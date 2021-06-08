@@ -1,41 +1,75 @@
 @import "../../styles/colors.scss";
+@import "../../styles/nav-lists.scss";
+@import "../../styles/responsive.scss";
 @import "@fontsource/finger-paint";
 
 .navbar {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
   width: 100%;
   background: $primary;
   height: 50px;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 5px;
+
+  @include breakpoint($md) {
+    height: 75px;
+  }
+
+  .content {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5px;
+
+    @include breakpoint($md) {
+      padding: 0 5px;
+    }
+  }
 
   .title {
     margin: 5px;
     font-family: "Finger Paint";
+    font-size: 1.2rem;
+
+    @include breakpoint($sm) {
+      font-size: 1.5rem;
+    }
 
     a {
       display: flex;
       align-items: center;
+      text-decoration: none;
 
       &:hover,
-      &:focus {
+      &:focus,
+      &:visited:hover,
+      &:visited:focus {
         color: $secondary;
 
         .logo {
           background-image: url("../../styles/img/Ausspeedruns-logo-orange.png");
         }
       }
+
+      &:visited {
+        color: $text-on-dark;
+        text-decoration: none;
+      }
     }
 
     .logo {
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
       margin-right: 5px;
       background: url("../../styles/img/Ausspeedruns-logo-white.png") no-repeat
         center;
       background-size: contain;
+
+      @include breakpoint($sm) {
+        height: 50px;
+        width: 50px;
+      }
     }
   }
 
@@ -44,46 +78,7 @@
     flex-flow: row nowrap;
     align-items: center;
     justify-content: space-between;
-  }
 
-  ul {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-around;
-    list-style-type: none;
-
-    li {
-      display: flex;
-      align-items: center;
-      margin: 5px 15px;
-
-      &.social {
-        margin: 5px 10px;
-        .text {
-          clip: rect(0 0 0 0);
-          clip-path: inset(50%);
-          height: 1px;
-          overflow: hidden;
-          position: absolute;
-          white-space: nowrap;
-          width: 1px;
-        }
-      }
-    }
-  }
-
-  a {
-    color: white;
-    font-weight: bold;
-    text-decoration: none;
-
-    &:visited {
-      color: white;
-    }
-
-    &:hover {
-      color: $secondary;
-      text-decoration: underline;
-    }
+    @include nav-lists;
   }
 }

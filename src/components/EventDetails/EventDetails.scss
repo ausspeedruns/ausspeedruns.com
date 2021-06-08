@@ -1,12 +1,18 @@
+@import "../../styles/responsive.scss";
+@import "../../styles/colors.scss";
+
 .eventDetails {
   width: 100%;
+  background-color: #f1f2f8;
 
   .content {
     width: 100%;
     max-width: 1200px;
     margin: auto;
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
     padding: 50px 0;
 
     .charities,
@@ -14,8 +20,20 @@
       padding: 25px;
     }
 
-    .charities {
-      border-right: 1px solid grey;
+    .charities img {
+      width: 400px;
+    }
+
+    .sponsors img {
+      width: 300px;
+    }
+
+    @include breakpoint($lg) {
+      flex-flow: row nowrap;
+
+      .charities {
+        border-right: 1px solid grey;
+      }
     }
   }
 }

@@ -3,10 +3,14 @@ $primary-mid: #005b8c;
 $primary-light: #0082c8;
 $secondary: #cc7722;
 $secondary-dark: #af651e;
+$neutral: #f9eadc;
+$light-neutral: #f9f9f9;
+$grey: #d8dbe2;
 $text-on-dark: white;
-$text-on-light: black;
+$text-on-light: $primary;
 
 $nav-background: $primary;
 $nav-text: $text-on-dark;
 $hero-background: $primary;
 $hero-text: $text-on-dark;
+$neutral-background: $neutral;

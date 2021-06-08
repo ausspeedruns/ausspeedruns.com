@@ -1,0 +1,38 @@
+@mixin nav-lists {
+  ul {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    list-style-type: none;
+    margin-block: 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      margin: 5px 15px;
+
+      &.social {
+        margin: 5px 10px;
+
+        .text {
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+
+  a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+
+    &:visited {
+      color: white;
+    }
+
+    &:hover {
+      color: $secondary;
+      text-decoration: underline;
+    }
+  }
+}

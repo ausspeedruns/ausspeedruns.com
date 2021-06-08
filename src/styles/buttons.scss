@@ -32,6 +32,23 @@ a.button {
     &:hover,
     &:focus {
       background-color: transparent;
+      color: $secondary;
+    }
+
+    span {
+      margin-left: 15px;
+    }
+  }
+
+  &.secondary {
+    padding: 10px 30px;
+    border-color: $primary;
+    background-color: $primary;
+    color: $text-on-dark;
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
     }
   }
 

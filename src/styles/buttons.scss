@@ -1,0 +1,41 @@
+@import "./colors.scss";
+
+a.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 25px;
+  border: 2px solid white;
+  border-radius: 0.375rem;
+
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+
+  &:visited {
+    color: white;
+  }
+
+  &:hover,
+  &:focus {
+    border-color: $secondary;
+    color: $secondary;
+    text-decoration: underline;
+  }
+
+  &.primary {
+    padding: 10px 30px;
+    border-color: $secondary;
+    background-color: $secondary;
+    color: $text-on-dark;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+    }
+  }
+
+  svg {
+    margin: 2px 0 0 15px;
+  }
+}

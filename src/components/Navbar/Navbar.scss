@@ -1,0 +1,89 @@
+@import "../../styles/colors.scss";
+@import "@fontsource/finger-paint";
+
+.navbar {
+  width: 100%;
+  background: $primary;
+  height: 50px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 5px;
+
+  .title {
+    margin: 5px;
+    font-family: "Finger Paint";
+
+    a {
+      display: flex;
+      align-items: center;
+
+      &:hover,
+      &:focus {
+        color: $secondary;
+
+        .logo {
+          background-image: url("../../styles/img/Ausspeedruns-logo-orange.png");
+        }
+      }
+    }
+
+    .logo {
+      width: 30px;
+      height: 30px;
+      margin-right: 5px;
+      background: url("../../styles/img/Ausspeedruns-logo-white.png") no-repeat
+        center;
+      background-size: contain;
+    }
+  }
+
+  nav {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  ul {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    list-style-type: none;
+
+    li {
+      display: flex;
+      align-items: center;
+      margin: 5px 15px;
+
+      &.social {
+        margin: 5px 10px;
+        .text {
+          clip: rect(0 0 0 0);
+          clip-path: inset(50%);
+          height: 1px;
+          overflow: hidden;
+          position: absolute;
+          white-space: nowrap;
+          width: 1px;
+        }
+      }
+    }
+  }
+
+  a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+
+    &:visited {
+      color: white;
+    }
+
+    &:hover {
+      color: $secondary;
+      text-decoration: underline;
+    }
+  }
+}

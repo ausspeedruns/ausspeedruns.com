@@ -1,0 +1,47 @@
+@import "../../styles/colors.scss";
+
+.heroblock {
+  width: 100%;
+  background: $hero-background;
+  color: $hero-text;
+
+  .content {
+    max-width: 80%;
+    margin: auto;
+    display: flex;
+    flex-flow: column;
+    padding: 50px 0;
+
+    @media screen and (min-width: 1200px) {
+      flex-flow: row;
+      max-width: 1200px;
+
+      & > * {
+        display: inline-block;
+        width: 50%;
+        margin: auto;
+      }
+
+      & > :nth-child(2) {
+        margin-left: 10px;
+      }
+    }
+
+    .ctaBlock {
+      text-align: left;
+      padding: 25px;
+
+      h1 {
+        margin: 0 0 5px 0;
+      }
+
+      h2 {
+        margin: 0 0 50px 0;
+      }
+
+      p {
+        max-width: 400px;
+      }
+    }
+  }
+}

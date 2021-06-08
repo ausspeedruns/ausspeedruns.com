@@ -1,29 +1,30 @@
 @import "../../styles/colors.scss";
+@import "../../styles/responsive.scss";
 
 .heroblock {
   width: 100%;
-  background: $hero-background;
+  background: url("../../styles/img/hero-image.png") no-repeat;
+  background-size: cover;
   color: $hero-text;
 
   .content {
-    max-width: 80%;
-    margin: auto;
     display: flex;
     flex-flow: column;
     padding: 50px 0;
 
-    @media screen and (min-width: 1200px) {
+    @include breakpoint($lg) {
       flex-flow: row;
       max-width: 1200px;
 
-      & > * {
+      & > :first-child {
         display: inline-block;
-        width: 50%;
+        max-width: 66%;
         margin: auto;
       }
 
-      & > :nth-child(2) {
+      & > :last-child:not(:only-child) {
         margin-left: 10px;
+        max-width: 33%;
       }
     }
 
@@ -36,11 +37,25 @@
       }
 
       h2 {
+        margin: 0 0 10px 0;
+      }
+
+      h3 {
         margin: 0 0 50px 0;
+        font-family: "Roboto Mono";
       }
 
       p {
         max-width: 400px;
+      }
+    }
+
+    .logoBlock {
+      width: inherit;
+      max-width: 400px;
+      img {
+        width: inherit;
+        margin: auto;
       }
     }
   }

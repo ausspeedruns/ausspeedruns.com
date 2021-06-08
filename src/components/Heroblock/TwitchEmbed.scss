@@ -1,8 +1,16 @@
+@import "../../styles/responsive.scss";
+
 .twitchEmbed {
   position: relative;
   overflow: hidden;
   width: 100%;
-  padding-top: 28.1%;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
+
+  @include breakpoint($lg) {
+    padding-top: calc(
+      (56.25% / 3) * 2
+    ); /* Half the screen width so half the height */
+  }
 
   iframe {
     position: absolute;

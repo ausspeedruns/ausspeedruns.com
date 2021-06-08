@@ -1,8 +1,34 @@
 @import "@fontsource/noto-sans";
+@import "@fontsource/roboto-mono";
+@import "./styles/responsive.scss";
 
 body {
   margin: 0;
   font-family: "Noto Sans";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.content {
+  display: flex;
+  margin: auto;
+  width: 100%;
+
+  @include breakpoint($sm) {
+    width: 90%;
+  }
+
+  @include breakpoint($lg) {
+    max-width: 1200px;
+  }
+}
+
+.sr-only {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }

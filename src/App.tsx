@@ -1,8 +1,11 @@
-import React from 'react';
-import './App.scss';
-import Navbar from './components/Navbar/Navbar';
-import Heroblock from './components/Heroblock/Heroblock'
-import EventDetails from './components/EventDetails/EventDetails'
+import React from "react";
+import "./App.scss";
+import Navbar from "./components/Navbar/Navbar";
+import Heroblock from "./components/Heroblock/Heroblock";
+import EventDetails from "./components/EventDetails/EventDetails";
+import About from "./components/About/About";
+import Participate from "./components/Participate/Participate";
+import Footer from "./components/Footer/Footer";
 
 function App() {
   return (
@@ -10,9 +13,15 @@ function App() {
       <header className="App-header">
         <Navbar />
       </header>
-      <Heroblock />
-      <EventDetails />
-      {/* <About /> */}
+      <main>
+        <Heroblock />
+        <EventDetails />
+        <Participate />
+        <About />
+      </main>
+      <footer>
+        <Footer />
+      </footer>
     </div>
   );
 }

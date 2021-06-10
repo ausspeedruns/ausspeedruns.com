@@ -1,16 +1,20 @@
-$primary: #2b315c;
-$primary-mid: #005b8c;
-$primary-light: #0082c8;
-$secondary: #cc7722;
-$secondary-dark: #af651e;
-$neutral: #f9eadc;
-$light-neutral: #f9f9f9;
-$grey: #d8dbe2;
-$text-on-dark: white;
-$text-on-light: $primary;
+$color-ochre: #CC7722;
+$color-teal: #437C90;
+$color-umber: #823329;
+$color-linen: #FCF5EE;
+$color-off-white: #F9F9F9;
+$color-grey: #D8D8E2;
+$color-charcoal: #424854;
+$color-white: #FFFFFF;
+$color-black: #000000;
 
-$nav-background: $primary;
-$nav-text: $text-on-dark;
+$primary: $color-ochre;
+$secondary: $color-teal;
+$light-text: $color-white;
+$dark-text: $color-black;
+
+$nav-background: $secondary;
+$nav-text: $light-text;
 $hero-background: $primary;
-$hero-text: $text-on-dark;
-$neutral-background: $neutral;
+$hero-text: $light-text;
+

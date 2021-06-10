@@ -27,7 +27,7 @@ a.button {
     padding: 10px 30px;
     border-color: $secondary;
     background-color: $secondary;
-    color: $text-on-dark;
+    color: $light-text;
 
     &:hover,
     &:focus {
@@ -44,7 +44,7 @@ a.button {
     padding: 10px 30px;
     border-color: $primary;
     background-color: $primary;
-    color: $text-on-dark;
+    color: $light-text;
 
     &:hover,
     &:focus {

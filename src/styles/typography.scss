@@ -1,0 +1,52 @@
+@import "@fontsource/noto-sans";
+@import "@fontsource/roboto-mono";
+@import "@fontsource/finger-paint";
+
+h1, h2, h3, h4, h5, h6, p {
+  margin-block: 0;
+  margin-inline: 0;
+
+  &.monospaced {
+    font-family: "Roboto Mono";
+  }
+}
+
+body {
+  font-family: "Noto Sans";
+}
+
+h1 {
+  font-family: "Finger Paint", "Noto Sans", Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 1.5rem;
+}
+
+h2, h3, h4, h5, h6, p {
+  font-family: "Noto Sans", Verdana, Geneva, Tahoma, sans-serif;
+  line-height: 1.5;
+}
+
+h2 {
+ font-size: 1.5rem;
+ font-weight: 700;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-size: 1rem;
+}
+
+h4 {
+
+}
+
+h5 {
+
+}
+
+h6 {
+
+}
+
+p {
+  margin-bottom: 15px;
+}

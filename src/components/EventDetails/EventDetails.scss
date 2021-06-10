@@ -1,9 +1,8 @@
-@import "../../styles/responsive.scss";
-@import "../../styles/colors.scss";
+@import "../../styles/styles.scss";
 
 .eventDetails {
   width: 100%;
-  background-color: #f1f2f8;
+  background: $color-white;
 
   .content {
     width: 100%;
@@ -32,7 +31,7 @@
       flex-flow: row nowrap;
 
       .charities {
-        border-right: 1px solid grey;
+        border-right: 1px solid $color-charcoal;
       }
     }
   }

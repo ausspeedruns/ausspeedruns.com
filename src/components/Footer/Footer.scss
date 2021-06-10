@@ -1,14 +1,13 @@
-@import "../../styles/colors.scss";
-@import "../../styles/nav-lists.scss";
+@import "../../styles/styles.scss";
 
 .footer {
   background-color: $nav-background;
-  color: $text-on-dark;
+  color: $light-text;
 
   @include nav-lists;
 }
 
 .acknowledgement {
   background-color: $secondary;
-  color: $text-on-dark;
+  color: $light-text;
 }

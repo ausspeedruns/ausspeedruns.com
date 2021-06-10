@@ -7,6 +7,8 @@ import {
   faDiscord,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
+import { faBars } from "@fortawesome/free-solid-svg-icons"
+import { faWindowClose } from "@fortawesome/free-regular-svg-icons"
 
 const Navbar = () => {
   return (
@@ -15,10 +17,10 @@ const Navbar = () => {
         <div className="title">
           <a href="/">
             <span className="logo"></span>
-            <span>AusSpeedruns</span>
+            <h1>AusSpeedruns</h1>
           </a>
         </div>
-        <nav>
+        <nav id="main-menu" className="main-menu" aria-label="Main menu">
           <ul>
             <li>
               <a href="//schedule.ausspeedruns.com">Schedule</a>
@@ -54,6 +56,27 @@ const Navbar = () => {
             {/* <li><a className="button secondary" href="//fundraise.beyondblue.org.au/asm2021">Donate</a></li> */}
           </ul>
         </nav>
+        <a href="#main-menu"
+          id="main-menu-toggle"
+          className="menu-toggle"
+          aria-label="Open main menu">
+          <span className="sr-only">Open main menu</span>
+          <FontAwesomeIcon icon={faBars} aria-hidden />
+        </a>
+
+        <a href="#main-menu-toggle"
+          id="main-menu-close"
+          className="menu-close"
+          aria-label="Close main menu">
+          <span className="sr-only">Close main menu</span>
+          <FontAwesomeIcon icon={faWindowClose} aria-hidden />
+        </a>
+
+        <a href="#main-menu-toggle"
+          className="backdrop"
+          tabIndex={-1}
+          aria-hidden="true" hidden>
+        </a>
       </div>
     </div>
   );

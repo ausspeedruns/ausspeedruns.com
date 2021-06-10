@@ -59,15 +59,15 @@ const Heroblock = () => {
       <div className="content">
         {/* <TwitchEmbed channel="ausspeedruns" parent={window.location.hostname}/> */}
         <div className="ctaBlock">
-          <h1>Australian Speedrun Marathon 2021</h1>
-          <h2>July 13th - 18th</h2>
-          <h3>
+          <h2>Australian Speedrun Marathon 2021</h2>
+          <h3>July 13th - 18th</h3>
+          <h4 className="countdown monospaced">
             <Countdown
               date={Date.parse("13 July 2021 11:00:00 GMT+1100")}
               renderer={countdownRender}
               zeroPadTime={2}
             />
-          </h3>
+          </h4>
           <p>
             Australian Speedrunners come together to raise money for Beyond Blue
             at ASM2021! Hosted at the Oaks Adelaide Embassy Suites, Australia.

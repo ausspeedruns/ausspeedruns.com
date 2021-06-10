@@ -1,10 +1,7 @@
-@import "@fontsource/noto-sans";
-@import "@fontsource/roboto-mono";
 @import "./styles/responsive.scss";
 
 body {
   margin: 0;
-  font-family: "Noto Sans";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

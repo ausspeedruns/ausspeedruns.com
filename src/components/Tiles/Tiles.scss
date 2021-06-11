@@ -1,0 +1,28 @@
+@import "../../styles/styles.scss";
+
+.tileGroup {
+  background: $color-off-white;
+  padding: 40px;
+
+  @include breakpoint($md) {
+    padding: 0 40px;
+  }
+
+  .content {
+    display: block;
+
+    @include breakpoint($md) {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 30px;
+    }
+  }
+
+  .tile {
+    background: $color-white;
+    border-radius: 3px;
+    margin: 5px;
+    padding: 10px;
+    width: 100%;
+  }
+}

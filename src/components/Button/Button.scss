@@ -1,4 +1,4 @@
-@import "./colors.scss";
+@import "../../styles/colors.scss";
 
 a.button {
   display: inline-flex;
@@ -33,11 +33,18 @@ a.button {
     &:focus {
       background-color: transparent;
       color: $secondary;
+
+      &.lightHover {
+        border-color: $color-white;
+        color: $color-white;
+      }
     }
 
     span {
       margin-left: 15px;
     }
+
+
   }
 
   &.secondary {
@@ -52,7 +59,11 @@ a.button {
     }
   }
 
-  svg {
+  svg + span {
+    margin: -2px 15px 0 0;
+  }
+
+  span + svg {
     margin: 2px 0 0 15px;
   }
 }

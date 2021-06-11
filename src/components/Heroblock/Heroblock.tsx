@@ -1,8 +1,6 @@
 import React from "react";
 import "./Heroblock.scss";
-import "../../styles/buttons.scss";
 // import TwitchEmbed from './TwitchEmbed'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import Countdown, { zeroPad, CountdownRenderProps } from "react-countdown";
 

@@ -5,14 +5,10 @@
   background: $color-white;
 
   .content {
-    width: 100%;
-    max-width: 1200px;
-    margin: auto;
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
-    padding: 50px 0;
 
     .charities,
     .sponsors {

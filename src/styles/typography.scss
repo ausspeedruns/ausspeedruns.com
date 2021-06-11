@@ -7,12 +7,12 @@ h1, h2, h3, h4, h5, h6, p {
   margin-inline: 0;
 
   &.monospaced {
-    font-family: "Roboto Mono";
+    font-family: "Roboto Mono", "Noto Sans", Verdana, Geneva, Tahoma, sans-serif;
   }
 }
 
 body {
-  font-family: "Noto Sans";
+  font-family: "Noto Sans", Verdana, Geneva, Tahoma, sans-serif;
 }
 
 h1 {
@@ -27,12 +27,11 @@ h2, h3, h4, h5, h6, p {
 
 h2 {
  font-size: 1.5rem;
- font-weight: 700;
+ font-weight: 900;
 }
 
 h3 {
-  font-size: 1.5rem;
-  font-size: 1rem;
+  font-size: 1.25rem;
 }
 
 h4 {

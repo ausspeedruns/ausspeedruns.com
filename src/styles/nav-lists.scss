@@ -29,12 +29,12 @@
   }
 
   a {
-    color: white;
+    color: $light-text;
     font-weight: bold;
     text-decoration: none;
 
     &:visited {
-      color: white;
+      color: $light-text;
     }
 
     &:hover {

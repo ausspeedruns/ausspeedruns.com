@@ -3,6 +3,7 @@ import "./Heroblock.scss";
 // import TwitchEmbed from './TwitchEmbed'
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import Countdown, { zeroPad, CountdownRenderProps } from "react-countdown";
+import Button from "../Button/Button";
 
 const Heroblock = () => {
   const countdownRender = ({
@@ -71,9 +72,7 @@ const Heroblock = () => {
             at ASM2021! Hosted at the Oaks Adelaide Embassy Suites, Australia.
           </p>
           {/* <a className="button primary" href="//fundraise.beyondblue.org.au/asm2021">Donate <FontAwesomeIcon icon={ faChevronRight } /></a> */}
-          <a className="button secondary" href="#participate">
-            Get involved <FontAwesomeIcon icon={faChevronRight} />
-          </a>
+          <Button actionText="Get Involved" link="#participate" iconRight={ faChevronRight} colorScheme={"primary lightHover"}/>
         </div>
       </div>
     </div>

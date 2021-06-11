@@ -35,8 +35,6 @@ function App() {
             description: "Our next event will be at PAX Australia 2021. Submissions for this event will be opening in August. Follow us on Twitter or join our discord for updates."
           },
         ]} />
-        {/* <Participate />
-        <About /> */}
       </main>
       <footer>
         <Footer />

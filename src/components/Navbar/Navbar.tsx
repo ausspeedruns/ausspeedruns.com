@@ -7,8 +7,7 @@ import {
   faDiscord,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
-import { faBars } from "@fortawesome/free-solid-svg-icons"
-import { faWindowClose } from "@fortawesome/free-regular-svg-icons"
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons"
 
 const Navbar = () => {
   return (
@@ -69,7 +68,7 @@ const Navbar = () => {
           className="menu-close"
           aria-label="Close main menu">
           <span className="sr-only">Close main menu</span>
-          <FontAwesomeIcon icon={faWindowClose} aria-hidden />
+          <FontAwesomeIcon icon={faTimes} aria-hidden />
         </a>
 
         <a href="#main-menu-toggle"

@@ -7,7 +7,7 @@ import {
   faDiscord,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
-import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons"
+import { faBars, faCalendarAlt, faTimes, faUsers } from "@fortawesome/free-solid-svg-icons"
 
 // Define general type for useWindowSize hook, which includes width and height
 interface Size {
@@ -48,11 +48,17 @@ const Navbar = () => {
         <nav className={`main-menu ${isOpen ? 'menu-open' : 'menu-closed'}`} aria-label="Main menu">
           <ul>
             <li>
-              <a href="//schedule.ausspeedruns.com">Schedule</a>
+              <a href="//schedule.ausspeedruns.com">
+                { isMobile ? (<FontAwesomeIcon icon={faCalendarAlt} />) : '' }
+                <span className="text">Schedule</span>
+              </a>
             </li>
             {/* <li><a href="//incentives.ausspeedruns.com">Incentives</a></li> */}
             <li>
-              <a href="#participate">Get Involved</a>
+              <a href="#participate">
+                { isMobile ? (<FontAwesomeIcon icon={faUsers} />) : '' }
+                <span className="text">Get Involved</span>
+              </a>
             </li>
             <li className="social">
               <a href="//www.twitch.tv/ausspeedruns">

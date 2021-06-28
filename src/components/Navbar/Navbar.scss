@@ -111,5 +111,9 @@
     @include breakpoint($sm) {
       display: none;
     }
+
+    &:hover {
+      color: $primary;
+    }
   }
 }

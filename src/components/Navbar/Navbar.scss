@@ -36,7 +36,8 @@
       &:hover,
       &:focus,
       &:visited:hover,
-      &:visited:focus {
+      &:visited:focus,
+      &:-webkit-any-link {
         color: $primary;
 
         .logo {
@@ -48,6 +49,7 @@
         color: $light-text;
         text-decoration: none;
       }
+
     }
 
     .logo {

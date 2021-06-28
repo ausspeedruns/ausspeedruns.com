@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/ausspeedruns.com/static/css/main.e10b7373.chunk.css",
+    "main.js": "/ausspeedruns.com/static/js/main.0dd8b8dd.chunk.js",
+    "main.js.map": "/ausspeedruns.com/static/js/main.0dd8b8dd.chunk.js.map",
+    "runtime-main.js": "/ausspeedruns.com/static/js/runtime-main.8b763241.js",
+    "runtime-main.js.map": "/ausspeedruns.com/static/js/runtime-main.8b763241.js.map",
+    "static/js/2.a8a2b068.chunk.js": "/ausspeedruns.com/static/js/2.a8a2b068.chunk.js",
+    "static/js/2.a8a2b068.chunk.js.map": "/ausspeedruns.com/static/js/2.a8a2b068.chunk.js.map",
+    "static/js/3.ec9a7942.chunk.js": "/ausspeedruns.com/static/js/3.ec9a7942.chunk.js",
+    "static/js/3.ec9a7942.chunk.js.map": "/ausspeedruns.com/static/js/3.ec9a7942.chunk.js.map",
+    "index.html": "/ausspeedruns.com/index.html",
+    "static/css/main.e10b7373.chunk.css.map": "/ausspeedruns.com/static/css/main.e10b7373.chunk.css.map",
+    "static/js/2.a8a2b068.chunk.js.LICENSE.txt": "/ausspeedruns.com/static/js/2.a8a2b068.chunk.js.LICENSE.txt",
+    "static/media/Navbar.scss": "/ausspeedruns.com/static/media/Ausspeedruns-logo-white.67ec64fc.png",
+    "static/media/bblue-blue.123d3c18.png": "/ausspeedruns.com/static/media/bblue-blue.123d3c18.png",
+    "static/media/Footer.scss": "/ausspeedruns.com/static/media/roboto-mono-vietnamese-400-normal.baa5de8f.woff2",
+    "static/media/Heroblock.scss": "/ausspeedruns.com/static/media/hero-image.8766b696.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.8b763241.js",
+    "static/js/2.a8a2b068.chunk.js",
+    "static/css/main.e10b7373.chunk.css",
+    "static/js/main.0dd8b8dd.chunk.js"
+  ]
+}

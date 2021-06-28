@@ -11,18 +11,15 @@
   .content {
     display: flex;
     align-items: center;
-
-    padding: 10px 5px;
+    flex-flow: wrap;
 
     @include breakpoint($md) {
       flex-flow: row nowrap;
       justify-content: space-between;
-      padding: 0 5px;
     }
   }
 
   .title {
-    margin: 5px;
     font-family: "Finger Paint";
     font-size: 1.2rem;
     flex-grow: 1;
@@ -70,7 +67,7 @@
 
   nav {
     display: flex;
-    flex-flow: column nowrap;
+    flex-flow: column wrap;
 
     @include breakpoint($xs) {
       flex-flow: row nowrap;
@@ -80,97 +77,34 @@
 
     @include nav-lists;
   }
-}
 
-.menu-toggle {
-  color: $light-text;
-}
-
-.menu-toggle:hover,
-.menu-toggle:focus {
-  color: $primary;
-}
-
-.main-menu {
-  position: absolute;
-  display: none;
-  left: 0; /* push off the screen to the left for future animation */
-  top: 60px;
-  width: 100%;
-  height: 0;
-	overflow-y: scroll;
-	overflow-x: visible;
-	transition: height 0.3s ease;
-	z-index: 999;
-  background: $secondary;
-}
-
-.main-menu a.menu-close {
-  border-bottom: 0; /* no border for the X 'button' */
-}
-
-.main-menu .menu-close {
-  position: absolute;
-  right: 0;
-  top: 0;
-}
-
-.main-menu:target,
-.main-menu[aria-expanded="true"] {
-  display: block;
-  height: auto; /* slide from -200px to the left edge at 0 */
-  outline: none;
-}
-
-.main-menu:target .menu-close,
-.main-menu[aria-expanded="true"] .menu-close {
-  z-index: 1001;
-}
-
-.main-menu:target ul,
-.main-menu[aria-expanded="true"] ul {
-  position: relative;
-  z-index: 1000;
-}
-
-.main-menu:target + .backdrop,
-.main-menu[aria-expanded="true"] + .backdrop{
-  position: absolute;
-  display: block;  
-  left: 0;
-  top: 60px;
-  width: 100%;
-  height: 100%;
-  z-index: 998;
-  background: #000;
-  background: rgba(0,0,0,.85);
-  cursor: default;
-}
-
-@supports (position: fixed) {
-  /*
-    Allow backdrop to stay fixed and not "scroll"
-  */
-  .main-menu,
-  .main-menu:target + .backdrop,
-  .main-menu[aria-expanded="true"] + .backdrop {
-    position: fixed;
+  .break {
+    flex-basis: 100%;
+    height: 0;
   }
-}
 
-@media (min-width: 768px) {
-  /* Hide hamburger menu/'button' */
-  .menu-toggle,
-  .main-menu .menu-close {
-    display: none;
-  }
-  
-  /* Undo positioning of off-canvas menu */
+
   .main-menu {
-    position: relative;
-		left: auto;
-		top: auto;
-		height: auto;
-    display: block;
+    &.menu-open {
+      display: block;
+    }
+
+    &.menu-closed {
+      display: none;
+    }
+
+    @include breakpoint($sm) {
+      display: block !important;
+    }
+  }
+
+  button {
+    background: none;
+    border: none;
+    color: $light-text;
+
+    @include breakpoint($sm) {
+      display: none;
+    }
   }
 }

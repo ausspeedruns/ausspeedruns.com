@@ -10,24 +10,55 @@
     justify-content: center;
     align-items: center;
 
+    h2, h3 {
+      color: $secondary;
+    }
+
+    .charitiesAndSponsors {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-evenly;
+      align-items: center;
+
+      .sponsorsSection {
+        text-align: center;
+      }
+
+      @include breakpoint($md) {
+        flex-wrap: nowrap;
+      }
+    }
+
     .charities,
     .sponsors {
-      padding: 25px;
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-evenly;
+      align-items: center;
+      margin: 24px 0;
     }
 
     .charities img {
-      width: 400px;
+      width: 350px;
     }
 
     .sponsors img {
-      width: 300px;
+      width: 250px;
     }
 
     @include breakpoint($lg) {
-      flex-flow: row nowrap;
-
       .charities {
-        border-right: 1px solid $color-charcoal;
+        border-right: 1px solid $color-grey;
+      }
+    }
+
+    a {
+      color: $secondary;
+      text-decoration: none;
+
+      &:hover, &:focus {
+        color: $primary;
+        text-decoration: underline;
       }
     }
   }

@@ -18,20 +18,20 @@ a.button {
 
   &:hover,
   &:focus {
-    border-color: $secondary;
-    color: $secondary;
+    border-color: $accent;
+    color: $accent;
     text-decoration: underline;
   }
 
   &.primary {
-    border-color: $secondary;
-    background-color: $secondary;
+    border-color: $accent;
+    background-color: $accent;
     color: $light-text;
 
     &:hover,
     &:focus {
       background-color: transparent;
-      color: $secondary;
+      color: $accent;
 
       &.lightHover {
         border-color: $color-white;
@@ -41,13 +41,14 @@ a.button {
   }
 
   &.secondary {
-    border-color: $primary;
-    background-color: $primary;
+    border-color: $secondary;
+    background-color: $secondary;
     color: $light-text;
 
     &:hover,
     &:focus {
-      text-decoration: underline;
+      background-color: transparent;
+      color: $secondary;
     }
   }
 

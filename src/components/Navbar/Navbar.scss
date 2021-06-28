@@ -33,11 +33,14 @@
       align-items: center;
       text-decoration: none;
 
+      &:-webkit-any-link {
+        color: $light-text;
+      }
+
       &:hover,
       &:focus,
       &:visited:hover,
-      &:visited:focus,
-      &:-webkit-any-link {
+      &:visited:focus {
         color: $primary;
 
         .logo {

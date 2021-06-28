@@ -26,7 +26,7 @@ function App() {
             description: "Submissions have closed for ASM2021 but you can still get involved in our community. Find out what's happening and keep in touch with us on our discord.", 
             cta: { 
               actionText: "Join our discord", 
-              link: "discord", 
+              link: "https://discord.com/invite/2xFkJta", 
               iconLeft: faDiscord 
             }
           },

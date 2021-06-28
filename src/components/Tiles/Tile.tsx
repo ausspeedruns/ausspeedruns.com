@@ -12,7 +12,7 @@ const Tile = ({title, description, cta} : TileProps) => {
     <div className="tile">
       <h3>{title}</h3>
       <p>{description}</p>
-      {cta && (<Button {...cta} />)}
+      {cta && (<Button {...{...cta, colorScheme: "secondary"}} />)}
     </div>
   );
 };

@@ -10,8 +10,8 @@ const TileGroup = ({tiles} : TileGroupProps) => {
   return (
     <div className="tileGroup">
       <div className="content">
-        { tiles.map( (tile) => 
-          <Tile {...tile} />
+        { tiles.map( (tile, key) => 
+          <Tile key={key} {...tile} />
         )}
       </div>
     </div>

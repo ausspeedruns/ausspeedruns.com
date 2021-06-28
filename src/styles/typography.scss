@@ -17,6 +17,10 @@ body {
 
 h1 {
   font-family: "Finger Paint", "Noto Sans", Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 2rem;
+}
+
+.title h1 {
   font-size: 1.5rem;
 }
 
@@ -28,24 +32,13 @@ h2, h3, h4, h5, h6, p {
 h2 {
  font-size: 1.5rem;
  font-weight: 900;
+ margin: 0 0 10px 0
 }
 
 h3 {
   font-size: 1.25rem;
 }
 
-h4 {
-
-}
-
-h5 {
-
-}
-
-h6 {
-
-}
-
-p {
-  margin-bottom: 15px;
+p:not(:only-child) {
+  margin-bottom: 24px;
 }

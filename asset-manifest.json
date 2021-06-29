@@ -1,26 +1,26 @@
 {
   "files": {
-    "main.css": "/static/css/main.868a733e.chunk.css",
-    "main.js": "/static/js/main.6f574446.chunk.js",
-    "main.js.map": "/static/js/main.6f574446.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.65905905.js",
-    "runtime-main.js.map": "/static/js/runtime-main.65905905.js.map",
-    "static/js/2.aa6f460a.chunk.js": "/static/js/2.aa6f460a.chunk.js",
-    "static/js/2.aa6f460a.chunk.js.map": "/static/js/2.aa6f460a.chunk.js.map",
-    "static/js/3.ec9a7942.chunk.js": "/static/js/3.ec9a7942.chunk.js",
-    "static/js/3.ec9a7942.chunk.js.map": "/static/js/3.ec9a7942.chunk.js.map",
+    "main.css": "/static/css/main.58660bea.chunk.css",
+    "main.js": "/static/js/main.2350208e.chunk.js",
+    "main.js.map": "/static/js/main.2350208e.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.3ed07f9c.js",
+    "runtime-main.js.map": "/static/js/runtime-main.3ed07f9c.js.map",
+    "static/js/2.ade9cd45.chunk.js": "/static/js/2.ade9cd45.chunk.js",
+    "static/js/2.ade9cd45.chunk.js.map": "/static/js/2.ade9cd45.chunk.js.map",
+    "static/js/3.604e736f.chunk.js": "/static/js/3.604e736f.chunk.js",
+    "static/js/3.604e736f.chunk.js.map": "/static/js/3.604e736f.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.868a733e.chunk.css.map": "/static/css/main.868a733e.chunk.css.map",
-    "static/js/2.aa6f460a.chunk.js.LICENSE.txt": "/static/js/2.aa6f460a.chunk.js.LICENSE.txt",
+    "static/css/main.58660bea.chunk.css.map": "/static/css/main.58660bea.chunk.css.map",
+    "static/js/2.ade9cd45.chunk.js.LICENSE.txt": "/static/js/2.ade9cd45.chunk.js.LICENSE.txt",
     "static/media/Navbar.scss": "/static/media/Ausspeedruns-logo-white.67ec64fc.png",
     "static/media/bblue-blue.123d3c18.png": "/static/media/bblue-blue.123d3c18.png",
     "static/media/Footer.scss": "/static/media/roboto-mono-vietnamese-400-normal.baa5de8f.woff2",
     "static/media/Heroblock.scss": "/static/media/hero-image.8766b696.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.65905905.js",
-    "static/js/2.aa6f460a.chunk.js",
-    "static/css/main.868a733e.chunk.css",
-    "static/js/main.6f574446.chunk.js"
+    "static/js/runtime-main.3ed07f9c.js",
+    "static/js/2.ade9cd45.chunk.js",
+    "static/css/main.58660bea.chunk.css",
+    "static/js/main.2350208e.chunk.js"
   ]
 }

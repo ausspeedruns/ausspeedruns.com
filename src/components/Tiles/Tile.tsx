@@ -4,12 +4,13 @@ import Button, { ButtonProps } from "../Button/Button";
 export type TileProps = {
   title: string,
   description: string,
-  cta?: ButtonProps
+  cta?: ButtonProps,
+  anchor?: string
 }
 
-const Tile = ({title, description, cta} : TileProps) => {
+const Tile = ({title, description, cta, anchor} : TileProps) => {
   return (
-    <div className="tile">
+    <div className="tile" id={anchor}>
       <h3>{title}</h3>
       <p>{description}</p>
       {cta && (<Button {...{...cta, colorScheme: "secondary"}} />)}

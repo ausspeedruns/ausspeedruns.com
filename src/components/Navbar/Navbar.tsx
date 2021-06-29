@@ -44,11 +44,11 @@ const Navbar = () => {
         </button>
         { isMobile ? (<div className="break"></div>
         ) : ''}
-        
+
         <nav className={`main-menu ${isOpen ? 'menu-open' : 'menu-closed'}`} aria-label="Main menu">
           <ul>
             <li>
-              <a href="//schedule.ausspeedruns.com">
+              <a href="http://schedule.ausspeedruns.com">
                 { isMobile ? (<FontAwesomeIcon icon={faCalendarAlt} />) : '' }
                 <span className="text">Schedule</span>
               </a>
@@ -79,7 +79,7 @@ const Navbar = () => {
               </a>
             </li>
             <li className="social">
-              <a href="//discord.ausspeedruns.com/">
+              <a href="http://discord.ausspeedruns.com/">
                 <FontAwesomeIcon icon={faDiscord} />
                 <span className={`text ${isMobile ? '' : 'sr-only'}`}>Join us on Discord</span>
               </a>

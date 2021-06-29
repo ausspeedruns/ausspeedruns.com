@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.58660bea.chunk.css",
+    "main.css": "/static/css/main.40dc069d.chunk.css",
     "main.js": "/static/js/main.2350208e.chunk.js",
     "main.js.map": "/static/js/main.2350208e.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.3ed07f9c.js",
@@ -10,7 +10,7 @@
     "static/js/3.604e736f.chunk.js": "/static/js/3.604e736f.chunk.js",
     "static/js/3.604e736f.chunk.js.map": "/static/js/3.604e736f.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.58660bea.chunk.css.map": "/static/css/main.58660bea.chunk.css.map",
+    "static/css/main.40dc069d.chunk.css.map": "/static/css/main.40dc069d.chunk.css.map",
     "static/js/2.ade9cd45.chunk.js.LICENSE.txt": "/static/js/2.ade9cd45.chunk.js.LICENSE.txt",
     "static/media/Navbar.scss": "/static/media/Ausspeedruns-logo-white.67ec64fc.png",
     "static/media/bblue-blue.123d3c18.png": "/static/media/bblue-blue.123d3c18.png",
@@ -20,7 +20,7 @@
   "entrypoints": [
     "static/js/runtime-main.3ed07f9c.js",
     "static/js/2.ade9cd45.chunk.js",
-    "static/css/main.58660bea.chunk.css",
+    "static/css/main.40dc069d.chunk.css",
     "static/js/main.2350208e.chunk.js"
   ]
 }

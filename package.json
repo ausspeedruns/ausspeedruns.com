@@ -2,7 +2,7 @@
   "name": "ausspeedruns",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://ausspeedruns.github.io/ausspeedruns.com",
+  "homepage": "https://www.ausspeedruns.com/",
   "dependencies": {
     "@fontsource/finger-paint": "^4.4.5",
     "@fontsource/noto-sans": "^4.4.5",

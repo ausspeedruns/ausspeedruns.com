@@ -59,10 +59,10 @@ const Heroblock = () => {
         {/* <TwitchEmbed channel="ausspeedruns" parent={window.location.hostname}/> */}
         <div className="ctaBlock">
           <h1>Australian Speedrun Marathon 2021</h1>
-          <h2>July 13th - 18th</h2>
+          <h2>July 14th - 18th</h2>
           <h3 className="countdown monospaced">
             <Countdown
-              date={Date.parse("13 July 2021 11:00:00 GMT+1100")}
+              date={Date.parse("14 July 2021 11:00:00 GMT+1100")}
               renderer={countdownRender}
               zeroPadTime={2}
             />

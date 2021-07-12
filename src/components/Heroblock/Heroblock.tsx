@@ -1,11 +1,12 @@
-import React from "react";
+import React, {useState} from "react";
 import "./Heroblock.scss";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import Countdown, { zeroPad, CountdownRenderProps } from "react-countdown";
 import Button from "../Button/Button";
-// import TwitchEmbed from "./TwitchEmbed";
+import TwitchEmbed from "./TwitchEmbed";
 
 const Heroblock = () => {
+  const [showVideoBlock, setShowVideoBlock] = useState<boolean>(false)
   const countdownRender = ({
     days,
     hours,
@@ -14,6 +15,10 @@ const Heroblock = () => {
     milliseconds,
     completed,
   }: CountdownRenderProps) => {
+    if (completed || (days === 0 && hours === 0 && minutes <= 20)) {
+      setShowVideoBlock(true)
+    }
+
     if (completed) return <span></span>;
     else if (days > 0)
       return (
@@ -56,13 +61,13 @@ const Heroblock = () => {
   return (
     <div className="heroblock">
       <div className="content">
-        {/* <TwitchEmbed channel="ausspeedruns" parent={window.location.hostname}/> */}
+        { showVideoBlock && (<TwitchEmbed channel="ausspeedruns" parent={window.location.hostname}/>) }
         <div className="ctaBlock">
           <h1>Australian Speedrun Marathon 2021</h1>
           <h2>July 14th - 18th</h2>
           <h3 className="countdown monospaced">
             <Countdown
-              date={Date.parse("13 July 2021 11:00:00 GMT+1000")}
+              date={Date.parse("14 July 2021 11:00:00 GMT+1000")}
               renderer={countdownRender}
               zeroPadTime={2}
             />
@@ -71,8 +76,8 @@ const Heroblock = () => {
             Australian Speedrunners come together to raise money for Beyond Blue
             at ASM2021!
           </p>
-          {/* <a className="button primary" href="//fundraise.beyondblue.org.au/asm2021">Donate <FontAwesomeIcon icon={ faChevronRight } /></a> */}
-          <Button actionText="Get Involved" link="#participate" iconRight={ faChevronRight} colorScheme={"primary lightHover"}/>
+          { showVideoBlock && <Button actionText="Donate" link="//fundraise.beyondblue.org.au/asm2021" iconRight={ faChevronRight} colorScheme={"primary lightHover"}/> }
+          { !showVideoBlock && <Button actionText="Get Involved" link="#participate" iconRight={ faChevronRight} colorScheme={"primary lightHover"}/> }
         </div>
       </div>
     </div>

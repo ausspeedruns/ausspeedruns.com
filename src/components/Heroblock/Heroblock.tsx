@@ -61,7 +61,11 @@ const Heroblock = () => {
   return (
     <div className="heroblock">
       <div className="content">
+<<<<<<< HEAD
         { showVideoBlock && (<TwitchEmbed channel="ausspeedruns" parent={window.location.hostname}/>) }
+=======
+        <TwitchEmbed channel="ausspeedruns" parent={window.location.hostname}/>
+>>>>>>> 5f11e8f (First draft event day)
         <div className="ctaBlock">
           <h1>Australian Speedrun Marathon 2021</h1>
           <h2>July 14th - 18th</h2>
@@ -76,8 +80,12 @@ const Heroblock = () => {
             Australian Speedrunners come together to raise money for Beyond Blue
             at ASM2021!
           </p>
+<<<<<<< HEAD
           { showVideoBlock && <Button actionText="Donate" link="//fundraise.beyondblue.org.au/asm2021" iconRight={ faChevronRight} colorScheme={"primary lightHover"}/> }
           { !showVideoBlock && <Button actionText="Get Involved" link="#participate" iconRight={ faChevronRight} colorScheme={"primary lightHover"}/> }
+=======
+          <Button actionText="Donate" link="#//fundraise.beyondblue.org.au/asm2021" iconRight={ faChevronRight} colorScheme={"primary lightHover"}/>
+>>>>>>> 5f11e8f (First draft event day)
         </div>
       </div>
     </div>

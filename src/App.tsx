@@ -24,7 +24,10 @@ function App() {
           {
             title: "Get Involved",
             description: "Submissions have closed for ASM2021 but you can still get involved in our community. Find out what's happening and keep in touch with us on our discord.",
+<<<<<<< HEAD
             anchor: "participate",
+=======
+>>>>>>> 5f11e8f (First draft event day)
             cta: {
               actionText: "Join our discord",
               link: "https://discord.com/invite/2xFkJta",

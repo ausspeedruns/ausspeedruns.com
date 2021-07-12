@@ -3,7 +3,7 @@ import "./Heroblock.scss";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import Countdown, { zeroPad, CountdownRenderProps } from "react-countdown";
 import Button from "../Button/Button";
-import TwitchEmbed from "./TwitchEmbed";
+import TwitchVideoEmbed from "../TwitchVideoEmbed/TwitchVideoEmbed";
 
 const Heroblock = () => {
   const [showVideoBlock, setShowVideoBlock] = useState<boolean>(false)
@@ -15,7 +15,7 @@ const Heroblock = () => {
     milliseconds,
     completed,
   }: CountdownRenderProps) => {
-    if (completed || (days === 0 && hours === 0 && minutes <= 20)) {
+    if (completed || (days <= 1 && hours < 15 && minutes <= 54)) {
       setShowVideoBlock(true)
     }
 
@@ -61,7 +61,7 @@ const Heroblock = () => {
   return (
     <div className="heroblock">
       <div className="content">
-        { showVideoBlock && (<TwitchEmbed channel="ausspeedruns" parent={window.location.hostname}/>) }
+        { showVideoBlock && (<TwitchVideoEmbed channel="ausspeedruns" parent={window.location.hostname}/>) }
         <div className="ctaBlock">
           <h1>Australian Speedrun Marathon 2021</h1>
           <h2>July 14th - 18th</h2>

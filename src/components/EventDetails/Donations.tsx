@@ -16,7 +16,6 @@ interface Dictionary {
 
 const Donations = () => {
   const donationUrl = "https://api.raisely.com/v3/profiles/b37711e0-8eb2-11eb-bbdb-558a75b6889f/donations?offset=0&isSuspicious=false&limit=3&sort=createdAt&order=desc&campaign=c660c910-0ddc-11eb-982d-2522a70939d9"
-
   const [donations, setDonations] = useState<Donation[]>([])
 
   const getNextTick = () => {
@@ -42,40 +41,21 @@ const Donations = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       getNextTick();
-      console.log(donations);
+      // console.log(donations);
     }, 5000);
     return () => clearInterval(interval);
   });
 
+  const donationString = (donation: Donation) => 
+      `${donation.preferredName} - ${donation.currencySymbol}${donation.publicAmount} ${donation.currency} ${donation.message}`
+
   return (
-    <div className="donations">
-      { donations && donations.map(donation => (
-        <div className="donation">
-          {donation && (
-            <h4>{donation.preferredName} - {donation.currencySymbol}{donation.publicAmount} {donation.currency}</h4>)}
-          {donation.message && (<p>{donation.message}</p>)}
-        </div>
-      ))}
-      { donations && donations.map(donation => (
-        <div className="donation">
-          {donation && (
-            <h4>{donation.preferredName} - {donation.currencySymbol}{donation.publicAmount} {donation.currency}</h4>)}
-          {donation.message && (<p>{donation.message}</p>)}
-        </div>
-      ))}
-      { donations && donations.map(donation => (
-        <div className="donation">
-          {donation && (
-            <h4>{donation.preferredName} - {donation.currencySymbol}{donation.publicAmount} {donation.currency}</h4>)}
-          {donation.message && (<p>{donation.message}</p>)}
-        </div>
-      ))}
-      <p>
-        Sponsors and donations make our events possible. If you would like
-        to donation us for a future event, get in touch!
-      </p>
-    </div>
-  );
+  <div>
+    { donations.length > 0 && (
+      <div><strong>Latest donations:</strong> 
+        { donations.map(donation => donationString(donation)).join(', ')  }
+    </div>)} 
+  </div>);
 };
 
 export default Donations;

@@ -1,0 +1,22 @@
+@import "../../styles/styles.scss";
+
+.tickerWrapper {
+  & > .marquee > div {
+    padding: 0 12px;
+    margin-right: 6px;
+    &:not(:last-child) {
+      border-right: 1px solid $color-grey;
+    }
+  }
+
+  & strong {
+    margin-right: 5px;
+  }
+}
+
+.ticker {
+  background: $color-linen;
+  content {
+    padding: 24px !important;
+  }
+}

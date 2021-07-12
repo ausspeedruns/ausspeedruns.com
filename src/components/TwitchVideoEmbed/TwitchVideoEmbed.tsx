@@ -1,5 +1,5 @@
 import React from "react";
-import "./TwitchEmbed.scss";
+import "./TwitchVideoEmbed.scss";
 
 type TwitchProps = {
   channel: string;
@@ -7,7 +7,7 @@ type TwitchProps = {
   muted?: boolean;
 };
 
-const TwitchEmbed = ({ channel, parent, muted = true }: TwitchProps) => {
+const TwitchVideoEmbed = ({ channel, parent, muted = true }: TwitchProps) => {
   return (
     <div className="twitchEmbed">
       <iframe
@@ -19,4 +19,4 @@ const TwitchEmbed = ({ channel, parent, muted = true }: TwitchProps) => {
   );
 };
 
-export default TwitchEmbed;
+export default TwitchVideoEmbed;

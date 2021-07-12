@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from "react";
+import Marquee from "react-fast-marquee";
+import Donations from "../EventDetails/Donations";
 import "./Ticker.scss";
-
-type TickerProps = {
-  scheduleId: string
-};
 
 type AgendaItem = {
   runner : string,
@@ -12,16 +10,16 @@ type AgendaItem = {
 } | null;
 
 
-const Ticker = ({ scheduleId }: TickerProps) => {
+const Ticker = () => {
   const [prevGame, setPrevGame] = useState<AgendaItem>(null);
   const [currentGame, setCurrentGame] = useState<AgendaItem>(null);
   const [nextGame, setNextGame] = useState<AgendaItem>(null);
+  const runnerRegex = /\[(.+)\]\((.+)\)/i;
 
   const convertToAgendaItem = (gameData: Array<string | null> | null) => {
-    console.log(gameData);
     if (gameData && gameData.length >= 3)
       return {
-        runner: gameData[0],
+        runner: gameData[0] && runnerRegex.test(gameData[0]) ? gameData[0].replace(runnerRegex, '$1') : gameData[0],
         gameTitle: gameData[1],
         category: gameData[2]
       } as AgendaItem
@@ -42,15 +40,35 @@ const Ticker = ({ scheduleId }: TickerProps) => {
   useEffect(() => {
     const interval = setInterval(() => {
       getNextTick();
-      console.log(prevGame, currentGame, nextGame);
-    }, 60000);
+    }, 5000);
     return () => clearInterval(interval);
   });
 
   return (
     <div className="ticker">
       <div className="content">
-        { nextGame?.gameTitle }
+        <Marquee
+          pauseOnHover={true}
+          className="tickerWrapper"
+          gradientColor={[252, 245, 238]}
+        >
+          {prevGame && (
+            <div><strong>Last game: </strong>{ prevGame.runner} - { prevGame.gameTitle } { prevGame.category } </div>
+          )}
+          {currentGame && (
+            <div><strong>Currently playing: </strong>{ currentGame.runner} - { currentGame.gameTitle } { currentGame.category } </div>
+          )}
+          {nextGame && (
+            <div><strong>Last game: </strong>{ nextGame.runner} - { nextGame.gameTitle } { nextGame.category } </div>
+          )}
+          {nextGame && (
+            <div><strong>Currently playing: </strong>{ nextGame.runner} - { nextGame.gameTitle } { nextGame.category } </div>
+          )}
+          {nextGame && (
+            <div><strong>Up next: </strong>{ nextGame.runner} - { nextGame.gameTitle } { nextGame.category } </div>
+          )}
+          <Donations />
+        </Marquee>
       </div>
     </div>
   );

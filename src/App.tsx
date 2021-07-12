@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./App.scss";
 import Navbar from "./components/Navbar/Navbar";
 import Heroblock from "./components/Heroblock/Heroblock";
@@ -6,8 +6,40 @@ import EventDetails from "./components/EventDetails/EventDetails";
 import TileGroup from "./components/Tiles/TileGroup";
 import Footer from "./components/Footer/Footer";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
+import TwitchChatEmbed from "./components/TwitchChatEmbed/TwitchChatEmbed";
+import Ticker from "./components/Ticker/Ticker";
 
 function App() {
+  const [eventLive, setEventLive] = useState<boolean>(false);
+  const [countDownInterval, setCountDownInterval] = useState<NodeJS.Timeout | null>(null)
+
+  useEffect(() => {
+    const eventDate = Date.parse("14 July 2021 11:00:00 GMT+1000");
+
+    if (!countDownInterval) {
+      setCountDownInterval(setInterval(function() {
+        // Get today's date and time
+        var now = new Date().getTime();
+    
+        // Find the distance between now and the count down date
+        var distance = eventDate - now;
+    
+        // Time calculations for days, hours, minutes and seconds
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    
+        // If the count down is finished, write some text
+        if (!eventLive && minutes < 20) {
+          console.log("Going live...");
+          setEventLive(true);
+          if (countDownInterval)
+            clearInterval(countDownInterval);
+        }
+      }, 5000))
+    }
+  }, [eventLive, countDownInterval])
+
+
+
   return (
     <div className="App">
       <header className="App-header">
@@ -15,6 +47,8 @@ function App() {
       </header>
       <main>
         <Heroblock />
+        { eventLive && <Ticker /> }
+        { eventLive && <TwitchChatEmbed channel="ausspeedruns" parent={window.location.hostname}/> }
         <EventDetails />
         <TileGroup tiles={[
           {

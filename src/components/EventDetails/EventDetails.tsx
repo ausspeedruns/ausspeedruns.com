@@ -1,6 +1,5 @@
 import React from "react";
 import "./EventDetails.scss";
-import Donations from "./Donations";
 import beyondBlue from "../../styles/img/bblue-blue.png";
 // import oaksHotels from "../../styles/img/oaks-hotels.png";
 
@@ -17,8 +16,19 @@ const EventDetails = () => {
             </div>
           </div>
           <div className="sponsorsSection">
-            <h3>Recent donations</h3>
-            <Donations />
+            <h3>Partners and Sponsors</h3>
+            <div className="sponsors">
+              {/* <div className="sponsor">
+                <img src={oaksHotels} alt="Proudly supporting Beyond Blue" />
+              </div>
+              <div className="sponsor">
+                <img src={oaksHotels} alt="Proudly supporting Beyond Blue" />
+              </div> */}
+              <p>
+                Sponsors and donations make our events possible. If you would like
+                to sponsor us for a future event, get in touch!
+              </p>
+            </div>
           </div>
         </div>
       </div>

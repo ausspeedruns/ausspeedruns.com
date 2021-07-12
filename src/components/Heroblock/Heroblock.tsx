@@ -3,7 +3,7 @@ import "./Heroblock.scss";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import Countdown, { zeroPad, CountdownRenderProps } from "react-countdown";
 import Button from "../Button/Button";
-// import TwitchEmbed from "./TwitchEmbed";
+import TwitchEmbed from "./TwitchEmbed";
 
 const Heroblock = () => {
   const countdownRender = ({
@@ -56,7 +56,7 @@ const Heroblock = () => {
   return (
     <div className="heroblock">
       <div className="content">
-        {/* <TwitchEmbed channel="ausspeedruns" parent={window.location.hostname}/> */}
+        <TwitchEmbed channel="ausspeedruns" parent={window.location.hostname}/>
         <div className="ctaBlock">
           <h1>Australian Speedrun Marathon 2021</h1>
           <h2>July 13th - 18th</h2>
@@ -71,8 +71,7 @@ const Heroblock = () => {
             Australian Speedrunners come together to raise money for Beyond Blue
             at ASM2021!
           </p>
-          {/* <a className="button primary" href="//fundraise.beyondblue.org.au/asm2021">Donate <FontAwesomeIcon icon={ faChevronRight } /></a> */}
-          <Button actionText="Get Involved" link="#participate" iconRight={ faChevronRight} colorScheme={"primary lightHover"}/>
+          <Button actionText="Donate" link="#//fundraise.beyondblue.org.au/asm2021" iconRight={ faChevronRight} colorScheme={"primary lightHover"}/>
         </div>
       </div>
     </div>

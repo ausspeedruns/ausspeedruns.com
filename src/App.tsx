@@ -17,21 +17,21 @@ function App() {
         <Heroblock />
         <EventDetails />
         <TileGroup tiles={[
-          { 
-            title: "About AusSpeedruns", 
+          {
+            title: "About AusSpeedruns",
             description: "Also known as Australian Speedrunners, AusSpeedruns is a not-for-profit organisation that brings together the best speedrunners in Australia to raise money and awareness for charity at events across Australia."
           },
-          { 
-            title: "Get Involved", 
-            description: "Submissions have closed for ASM2021 but you can still get involved in our community. Find out what's happening and keep in touch with us on our discord.", 
-            cta: { 
-              actionText: "Join our discord", 
-              link: "https://discord.com/invite/2xFkJta", 
-              iconLeft: faDiscord 
+          {
+            title: "Get Involved",
+            description: "Submissions have closed for ASM2021 but you can still get involved in our community. Find out what's happening and keep in touch with us on our discord.",
+            cta: {
+              actionText: "Join our discord",
+              link: "https://discord.com/invite/2xFkJta",
+              iconLeft: faDiscord
             }
           },
-          { 
-            title: "Next event", 
+          {
+            title: "Next event",
             description: "Our next event will be at PAX Australia 2021. Submissions for this event will be opening in August. Follow us on Twitter or join our discord for updates."
           },
         ]} />

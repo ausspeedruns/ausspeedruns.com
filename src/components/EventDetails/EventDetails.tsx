@@ -1,10 +1,6 @@
 import React from "react";
 import "./EventDetails.scss";
-<<<<<<< HEAD
-import Donations from "./Donations"
-=======
-import Sponsors from "./Sponsors"
->>>>>>> 5f11e8f (First draft event day)
+import Donations from "./Donations";
 import beyondBlue from "../../styles/img/bblue-blue.png";
 // import oaksHotels from "../../styles/img/oaks-hotels.png";
 
@@ -22,11 +18,7 @@ const EventDetails = () => {
           </div>
           <div className="sponsorsSection">
             <h3>Recent donations</h3>
-<<<<<<< HEAD
             <Donations />
-=======
-            <Sponsors />
->>>>>>> 5f11e8f (First draft event day)
           </div>
         </div>
       </div>

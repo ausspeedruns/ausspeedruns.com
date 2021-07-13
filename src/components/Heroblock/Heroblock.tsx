@@ -16,7 +16,7 @@ const Heroblock = () => {
     milliseconds,
     completed,
   }: CountdownRenderProps) => {
-    if (completed || (days <= 1 && hours < 15 && minutes <= 54)) {
+    if (completed || (days <= 1 && hours < 1  && minutes <= 20)) {
       setShowVideoBlock(true)
     }
 
@@ -75,7 +75,7 @@ const Heroblock = () => {
           </h3>
           <p>
             Australian Speedrunners come together to raise money for Beyond Blue
-            at ASM2021!
+            at ASM2021! 
           </p>
           { showVideoBlock && <Button actionText="Donate" link={globals.donateLink} iconRight={ faChevronRight} colorScheme={"primary lightHover"}/> }
           { !showVideoBlock && <Button actionText="Get Involved" link="#participate" iconRight={ faChevronRight} colorScheme={"primary lightHover"}/> }

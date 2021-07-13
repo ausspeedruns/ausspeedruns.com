@@ -2,7 +2,7 @@ import React from "react";
 import "./EventDetails.scss";
 import beyondBlue from "../../styles/img/bblue-blue.png";
 // import oaksHotels from "../../styles/img/oaks-hotels.png";
-// import landfall from "../../styles/img/Landfall_Logo_1.png";
+import landfall from "../../styles/img/Landfall_Logo_1.png";
 import { globals } from "../../globals"
 
 const EventDetails = () => {
@@ -18,14 +18,14 @@ const EventDetails = () => {
               <a href={globals.donateLink}><img src={beyondBlue} alt="Proudly supporting Beyond Blue" /><span className="sr-only">Proudly supporting Beyond Blue</span></a>
             </div>
           </div>
-          {/* <div className="sponsorsSection">
+          <div className="sponsorsSection">
             <div className="sponsors">
             <h3>ASM2021 Sponsor</h3>
               <div className="sponsor">
                 <a href="https://landfall.se/"><img src={landfall} alt="Sponsored by Landfall Games" /><span className="sr-only">Sponsored by Landfall Games</span></a>
               </div>
             </div>
-          </div> */}
+          </div>
         </div>
         <p>
                 Sponsors and donations make our events possible. If you would like

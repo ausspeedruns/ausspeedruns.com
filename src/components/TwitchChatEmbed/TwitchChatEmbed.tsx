@@ -1,3 +1,5 @@
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import "./TwitchChatEmbed.scss";
 
@@ -8,11 +10,11 @@ type TwitchProps = {
 };
 
 const TwitchChatEmbed = ({ channel, parent, muted = true }: TwitchProps) => {
-  const [showChat, setShowChat] = useState<boolean>(true)
+  const [showChat, setShowChat] = useState<boolean>(false)
   return (
-    <div className="eventDetails">
+    <div className="twitchChat">
       <div className="content">
-          <button onClick={() => setShowChat(!showChat)} className="toggleChat">{ showChat ? 'Hide' : 'Show'} chat</button>
+          <button onClick={() => setShowChat(!showChat)} className="toggleChat"><span>{ showChat ? 'Hide' : 'Show'} chat </span><FontAwesomeIcon icon={showChat ? faChevronUp : faChevronDown} /></button>
           {showChat && <div className="twitchChatEmbed">
             <iframe 
               title="Ausspeedruns twitch chat embed"

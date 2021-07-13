@@ -6,9 +6,15 @@ import {
   faTwitter,
   faDiscord,
   faYoutube,
+  // faFacebook,
 } from "@fortawesome/free-brands-svg-icons";
-import { faBars, faCalendarAlt, faTimes, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faCalendarAlt, faTimes, faUsers, faChevronRight, faCoins } from "@fortawesome/free-solid-svg-icons";
 import { globals } from "../../globals";
+import Button from "../Button/Button";
+
+type NavbarProps = {
+  isLive: boolean
+}
 
 // Define general type for useWindowSize hook, which includes width and height
 interface Size {
@@ -16,7 +22,7 @@ interface Size {
   height: number | undefined;
 }
 
-const Navbar = () => {
+const Navbar = ({ isLive } : NavbarProps) => {
   const [isOpen, setIsOpen] = useState<Boolean>(false);
   const [isMobile, setIsMobile] = useState<Boolean>(true);
   const windowSize: Size = useWindowSize();
@@ -54,7 +60,8 @@ const Navbar = () => {
                 <span className="text">Schedule</span>
               </a>
             </li>
-            {/* <li><a href="//incentives.ausspeedruns.com">Incentives</a></li> */}
+            { isLive && <li><a href={globals.incentivesLink}>{ isMobile ? (<FontAwesomeIcon icon={faCoins} />) : '' }
+                <span className="text">Incentives</span></a></li> }
             <li>
               <a href="#participate">
                 { isMobile ? (<FontAwesomeIcon icon={faUsers} />) : '' }
@@ -67,6 +74,12 @@ const Navbar = () => {
                 <span className={`text ${isMobile ? '' : 'sr-only'}`}>Follow us on Twitch</span>
               </a>
             </li>
+            {/* <li className="social">
+              <a href={globals.socialLinks.facebook}>
+                <FontAwesomeIcon icon={faFacebook} />
+                <span className={`text ${isMobile ? '' : 'sr-only'}`}>Like us on Facebook</span>
+              </a>
+            </li> */}
             <li className="social">
               <a href={globals.socialLinks.twitter}>
                 <FontAwesomeIcon icon={faTwitter} />
@@ -85,7 +98,7 @@ const Navbar = () => {
                 <span className={`text ${isMobile ? '' : 'sr-only'}`}>Join us on Discord</span>
               </a>
             </li>
-            {/* <li><a className="button secondary" href="//fundraise.beyondblue.org.au/asm2021">Donate</a></li> */}
+            { isLive && <li className="cta"><Button actionText="Donate" link={globals.donateLink} iconRight={ faChevronRight } colorScheme={"secondary inverted"}/></li> }
           </ul>
         </nav>
       </div>

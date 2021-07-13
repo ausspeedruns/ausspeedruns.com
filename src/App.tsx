@@ -20,16 +20,18 @@ function App() {
     if (!countDownInterval) {
       setCountDownInterval(setInterval(function() {
         // Get today's date and time
-        var now = new Date().getTime();
+        const now = new Date().getTime();
 
         // Find the distance between now and the count down date
-        var distance = eventDate - now;
+        const distance = eventDate - now;
 
         // Time calculations for days, hours, minutes and seconds
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const hours = Math.floor( (distance/(1000*60*60)) % 24 );
+        const days = Math.floor( distance/(1000*60*60*24) );
 
         // If the count down is finished, write some text
-        if (!eventLive && minutes < 20) {
+        if (!eventLive && days < 1 && hours < 1 && minutes < 20) {
           console.log("Going live...");
           setEventLive(true);
           if (countDownInterval)
@@ -44,7 +46,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Navbar />
+        <Navbar isLive={eventLive} />
       </header>
       <main>
         <Heroblock />

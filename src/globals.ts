@@ -15,10 +15,12 @@ export const globals = {
   },
   donateLink: 'http://donate.ausspeedruns.com/',
   scheduleLink: 'http://schedule.ausspeedruns.com/',
+  incentivesLink: 'http://incentives.ausspeedruns.com/',
   socialLinks: {
     discord: 'http://discord.ausspeedruns.com/',
     twitter: '//twitter.com/ausspeedruns',
     youtube: '//youtube.com/ausspeedruns',
-    twitch: '//twitch.tv/ausspeedruns'
+    twitch: '//twitch.tv/ausspeedruns',
+    facebook: '//www.facebook.com/ausspeedruns'
   }
 }

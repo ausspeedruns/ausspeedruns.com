@@ -16,45 +16,44 @@
     }
 
     .charitiesAndSponsors {
-      display: flex;
-      flex-flow: row wrap;
-      justify-content: space-evenly;
-      align-items: center;
+      display: grid;
+      text-align: center;
+      // grid-template-rows: 1fr 1fr;
+      // grid-template-columns: 1fr;
 
-      .sponsorsSection {
-        text-align: center;
-      }
-
-      @include breakpoint($md) {
-        flex-wrap: nowrap;
-      }
+      // @include breakpoint($md) {
+      //   grid-template-rows: 1fr;
+      //   grid-template-columns: 1fr 1fr;
+      // }
     }
 
     .charities,
     .sponsors {
       display: flex;
-      flex-flow: row wrap;
+      flex-flow: column wrap;
       justify-content: space-evenly;
       align-items: center;
       margin: 24px 0;
     }
 
     .charities img {
-      width: 350px;
+      width: 400px;
     }
 
     .sponsor {
-      background: $color-white;
-      border-radius: 4px;
-      padding: 24px 24px 32px;
-      box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
+      // background: $color-white;
+      // border-radius: 4px;
+      // padding: 24px 24px 32px;
+      // box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
+      padding: 8px;
       img {
-        width: 250px;
+        max-width: 200px;
+        max-height: 200px;
       }
     }
 
     @include breakpoint($lg) {
-      .charities {
+      .charities:not(:only-child) {
         border-right: 1px solid $color-grey;
       }
     }

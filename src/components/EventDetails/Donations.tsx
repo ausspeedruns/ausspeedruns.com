@@ -47,14 +47,14 @@ const Donations = () => {
   });
 
   const donationString = (donation: Donation) => 
-      `${donation.preferredName} - ${donation.currencySymbol}${donation.publicAmount} ${donation.currency} ${donation.message}`
+      `${donation.preferredName} donated ${donation.currencySymbol}${donation.publicAmount} ${donation.currency}${donation.message  ? ` - ${donation.message}` : ""}`
 
   return (
   <div>
     { donations.length > 0 && (
-      <div><strong>Latest donations:</strong> 
+      <p><strong>Latest donations:</strong> 
         { donations.map(donation => donationString(donation)).join(', ')  }
-    </div>)} 
+    </p>)} 
   </div>);
 };
 

@@ -53,19 +53,13 @@ const Ticker = () => {
           gradientColor={[252, 245, 238]}
         >
           {prevGame && (
-            <div><strong>Last game: </strong>{ prevGame.runner} - { prevGame.gameTitle } { prevGame.category } </div>
+            <p><strong>Previous game: </strong>{ prevGame.runner} - { prevGame.gameTitle } { prevGame.category } </p>
           )}
           {currentGame && (
-            <div><strong>Currently playing: </strong>{ currentGame.runner} - { currentGame.gameTitle } { currentGame.category } </div>
+            <p><strong>Currently playing: </strong>{ currentGame.runner} - { currentGame.gameTitle } { currentGame.category } </p>
           )}
           {nextGame && (
-            <div><strong>Last game: </strong>{ nextGame.runner} - { nextGame.gameTitle } { nextGame.category } </div>
-          )}
-          {nextGame && (
-            <div><strong>Currently playing: </strong>{ nextGame.runner} - { nextGame.gameTitle } { nextGame.category } </div>
-          )}
-          {nextGame && (
-            <div><strong>Up next: </strong>{ nextGame.runner} - { nextGame.gameTitle } { nextGame.category } </div>
+            <p><strong>Up next: </strong>{ nextGame.runner} - { nextGame.gameTitle } { nextGame.category } </p>
           )}
           <Donations />
         </Marquee>

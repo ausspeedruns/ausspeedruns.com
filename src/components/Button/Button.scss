@@ -50,6 +50,17 @@ a.button {
       background-color: transparent;
       color: $secondary;
     }
+
+    &.inverted {
+      background-color: transparent;
+      color: $color-white;
+      border-color: $color-white;
+
+      &:hover, &:focus {
+        border-color: $primary;
+        background-color: $primary;
+      }
+    }
   }
 
   svg + span {

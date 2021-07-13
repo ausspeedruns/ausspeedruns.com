@@ -1,9 +1,10 @@
 @import "../../styles/styles.scss";
 
 .tickerWrapper {
-  & > .marquee > div {
+  & > .marquee > p {
     padding: 0 12px;
     margin-right: 6px;
+    margin-bottom: 0;
     &:not(:last-child) {
       border-right: 1px solid $color-grey;
     }

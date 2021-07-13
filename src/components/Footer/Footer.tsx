@@ -3,6 +3,7 @@ import {
   faTwitter,
   faYoutube,
   faDiscord,
+  // faFacebook,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
@@ -32,6 +33,12 @@ const Footer = () => {
                 <span className="text">Follow us on Twitch</span>
               </a>
             </li>
+            {/* <li className="social">
+              <a href={globals.socialLinks.facebook}>
+                <FontAwesomeIcon icon={faFacebook} />
+                <span className="text">Like us on Facebook</span>
+              </a>
+            </li> */}
             <li className="social">
               <a href={globals.socialLinks.twitter}>
                 <FontAwesomeIcon icon={faTwitter} />

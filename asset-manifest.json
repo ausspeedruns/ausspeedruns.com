@@ -1,26 +1,26 @@
 {
   "files": {
-    "main.css": "/static/css/main.af920b06.chunk.css",
-    "main.js": "/static/js/main.f9a9fbf3.chunk.js",
-    "main.js.map": "/static/js/main.f9a9fbf3.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.344ce69f.js",
-    "runtime-main.js.map": "/static/js/runtime-main.344ce69f.js.map",
-    "static/js/2.1d2f2d58.chunk.js": "/static/js/2.1d2f2d58.chunk.js",
-    "static/js/2.1d2f2d58.chunk.js.map": "/static/js/2.1d2f2d58.chunk.js.map",
-    "static/js/3.03c57391.chunk.js": "/static/js/3.03c57391.chunk.js",
-    "static/js/3.03c57391.chunk.js.map": "/static/js/3.03c57391.chunk.js.map",
+    "main.css": "/static/css/main.c213122b.chunk.css",
+    "main.js": "/static/js/main.74cf1a13.chunk.js",
+    "main.js.map": "/static/js/main.74cf1a13.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.8c9b7c88.js",
+    "runtime-main.js.map": "/static/js/runtime-main.8c9b7c88.js.map",
+    "static/js/2.47c2645d.chunk.js": "/static/js/2.47c2645d.chunk.js",
+    "static/js/2.47c2645d.chunk.js.map": "/static/js/2.47c2645d.chunk.js.map",
+    "static/js/3.7c632527.chunk.js": "/static/js/3.7c632527.chunk.js",
+    "static/js/3.7c632527.chunk.js.map": "/static/js/3.7c632527.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.af920b06.chunk.css.map": "/static/css/main.af920b06.chunk.css.map",
-    "static/js/2.1d2f2d58.chunk.js.LICENSE.txt": "/static/js/2.1d2f2d58.chunk.js.LICENSE.txt",
+    "static/css/main.c213122b.chunk.css.map": "/static/css/main.c213122b.chunk.css.map",
+    "static/js/2.47c2645d.chunk.js.LICENSE.txt": "/static/js/2.47c2645d.chunk.js.LICENSE.txt",
     "static/media/Navbar.scss": "/static/media/Ausspeedruns-logo-white.67ec64fc.png",
     "static/media/bblue-blue.123d3c18.png": "/static/media/bblue-blue.123d3c18.png",
-    "static/media/Footer.scss": "/static/media/roboto-mono-vietnamese-400-normal.baa5de8f.woff2",
+    "static/media/Ticker.scss": "/static/media/roboto-mono-vietnamese-400-normal.baa5de8f.woff2",
     "static/media/Heroblock.scss": "/static/media/hero-image.8766b696.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.344ce69f.js",
-    "static/js/2.1d2f2d58.chunk.js",
-    "static/css/main.af920b06.chunk.css",
-    "static/js/main.f9a9fbf3.chunk.js"
+    "static/js/runtime-main.8c9b7c88.js",
+    "static/js/2.47c2645d.chunk.js",
+    "static/css/main.c213122b.chunk.css",
+    "static/js/main.74cf1a13.chunk.js"
   ]
 }

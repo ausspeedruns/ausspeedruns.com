@@ -4,6 +4,7 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import Countdown, { zeroPad, CountdownRenderProps } from "react-countdown";
 import Button from "../Button/Button";
 import TwitchVideoEmbed from "../TwitchVideoEmbed/TwitchVideoEmbed";
+import { globals } from "../../globals";
 
 const Heroblock = () => {
   const [showVideoBlock, setShowVideoBlock] = useState<boolean>(false)
@@ -67,7 +68,7 @@ const Heroblock = () => {
           <h2>July 14th - 18th</h2>
           <h3 className="countdown monospaced">
             <Countdown
-              date={Date.parse("14 July 2021 11:00:00 GMT+1000")}
+              date={Date.parse(globals.events.current.date)}
               renderer={countdownRender}
               zeroPadTime={2}
             />
@@ -76,7 +77,7 @@ const Heroblock = () => {
             Australian Speedrunners come together to raise money for Beyond Blue
             at ASM2021!
           </p>
-          { showVideoBlock && <Button actionText="Donate" link="//fundraise.beyondblue.org.au/asm2021" iconRight={ faChevronRight} colorScheme={"primary lightHover"}/> }
+          { showVideoBlock && <Button actionText="Donate" link={globals.donateLink} iconRight={ faChevronRight} colorScheme={"primary lightHover"}/> }
           { !showVideoBlock && <Button actionText="Get Involved" link="#participate" iconRight={ faChevronRight} colorScheme={"primary lightHover"}/> }
         </div>
       </div>

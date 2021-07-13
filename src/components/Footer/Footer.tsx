@@ -7,6 +7,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import "./Footer.scss";
+import { globals } from "../../globals";
 
 const Footer = () => {
   return (
@@ -26,19 +27,19 @@ const Footer = () => {
         <div className="content">
           <ul>
             <li className="social">
-              <a href="//www.twitch.tv/ausspeedruns">
+              <a href={globals.socialLinks.twitch}>
                 <FontAwesomeIcon icon={faTwitch} />
                 <span className="text">Follow us on Twitch</span>
               </a>
             </li>
             <li className="social">
-              <a href="//twitter.com/ausspeedruns">
+              <a href={globals.socialLinks.twitter}>
                 <FontAwesomeIcon icon={faTwitter} />
                 <span className="text">Follow us on Twitter</span>
               </a>
             </li>
             <li className="social">
-              <a href="http://youtube.com/ausspeedruns">
+              <a href={globals.socialLinks.youtube}>
                 <FontAwesomeIcon icon={faYoutube} />
                 <span className="text">
                   Subscribe to AusSpeedruns on Youtube
@@ -46,7 +47,7 @@ const Footer = () => {
               </a>
             </li>
             <li className="social">
-              <a href="http://discord.ausspeedruns.com/">
+              <a href={globals.socialLinks.discord}>
                 <FontAwesomeIcon icon={faDiscord} />
                 <span className="text">Join us on Discord</span>
               </a>

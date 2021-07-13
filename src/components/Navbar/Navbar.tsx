@@ -7,7 +7,8 @@ import {
   faDiscord,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
-import { faBars, faCalendarAlt, faTimes, faUsers } from "@fortawesome/free-solid-svg-icons"
+import { faBars, faCalendarAlt, faTimes, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { globals } from "../../globals";
 
 // Define general type for useWindowSize hook, which includes width and height
 interface Size {
@@ -48,7 +49,7 @@ const Navbar = () => {
         <nav className={`main-menu ${isOpen ? 'menu-open' : 'menu-closed'}`} aria-label="Main menu">
           <ul>
             <li>
-              <a href="http://schedule.ausspeedruns.com">
+              <a href={globals.scheduleLink}>
                 { isMobile ? (<FontAwesomeIcon icon={faCalendarAlt} />) : '' }
                 <span className="text">Schedule</span>
               </a>
@@ -61,25 +62,25 @@ const Navbar = () => {
               </a>
             </li>
             <li className="social">
-              <a href="//www.twitch.tv/ausspeedruns">
+              <a href={globals.socialLinks.twitch}>
                 <FontAwesomeIcon icon={faTwitch} />
                 <span className={`text ${isMobile ? '' : 'sr-only'}`}>Follow us on Twitch</span>
               </a>
             </li>
             <li className="social">
-              <a href="//twitter.com/ausspeedruns">
+              <a href={globals.socialLinks.twitter}>
                 <FontAwesomeIcon icon={faTwitter} />
                 <span className={`text ${isMobile ? '' : 'sr-only'}`}>Follow us on Twitter</span>
               </a>
             </li>
             <li className="social">
-              <a href="//youtube.com/ausspeedruns">
+              <a href={globals.socialLinks.youtube}>
                 <FontAwesomeIcon icon={faYoutube} />
                 <span className={`text ${isMobile ? '' : 'sr-only'}`}>Subscribe to AusSpeedruns on Youtube</span>
               </a>
             </li>
             <li className="social">
-              <a href="http://discord.ausspeedruns.com/">
+              <a href={globals.socialLinks.discord}>
                 <FontAwesomeIcon icon={faDiscord} />
                 <span className={`text ${isMobile ? '' : 'sr-only'}`}>Join us on Discord</span>
               </a>

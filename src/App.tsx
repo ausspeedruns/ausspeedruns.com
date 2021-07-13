@@ -8,25 +8,26 @@ import Footer from "./components/Footer/Footer";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import TwitchChatEmbed from "./components/TwitchChatEmbed/TwitchChatEmbed";
 import Ticker from "./components/Ticker/Ticker";
+import { globals } from "./globals";
 
 function App() {
   const [eventLive, setEventLive] = useState<boolean>(false);
   const [countDownInterval, setCountDownInterval] = useState<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
-    const eventDate = Date.parse("14 July 2021 11:00:00 GMT+1000");
+    const eventDate = Date.parse(globals.events.current.date);
 
     if (!countDownInterval) {
       setCountDownInterval(setInterval(function() {
         // Get today's date and time
         var now = new Date().getTime();
-    
+
         // Find the distance between now and the count down date
         var distance = eventDate - now;
-    
+
         // Time calculations for days, hours, minutes and seconds
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    
+
         // If the count down is finished, write some text
         if (!eventLive && minutes < 20) {
           console.log("Going live...");
@@ -61,7 +62,7 @@ function App() {
             anchor: "participate",
             cta: {
               actionText: "Join our discord",
-              link: "https://discord.com/invite/2xFkJta",
+              link: globals.socialLinks.discord,
               iconLeft: faDiscord
             }
           },

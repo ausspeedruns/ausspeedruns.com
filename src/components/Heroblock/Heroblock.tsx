@@ -16,7 +16,7 @@ const Heroblock = () => {
     milliseconds,
     completed,
   }: CountdownRenderProps) => {
-    if (completed || (days <= 1 && hours < 1  && minutes <= 20)) {
+    if (completed || (days <= 1 && hours < 1  && minutes < 20)) {
       setShowVideoBlock(true)
     }
 
@@ -49,11 +49,11 @@ const Heroblock = () => {
       return (
         <span>
           <span className="sr-only">
-            {minutes} minutes, {seconds} seconds and {milliseconds} milliseconds
+            {minutes} minutes and {seconds} seconds
             remaining
           </span>
           <span aria-hidden>
-            {zeroPad(minutes)}:{zeroPad(seconds)}:{zeroPad(milliseconds)}
+            {zeroPad(minutes)}:{zeroPad(seconds)}
           </span>
         </span>
       );

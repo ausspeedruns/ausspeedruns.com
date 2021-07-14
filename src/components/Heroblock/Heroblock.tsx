@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import "./Heroblock.scss";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import Countdown, { zeroPad, CountdownRenderProps } from "react-countdown";
@@ -7,7 +7,7 @@ import TwitchVideoEmbed from "../TwitchVideoEmbed/TwitchVideoEmbed";
 import { globals } from "../../globals";
 
 const Heroblock = () => {
-  const [showVideoBlock, setShowVideoBlock] = useState<boolean>(false)
+  const showVideoBlock = true;
   const countdownRender = ({
     days,
     hours,
@@ -16,9 +16,9 @@ const Heroblock = () => {
     milliseconds,
     completed,
   }: CountdownRenderProps) => {
-    if (completed || (days <= 1 && hours < 1  && minutes < 20)) {
-      setShowVideoBlock(true)
-    }
+    // if (completed || (days <= 1 && hours < 1  && minutes < 20)) {
+    //   setShowVideoBlock(true)
+    // }
 
     if (completed) return <span></span>;
     else if (days > 0)

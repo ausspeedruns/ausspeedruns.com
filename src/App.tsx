@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./App.scss";
 import Navbar from "./components/Navbar/Navbar";
 import Heroblock from "./components/Heroblock/Heroblock";
@@ -11,35 +11,35 @@ import Ticker from "./components/Ticker/Ticker";
 import { globals } from "./globals";
 
 function App() {
-  const [eventLive, setEventLive] = useState<boolean>(false);
-  const [countDownInterval, setCountDownInterval] = useState<NodeJS.Timeout | null>(null)
+  const eventLive = true;
+  // const [countDownInterval, setCountDownInterval] = useState<NodeJS.Timeout | null>(null)
 
-  useEffect(() => {
-    const eventDate = Date.parse(globals.events.current.date);
+  // useEffect(() => {
+  //   const eventDate = Date.parse(globals.events.current.date);
 
-    if (!countDownInterval) {
-      setCountDownInterval(setInterval(function() {
-        // Get today's date and time
-        const now = new Date().getTime();
+  //   if (!countDownInterval) {
+  //     setCountDownInterval(setInterval(function() {
+  //       // Get today's date and time
+  //       const now = new Date().getTime();
 
-        // Find the distance between now and the count down date
-        const distance = eventDate - now;
+  //       // Find the distance between now and the count down date
+  //       const distance = eventDate - now;
 
-        // Time calculations for days, hours, minutes and seconds
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const hours = Math.floor( (distance/(1000*60*60)) % 24 );
-        const days = Math.floor( distance/(1000*60*60*24) );
+  //       // Time calculations for days, hours, minutes and seconds
+  //       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  //       const hours = Math.floor( (distance/(1000*60*60)) % 24 );
+  //       const days = Math.floor( distance/(1000*60*60*24) );
 
-        // If the count down is finished, write some text
-        if (!eventLive && days < 1 && hours < 1 && minutes < 20) {
-          console.log("Going live...");
-          setEventLive(true);
-          if (countDownInterval)
-            clearInterval(countDownInterval);
-        }
-      }, 5000))
-    }
-  }, [eventLive, countDownInterval])
+  //       // If the count down is finished, write some text
+  //       if (!eventLive && days < 1 && hours < 1 && minutes < 20) {
+  //         console.log("Going live...");
+  //         setEventLive(true);
+  //         if (countDownInterval)
+  //           clearInterval(countDownInterval);
+  //       }
+  //     }, 5000))
+  //   }
+  // }, [eventLive, countDownInterval])
 
 
 

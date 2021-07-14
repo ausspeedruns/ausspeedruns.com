@@ -14,12 +14,12 @@ const Ticker = () => {
   const [prevGame, setPrevGame] = useState<AgendaItem>(null);
   const [currentGame, setCurrentGame] = useState<AgendaItem>(null);
   const [nextGame, setNextGame] = useState<AgendaItem>(null);
-  const runnerRegex = /\[(.+)\]\((.+)\)/i;
+  const runnerRegex = /(\[)([^\[]+)(\])(\()([^\)]+)(\))/gi;
 
   const convertToAgendaItem = (gameData: Array<string | null> | null) => {
     if (gameData && gameData.length >= 3)
       return {
-        runner: gameData[0] && runnerRegex.test(gameData[0]) ? gameData[0].replace(runnerRegex, '$1') : gameData[0],
+        runner: gameData[0] && runnerRegex.test(gameData[0]) ? gameData[0].replace(runnerRegex, '$2') : gameData[0],
         gameTitle: gameData[1],
         category: gameData[2]
       } as AgendaItem

@@ -10,7 +10,7 @@ const EventDetails = () => {
     <div className="eventDetails">
       <div className="content">
         <h2>About AusSpeedrun Marathon 2021</h2>
-        <p>Due to COVID-19 restrictions, ASM2021 will be hosted entirely online. For more details about in-person event ticket and tshirt sales, please <a href={globals.socialLinks.discord}>join our discord</a>.</p>
+        {/* <p></p> */}
         <div className="charitiesAndSponsors">
           <div className="charities">
             <h3>ASM2021 Charity</h3>
@@ -28,9 +28,9 @@ const EventDetails = () => {
           </div>
         </div>
         <p>
-                Sponsors and donations make our events possible. If you would like
-                to sponsor us for a future event, get in touch!
-              </p>
+          At ASM2021 we were able to raise over ${globals.ASM_2021_total} but we couldn't have done so without our incredible sponsors, volunteers, donations and support from our community. This total only includes donations made directly to Beyond Blue, and the complete total including money from Twitch subs will be updated in coming days. If you would like
+          to sponsor us for a future event, get in touch!
+        </p>
       </div>
     </div>
   );

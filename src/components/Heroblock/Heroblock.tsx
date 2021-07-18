@@ -7,7 +7,7 @@ import TwitchVideoEmbed from "../TwitchVideoEmbed/TwitchVideoEmbed";
 import { globals } from "../../globals";
 
 const Heroblock = () => {
-  const showVideoBlock = true;
+  const showVideoBlock = false;
   const countdownRender = ({
     days,
     hours,
@@ -64,21 +64,23 @@ const Heroblock = () => {
       <div className="content">
         { showVideoBlock && (<TwitchVideoEmbed channel="ausspeedruns" parent={window.location.hostname}/>) }
         <div className="ctaBlock">
-          <h1>Australian Speedrun Marathon 2021</h1>
-          <h2>July 14th - 18th</h2>
-          <h3 className="countdown monospaced">
+          <h1>AusSpeedruns Marathon 2021</h1>
+          <br/>
+          <h2>Thank you for helping us raise over ${globals.ASM_2021_total} for Beyond Blue</h2>
+          {/* <h2>ASM2021 raised a total of ${ASM_2021_TOTAL_RAISED}</h2> */}
+          {/* <h3 className="countdown monospaced">
             <Countdown
               date={Date.parse(globals.events.current.date)}
               renderer={countdownRender}
               zeroPadTime={2}
             />
-          </h3>
+          </h3> */}
           <p>
-            Australian Speedrunners come together to raise money for Beyond Blue
-            at ASM2021! 
+            Thank you to all runners, volunteers, donators and viewers of ASM2021. The event has now finished and the above total is from only our donations directly to Beyond Blue; the total including money from subs will be added in coming days. Details about our next event at PAX 2021 will be shared in August, so please check back soon.
           </p>
+          <p>Not finished watching amazing speedruns? Missed a game you wanted to watch? You can find videos of individual runs from ASM2021 and our previous events on our Youtube channel.</p>
           { showVideoBlock && <Button actionText="Donate" link={globals.donateLink} iconRight={ faChevronRight} colorScheme={"primary lightHover"}/> }
-          { !showVideoBlock && <Button actionText="Get Involved" link="#participate" iconRight={ faChevronRight} colorScheme={"primary lightHover"}/> }
+          { !showVideoBlock && <Button actionText="Watch again" link={globals.socialLinks.youtube} iconRight={ faChevronRight} colorScheme={"primary lightHover"}/> }
         </div>
       </div>
     </div>

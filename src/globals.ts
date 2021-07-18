@@ -22,5 +22,6 @@ export const globals = {
     youtube: '//youtube.com/ausspeedruns',
     twitch: '//twitch.tv/ausspeedruns',
     facebook: '//www.facebook.com/ausspeedruns'
-  }
+  },
+  ASM_2021_total: "14,645.58"
 }

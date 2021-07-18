@@ -11,7 +11,7 @@ import Ticker from "./components/Ticker/Ticker";
 import { globals } from "./globals";
 
 function App() {
-  const eventLive = true;
+  const eventLive = false;
   // const [countDownInterval, setCountDownInterval] = useState<NodeJS.Timeout | null>(null)
 
   // useEffect(() => {
@@ -41,8 +41,6 @@ function App() {
   //   }
   // }, [eventLive, countDownInterval])
 
-
-
   return (
     <div className="App">
       <header className="App-header">
@@ -60,7 +58,7 @@ function App() {
           },
           {
             title: "Get Involved",
-            description: "Submissions have closed for ASM2021 but you can still get involved in our community. Find out what's happening and keep in touch with us on our discord.",
+            description: "ASM2021 may have finished but you can still get involved in our community. Find out what's happening and keep in touch with us on our discord.",
             anchor: "participate",
             cta: {
               actionText: "Join our discord",

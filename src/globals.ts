@@ -23,5 +23,5 @@ export const globals = {
     twitch: '//twitch.tv/ausspeedruns',
     facebook: '//www.facebook.com/ausspeedruns'
   },
-  ASM_2021_total: "14,645.58"
+  ASM_2021_total: "15,000.58"
 }

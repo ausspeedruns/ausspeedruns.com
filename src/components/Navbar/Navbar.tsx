@@ -54,16 +54,16 @@ const Navbar = ({ isLive } : NavbarProps) => {
 
         <nav className={`main-menu ${isOpen ? 'menu-open' : 'menu-closed'}`} aria-label="Main menu">
           <ul>
-            <li>
+            {/* <li>
               <a href={globals.scheduleLink}>
                 { isMobile ? (<FontAwesomeIcon icon={faCalendarAlt} />) : '' }
                 <span className="text">Schedule</span>
               </a>
-            </li>
+            </li> */}
             { isLive && <li><a href={globals.incentivesLink}>{ isMobile ? (<FontAwesomeIcon icon={faCoins} />) : '' }
                 <span className="text">Incentives</span></a></li> }
             <li>
-              <a href="#participate">
+              <a href="/#participate">
                 { isMobile ? (<FontAwesomeIcon icon={faUsers} />) : '' }
                 <span className="text">Get Involved</span>
               </a>

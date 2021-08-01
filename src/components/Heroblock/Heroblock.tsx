@@ -5,8 +5,14 @@ import Countdown, { zeroPad, CountdownRenderProps } from "react-countdown";
 import Button from "../Button/Button";
 import TwitchVideoEmbed from "../TwitchVideoEmbed/TwitchVideoEmbed";
 import { globals } from "../../globals";
+import { AusSpeedrunsEvent } from "../../types";
 
-const Heroblock = () => {
+type HeroblockProps = {
+  event: AusSpeedrunsEvent
+}
+
+
+const Heroblock = ({event}: HeroblockProps) => {
   const showVideoBlock = false;
   const countdownRender = ({
     days,
@@ -64,23 +70,23 @@ const Heroblock = () => {
       <div className="content">
         { showVideoBlock && (<TwitchVideoEmbed channel="ausspeedruns" parent={window.location.hostname}/>) }
         <div className="ctaBlock">
-          <h1>AusSpeedruns Marathon 2021</h1>
+          <h1>{event.fullName}</h1>
+          <h2>{event.dates}</h2>
           <br/>
-          <h2>Thank you for helping us raise over ${globals.ASM_2021_total} for Beyond Blue</h2>
-          {/* <h2>ASM2021 raised a total of ${ASM_2021_TOTAL_RAISED}</h2> */}
           {/* <h3 className="countdown monospaced">
-            <Countdown
-              date={Date.parse(globals.events.current.date)}
-              renderer={countdownRender}
-              zeroPadTime={2}
-            />
+            { event.startDate && 
+              <Countdown
+                date={Date.parse(event.startDate)}
+                renderer={countdownRender}
+                zeroPadTime={2}
+              />
+            }
           </h3> */}
           <p>
-            Thank you to all runners, volunteers, donators and viewers of ASM2021. The event has now finished and the above total is from only our donations directly to Beyond Blue; the total including money from subs will be added in coming days. Details about our next event at PAX 2021 will be shared in August, so please check back soon.
+            Submissions for {event.shortName} are now open! Pending COVID restrictions, our event will be hosted at the Melbourne Convention &amp; Exhibition Centre during PAX Aus. Tickets for general attendance are available on the <a href={event.website}>PAX website</a>.
           </p>
-          <p>Not finished watching amazing speedruns? Missed a game you wanted to watch? You can find videos of individual runs from ASM2021 and our previous events on our Youtube channel.</p>
-          { showVideoBlock && <Button actionText="Donate" link={globals.donateLink} iconRight={ faChevronRight} colorScheme={"primary lightHover"}/> }
-          { !showVideoBlock && <Button actionText="Watch again" link={globals.socialLinks.youtube} iconRight={ faChevronRight} colorScheme={"primary lightHover"}/> }
+          <Button actionText="Get involved" link="/#participate" iconRight={ faChevronRight } colorScheme={"primary lightHover"}/>
+          {/* {event.website && <Button actionText="Buy tickets" link={event.website} iconRight={ faChevronRight } colorScheme={"primary inverted"}/> } */}
         </div>
       </div>
     </div>

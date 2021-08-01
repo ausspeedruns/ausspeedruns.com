@@ -7,7 +7,7 @@ export type ButtonProps = {
   link: string,
   iconLeft?: IconProp,
   iconRight?: IconProp,
-  colorScheme?: "primary" | "secondary" | "secondary inverted" | "primary lightHover"
+  colorScheme?: "primary" | "secondary" | "primary inverted" | "secondary inverted" | "primary lightHover"
 }
 
 const Button = ({actionText, link, iconLeft, iconRight, colorScheme = "primary"} : ButtonProps) => {

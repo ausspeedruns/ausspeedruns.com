@@ -26,6 +26,14 @@
       }
     }
 
+    a {
+      color: $color-white;
+
+      &:visited {
+        color: $color-white;
+      }
+    }
+
     .ctaBlock {
       text-align: left;
       padding: 25px;

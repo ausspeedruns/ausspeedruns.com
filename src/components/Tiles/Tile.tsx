@@ -4,16 +4,22 @@ import Button, { ButtonProps } from "../Button/Button";
 export type TileProps = {
   title: string,
   description: string,
-  cta?: ButtonProps,
-  anchor?: string
+  ctas?: ButtonProps[],
+  anchor?: string,
+  colorScheme?: string
 }
 
-const Tile = ({title, description, cta, anchor} : TileProps) => {
+const Tile = ({title, description, ctas, anchor} : TileProps) => {
+  console.log(title, ctas)
   return (
     <div className="tile" id={anchor}>
       <h3>{title}</h3>
       <p>{description}</p>
-      {cta && (<Button {...{...cta, colorScheme: "secondary"}} />)}
+      <div className="ctas">
+        {ctas && ctas.map( (cta: ButtonProps) => {
+          return (<Button {...{...cta, colorScheme: cta.colorScheme || "secondary"}} />)
+        })}
+      </div>
     </div>
   );
 };

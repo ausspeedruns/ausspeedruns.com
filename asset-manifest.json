@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/static/css/main.3528f604.chunk.css",
-    "main.js": "/static/js/main.46e91310.chunk.js",
-    "main.js.map": "/static/js/main.46e91310.chunk.js.map",
+    "main.js": "/static/js/main.96e2b590.chunk.js",
+    "main.js.map": "/static/js/main.96e2b590.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.7e694e00.js",
     "runtime-main.js.map": "/static/js/runtime-main.7e694e00.js.map",
-    "static/js/2.74317b71.chunk.js": "/static/js/2.74317b71.chunk.js",
-    "static/js/2.74317b71.chunk.js.map": "/static/js/2.74317b71.chunk.js.map",
+    "static/js/2.6dbce397.chunk.js": "/static/js/2.6dbce397.chunk.js",
+    "static/js/2.6dbce397.chunk.js.map": "/static/js/2.6dbce397.chunk.js.map",
     "static/js/3.9462b132.chunk.js": "/static/js/3.9462b132.chunk.js",
     "static/js/3.9462b132.chunk.js.map": "/static/js/3.9462b132.chunk.js.map",
     "index.html": "/index.html",
     "static/css/main.3528f604.chunk.css.map": "/static/css/main.3528f604.chunk.css.map",
-    "static/js/2.74317b71.chunk.js.LICENSE.txt": "/static/js/2.74317b71.chunk.js.LICENSE.txt",
+    "static/js/2.6dbce397.chunk.js.LICENSE.txt": "/static/js/2.6dbce397.chunk.js.LICENSE.txt",
     "static/media/Navbar.scss": "/static/media/Ausspeedruns-logo-white.67ec64fc.png",
     "static/media/Landfall_Logo_1.faf135b5.png": "/static/media/Landfall_Logo_1.faf135b5.png",
     "static/media/bblue-blue.123d3c18.png": "/static/media/bblue-blue.123d3c18.png",
@@ -20,8 +20,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.7e694e00.js",
-    "static/js/2.74317b71.chunk.js",
+    "static/js/2.6dbce397.chunk.js",
     "static/css/main.3528f604.chunk.css",
-    "static/js/main.46e91310.chunk.js"
+    "static/js/main.96e2b590.chunk.js"
   ]
 }

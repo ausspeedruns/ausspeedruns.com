@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.356d9118.chunk.css",
+    "main.css": "/static/css/main.c5d524ea.chunk.css",
     "main.js": "/static/js/main.dddfd98b.chunk.js",
     "main.js.map": "/static/js/main.dddfd98b.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.7e694e00.js",
@@ -10,13 +10,14 @@
     "static/js/3.9462b132.chunk.js": "/static/js/3.9462b132.chunk.js",
     "static/js/3.9462b132.chunk.js.map": "/static/js/3.9462b132.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.356d9118.chunk.css.map": "/static/css/main.356d9118.chunk.css.map",
+    "static/css/main.c5d524ea.chunk.css.map": "/static/css/main.c5d524ea.chunk.css.map",
     "static/js/2.3e1b05f7.chunk.js.LICENSE.txt": "/static/js/2.3e1b05f7.chunk.js.LICENSE.txt",
     "static/media/100.c972d10b.png": "/static/media/100.c972d10b.png",
     "static/media/1000.49e05729.png": "/static/media/1000.49e05729.png",
     "static/media/10000.eceb1c67.png": "/static/media/10000.eceb1c67.png",
     "static/media/100000.47b0c36e.png": "/static/media/100000.47b0c36e.png",
     "static/media/50.98491e4d.png": "/static/media/50.98491e4d.png",
+    "static/media/Ausspeedruns-logo-orange.aa89029e.png": "/static/media/Ausspeedruns-logo-orange.aa89029e.png",
     "static/media/Navbar.scss": "/static/media/Ausspeedruns-logo-white.67ec64fc.png",
     "static/media/cure-cancer-logo.25c0363a.jpg": "/static/media/cure-cancer-logo.25c0363a.jpg",
     "static/media/TwitchVideoEmbed.scss": "/static/media/roboto-mono-vietnamese-400-normal.baa5de8f.woff2",
@@ -26,7 +27,7 @@
   "entrypoints": [
     "static/js/runtime-main.7e694e00.js",
     "static/js/2.3e1b05f7.chunk.js",
-    "static/css/main.356d9118.chunk.css",
+    "static/css/main.c5d524ea.chunk.css",
     "static/js/main.dddfd98b.chunk.js"
   ]
 }

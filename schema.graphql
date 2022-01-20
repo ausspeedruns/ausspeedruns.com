@@ -91,6 +91,316 @@ input PostCreateInput {
   content: String
 }
 
+type User {
+  id: ID!
+  name: String
+  username: String
+  email: String
+  password: PasswordState
+  accountCreated: DateTime
+  isOver18: Boolean
+  pronouns: String
+  eventsAttended: String
+  isRunner: Boolean
+  isStaff: Boolean
+  discord: String
+  twitter: String
+}
+
+type PasswordState {
+  isSet: Boolean!
+}
+
+scalar DateTime
+  @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
+
+input UserWhereUniqueInput {
+  id: ID
+  email: String
+}
+
+input UserWhereInput {
+  AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  username: StringFilter
+  email: StringFilter
+  accountCreated: DateTimeNullableFilter
+  isOver18: BooleanFilter
+  pronouns: StringFilter
+  eventsAttended: StringFilter
+  isRunner: BooleanFilter
+  isStaff: BooleanFilter
+  discord: StringFilter
+  twitter: StringFilter
+}
+
+input DateTimeNullableFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: DateTimeNullableFilter
+}
+
+input BooleanFilter {
+  equals: Boolean
+  not: BooleanFilter
+}
+
+input UserOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  username: OrderDirection
+  email: OrderDirection
+  accountCreated: OrderDirection
+  isOver18: OrderDirection
+  pronouns: OrderDirection
+  eventsAttended: OrderDirection
+  isRunner: OrderDirection
+  isStaff: OrderDirection
+  discord: OrderDirection
+  twitter: OrderDirection
+}
+
+input UserUpdateInput {
+  name: String
+  username: String
+  email: String
+  password: String
+  accountCreated: DateTime
+  isOver18: Boolean
+  pronouns: String
+  eventsAttended: String
+  isRunner: Boolean
+  isStaff: Boolean
+  discord: String
+  twitter: String
+}
+
+input UserUpdateArgs {
+  where: UserWhereUniqueInput!
+  data: UserUpdateInput!
+}
+
+input UserCreateInput {
+  name: String
+  username: String
+  email: String
+  password: String
+  accountCreated: DateTime
+  isOver18: Boolean
+  pronouns: String
+  eventsAttended: String
+  isRunner: Boolean
+  isStaff: Boolean
+  discord: String
+  twitter: String
+}
+
+type Volunteer {
+  id: ID!
+  user: User
+  isHost: Boolean
+  isTech: Boolean
+  isRunnerManagement: Boolean
+  isAdmin: Boolean
+}
+
+input VolunteerWhereUniqueInput {
+  id: ID
+}
+
+input VolunteerWhereInput {
+  AND: [VolunteerWhereInput!]
+  OR: [VolunteerWhereInput!]
+  NOT: [VolunteerWhereInput!]
+  id: IDFilter
+  user: UserWhereInput
+  isHost: BooleanFilter
+  isTech: BooleanFilter
+  isRunnerManagement: BooleanFilter
+  isAdmin: BooleanFilter
+}
+
+input VolunteerOrderByInput {
+  id: OrderDirection
+  isHost: OrderDirection
+  isTech: OrderDirection
+  isRunnerManagement: OrderDirection
+  isAdmin: OrderDirection
+}
+
+input VolunteerUpdateInput {
+  user: UserRelateToOneForUpdateInput
+  isHost: Boolean
+  isTech: Boolean
+  isRunnerManagement: Boolean
+  isAdmin: Boolean
+}
+
+input UserRelateToOneForUpdateInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
+  disconnect: Boolean
+}
+
+input VolunteerUpdateArgs {
+  where: VolunteerWhereUniqueInput!
+  data: VolunteerUpdateInput!
+}
+
+input VolunteerCreateInput {
+  user: UserRelateToOneForCreateInput
+  isHost: Boolean
+  isTech: Boolean
+  isRunnerManagement: Boolean
+  isAdmin: Boolean
+}
+
+input UserRelateToOneForCreateInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
+}
+
+type Submission {
+  id: ID!
+  user: User
+  created: DateTime
+  game: String
+  category: String
+  platform: String
+  estimate: String
+  ageRating: SubmissionAgeRatingType
+  donationIncentive: String
+  race: SubmissionRaceType
+  racer: String
+  video: String
+  status: SubmissionStatusType
+  event: String
+}
+
+enum SubmissionAgeRatingType {
+  m_or_lower
+  ma15
+  ra18
+}
+
+enum SubmissionRaceType {
+  no
+  solo
+  only
+}
+
+enum SubmissionStatusType {
+  submitted
+  accepted
+  backup
+}
+
+input SubmissionWhereUniqueInput {
+  id: ID
+}
+
+input SubmissionWhereInput {
+  AND: [SubmissionWhereInput!]
+  OR: [SubmissionWhereInput!]
+  NOT: [SubmissionWhereInput!]
+  id: IDFilter
+  user: UserWhereInput
+  created: DateTimeNullableFilter
+  game: StringFilter
+  category: StringFilter
+  platform: StringFilter
+  estimate: StringFilter
+  ageRating: SubmissionAgeRatingTypeNullableFilter
+  donationIncentive: StringFilter
+  race: SubmissionRaceTypeNullableFilter
+  racer: StringFilter
+  video: StringFilter
+  status: SubmissionStatusTypeNullableFilter
+  event: StringFilter
+}
+
+input SubmissionAgeRatingTypeNullableFilter {
+  equals: SubmissionAgeRatingType
+  in: [SubmissionAgeRatingType!]
+  notIn: [SubmissionAgeRatingType!]
+  not: SubmissionAgeRatingTypeNullableFilter
+}
+
+input SubmissionRaceTypeNullableFilter {
+  equals: SubmissionRaceType
+  in: [SubmissionRaceType!]
+  notIn: [SubmissionRaceType!]
+  not: SubmissionRaceTypeNullableFilter
+}
+
+input SubmissionStatusTypeNullableFilter {
+  equals: SubmissionStatusType
+  in: [SubmissionStatusType!]
+  notIn: [SubmissionStatusType!]
+  not: SubmissionStatusTypeNullableFilter
+}
+
+input SubmissionOrderByInput {
+  id: OrderDirection
+  created: OrderDirection
+  game: OrderDirection
+  category: OrderDirection
+  platform: OrderDirection
+  estimate: OrderDirection
+  ageRating: OrderDirection
+  donationIncentive: OrderDirection
+  race: OrderDirection
+  racer: OrderDirection
+  video: OrderDirection
+  status: OrderDirection
+  event: OrderDirection
+}
+
+input SubmissionUpdateInput {
+  user: UserRelateToOneForUpdateInput
+  created: DateTime
+  game: String
+  category: String
+  platform: String
+  estimate: String
+  ageRating: SubmissionAgeRatingType
+  donationIncentive: String
+  race: SubmissionRaceType
+  racer: String
+  video: String
+  status: SubmissionStatusType
+  event: String
+}
+
+input SubmissionUpdateArgs {
+  where: SubmissionWhereUniqueInput!
+  data: SubmissionUpdateInput!
+}
+
+input SubmissionCreateInput {
+  user: UserRelateToOneForCreateInput
+  created: DateTime
+  game: String
+  category: String
+  platform: String
+  estimate: String
+  ageRating: SubmissionAgeRatingType
+  donationIncentive: String
+  race: SubmissionRaceType
+  racer: String
+  video: String
+  status: SubmissionStatusType
+  event: String
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -106,6 +416,57 @@ type Mutation {
   updatePosts(data: [PostUpdateArgs!]!): [Post]
   deletePost(where: PostWhereUniqueInput!): Post
   deletePosts(where: [PostWhereUniqueInput!]!): [Post]
+  createUser(data: UserCreateInput!): User
+  createUsers(data: [UserCreateInput!]!): [User]
+  updateUser(where: UserWhereUniqueInput!, data: UserUpdateInput!): User
+  updateUsers(data: [UserUpdateArgs!]!): [User]
+  deleteUser(where: UserWhereUniqueInput!): User
+  deleteUsers(where: [UserWhereUniqueInput!]!): [User]
+  createVolunteer(data: VolunteerCreateInput!): Volunteer
+  createVolunteers(data: [VolunteerCreateInput!]!): [Volunteer]
+  updateVolunteer(
+    where: VolunteerWhereUniqueInput!
+    data: VolunteerUpdateInput!
+  ): Volunteer
+  updateVolunteers(data: [VolunteerUpdateArgs!]!): [Volunteer]
+  deleteVolunteer(where: VolunteerWhereUniqueInput!): Volunteer
+  deleteVolunteers(where: [VolunteerWhereUniqueInput!]!): [Volunteer]
+  createSubmission(data: SubmissionCreateInput!): Submission
+  createSubmissions(data: [SubmissionCreateInput!]!): [Submission]
+  updateSubmission(
+    where: SubmissionWhereUniqueInput!
+    data: SubmissionUpdateInput!
+  ): Submission
+  updateSubmissions(data: [SubmissionUpdateArgs!]!): [Submission]
+  deleteSubmission(where: SubmissionWhereUniqueInput!): Submission
+  deleteSubmissions(where: [SubmissionWhereUniqueInput!]!): [Submission]
+  endSession: Boolean!
+  authenticateUserWithPassword(
+    email: String!
+    password: String!
+  ): UserAuthenticationWithPasswordResult
+  createInitialUser(
+    data: CreateInitialUserInput!
+  ): UserAuthenticationWithPasswordSuccess!
+}
+
+union UserAuthenticationWithPasswordResult =
+    UserAuthenticationWithPasswordSuccess
+  | UserAuthenticationWithPasswordFailure
+
+type UserAuthenticationWithPasswordSuccess {
+  sessionToken: String!
+  item: User!
+}
+
+type UserAuthenticationWithPasswordFailure {
+  message: String!
+}
+
+input CreateInitialUserInput {
+  name: String
+  email: String
+  password: String
 }
 
 type Query {
@@ -117,8 +478,35 @@ type Query {
   ): [Post!]
   post(where: PostWhereUniqueInput!): Post
   postsCount(where: PostWhereInput! = {}): Int
+  users(
+    where: UserWhereInput! = {}
+    orderBy: [UserOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [User!]
+  user(where: UserWhereUniqueInput!): User
+  usersCount(where: UserWhereInput! = {}): Int
+  volunteers(
+    where: VolunteerWhereInput! = {}
+    orderBy: [VolunteerOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Volunteer!]
+  volunteer(where: VolunteerWhereUniqueInput!): Volunteer
+  volunteersCount(where: VolunteerWhereInput! = {}): Int
+  submissions(
+    where: SubmissionWhereInput! = {}
+    orderBy: [SubmissionOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Submission!]
+  submission(where: SubmissionWhereUniqueInput!): Submission
+  submissionsCount(where: SubmissionWhereInput! = {}): Int
   keystone: KeystoneMeta!
+  authenticatedItem: AuthenticatedItem
 }
+
+union AuthenticatedItem = User
 
 type KeystoneMeta {
   adminMeta: KeystoneAdminMeta!

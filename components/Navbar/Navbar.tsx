@@ -34,7 +34,7 @@ const Navbar = ({ isLive } : NavbarProps) => {
 
   return (
     <div className={styles.navbar}>
-      <div className={styles.content}>
+      <div className={`${styles.content} content`}>
         <div className={styles.title}>
           <a href="/">
             <span className={styles.logo}></span>

@@ -15,7 +15,7 @@ const Tile = ({title, description, ctas, anchor} : TileProps) => {
     <div className={styles.tile} id={anchor}>
       <h3>{title}</h3>
       <p>{description}</p><div className={styles.ctas}>
-        {ctas && ctas.map( (cta: ButtonProps, i) => {
+        {ctas?.map( (cta: ButtonProps, i) => {
           return (<Button key={i} {...{...cta, colorScheme: cta.colorScheme || "secondary"}} />)
         })}
       </div>

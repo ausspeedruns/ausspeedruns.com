@@ -14,7 +14,7 @@ type EventDetailsProps = {
 const EventDetails = ( { event } : EventDetailsProps) => {
   return (
     <div className={styles.eventDetails}>
-      <div className={styles.content}>
+      <div className={`${styles.content} content`}>
         <h2>About {event.fullName}</h2>
         {/* <p></p> */}
         <div className={styles.charitiesAndSponsors}>

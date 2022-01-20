@@ -30,25 +30,25 @@ const Footer = () => {
             <li className="social">
               <a href={globals.socialLinks.twitch}>
                 <FontAwesomeIcon icon={faTwitch} />
-                <span className="text">Follow us on Twitch</span>
+                <span className={styles.text}>Follow us on Twitch</span>
               </a>
             </li>
             {/* <li className="social">
               <a href={globals.socialLinks.facebook}>
                 <FontAwesomeIcon icon={faFacebook} />
-                <span className="text">Like us on Facebook</span>
+                <span className={styles.text}>Like us on Facebook</span>
               </a>
             </li> */}
             <li className="social">
               <a href={globals.socialLinks.twitter}>
                 <FontAwesomeIcon icon={faTwitter} />
-                <span className="text">Follow us on Twitter</span>
+                <span className={styles.text}>Follow us on Twitter</span>
               </a>
             </li>
             <li className="social">
               <a href={globals.socialLinks.youtube}>
                 <FontAwesomeIcon icon={faYoutube} />
-                <span className="text">
+                <span className={styles.text}>
                   Subscribe to AusSpeedruns on Youtube
                 </span>
               </a>
@@ -56,7 +56,7 @@ const Footer = () => {
             <li className="social">
               <a href={globals.socialLinks.discord}>
                 <FontAwesomeIcon icon={faDiscord} />
-                <span className="text">Join us on Discord</span>
+                <span className={styles.text}>Join us on Discord</span>
               </a>
             </li>
           </ul>

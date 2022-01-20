@@ -1,5 +1,6 @@
 import { InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
+import Head from 'next/head';
 
 // Import the generated Lists API and types from Keystone
 import { query } from '.keystone/api';
@@ -50,6 +51,9 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
     //   </main>
     // </div>
     <div className="App">
+      <Head>
+        <title>AusSpeedruns</title>
+      </Head>
       <header className="App-header">
         <Navbar isLive={eventLive} />
       </header>

@@ -6,6 +6,7 @@ import {
   faTwitter,
   faDiscord,
   faYoutube,
+  faInstagram,
   // faFacebook,
 } from "@fortawesome/free-brands-svg-icons";
 import { faBars, faCalendarAlt, faTimes, faUsers, faChevronRight, faCoins } from "@fortawesome/free-solid-svg-icons";
@@ -54,12 +55,12 @@ const Navbar = ({ isLive } : NavbarProps) => {
 
         <nav className={`main-menu ${isOpen ? 'menu-open' : 'menu-closed'}`} aria-label="Main menu">
           <ul>
-            <li>
+            {/* <li>
               <a href={globals.scheduleLink}>
                 { isMobile ? (<FontAwesomeIcon icon={faCalendarAlt} />) : '' }
                 <span className="text">Schedule</span>
               </a>
-            </li>
+            </li> */}
             { isLive && <li><a href={globals.incentivesLink}>{ isMobile ? (<FontAwesomeIcon icon={faCoins} />) : '' }
                 <span className="text">Incentives</span></a></li> }
             <li>
@@ -96,6 +97,12 @@ const Navbar = ({ isLive } : NavbarProps) => {
               <a href={globals.socialLinks.discord}>
                 <FontAwesomeIcon icon={faDiscord} />
                 <span className={`text ${isMobile ? '' : 'sr-only'}`}>Join us on Discord</span>
+              </a>
+            </li>
+            <li className="social">
+              <a href={globals.socialLinks.instagram}>
+                <FontAwesomeIcon icon={faInstagram} />
+                <span className={`text ${isMobile ? '' : 'sr-only'}`}>Follow us on Instagram</span>
               </a>
             </li>
             { isLive && <li className="cta"><Button actionText="Donate" link={globals.donateLink} iconRight={ faChevronRight } colorScheme={"secondary inverted"}/></li> }

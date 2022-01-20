@@ -1,0 +1,62 @@
+@import "../../styles/responsive.scss";
+@import "../../styles/colors.scss";
+
+.heroblock {
+  width: 100%;
+  background: url("../../styles/img/hero-image.png") no-repeat;
+  background-size: cover;
+  color: $hero-text;
+
+  .content {
+    display: flex;
+    flex-flow: column;
+    padding: 50px 0;
+
+    @include breakpoint($lg) {
+      flex-flow: row;
+      max-width: 1200px;
+
+      & > :first-child {
+        display: inline-block;
+        max-width: 66%;
+      }
+
+      & > :last-child:not(:only-child) {
+        margin-left: 10px;
+        max-width: 33%;
+      }
+    }
+
+    a {
+      color: $color-white;
+
+      &:visited {
+        color: $color-white;
+      }
+    }
+
+    .ctaBlock {
+      text-align: left;
+      padding: 25px;
+
+      p {
+        max-width: 400px;
+      }
+
+      .countdown {
+        font-size: 1.75rem;
+        line-height: 3;
+
+      }
+    }
+
+    .logoBlock {
+      width: inherit;
+      max-width: 400px;
+      img {
+        width: inherit;
+        margin: auto;
+      }
+    }
+  }
+}

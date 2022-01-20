@@ -17,7 +17,10 @@ export type AusSpeedrunsEvent = {
 export type EventsLineUp = {
 	previous: AusSpeedrunsEvent,
 	current: AusSpeedrunsEvent,
-	next: AusSpeedrunsEvent
+	next: AusSpeedrunsEvent,
+	oldEvents: {
+		[key: string]: AusSpeedrunsEvent
+	}
 }
 
 export type Globals = {

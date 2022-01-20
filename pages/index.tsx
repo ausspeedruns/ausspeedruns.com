@@ -58,10 +58,10 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
         <Navbar isLive={eventLive} />
       </header>
       <main>
-        <Heroblock event={next} />
+        <Heroblock event={current} />
         { eventLive && <Ticker /> }
         { eventLive && <TwitchChatEmbed channel="ausspeedruns" parent={window.location.hostname}/> }
-        <EventDetails event={next} />
+        <EventDetails event={current} />
         <TileGroup tiles={[
         {
           title: "About AusSpeedruns",
@@ -69,20 +69,20 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
         },
         {
           title: "Get Involved",
-          description: `Submissions for ${current.shortName} are now open!`,
+          description: `Submissions for ${current.shortName} will be open soon!`,
           anchor: "participate",
           ctas: [
-            {
-              actionText: "Submit your run",
-              link: "/submissions#submissionForm",
-              iconRight: faChevronRight
-            },
-            {
-              actionText: "Buy a ticket",
-              link: current.website || "",
-              iconLeft: faTicketAlt,
+            // {
+            //   actionText: "Submit your run",
+            //   link: "/submissions#submissionForm",
+            //   iconRight: faChevronRight
+            // },
+            // {
+            //   actionText: "Buy a ticket",
+            //   link: current.website || "",
+            //   iconLeft: faTicketAlt,
               
-            },
+            // },
             {
               actionText: "Join our discord",
               link: globals.socialLinks.discord,

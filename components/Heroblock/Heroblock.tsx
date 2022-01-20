@@ -71,14 +71,11 @@ const Heroblock = ({ event }: HeroblockProps) => {
             />
           </h3> */}
 					<p>
-						Thank you to all runners, volunteers, donators and viewers of ASM2021. The event has now finished and the
-						above total is from only our donations directly to Beyond Blue; the total including money from subs will be
-						added in coming days. Details about our next event at PAX 2021 will be shared in August, so please check
-						back soon.
+						Australian Speedrunners come together to raise money for Beyond Blue at ASM2022! More details about the event to come soon.
 					</p>
 					<p>
 						Not finished watching amazing speedruns? Missed a game you wanted to watch? You can find videos of
-						individual runs from ASM2021 and our previous events on our Youtube channel.
+						individual runs from {globals.events.previous.shortName} and our previous events on our Youtube channel.
 					</p>
 					{showVideoBlock && (
 						<Button

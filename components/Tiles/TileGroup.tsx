@@ -9,7 +9,7 @@ type TileGroupProps = {
 const TileGroup = ({tiles} : TileGroupProps) => {
   return (
     <div className={styles.tileGroup}>
-      <div className={styles.content}>
+      <div className={`${styles.content} content`}>
         { tiles.map( (tile, key) => 
           <Tile key={key} {...tile} />
         )}

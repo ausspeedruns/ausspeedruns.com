@@ -9,7 +9,7 @@
     grid-gap: 24px;
 
     @include breakpoint($sm) {
-      grid-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, 1fr);
     }
 
     @include breakpoint($md) {
@@ -32,6 +32,10 @@
       &:first-child {
         grid-column: 1 / 3;
       }
+    }
+
+    .ctas > a {
+      margin-bottom: 10px;
     }
   }
 }

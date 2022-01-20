@@ -18,6 +18,7 @@
     @include breakpoint($md) {
       flex-flow: row nowrap;
       justify-content: space-between;
+      // padding: 8px;
     }
   }
 

@@ -3,6 +3,7 @@ import {
   faTwitter,
   faYoutube,
   faDiscord,
+  faInstagram,
   // faFacebook,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -49,7 +50,7 @@ const Footer = () => {
               <a href={globals.socialLinks.youtube}>
                 <FontAwesomeIcon icon={faYoutube} />
                 <span className={styles.text}>
-                  Subscribe to AusSpeedruns on Youtube
+                  Subscribe on Youtube
                 </span>
               </a>
             </li>
@@ -57,6 +58,12 @@ const Footer = () => {
               <a href={globals.socialLinks.discord}>
                 <FontAwesomeIcon icon={faDiscord} />
                 <span className={styles.text}>Join us on Discord</span>
+              </a>
+            </li>
+            <li className="social">
+              <a href={globals.socialLinks.instagram}>
+                <FontAwesomeIcon icon={faInstagram} />
+                <span className={styles.text}>Follow us on Instagram</span>
               </a>
             </li>
           </ul>

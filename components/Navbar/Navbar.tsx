@@ -50,62 +50,62 @@ const Navbar = ({ isLive } : NavbarProps) => {
           )}
           <span className="sr-only">Menu</span>
         </button>
-        { isMobile ? (<div className="break"></div>
+        { isMobile ? (<div className={styles.break}></div>
         ) : ''}
 
-        <nav className={`main-menu ${isOpen ? 'menu-open' : 'menu-closed'}`} aria-label="Main menu">
+        <nav className={`${styles.mainmenu} ${isOpen ? styles.menuopen : styles.menuclosed}`} aria-label="Main menu">
           <ul>
             {/* <li>
               <a href={globals.scheduleLink}>
                 { isMobile ? (<FontAwesomeIcon icon={faCalendarAlt} />) : '' }
-                <span className="text">Schedule</span>
+                <span className={styles.text}>Schedule</span>
               </a>
             </li> */}
             { isLive && <li><a href={globals.incentivesLink}>{ isMobile ? (<FontAwesomeIcon icon={faCoins} />) : '' }
-                <span className="text">Incentives</span></a></li> }
+                <span className={styles.text}>Incentives</span></a></li> }
             <li>
               <a href="#participate">
                 { isMobile ? (<FontAwesomeIcon icon={faUsers} />) : '' }
-                <span className="text">Get Involved</span>
+                <span className={styles.text}>Get Involved</span>
               </a>
             </li>
             <li className="social">
               <a href={globals.socialLinks.twitch}>
                 <FontAwesomeIcon icon={faTwitch} />
-                <span className={`text ${isMobile ? '' : 'sr-only'}`}>Follow us on Twitch</span>
+                <span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Follow us on Twitch</span>
               </a>
             </li>
             {/* <li className="social">
               <a href={globals.socialLinks.facebook}>
                 <FontAwesomeIcon icon={faFacebook} />
-                <span className={`text ${isMobile ? '' : 'sr-only'}`}>Like us on Facebook</span>
+                <span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Like us on Facebook</span>
               </a>
             </li> */}
             <li className="social">
               <a href={globals.socialLinks.twitter}>
                 <FontAwesomeIcon icon={faTwitter} />
-                <span className={`text ${isMobile ? '' : 'sr-only'}`}>Follow us on Twitter</span>
+                <span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Follow us on Twitter</span>
               </a>
             </li>
             <li className="social">
               <a href={globals.socialLinks.youtube}>
                 <FontAwesomeIcon icon={faYoutube} />
-                <span className={`text ${isMobile ? '' : 'sr-only'}`}>Subscribe to AusSpeedruns on Youtube</span>
+                <span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Subscribe to AusSpeedruns on Youtube</span>
               </a>
             </li>
             <li className="social">
               <a href={globals.socialLinks.discord}>
                 <FontAwesomeIcon icon={faDiscord} />
-                <span className={`text ${isMobile ? '' : 'sr-only'}`}>Join us on Discord</span>
+                <span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Join us on Discord</span>
               </a>
             </li>
             <li className="social">
               <a href={globals.socialLinks.instagram}>
                 <FontAwesomeIcon icon={faInstagram} />
-                <span className={`text ${isMobile ? '' : 'sr-only'}`}>Follow us on Instagram</span>
+                <span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Follow us on Instagram</span>
               </a>
             </li>
-            { isLive && <li className="cta"><Button actionText="Donate" link={globals.donateLink} iconRight={ faChevronRight } colorScheme={"secondary inverted"}/></li> }
+            { isLive && <li className={styles.cta}><Button actionText="Donate" link={globals.donateLink} iconRight={ faChevronRight } colorScheme={"secondary inverted"}/></li> }
           </ul>
         </nav>
       </div>

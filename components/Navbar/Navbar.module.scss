@@ -93,12 +93,12 @@
   }
 
 
-  .main-menu {
-    &.menu-open {
+  .mainmenu {
+    &.menuopen {
       display: block;
     }
 
-    &.menu-closed {
+    &.menuclosed {
       display: none;
     }
 

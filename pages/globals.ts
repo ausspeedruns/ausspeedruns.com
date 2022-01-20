@@ -37,6 +37,7 @@ export const globals: Globals = {
     twitter: '//twitter.com/ausspeedruns',
     youtube: '//youtube.com/ausspeedruns',
     twitch: '//twitch.tv/ausspeedruns',
-    facebook: '//www.facebook.com/ausspeedruns'
+    facebook: '//www.facebook.com/ausspeedruns',
+    instagram: '//instagram.com/ausspeedruns',
   }
 }

@@ -1,0 +1,126 @@
+@import "../../styles/colors.scss";
+@import "../../styles/responsive.scss";
+@import "../../styles/nav-lists.scss";
+
+.navbar {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  width: 100%;
+  background: $secondary;
+  height: auto;
+
+  .content {
+    display: flex;
+    align-items: center;
+    flex-flow: wrap;
+
+    @include breakpoint($md) {
+      flex-flow: row nowrap;
+      justify-content: space-between;
+    }
+  }
+
+  .title {
+    font-family: "Finger Paint";
+    font-size: 1.2rem;
+    font-weight: 500;
+    flex-grow: 1;
+
+    @include breakpoint($sm) {
+      font-size: 1.5rem;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+
+      &:-webkit-any-link {
+        color: $light-text;
+      }
+
+      &:hover,
+      &:focus,
+      &:visited:hover,
+      &:visited:focus {
+        color: $primary;
+
+        .logo {
+          background-image: url("../../styles/img/Ausspeedruns-logo-orange.png");
+        }
+      }
+
+      &:visited {
+        color: $light-text;
+        text-decoration: none;
+      }
+
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      margin-right: 5px;
+      background: url("../../styles/img/Ausspeedruns-logo-white.png") no-repeat
+        center;
+      background-size: contain;
+
+      @include breakpoint($sm) {
+        height: 50px;
+        width: 50px;
+      }
+    }
+  }
+
+  nav {
+    display: flex;
+    flex-flow: column wrap;
+
+    @include breakpoint($xs) {
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    @include nav-lists;
+  }
+
+  .break {
+    flex-basis: 100%;
+    height: 0;
+  }
+
+
+  .main-menu {
+    &.menu-open {
+      display: block;
+    }
+
+    &.menu-closed {
+      display: none;
+    }
+
+    @include breakpoint($sm) {
+      display: block !important;
+    }
+  }
+
+  button {
+    background: none;
+    border: none;
+    color: $light-text;
+
+    @include breakpoint($sm) {
+      display: none;
+    }
+
+    &:hover {
+      color: $primary;
+    }
+  }
+
+  .cta > .button {
+    padding: 6px 32px;
+  }
+}

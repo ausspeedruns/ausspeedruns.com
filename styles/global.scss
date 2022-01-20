@@ -1,0 +1,38 @@
+@import "./responsive.scss";
+@import "./typography.scss";
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.content {
+  display: flex;
+  width: 100%;
+  margin: auto;
+  padding: 24px;
+
+  @include breakpoint($sm) {
+    padding: 40px 24px;
+  }
+
+  @include breakpoint($lg) {
+    max-width: 1200px;
+  }
+}
+
+header .content, .footer .content {
+  min-height: 50px;
+  padding: 8px;
+}
+
+.sr-only {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}

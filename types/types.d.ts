@@ -11,7 +11,8 @@ export type AusSpeedrunsEvent = {
 		url?: string
 	},
 	submissionFormUrl?: string,
-	website?: string
+	website?: string,
+	logo?: string,
 }
 
 export type EventsLineUp = {

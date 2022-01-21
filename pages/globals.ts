@@ -14,12 +14,16 @@ export const globals: Globals = {
       charity: {
         name: "Cure Cancer"
       }
-    } ,
+    },
     current: {
       fullName: 'ASM 2022',
       preferredName: 'ASM 2022',
       shortName: 'ASM 2022',
-      dates: "July, 2022"
+      dates: 'July, 2022',
+      charity: {
+        name: "Beyond Blue"
+      },
+      logo: 'ASM2022-Logo.svg'
     },
     next: {
       fullName: 'PAX Australia 2022',

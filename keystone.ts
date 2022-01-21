@@ -17,6 +17,11 @@ const Post: Lists.Post = list({
 });
 
 const User = list({
+  access: {
+    filter: {
+      query: () => true
+    }
+  },
   fields: {
     name: text(),
     username: text({ validation: { isRequired: true } }),

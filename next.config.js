@@ -6,4 +6,12 @@ module.exports = withKeystone({
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles')],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/graphql',
+        destination: 'http://localhost:8000/api/graphql',
+      },
+    ];
+  },
 });

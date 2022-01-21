@@ -1,6 +1,6 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { HTMLAttributeAnchorTarget } from 'react';
+import { AnchorHTMLAttributes, HTMLAttributeAnchorTarget } from 'react';
 import styles from './Button.module.scss';
 
 export type ButtonProps = {
@@ -10,9 +10,10 @@ export type ButtonProps = {
 	iconRight?: IconProp;
 	colorScheme?: 'primary' | 'secondary' | 'secondary inverted' | 'primary lightHover';
 	target?: HTMLAttributeAnchorTarget;
+	type?: string;
 };
 
-const Button = ({ actionText, link, iconLeft, iconRight, colorScheme = 'primary', target = '_self' }: ButtonProps) => {
+const Button = ({ actionText, link, iconLeft, iconRight, colorScheme = 'primary', target = '_self', type }: ButtonProps) => {
 	return (
 		<a
 			className={`${styles.button} ${colorScheme
@@ -21,6 +22,7 @@ const Button = ({ actionText, link, iconLeft, iconRight, colorScheme = 'primary'
 				.join(' ')}`}
 			href={link}
 			target={target}
+			type={type}
 		>
 			{iconLeft && <FontAwesomeIcon icon={iconLeft} />}
 			<span>{actionText}</span>

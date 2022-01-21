@@ -96,6 +96,9 @@ const Heroblock = ({ event }: HeroblockProps) => {
 						/>
 					)}
 				</div>
+				<div className={styles.logoBlock}>
+					<img src={require(`../../styles/img/${event.logo}`).default.src} />
+				</div>
 			</div>
 		</div>
 	);

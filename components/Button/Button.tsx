@@ -1,14 +1,14 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { AnchorHTMLAttributes, HTMLAttributeAnchorTarget } from 'react';
+import { HTMLAttributeAnchorTarget } from 'react';
 import styles from './Button.module.scss';
 
 export type ButtonProps = {
 	actionText: string;
-	link: string;
+	link?: string;
 	iconLeft?: IconProp;
 	iconRight?: IconProp;
-	colorScheme?: 'primary' | 'secondary' | 'secondary inverted' | 'primary lightHover';
+	colorScheme?: 'primary' | 'secondary' | 'secondary lightHover' | 'secondary inverted' | 'primary lightHover' | 'orange';
 	target?: HTMLAttributeAnchorTarget;
 	type?: string;
 };

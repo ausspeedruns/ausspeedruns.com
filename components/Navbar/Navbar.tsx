@@ -123,11 +123,15 @@ const Navbar = ({ isLive }: NavbarProps) => {
 						<li>
 							{auth.ready && auth.sessionData ? (
 								<>
-									<span className={styles.text}>{auth.sessionData.username} | </span>
-									<a onClick={() => auth.signOut()}>Sign out</a>
+									<Button
+										actionText={auth.sessionData.username}
+										link={"/profile"}
+										colorScheme={'orange'}
+									/>
+									<a className={styles.signout} onClick={() => auth.signOut()}>Sign out</a>
 								</>
 							) : (
-								<span>
+								<span className={styles.join}>
 									<Link href="/signin">Sign In</Link> | <Link href="/signup">Join</Link>
 								</span>
 							)}

@@ -12,7 +12,7 @@
     flex-flow: column;
     padding: 50px 0;
 
-    @include breakpoint($lg) {
+    @include breakpoint($md) {
       flex-flow: row;
       max-width: 1200px;
 

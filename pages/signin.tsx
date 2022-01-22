@@ -1,14 +1,19 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { useAuth } from '../components/auth';
+import { TextField, ThemeProvider } from '@mui/material';
+import styles from '../styles/SignIn.module.scss';
 
 import Button from '../components/Button/Button';
+import Footer from '../components/Footer/Footer';
 import Navbar from '../components/Navbar/Navbar';
+import Head from 'next/head';
+import { theme } from '../components/mui-theme';
 
 export const SignInPage: React.FC = () => {
 	const auth = useAuth();
-	const [email, setEmail] = useState('ewan.lyon@ausspeedruns.com');
-	const [password, setPassword] = useState('password');
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
 
 	// const router = useRouter();
@@ -29,8 +34,8 @@ export const SignInPage: React.FC = () => {
 			// current user properly if we do a client-side redirect here.
 			// router.push('/');
 			top.location.href = '/';
-			result.success
-		} else if (result.success === false) {	// This is silly ofc but TypeScript wasn't detecting that it was false
+		} else if (result.success === false) {
+			// This is silly ofc but TypeScript wasn't detecting that it was false
 			setEmail('');
 			setPassword('');
 			setError(result.message);
@@ -38,43 +43,50 @@ export const SignInPage: React.FC = () => {
 	};
 
 	return (
-		<div className="App">
-			<Navbar />
-			<h1>Sign In</h1>
-			<h2>{error}</h2>
-			<form
-				onSubmit={(event) => {
-					event.preventDefault();
-					signIn();
-				}}
-			>
-				<div style={{margin: '4px 0'}}>
-					<div style={{display: 'inline-block', width: '9rem'}}>Email address</div>
-					<input
-						type="text"
-						value={email}
-						onChange={(event) => {
-							setEmail(event.target.value);
+		<ThemeProvider theme={theme}>
+			<div className="App">
+				<Head>
+					<title>Sign In - AusSpeedruns</title>
+				</Head>
+				<Navbar />
+				<div className={`content ${styles.form}`}>
+					<h1>Sign In</h1>
+					<form
+						onSubmit={(event) => {
+							event.preventDefault();
+							signIn();
 						}}
-					/>
+					>
+						<TextField
+							label="Email"
+							variant="outlined"
+							value={email}
+							onChange={(event) => {
+								setEmail(event.target.value);
+							}}
+							fullWidth
+						/>
+						
+						<TextField
+							label="Password"
+							type={'password'}
+							variant="outlined"
+							value={password}
+							onChange={(event) => {
+								setPassword(event.target.value);
+							}}
+							fullWidth
+						/>
+						<h2>{error}</h2>
+						<Button type="submit" actionText='Sign In' />
+					</form>
+					<hr />
+					<div>
+						<Link href="/signup">Want to join instead?</Link>
+					</div>
 				</div>
-				<div style={{margin: '4px 0'}}>
-					<div style={{display: 'inline-block', width: '9rem'}}>Password</div>
-					<input
-						type="password"
-						value={password}
-						onChange={(event) => {
-							setPassword(event.target.value);
-						}}
-					/>
-				</div>
-				<button type="submit">Sign In</button>
-			</form>
-			<hr className="my-4" />
-			<div>
-				<Link href="/signup">Want to join instead?</Link>
 			</div>
-		</div>
+		</ThemeProvider>
 	);
 };
 

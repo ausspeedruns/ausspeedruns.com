@@ -87,7 +87,6 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
               actionText: "Join our discord",
               link: globals.socialLinks.discord,
               iconLeft: faDiscord,
-              colorScheme: "primary"
             }
 
           ]

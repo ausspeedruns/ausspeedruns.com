@@ -85,6 +85,20 @@
     }
 
     @include nav-lists;
+
+    .signout {
+      margin-left: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .join {
+      color: $light-text;
+
+      a {
+        font-weight: 500;
+      }
+    }
   }
 
   .break {
@@ -118,6 +132,11 @@
 
     &:hover {
       color: $primary;
+    }
+
+    .user {
+      background-color: $primary;
+      border-radius: 100%;
     }
   }
 

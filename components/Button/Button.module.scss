@@ -22,17 +22,18 @@ a.button {
     border-color: $accent;
     color: $accent;
     text-decoration: underline;
+    cursor: pointer;
   }
 
   &.primary {
-    border-color: $accent;
-    background-color: $accent;
+    border-color: $primary;
+    background-color: $primary;
     color: $light-text;
 
     &:hover,
     &:focus {
       background-color: transparent;
-      color: $accent;
+      color: $primary;
 
       &.lightHover {
         border-color: $color-white;
@@ -61,6 +62,35 @@ a.button {
     &:focus {
       background-color: transparent;
       color: $secondary;
+
+      &.lightHover {
+        border-color: $color-white;
+        color: $color-white;
+      }
+    }
+
+    &.inverted {
+      background-color: transparent;
+      color: $color-white;
+      border-color: $color-white;
+
+      &:hover, &:focus {
+        border-color: $primary;
+        background-color: $primary;
+      }
+    }
+  }
+
+  &.orange {
+    border-color: $primary;
+    background-color: $primary;
+    color: $light-text;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      border-color: $color-white;
+      color: $light-text;
     }
 
     &.inverted {

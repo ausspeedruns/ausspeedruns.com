@@ -82,7 +82,7 @@ const Heroblock = ({ event }: HeroblockProps) => {
 							actionText="Donate"
 							link={globals.donateLink}
 							iconRight={faChevronRight}
-							colorScheme={'primary lightHover'}
+							colorScheme={'secondary'}
               target={'_blank'}
 						/>
 					)}
@@ -91,7 +91,7 @@ const Heroblock = ({ event }: HeroblockProps) => {
 							actionText="Watch again"
 							link={globals.socialLinks.youtube}
 							iconRight={faChevronRight}
-							colorScheme={'primary lightHover'}
+							colorScheme={'secondary'}
               target={'_blank'}
 						/>
 					)}

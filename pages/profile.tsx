@@ -93,8 +93,8 @@ export default function ProfilePage() {
 	const disableSave =
 		!Boolean(username) ||
 		!Boolean(email) ||
-		!TwitterRegex.test(twitter) ||
-		!DiscordRegex.test(discord);
+		(twitter !== '' && !TwitterRegex.test(twitter)) ||
+		(discord !== '' && !DiscordRegex.test(discord));
 
 	return (
 		<ThemeProvider theme={theme}>

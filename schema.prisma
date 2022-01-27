@@ -19,21 +19,21 @@ model Post {
 }
 
 model User {
-  id                   String       @id @default(cuid())
-  name                 String       @default("")
-  username             String       @default("")
-  email                String       @unique @default("")
-  password             String
-  accountCreated       DateTime?    @default(now())
-  isOver18             Boolean      @default(false)
-  pronouns             String       @default("")
-  eventsAttended       String       @default("")
-  isRunner             Boolean      @default(false)
-  isStaff              Boolean      @default(false)
-  discord              String       @default("")
-  twitter              String       @default("")
-  from_Volunteer_user  Volunteer[]  @relation("Volunteer_user")
-  from_Submission_user Submission[] @relation("Submission_user")
+  id                  String       @id @default(cuid())
+  name                String       @default("")
+  username            String       @default("")
+  email               String       @unique @default("")
+  password            String
+  accountCreated      DateTime?    @default(now())
+  isOver18            Boolean      @default(false)
+  pronouns            String       @default("")
+  eventsAttended      String       @default("")
+  isRunner            Boolean      @default(false)
+  isStaff             Boolean      @default(false)
+  discord             String       @default("")
+  twitter             String       @default("")
+  submissions         Submission[] @relation("Submission_user")
+  from_Volunteer_user Volunteer[]  @relation("Volunteer_user")
 }
 
 model Volunteer {
@@ -61,6 +61,7 @@ model Submission {
   donationIncentive String    @default("")
   race              String?   @default("no")
   racer             String    @default("")
+  coop              Boolean   @default(false)
   video             String    @default("")
   status            String?   @default("submitted")
   event             String    @default("ASM2022")

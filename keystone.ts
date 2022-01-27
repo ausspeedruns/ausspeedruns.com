@@ -50,7 +50,8 @@ const User = list({
           explanation: `Twitter handle is invalid. Make sure its like "@Clubwhom".`
         }
       }
-    })
+    }),
+    submissions: relationship({ ref: 'Submission.user', many: true })
   },
   ui: {
     labelField: 'username'
@@ -94,11 +95,11 @@ const Submission = list({
     }
   },
   fields: {
-    user: relationship({ ref: 'User', ui: { hideCreate: true, labelField: 'username' } }),
+    user: relationship({ ref: 'User.submissions', ui: { hideCreate: true, labelField: 'username' } }),
     created: timestamp({ defaultValue: { kind: 'now' } }),
     game: text({ validation: { isRequired: true } }),
     category: text({ validation: { isRequired: true } }),
-    platform: text({ validation: { isRequired: true } }),
+    platform: text({ validation: { isRequired: true } }), // Potentially an enum with "other"?
     estimate: text({ validation: { isRequired: true, match: { regex: /^\d{2}:\d{2}:\d{2}$/, explanation: 'Estimate invalid. Make sure its like 01:30:00.' } } }),
     ageRating: select({
       type: 'enum',
@@ -115,11 +116,12 @@ const Submission = list({
       options: [
         { label: "No", value: "no" },
         { label: "Yes - Possible Solo", value: "solo" },
-        { label: "Yes - Only Race", value: "only" }
+        { label: "Yes - Only Race/Coop", value: "only" }
       ],
       defaultValue: "no"
     }),
     racer: text(),
+    coop: checkbox(),
     video: text({ validation: { isRequired: true } }),
     status: select({
       type: 'enum',

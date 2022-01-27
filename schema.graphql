@@ -105,6 +105,13 @@ type User {
   isStaff: Boolean
   discord: String
   twitter: String
+  submissions(
+    where: SubmissionWhereInput! = {}
+    orderBy: [SubmissionOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Submission!]
+  submissionsCount(where: SubmissionWhereInput! = {}): Int
 }
 
 type PasswordState {
@@ -135,6 +142,7 @@ input UserWhereInput {
   isStaff: BooleanFilter
   discord: StringFilter
   twitter: StringFilter
+  submissions: SubmissionManyRelationFilter
 }
 
 input DateTimeNullableFilter {
@@ -151,6 +159,12 @@ input DateTimeNullableFilter {
 input BooleanFilter {
   equals: Boolean
   not: BooleanFilter
+}
+
+input SubmissionManyRelationFilter {
+  every: SubmissionWhereInput
+  some: SubmissionWhereInput
+  none: SubmissionWhereInput
 }
 
 input UserOrderByInput {
@@ -181,6 +195,14 @@ input UserUpdateInput {
   isStaff: Boolean
   discord: String
   twitter: String
+  submissions: SubmissionRelateToManyForUpdateInput
+}
+
+input SubmissionRelateToManyForUpdateInput {
+  disconnect: [SubmissionWhereUniqueInput!]
+  set: [SubmissionWhereUniqueInput!]
+  create: [SubmissionCreateInput!]
+  connect: [SubmissionWhereUniqueInput!]
 }
 
 input UserUpdateArgs {
@@ -201,6 +223,12 @@ input UserCreateInput {
   isStaff: Boolean
   discord: String
   twitter: String
+  submissions: SubmissionRelateToManyForCreateInput
+}
+
+input SubmissionRelateToManyForCreateInput {
+  create: [SubmissionCreateInput!]
+  connect: [SubmissionWhereUniqueInput!]
 }
 
 type Volunteer {
@@ -280,6 +308,7 @@ type Submission {
   donationIncentive: String
   race: SubmissionRaceType
   racer: String
+  coop: Boolean
   video: String
   status: SubmissionStatusType
   event: String
@@ -322,6 +351,7 @@ input SubmissionWhereInput {
   donationIncentive: StringFilter
   race: SubmissionRaceTypeNullableFilter
   racer: StringFilter
+  coop: BooleanFilter
   video: StringFilter
   status: SubmissionStatusTypeNullableFilter
   event: StringFilter
@@ -359,6 +389,7 @@ input SubmissionOrderByInput {
   donationIncentive: OrderDirection
   race: OrderDirection
   racer: OrderDirection
+  coop: OrderDirection
   video: OrderDirection
   status: OrderDirection
   event: OrderDirection
@@ -375,6 +406,7 @@ input SubmissionUpdateInput {
   donationIncentive: String
   race: SubmissionRaceType
   racer: String
+  coop: Boolean
   video: String
   status: SubmissionStatusType
   event: String
@@ -396,6 +428,7 @@ input SubmissionCreateInput {
   donationIncentive: String
   race: SubmissionRaceType
   racer: String
+  coop: Boolean
   video: String
   status: SubmissionStatusType
   event: String

@@ -1,0 +1,28 @@
+@import "./responsive.scss";
+
+.content {
+	flex-direction: column;
+	
+	h1 {
+		text-align: center;
+	}
+
+	.gameForm {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		width: 100%;
+	
+		@include breakpoint($md) {
+			padding: 0 10%;
+		}
+		
+		@include breakpoint($lg) {
+			padding: 0 20%;
+		}
+	
+		& > * {
+			margin: 10px 0;
+		}
+	}
+}

@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../components/auth';
-import { TextField, ThemeProvider } from '@mui/material';
+import { TextField, ThemeProvider, CircularProgress } from '@mui/material';
 import styles from '../styles/SignIn.module.scss';
 
 import Button from '../components/Button/Button';
@@ -15,6 +15,7 @@ export const SignInPage: React.FC = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
+	const [spinner, setSpinner] = useState(false);
 
 	// const router = useRouter();
 
@@ -42,6 +43,12 @@ export const SignInPage: React.FC = () => {
 		}
 	};
 
+	useEffect(() => {
+		if (error) {
+			setSpinner(false);
+		}
+	}, [error])
+
 	return (
 		<ThemeProvider theme={theme}>
 			<div className="App">
@@ -54,7 +61,9 @@ export const SignInPage: React.FC = () => {
 					<form
 						onSubmit={(event) => {
 							event.preventDefault();
+							console.log('Logging in');
 							signIn();
+							setSpinner(true);
 						}}
 					>
 						<TextField
@@ -79,6 +88,7 @@ export const SignInPage: React.FC = () => {
 						/>
 						<h2>{error}</h2>
 						<Button type="submit" actionText='Sign In' />
+						{spinner && <CircularProgress />}
 					</form>
 					<hr />
 					<div>

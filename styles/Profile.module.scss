@@ -1,0 +1,14 @@
+
+.content {
+	flex-direction: column;
+	align-items: center;
+
+	.profileInformation {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-auto-rows: 1fr;
+		gap: 10px 0px;
+		grid-auto-flow: row;
+		align-items: baseline;
+	}
+}

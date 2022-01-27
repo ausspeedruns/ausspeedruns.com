@@ -35,18 +35,18 @@ const User = list({
     isStaff: checkbox(),
     discord: text({
       validation: {
-        isRequired: true,
+        isRequired: false,
         match: {
-          regex: /^.{3,32}#[0-9]{4}$/,
+          regex: /(^.{3,32}#[0-9]{4}$)?/,
           explanation: `Discord user ID is invalid. Make sure its like "Clubwho#1337".`
         }
       }
     }),
     twitter: text({
       validation: {
-        isRequired: true,
+        isRequired: false,
         match: {
-          regex: /^@(\w){1,15}$/,
+          regex: /(^@(\w){1,15}$)?/,
           explanation: `Twitter handle is invalid. Make sure its like "@Clubwhom".`
         }
       }
@@ -144,7 +144,7 @@ const { withAuth } = createAuth({
   sessionData: 'name isStaff',
   initFirstItem: {
     // These fields are collected in the "Create First User" form
-    fields: ['name', 'email', 'password'],
+    fields: ['name', 'email', 'password', 'username'],
   },
 });
 

@@ -465,6 +465,7 @@ type UserAuthenticationWithPasswordFailure {
 
 input CreateInitialUserInput {
   name: String
+  username: String
   email: String
   password: String
 }

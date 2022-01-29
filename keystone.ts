@@ -207,10 +207,7 @@ export default withAuth(
     lists: { Post, User, Submission, Event },
     session,
     ui: {
-      isAccessAllowed: async (context) => {
-        console.log(context.session?.data.roleAdmin)
-        return context.session?.data.roleAdmin
-      },
+      isAccessAllowed: context => context.session?.data.roleAdmin,
     }
   })
 );

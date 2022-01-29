@@ -61,7 +61,6 @@ export const SignInPage: React.FC = () => {
 					<form
 						onSubmit={(event) => {
 							event.preventDefault();
-							console.log('Logging in');
 							signIn();
 							setSpinner(true);
 						}}
@@ -87,7 +86,7 @@ export const SignInPage: React.FC = () => {
 							fullWidth
 						/>
 						<h2>{error}</h2>
-						<Button type="submit">Sign In</Button>
+						<Button type="submit" variant="contained">Sign In</Button>
 						{/* <Button type="submit" actionText='Sign In' /> */}
 						{spinner && <CircularProgress />}
 					</form>

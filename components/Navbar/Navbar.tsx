@@ -9,7 +9,7 @@ import {
 	faInstagram,
 	// faFacebook,
 } from '@fortawesome/free-brands-svg-icons';
-import { faBars, faCalendarAlt, faTimes, faUsers, faChevronRight, faCoins } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faCalendarAlt, faTimes, faUsers, faChevronRight, faCoins, faBook } from '@fortawesome/free-solid-svg-icons';
 import { globals } from '../../pages/globals';
 import Button from '../Button/Button';
 import { useAuth } from '../auth';
@@ -67,7 +67,13 @@ const Navbar = ({ isLive }: NavbarProps) => {
 							</li>
 						)}
 						<li>
-							<a href="#participate">
+							<a href="/blog">
+								{isMobile ? <FontAwesomeIcon icon={faBook} /> : ''}
+								<span className={styles.text}>Blog</span>
+							</a>
+						</li>
+						<li>
+							<a href="/#participate">
 								{isMobile ? <FontAwesomeIcon icon={faUsers} /> : ''}
 								<span className={styles.text}>Get Involved</span>
 							</a>

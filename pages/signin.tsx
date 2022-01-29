@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../components/auth';
-import { TextField, ThemeProvider, CircularProgress } from '@mui/material';
+import { TextField, ThemeProvider, CircularProgress, Button } from '@mui/material';
 import styles from '../styles/SignIn.module.scss';
 
-import Button from '../components/Button/Button';
+// import Button from '../components/Button/Button';
 import Footer from '../components/Footer/Footer';
 import Navbar from '../components/Navbar/Navbar';
 import Head from 'next/head';
@@ -87,7 +87,8 @@ export const SignInPage: React.FC = () => {
 							fullWidth
 						/>
 						<h2>{error}</h2>
-						<Button type="submit" actionText='Sign In' />
+						<Button type="submit">Sign In</Button>
+						{/* <Button type="submit" actionText='Sign In' /> */}
 						{spinner && <CircularProgress />}
 					</form>
 					<hr />

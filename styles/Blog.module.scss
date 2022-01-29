@@ -1,0 +1,49 @@
+@import './colors.scss';
+
+.content {
+	flex-direction: column;
+
+	h1 {
+		text-align: center;
+	}
+}
+
+.blogPosts {
+	width: 100%;
+
+	ul {
+		// display: flex;
+		// flex-direction: column;
+		// justify-content: center;
+		text-align: center;
+		list-style: none;
+		padding-left: 0;
+
+		li {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+
+			a {
+				font-weight: 600;
+				font-size: 1.5rem;
+				text-decoration: none;
+				color: $primary;
+			
+				&:hover {
+					color: lighten($primary, 10%)
+				}
+			}
+		}
+
+	}
+
+	.authors {
+		color: $dark-text;
+	}
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+}

@@ -11,9 +11,13 @@ import React from "react";
 import styles from "./Footer.module.scss";
 import { globals } from "../../pages/globals";
 
-const Footer = () => {
+interface FooterProps {
+  className?: string;
+}
+
+const Footer = (props: FooterProps) => {
   return (
-    <div>
+    <div className={props.className}>
       <div className={styles.acknowledgement}>
         <div className="content">
           <p>

@@ -83,6 +83,7 @@ export default function SubmitGamePage() {
 					racer: $racer
 					coop: $coop
 					video: $video
+					event: { connect: { id: "ckywyeqnq0108h0nr284hu98j" } }
 				}
 			) {
 				__typename
@@ -117,7 +118,7 @@ export default function SubmitGamePage() {
 									coop,
 									video,
 								}).then((result) => {
-									console.log('YAYY', result)
+									// console.log('YAYY', result)
 								});
 							}
 						}}
@@ -155,7 +156,7 @@ export default function SubmitGamePage() {
 							</Select>
 							<FormHelperText>
 								If unsure please search for the game title here:{' '}
-								<a href="https://www.classification.gov.au/">https://www.classification.gov.au/</a>
+								<a href="https://www.classification.gov.au/" target='_blank'>https://www.classification.gov.au/</a>
 							</FormHelperText>
 						</FormControl>
 						<TextField
@@ -165,14 +166,14 @@ export default function SubmitGamePage() {
 						/>
 
 						<FormControlLabel
-							control={<Checkbox onChange={(e) => setRace(e.target.checked ? 'solo' : 'no')} value={race !== 'no'} />}
+							control={<Checkbox onChange={(e) => setRace(e.target.checked ? 'solo' : 'no')} checked={race !== 'no'} />}
 							label="Submit as a race/coop?"
 						/>
 
 						{race !== 'no' && (
 							<>
 								<FormControlLabel
-									control={<Checkbox onChange={(e) => setCoop(e.target.checked)} value={coop} />}
+									control={<Checkbox onChange={(e) => setCoop(e.target.checked)} checked={coop} />}
 									label="Coop"
 								/>
 								<FormControl>

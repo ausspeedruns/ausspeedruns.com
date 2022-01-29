@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { gql, useMutation, useQuery } from 'urql';
 import Head from 'next/head';
-import { Button, CircularProgress, IconButton, TextField, ThemeProvider } from '@mui/material';
+import { Button, Checkbox, CircularProgress, IconButton, TextField, ThemeProvider, Tooltip } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-regular-svg-icons';
 
@@ -9,6 +9,7 @@ import styles from '../styles/Profile.module.scss';
 import NavBar from '../components/Navbar/Navbar';
 import { useAuth } from '../components/auth';
 import { theme } from '../components/mui-theme';
+import Link from 'next/link';
 
 const DiscordRegex = /^.{3,32}#[0-9]{4}$/;
 const TwitterRegex = /^@(\w){1,15}$/;
@@ -26,6 +27,7 @@ export default function ProfilePage() {
 	const [pronouns, setPronouns] = useState('');
 	const [discord, setDiscord] = useState('');
 	const [twitter, setTwitter] = useState('');
+	const [over18, setOver18] = useState(false);
 
 	const [queryResult, profileQuery] = useQuery({
 		query: gql`
@@ -39,6 +41,7 @@ export default function ProfilePage() {
 					eventsAttended
 					discord
 					twitter
+					isOver18
 				}
 			}
 		`,
@@ -56,6 +59,7 @@ export default function ProfilePage() {
 			$pronouns: String!
 			$discord: String!
 			$twitter: String!
+			$over18: Boolean!
 		) {
 			updateUser(
 				where: { id: $userId }
@@ -66,6 +70,7 @@ export default function ProfilePage() {
 					pronouns: $pronouns
 					discord: $discord
 					twitter: $twitter
+					isOver18: $over18
 				}
 			) {
 				name
@@ -74,6 +79,7 @@ export default function ProfilePage() {
 				pronouns
 				discord
 				twitter
+				isOver18
 			}
 		}
 	`);
@@ -86,15 +92,26 @@ export default function ProfilePage() {
 			setPronouns(queryResult.data.user.pronouns);
 			setDiscord(queryResult.data.user.discord);
 			setTwitter(queryResult.data.user.twitter);
+			setOver18(queryResult.data.user.isOver18);
 		}
 	}, [queryResult]);
 
-	const textfieldVariant = profileEditing ? 'outlined' : 'standard';
+	const textfieldVariant = profileEditing ? 'standard' : 'standard';
 	const disableSave =
 		!Boolean(username) ||
 		!Boolean(email) ||
 		(twitter !== '' && !TwitterRegex.test(twitter)) ||
 		(discord !== '' && !DiscordRegex.test(discord));
+
+	function UpdateProfileButton() {
+		if (auth.ready) {
+			updateProfile({ userId: auth.sessionData.id, username, name, email, pronouns, discord, twitter, over18 }).then((res) =>{
+				if (!res.error) {
+					setProfileEditing(false);
+				}
+			});
+		}
+	}
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -105,13 +122,16 @@ export default function ProfilePage() {
 				<NavBar />
 				<div className={`content ${styles.content}`}>
 					<h1>Profile</h1>
+					<Link href="/submit-game">Submit game to ASM2022</Link>
 					{(queryResult.fetching || queryResult.data.user === null) && <CircularProgress />}
 					{queryResult.data?.user && (
 						<div className={styles.profileInformation}>
 							<h2>Information</h2>
-							<IconButton onClick={() => setProfileEditing(!profileEditing)}>
-								<FontAwesomeIcon icon={faEdit} />
-							</IconButton>
+							<div>
+								<IconButton style={{ float: 'right' }} onClick={() => setProfileEditing(!profileEditing)}>
+									<FontAwesomeIcon icon={faEdit} />
+								</IconButton>
+							</div>
 							<div>Username</div>
 							<TextField
 								value={username}
@@ -162,12 +182,18 @@ export default function ProfilePage() {
 								onChange={(e) => setTwitter(e.target.value)}
 								onBlur={(e) => setTwitterWarning(!TwitterRegex.test(e.target.value))}
 							/>
+							<Tooltip placement="top" arrow title="For events we may need to give different tickets if under 18">
+								<div>Are you over 18 years of age?</div>
+							</Tooltip>
+							<div style={{display: 'flex', justifyContent: 'center'}}>
+								<Checkbox disabled={!profileEditing} onChange={(e) => setOver18(e.target.checked)} checked={over18} />
+							</div>
 							<div>Events attended</div>
 							<TextField disabled variant="standard" value={queryResult.data.user.eventsAttended} />
 						</div>
 					)}
 					{profileEditing && (
-						<Button variant="contained" disabled={disableSave}>
+						<Button variant="contained" disabled={disableSave} onClick={UpdateProfileButton}>
 							Save
 						</Button>
 					)}

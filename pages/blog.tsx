@@ -18,8 +18,6 @@ type Post = {
 };
 
 export default function BlogPage({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
-	console.log(posts[0])
-	
 	return (
 		<div className="app">
 			<Head>

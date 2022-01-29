@@ -20,6 +20,8 @@
     "@fortawesome/react-fontawesome": "^0.1.16",
     "@keystone-6/auth": "^1.0.2",
     "@keystone-6/core": "^1.0.1",
+    "@keystone-6/document-renderer": "^1.0.0",
+    "@keystone-6/fields-document": "^1.0.1",
     "@mui/material": "^5.3.0",
     "@mui/styles": "^5.3.0",
     "@urql/devtools": "^2.0.3",

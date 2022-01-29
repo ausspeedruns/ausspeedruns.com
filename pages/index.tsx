@@ -1,10 +1,4 @@
-import { InferGetStaticPropsType } from 'next';
-import Link from 'next/link';
 import Head from 'next/head';
-
-// Import the generated Lists API and types from Keystone
-import { query } from '.keystone/api';
-import { Lists } from '.keystone/types';
 
 // Components
 import Navbar from "../components/Navbar/Navbar";
@@ -13,19 +7,13 @@ import EventDetails from "../components/EventDetails/EventDetails";
 import TileGroup from "../components/Tiles/TileGroup";
 import Footer from "../components/Footer/Footer";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
-import { faChevronRight, faCoins, faTicketAlt } from "@fortawesome/free-solid-svg-icons";
+// import { faChevronRight, faCoins, faTicketAlt } from "@fortawesome/free-solid-svg-icons";
 import TwitchChatEmbed from "../components/TwitchChatEmbed/TwitchChatEmbed";
 import Ticker from "../components/Ticker/Ticker";
 import { globals } from "./globals";
 
-type Post = {
-  id: string;
-  title: string;
-  slug: string;
-};
-
 // Home receives a `posts` prop from `getStaticProps` below
-export default function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Home() {
   const eventLive = false;
   const {
       events: {
@@ -35,21 +23,6 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
     }
   } = globals;
   return (
-    // <div>
-    //   <main style={{ margin: '3rem' }}>
-    //     <h1>Hello World! 👋🏻 </h1>
-    //     <ul>
-    //       {/* Render each post with a link to the content page */}
-    //       {posts.map(post => (
-    //         <li key={post.id}>
-    //           <Link href={`/post/${post.slug}`}>
-    //             <a>{post.title}</a>
-    //           </Link>
-    //         </li>
-    //       ))}
-    //     </ul>
-    //   </main>
-    // </div>
     <div className="App">
       <Head>
         <title>AusSpeedruns</title>
@@ -102,15 +75,4 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
       </footer>
     </div>
   );
-}
-
-// Here we use the Lists API to load all the posts we want to display
-// The return of this function is provided to the `Home` component
-export async function getStaticProps() {
-  const posts = await query.Post.findMany({ query: 'id title slug' }) as Post[];
-  return {
-    props: {
-      posts
-    }
-  };
 }

@@ -1,18 +1,61 @@
 import { config, list } from '@keystone-6/core';
 import { statelessSessions } from '@keystone-6/core/session';
 import { createAuth } from '@keystone-6/auth';
-import { checkbox, integer, password, relationship, select, text, timestamp } from '@keystone-6/core/fields';
+import { document } from '@keystone-6/fields-document'
+import { checkbox, float, password, relationship, select, text, timestamp } from '@keystone-6/core/fields';
 import { Lists } from '.keystone/types';
 
 const session = statelessSessions({
   secret: ".MR-gkEFp'Hl0a]s4y7TJZ@:K?3x9u@CFC_+<^ldjpVL5:Fyi_2UB!)b*r3"
 })
 
+const operationsAdmin = ({ session }: { session: any }) => session?.data.roleAdmin;
+
+const filterPosts = ({ session }: { session: any }) => {
+  // if the user is an Admin, they can access all the records
+  if (session?.data.roleAdmin) return true;
+  // otherwise, filter for published posts
+  // return { published: { equals: true } };
+  return false;
+}
+
 const Post: Lists.Post = list({
+  access: {
+    operation: {
+      create: operationsAdmin,
+      delete: operationsAdmin,
+      update: operationsAdmin,
+    },
+    filter: {
+      query: filterPosts
+    }
+  },
   fields: {
     title: text({ validation: { isRequired: true } }),
     slug: text({ isIndexed: 'unique', isFilterable: true }),
-    content: text(),
+    author: relationship({ ref: 'User', many: true }),
+    published: checkbox(),
+    role: select({
+      type: 'enum',
+      options: [
+        { label: "Public", value: "public" },
+        { label: "Runners", value: "runner" },
+        { label: "Tech", value: "tech" },
+        { label: "Runner Management", value: "runnermanagement" }
+      ]
+    }),
+    content: document({
+      formatting: true,
+      links: true,
+      layouts: [
+        [1, 1],
+        [1, 1, 1],
+        [2, 1],
+        [1, 2],
+        [1, 2, 1]
+      ],
+      dividers: true
+    }),
   },
 });
 
@@ -31,8 +74,6 @@ const User = list({
     isOver18: checkbox(),
     pronouns: text(),
     eventsAttended: text(),
-    isRunner: checkbox(),
-    isStaff: checkbox(),
     discord: text({
       validation: {
         isRequired: false,
@@ -51,7 +92,13 @@ const User = list({
         }
       }
     }),
-    submissions: relationship({ ref: 'Submission.user', many: true })
+    submissions: relationship({ ref: 'Submission.user', many: true }),
+
+    // I really don't like all these checkboxes
+    roleRunner: checkbox(),
+    roleTech: checkbox(),
+    roleRunnerManagement: checkbox(),
+    roleAdmin: checkbox(),
   },
   ui: {
     labelField: 'username'
@@ -64,34 +111,15 @@ const User = list({
 //   session?.data.
 // }
 
-const filterStaff = ({ session }: { session: any }) => {
-  if (session?.data.isStaff) return true;
+const filterAdmin = ({ session }: { session: any }) => {
+  if (session?.data.roleAdmin) return true;
   return false;
 };
-
-// Would name this "Staff" but it gets marked as an ambiguous plural :(
-const Volunteer = list({
-  access: {
-    filter: {
-      query: filterStaff
-    }
-  },
-  fields: {
-    user: relationship({ ref: 'User' }),
-    isHost: checkbox(),
-    isTech: checkbox(),
-    isRunnerManagement: checkbox(),
-    isAdmin: checkbox(),
-  },
-  ui: {
-    labelField: 'user'
-  }
-});
 
 const Submission = list({
   access: {
     filter: {
-      query: filterStaff
+      query: filterAdmin,
     }
   },
   fields: {
@@ -132,10 +160,29 @@ const Submission = list({
       ],
       defaultValue: "submitted"
     }),
-    event: text({ validation: { isRequired: true }, defaultValue: 'ASM2022' }),
+    event: relationship({ ref: 'Event.submissions', ui: { hideCreate: true, labelField: 'shortname' } }),
   },
   ui: {
     labelField: 'game'
+  }
+});
+
+const Event = list({
+  access: {
+    operation: {
+      create: filterAdmin,
+      delete: filterAdmin,
+      update: filterAdmin,
+    },
+    filter: {
+    }
+  },
+  fields: {
+    name: text(),
+    shortname: text(),
+    raised: float(),
+    submissions: relationship({ ref: 'Submission.event', many: true, access: filterAdmin }),
+    acceptingSubmissions: checkbox(),
   }
 });
 
@@ -143,7 +190,7 @@ const { withAuth } = createAuth({
   listKey: 'User',
   identityField: 'email',
   secretField: 'password',
-  sessionData: 'name isStaff',
+  sessionData: 'name roleAdmin',
   initFirstItem: {
     // These fields are collected in the "Create First User" form
     fields: ['name', 'email', 'password', 'username'],
@@ -157,7 +204,13 @@ export default withAuth(
       generateNextGraphqlAPI: true,
       generateNodeAPI: true,
     },
-    lists: { Post, User, Volunteer, Submission },
+    lists: { Post, User, Submission, Event },
     session,
+    ui: {
+      isAccessAllowed: async (context) => {
+        console.log(context.session?.data.roleAdmin)
+        return context.session?.data.roleAdmin
+      },
+    }
   })
 );

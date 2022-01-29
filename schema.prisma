@@ -12,40 +12,33 @@ generator client {
 }
 
 model Post {
-  id      String @id @default(cuid())
-  title   String @default("")
-  slug    String @unique @default("")
-  content String @default("")
+  id        String  @id @default(cuid())
+  title     String  @default("")
+  slug      String  @unique @default("")
+  author    User[]  @relation("Post_author")
+  published Boolean @default(false)
+  role      String?
+  content   String  @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model User {
-  id                  String       @id @default(cuid())
-  name                String       @default("")
-  username            String       @default("")
-  email               String       @unique @default("")
-  password            String
-  accountCreated      DateTime?    @default(now())
-  isOver18            Boolean      @default(false)
-  pronouns            String       @default("")
-  eventsAttended      String       @default("")
-  isRunner            Boolean      @default(false)
-  isStaff             Boolean      @default(false)
-  discord             String       @default("")
-  twitter             String       @default("")
-  submissions         Submission[] @relation("Submission_user")
-  from_Volunteer_user Volunteer[]  @relation("Volunteer_user")
-}
-
-model Volunteer {
-  id                 String  @id @default(cuid())
-  user               User?   @relation("Volunteer_user", fields: [userId], references: [id])
-  userId             String? @map("user")
-  isHost             Boolean @default(false)
-  isTech             Boolean @default(false)
-  isRunnerManagement Boolean @default(false)
-  isAdmin            Boolean @default(false)
-
-  @@index([userId])
+  id                   String       @id @default(cuid())
+  name                 String       @default("")
+  username             String       @default("")
+  email                String       @unique @default("")
+  password             String
+  accountCreated       DateTime?    @default(now())
+  isOver18             Boolean      @default(false)
+  pronouns             String       @default("")
+  eventsAttended       String       @default("")
+  discord              String       @default("")
+  twitter              String       @default("")
+  submissions          Submission[] @relation("Submission_user")
+  roleRunner           Boolean      @default(false)
+  roleTech             Boolean      @default(false)
+  roleRunnerManagement Boolean      @default(false)
+  roleAdmin            Boolean      @default(false)
+  from_Post_author     Post[]       @relation("Post_author")
 }
 
 model Submission {
@@ -64,7 +57,18 @@ model Submission {
   coop              Boolean   @default(false)
   video             String    @default("")
   status            String?   @default("submitted")
-  event             String    @default("ASM2022")
+  event             Event?    @relation("Submission_event", fields: [eventId], references: [id])
+  eventId           String?   @map("event")
 
   @@index([userId])
+  @@index([eventId])
+}
+
+model Event {
+  id                   String       @id @default(cuid())
+  name                 String       @default("")
+  shortname            String       @default("")
+  raised               Float?
+  submissions          Submission[] @relation("Submission_event")
+  acceptingSubmissions Boolean      @default(false)
 }

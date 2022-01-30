@@ -91,6 +91,19 @@ export default function SubmitGamePage() {
 		}
 	`);
 
+	function clearInputs() {
+		setGame('');
+		setCategory('');
+		setPlatform('');
+		setEstimate('');
+		setAgeRating('m_or_lower');
+		setDonationIncentive('');
+		setRace('no');
+		setRacer('');
+		setCoop(false);
+		setVideo('');
+	}
+
 	return (
 		<ThemeProvider theme={theme}>
 			<div className="App">
@@ -119,6 +132,10 @@ export default function SubmitGamePage() {
 									video,
 								}).then((result) => {
 									// console.log('YAYY', result)
+									if (!result.error) {
+										clearInputs();
+										window.scrollY = 0;
+									}
 								});
 							}
 						}}
@@ -156,13 +173,15 @@ export default function SubmitGamePage() {
 							</Select>
 							<FormHelperText>
 								If unsure please search for the game title here:{' '}
-								<a href="https://www.classification.gov.au/" target='_blank'>https://www.classification.gov.au/</a>
+								<a href="https://www.classification.gov.au/" target="_blank">
+									https://www.classification.gov.au/
+								</a>
 							</FormHelperText>
 						</FormControl>
 						<TextField
 							value={donationIncentive}
 							onChange={(e) => setDonationIncentive(e.target.value)}
-							label="Donation Incentive (If you have one)"
+							label="Donation Incentive (Leave blank if none)"
 						/>
 
 						<FormControlLabel

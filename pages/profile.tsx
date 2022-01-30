@@ -122,7 +122,7 @@ export default function ProfilePage() {
 				<NavBar />
 				<div className={`content ${styles.content}`}>
 					<h1>Profile</h1>
-					<Link href="/submit-game">Submit game to ASM2022</Link>
+					<a className={styles.submitGameLink} href="/submit-game">Submit game to ASM2022</a>
 					{(queryResult.fetching || queryResult.data.user === null) && <CircularProgress />}
 					{queryResult.data?.user && (
 						<div className={styles.profileInformation}>

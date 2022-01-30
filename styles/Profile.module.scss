@@ -1,3 +1,4 @@
+@import './colors.scss';
 
 .content {
 	flex-direction: column;
@@ -10,5 +11,18 @@
 		gap: 10px 0px;
 		grid-auto-flow: row;
 		align-items: baseline;
+	}
+
+	.submitGameLink {
+		font-weight: 600;
+		font-size: 1.5rem;
+		text-decoration: none;
+		color: $primary;
+		margin: 1rem 0;
+
+		&:hover {
+			color: lighten($primary, 10%);
+		}
+
 	}
 }

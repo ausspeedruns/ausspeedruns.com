@@ -28,6 +28,8 @@ export default function SignUpPage() {
 	const [password, setPassword] = useState('');
 	const [over18, setOver18] = useState(false);
 
+	const canSignUp = !Boolean(username) || !Boolean(name) || !Boolean(email) || !Boolean(password);
+
 	return (
 		<ThemeProvider theme={theme}>
 			<div className="App">
@@ -58,6 +60,7 @@ export default function SignUpPage() {
 							}}
 							variant="outlined"
 							label="Email"
+							type="email"
 						/>
 						<TextField
 							value={password}
@@ -90,7 +93,7 @@ export default function SignUpPage() {
 								label="Are you over 18 years of age?"
 							/>
 						</Tooltip>
-						<Button type="submit" variant="contained">Sign Up</Button>
+						<Button type="submit" variant="contained" disabled={canSignUp}>Sign Up</Button>
 					</form>
 					<hr className="my-4" />
 					<div>

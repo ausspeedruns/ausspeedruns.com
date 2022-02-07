@@ -35,4 +35,4 @@ yarn-error.log*
 
 # keystone
 .keystone
-./app.db
+app.db

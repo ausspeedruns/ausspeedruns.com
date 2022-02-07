@@ -13,9 +13,14 @@ type Post {
   ): [User!]
   authorCount(where: UserWhereInput! = {}): Int
   published: Boolean
+  publishDate: DateTime
+  editedDate: DateTime
   role: PostRoleType
   content: Post_content_Document
 }
+
+scalar DateTime
+  @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
 
 enum PostRoleType {
   public
@@ -42,6 +47,8 @@ input PostWhereInput {
   slug: StringFilter
   author: UserManyRelationFilter
   published: BooleanFilter
+  publishDate: DateTimeNullableFilter
+  editedDate: DateTimeNullableFilter
   role: PostRoleTypeNullableFilter
 }
 
@@ -95,6 +102,17 @@ input BooleanFilter {
   not: BooleanFilter
 }
 
+input DateTimeNullableFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: DateTimeNullableFilter
+}
+
 input PostRoleTypeNullableFilter {
   equals: PostRoleType
   in: [PostRoleType!]
@@ -107,6 +125,8 @@ input PostOrderByInput {
   title: OrderDirection
   slug: OrderDirection
   published: OrderDirection
+  publishDate: OrderDirection
+  editedDate: OrderDirection
   role: OrderDirection
 }
 
@@ -120,6 +140,8 @@ input PostUpdateInput {
   slug: String
   author: UserRelateToManyForUpdateInput
   published: Boolean
+  publishDate: DateTime
+  editedDate: DateTime
   role: PostRoleType
   content: JSON
 }
@@ -141,6 +163,8 @@ input PostCreateInput {
   slug: String
   author: UserRelateToManyForCreateInput
   published: Boolean
+  publishDate: DateTime
+  editedDate: DateTime
   role: PostRoleType
   content: JSON
 }
@@ -157,11 +181,9 @@ type User {
   email: String
   password: PasswordState
   accountCreated: DateTime
-  isOver18: Boolean
+  dateOfBirth: DateTime
   pronouns: String
-  eventsAttended: String
-  discord: String
-  twitter: String
+  socials: Social
   submissions(
     where: SubmissionWhereInput! = {}
     orderBy: [SubmissionOrderByInput!]! = []
@@ -169,18 +191,18 @@ type User {
     skip: Int! = 0
   ): [Submission!]
   submissionsCount(where: SubmissionWhereInput! = {}): Int
-  roleRunner: Boolean
-  roleTech: Boolean
-  roleRunnerManagement: Boolean
-  roleAdmin: Boolean
+  role(
+    where: RoleWhereInput! = {}
+    orderBy: [RoleOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Role!]
+  roleCount(where: RoleWhereInput! = {}): Int
 }
 
 type PasswordState {
   isSet: Boolean!
 }
-
-scalar DateTime
-  @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
 
 input UserWhereUniqueInput {
   id: ID
@@ -196,19 +218,14 @@ input UserWhereInput {
   username: StringFilter
   email: StringFilter
   accountCreated: DateTimeNullableFilter
-  isOver18: BooleanFilter
+  dateOfBirth: DateTimeFilter
   pronouns: StringFilter
-  eventsAttended: StringFilter
-  discord: StringFilter
-  twitter: StringFilter
+  socials: SocialWhereInput
   submissions: SubmissionManyRelationFilter
-  roleRunner: BooleanFilter
-  roleTech: BooleanFilter
-  roleRunnerManagement: BooleanFilter
-  roleAdmin: BooleanFilter
+  role: RoleManyRelationFilter
 }
 
-input DateTimeNullableFilter {
+input DateTimeFilter {
   equals: DateTime
   in: [DateTime!]
   notIn: [DateTime!]
@@ -216,7 +233,7 @@ input DateTimeNullableFilter {
   lte: DateTime
   gt: DateTime
   gte: DateTime
-  not: DateTimeNullableFilter
+  not: DateTimeFilter
 }
 
 input SubmissionManyRelationFilter {
@@ -225,21 +242,20 @@ input SubmissionManyRelationFilter {
   none: SubmissionWhereInput
 }
 
+input RoleManyRelationFilter {
+  every: RoleWhereInput
+  some: RoleWhereInput
+  none: RoleWhereInput
+}
+
 input UserOrderByInput {
   id: OrderDirection
   name: OrderDirection
   username: OrderDirection
   email: OrderDirection
   accountCreated: OrderDirection
-  isOver18: OrderDirection
+  dateOfBirth: OrderDirection
   pronouns: OrderDirection
-  eventsAttended: OrderDirection
-  discord: OrderDirection
-  twitter: OrderDirection
-  roleRunner: OrderDirection
-  roleTech: OrderDirection
-  roleRunnerManagement: OrderDirection
-  roleAdmin: OrderDirection
 }
 
 input UserUpdateInput {
@@ -248,16 +264,17 @@ input UserUpdateInput {
   email: String
   password: String
   accountCreated: DateTime
-  isOver18: Boolean
+  dateOfBirth: DateTime
   pronouns: String
-  eventsAttended: String
-  discord: String
-  twitter: String
+  socials: SocialRelateToOneForUpdateInput
   submissions: SubmissionRelateToManyForUpdateInput
-  roleRunner: Boolean
-  roleTech: Boolean
-  roleRunnerManagement: Boolean
-  roleAdmin: Boolean
+  role: RoleRelateToManyForUpdateInput
+}
+
+input SocialRelateToOneForUpdateInput {
+  create: SocialCreateInput
+  connect: SocialWhereUniqueInput
+  disconnect: Boolean
 }
 
 input SubmissionRelateToManyForUpdateInput {
@@ -265,6 +282,13 @@ input SubmissionRelateToManyForUpdateInput {
   set: [SubmissionWhereUniqueInput!]
   create: [SubmissionCreateInput!]
   connect: [SubmissionWhereUniqueInput!]
+}
+
+input RoleRelateToManyForUpdateInput {
+  disconnect: [RoleWhereUniqueInput!]
+  set: [RoleWhereUniqueInput!]
+  create: [RoleCreateInput!]
+  connect: [RoleWhereUniqueInput!]
 }
 
 input UserUpdateArgs {
@@ -278,21 +302,26 @@ input UserCreateInput {
   email: String
   password: String
   accountCreated: DateTime
-  isOver18: Boolean
+  dateOfBirth: DateTime
   pronouns: String
-  eventsAttended: String
-  discord: String
-  twitter: String
+  socials: SocialRelateToOneForCreateInput
   submissions: SubmissionRelateToManyForCreateInput
-  roleRunner: Boolean
-  roleTech: Boolean
-  roleRunnerManagement: Boolean
-  roleAdmin: Boolean
+  role: RoleRelateToManyForCreateInput
+}
+
+input SocialRelateToOneForCreateInput {
+  create: SocialCreateInput
+  connect: SocialWhereUniqueInput
 }
 
 input SubmissionRelateToManyForCreateInput {
   create: [SubmissionCreateInput!]
   connect: [SubmissionWhereUniqueInput!]
+}
+
+input RoleRelateToManyForCreateInput {
+  create: [RoleCreateInput!]
+  connect: [RoleWhereUniqueInput!]
 }
 
 type Submission {
@@ -329,6 +358,7 @@ enum SubmissionStatusType {
   submitted
   accepted
   backup
+  rejected
 }
 
 input SubmissionWhereUniqueInput {
@@ -525,6 +555,125 @@ input EventCreateInput {
   acceptingSubmissions: Boolean
 }
 
+type Role {
+  id: ID!
+  name: String
+  admin: Boolean
+  canManageContent: Boolean
+  canManageUsers: Boolean
+  canReadTech: Boolean
+  canReadRunnerInfo: Boolean
+  canReadRunnerMgmt: Boolean
+  users(
+    where: UserWhereInput! = {}
+    orderBy: [UserOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [User!]
+  usersCount(where: UserWhereInput! = {}): Int
+}
+
+input RoleWhereUniqueInput {
+  id: ID
+}
+
+input RoleWhereInput {
+  AND: [RoleWhereInput!]
+  OR: [RoleWhereInput!]
+  NOT: [RoleWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  admin: BooleanFilter
+  canManageContent: BooleanFilter
+  canManageUsers: BooleanFilter
+  canReadTech: BooleanFilter
+  canReadRunnerInfo: BooleanFilter
+  canReadRunnerMgmt: BooleanFilter
+  users: UserManyRelationFilter
+}
+
+input RoleOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  admin: OrderDirection
+  canManageContent: OrderDirection
+  canManageUsers: OrderDirection
+  canReadTech: OrderDirection
+  canReadRunnerInfo: OrderDirection
+  canReadRunnerMgmt: OrderDirection
+}
+
+input RoleUpdateInput {
+  name: String
+  admin: Boolean
+  canManageContent: Boolean
+  canManageUsers: Boolean
+  canReadTech: Boolean
+  canReadRunnerInfo: Boolean
+  canReadRunnerMgmt: Boolean
+  users: UserRelateToManyForUpdateInput
+}
+
+input RoleUpdateArgs {
+  where: RoleWhereUniqueInput!
+  data: RoleUpdateInput!
+}
+
+input RoleCreateInput {
+  name: String
+  admin: Boolean
+  canManageContent: Boolean
+  canManageUsers: Boolean
+  canReadTech: Boolean
+  canReadRunnerInfo: Boolean
+  canReadRunnerMgmt: Boolean
+  users: UserRelateToManyForCreateInput
+}
+
+type Social {
+  id: ID!
+  discord: String
+  twitter: String
+  user: User
+}
+
+input SocialWhereUniqueInput {
+  id: ID
+}
+
+input SocialWhereInput {
+  AND: [SocialWhereInput!]
+  OR: [SocialWhereInput!]
+  NOT: [SocialWhereInput!]
+  id: IDFilter
+  discord: StringFilter
+  twitter: StringFilter
+  user: UserWhereInput
+}
+
+input SocialOrderByInput {
+  id: OrderDirection
+  discord: OrderDirection
+  twitter: OrderDirection
+}
+
+input SocialUpdateInput {
+  discord: String
+  twitter: String
+  user: UserRelateToOneForUpdateInput
+}
+
+input SocialUpdateArgs {
+  where: SocialWhereUniqueInput!
+  data: SocialUpdateInput!
+}
+
+input SocialCreateInput {
+  discord: String
+  twitter: String
+  user: UserRelateToOneForCreateInput
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -561,6 +710,18 @@ type Mutation {
   updateEvents(data: [EventUpdateArgs!]!): [Event]
   deleteEvent(where: EventWhereUniqueInput!): Event
   deleteEvents(where: [EventWhereUniqueInput!]!): [Event]
+  createRole(data: RoleCreateInput!): Role
+  createRoles(data: [RoleCreateInput!]!): [Role]
+  updateRole(where: RoleWhereUniqueInput!, data: RoleUpdateInput!): Role
+  updateRoles(data: [RoleUpdateArgs!]!): [Role]
+  deleteRole(where: RoleWhereUniqueInput!): Role
+  deleteRoles(where: [RoleWhereUniqueInput!]!): [Role]
+  createSocial(data: SocialCreateInput!): Social
+  createSocials(data: [SocialCreateInput!]!): [Social]
+  updateSocial(where: SocialWhereUniqueInput!, data: SocialUpdateInput!): Social
+  updateSocials(data: [SocialUpdateArgs!]!): [Social]
+  deleteSocial(where: SocialWhereUniqueInput!): Social
+  deleteSocials(where: [SocialWhereUniqueInput!]!): [Social]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -589,6 +750,7 @@ input CreateInitialUserInput {
   username: String
   email: String
   password: String
+  dateOfBirth: DateTime
 }
 
 type Query {
@@ -624,6 +786,22 @@ type Query {
   ): [Event!]
   event(where: EventWhereUniqueInput!): Event
   eventsCount(where: EventWhereInput! = {}): Int
+  roles(
+    where: RoleWhereInput! = {}
+    orderBy: [RoleOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Role!]
+  role(where: RoleWhereUniqueInput!): Role
+  rolesCount(where: RoleWhereInput! = {}): Int
+  socials(
+    where: SocialWhereInput! = {}
+    orderBy: [SocialOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Social!]
+  social(where: SocialWhereUniqueInput!): Social
+  socialsCount(where: SocialWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }

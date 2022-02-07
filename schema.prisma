@@ -12,33 +12,30 @@ generator client {
 }
 
 model Post {
-  id        String  @id @default(cuid())
-  title     String  @default("")
-  slug      String  @unique @default("")
-  author    User[]  @relation("Post_author")
-  published Boolean @default(false)
-  role      String?
-  content   String  @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id          String    @id @default(cuid())
+  title       String    @default("")
+  slug        String    @unique @default("")
+  author      User[]    @relation("Post_author")
+  published   Boolean   @default(false)
+  publishDate DateTime?
+  editedDate  DateTime?
+  role        String?
+  content     String    @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
 }
 
 model User {
-  id                   String       @id @default(cuid())
-  name                 String       @default("")
-  username             String       @default("")
-  email                String       @unique @default("")
-  password             String
-  accountCreated       DateTime?    @default(now())
-  isOver18             Boolean      @default(false)
-  pronouns             String       @default("")
-  eventsAttended       String       @default("")
-  discord              String       @default("")
-  twitter              String       @default("")
-  submissions          Submission[] @relation("Submission_user")
-  roleRunner           Boolean      @default(false)
-  roleTech             Boolean      @default(false)
-  roleRunnerManagement Boolean      @default(false)
-  roleAdmin            Boolean      @default(false)
-  from_Post_author     Post[]       @relation("Post_author")
+  id               String       @id @default(cuid())
+  name             String       @default("")
+  username         String       @default("")
+  email            String       @unique @default("")
+  password         String
+  accountCreated   DateTime?    @default(now())
+  dateOfBirth      DateTime
+  pronouns         String       @default("")
+  socials          Social?      @relation("Social_user")
+  submissions      Submission[] @relation("Submission_user")
+  role             Role[]       @relation("Role_users")
+  from_Post_author Post[]       @relation("Post_author")
 }
 
 model Submission {
@@ -50,7 +47,7 @@ model Submission {
   category          String    @default("")
   platform          String    @default("")
   estimate          String    @default("")
-  ageRating         String?   @default("M_or_Lower")
+  ageRating         String?   @default("m_or_lower")
   donationIncentive String    @default("")
   race              String?   @default("no")
   racer             String    @default("")
@@ -71,4 +68,24 @@ model Event {
   raised               Float?
   submissions          Submission[] @relation("Submission_event")
   acceptingSubmissions Boolean      @default(false)
+}
+
+model Role {
+  id                String  @id @default(cuid())
+  name              String  @default("")
+  admin             Boolean @default(false)
+  canManageContent  Boolean @default(false)
+  canManageUsers    Boolean @default(false)
+  canReadTech       Boolean @default(false)
+  canReadRunnerInfo Boolean @default(false)
+  canReadRunnerMgmt Boolean @default(false)
+  users             User[]  @relation("Role_users")
+}
+
+model Social {
+  id      String  @id @default(cuid())
+  discord String  @default("")
+  twitter String  @default("")
+  user    User?   @relation("Social_user", fields: [userId], references: [id])
+  userId  String? @unique @map("user")
 }

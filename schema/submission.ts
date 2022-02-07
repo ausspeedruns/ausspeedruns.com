@@ -1,0 +1,56 @@
+import { list } from '@keystone-6/core';
+import { checkbox, relationship, select, text, timestamp } from '@keystone-6/core/fields';
+import { operationsAdmin } from './access';
+import { Lists } from '.keystone/types';
+
+export const Submission: Lists.Submission = list({
+	access: {
+		operation: {
+			query: operationsAdmin,
+		}
+	},
+	fields: {
+		user: relationship({ ref: 'User.submissions', ui: { hideCreate: true, labelField: 'username' } }),
+		created: timestamp({ defaultValue: { kind: 'now' } }),
+		game: text({ validation: { isRequired: true } }),
+		category: text({ validation: { isRequired: true } }),
+		platform: text({ validation: { isRequired: true } }), // Potentially an enum with "other"?
+		estimate: text({ validation: { isRequired: true, match: { regex: /^\d{2}:\d{2}:\d{2}$/, explanation: 'Estimate invalid. Make sure its like 01:30:00.' } } }),
+		ageRating: select({
+			type: 'enum',
+			options: [
+				{ label: "M or Lower", value: "m_or_lower" },
+				{ label: "MA15+", value: "ma15" },
+				{ label: "RA18+", value: "ra18" }
+			],
+			defaultValue: "m_or_lower"
+		}),
+		donationIncentive: text(),
+		race: select({
+			type: 'enum',
+			options: [
+				{ label: "No", value: "no" },
+				{ label: "Yes - Possible Solo", value: "solo" },
+				{ label: "Yes - Only Race/Coop", value: "only" }
+			],
+			defaultValue: "no"
+		}),
+		racer: text(),
+		coop: checkbox(),
+		video: text({ validation: { isRequired: true } }),
+		status: select({
+			type: 'enum',
+			options: [
+				{ label: "Submitted", value: "submitted" },
+				{ label: "Accepted", value: "accepted" },
+				{ label: "Backup", value: "backup" },
+				{ label: "Rejected", value: "rejected" }
+			],
+			defaultValue: "submitted"
+		}),
+		event: relationship({ ref: 'Event.submissions', ui: { hideCreate: true, labelField: 'shortname' } }),
+	},
+	ui: {
+		labelField: 'game'
+	}
+});

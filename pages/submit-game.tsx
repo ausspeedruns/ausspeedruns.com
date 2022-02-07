@@ -83,7 +83,7 @@ export default function SubmitGamePage() {
 					racer: $racer
 					coop: $coop
 					video: $video
-					event: { connect: { id: "ckywyeqnq0108h0nr284hu98j" } }
+					event: { connect: { id: "ckz0z77pb0248ksoorlfk7pbr" } }
 				}
 			) {
 				__typename
@@ -211,7 +211,7 @@ export default function SubmitGamePage() {
 							</>
 						)}
 						<TextField value={video} onChange={(e) => setVideo(e.target.value)} label="Video of the run" required />
-						{submissionResult.error && <h2>{submissionResult.error}</h2>}
+						{submissionResult.error && <h2>{submissionResult.error.message}</h2>}
 						<Button variant="contained" type="submit">
 							Submit
 						</Button>

@@ -36,16 +36,17 @@ export const User: Lists.User = list({
 		}
 	},
 	fields: {
-		name: text({ access: fieldAccess.editSelfOrHidden }),
-		username: text({ validation: { isRequired: true }, access: fieldAccess.editSelfOrRead  }),
-		email: text({ isIndexed: 'unique', validation: { isRequired: true }, access: fieldAccess.editSelfOrHidden }),
+		name: text({ access: fieldAccess.editSelfOrHidden, ui: { itemView: { fieldMode: fieldModes.editSelfOrHidden } } }),
+		username: text({ validation: { isRequired: true }, access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
+		email: text({ isIndexed: 'unique', validation: { isRequired: true }, access: fieldAccess.editSelfOrHidden, ui: { itemView: { fieldMode: fieldModes.editSelfOrHidden } } }),
 		password: password({ validation: { isRequired: true } }),
 		accountCreated: timestamp({ defaultValue: { kind: 'now' }, access: fieldAccess.readSelfOrHidden }),
-		dateOfBirth: timestamp({ validation: { isRequired: true }, access: fieldAccess.editSelfOrHidden }),
-		pronouns: text({ access: fieldAccess.editSelfOrRead }),
-		socials: relationship({ ref: 'Social.user', access: fieldAccess.editSelfOrRead }),
-		submissions: relationship({ ref: 'Submission.user', many: true, access: fieldAccess.editSelfOrRead }),
-		role: relationship({ ref: 'Role.users', access: permissions.canManageUsers, many: true })
+		dateOfBirth: timestamp({ validation: { isRequired: true }, access: fieldAccess.editSelfOrHidden, ui: { itemView: { fieldMode: fieldModes.editSelfOrHidden } } }),
+		pronouns: text({ access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
+		socials: relationship({ ref: 'Social.user', access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
+		submissions: relationship({ ref: 'Submission.runner', many: true, access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
+		role: relationship({ ref: 'Role.users', access: permissions.canManageUsers, many: true }),
+		runs: relationship({ ref: 'Run.runners', many: true, label: 'game' }),
 	},
 	ui: {
 		labelField: 'username'
@@ -57,11 +58,11 @@ export const Role = list({
 		filter: {
 			delete: permissions.canManageUsers,
 			// query: permissions.canManageUsers,
-			// update: permissions.canManageUsers,
+			update: permissions.canManageUsers,
 		}
 	},
 	ui: {
-		// isHidden: context => !permissions.canManageUsers(context),
+		isHidden: context => !permissions.canManageUsers(context),
 	},
 	fields: {
 		name: text(),
@@ -96,5 +97,5 @@ export const Social = list({
 			}
 		}),
 		user: relationship({ ref: 'User.socials' }),
-	},
+	}
 });

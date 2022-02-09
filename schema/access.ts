@@ -1,4 +1,4 @@
-type SessionContext = {
+export type SessionContext = {
 	session?: {
 		data: {
 			name: string;
@@ -16,20 +16,15 @@ type SessionContext = {
 	};
 };
 
-type ItemContext = { item: any; } & SessionContext;
+export type ItemContext = { item: any; } & SessionContext;
 
 export const isSignedIn = ({ session }: SessionContext) => {
 	return !!session;
 };
 
-export const operationsAdmin = ({ session }: SessionContext ) => session?.data.role?.some(role => role.admin);
-
-export const filterPosts = ({ session }: SessionContext ) => {
-	// if the user is an Admin, they can access all the records
-	if (session?.data.role?.some(role => role.canManageContent)) return true;
-	// otherwise, filter for published posts
-	// return { published: { equals: true } };
-	return false;
+export const operations = {
+	admin: ({ session }: SessionContext ) => session?.data.role?.some(role => role.admin),
+	runnerMgmt: ({ session }: SessionContext ) => session?.data.role?.some(role => role.canReadRunnerMgmt),
 }
 
 export const permissions = {

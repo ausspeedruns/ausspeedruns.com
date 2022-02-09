@@ -198,6 +198,13 @@ type User {
     skip: Int! = 0
   ): [Role!]
   roleCount(where: RoleWhereInput! = {}): Int
+  runs(
+    where: RunWhereInput! = {}
+    orderBy: [RunOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Run!]
+  runsCount(where: RunWhereInput! = {}): Int
 }
 
 type PasswordState {
@@ -223,6 +230,7 @@ input UserWhereInput {
   socials: SocialWhereInput
   submissions: SubmissionManyRelationFilter
   role: RoleManyRelationFilter
+  runs: RunManyRelationFilter
 }
 
 input DateTimeFilter {
@@ -248,6 +256,12 @@ input RoleManyRelationFilter {
   none: RoleWhereInput
 }
 
+input RunManyRelationFilter {
+  every: RunWhereInput
+  some: RunWhereInput
+  none: RunWhereInput
+}
+
 input UserOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -269,6 +283,7 @@ input UserUpdateInput {
   socials: SocialRelateToOneForUpdateInput
   submissions: SubmissionRelateToManyForUpdateInput
   role: RoleRelateToManyForUpdateInput
+  runs: RunRelateToManyForUpdateInput
 }
 
 input SocialRelateToOneForUpdateInput {
@@ -291,6 +306,13 @@ input RoleRelateToManyForUpdateInput {
   connect: [RoleWhereUniqueInput!]
 }
 
+input RunRelateToManyForUpdateInput {
+  disconnect: [RunWhereUniqueInput!]
+  set: [RunWhereUniqueInput!]
+  create: [RunCreateInput!]
+  connect: [RunWhereUniqueInput!]
+}
+
 input UserUpdateArgs {
   where: UserWhereUniqueInput!
   data: UserUpdateInput!
@@ -307,6 +329,7 @@ input UserCreateInput {
   socials: SocialRelateToOneForCreateInput
   submissions: SubmissionRelateToManyForCreateInput
   role: RoleRelateToManyForCreateInput
+  runs: RunRelateToManyForCreateInput
 }
 
 input SocialRelateToOneForCreateInput {
@@ -324,9 +347,14 @@ input RoleRelateToManyForCreateInput {
   connect: [RoleWhereUniqueInput!]
 }
 
+input RunRelateToManyForCreateInput {
+  create: [RunCreateInput!]
+  connect: [RunWhereUniqueInput!]
+}
+
 type Submission {
   id: ID!
-  user: User
+  runner: User
   created: DateTime
   game: String
   category: String
@@ -370,7 +398,7 @@ input SubmissionWhereInput {
   OR: [SubmissionWhereInput!]
   NOT: [SubmissionWhereInput!]
   id: IDFilter
-  user: UserWhereInput
+  runner: UserWhereInput
   created: DateTimeNullableFilter
   game: StringFilter
   category: StringFilter
@@ -424,7 +452,7 @@ input SubmissionOrderByInput {
 }
 
 input SubmissionUpdateInput {
-  user: UserRelateToOneForUpdateInput
+  runner: UserRelateToOneForUpdateInput
   created: DateTime
   game: String
   category: String
@@ -458,7 +486,7 @@ input SubmissionUpdateArgs {
 }
 
 input SubmissionCreateInput {
-  user: UserRelateToOneForCreateInput
+  runner: UserRelateToOneForCreateInput
   created: DateTime
   game: String
   category: String
@@ -496,6 +524,13 @@ type Event {
     skip: Int! = 0
   ): [Submission!]
   submissionsCount(where: SubmissionWhereInput! = {}): Int
+  runs(
+    where: RunWhereInput! = {}
+    orderBy: [RunOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Run!]
+  runsCount(where: RunWhereInput! = {}): Int
   acceptingSubmissions: Boolean
 }
 
@@ -512,6 +547,7 @@ input EventWhereInput {
   shortname: StringFilter
   raised: FloatNullableFilter
   submissions: SubmissionManyRelationFilter
+  runs: RunManyRelationFilter
   acceptingSubmissions: BooleanFilter
 }
 
@@ -539,6 +575,7 @@ input EventUpdateInput {
   shortname: String
   raised: Float
   submissions: SubmissionRelateToManyForUpdateInput
+  runs: RunRelateToManyForUpdateInput
   acceptingSubmissions: Boolean
 }
 
@@ -552,6 +589,7 @@ input EventCreateInput {
   shortname: String
   raised: Float
   submissions: SubmissionRelateToManyForCreateInput
+  runs: RunRelateToManyForCreateInput
   acceptingSubmissions: Boolean
 }
 
@@ -674,6 +712,120 @@ input SocialCreateInput {
   user: UserRelateToOneForCreateInput
 }
 
+type Run {
+  id: ID!
+  runners(
+    where: UserWhereInput! = {}
+    orderBy: [UserOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [User!]
+  runnersCount(where: UserWhereInput! = {}): Int
+  originalSubmission: Submission
+  game: String
+  category: String
+  platform: String
+  estimate: String
+  finalTime: DateTime
+  donationIncentive: String
+  race: Boolean
+  racer: String
+  coop: Boolean
+  twitchVOD: String
+  yotubeVOD: String
+  event: Event
+}
+
+input RunWhereUniqueInput {
+  id: ID
+}
+
+input RunWhereInput {
+  AND: [RunWhereInput!]
+  OR: [RunWhereInput!]
+  NOT: [RunWhereInput!]
+  id: IDFilter
+  runners: UserManyRelationFilter
+  originalSubmission: SubmissionWhereInput
+  game: StringFilter
+  category: StringFilter
+  platform: StringFilter
+  estimate: StringFilter
+  finalTime: DateTimeNullableFilter
+  donationIncentive: StringFilter
+  race: BooleanFilter
+  racer: StringFilter
+  coop: BooleanFilter
+  twitchVOD: StringFilter
+  yotubeVOD: StringFilter
+  event: EventWhereInput
+}
+
+input RunOrderByInput {
+  id: OrderDirection
+  game: OrderDirection
+  category: OrderDirection
+  platform: OrderDirection
+  estimate: OrderDirection
+  finalTime: OrderDirection
+  donationIncentive: OrderDirection
+  race: OrderDirection
+  racer: OrderDirection
+  coop: OrderDirection
+  twitchVOD: OrderDirection
+  yotubeVOD: OrderDirection
+}
+
+input RunUpdateInput {
+  runners: UserRelateToManyForUpdateInput
+  originalSubmission: SubmissionRelateToOneForUpdateInput
+  game: String
+  category: String
+  platform: String
+  estimate: String
+  finalTime: DateTime
+  donationIncentive: String
+  race: Boolean
+  racer: String
+  coop: Boolean
+  twitchVOD: String
+  yotubeVOD: String
+  event: EventRelateToOneForUpdateInput
+}
+
+input SubmissionRelateToOneForUpdateInput {
+  create: SubmissionCreateInput
+  connect: SubmissionWhereUniqueInput
+  disconnect: Boolean
+}
+
+input RunUpdateArgs {
+  where: RunWhereUniqueInput!
+  data: RunUpdateInput!
+}
+
+input RunCreateInput {
+  runners: UserRelateToManyForCreateInput
+  originalSubmission: SubmissionRelateToOneForCreateInput
+  game: String
+  category: String
+  platform: String
+  estimate: String
+  finalTime: DateTime
+  donationIncentive: String
+  race: Boolean
+  racer: String
+  coop: Boolean
+  twitchVOD: String
+  yotubeVOD: String
+  event: EventRelateToOneForCreateInput
+}
+
+input SubmissionRelateToOneForCreateInput {
+  create: SubmissionCreateInput
+  connect: SubmissionWhereUniqueInput
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -722,6 +874,12 @@ type Mutation {
   updateSocials(data: [SocialUpdateArgs!]!): [Social]
   deleteSocial(where: SocialWhereUniqueInput!): Social
   deleteSocials(where: [SocialWhereUniqueInput!]!): [Social]
+  createRun(data: RunCreateInput!): Run
+  createRuns(data: [RunCreateInput!]!): [Run]
+  updateRun(where: RunWhereUniqueInput!, data: RunUpdateInput!): Run
+  updateRuns(data: [RunUpdateArgs!]!): [Run]
+  deleteRun(where: RunWhereUniqueInput!): Run
+  deleteRuns(where: [RunWhereUniqueInput!]!): [Run]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -802,6 +960,14 @@ type Query {
   ): [Social!]
   social(where: SocialWhereUniqueInput!): Social
   socialsCount(where: SocialWhereInput! = {}): Int
+  runs(
+    where: RunWhereInput! = {}
+    orderBy: [RunOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Run!]
+  run(where: RunWhereUniqueInput!): Run
+  runsCount(where: RunWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }

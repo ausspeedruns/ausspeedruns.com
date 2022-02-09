@@ -7,6 +7,7 @@ import { Submission } from './schema/submission';
 import { Event } from './schema/event';
 import { Post } from './schema/post';
 import { permissions, rules } from './schema/access';
+import { Run } from './schema/runs';
 
 const session = statelessSessions({
   secret: ".MR-gkEFp'Hl0a]s4y7TJZ@:K?3x9u@CFC_+<^ldjpVL5:Fyi_2UB!)b*r3"
@@ -44,7 +45,7 @@ export default withAuth(
       generateNextGraphqlAPI: true,
       generateNodeAPI: true,
     },
-    lists: { Post, User, Submission, Event, Role, Social },
+    lists: { Post, User, Submission, Event, Role, Social, Run },
     session,
     ui: {
       isAccessAllowed: permissions.canManageContent

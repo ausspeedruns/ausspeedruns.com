@@ -1,16 +1,16 @@
 import { list } from '@keystone-6/core';
 import { checkbox, relationship, select, text, timestamp } from '@keystone-6/core/fields';
-import { operationsAdmin } from './access';
+import { operations } from './access';
 import { Lists } from '.keystone/types';
 
 export const Submission: Lists.Submission = list({
 	access: {
 		operation: {
-			query: operationsAdmin,
+			query: operations.admin,
 		}
 	},
 	fields: {
-		user: relationship({ ref: 'User.submissions', ui: { hideCreate: true, labelField: 'username' } }),
+		runner: relationship({ ref: 'User.submissions', ui: { hideCreate: true, labelField: 'username' } }),
 		created: timestamp({ defaultValue: { kind: 'now' } }),
 		game: text({ validation: { isRequired: true } }),
 		category: text({ validation: { isRequired: true } }),

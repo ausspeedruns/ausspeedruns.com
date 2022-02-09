@@ -2,7 +2,13 @@ import { list } from '@keystone-6/core';
 import { checkbox, relationship, select, text, timestamp } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { Lists } from '.keystone/types';
-import { filterPosts, operationsAdmin, permissions } from './access';
+import { permissions, SessionContext } from './access';
+import { ListFilterAccessControl } from '@keystone-6/core/types';
+
+const filterPosts: ListFilterAccessControl<"query", Lists.Post.TypeInfo> = ({ session }: SessionContext ) => {
+	if (session?.data.role?.some(role => role.canManageContent)) return true;
+	return { published: { equals: true } };
+}
 
 export const Post: Lists.Post = list({
 	access: {

@@ -33,31 +33,33 @@ model User {
   dateOfBirth      DateTime
   pronouns         String       @default("")
   socials          Social?      @relation("Social_user")
-  submissions      Submission[] @relation("Submission_user")
+  submissions      Submission[] @relation("Submission_runner")
   role             Role[]       @relation("Role_users")
+  runs             Run[]        @relation("Run_runners")
   from_Post_author Post[]       @relation("Post_author")
 }
 
 model Submission {
-  id                String    @id @default(cuid())
-  user              User?     @relation("Submission_user", fields: [userId], references: [id])
-  userId            String?   @map("user")
-  created           DateTime? @default(now())
-  game              String    @default("")
-  category          String    @default("")
-  platform          String    @default("")
-  estimate          String    @default("")
-  ageRating         String?   @default("m_or_lower")
-  donationIncentive String    @default("")
-  race              String?   @default("no")
-  racer             String    @default("")
-  coop              Boolean   @default(false)
-  video             String    @default("")
-  status            String?   @default("submitted")
-  event             Event?    @relation("Submission_event", fields: [eventId], references: [id])
-  eventId           String?   @map("event")
+  id                          String    @id @default(cuid())
+  runner                      User?     @relation("Submission_runner", fields: [runnerId], references: [id])
+  runnerId                    String?   @map("runner")
+  created                     DateTime? @default(now())
+  game                        String    @default("")
+  category                    String    @default("")
+  platform                    String    @default("")
+  estimate                    String    @default("")
+  ageRating                   String?   @default("m_or_lower")
+  donationIncentive           String    @default("")
+  race                        String?   @default("no")
+  racer                       String    @default("")
+  coop                        Boolean   @default(false)
+  video                       String    @default("")
+  status                      String?   @default("submitted")
+  event                       Event?    @relation("Submission_event", fields: [eventId], references: [id])
+  eventId                     String?   @map("event")
+  from_Run_originalSubmission Run[]     @relation("Run_originalSubmission")
 
-  @@index([userId])
+  @@index([runnerId])
   @@index([eventId])
 }
 
@@ -67,6 +69,7 @@ model Event {
   shortname            String       @default("")
   raised               Float?
   submissions          Submission[] @relation("Submission_event")
+  runs                 Run[]        @relation("Run_event")
   acceptingSubmissions Boolean      @default(false)
 }
 
@@ -88,4 +91,27 @@ model Social {
   twitter String  @default("")
   user    User?   @relation("Social_user", fields: [userId], references: [id])
   userId  String? @unique @map("user")
+}
+
+model Run {
+  id                   String      @id @default(cuid())
+  runners              User[]      @relation("Run_runners")
+  originalSubmission   Submission? @relation("Run_originalSubmission", fields: [originalSubmissionId], references: [id])
+  originalSubmissionId String?     @map("originalSubmission")
+  game                 String      @default("")
+  category             String      @default("")
+  platform             String      @default("")
+  estimate             String      @default("")
+  finalTime            DateTime?
+  donationIncentive    String      @default("")
+  race                 Boolean     @default(false)
+  racer                String      @default("")
+  coop                 Boolean     @default(false)
+  twitchVOD            String      @default("")
+  yotubeVOD            String      @default("")
+  event                Event?      @relation("Run_event", fields: [eventId], references: [id])
+  eventId              String?     @map("event")
+
+  @@index([originalSubmissionId])
+  @@index([eventId])
 }

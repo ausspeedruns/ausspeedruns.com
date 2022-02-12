@@ -67,6 +67,11 @@ const Navbar = ({ isLive }: NavbarProps) => {
 							</li>
 						)}
 						<li>
+							<a href="/event/ASM2022">
+								<span className={styles.text}>ASM2022</span>
+							</a>
+						</li>
+						<li>
 							<a href="/blog">
 								{isMobile ? <FontAwesomeIcon icon={faBook} /> : ''}
 								<span className={styles.text}>Blog</span>
@@ -131,7 +136,7 @@ const Navbar = ({ isLive }: NavbarProps) => {
 								<>
 									<Button
 										actionText={auth.sessionData.username}
-										link={"/profile"}
+										link={`/user/${auth.sessionData.username}`}
 										colorScheme={'orange'}
 									/>
 									<a className={styles.signout} onClick={() => auth.signOut()}>Sign out</a>

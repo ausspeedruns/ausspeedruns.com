@@ -1,0 +1,98 @@
+@import './colors.scss';
+
+.header {
+	background-image: url('./img/ASM2022Background.png');
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-color: #202545;
+	width: 100%;
+	height: 25rem;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	img {
+		width: 600px;
+		height: auto;
+	}
+}
+
+.contentRow {
+	display: flex;
+	width: 100%;
+	height: 30rem;
+
+	.intro, .moreInfo {
+		width: 50%;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+		h2 {
+			font-size: 2.5rem;
+		}
+
+		p {
+			font-size: 1.5rem;
+			width: 60%;
+		}
+	}
+	
+	.intro {
+		background: $primary;
+		color: $light-text;
+	}
+	
+	img {
+		object-fit: cover;
+		width: 50%;
+	}
+
+	.moreInfo {
+		color: $dark-text;
+	}
+}
+
+.informationSection {
+	height: 30rem;
+	width: 100%;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	
+	font-size: 1.3rem;
+
+	h3 {
+		font-size: 1.8rem;
+	}
+
+	.information {
+		// display: flex;
+		// flex-direction: column;
+	
+		display: grid; 
+		grid-template-columns: 1fr 1fr; 
+		gap: 5px 0px;
+	
+		span:nth-child(odd) {
+			font-weight: bold;
+		}
+
+		span:nth-child(even) {
+			text-align: right;
+		}
+	}
+}
+
+.footer {
+	object-fit: cover;
+	width: 100%;
+	height: 30rem;
+	margin-bottom: -4px;
+}

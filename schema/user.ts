@@ -57,6 +57,7 @@ export const User: Lists.User = list({
 				{ label: "Western Australia", value: "wa" },
 				{ label: "ACT", value: "act" },
 				{ label: "Northern Territory", value: "nt" },
+				{ label: "Tasmania", value: "tas" },
 				{ label: "Outside of Australia", value: "outer" },
 			]
 		}),

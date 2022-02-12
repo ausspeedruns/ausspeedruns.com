@@ -7,10 +7,14 @@
 	.profileInformation {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		grid-auto-rows: 1fr;
-		gap: 10px 0px;
+		gap: 5px 0px;
 		grid-auto-flow: row;
 		align-items: baseline;
+		margin: 1rem 0 2rem 0;
+	}
+
+	h3 {
+		margin-top: 2rem;
 	}
 
 	.submitGameLink {
@@ -23,6 +27,5 @@
 		&:hover {
 			color: lighten($primary, 10%);
 		}
-
 	}
 }

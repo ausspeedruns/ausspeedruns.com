@@ -220,6 +220,7 @@ enum UserStateType {
   wa
   act
   nt
+  tas
   outer
 }
 

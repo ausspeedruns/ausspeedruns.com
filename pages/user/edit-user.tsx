@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { gql, useMutation, useQuery } from 'urql';
 import Head from 'next/head';
-import { Button, CircularProgress, IconButton, TextField, ThemeProvider, Input } from '@mui/material';
+import { Button, CircularProgress, IconButton, TextField, ThemeProvider, Input, Select, MenuItem } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-regular-svg-icons';
 
-import styles from '../styles/Profile.module.scss';
-import NavBar from '../components/Navbar/Navbar';
-import { useAuth } from '../components/auth';
-import { theme } from '../components/mui-theme';
-import Link from 'next/link';
+import styles from '../../styles/Profile.module.scss';
+import NavBar from '../../components/Navbar/Navbar';
+import { useAuth } from '../../components/auth';
+import { theme } from '../../components/mui-theme';
 
 const DiscordRegex = /^.{3,32}#[0-9]{4}$/;
 const TwitterRegex = /^@(\w){1,15}$/;
@@ -24,6 +23,7 @@ export default function EditUser() {
 	const [username, setUsername] = useState('');
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
+	const [state, setState] = useState('');
 	const [pronouns, setPronouns] = useState('');
 	const [socialId, setSocialId] = useState('');
 	const [discord, setDiscord] = useState('');
@@ -39,6 +39,7 @@ export default function EditUser() {
 					email
 					dateOfBirth
 					pronouns
+					state
 					socials {
 						id
 						discord
@@ -83,6 +84,7 @@ export default function EditUser() {
 			setName(queryResult.data.user.name);
 			setEmail(queryResult.data.user.email);
 			setPronouns(queryResult.data.user.pronouns);
+			setState(queryResult.data.user.state);
 			setSocialId(queryResult.data.user.socials.id);
 			setDiscord(queryResult.data.user.socials.discord);
 			setTwitter(queryResult.data.user.socials.twitter);
@@ -133,14 +135,41 @@ export default function EditUser() {
 					{queryResult.data?.user && (
 						<>
 							<div className={styles.profileInformation}>
+								<h3>Personal Information</h3>
+								<div />
 								<div>Username</div>
-								<TextField value={username} onChange={(e) => setUsername(e.target.value)} variant={'outlined'} />
+								<TextField required value={username} onChange={(e) => setUsername(e.target.value)} variant={'outlined'} />
 								<div>Name</div>
-								<TextField value={name} onChange={(e) => setName(e.target.value)} variant={'outlined'} />
+								<TextField required value={name} onChange={(e) => setName(e.target.value)} variant={'outlined'} />
 								<div>Email</div>
-								<TextField value={email} onChange={(e) => setEmail(e.target.value)} variant={'outlined'} />
+								<TextField required value={email} onChange={(e) => setEmail(e.target.value)} variant={'outlined'} />
 								<div>Pronouns</div>
 								<TextField value={pronouns} onChange={(e) => setPronouns(e.target.value)} variant={'outlined'} />
+								<div>Date of birth</div>
+								<div style={{ display: 'flex', justifyContent: 'center' }}>
+									<Input
+										required
+										fullWidth
+										type="date"
+										onChange={(e) => setDateOfBirth(e.target.value)}
+										value={new Date(dateOfBirth).toLocaleDateString().split('/').reverse().join('-')}
+									/>
+								</div>
+								<div>State</div>
+								<Select value={state} onChange={(e) => setState(e.target.value)}>
+									<MenuItem value="vic">Victoria</MenuItem>
+									<MenuItem value="nsw">New South Wales</MenuItem>
+									<MenuItem value="qld">Queensland</MenuItem>
+									<MenuItem value="sa">South Australia</MenuItem>
+									<MenuItem value="nt">Northern Territory</MenuItem>
+									<MenuItem value="act">ACT</MenuItem>
+									<MenuItem value="tas">Tasmania</MenuItem>
+									<MenuItem value="wa">Western Australia</MenuItem>
+									<MenuItem value="outer">Outside of Australia</MenuItem>
+								</Select>
+
+								<h3>Socials</h3>
+								<div />
 								<div>Discord</div>
 								<TextField
 									error={discordWarning}
@@ -161,15 +190,6 @@ export default function EditUser() {
 									onChange={(e) => setTwitter(e.target.value)}
 									onBlur={(e) => setTwitterWarning(!TwitterRegex.test(e.target.value))}
 								/>
-								<div>Date of birth</div>
-								<div style={{ display: 'flex', justifyContent: 'center' }}>
-									<Input
-										fullWidth
-										type="date"
-										onChange={(e) => setDateOfBirth(e.target.value)}
-										value={new Date(dateOfBirth).toLocaleDateString().split('/').reverse().join('-')}
-									/>
-								</div>
 							</div>
 						</>
 					)}

@@ -30,6 +30,7 @@ type User = {
 			shortname: string;
 		}
 		colour: string;
+		textColour: string;
 	}[]
 };
 
@@ -143,7 +144,7 @@ export default function ProfilePage() {
 						<h1>{userData.username}</h1>
 						{auth.ready && auth.sessionData?.id === userData.id && (
 							<div>
-								<IconButton style={{ float: 'right' }} onClick={() => router.push('/edit-user')}>
+								<IconButton style={{ float: 'right' }} onClick={() => router.push('/user/edit-user')}>
 									<FontAwesomeIcon icon={faEdit} />
 								</IconButton>
 							</div>

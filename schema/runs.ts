@@ -8,7 +8,6 @@ export const Run: Lists.Run = list({
 		operation: {
 			create: operations.admin,
 			update: operations.runnerMgmt,
-			query: operations.admin,
 		}
 	},
 	fields: {

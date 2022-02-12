@@ -2,7 +2,7 @@ export type SessionContext = {
 	session?: {
 		data: {
 			name: string;
-			role: {
+			roles: {
 				admin: boolean;
 				canReadTech: boolean;
 				canReadRunnerInfo: boolean;
@@ -23,22 +23,22 @@ export const isSignedIn = ({ session }: SessionContext) => {
 };
 
 export const operations = {
-	admin: ({ session }: SessionContext ) => session?.data.role?.some(role => role.admin),
-	runnerMgmt: ({ session }: SessionContext ) => session?.data.role?.some(role => role.canReadRunnerMgmt),
+	admin: ({ session }: SessionContext ) => session?.data.roles?.some(role => role.admin),
+	runnerMgmt: ({ session }: SessionContext ) => session?.data.roles?.some(role => role.canReadRunnerMgmt),
 }
 
 export const permissions = {
 	canManageUsers: ({ session }: SessionContext) => {
-		return !!session?.data.role?.some(role => role.canManageUsers);
+		return !!session?.data.roles?.some(role => role.canManageUsers);
 	},
 	canManageContent: ({ session }: SessionContext) => {
-		return !!session?.data.role?.some(role => role.canManageContent);
+		return !!session?.data.roles?.some(role => role.canManageContent);
 	},
 }
 
 export const rules = {
 	canUseAdminUI: ({ session }: SessionContext) => {
-		return !!session?.data.role?.some(role => role.canManageContent);
+		return !!session?.data.roles?.some(role => role.canManageContent);
 	},
 	// canReadContentList: ({ session }: SessionContext) => {
 	// 	if (permissions.canManageContent({ session })) return true;

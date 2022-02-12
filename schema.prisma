@@ -26,7 +26,7 @@ model Post {
 model User {
   id               String       @id @default(cuid())
   name             String       @default("")
-  username         String       @default("")
+  username         String       @unique @default("")
   email            String       @unique @default("")
   password         String
   accountCreated   DateTime?    @default(now())
@@ -34,8 +34,9 @@ model User {
   pronouns         String       @default("")
   socials          Social?      @relation("Social_user")
   submissions      Submission[] @relation("Submission_runner")
-  role             Role[]       @relation("Role_users")
+  roles            Role[]       @relation("Role_users")
   runs             Run[]        @relation("Run_runners")
+  state            String?
   from_Post_author Post[]       @relation("Post_author")
 }
 
@@ -71,6 +72,13 @@ model Event {
   submissions          Submission[] @relation("Submission_event")
   runs                 Run[]        @relation("Run_event")
   acceptingSubmissions Boolean      @default(false)
+  logo_filesize        Int?
+  logo_extension       String?
+  logo_width           Int?
+  logo_height          Int?
+  logo_mode            String?
+  logo_id              String?
+  from_Role_event      Role[]       @relation("Role_event")
 }
 
 model Role {
@@ -83,6 +91,13 @@ model Role {
   canReadRunnerInfo Boolean @default(false)
   canReadRunnerMgmt Boolean @default(false)
   users             User[]  @relation("Role_users")
+  event             Event?  @relation("Role_event", fields: [eventId], references: [id])
+  eventId           String? @map("event")
+  show              Boolean @default(false)
+  colour            String  @default("#ffffff")
+  textColour        String?
+
+  @@index([eventId])
 }
 
 model Social {

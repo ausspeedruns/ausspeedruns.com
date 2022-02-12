@@ -1,5 +1,5 @@
 import { list } from '@keystone-6/core';
-import { checkbox, password, relationship, text, timestamp } from '@keystone-6/core/fields';
+import { checkbox, password, relationship, select, text, timestamp } from '@keystone-6/core/fields';
 import { Lists } from '.keystone/types';
 import { permissions } from './access';
 import { FieldAccessControl } from '@keystone-6/core/types';
@@ -37,7 +37,7 @@ export const User: Lists.User = list({
 	},
 	fields: {
 		name: text({ access: fieldAccess.editSelfOrHidden, ui: { itemView: { fieldMode: fieldModes.editSelfOrHidden } } }),
-		username: text({ validation: { isRequired: true }, access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
+		username: text({ isIndexed: 'unique', validation: { isRequired: true }, access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
 		email: text({ isIndexed: 'unique', validation: { isRequired: true }, access: fieldAccess.editSelfOrHidden, ui: { itemView: { fieldMode: fieldModes.editSelfOrHidden } } }),
 		password: password({ validation: { isRequired: true } }),
 		accountCreated: timestamp({ defaultValue: { kind: 'now' }, access: fieldAccess.readSelfOrHidden }),
@@ -45,8 +45,21 @@ export const User: Lists.User = list({
 		pronouns: text({ access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
 		socials: relationship({ ref: 'Social.user', access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
 		submissions: relationship({ ref: 'Submission.runner', many: true, access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
-		role: relationship({ ref: 'Role.users', access: permissions.canManageUsers, many: true }),
-		runs: relationship({ ref: 'Run.runners', many: true, label: 'game' }),
+		roles: relationship({ ref: 'Role.users', many: true }),
+		runs: relationship({ ref: 'Run.runners', many: true }),
+		state: select({
+			type: 'enum',
+			options: [
+				{ label: "Victoria", value: "vic" },
+				{ label: "New South Wales", value: "nsw" },
+				{ label: "Queensland", value: "qld" },
+				{ label: "South Australia", value: "sa" },
+				{ label: "Western Australia", value: "wa" },
+				{ label: "ACT", value: "act" },
+				{ label: "Northern Territory", value: "nt" },
+				{ label: "Outside of Australia", value: "outer" },
+			]
+		}),
 	},
 	ui: {
 		labelField: 'username'
@@ -72,7 +85,17 @@ export const Role = list({
 		canReadTech: checkbox({ defaultValue: false }),
 		canReadRunnerInfo: checkbox({ defaultValue: false }),
 		canReadRunnerMgmt: checkbox({ defaultValue: false }),
-		users: relationship({ ref: 'User.role', many: true }),
+		users: relationship({ ref: 'User.roles', many: true }),
+		event: relationship({ ref: 'Event' }),
+		show: checkbox({ defaultValue: false }),
+		colour: text({ defaultValue: '#ffffff', validation: { match: { regex: /#([a-fA-F0-9]{3}){1,2}\b/ } } }),
+		textColour: select({
+			type: 'enum',
+			options: [
+				{ label: "Light", value: "white" },
+				{ label: "Dark", value: "black" },
+			]
+		})
 	},
 });
 

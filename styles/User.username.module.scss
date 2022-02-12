@@ -1,0 +1,37 @@
+@import "./colors.scss";
+
+.content {
+	padding: 2rem 10%;
+	display: flex;
+	flex-direction: column;
+
+	.profileHeader {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+	}
+
+	hr {
+		border-top: 4px $primary solid;
+		width: 100%;
+	}
+
+	.roleList {
+		display: flex;
+		gap: 5px;
+		flex-wrap: wrap;
+		width: 100%;
+		margin-bottom: 1rem;
+	}
+
+	.userInfo {
+		width: 50%;
+		display: grid;
+		grid-template-columns: 1fr 1fr; 
+		gap: 5px 0px;
+
+		*:nth-child(odd) {
+			font-weight: bold;
+		}
+	}
+}

@@ -17,7 +17,7 @@ const { withAuth } = createAuth({
   listKey: 'User',
   identityField: 'email',
   secretField: 'password',
-  sessionData: 'name roles { admin canManageUsers canManageContent canReadRunnerInfo canReadRunnerMgmt }',
+  sessionData: 'username roles { admin canManageUsers canManageContent canReadRunnerInfo canReadRunnerMgmt }',
   initFirstItem: {
     // These fields are collected in the "Create First User" form
     fields: ['name', 'email', 'password', 'username', 'dateOfBirth'],

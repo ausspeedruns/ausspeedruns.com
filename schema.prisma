@@ -117,7 +117,7 @@ model Run {
   category             String      @default("")
   platform             String      @default("")
   estimate             String      @default("")
-  finalTime            DateTime?
+  finalTime            String      @default("")
   donationIncentive    String      @default("")
   race                 Boolean     @default(false)
   racer                String      @default("")
@@ -126,6 +126,7 @@ model Run {
   youtubeVOD           String      @default("")
   event                Event?      @relation("Run_event", fields: [eventId], references: [id])
   eventId              String?     @map("event")
+  scheduledTime        DateTime?
 
   @@index([originalSubmissionId])
   @@index([eventId])

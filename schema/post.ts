@@ -6,7 +6,7 @@ import { permissions, SessionContext } from './access';
 import { ListFilterAccessControl } from '@keystone-6/core/types';
 
 const filterPosts: ListFilterAccessControl<"query", Lists.Post.TypeInfo> = ({ session }: SessionContext ) => {
-	if (session?.data.role?.some(role => role.canManageContent)) return true;
+	if (session?.data.roles?.some(role => role.canManageContent)) return true;
 	return { published: { equals: true } };
 }
 

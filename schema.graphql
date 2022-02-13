@@ -832,7 +832,7 @@ type Run {
   category: String
   platform: String
   estimate: String
-  finalTime: DateTime
+  finalTime: String
   donationIncentive: String
   race: Boolean
   racer: String
@@ -840,6 +840,7 @@ type Run {
   twitchVOD: String
   youtubeVOD: String
   event: Event
+  scheduledTime: DateTime
 }
 
 input RunWhereUniqueInput {
@@ -857,7 +858,7 @@ input RunWhereInput {
   category: StringFilter
   platform: StringFilter
   estimate: StringFilter
-  finalTime: DateTimeNullableFilter
+  finalTime: StringFilter
   donationIncentive: StringFilter
   race: BooleanFilter
   racer: StringFilter
@@ -865,6 +866,7 @@ input RunWhereInput {
   twitchVOD: StringFilter
   youtubeVOD: StringFilter
   event: EventWhereInput
+  scheduledTime: DateTimeNullableFilter
 }
 
 input RunOrderByInput {
@@ -880,6 +882,7 @@ input RunOrderByInput {
   coop: OrderDirection
   twitchVOD: OrderDirection
   youtubeVOD: OrderDirection
+  scheduledTime: OrderDirection
 }
 
 input RunUpdateInput {
@@ -889,7 +892,7 @@ input RunUpdateInput {
   category: String
   platform: String
   estimate: String
-  finalTime: DateTime
+  finalTime: String
   donationIncentive: String
   race: Boolean
   racer: String
@@ -897,6 +900,7 @@ input RunUpdateInput {
   twitchVOD: String
   youtubeVOD: String
   event: EventRelateToOneForUpdateInput
+  scheduledTime: DateTime
 }
 
 input SubmissionRelateToOneForUpdateInput {
@@ -917,7 +921,7 @@ input RunCreateInput {
   category: String
   platform: String
   estimate: String
-  finalTime: DateTime
+  finalTime: String
   donationIncentive: String
   race: Boolean
   racer: String
@@ -925,6 +929,7 @@ input RunCreateInput {
   twitchVOD: String
   youtubeVOD: String
   event: EventRelateToOneForCreateInput
+  scheduledTime: DateTime
 }
 
 input SubmissionRelateToOneForCreateInput {

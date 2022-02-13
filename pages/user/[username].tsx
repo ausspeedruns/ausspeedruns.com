@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { gql, useMutation, useQuery } from 'urql';
+import { gql, useQuery } from 'urql';
 import Head from 'next/head';
-import { Button, CircularProgress, IconButton, TextField, ThemeProvider } from '@mui/material';
+import { IconButton, ThemeProvider } from '@mui/material';
 import { useRouter } from 'next/router';
-import { GetStaticPathsResult, GetStaticPropsContext } from 'next';
-import { query } from '.keystone/api';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import styles from '../../styles/User.username.module.scss';
 import NavBar from '../../components/Navbar/Navbar';
 import { useAuth } from '../../components/auth';
 import { theme } from '../../components/mui-theme';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RoleBadge } from '../../components/RoleBadge/RoleBadge';
-import YouTubeVideoEmbed from '../../components/YouTubeVideoEmbed/YouTubeVideoEmbed';
+import SubmissionAccordian from '../../components/SubmissionAccordian/SubmissionAccordian';
+import RunUpcoming from '../../components/RunUpcoming/RunUpcoming';
+import RunCompleted from '../../components/RunCompleted/RunCompleted';
 
 type User = {
 	id: string;
@@ -38,15 +38,36 @@ type User = {
 		id: string;
 		game: string;
 		category: string;
-		finalTime: string;
+		finalTime?: string;
 		platform: string;
 		twitchVOD?: string;
 		youtubeVOD?: string;
+		scheduledTime: string;
 		event: {
 			name: string;
 			logo: {
 				url: string;
 			};
+		};
+	}[];
+	submissions: {
+		id: string;
+		game: string;
+		category: string;
+		platform: string;
+		estimate: string;
+		status: string;
+		donationIncentive?: string;
+		race?: string;
+		racer?: string;
+		coop?: boolean;
+		video: string;
+		ageRating?: string;
+		event: {
+			name: string;
+		};
+		runner: {
+			username: string;
 		};
 	}[];
 };
@@ -67,6 +88,8 @@ function StateCodeToString(stateCode: string) {
 			return 'ACT';
 		case 'wa':
 			return 'Western Australia';
+		case 'tas':
+			return 'Tasmania';
 		case 'outer':
 			return 'Outside of Australia';
 		default:
@@ -110,11 +133,31 @@ export default function ProfilePage() {
 						platform
 						youtubeVOD
 						twitchVOD
+						scheduledTime
 						event {
 							name
 							logo {
 								url
 							}
+						}
+					}
+					submissions {
+						id
+						runner {
+							username
+						}
+						game
+						category
+						platform
+						estimate
+						donationIncentive
+						status
+						race
+						racer
+						coop
+						video
+						event {
+							name
 						}
 					}
 				}
@@ -127,9 +170,13 @@ export default function ProfilePage() {
 
 	useEffect(() => {
 		setLoading(true);
-		if (!queryResult.fetching && queryResult.data?.user) {
-			setLoading(false);
-			setUserData(queryResult.data.user);
+		if (!queryResult.fetching) {
+			if (queryResult.data?.user) {
+				setLoading(false);
+				setUserData(queryResult.data.user);
+			} else {
+				setLoading(false);
+			}
 		}
 	}, [queryResult]);
 
@@ -158,12 +205,14 @@ export default function ProfilePage() {
 					</Head>
 					<NavBar />
 					<div className={`content ${styles.content}`}>
-						<h2>Could not find user</h2>
+						<h2>Could not find {router.query.username}</h2>
 					</div>
 				</div>
 			</ThemeProvider>
 		);
 	}
+
+	const upcomingRunsList = userData.runs.filter((run) => !run.finalTime);
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -205,29 +254,31 @@ export default function ProfilePage() {
 							</>
 						)}
 					</div>
+					{/* Submissions */}
+					{userData.submissions.length > 0 && (
+						<div className={styles.submissions}>
+							<h3>Submissions</h3>
+							{userData.submissions.map((submission) => {
+								return <SubmissionAccordian key={submission.id} submission={submission} />;
+							})}
+						</div>
+					)}
 
+					{/* Upcoming Runs */}
+					{upcomingRunsList.length > 0 && (
+						<div className={styles.upcomingRuns}>
+							<h3>Upcoming Runs</h3>
+							{upcomingRunsList.map((run) => {
+								return <RunUpcoming run={run} />;
+							})}
+						</div>
+					)}
+					<hr />
+					{/* Runs */}
 					<div className={styles.runs}>
 						{userData.runs.map((run) => {
-							console.log(run);
-							const timeAsDate = new Date(run.finalTime);
-							return (
-								<div className={styles.run}>
-									<div key={run.id} className={styles.header}>
-										<img src={run.event.logo.url} title={run.event.name} />
-										<div className={styles.runInfo}>
-											<span>
-												<b>{run.game}</b> - {run.category}
-											</span>
-											<span>
-												{timeAsDate.getHours()}:{timeAsDate.getMinutes()}:{timeAsDate.getSeconds()}.
-												{timeAsDate.getMilliseconds()}
-											</span>
-										</div>
-									</div>
-									{run.youtubeVOD ? <YouTubeVideoEmbed videoID={run.youtubeVOD.split('=')[1]} /> : <p>YouTube VOD to be uploaded soon!</p>}
-									{run.twitchVOD && <a href={run.twitchVOD} target="_blank">Twitch VOD</a>}
-								</div>
-							);
+							if (!run.finalTime) return;
+							return <RunCompleted run={run} />;
 						})}
 					</div>
 				</div>

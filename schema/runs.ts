@@ -17,7 +17,7 @@ export const Run: Lists.Run = list({
 		category: text({ validation: { isRequired: true } }),
 		platform: text({ validation: { isRequired: true } }), // Potentially an enum with "other"?
 		estimate: text({ validation: { isRequired: true } }),
-		finalTime: timestamp(), // DOES NOT SUPPORT RACES!!!!!!
+		finalTime: text(),
 		donationIncentive: text(),
 		race: checkbox(),
 		racer: text(),
@@ -37,6 +37,7 @@ export const Run: Lists.Run = list({
 		// 		}
 		// 	})
 		// })
+		scheduledTime: timestamp(),
 	},
 	ui: {
 		labelField: 'game'

@@ -1,0 +1,36 @@
+@import '../../styles/colors.scss';
+
+.submission {
+	&.MuiAccordion-root {
+		background-color: $color-off-white;
+	}
+
+	// border: 1px $primary solid;
+
+	.submissionHeader {
+		div {
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.submissionStatus {
+			text-transform: capitalize;
+			float: right;
+			font-weight: bold;
+			margin-right: 16px;
+		}
+	}
+
+	.submissionDetails {
+		display: grid;
+		grid-template-columns: auto auto auto auto;
+
+		span:nth-child(odd) {
+			font-weight: bold;
+		}
+
+		h3 {
+			margin-top: 1rem;
+		}
+	}
+}

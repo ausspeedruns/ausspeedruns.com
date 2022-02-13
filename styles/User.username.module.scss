@@ -43,29 +43,19 @@
 		}
 	}
 
-	.runs {
-		margin-top: 5rem;
+	.submissions {
+		margin-top: 2rem;
 
-		.run {
-			display: flex;
-			flex-direction: column;
-			
-			.header {
-				display: flex;
-	
-				img {
-					height: 80px;
-					width: auto;
-					margin-right: 8px;
-				}
-	
-				.runInfo {
-					display: flex;
-					flex-direction: column;
-					justify-content: space-evenly;
-					font-size: 1.2rem;
-				}
-			}
+		.submission {
+			color: black;
 		}
+	}
+
+	.upcomingRuns {
+		margin-top: 2rem;		
+	}
+
+	.runs {
+		margin-top: 2rem;		
 	}
 }

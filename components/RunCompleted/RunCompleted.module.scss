@@ -1,0 +1,21 @@
+.run {
+	display: flex;
+	flex-direction: column;
+	
+	.header {
+		display: flex;
+
+		img {
+			height: 80px;
+			width: auto;
+			margin-right: 8px;
+		}
+
+		.runInfo {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-evenly;
+			font-size: 1.2rem;
+		}
+	}
+}

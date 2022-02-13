@@ -24,9 +24,10 @@ export default function EventPage() {
 					<div className={styles.intro}>
 						<h2>Australian Speedrun Marathon 2022</h2>
 						<p>
-							ASM2022 is our main event taking place in July raising money for Beyond Blue. It will feature non-stop
-							speedrunning for a week. Speedrunning everything from large multi hour games to small quick speedgames.
-							The event will have something everyone can watch.
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ultricies quam eros, vitae congue est auctor
+							et. Suspendisse eget libero tempor, egestas velit id, luctus risus. Fusce pharetra ut dolor id vehicula.
+							Vestibulum dignissim quam eget euismod ullamcorper. Suspendisse hendrerit massa non lectus pellentesque,
+							id tincidunt leo luctus.
 						</p>
 					</div>
 					<img src={StockPhoto1.src} />

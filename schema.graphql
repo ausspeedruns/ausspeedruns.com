@@ -838,7 +838,7 @@ type Run {
   racer: String
   coop: Boolean
   twitchVOD: String
-  yotubeVOD: String
+  youtubeVOD: String
   event: Event
 }
 
@@ -863,7 +863,7 @@ input RunWhereInput {
   racer: StringFilter
   coop: BooleanFilter
   twitchVOD: StringFilter
-  yotubeVOD: StringFilter
+  youtubeVOD: StringFilter
   event: EventWhereInput
 }
 
@@ -879,7 +879,7 @@ input RunOrderByInput {
   racer: OrderDirection
   coop: OrderDirection
   twitchVOD: OrderDirection
-  yotubeVOD: OrderDirection
+  youtubeVOD: OrderDirection
 }
 
 input RunUpdateInput {
@@ -895,7 +895,7 @@ input RunUpdateInput {
   racer: String
   coop: Boolean
   twitchVOD: String
-  yotubeVOD: String
+  youtubeVOD: String
   event: EventRelateToOneForUpdateInput
 }
 
@@ -923,7 +923,7 @@ input RunCreateInput {
   racer: String
   coop: Boolean
   twitchVOD: String
-  yotubeVOD: String
+  youtubeVOD: String
   event: EventRelateToOneForCreateInput
 }
 

@@ -23,7 +23,7 @@ export const Run: Lists.Run = list({
 		racer: text(),
 		coop: checkbox(),
 		twitchVOD: text(),
-		yotubeVOD: text(),
+		youtubeVOD: text(),
 		event: relationship({ ref: 'Event.runs', ui: { hideCreate: true, labelField: 'shortname' } }),
 		// runLabel: virtual({
 		// 	field: graphql.field({

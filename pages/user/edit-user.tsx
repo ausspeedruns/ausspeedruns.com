@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { gql, useMutation, useQuery } from 'urql';
 import Head from 'next/head';
-import { Button, CircularProgress, IconButton, TextField, ThemeProvider, Input, Select, MenuItem } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit } from '@fortawesome/free-regular-svg-icons';
+import { Button, CircularProgress, TextField, ThemeProvider, Input, Select, MenuItem } from '@mui/material';
 
-import styles from '../../styles/Profile.module.scss';
+import styles from '../../styles/User.EditUser.module.scss';
 import NavBar from '../../components/Navbar/Navbar';
 import { useAuth } from '../../components/auth';
 import { theme } from '../../components/mui-theme';
@@ -124,7 +122,7 @@ export default function EditUser() {
 		<ThemeProvider theme={theme}>
 			<div className="app">
 				<Head>
-					<title>Profile - AusSpeedruns</title>
+					<title>Edit User - AusSpeedruns</title>
 				</Head>
 				<NavBar />
 				<div className={`content ${styles.content}`}>

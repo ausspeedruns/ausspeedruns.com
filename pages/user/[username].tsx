@@ -13,6 +13,7 @@ import { theme } from '../../components/mui-theme';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RoleBadge } from '../../components/RoleBadge/RoleBadge';
+import YouTubeVideoEmbed from '../../components/YouTubeVideoEmbed/YouTubeVideoEmbed';
 
 type User = {
 	id: string;
@@ -25,13 +26,29 @@ type User = {
 		twitch?: string;
 	};
 	roles: {
+		id: string;
 		name: string;
 		event?: {
 			shortname: string;
-		}
+		};
 		colour: string;
 		textColour: string;
-	}[]
+	}[];
+	runs: {
+		id: string;
+		game: string;
+		category: string;
+		finalTime: string;
+		platform: string;
+		twitchVOD?: string;
+		youtubeVOD?: string;
+		event: {
+			name: string;
+			logo: {
+				url: string;
+			};
+		};
+	}[];
 };
 
 function StateCodeToString(stateCode: string) {
@@ -77,12 +94,28 @@ export default function ProfilePage() {
 						twitter
 					}
 					roles(where: { show: { equals: true } }) {
+						id
 						name
 						event {
 							shortname
 						}
 						colour
 						textColour
+					}
+					runs {
+						id
+						game
+						category
+						finalTime
+						platform
+						youtubeVOD
+						twitchVOD
+						event {
+							name
+							logo {
+								url
+							}
+						}
 					}
 				}
 			}
@@ -151,11 +184,13 @@ export default function ProfilePage() {
 						)}
 					</div>
 					<hr />
+					{/* Role List */}
 					<div className={styles.roleList}>
-						{userData.roles.map(role => {
-							return <RoleBadge key={role.name + '1'} role={role} />
+						{userData.roles.map((role) => {
+							return <RoleBadge key={role.id} role={role} />;
 						})}
 					</div>
+					{/* Profile Information */}
 					<div className={styles.userInfo}>
 						{userData.state && (
 							<>
@@ -169,6 +204,31 @@ export default function ProfilePage() {
 								<span>{userData.pronouns}</span>
 							</>
 						)}
+					</div>
+
+					<div className={styles.runs}>
+						{userData.runs.map((run) => {
+							console.log(run);
+							const timeAsDate = new Date(run.finalTime);
+							return (
+								<div className={styles.run}>
+									<div key={run.id} className={styles.header}>
+										<img src={run.event.logo.url} title={run.event.name} />
+										<div className={styles.runInfo}>
+											<span>
+												<b>{run.game}</b> - {run.category}
+											</span>
+											<span>
+												{timeAsDate.getHours()}:{timeAsDate.getMinutes()}:{timeAsDate.getSeconds()}.
+												{timeAsDate.getMilliseconds()}
+											</span>
+										</div>
+									</div>
+									{run.youtubeVOD ? <YouTubeVideoEmbed videoID={run.youtubeVOD.split('=')[1]} /> : <p>YouTube VOD to be uploaded soon!</p>}
+									{run.twitchVOD && <a href={run.twitchVOD} target="_blank">Twitch VOD</a>}
+								</div>
+							);
+						})}
 					</div>
 				</div>
 			</div>

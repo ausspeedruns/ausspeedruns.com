@@ -9,7 +9,7 @@ type TwitchProps = {
 
 const TwitchVideoEmbed = ({ channel, parent, muted = true }: TwitchProps) => {
   return (
-    <div className="twitchEmbed">
+    <div className={styles.twitchEmbed}>
       <iframe
         title="Ausspeedruns twitch player"
         src={`https://player.twitch.tv/?channel=${channel}&parent=${parent}&muted=${muted}`}

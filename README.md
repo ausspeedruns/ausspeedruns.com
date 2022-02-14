@@ -13,13 +13,11 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000) to see the website.
 Open [http://localhost:8000](http://localhost:8000) to access the KeystoneJS admin UI.
 
-## TODO
+## TODO (Due March 18th)
 
 - Clean blog page
-- Redesign profile page
 - Clean submissions page
 - About us page
-- View profiles
 - Event page (e.g. ASM2022 and previous events)
   - Runs
   - Schedule

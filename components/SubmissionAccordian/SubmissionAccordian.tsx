@@ -1,31 +1,16 @@
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import React, { useState } from 'react';
+import { styled } from '@mui/styles';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
-import React from 'react';
+
+import { UserPageData } from '../../pages/user/[username]';
+
 import styles from './SubmissionAccordian.module.scss';
-import { styled } from '@mui/styles';
+import SubmissionEditDialog from './SubmissionEditDialog';
 
 type SubmissionProps = {
-	submission: {
-		id: string;
-		game: string;
-		category: string;
-		platform: string;
-		estimate: string;
-		status: string;
-		donationIncentive?: string;
-		race?: string;
-		racer?: string;
-		coop?: boolean;
-		video: string;
-		ageRating?: string;
-		event: {
-			name: string;
-		};
-		runner: {
-			username: string;
-		};
-	};
+	submission: UserPageData['submissions'][0];
 };
 
 function RaceTypeLabels(raceType: string) {
@@ -39,11 +24,17 @@ function RaceTypeLabels(raceType: string) {
 	}
 }
 
-const StyledAccordian = styled(Accordion)(({theme}) => ({
-	backgroundColor: '#F9F9F9'
-}))
+const StyledAccordian = styled(Accordion)(({ theme }) => ({
+	backgroundColor: '#F9F9F9',
+}));
 
 const SubmissionAccordian = ({ submission }: SubmissionProps) => {
+	const [editDialog, setEditDialog] = useState(false);
+
+	const closeDialog = () => {
+		setEditDialog(false);
+	};
+
 	const isRace = submission.race !== 'no';
 	const raceOrCoop = submission.coop ? 'Coop' : 'Race';
 
@@ -61,7 +52,7 @@ const SubmissionAccordian = ({ submission }: SubmissionProps) => {
 		default:
 			break;
 	}
-	console.log(colour)
+	console.log(colour);
 
 	return (
 		<StyledAccordian className={styles.submission} style={{ backgroundColor: colour }}>
@@ -106,6 +97,14 @@ const SubmissionAccordian = ({ submission }: SubmissionProps) => {
 					</>
 				)}
 			</AccordionDetails>
+			{submission.status === 'submitted' && (
+				<AccordionActions>
+					<Button color="primary" variant="contained" onClick={() => setEditDialog(true)}>
+						Edit
+					</Button>
+				</AccordionActions>
+			)}
+			<SubmissionEditDialog submission={submission} handleClose={closeDialog} open={editDialog} />
 		</StyledAccordian>
 	);
 };

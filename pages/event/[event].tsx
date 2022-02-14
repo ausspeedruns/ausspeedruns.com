@@ -1,17 +1,33 @@
 import React from 'react';
-import { GetStaticPathsResult } from 'next';
+import { GetStaticPathsResult, GetStaticPropsContext } from 'next';
 import { query } from '.keystone/api';
+import Head from 'next/head';
+import Navbar from '../../components/Navbar/Navbar';
 
-export default function EventPage() {
-	return <div>Test</div>;
+type Event = {
+	name: string;
+	shortname: string;
 };
 
+export default function EventPage({ event }: { event: Event }) {
+	return (
+		<div className="App">
+			<Head>
+				<title>{event.shortname} - AusSpeedruns</title>
+			</Head>
+			<header className="App-header">
+				<Navbar />
+			</header>
+		</div>
+	);
+}
+
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-	const posts = (await query.Event.findMany({
+	const event = (await query.Event.findMany({
 		query: `shortname`,
 	})) as { shortname: string }[];
 
-	const paths = posts.filter(({ shortname }) => !!shortname).map(({ shortname }) => `/event/${shortname}`);
+	const paths = event.filter(({ shortname }) => !!shortname).map(({ shortname }) => `/event/${shortname}`);
 
 	return {
 		paths,
@@ -19,3 +35,13 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 	};
 }
 
+export async function getStaticProps({ params }: GetStaticPropsContext) {
+	const event = (await query.Event.findOne({
+		where: { shortname: params!.event as string },
+		query: 'id name shortname',
+	})) as Event | null;
+	if (!event) {
+		return { notFound: true };
+	}
+	return { props: { event } };
+}

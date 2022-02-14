@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import {
 	Button,
@@ -30,6 +30,7 @@ type RaceLiterals = 'no' | 'solo' | 'only';
 export default function SubmitGamePage() {
 	const auth = useAuth();
 
+	const [event, setEvent] = useState('');
 	const [game, setGame] = useState('');
 	const [category, setCategory] = useState('');
 	const [platform, setPlatform] = useState('');
@@ -46,7 +47,9 @@ export default function SubmitGamePage() {
 		query: gql`
 			query Profile($userId: ID!) {
 				user(where: { id: $userId }) {
-					discord
+					socials {
+						discord
+					}
 				}
 			}
 		`,
@@ -54,6 +57,19 @@ export default function SubmitGamePage() {
 			userId: auth.ready ? auth.sessionData?.id ?? '' : '',
 		},
 	});
+
+	const [eventsResult, eventsQuery] = useQuery<{events: {shortname: string, id: string}[]}>({
+		query: gql`
+			query {
+				events(where: { acceptingSubmissions: { equals: true } }) {
+					id
+					shortname
+				}
+			}
+		`,
+	});
+
+	console.log(eventsResult);
 
 	// Mutation for game submission
 	const [submissionResult, createSubmission] = useMutation(gql`
@@ -69,6 +85,7 @@ export default function SubmitGamePage() {
 			$racer: String!
 			$coop: Boolean!
 			$video: String
+			$eventId: ID
 		) {
 			createSubmission(
 				data: {
@@ -83,13 +100,19 @@ export default function SubmitGamePage() {
 					racer: $racer
 					coop: $coop
 					video: $video
-					event: { connect: { id: "ckz0z77pb0248ksoorlfk7pbr" } }
+					event: { connect: { id: $eventId } }
 				}
 			) {
 				__typename
 			}
 		}
 	`);
+
+	useEffect(() => {
+		if (eventsResult.data?.events) {
+			setEvent(eventsResult.data.events[0].id);
+		}
+	}, [eventsResult]);
 
 	function clearInputs() {
 		setGame('');
@@ -112,7 +135,7 @@ export default function SubmitGamePage() {
 				</Head>
 				<Navbar />
 				<div className={`content ${styles.content}`}>
-					<h1>Game Submission</h1>
+					<h1>{eventsResult.data?.events.find(eventResult => eventResult.id === event)?.shortname} Game Submission</h1>
 					<form
 						className={styles.gameForm}
 						onSubmit={(e) => {
@@ -130,91 +153,119 @@ export default function SubmitGamePage() {
 									racer,
 									coop,
 									video,
+									eventId: event,
 								}).then((result) => {
-									// console.log('YAYY', result)
 									if (!result.error) {
 										clearInputs();
 										window.scrollY = 0;
+									} else {
+										console.error(result.error)
 									}
 								});
 							}
 						}}
 					>
-						{!DiscordRegex.test(queryResult?.data?.user?.discord ?? '') && (
+						{!DiscordRegex.test(queryResult?.data?.user?.socials?.discord ?? '') ? (
 							<div>Please set your Discord ID on your profile as this will be the primary form of communication.</div>
-						)}
-						<TextField value={game} onChange={(e) => setGame(e.target.value)} label="Game Name" required />
-						<TextField value={category} onChange={(e) => setCategory(e.target.value)} label="Category" required />
-						<TextField
-							value={platform}
-							onChange={(e) => setPlatform(e.target.value)}
-							label="Platform/Console"
-							required
-						/>
-						<TextField
-							value={estimate}
-							onChange={(e) => setEstimate(e.target.value)}
-							label="Estimate"
-							helperText="e.g. 01:20:00 for 1 hour and 20 mins"
-							required
-						/>
-						<FormControl fullWidth>
-							<InputLabel id="age-rating-label">Age Rating</InputLabel>
-							<Select
-								labelId="age-rating-label"
-								value={ageRating}
-								label="Age Rating"
-								onChange={(e) => setAgeRating(e.target.value as AgeRatingLiterals)}
-								required
-							>
-								<MenuItem value={'m_or_lower'}>G, PG or M</MenuItem>
-								<MenuItem value={'ma15'}>MA15+</MenuItem>
-								<MenuItem value={'ra18'}>RA18+</MenuItem>
-							</Select>
-							<FormHelperText>
-								If unsure please search for the game title here:{' '}
-								<a href="https://www.classification.gov.au/" target="_blank">
-									https://www.classification.gov.au/
-								</a>
-							</FormHelperText>
-						</FormControl>
-						<TextField
-							value={donationIncentive}
-							onChange={(e) => setDonationIncentive(e.target.value)}
-							label="Donation Incentive (Leave blank if none)"
-						/>
-
-						<FormControlLabel
-							control={<Checkbox onChange={(e) => setRace(e.target.checked ? 'solo' : 'no')} checked={race !== 'no'} />}
-							label="Submit as a race/coop?"
-						/>
-
-						{race !== 'no' && (
+						) : (
 							<>
-								<FormControlLabel
-									control={<Checkbox onChange={(e) => setCoop(e.target.checked)} checked={coop} />}
-									label="Coop"
+								{eventsResult.data.events.length > 1 && (
+									<FormControl fullWidth>
+										<InputLabel id="event-label">Event</InputLabel>
+										<Select
+											labelId="event-label"
+											value={event}
+											label="Event"
+											onChange={(e) => setEvent(e.target.value)}
+											required
+										>
+											{eventsResult.data.events.map((event) => {
+												return <MenuItem value={event.id}>{event.shortname}</MenuItem>;
+											})}
+										</Select>
+									</FormControl>
+								)}
+
+								<TextField value={game} onChange={(e) => setGame(e.target.value)} label="Game Name" required />
+								<TextField value={category} onChange={(e) => setCategory(e.target.value)} label="Category" required />
+								<TextField
+									value={platform}
+									onChange={(e) => setPlatform(e.target.value)}
+									label="Platform/Console"
+									required
 								/>
-								<FormControl>
-									{/* Don't think "type" is a good descriptor */}
-									<FormLabel id="race-type-label">Race/Coop Type</FormLabel>
-									<RadioGroup
-										aria-labelledby="race-type-label"
-										value={race}
-										onChange={(e) => setRace(e.target.value as RaceLiterals)}
+								<TextField
+									value={estimate}
+									onChange={(e) => setEstimate(e.target.value)}
+									label="Estimate"
+									helperText="e.g. 01:20:00 for 1 hour and 20 mins"
+									required
+								/>
+								<FormControl fullWidth>
+									<InputLabel id="age-rating-label">Age Rating</InputLabel>
+									<Select
+										labelId="age-rating-label"
+										value={ageRating}
+										label="Age Rating"
+										onChange={(e) => setAgeRating(e.target.value as AgeRatingLiterals)}
+										required
 									>
-										<FormControlLabel value="solo" control={<Radio />} label="Possible to do solo" />
-										<FormControlLabel value="only" control={<Radio />} label="Only race/coop" />
-									</RadioGroup>
+										<MenuItem value={'m_or_lower'}>G, PG or M</MenuItem>
+										<MenuItem value={'ma15'}>MA15+</MenuItem>
+										<MenuItem value={'ra18'}>RA18+</MenuItem>
+									</Select>
+									<FormHelperText>
+										If unsure please search for the game title here:{' '}
+										<a href="https://www.classification.gov.au/" target="_blank">
+											https://www.classification.gov.au/
+										</a>
+									</FormHelperText>
 								</FormControl>
-								<TextField value={racer} onChange={(e) => setRacer(e.target.value)} label="Name of other player(s)" />
+								<TextField
+									value={donationIncentive}
+									onChange={(e) => setDonationIncentive(e.target.value)}
+									label="Donation Incentive (Leave blank if none)"
+								/>
+
+								<FormControlLabel
+									control={
+										<Checkbox onChange={(e) => setRace(e.target.checked ? 'solo' : 'no')} checked={race !== 'no'} />
+									}
+									label="Submit as a race/coop?"
+								/>
+
+								{race !== 'no' && (
+									<>
+										<FormControlLabel
+											control={<Checkbox onChange={(e) => setCoop(e.target.checked)} checked={coop} />}
+											label="Coop"
+										/>
+										<FormControl>
+											{/* Don't think "type" is a good descriptor */}
+											<FormLabel id="race-type-label">Race/Coop Type</FormLabel>
+											<RadioGroup
+												aria-labelledby="race-type-label"
+												value={race}
+												onChange={(e) => setRace(e.target.value as RaceLiterals)}
+											>
+												<FormControlLabel value="solo" control={<Radio />} label="Possible to do solo" />
+												<FormControlLabel value="only" control={<Radio />} label="Only race/coop" />
+											</RadioGroup>
+										</FormControl>
+										<TextField
+											value={racer}
+											onChange={(e) => setRacer(e.target.value)}
+											label="Name of other runner(s)"
+										/>
+									</>
+								)}
+								<TextField value={video} onChange={(e) => setVideo(e.target.value)} label="Video of the run" required />
+								{submissionResult.error && <h2>{submissionResult.error.message}</h2>}
+								<Button variant="contained" type="submit">
+									Submit
+								</Button>
 							</>
 						)}
-						<TextField value={video} onChange={(e) => setVideo(e.target.value)} label="Video of the run" required />
-						{submissionResult.error && <h2>{submissionResult.error.message}</h2>}
-						<Button variant="contained" type="submit">
-							Submit
-						</Button>
 					</form>
 				</div>
 			</div>

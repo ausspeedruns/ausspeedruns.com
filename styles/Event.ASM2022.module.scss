@@ -11,7 +11,9 @@
 
 	display: flex;
 	justify-content: center;
+	flex-direction: column;
 	align-items: center;
+	gap: 16px;
 
 	img {
 		width: 600px;
@@ -58,6 +60,7 @@
 }
 
 .informationSection {
+	background-color: $color-off-white;
 	height: 30rem;
 	width: 100%;
 	

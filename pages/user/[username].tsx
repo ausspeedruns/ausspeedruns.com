@@ -7,7 +7,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import styles from '../../styles/User.username.module.scss';
-import NavBar from '../../components/Navbar/Navbar';
+import Navbar from '../../components/Navbar/Navbar';
 import { useAuth } from '../../components/auth';
 import { theme } from '../../components/mui-theme';
 import { RoleBadge } from '../../components/RoleBadge/RoleBadge';
@@ -15,7 +15,7 @@ import SubmissionAccordian from '../../components/SubmissionAccordian/Submission
 import RunUpcoming from '../../components/RunUpcoming/RunUpcoming';
 import RunCompleted from '../../components/RunCompleted/RunCompleted';
 
-type User = {
+export type UserPageData = {
 	id: string;
 	username: string;
 	pronouns?: string;
@@ -64,6 +64,7 @@ type User = {
 		video: string;
 		ageRating?: string;
 		event: {
+			id: string;
 			name: string;
 		};
 		runner: {
@@ -102,7 +103,7 @@ export default function ProfilePage() {
 	const auth = useAuth();
 
 	// User inputs
-	const [userData, setUserData] = useState<User>(null);
+	const [userData, setUserData] = useState<UserPageData>(null);
 	const [loading, setLoading] = useState(false);
 	const [queryResult, profileQuery] = useQuery({
 		query: gql`
@@ -150,6 +151,7 @@ export default function ProfilePage() {
 						category
 						platform
 						estimate
+						ageRating
 						donationIncentive
 						status
 						race
@@ -157,6 +159,7 @@ export default function ProfilePage() {
 						coop
 						video
 						event {
+							id
 							name
 						}
 					}
@@ -170,6 +173,7 @@ export default function ProfilePage() {
 
 	useEffect(() => {
 		setLoading(true);
+		console.log(queryResult)
 		if (!queryResult.fetching) {
 			if (queryResult.data?.user) {
 				setLoading(false);
@@ -187,7 +191,9 @@ export default function ProfilePage() {
 					<Head>
 						<title>{router.query.username} - AusSpeedruns</title>
 					</Head>
-					<NavBar />
+					<header className="App-header">
+						<Navbar />
+					</header>
 					<div className={`content ${styles.content}`}>
 						<h2>Loading</h2>
 					</div>
@@ -203,7 +209,9 @@ export default function ProfilePage() {
 					<Head>
 						<title>{router.query.username} - AusSpeedruns</title>
 					</Head>
-					<NavBar />
+					<header className="App-header">
+						<Navbar />
+					</header>
 					<div className={`content ${styles.content}`}>
 						<h2>Could not find {router.query.username}</h2>
 					</div>
@@ -220,7 +228,9 @@ export default function ProfilePage() {
 				<Head>
 					<title>{router.query.username} - AusSpeedruns</title>
 				</Head>
-				<NavBar />
+				<header className="App-header">
+					<Navbar />
+				</header>
 				<div className={`content ${styles.content}`}>
 					<div className={styles.profileHeader}>
 						<h1>{userData.username}</h1>
@@ -257,7 +267,7 @@ export default function ProfilePage() {
 					{/* Submissions */}
 					{userData.submissions.length > 0 && (
 						<div className={styles.submissions}>
-							<h3>Submissions</h3>
+							<h3>Submissions (Private)</h3>
 							{userData.submissions.map((submission) => {
 								return <SubmissionAccordian key={submission.id} submission={submission} />;
 							})}

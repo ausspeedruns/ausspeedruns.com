@@ -26,8 +26,6 @@ export default function EventPage() {
 		`,
 	});
 
-	console.log(queryResult);
-
 	return (
 		<div className="App">
 			<Head>

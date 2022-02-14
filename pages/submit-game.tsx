@@ -21,6 +21,8 @@ import styles from '../styles/SubmitGame.module.scss';
 import { theme } from '../components/mui-theme';
 import { useAuth } from '../components/auth';
 import Navbar from '../components/Navbar/Navbar';
+import LinkButton from '../components/Button/Button';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 const DiscordRegex = /^.{3,32}#[0-9]{4}$/;
 
@@ -58,7 +60,7 @@ export default function SubmitGamePage() {
 		},
 	});
 
-	const [eventsResult, eventsQuery] = useQuery<{events: {shortname: string, id: string}[]}>({
+	const [eventsResult, eventsQuery] = useQuery<{ events: { shortname: string; id: string }[] }>({
 		query: gql`
 			query {
 				events(where: { acceptingSubmissions: { equals: true } }) {
@@ -68,8 +70,6 @@ export default function SubmitGamePage() {
 			}
 		`,
 	});
-
-	console.log(eventsResult);
 
 	// Mutation for game submission
 	const [submissionResult, createSubmission] = useMutation(gql`
@@ -109,7 +109,7 @@ export default function SubmitGamePage() {
 	`);
 
 	useEffect(() => {
-		if (eventsResult.data?.events) {
+		if (eventsResult.data?.events.length > 0) {
 			setEvent(eventsResult.data.events[0].id);
 		}
 	}, [eventsResult]);
@@ -127,6 +127,24 @@ export default function SubmitGamePage() {
 		setVideo('');
 	}
 
+	if (!eventsResult.fetching && eventsResult.data.events.length === 0) {
+		return (
+			<ThemeProvider theme={theme}>
+				<div className="App">
+					<Head>
+						<title>Game Submission - AusSpeedruns</title>
+					</Head>
+					<Navbar />
+					<main className={`content ${styles.content} ${styles.noEvents}`}>
+						<h2>Unfortunately we have no events currently accepting submissions.</h2>
+						<p>Follow us on Twitter and Join our Discord to stay up to date!</p>
+						<LinkButton actionText="Home" iconRight={faArrowRight} link="/" />
+					</main>
+				</div>
+			</ThemeProvider>
+		);
+	}
+
 	return (
 		<ThemeProvider theme={theme}>
 			<div className="App">
@@ -134,8 +152,10 @@ export default function SubmitGamePage() {
 					<title>Game Submission - AusSpeedruns</title>
 				</Head>
 				<Navbar />
-				<div className={`content ${styles.content}`}>
-					<h1>{eventsResult.data?.events.find(eventResult => eventResult.id === event)?.shortname} Game Submission</h1>
+				<main className={`content ${styles.content}`}>
+					<h1>
+						{eventsResult.data?.events.find((eventResult) => eventResult.id === event)?.shortname} Game Submission
+					</h1>
 					<form
 						className={styles.gameForm}
 						onSubmit={(e) => {
@@ -159,7 +179,7 @@ export default function SubmitGamePage() {
 										clearInputs();
 										window.scrollY = 0;
 									} else {
-										console.error(result.error)
+										console.error(result.error);
 									}
 								});
 							}
@@ -267,7 +287,7 @@ export default function SubmitGamePage() {
 							</>
 						)}
 					</form>
-				</div>
+				</main>
 			</div>
 		</ThemeProvider>
 	);

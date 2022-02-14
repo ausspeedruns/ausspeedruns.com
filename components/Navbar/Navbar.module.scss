@@ -15,10 +15,13 @@
     align-items: center;
     flex-flow: wrap;
 
+    @include breakpoint($sm) {
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
     @include breakpoint($md) {
       flex-flow: row nowrap;
-      justify-content: space-between;
-      // padding: 8px;
     }
   }
 

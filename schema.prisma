@@ -67,7 +67,7 @@ model Submission {
 model Event {
   id                   String       @id @default(cuid())
   name                 String       @default("")
-  shortname            String       @default("")
+  shortname            String       @unique @default("")
   raised               Float?
   submissions          Submission[] @relation("Submission_event")
   runs                 Run[]        @relation("Run_event")

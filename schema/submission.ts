@@ -6,10 +6,6 @@ import { FieldAccessControl } from '@keystone-6/core/types';
 
 export const Submission: Lists.Submission = list({
 	access: {
-		operation: {
-			update: operations.admin,
-			delete: operations.admin,
-		},
 		filter: {
 			query: ({ session }: SessionContext) => {
 				if (!session?.data) return false;

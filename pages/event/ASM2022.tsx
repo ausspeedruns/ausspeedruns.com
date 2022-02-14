@@ -1,23 +1,46 @@
 import Head from 'next/head';
 import React from 'react';
-import styles from '../../styles/Event.ASM2022.module.scss';
+import { gql } from '@keystone-6/core';
+import { useQuery } from 'urql';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
+import styles from '../../styles/Event.ASM2022.module.scss';
 import Navbar from '../../components/Navbar/Navbar';
+import Footer from '../../components/Footer/Footer';
+import Button from '../../components/Button/Button';
+
 import ASM2022Logo from '../../styles/img/ASM2022-Logo.svg';
 import StockPhoto1 from '../../styles/img/StockPhoto1.jpg';
 import StockPhoto2 from '../../styles/img/StockPhoto2.jpg';
 import StockPhoto3 from '../../styles/img/StockPhoto3.jpg';
-import Footer from '../../components/Footer/Footer';
 
 export default function EventPage() {
+	const [queryResult, profileQuery] = useQuery({
+		query: gql`
+			query {
+				event(where: { shortname: "ASM2022" }) {
+					id
+					acceptingSubmissions
+				}
+			}
+		`,
+	});
+
+	console.log(queryResult);
+
 	return (
 		<div className="App">
 			<Head>
 				<title>ASM2022 - AusSpeedruns</title>
 			</Head>
-			<Navbar />
+			<header className="App-header">
+				<Navbar />
+			</header>
 			<header className={styles.header}>
 				<img src={ASM2022Logo.src} />
+				{queryResult.data?.event.acceptingSubmissions && (
+					<Button actionText="Submissions are open!" link="/submit-game" iconRight={faArrowRight} />
+				)}
 			</header>
 			<main>
 				<div className={styles.contentRow}>
@@ -36,8 +59,9 @@ export default function EventPage() {
 					<img src={StockPhoto2.src} />
 					<div className={styles.moreInfo}>
 						<p>
-							We will be releasing more information about the event soon. Follow us on Twitter or Join the Discord to be
-							notified as soon as possible!
+							We will be releasing more information about the event soon.
+							<br />
+							Follow us on Twitter or Join the Discord to be notified as soon as possible!
 						</p>
 					</div>
 				</div>

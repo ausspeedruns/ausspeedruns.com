@@ -13,7 +13,7 @@ export const Event: Lists.Event = list({
 	},
 	fields: {
 		name: text(),
-		shortname: text(),
+		shortname: text({ isIndexed: 'unique' }),
 		raised: float(),
 		submissions: relationship({ ref: 'Submission.event', many: true, access: operations.admin }),
 		runs: relationship({ ref: 'Run.event', many: true }),

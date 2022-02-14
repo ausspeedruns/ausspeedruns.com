@@ -1,4 +1,5 @@
 @import './colors.scss';
+@import './responsive.scss';
 
 .header {
 	background-image: url('./img/ASM2022Background.png');
@@ -35,12 +36,21 @@
 		align-items: center;
 
 		h2 {
-			font-size: 2.5rem;
+			font-size: 1.5rem;
+
+			@include breakpoint($lg) {
+				font-size: 2rem;
+			}
 		}
 
 		p {
-			font-size: 1.5rem;
-			width: 60%;
+			font-size: 1.2rem;
+			width: 80%;
+
+			@include breakpoint($lg) {
+				font-size: 1.4rem;
+				width: 70%;
+			}
 		}
 	}
 	
@@ -56,6 +66,32 @@
 
 	.moreInfo {
 		color: $dark-text;
+	}
+
+	@include breakpoint($sm-zero-only) {
+		position: relative;
+		display: block;
+
+		.intro, .moreInfo {
+			position: absolute;
+			height: 100%;
+			width: 100%;
+			z-index: 2;
+		}
+
+		img {
+			position: absolute;
+			height: 100%;
+			width: 100%;
+		}
+
+		.intro {
+			background: transparentize($color: $primary, $amount: 0.2);
+		}
+
+		.moreInfo {
+			background: transparentize($color: #ffffff, $amount: 0.2);
+		}
 	}
 }
 

@@ -19,6 +19,13 @@ $md-only: (
   min: map-get($md, min),
   max: map-get($lg, min) - 1,
 );
+$sm-zero: (
+  min: 0px,
+);
+$sm-zero-only: (
+  min: map-get($sm-zero, min),
+  max: map-get($md, min) - 1,
+);
 
 @mixin breakpoint($map) {
   $query: "";

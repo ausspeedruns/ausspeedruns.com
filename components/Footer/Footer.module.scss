@@ -6,6 +6,20 @@
   color: $light-text;
 
   @include nav-lists;
+
+  .content {
+    flex-direction: column;
+    gap: 8px;
+
+    .miscLinks {
+      display: flex;
+      justify-content: center;
+      
+      a {
+        font-weight: 500;
+      }
+    }
+  }
 }
 
 .acknowledgement {

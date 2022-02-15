@@ -11,7 +11,11 @@ export type SignInResult = { success: true } | { success: false; message: string
 type AuthContextType =
 	| {
 			ready: true;
-			sessionData?: { id: string; username: string };
+			sessionData?: {
+				id: string;
+				username: string;
+				roles: { canReadRunnerInfo: boolean; canReadRunnerMgmt: boolean; canReadTech: boolean }[];
+			};
 			signIn: ({ email, password }: SignInArgs) => Promise<SignInResult>;
 			signOut: () => void;
 	  }
@@ -38,6 +42,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 					... on User {
 						id
 						username
+						roles {
+							canReadTech
+							canReadRunnerInfo
+							canReadRunnerMgmt
+						}
 					}
 				}
 			}

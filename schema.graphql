@@ -13,10 +13,11 @@ type Post {
   ): [User!]
   authorCount(where: UserWhereInput! = {}): Int
   published: Boolean
-  publishDate: DateTime
+  publishedDate: DateTime
   editedDate: DateTime
   role: PostRoleType
   content: Post_content_Document
+  intro: String
 }
 
 scalar DateTime
@@ -26,7 +27,7 @@ enum PostRoleType {
   public
   runner
   tech
-  runnermanagement
+  runner_management
 }
 
 type Post_content_Document {
@@ -47,9 +48,10 @@ input PostWhereInput {
   slug: StringFilter
   author: UserManyRelationFilter
   published: BooleanFilter
-  publishDate: DateTimeNullableFilter
+  publishedDate: DateTimeNullableFilter
   editedDate: DateTimeNullableFilter
   role: PostRoleTypeNullableFilter
+  intro: StringFilter
 }
 
 input IDFilter {
@@ -125,9 +127,10 @@ input PostOrderByInput {
   title: OrderDirection
   slug: OrderDirection
   published: OrderDirection
-  publishDate: OrderDirection
+  publishedDate: OrderDirection
   editedDate: OrderDirection
   role: OrderDirection
+  intro: OrderDirection
 }
 
 enum OrderDirection {
@@ -140,10 +143,11 @@ input PostUpdateInput {
   slug: String
   author: UserRelateToManyForUpdateInput
   published: Boolean
-  publishDate: DateTime
+  publishedDate: DateTime
   editedDate: DateTime
   role: PostRoleType
   content: JSON
+  intro: String
 }
 
 input UserRelateToManyForUpdateInput {
@@ -163,10 +167,11 @@ input PostCreateInput {
   slug: String
   author: UserRelateToManyForCreateInput
   published: Boolean
-  publishDate: DateTime
+  publishedDate: DateTime
   editedDate: DateTime
   role: PostRoleType
   content: JSON
+  intro: String
 }
 
 input UserRelateToManyForCreateInput {

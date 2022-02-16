@@ -60,6 +60,13 @@ export default withAuth(
         storagePath: 'public/images',
         baseUrl: '/images',
       },
+    },
+    files: {
+      upload: 'local',
+      local: {
+        storagePath: 'public/files',
+        baseUrl: '/files'
+      }
     }
   })
 );

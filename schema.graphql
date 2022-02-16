@@ -563,6 +563,7 @@ type Event {
   runsCount(where: RunWhereInput! = {}): Int
   acceptingSubmissions: Boolean
   logo: ImageFieldOutput
+  pressKit: FileFieldOutput
 }
 
 interface ImageFieldOutput {
@@ -580,6 +581,13 @@ enum ImageExtension {
   png
   webp
   gif
+}
+
+interface FileFieldOutput {
+  filename: String!
+  filesize: Int!
+  ref: String!
+  url: String!
 }
 
 input EventWhereUniqueInput {
@@ -603,6 +611,20 @@ type CloudImageFieldOutput implements ImageFieldOutput {
   width: Int!
   height: Int!
   extension: ImageExtension!
+  ref: String!
+  url: String!
+}
+
+type LocalFileFieldOutput implements FileFieldOutput {
+  filename: String!
+  filesize: Int!
+  ref: String!
+  url: String!
+}
+
+type CloudFileFieldOutput implements FileFieldOutput {
+  filename: String!
+  filesize: Int!
   ref: String!
   url: String!
 }
@@ -647,6 +669,7 @@ input EventUpdateInput {
   runs: RunRelateToManyForUpdateInput
   acceptingSubmissions: Boolean
   logo: ImageFieldInput
+  pressKit: FileFieldInput
 }
 
 input ImageFieldInput {
@@ -658,6 +681,11 @@ input ImageFieldInput {
 The `Upload` scalar type represents a file upload.
 """
 scalar Upload
+
+input FileFieldInput {
+  upload: Upload
+  ref: String
+}
 
 input EventUpdateArgs {
   where: EventWhereUniqueInput!
@@ -672,6 +700,7 @@ input EventCreateInput {
   runs: RunRelateToManyForCreateInput
   acceptingSubmissions: Boolean
   logo: ImageFieldInput
+  pressKit: FileFieldInput
 }
 
 type Role {

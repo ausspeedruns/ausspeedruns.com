@@ -1,5 +1,5 @@
 import { list } from '@keystone-6/core';
-import { checkbox, float, image, relationship, text } from '@keystone-6/core/fields';
+import { checkbox, file, float, image, relationship, text } from '@keystone-6/core/fields';
 import { operations } from './access';
 import { Lists } from '.keystone/types';
 
@@ -19,5 +19,6 @@ export const Event: Lists.Event = list({
 		runs: relationship({ ref: 'Run.event', many: true }),
 		acceptingSubmissions: checkbox(),
 		logo: image(),
+		pressKit: file(),
 	}
 });

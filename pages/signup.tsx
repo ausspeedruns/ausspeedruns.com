@@ -36,7 +36,9 @@ export default function SignUpPage() {
 				<Head>
 					<title>Sing Up - AusSpeedruns</title>
 				</Head>
-				<Navbar />
+				<header className="App-header">
+					<Navbar />
+				</header>
 				<div className={`content ${styles.form}`}>
 					<h1>Join</h1>
 					<form
@@ -87,13 +89,15 @@ export default function SignUpPage() {
 							variant="outlined"
 							label="Name"
 						/>
-						<Tooltip placement='top' arrow title="For events we may need to give different tickets if under 18">
+						<Tooltip placement="top" arrow title="For events we may need to give different tickets if under 18">
 							<FormControlLabel
 								control={<Checkbox onChange={(e) => setOver18(e.target.checked)} checked={over18} />}
 								label="Are you over 18 years of age?"
 							/>
 						</Tooltip>
-						<Button type="submit" variant="contained" disabled={canSignUp}>Sign Up</Button>
+						<Button type="submit" variant="contained" disabled={canSignUp}>
+							Sign Up
+						</Button>
 					</form>
 					<hr className="my-4" />
 					<div>

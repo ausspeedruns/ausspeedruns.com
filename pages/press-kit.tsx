@@ -1,0 +1,67 @@
+import React from 'react';
+import Head from 'next/head';
+
+import styles from '../styles/PressKit.module.scss';
+import Navbar from '../components/Navbar/Navbar';
+import Footer from '../components/Footer/Footer';
+import { useQuery } from 'urql';
+import { gql } from '@keystone-6/core';
+
+const PressKit = () => {
+	const [pressKitResult, pressKitQuery] = useQuery({
+		query: gql`
+			query {
+				events {
+					name
+					pressKit {
+						url
+					}
+				}
+			}
+		`,
+	});
+
+	console.log(pressKitResult.error);
+
+	return (
+		<div className={`app ${styles.app}`}>
+			<Head>
+				<title>Press Kit - AusSpeedruns</title>
+			</Head>
+			<header className="App-header">
+				<Navbar />
+			</header>
+			<main className={`content ${styles.content}`}>
+				<h2>Press Kit</h2>
+				<p>
+					<a target="_blank" href="/AusSpeedruns_Logos.zip" className={styles.ausspeedrunsLogo}>
+						AusSpeedruns Logos
+					</a>
+				</p>
+				<div>
+					<div className={`${styles.colourBox} ${styles.orange}`} />
+					<p>Orange: #CC7722</p>
+				</div>
+				<div>
+					<div className={`${styles.colourBox} ${styles.blue}`} />
+					<p>Blue: #437C90</p>
+				</div>
+
+				<h3>Event Press Kits</h3>
+				<div className={styles.pressKitList}>
+					{pressKitResult.data?.events.map((event) => {
+						if (!event.pressKit) return;
+						return (
+							<a target="_blank" href={event.pressKit.url}>
+								{event.name}
+							</a>
+						);
+					})}
+				</div>
+			</main>
+			<Footer className={styles.footer} />
+		</div>
+	);
+};
+
+export default PressKit;

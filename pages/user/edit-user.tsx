@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { Button, CircularProgress, TextField, ThemeProvider, Input, Select, MenuItem } from '@mui/material';
 
 import styles from '../../styles/User.EditUser.module.scss';
-import NavBar from '../../components/Navbar/Navbar';
+import Navbar from '../../components/Navbar/Navbar';
 import { useAuth } from '../../components/auth';
 import { theme } from '../../components/mui-theme';
 
@@ -124,7 +124,9 @@ export default function EditUser() {
 				<Head>
 					<title>Edit User - AusSpeedruns</title>
 				</Head>
-				<NavBar />
+				<header className="App-header">
+					<Navbar />
+				</header>
 				<div className={`content ${styles.content}`}>
 					<h1>{username}</h1>
 					{(queryResult.fetching || queryResult.data?.user === null) && <CircularProgress />}

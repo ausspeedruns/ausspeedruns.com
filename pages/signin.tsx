@@ -47,7 +47,7 @@ export const SignInPage: React.FC = () => {
 		if (error) {
 			setSpinner(false);
 		}
-	}, [error])
+	}, [error]);
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -55,7 +55,9 @@ export const SignInPage: React.FC = () => {
 				<Head>
 					<title>Sign In - AusSpeedruns</title>
 				</Head>
-				<Navbar />
+				<header className="App-header">
+					<Navbar />
+				</header>
 				<div className={`content ${styles.form}`}>
 					<h1>Sign In</h1>
 					<form
@@ -74,7 +76,7 @@ export const SignInPage: React.FC = () => {
 							}}
 							fullWidth
 						/>
-						
+
 						<TextField
 							label="Password"
 							type={'password'}
@@ -86,7 +88,9 @@ export const SignInPage: React.FC = () => {
 							fullWidth
 						/>
 						<h2>{error}</h2>
-						<Button type="submit" variant="contained">Sign In</Button>
+						<Button type="submit" variant="contained">
+							Sign In
+						</Button>
 						{/* <Button type="submit" actionText='Sign In' /> */}
 						{spinner && <CircularProgress />}
 					</form>

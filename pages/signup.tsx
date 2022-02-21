@@ -11,8 +11,8 @@ import { theme } from '../components/mui-theme';
 
 export default function SignUpPage() {
 	const [{ error, data }, signup] = useMutation(gql`
-		mutation ($username: String!, $name: String!, $email: String!, $password: String!, $over18: Boolean!) {
-			createUser(data: { username: $username, name: $name, email: $email, password: $password, isOver18: $over18 }) {
+		mutation ($username: String!, $email: String!, $password: String!) {
+			createUser(data: { username: $username, email: $email, password: $password }) {
 				__typename
 				id
 			}
@@ -23,12 +23,10 @@ export default function SignUpPage() {
 	`);
 
 	const [username, setUsername] = useState('');
-	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [over18, setOver18] = useState(false);
 
-	const canSignUp = !Boolean(username) || !Boolean(name) || !Boolean(email) || !Boolean(password);
+	const canSignUp = !Boolean(username) || !Boolean(email) || password.length < 8;
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -36,15 +34,13 @@ export default function SignUpPage() {
 				<Head>
 					<title>Sing Up - AusSpeedruns</title>
 				</Head>
-				<header className="App-header">
-					<Navbar />
-				</header>
+				<Navbar />
 				<div className={`content ${styles.form}`}>
 					<h1>Join</h1>
 					<form
 						onSubmit={(event) => {
 							event.preventDefault();
-							signup({ username, name, email, password, over18 }).then((result) => {
+							signup({ username, email, password }).then((result) => {
 								if (result.data?.createUser) {
 									// FIXME: there's a cache issue with Urql where it's not reloading the
 									// current user properly if we do a client-side redirect here.
@@ -72,6 +68,7 @@ export default function SignUpPage() {
 							variant="outlined"
 							label="Password"
 							type="password"
+							helperText="Minimum 8 characters"
 						/>
 						<TextField
 							value={username}
@@ -81,20 +78,6 @@ export default function SignUpPage() {
 							variant="outlined"
 							label="Username"
 						/>
-						<TextField
-							value={name}
-							onChange={(e) => {
-								setName(e.target.value);
-							}}
-							variant="outlined"
-							label="Name"
-						/>
-						<Tooltip placement="top" arrow title="For events we may need to give different tickets if under 18">
-							<FormControlLabel
-								control={<Checkbox onChange={(e) => setOver18(e.target.checked)} checked={over18} />}
-								label="Are you over 18 years of age?"
-							/>
-						</Tooltip>
 						<Button type="submit" variant="contained" disabled={canSignUp}>
 							Sign Up
 						</Button>

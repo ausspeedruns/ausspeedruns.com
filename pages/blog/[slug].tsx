@@ -55,9 +55,7 @@ export default function PostPage({ post }: { post: Post }) {
 			<Head>
 				<title>{post.title} - AusSpeedruns</title>
 			</Head>
-			<header className="App-header">
-				<Navbar />
-			</header>
+			<Navbar />
 			<main className={`content ${styles.content}`}>
 				<h1 className={styles.title}>{post.title}</h1>
 				<div className={styles.metaData}>

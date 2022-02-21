@@ -15,9 +15,7 @@ export default function EventPage({ event }: { event: Event }) {
 			<Head>
 				<title>{event.shortname} - AusSpeedruns</title>
 			</Head>
-			<header className="App-header">
-				<Navbar />
-			</header>
+			<Navbar />
 		</div>
 	);
 }

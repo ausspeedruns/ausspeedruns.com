@@ -13,6 +13,7 @@ import ASM2022Logo from '../../styles/img/ASM2022-Logo.svg';
 import StockPhoto1 from '../../styles/img/StockPhoto1.jpg';
 import StockPhoto2 from '../../styles/img/StockPhoto2.jpg';
 import StockPhoto3 from '../../styles/img/StockPhoto3.jpg';
+import DiscordEmbed from '../../components/DiscordEmbed';
 
 export default function EventPage() {
 	const [queryResult, profileQuery] = useQuery({
@@ -30,6 +31,7 @@ export default function EventPage() {
 		<div className="App">
 			<Head>
 				<title>ASM2022 - AusSpeedruns</title>
+				<DiscordEmbed title="ASM2022 - AusSpeedruns" pageUrl="/event/ASM2022" />
 			</Head>
 			<Navbar />
 			<header className={styles.header}>

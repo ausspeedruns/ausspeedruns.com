@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
 import { useQuery } from 'urql';
 import { gql } from '@keystone-6/core';
+import DiscordEmbed from '../components/DiscordEmbed';
 
 const PressKit = () => {
 	const [pressKitResult, pressKitQuery] = useQuery({
@@ -27,6 +28,7 @@ const PressKit = () => {
 		<div className={`app ${styles.app}`}>
 			<Head>
 				<title>Press Kit - AusSpeedruns</title>
+				<DiscordEmbed title='Press Kit - AusSpeedruns' description='Press Kit for AusSpeedruns and our events' pageUrl='/press-kit' />
 			</Head>
 			<Navbar />
 			<main className={`content ${styles.content}`}>

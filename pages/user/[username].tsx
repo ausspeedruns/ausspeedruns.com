@@ -14,6 +14,7 @@ import { RoleBadge } from '../../components/RoleBadge/RoleBadge';
 import SubmissionAccordian from '../../components/SubmissionAccordian/SubmissionAccordian';
 import RunUpcoming from '../../components/RunUpcoming/RunUpcoming';
 import RunCompleted from '../../components/RunCompleted/RunCompleted';
+import DiscordEmbed from '../../components/DiscordEmbed';
 
 export type UserPageData = {
 	id: string;
@@ -223,6 +224,7 @@ export default function ProfilePage() {
 			<div className="app">
 				<Head>
 					<title>{router.query.username} - AusSpeedruns</title>
+					<DiscordEmbed title={`${router.query.username}'s Profile - AusSpeedruns`} pageUrl={`/user/${router.query.username}`} />
 				</Head>
 				<Navbar />
 				<div className={`content ${styles.content}`}>

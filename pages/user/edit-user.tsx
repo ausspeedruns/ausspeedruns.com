@@ -7,6 +7,7 @@ import styles from '../../styles/User.EditUser.module.scss';
 import Navbar from '../../components/Navbar/Navbar';
 import { useAuth } from '../../components/auth';
 import { theme } from '../../components/mui-theme';
+import DiscordEmbed from '../../components/DiscordEmbed';
 
 const DiscordRegex = /^.{3,32}#[0-9]{4}$/;
 const TwitterRegex = /^@(\w){1,15}$/;
@@ -123,6 +124,7 @@ export default function EditUser() {
 			<div className="app">
 				<Head>
 					<title>Edit User - AusSpeedruns</title>
+					<DiscordEmbed title={`Edit User - AusSpeedruns`} pageUrl="/user/edit-user" />
 				</Head>
 				<Navbar />
 				<div className={`content ${styles.content}`}>
@@ -136,7 +138,12 @@ export default function EditUser() {
 								<h3>Personal Information</h3>
 								<div />
 								<div>Username</div>
-								<TextField required value={username} onChange={(e) => setUsername(e.target.value)} variant={'outlined'} />
+								<TextField
+									required
+									value={username}
+									onChange={(e) => setUsername(e.target.value)}
+									variant={'outlined'}
+								/>
 								<div>Name</div>
 								<TextField required value={name} onChange={(e) => setName(e.target.value)} variant={'outlined'} />
 								<div>Email</div>

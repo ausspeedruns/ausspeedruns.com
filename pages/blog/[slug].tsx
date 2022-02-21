@@ -7,6 +7,8 @@ import Navbar from '../../components/Navbar/Navbar';
 import styles from '../../styles/Blog.slug.module.scss';
 import Head from 'next/head';
 import Footer from '../../components/Footer/Footer';
+import { useRouter } from 'next/router';
+import DiscordEmbed from '../../components/DiscordEmbed';
 
 type Post = {
 	id: string;
@@ -20,6 +22,7 @@ type Post = {
 };
 
 export default function PostPage({ post }: { post: Post }) {
+	const router = useRouter();
 	const authorNames = post.author.map((author) => author.username);
 	const authorString = authorNames.map((author, i) => {
 		// If only one name or second last in the list to not include a comma
@@ -54,6 +57,7 @@ export default function PostPage({ post }: { post: Post }) {
 		<div className={`app ${styles.app}`}>
 			<Head>
 				<title>{post.title} - AusSpeedruns</title>
+				<DiscordEmbed title={`${post.title} - Blog Post - AusSpeedruns`} pageUrl={`/blog/${router.query.slug}`} />
 			</Head>
 			<Navbar />
 			<main className={`content ${styles.content}`}>

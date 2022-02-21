@@ -11,9 +11,7 @@ const PoliciesPage = () => {
 			<Head>
 				<title>Policies - AusSpeedruns</title>
 			</Head>
-			<header className="App-header">
-				<Navbar />
-			</header>
+			<Navbar />
 			<main className={`content ${styles.content}`}>
 				<h2>Policies</h2>
 				<p>

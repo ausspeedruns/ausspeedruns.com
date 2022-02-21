@@ -151,9 +151,7 @@ export default function SubmitGamePage() {
 				<Head>
 					<title>Game Submission - AusSpeedruns</title>
 				</Head>
-				<header className="App-header">
-					<Navbar />
-				</header>
+				<Navbar />
 				<main className={`content ${styles.content}`}>
 					<h1>
 						{eventsResult.data?.events.find((eventResult) => eventResult.id === event)?.shortname} Game Submission

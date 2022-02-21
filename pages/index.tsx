@@ -27,9 +27,7 @@ export default function Home() {
       <Head>
         <title>AusSpeedruns</title>
       </Head>
-      <header className="App-header">
-        <Navbar isLive={eventLive} />
-      </header>
+      <Navbar isLive={eventLive} />
       <main>
         <Heroblock event={current} />
         { eventLive && <Ticker /> }

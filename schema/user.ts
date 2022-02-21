@@ -41,7 +41,7 @@ export const User: Lists.User = list({
 		email: text({ isIndexed: 'unique', validation: { isRequired: true }, access: fieldAccess.editSelfOrHidden, ui: { itemView: { fieldMode: fieldModes.editSelfOrHidden } } }),
 		password: password({ validation: { isRequired: true } }),
 		accountCreated: timestamp({ defaultValue: { kind: 'now' }, access: fieldAccess.readSelfOrHidden }),
-		dateOfBirth: timestamp({ validation: { isRequired: true }, access: fieldAccess.editSelfOrHidden, ui: { itemView: { fieldMode: fieldModes.editSelfOrHidden } } }),
+		dateOfBirth: timestamp({ access: fieldAccess.editSelfOrHidden, ui: { itemView: { fieldMode: fieldModes.editSelfOrHidden } } }),
 		pronouns: text({ access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
 		socials: relationship({ ref: 'Social.user', access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
 		submissions: relationship({ ref: 'Submission.runner', many: true, access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),

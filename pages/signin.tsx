@@ -55,9 +55,7 @@ export const SignInPage: React.FC = () => {
 				<Head>
 					<title>Sign In - AusSpeedruns</title>
 				</Head>
-				<header className="App-header">
-					<Navbar />
-				</header>
+				<Navbar />
 				<div className={`content ${styles.form}`}>
 					<h1>Sign In</h1>
 					<form

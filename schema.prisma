@@ -31,7 +31,7 @@ model User {
   email            String       @unique @default("")
   password         String
   accountCreated   DateTime?    @default(now())
-  dateOfBirth      DateTime
+  dateOfBirth      DateTime?
   pronouns         String       @default("")
   socials          Social?      @relation("Social_user")
   submissions      Submission[] @relation("Submission_runner")

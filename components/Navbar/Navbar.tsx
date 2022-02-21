@@ -36,7 +36,7 @@ const Navbar = ({ isLive }: NavbarProps) => {
 	}, [windowSize]);
 
 	return (
-		<div className={styles.navbar}>
+		<header className={`App-header ${styles.navbar}`}>
 			<div className={`${styles.content} content`}>
 				<div className={styles.title}>
 					<a href="/">
@@ -150,7 +150,7 @@ const Navbar = ({ isLive }: NavbarProps) => {
 					</ul>
 				</nav>
 			</div>
-		</div>
+		</header>
 	);
 };
 

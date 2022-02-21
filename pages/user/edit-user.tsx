@@ -124,9 +124,7 @@ export default function EditUser() {
 				<Head>
 					<title>Edit User - AusSpeedruns</title>
 				</Head>
-				<header className="App-header">
-					<Navbar />
-				</header>
+				<Navbar />
 				<div className={`content ${styles.content}`}>
 					<h1>{username}</h1>
 					{(queryResult.fetching || queryResult.data?.user === null) && <CircularProgress />}

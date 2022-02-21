@@ -86,9 +86,7 @@ export default function BlogPage() {
 			<Head>
 				<title>Blog - AusSpeedruns</title>
 			</Head>
-			<header className="App-header">
-				<Navbar />
-			</header>
+			<Navbar />
 			<main className={`content ${styles.content}`}>
 				<h1>Blog</h1>
 				<div className={styles.blogPosts}>

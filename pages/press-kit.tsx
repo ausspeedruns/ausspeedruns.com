@@ -28,9 +28,7 @@ const PressKit = () => {
 			<Head>
 				<title>Press Kit - AusSpeedruns</title>
 			</Head>
-			<header className="App-header">
-				<Navbar />
-			</header>
+			<Navbar />
 			<main className={`content ${styles.content}`}>
 				<h2>Press Kit</h2>
 				<p>

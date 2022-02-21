@@ -31,9 +31,7 @@ export default function EventPage() {
 			<Head>
 				<title>ASM2022 - AusSpeedruns</title>
 			</Head>
-			<header className="App-header">
-				<Navbar />
-			</header>
+			<Navbar />
 			<header className={styles.header}>
 				<img src={ASM2022Logo.src} />
 				{queryResult.data?.event.acceptingSubmissions && (

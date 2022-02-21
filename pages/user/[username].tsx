@@ -191,9 +191,7 @@ export default function ProfilePage() {
 					<Head>
 						<title>{router.query.username} - AusSpeedruns</title>
 					</Head>
-					<header className="App-header">
-						<Navbar />
-					</header>
+					<Navbar />
 					<div className={`content ${styles.content}`}>
 						<h2>Loading</h2>
 					</div>
@@ -209,9 +207,7 @@ export default function ProfilePage() {
 					<Head>
 						<title>{router.query.username} - AusSpeedruns</title>
 					</Head>
-					<header className="App-header">
-						<Navbar />
-					</header>
+					<Navbar />
 					<div className={`content ${styles.content}`}>
 						<h2>Could not find {router.query.username}</h2>
 					</div>
@@ -228,9 +224,7 @@ export default function ProfilePage() {
 				<Head>
 					<title>{router.query.username} - AusSpeedruns</title>
 				</Head>
-				<header className="App-header">
-					<Navbar />
-				</header>
+				<Navbar />
 				<div className={`content ${styles.content}`}>
 					<div className={styles.profileHeader}>
 						<h1>{userData.username}</h1>

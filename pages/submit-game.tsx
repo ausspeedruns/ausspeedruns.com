@@ -23,6 +23,7 @@ import { useAuth } from '../components/auth';
 import Navbar from '../components/Navbar/Navbar';
 import LinkButton from '../components/Button/Button';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import DiscordEmbed from '../components/DiscordEmbed';
 
 const DiscordRegex = /^.{3,32}#[0-9]{4}$/;
 
@@ -150,6 +151,7 @@ export default function SubmitGamePage() {
 			<div className="App">
 				<Head>
 					<title>Game Submission - AusSpeedruns</title>
+					<DiscordEmbed title='Game Submission - AusSpeedruns' description='Submit your speedrun to the AusSpeedrun Marathon' pageUrl='/submit-game' />
 				</Head>
 				<Navbar />
 				<main className={`content ${styles.content}`}>

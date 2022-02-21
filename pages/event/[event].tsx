@@ -3,6 +3,8 @@ import { GetStaticPathsResult, GetStaticPropsContext } from 'next';
 import { query } from '.keystone/api';
 import Head from 'next/head';
 import Navbar from '../../components/Navbar/Navbar';
+import { useRouter } from 'next/router';
+import DiscordEmbed from '../../components/DiscordEmbed';
 
 type Event = {
 	name: string;
@@ -10,10 +12,13 @@ type Event = {
 };
 
 export default function EventPage({ event }: { event: Event }) {
+	const router = useRouter();
+
 	return (
 		<div className="App">
 			<Head>
 				<title>{event.shortname} - AusSpeedruns</title>
+				<DiscordEmbed title={`${event.shortname} - AusSpeedruns`} pageUrl={`/event/${router.query.event}`} />
 			</Head>
 			<Navbar />
 		</div>

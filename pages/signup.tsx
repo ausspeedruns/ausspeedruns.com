@@ -8,6 +8,7 @@ import Navbar from '../components/Navbar/Navbar';
 // import Footer from '../components/Footer/Footer';
 import styles from '../styles/SignIn.module.scss';
 import { theme } from '../components/mui-theme';
+import DiscordEmbed from '../components/DiscordEmbed';
 
 export default function SignUpPage() {
 	const [{ error, data }, signup] = useMutation(gql`
@@ -33,6 +34,7 @@ export default function SignUpPage() {
 			<div className="App">
 				<Head>
 					<title>Sing Up - AusSpeedruns</title>
+					<DiscordEmbed title='Sign Up - AusSpeedruns' description='Sign Up to AusSpeedruns' pageUrl='/signup' />
 				</Head>
 				<Navbar />
 				<div className={`content ${styles.form}`}>

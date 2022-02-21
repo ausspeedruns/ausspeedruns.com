@@ -11,6 +11,7 @@ import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import TwitchChatEmbed from "../components/TwitchChatEmbed/TwitchChatEmbed";
 import Ticker from "../components/Ticker/Ticker";
 import { globals } from "./globals";
+import DiscordEmbed from '../components/DiscordEmbed';
 
 // Home receives a `posts` prop from `getStaticProps` below
 export default function Home() {
@@ -26,6 +27,7 @@ export default function Home() {
     <div className="App">
       <Head>
         <title>AusSpeedruns</title>
+        <DiscordEmbed title='AusSpeedruns' description='Home of the AusSpeedruns events' pageUrl='/' />
       </Head>
       <Navbar isLive={eventLive} />
       <main>

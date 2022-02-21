@@ -9,6 +9,7 @@ import Footer from '../components/Footer/Footer';
 import Navbar from '../components/Navbar/Navbar';
 import Head from 'next/head';
 import { theme } from '../components/mui-theme';
+import DiscordEmbed from '../components/DiscordEmbed';
 
 export const SignInPage: React.FC = () => {
 	const auth = useAuth();
@@ -54,6 +55,7 @@ export const SignInPage: React.FC = () => {
 			<div className="App">
 				<Head>
 					<title>Sign In - AusSpeedruns</title>
+					<DiscordEmbed title='Sign In - AusSpeedruns' description='Sign In to AusSpeedruns' pageUrl='/signin' />
 				</Head>
 				<Navbar />
 				<div className={`content ${styles.form}`}>

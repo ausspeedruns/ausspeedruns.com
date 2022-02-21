@@ -10,6 +10,7 @@ import styles from '../styles/Blog.module.scss';
 import { useAuth } from '../components/auth';
 import { useQuery } from 'urql';
 import { gql } from '@keystone-6/core';
+import DiscordEmbed from '../components/DiscordEmbed';
 
 type Post = {
 	id: string;
@@ -85,6 +86,7 @@ export default function BlogPage() {
 		<div className="app">
 			<Head>
 				<title>Blog - AusSpeedruns</title>
+				<DiscordEmbed title='Blog - AusSpeedruns' description='AusSpeedruns blog' pageUrl='/blog' />
 			</Head>
 			<Navbar />
 			<main className={`content ${styles.content}`}>

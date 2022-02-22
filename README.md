@@ -22,6 +22,7 @@ Open [http://localhost:8000](http://localhost:8000) to access the KeystoneJS adm
 - About us page
 - Testing
 - ASM2022 Press kit
+- Use more HTML semantic tags
 
 ### Closer to ASM2022
 

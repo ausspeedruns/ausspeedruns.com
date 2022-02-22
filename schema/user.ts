@@ -120,6 +120,15 @@ export const Social = list({
 				}
 			}
 		}),
+		twitch: text({
+			validation: {
+				isRequired: false,
+				match: {
+					regex: /(^[a-zA-Z0-9][\w]{2,24}$)?/,
+					explanation: `Twitch name is invalid.`
+				}
+			}
+		}),
 		user: relationship({ ref: 'User.socials' }),
 	}
 });

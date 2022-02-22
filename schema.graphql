@@ -802,6 +802,7 @@ type Social {
   id: ID!
   discord: String
   twitter: String
+  twitch: String
   user: User
 }
 
@@ -816,6 +817,7 @@ input SocialWhereInput {
   id: IDFilter
   discord: StringFilter
   twitter: StringFilter
+  twitch: StringFilter
   user: UserWhereInput
 }
 
@@ -823,11 +825,13 @@ input SocialOrderByInput {
   id: OrderDirection
   discord: OrderDirection
   twitter: OrderDirection
+  twitch: OrderDirection
 }
 
 input SocialUpdateInput {
   discord: String
   twitter: String
+  twitch: String
   user: UserRelateToOneForUpdateInput
 }
 
@@ -839,6 +843,7 @@ input SocialUpdateArgs {
 input SocialCreateInput {
   discord: String
   twitter: String
+  twitch: String
   user: UserRelateToOneForCreateInput
 }
 

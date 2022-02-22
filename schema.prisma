@@ -108,6 +108,7 @@ model Social {
   id      String  @id @default(cuid())
   discord String  @default("")
   twitter String  @default("")
+  twitch  String  @default("")
   user    User?   @relation("Social_user", fields: [userId], references: [id])
   userId  String? @unique @map("user")
 }

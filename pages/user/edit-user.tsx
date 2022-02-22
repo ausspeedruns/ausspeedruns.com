@@ -11,12 +11,14 @@ import DiscordEmbed from '../../components/DiscordEmbed';
 
 const DiscordRegex = /^.{3,32}#[0-9]{4}$/;
 const TwitterRegex = /^@(\w){1,15}$/;
+const TwitchRegex = /^[a-zA-Z0-9][\w]{2,24}$/;
 
 export default function EditUser() {
 	const auth = useAuth();
 	// const [profileEditing, setProfileEditing] = useState(false);
 	const [discordWarning, setDiscordWarning] = useState(false);
 	const [twitterWarning, setTwitterWarning] = useState(false);
+	const [twitchWarning, setTwitchWarning] = useState(false);
 
 	// User inputs
 	const [username, setUsername] = useState('');
@@ -27,6 +29,7 @@ export default function EditUser() {
 	const [socialId, setSocialId] = useState('');
 	const [discord, setDiscord] = useState('');
 	const [twitter, setTwitter] = useState('');
+	const [twitch, setTwitch] = useState('');
 	const [dateOfBirth, setDateOfBirth] = useState('');
 
 	const [queryResult, profileQuery] = useQuery({
@@ -43,6 +46,7 @@ export default function EditUser() {
 						id
 						discord
 						twitter
+						twitch
 					}
 				}
 			}
@@ -62,6 +66,7 @@ export default function EditUser() {
 			$socialId: ID
 			$discord: String!
 			$twitter: String!
+			$twitch: String!
 			$dateOfBirth: DateTime!
 		) {
 			updateUser(
@@ -71,7 +76,7 @@ export default function EditUser() {
 				__typename
 			}
 
-			updateSocial(where: { id: $socialId }, data: { discord: $discord, twitter: $twitter }) {
+			updateSocial(where: { id: $socialId }, data: { discord: $discord, twitter: $twitter, twitch: $twitch }) {
 				__typename
 			}
 		}
@@ -88,6 +93,7 @@ export default function EditUser() {
 			setDiscord(queryResult.data.user.socials.discord);
 			setTwitter(queryResult.data.user.socials.twitter);
 			setDateOfBirth(queryResult.data.user.dateOfBirth);
+			setTwitch(queryResult.data.user.socials.twitch);
 		}
 	}, [queryResult]);
 
@@ -109,6 +115,7 @@ export default function EditUser() {
 				twitter,
 				socialId,
 				dateOfBirth: new Date(dateOfBirth).toISOString(),
+				twitch,
 			}).then((res) => {
 				if (!res.error) {
 					// setProfileEditing(false);
@@ -132,6 +139,7 @@ export default function EditUser() {
 					{(queryResult.fetching || queryResult.data?.user === null) && <CircularProgress />}
 					{queryResult.error && <h2>{queryResult.error.message}</h2>}
 					{updateResult.error && <h2>{updateResult.error.message}</h2>}
+					{updateResult.data && <h2>Profile updated!</h2>}
 					{queryResult.data?.user && (
 						<>
 							<div className={styles.profileInformation}>
@@ -194,6 +202,15 @@ export default function EditUser() {
 									variant={'outlined'}
 									onChange={(e) => setTwitter(e.target.value)}
 									onBlur={(e) => setTwitterWarning(!TwitterRegex.test(e.target.value))}
+								/>
+								<div>Twitch</div>
+								<TextField
+									error={twitchWarning}
+									label={twitchWarning ? 'Error' : undefined}
+									value={twitch}
+									variant={'outlined'}
+									onChange={(e) => setTwitch(e.target.value)}
+									onBlur={(e) => setTwitchWarning(!TwitchRegex.test(e.target.value))}
 								/>
 							</div>
 						</>

@@ -15,7 +15,7 @@ export default function EventPage({ event }: { event: Event }) {
 	const router = useRouter();
 
 	return (
-		<div className="App">
+		<div>
 			<Head>
 				<title>{event.shortname} - AusSpeedruns</title>
 				<DiscordEmbed title={`${event.shortname} - AusSpeedruns`} pageUrl={`/event/${router.query.event}`} />

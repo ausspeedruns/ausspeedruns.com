@@ -131,166 +131,160 @@ export default function SubmitGamePage() {
 	if (!eventsResult.fetching && eventsResult.data.events.length === 0) {
 		return (
 			<ThemeProvider theme={theme}>
-				<div className="App">
-					<Head>
-						<title>Game Submission - AusSpeedruns</title>
-					</Head>
-					<Navbar />
-					<main className={`content ${styles.content} ${styles.noEvents}`}>
-						<h2>Unfortunately we have no events currently accepting submissions.</h2>
-						<p>Follow us on Twitter and Join our Discord to stay up to date!</p>
-						<LinkButton actionText="Home" iconRight={faArrowRight} link="/" />
-					</main>
-				</div>
+				<Head>
+					<title>Game Submission - AusSpeedruns</title>
+				</Head>
+				<Navbar />
+				<main className={`content ${styles.content} ${styles.noEvents}`}>
+					<h2>Unfortunately we have no events currently accepting submissions.</h2>
+					<p>Follow us on Twitter and Join our Discord to stay up to date!</p>
+					<LinkButton actionText="Home" iconRight={faArrowRight} link="/" />
+				</main>
 			</ThemeProvider>
 		);
 	}
 
 	return (
 		<ThemeProvider theme={theme}>
-			<div className="App">
-				<Head>
-					<title>Game Submission - AusSpeedruns</title>
-					<DiscordEmbed title='Game Submission - AusSpeedruns' description='Submit your speedrun to the AusSpeedrun Marathon' pageUrl='/submit-game' />
-				</Head>
-				<Navbar />
-				<main className={`content ${styles.content}`}>
-					<h1>
-						{eventsResult.data?.events.find((eventResult) => eventResult.id === event)?.shortname} Game Submission
-					</h1>
-					<form
-						className={styles.gameForm}
-						onSubmit={(e) => {
-							e.preventDefault();
-							if (auth.ready) {
-								createSubmission({
-									userId: auth.sessionData.id,
-									game,
-									category,
-									platform,
-									estimate,
-									ageRating,
-									donationIncentive,
-									race,
-									racer,
-									coop,
-									video,
-									eventId: event,
-								}).then((result) => {
-									if (!result.error) {
-										clearInputs();
-										window.scrollY = 0;
-									} else {
-										console.error(result.error);
-									}
-								});
-							}
-						}}
-					>
-						{!DiscordRegex.test(queryResult?.data?.user?.socials?.discord ?? '') ? (
-							<div>Please set your Discord ID on your profile as this will be the primary form of communication.</div>
-						) : (
-							<>
-								{eventsResult.data.events.length > 1 && (
-									<FormControl fullWidth>
-										<InputLabel id="event-label">Event</InputLabel>
-										<Select
-											labelId="event-label"
-											value={event}
-											label="Event"
-											onChange={(e) => setEvent(e.target.value)}
-											required
-										>
-											{eventsResult.data.events.map((event) => {
-												return <MenuItem value={event.id}>{event.shortname}</MenuItem>;
-											})}
-										</Select>
-									</FormControl>
-								)}
-
-								<TextField value={game} onChange={(e) => setGame(e.target.value)} label="Game Name" required />
-								<TextField value={category} onChange={(e) => setCategory(e.target.value)} label="Category" required />
-								<TextField
-									value={platform}
-									onChange={(e) => setPlatform(e.target.value)}
-									label="Platform/Console"
-									required
-								/>
-								<TextField
-									value={estimate}
-									onChange={(e) => setEstimate(e.target.value)}
-									label="Estimate"
-									helperText="e.g. 01:20:00 for 1 hour and 20 mins"
-									required
-								/>
+			<Head>
+				<title>Game Submission - AusSpeedruns</title>
+				<DiscordEmbed
+					title="Game Submission - AusSpeedruns"
+					description="Submit your speedrun to the AusSpeedrun Marathon"
+					pageUrl="/submit-game"
+				/>
+			</Head>
+			<Navbar />
+			<main className={styles.content}>
+				<h1>{eventsResult.data?.events.find((eventResult) => eventResult.id === event)?.shortname} Game Submission</h1>
+				<form
+					className={styles.gameForm}
+					onSubmit={(e) => {
+						e.preventDefault();
+						if (auth.ready) {
+							createSubmission({
+								userId: auth.sessionData.id,
+								game,
+								category,
+								platform,
+								estimate,
+								ageRating,
+								donationIncentive,
+								race,
+								racer,
+								coop,
+								video,
+								eventId: event,
+							}).then((result) => {
+								if (!result.error) {
+									clearInputs();
+									window.scrollY = 0;
+								} else {
+									console.error(result.error);
+								}
+							});
+						}
+					}}
+				>
+					{!DiscordRegex.test(queryResult?.data?.user?.socials?.discord ?? '') ? (
+						<div>Please set your Discord ID on your profile as this will be the primary form of communication.</div>
+					) : (
+						<>
+							{eventsResult.data.events.length > 1 && (
 								<FormControl fullWidth>
-									<InputLabel id="age-rating-label">Age Rating</InputLabel>
+									<InputLabel id="event-label">Event</InputLabel>
 									<Select
-										labelId="age-rating-label"
-										value={ageRating}
-										label="Age Rating"
-										onChange={(e) => setAgeRating(e.target.value as AgeRatingLiterals)}
+										labelId="event-label"
+										value={event}
+										label="Event"
+										onChange={(e) => setEvent(e.target.value)}
 										required
 									>
-										<MenuItem value={'m_or_lower'}>G, PG or M</MenuItem>
-										<MenuItem value={'ma15'}>MA15+</MenuItem>
-										<MenuItem value={'ra18'}>RA18+</MenuItem>
+										{eventsResult.data.events.map((event) => {
+											return <MenuItem value={event.id}>{event.shortname}</MenuItem>;
+										})}
 									</Select>
-									<FormHelperText>
-										If unsure please search for the game title here:{' '}
-										<a href="https://www.classification.gov.au/" target="_blank">
-											https://www.classification.gov.au/
-										</a>
-									</FormHelperText>
 								</FormControl>
-								<TextField
-									value={donationIncentive}
-									onChange={(e) => setDonationIncentive(e.target.value)}
-									label="Donation Incentive (Leave blank if none)"
-								/>
+							)}
 
-								<FormControlLabel
-									control={
-										<Checkbox onChange={(e) => setRace(e.target.checked ? 'solo' : 'no')} checked={race !== 'no'} />
-									}
-									label="Submit as a race/coop?"
-								/>
+							<TextField value={game} onChange={(e) => setGame(e.target.value)} label="Game Name" required />
+							<TextField value={category} onChange={(e) => setCategory(e.target.value)} label="Category" required />
+							<TextField
+								value={platform}
+								onChange={(e) => setPlatform(e.target.value)}
+								label="Platform/Console"
+								required
+							/>
+							<TextField
+								value={estimate}
+								onChange={(e) => setEstimate(e.target.value)}
+								label="Estimate"
+								helperText="e.g. 01:20:00 for 1 hour and 20 mins"
+								required
+							/>
+							<FormControl fullWidth>
+								<InputLabel id="age-rating-label">Age Rating</InputLabel>
+								<Select
+									labelId="age-rating-label"
+									value={ageRating}
+									label="Age Rating"
+									onChange={(e) => setAgeRating(e.target.value as AgeRatingLiterals)}
+									required
+								>
+									<MenuItem value={'m_or_lower'}>G, PG or M</MenuItem>
+									<MenuItem value={'ma15'}>MA15+</MenuItem>
+									<MenuItem value={'ra18'}>RA18+</MenuItem>
+								</Select>
+								<FormHelperText>
+									If unsure please search for the game title here:{' '}
+									<a href="https://www.classification.gov.au/" target="_blank">
+										https://www.classification.gov.au/
+									</a>
+								</FormHelperText>
+							</FormControl>
+							<TextField
+								value={donationIncentive}
+								onChange={(e) => setDonationIncentive(e.target.value)}
+								label="Donation Incentive (Leave blank if none)"
+							/>
 
-								{race !== 'no' && (
-									<>
-										<FormControlLabel
-											control={<Checkbox onChange={(e) => setCoop(e.target.checked)} checked={coop} />}
-											label="Coop"
-										/>
-										<FormControl>
-											{/* Don't think "type" is a good descriptor */}
-											<FormLabel id="race-type-label">Race/Coop Type</FormLabel>
-											<RadioGroup
-												aria-labelledby="race-type-label"
-												value={race}
-												onChange={(e) => setRace(e.target.value as RaceLiterals)}
-											>
-												<FormControlLabel value="solo" control={<Radio />} label="Possible to do solo" />
-												<FormControlLabel value="only" control={<Radio />} label="Only race/coop" />
-											</RadioGroup>
-										</FormControl>
-										<TextField
-											value={racer}
-											onChange={(e) => setRacer(e.target.value)}
-											label="Name of other runner(s)"
-										/>
-									</>
-								)}
-								<TextField value={video} onChange={(e) => setVideo(e.target.value)} label="Video of the run" required />
-								{submissionResult.error && <h2>{submissionResult.error.message}</h2>}
-								<Button variant="contained" type="submit">
-									Submit
-								</Button>
-							</>
-						)}
-					</form>
-				</main>
-			</div>
+							<FormControlLabel
+								control={
+									<Checkbox onChange={(e) => setRace(e.target.checked ? 'solo' : 'no')} checked={race !== 'no'} />
+								}
+								label="Submit as a race/coop?"
+							/>
+
+							{race !== 'no' && (
+								<>
+									<FormControlLabel
+										control={<Checkbox onChange={(e) => setCoop(e.target.checked)} checked={coop} />}
+										label="Coop"
+									/>
+									<FormControl>
+										{/* Don't think "type" is a good descriptor */}
+										<FormLabel id="race-type-label">Race/Coop Type</FormLabel>
+										<RadioGroup
+											aria-labelledby="race-type-label"
+											value={race}
+											onChange={(e) => setRace(e.target.value as RaceLiterals)}
+										>
+											<FormControlLabel value="solo" control={<Radio />} label="Possible to do solo" />
+											<FormControlLabel value="only" control={<Radio />} label="Only race/coop" />
+										</RadioGroup>
+									</FormControl>
+									<TextField value={racer} onChange={(e) => setRacer(e.target.value)} label="Name of other runner(s)" />
+								</>
+							)}
+							<TextField value={video} onChange={(e) => setVideo(e.target.value)} label="Video of the run" required />
+							{submissionResult.error && <h2>{submissionResult.error.message}</h2>}
+							<Button variant="contained" type="submit">
+								Submit
+							</Button>
+						</>
+					)}
+				</form>
+			</main>
 		</ThemeProvider>
 	);
 }

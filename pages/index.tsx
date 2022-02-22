@@ -24,7 +24,7 @@ export default function Home() {
     }
   } = globals;
   return (
-    <div className="App">
+    <div>
       <Head>
         <title>AusSpeedruns</title>
         <DiscordEmbed title='AusSpeedruns' description='Home of the AusSpeedruns events' pageUrl='/' />

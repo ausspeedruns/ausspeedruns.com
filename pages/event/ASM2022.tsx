@@ -28,7 +28,7 @@ export default function EventPage() {
 	});
 
 	return (
-		<div className="App">
+		<div>
 			<Head>
 				<title>ASM2022 - AusSpeedruns</title>
 				<DiscordEmbed title="ASM2022 - AusSpeedruns" pageUrl="/event/ASM2022" />

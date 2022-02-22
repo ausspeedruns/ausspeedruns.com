@@ -83,13 +83,13 @@ export default function BlogPage() {
 	}, [blogResults]);
 
 	return (
-		<div className="app">
+		<div>
 			<Head>
 				<title>Blog - AusSpeedruns</title>
-				<DiscordEmbed title='Blog - AusSpeedruns' description='AusSpeedruns blog' pageUrl='/blog' />
+				<DiscordEmbed title="Blog - AusSpeedruns" description="AusSpeedruns blog" pageUrl="/blog" />
 			</Head>
 			<Navbar />
-			<main className={`content ${styles.content}`}>
+			<main className={styles.content}>
 				<h1>Blog</h1>
 				<div className={styles.blogPosts}>
 					<ul>
@@ -137,18 +137,14 @@ const TagColours = {
 	runnermanagement: {
 		color: '#000000',
 		background: '#00ce67',
-		label: 'Runner Management'
+		label: 'Runner Management',
 	},
 };
 
 const ArticleTag = ({ tag }: { tag: string }) => {
 	if (tag === 'public') return <></>;
 
-	return (
-		<div className={[styles.articleTag, styles[tag]].join(' ')}>
-			{tag.replaceAll('_', ' ')}
-		</div>
-	);
+	return <div className={[styles.articleTag, styles[tag]].join(' ')}>{tag.replaceAll('_', ' ')}</div>;
 };
 
 // Here we use the Lists API to load all the posts we want to display

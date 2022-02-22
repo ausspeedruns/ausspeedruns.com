@@ -54,13 +54,13 @@ export default function PostPage({ post }: { post: Post }) {
 	// }
 
 	return (
-		<div className={`app ${styles.app}`}>
+		<div className={styles.app}>
 			<Head>
 				<title>{post.title} - AusSpeedruns</title>
 				<DiscordEmbed title={`${post.title} - Blog Post - AusSpeedruns`} pageUrl={`/blog/${router.query.slug}`} />
 			</Head>
 			<Navbar />
-			<main className={`content ${styles.content}`}>
+			<main className={styles.content}>
 				<h1 className={styles.title}>{post.title}</h1>
 				<div className={styles.metaData}>
 					<span>By {authorString}</span>

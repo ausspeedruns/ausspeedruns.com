@@ -8,13 +8,13 @@ import DiscordEmbed from '../components/DiscordEmbed';
 
 const PoliciesPage = () => {
 	return (
-		<div className={`app ${styles.app}`}>
+		<div className={styles.app}>
 			<Head>
 				<title>Policies - AusSpeedruns</title>
 				<DiscordEmbed title="Policies - AusSpeedruns" description="AusSpeedruns's policies" pageUrl="/policies" />
 			</Head>
 			<Navbar />
-			<main className={`content ${styles.content}`}>
+			<main className={styles.content}>
 				<h2>Policies</h2>
 				<p>
 					<a

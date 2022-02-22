@@ -52,52 +52,50 @@ export const SignInPage: React.FC = () => {
 
 	return (
 		<ThemeProvider theme={theme}>
-			<div className="App">
-				<Head>
-					<title>Sign In - AusSpeedruns</title>
-					<DiscordEmbed title='Sign In - AusSpeedruns' description='Sign In to AusSpeedruns' pageUrl='/signin' />
-				</Head>
-				<Navbar />
-				<div className={`content ${styles.form}`}>
-					<h1>Sign In</h1>
-					<form
-						onSubmit={(event) => {
-							event.preventDefault();
-							signIn();
-							setSpinner(true);
+			<Head>
+				<title>Sign In - AusSpeedruns</title>
+				<DiscordEmbed title="Sign In - AusSpeedruns" description="Sign In to AusSpeedruns" pageUrl="/signin" />
+			</Head>
+			<Navbar />
+			<div className={`${styles.content} ${styles.form}`}>
+				<h1>Sign In</h1>
+				<form
+					onSubmit={(event) => {
+						event.preventDefault();
+						signIn();
+						setSpinner(true);
+					}}
+				>
+					<TextField
+						label="Email"
+						variant="outlined"
+						value={email}
+						onChange={(event) => {
+							setEmail(event.target.value);
 						}}
-					>
-						<TextField
-							label="Email"
-							variant="outlined"
-							value={email}
-							onChange={(event) => {
-								setEmail(event.target.value);
-							}}
-							fullWidth
-						/>
+						fullWidth
+					/>
 
-						<TextField
-							label="Password"
-							type={'password'}
-							variant="outlined"
-							value={password}
-							onChange={(event) => {
-								setPassword(event.target.value);
-							}}
-							fullWidth
-						/>
-						<h2>{error}</h2>
-						<Button type="submit" variant="contained">
-							Sign In
-						</Button>
-						{/* <Button type="submit" actionText='Sign In' /> */}
-						{spinner && <CircularProgress />}
-					</form>
-					<hr />
-					<div>
-						<Link href="/signup">Want to join instead?</Link>
-					</div>
+					<TextField
+						label="Password"
+						type={'password'}
+						variant="outlined"
+						value={password}
+						onChange={(event) => {
+							setPassword(event.target.value);
+						}}
+						fullWidth
+					/>
+					<h2>{error}</h2>
+					<Button type="submit" variant="contained">
+						Sign In
+					</Button>
+					{/* <Button type="submit" actionText='Sign In' /> */}
+					{spinner && <CircularProgress />}
+				</form>
+				<hr />
+				<div>
+					<Link href="/signup">Want to join instead?</Link>
 				</div>
 			</div>
 		</ThemeProvider>

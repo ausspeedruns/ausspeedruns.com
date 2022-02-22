@@ -25,13 +25,13 @@ const PressKit = () => {
 	console.log(pressKitResult.error);
 
 	return (
-		<div className={`app ${styles.app}`}>
+		<div className={styles.app}>
 			<Head>
 				<title>Press Kit - AusSpeedruns</title>
 				<DiscordEmbed title='Press Kit - AusSpeedruns' description='Press Kit for AusSpeedruns and our events' pageUrl='/press-kit' />
 			</Head>
 			<Navbar />
-			<main className={`content ${styles.content}`}>
+			<main className={styles.content}>
 				<h2>Press Kit</h2>
 				<p>
 					<a target="_blank" href="/AusSpeedruns_Logos.zip" className={styles.ausspeedrunsLogo}>

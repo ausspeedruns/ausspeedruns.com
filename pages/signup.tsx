@@ -31,63 +31,61 @@ export default function SignUpPage() {
 
 	return (
 		<ThemeProvider theme={theme}>
-			<div className="App">
-				<Head>
-					<title>Sing Up - AusSpeedruns</title>
-					<DiscordEmbed title='Sign Up - AusSpeedruns' description='Sign Up to AusSpeedruns' pageUrl='/signup' />
-				</Head>
-				<Navbar />
-				<div className={`content ${styles.form}`}>
-					<h1>Join</h1>
-					<form
-						onSubmit={(event) => {
-							event.preventDefault();
-							signup({ username, email, password }).then((result) => {
-								if (result.data?.createUser) {
-									// FIXME: there's a cache issue with Urql where it's not reloading the
-									// current user properly if we do a client-side redirect here.
-									// router.push('/');
-									top.location.href = '/profile';
-								}
-							});
+			<Head>
+				<title>Sing Up - AusSpeedruns</title>
+				<DiscordEmbed title="Sign Up - AusSpeedruns" description="Sign Up to AusSpeedruns" pageUrl="/signup" />
+			</Head>
+			<Navbar />
+			<div className={`${styles.content} ${styles.form}`}>
+				<h1>Join</h1>
+				<form
+					onSubmit={(event) => {
+						event.preventDefault();
+						signup({ username, email, password }).then((result) => {
+							if (result.data?.createUser) {
+								// FIXME: there's a cache issue with Urql where it's not reloading the
+								// current user properly if we do a client-side redirect here.
+								// router.push('/');
+								top.location.href = '/profile';
+							}
+						});
+					}}
+				>
+					{error && <div>{error.toString()}</div>}
+					<TextField
+						value={email}
+						onChange={(e) => {
+							setEmail(e.target.value);
 						}}
-					>
-						{error && <div>{error.toString()}</div>}
-						<TextField
-							value={email}
-							onChange={(e) => {
-								setEmail(e.target.value);
-							}}
-							variant="outlined"
-							label="Email"
-							type="email"
-						/>
-						<TextField
-							value={password}
-							onChange={(e) => {
-								setPassword(e.target.value);
-							}}
-							variant="outlined"
-							label="Password"
-							type="password"
-							helperText="Minimum 8 characters"
-						/>
-						<TextField
-							value={username}
-							onChange={(e) => {
-								setUsername(e.target.value);
-							}}
-							variant="outlined"
-							label="Username"
-						/>
-						<Button type="submit" variant="contained" disabled={canSignUp}>
-							Sign Up
-						</Button>
-					</form>
-					<hr className="my-4" />
-					<div>
-						<Link href="/signin">Already have an account? Sign in</Link>
-					</div>
+						variant="outlined"
+						label="Email"
+						type="email"
+					/>
+					<TextField
+						value={password}
+						onChange={(e) => {
+							setPassword(e.target.value);
+						}}
+						variant="outlined"
+						label="Password"
+						type="password"
+						helperText="Minimum 8 characters"
+					/>
+					<TextField
+						value={username}
+						onChange={(e) => {
+							setUsername(e.target.value);
+						}}
+						variant="outlined"
+						label="Username"
+					/>
+					<Button type="submit" variant="contained" disabled={canSignUp}>
+						Sign Up
+					</Button>
+				</form>
+				<hr className="my-4" />
+				<div>
+					<Link href="/signin">Already have an account? Sign in</Link>
 				</div>
 			</div>
 		</ThemeProvider>

@@ -174,7 +174,7 @@ export default function ProfilePage() {
 
 	useEffect(() => {
 		setLoading(true);
-		console.log(queryResult)
+		console.log(queryResult);
 		if (!queryResult.fetching) {
 			if (queryResult.data?.user) {
 				setLoading(false);
@@ -188,14 +188,12 @@ export default function ProfilePage() {
 	if (loading) {
 		return (
 			<ThemeProvider theme={theme}>
-				<div className="app">
-					<Head>
-						<title>{router.query.username} - AusSpeedruns</title>
-					</Head>
-					<Navbar />
-					<div className={`content ${styles.content}`}>
-						<h2>Loading</h2>
-					</div>
+				<Head>
+					<title>{router.query.username} - AusSpeedruns</title>
+				</Head>
+				<Navbar />
+				<div className={styles.content}>
+					<h2>Loading</h2>
 				</div>
 			</ThemeProvider>
 		);
@@ -204,14 +202,12 @@ export default function ProfilePage() {
 	if (!userData) {
 		return (
 			<ThemeProvider theme={theme}>
-				<div className="app">
-					<Head>
-						<title>{router.query.username} - AusSpeedruns</title>
-					</Head>
-					<Navbar />
-					<div className={`content ${styles.content}`}>
-						<h2>Could not find {router.query.username}</h2>
-					</div>
+				<Head>
+					<title>{router.query.username} - AusSpeedruns</title>
+				</Head>
+				<Navbar />
+				<div className={styles.content}>
+					<h2>Could not find {router.query.username}</h2>
 				</div>
 			</ThemeProvider>
 		);
@@ -221,72 +217,73 @@ export default function ProfilePage() {
 
 	return (
 		<ThemeProvider theme={theme}>
-			<div className="app">
-				<Head>
-					<title>{router.query.username} - AusSpeedruns</title>
-					<DiscordEmbed title={`${router.query.username}'s Profile - AusSpeedruns`} pageUrl={`/user/${router.query.username}`} />
-				</Head>
-				<Navbar />
-				<div className={`content ${styles.content}`}>
-					<div className={styles.profileHeader}>
-						<h1>{userData.username}</h1>
-						{auth.ready && auth.sessionData?.id === userData.id && (
-							<div>
-								<IconButton style={{ float: 'right' }} onClick={() => router.push('/user/edit-user')}>
-									<FontAwesomeIcon icon={faEdit} />
-								</IconButton>
-							</div>
-						)}
-					</div>
-					<hr />
-					{/* Role List */}
-					<div className={styles.roleList}>
-						{userData.roles.map((role) => {
-							return <RoleBadge key={role.id} role={role} />;
-						})}
-					</div>
-					{/* Profile Information */}
-					<div className={styles.userInfo}>
-						{userData.state && (
-							<>
-								<span>State</span>
-								<span>{StateCodeToString(userData.state)}</span>
-							</>
-						)}
-						{userData.pronouns && (
-							<>
-								<span>Pronouns</span>
-								<span>{userData.pronouns}</span>
-							</>
-						)}
-					</div>
-					{/* Submissions */}
-					{userData.submissions.length > 0 && (
-						<div className={styles.submissions}>
-							<h3>Submissions (Private)</h3>
-							{userData.submissions.map((submission) => {
-								return <SubmissionAccordian key={submission.id} submission={submission} />;
-							})}
+			<Head>
+				<title>{router.query.username} - AusSpeedruns</title>
+				<DiscordEmbed
+					title={`${router.query.username}'s Profile - AusSpeedruns`}
+					pageUrl={`/user/${router.query.username}`}
+				/>
+			</Head>
+			<Navbar />
+			<div className={styles.content}>
+				<div className={styles.profileHeader}>
+					<h1>{userData.username}</h1>
+					{auth.ready && auth.sessionData?.id === userData.id && (
+						<div>
+							<IconButton style={{ float: 'right' }} onClick={() => router.push('/user/edit-user')}>
+								<FontAwesomeIcon icon={faEdit} />
+							</IconButton>
 						</div>
 					)}
+				</div>
+				<hr />
+				{/* Role List */}
+				<div className={styles.roleList}>
+					{userData.roles.map((role) => {
+						return <RoleBadge key={role.id} role={role} />;
+					})}
+				</div>
+				{/* Profile Information */}
+				<div className={styles.userInfo}>
+					{userData.state && (
+						<>
+							<span>State</span>
+							<span>{StateCodeToString(userData.state)}</span>
+						</>
+					)}
+					{userData.pronouns && (
+						<>
+							<span>Pronouns</span>
+							<span>{userData.pronouns}</span>
+						</>
+					)}
+				</div>
+				{/* Submissions */}
+				{userData.submissions.length > 0 && (
+					<div className={styles.submissions}>
+						<h3>Submissions (Private)</h3>
+						{userData.submissions.map((submission) => {
+							return <SubmissionAccordian key={submission.id} submission={submission} />;
+						})}
+					</div>
+				)}
 
-					{/* Upcoming Runs */}
-					{upcomingRunsList.length > 0 && (
-						<div className={styles.upcomingRuns}>
-							<h3>Upcoming Runs</h3>
-							{upcomingRunsList.map((run) => {
-								return <RunUpcoming run={run} />;
-							})}
-						</div>
-					)}
-					<hr />
-					{/* Runs */}
-					<div className={styles.runs}>
-						{userData.runs.map((run) => {
-							if (!run.finalTime) return;
-							return <RunCompleted run={run} />;
+				{/* Upcoming Runs */}
+				{upcomingRunsList.length > 0 && (
+					<div className={styles.upcomingRuns}>
+						<h3>Upcoming Runs</h3>
+						{upcomingRunsList.map((run) => {
+							return <RunUpcoming run={run} />;
 						})}
 					</div>
+				)}
+				<hr />
+				{/* Runs */}
+				<div className={styles.runs}>
+					{userData.runs.map((run) => {
+						if (!run.finalTime) return;
+						return <RunCompleted run={run} />;
+					})}
 				</div>
 			</div>
 		</ThemeProvider>

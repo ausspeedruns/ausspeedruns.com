@@ -13,7 +13,6 @@ import Ticker from "../components/Ticker/Ticker";
 import { globals } from "./globals";
 import DiscordEmbed from '../components/DiscordEmbed';
 
-// Home receives a `posts` prop from `getStaticProps` below
 export default function Home() {
   const eventLive = false;
   const {

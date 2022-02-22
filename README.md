@@ -15,10 +15,10 @@ Open [http://localhost:8000](http://localhost:8000) to access the KeystoneJS adm
 
 ## TODO (Due March 18th)
 
-- Correct embed meta data
 - Emailing
+  - Verification
   - Password reset
-  - Mass email
+  - Mailing list
 - About us page
 - Testing
 - ASM2022 Press kit
@@ -31,7 +31,7 @@ Open [http://localhost:8000](http://localhost:8000) to access the KeystoneJS adm
 
 ## Nice to have
 
-- Previous events
+- Previous events page
   - Runs
   - Schedule
   - Photos

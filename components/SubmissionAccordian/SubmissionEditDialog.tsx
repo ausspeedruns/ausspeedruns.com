@@ -96,21 +96,8 @@ const SubmissionEditDialog = ({ open, submission, handleClose }: SubmissionEditP
 	`);
 
 	const UpdateSubmission = () => {
-		console.log({
-			submissionId: submission.id,
-			game,
-			category,
-			platform,
-			estimate,
-			ageRating,
-			donationIncentive,
-			race,
-			racer,
-			coop,
-			video,
-		});
 		editSubmission({
-			submissionId: submission.id,
+			submissionID: submission.id,
 			game,
 			category,
 			platform,
@@ -125,13 +112,13 @@ const SubmissionEditDialog = ({ open, submission, handleClose }: SubmissionEditP
 			if (!result.error) {
 				handleClose();
 			} else {
-				console.error(result.error)
+				console.error(result.error);
 			}
 		});
 	};
 
 	const DeleteSubmission = () => {
-		deleteSubmission({ id: submission.id });
+		deleteSubmission({ submissionID: submission.id });
 	};
 
 	return (
@@ -214,7 +201,11 @@ const SubmissionEditDialog = ({ open, submission, handleClose }: SubmissionEditP
 			</DialogActions>
 			<Dialog open={deleteDialog} onClose={closeDeleteDialog}>
 				<DialogTitle>Are you sure?</DialogTitle>
-				<DialogContent>You are about to delete this submission.</DialogContent>
+				<DialogContent>
+					You are about to delete this submission.
+					<br />
+					<b>This cannot be undone.</b>
+				</DialogContent>
 				<DialogActions style={{ justifyContent: 'space-between' }}>
 					<Button color="error" variant="contained" onClick={DeleteSubmission}>
 						Delete

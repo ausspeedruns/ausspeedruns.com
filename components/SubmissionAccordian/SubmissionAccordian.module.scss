@@ -10,14 +10,17 @@
 	.submissionHeader {
 		div {
 			display: flex;
-			justify-content: space-between;
+			align-items: center;
 		}
 
 		.submissionStatus {
 			text-transform: capitalize;
-			float: right;
 			font-weight: bold;
-			margin-right: 16px;
+			margin-right: 8px;    
+			padding: 4px;
+			border-radius: 8px;
+			min-width: 90px;
+			text-align: center;
 		}
 	}
 

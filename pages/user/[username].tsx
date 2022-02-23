@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { gql, useQuery } from 'urql';
 import Head from 'next/head';
-import { IconButton, ThemeProvider } from '@mui/material';
+import { Box, IconButton, Tab, Tabs, ThemeProvider } from '@mui/material';
 import { useRouter } from 'next/router';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -46,6 +46,7 @@ export type UserPageData = {
 		scheduledTime: string;
 		event: {
 			name: string;
+			shortname: string;
 			logo: {
 				url: string;
 			};
@@ -67,6 +68,7 @@ export type UserPageData = {
 		event: {
 			id: string;
 			name: string;
+			shortname: string;
 		};
 		runner: {
 			username: string;
@@ -103,6 +105,9 @@ export default function ProfilePage() {
 	const router = useRouter();
 	const auth = useAuth();
 
+	const [submissionTab, setSubmissionTab] = useState(0);
+	const [eventTab, setEventTab] = useState(0);
+
 	// User inputs
 	const [userData, setUserData] = useState<UserPageData>(null);
 	const [loading, setLoading] = useState(false);
@@ -138,6 +143,7 @@ export default function ProfilePage() {
 						scheduledTime
 						event {
 							name
+							shortname
 							logo {
 								url
 							}
@@ -162,6 +168,7 @@ export default function ProfilePage() {
 						event {
 							id
 							name
+							shortname
 						}
 					}
 				}
@@ -215,6 +222,12 @@ export default function ProfilePage() {
 
 	const upcomingRunsList = userData.runs.filter((run) => !run.finalTime);
 
+	// Would just do [...new Set(****)] buuuuuuuut... https://stackoverflow.com/questions/33464504/using-spread-syntax-and-new-set-with-typescript
+	const allSubmissionEvents = [
+		...Array.from(new Set(userData.submissions.map((submission) => submission.event.shortname))),
+	];
+	const allRunEvents = [...Array.from(new Set(userData.runs.map((run) => run.finalTime ? run.event.shortname : undefined)))];
+
 	return (
 		<ThemeProvider theme={theme}>
 			<Head>
@@ -262,7 +275,19 @@ export default function ProfilePage() {
 				{userData.submissions.length > 0 && (
 					<div className={styles.submissions}>
 						<h3>Submissions (Private)</h3>
+						<Box>
+							<Tabs
+								value={submissionTab}
+								onChange={(_e, newVal) => setSubmissionTab(newVal)}
+								aria-label="basic tabs example"
+							>
+								{allSubmissionEvents.map((event) => (
+									<Tab label={event} />
+								))}
+							</Tabs>
+						</Box>
 						{userData.submissions.map((submission) => {
+							if (submission.event.shortname !== allSubmissionEvents[submissionTab]) return;
 							return <SubmissionAccordian key={submission.id} submission={submission} />;
 						})}
 					</div>
@@ -280,12 +305,33 @@ export default function ProfilePage() {
 				<hr />
 				{/* Runs */}
 				<div className={styles.runs}>
+					<Box>
+						<Tabs
+							value={eventTab}
+							onChange={(_e, newVal) => setEventTab(newVal)}
+							aria-label="basic tabs example"
+						>
+							{allRunEvents.map((event) => (
+								<Tab label={event} />
+							))}
+						</Tabs>
+					</Box>
 					{userData.runs.map((run) => {
-						if (!run.finalTime) return;
-						return <RunCompleted run={run} />;
+						if (!run.finalTime || run.event.shortname !== allRunEvents[eventTab]) return;
+						return <RunCompleted key={run.id} run={run} />;
 					})}
 				</div>
 			</div>
 		</ThemeProvider>
 	);
+}
+
+type SubmissionPanelProps = {
+	value: number;
+	index: number;
+	children: React.ReactChild;
+};
+
+function SubmissionPanel({ value, index, children }: SubmissionPanelProps) {
+	return <div hidden={value !== index}>{value === index && children}</div>;
 }

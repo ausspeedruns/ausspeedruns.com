@@ -90,7 +90,7 @@ export default function SubmitGamePage() {
 		) {
 			createSubmission(
 				data: {
-					user: { connect: { id: $userId } }
+					runner: { connect: { id: $userId } }
 					game: $game
 					category: $category
 					platform: $platform

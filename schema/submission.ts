@@ -1,6 +1,6 @@
 import { list } from '@keystone-6/core';
 import { checkbox, relationship, select, text, timestamp } from '@keystone-6/core/fields';
-import { operations, permissions, SessionContext } from './access';
+import { ItemContext, operations, permissions, SessionContext } from './access';
 import { Lists } from '.keystone/types';
 import { FieldAccessControl } from '@keystone-6/core/types';
 
@@ -11,7 +11,17 @@ export const Submission: Lists.Submission = list({
 				if (!session?.data) return false;
 				if (session.data.roles?.some(role => role.canManageContent)) return true;
 				return { runner: { username: { equals: session.data.username } } }
-			}
+			},
+			update: ({ session }: SessionContext) => {
+				if (!session?.data) return false;
+				if (session.data.roles?.some(role => role.canManageContent)) return true;
+				return { runner: { username: { equals: session.data.username } }, status: { equals: "submitted" } }
+			},
+			delete: ({ session }: SessionContext) => {
+				if (!session?.data) return false;
+				if (session.data.roles?.some(role => role.canManageContent)) return true;
+				return { runner: { username: { equals: session.data.username } }, status: { equals: "submitted" } }
+			},
 		}
 	},
 	fields: {

@@ -55,13 +55,17 @@ const SubmissionAccordian = ({ submission }: SubmissionProps) => {
 	console.log(colour);
 
 	return (
-		<StyledAccordian className={styles.submission} style={{ backgroundColor: colour }}>
+		<StyledAccordian className={styles.submission}>
 			<AccordionSummary expandIcon={<FontAwesomeIcon icon={faAngleDown} />} className={styles.submissionHeader}>
+				{submission.status !== 'submitted' && (
+					<span className={styles.submissionStatus} style={{ backgroundColor: colour }}>
+						{submission.status}
+					</span>
+				)}
 				<span>
 					{submission.game} - {submission.category}
 					{isRace && ` - ${raceOrCoop}`}
 				</span>
-				{submission.status !== 'submitted' && <span className={styles.submissionStatus}>{submission.status}</span>}
 			</AccordionSummary>
 			<AccordionDetails className={styles.submissionDetails}>
 				<span>Event</span>

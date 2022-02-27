@@ -32,7 +32,7 @@ export default function SignUpPage() {
 	return (
 		<ThemeProvider theme={theme}>
 			<Head>
-				<title>Sing Up - AusSpeedruns</title>
+				<title>Sign Up - AusSpeedruns</title>
 				<DiscordEmbed title="Sign Up - AusSpeedruns" description="Sign Up to AusSpeedruns" pageUrl="/signup" />
 			</Head>
 			<Navbar />

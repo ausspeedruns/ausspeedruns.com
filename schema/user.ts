@@ -3,6 +3,7 @@ import { checkbox, password, relationship, select, text, timestamp } from '@keys
 import { Lists } from '.keystone/types';
 import { permissions } from './access';
 import { FieldAccessControl } from '@keystone-6/core/types';
+import { v4 as uuid } from 'uuid';
 
 const fieldModes = {
 	editSelfOrRead: ({ session, item }: any) =>
@@ -47,6 +48,7 @@ export const User: Lists.User = list({
 		submissions: relationship({ ref: 'Submission.runner', many: true, access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
 		roles: relationship({ ref: 'Role.users', many: true }),
 		runs: relationship({ ref: 'Run.runners', many: true }),
+		verified: checkbox({ defaultValue: false, access: {update: () => false} }),
 		state: select({
 			type: 'enum',
 			options: [
@@ -64,6 +66,28 @@ export const User: Lists.User = list({
 	},
 	ui: {
 		labelField: 'username'
+	},
+	hooks: {
+		afterOperation: ({ operation, item, context }) => {
+			if (operation === 'create') {	
+				context.db.Social.createOne({
+					data: {
+						user: { connect: { id: item.id } }
+					}
+				});
+				
+				const sudoContext = context.sudo();
+				const verificationID = uuid().replaceAll('-', '');
+				console.log(verificationID)
+				sudoContext.db.Verification.createOne({
+					data: {
+						account: item.id,
+						code: verificationID,
+					}
+				});
+				sudoContext.exitSudo();
+			}
+		}
 	}
 });
 

@@ -8,6 +8,7 @@ import { Event } from './schema/event';
 import { Post } from './schema/post';
 import { permissions, rules } from './schema/access';
 import { Run } from './schema/runs';
+import { Verification } from './schema/verification';
 
 const session = statelessSessions({
   secret: ".MR-gkEFp'Hl0a]s4y7TJZ@:K?3x9u@CFC_+<^ldjpVL5:Fyi_2UB!)b*r3"
@@ -17,7 +18,7 @@ const { withAuth } = createAuth({
   listKey: 'User',
   identityField: 'email',
   secretField: 'password',
-  sessionData: 'username roles { admin canManageUsers canManageContent canReadRunnerInfo canReadRunnerMgmt }',
+  sessionData: 'username id roles { admin canManageUsers canManageContent canReadRunnerInfo canReadRunnerMgmt }',
   initFirstItem: {
     // These fields are collected in the "Create First User" form
     fields: ['name', 'email', 'password', 'username', 'dateOfBirth'],
@@ -45,7 +46,7 @@ export default withAuth(
       generateNextGraphqlAPI: true,
       generateNodeAPI: true,
     },
-    lists: { Post, User, Submission, Event, Role, Social, Run },
+    lists: { Post, User, Submission, Event, Role, Social, Run, Verification },
     session,
     ui: {
       isAccessAllowed: permissions.canManageContent

@@ -37,6 +37,7 @@ model User {
   submissions      Submission[] @relation("Submission_runner")
   roles            Role[]       @relation("Role_users")
   runs             Run[]        @relation("Run_runners")
+  verified         Boolean      @default(false)
   state            String?
   from_Post_author Post[]       @relation("Post_author")
 }
@@ -135,4 +136,10 @@ model Run {
 
   @@index([originalSubmissionId])
   @@index([eventId])
+}
+
+model Verification {
+  id      String @id @default(cuid())
+  code    String @unique @default("")
+  account String @default("")
 }

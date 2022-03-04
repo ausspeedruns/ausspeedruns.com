@@ -210,6 +210,7 @@ type User {
     skip: Int! = 0
   ): [Run!]
   runsCount(where: RunWhereInput! = {}): Int
+  verified: Boolean
   state: UserStateType
 }
 
@@ -250,6 +251,7 @@ input UserWhereInput {
   submissions: SubmissionManyRelationFilter
   roles: RoleManyRelationFilter
   runs: RunManyRelationFilter
+  verified: BooleanFilter
   state: UserStateTypeNullableFilter
 }
 
@@ -286,6 +288,7 @@ input UserOrderByInput {
   accountCreated: OrderDirection
   dateOfBirth: OrderDirection
   pronouns: OrderDirection
+  verified: OrderDirection
   state: OrderDirection
 }
 
@@ -301,6 +304,7 @@ input UserUpdateInput {
   submissions: SubmissionRelateToManyForUpdateInput
   roles: RoleRelateToManyForUpdateInput
   runs: RunRelateToManyForUpdateInput
+  verified: Boolean
   state: UserStateType
 }
 
@@ -348,6 +352,7 @@ input UserCreateInput {
   submissions: SubmissionRelateToManyForCreateInput
   roles: RoleRelateToManyForCreateInput
   runs: RunRelateToManyForCreateInput
+  verified: Boolean
   state: UserStateType
 }
 
@@ -966,6 +971,47 @@ input SubmissionRelateToOneForCreateInput {
   connect: SubmissionWhereUniqueInput
 }
 
+type Verification {
+  id: ID!
+  code: String
+  account: String
+}
+
+input VerificationWhereUniqueInput {
+  id: ID
+  code: String
+}
+
+input VerificationWhereInput {
+  AND: [VerificationWhereInput!]
+  OR: [VerificationWhereInput!]
+  NOT: [VerificationWhereInput!]
+  id: IDFilter
+  code: StringFilter
+  account: StringFilter
+}
+
+input VerificationOrderByInput {
+  id: OrderDirection
+  code: OrderDirection
+  account: OrderDirection
+}
+
+input VerificationUpdateInput {
+  code: String
+  account: String
+}
+
+input VerificationUpdateArgs {
+  where: VerificationWhereUniqueInput!
+  data: VerificationUpdateInput!
+}
+
+input VerificationCreateInput {
+  code: String
+  account: String
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -1020,6 +1066,15 @@ type Mutation {
   updateRuns(data: [RunUpdateArgs!]!): [Run]
   deleteRun(where: RunWhereUniqueInput!): Run
   deleteRuns(where: [RunWhereUniqueInput!]!): [Run]
+  createVerification(data: VerificationCreateInput!): Verification
+  createVerifications(data: [VerificationCreateInput!]!): [Verification]
+  updateVerification(
+    where: VerificationWhereUniqueInput!
+    data: VerificationUpdateInput!
+  ): Verification
+  updateVerifications(data: [VerificationUpdateArgs!]!): [Verification]
+  deleteVerification(where: VerificationWhereUniqueInput!): Verification
+  deleteVerifications(where: [VerificationWhereUniqueInput!]!): [Verification]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -1108,6 +1163,14 @@ type Query {
   ): [Run!]
   run(where: RunWhereUniqueInput!): Run
   runsCount(where: RunWhereInput! = {}): Int
+  verifications(
+    where: VerificationWhereInput! = {}
+    orderBy: [VerificationOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Verification!]
+  verification(where: VerificationWhereUniqueInput!): Verification
+  verificationsCount(where: VerificationWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }

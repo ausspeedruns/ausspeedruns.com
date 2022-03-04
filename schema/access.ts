@@ -2,6 +2,7 @@ export type SessionContext = {
 	session?: {
 		data: {
 			username: string;
+			id: string;
 			roles: {
 				admin: boolean;
 				canReadTech: boolean;

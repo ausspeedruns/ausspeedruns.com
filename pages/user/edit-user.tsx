@@ -31,6 +31,7 @@ export default function EditUser() {
 	const [twitter, setTwitter] = useState('');
 	const [twitch, setTwitch] = useState('');
 	const [dateOfBirth, setDateOfBirth] = useState('');
+	const [verified, setVerified] = useState(false);
 
 	const [queryResult, profileQuery] = useQuery({
 		query: gql`
@@ -42,6 +43,7 @@ export default function EditUser() {
 					dateOfBirth
 					pronouns
 					state
+					verified
 					socials {
 						id
 						discord
@@ -94,6 +96,7 @@ export default function EditUser() {
 			setTwitter(queryResult.data.user.socials.twitter);
 			setDateOfBirth(queryResult.data.user.dateOfBirth);
 			setTwitch(queryResult.data.user.socials.twitch);
+			setVerified(queryResult.data.user.verified);
 		}
 	}, [queryResult]);
 
@@ -142,6 +145,7 @@ export default function EditUser() {
 				{queryResult.data?.user && (
 					<>
 						<div className={styles.profileInformation}>
+							{!verified && <><div>Email not verified!</div><Button variant='contained'>Send verification</Button></>}
 							<h3>Personal Information</h3>
 							<div />
 							<div>Username</div>

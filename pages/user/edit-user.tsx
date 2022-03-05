@@ -84,6 +84,14 @@ export default function EditUser() {
 		}
 	`);
 
+	const [updateVerificationTimeResult, updateVerificationTime] = useMutation(gql`
+		mutation UpdateVerificationTime($userId: ID, $time: DateTime) {
+			updateUser(where: { id: $userId }, data: { sentVerification: $time }) {
+				__typename
+			}
+		}
+	`);
+
 	useEffect(() => {
 		if (!queryResult.fetching && queryResult.data?.user) {
 			setUsername(queryResult.data.user.username);
@@ -129,6 +137,16 @@ export default function EditUser() {
 		}
 	}
 
+	function sendVerification() {
+		if (auth.ready) {
+			const curTime = new Date().toISOString();
+			updateVerificationTime({
+				userId: auth.sessionData.id,
+				time: curTime,
+			});
+		}
+	}
+
 	return (
 		<ThemeProvider theme={theme}>
 			<Head>
@@ -145,7 +163,12 @@ export default function EditUser() {
 				{queryResult.data?.user && (
 					<>
 						<div className={styles.profileInformation}>
-							{!verified && <><div>Email not verified!</div><Button variant='contained'>Send verification</Button></>}
+							{!verified && (
+								<>
+									<div>Email not verified!</div>
+									<Button variant="contained" onClick={sendVerification}>Send verification</Button>
+								</>
+							)}
 							<h3>Personal Information</h3>
 							<div />
 							<div>Username</div>

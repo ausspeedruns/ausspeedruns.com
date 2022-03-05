@@ -11,6 +11,16 @@ import Head from 'next/head';
 import { theme } from '../components/mui-theme';
 import DiscordEmbed from '../components/DiscordEmbed';
 
+function HumanErrorMsg(error: string) {
+	switch (error) {
+		case 'Authentication failed.':
+			return 'Incorrect Email or Password.';
+
+		default:
+			return '';
+	}
+}
+
 export const SignInPage: React.FC = () => {
 	const auth = useAuth();
 	const [email, setEmail] = useState('');
@@ -86,12 +96,13 @@ export const SignInPage: React.FC = () => {
 						}}
 						fullWidth
 					/>
-					<h2>{error}</h2>
+					<h3>{error}</h3>
+					{error && <h4>{HumanErrorMsg(error)}</h4>}
 					<Button type="submit" variant="contained">
 						Sign In
 					</Button>
 					{/* <Button type="submit" actionText='Sign In' /> */}
-					{spinner && <CircularProgress />}
+					{spinner && <CircularProgress className={styles.spinner} />}
 				</form>
 				<hr />
 				<div>

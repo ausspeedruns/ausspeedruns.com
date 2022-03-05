@@ -67,13 +67,13 @@ export default function EventPage() {
 					<h3>Information</h3>
 					<div className={styles.information}>
 						<span>Dates</span>
-						<span>TBA (Winter)</span>
+						<span>July 13-17</span>
 						<span>Location</span>
-						<span>Adelaide</span>
+						<span>in. Studio + Cafe, Adelaide</span>
 						<span>Price</span>
-						<span>TBA</span>
-						<span>Submission Open Date</span>
-						<span>TBA</span>
+						<span>$35</span>
+						<span>Submissions period</span>
+						<span>25 March - 29 April</span>
 						<span>Charity</span>
 						<span>Beyond Blue</span>
 					</div>

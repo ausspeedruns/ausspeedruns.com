@@ -20,7 +20,7 @@
     .charitiesAndSponsors {
       display: grid;
       text-align: center;
-      grid-template-rows: 1fr 1fr;
+      grid-template-rows: 1fr;
       grid-template-columns: 1fr;
 
       @include breakpoint($md) {

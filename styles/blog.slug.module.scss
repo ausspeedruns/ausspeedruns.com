@@ -16,7 +16,6 @@
 	.title {
 		text-align: center;
 		font-size: 2.2rem;
-		// margin: 2%;
 	}
 
 	.metaData, .edited {
@@ -29,6 +28,10 @@
 		display: flex;
 		justify-content: space-between;
 
+		@include breakpoint($sm-zero-only) {
+			flex-direction: column;
+		}
+
 		a {
 			color: #777777;
 		}
@@ -38,6 +41,10 @@
 		width: 100%;
 		text-align: right;
 		margin-top: -1rem;
+
+		@include breakpoint($sm-zero-only) {
+			text-align: left;
+		}
 	}
 
 	hr {

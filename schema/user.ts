@@ -87,6 +87,12 @@ export const User: Lists.User = list({
 		labelField: 'username'
 	},
 	hooks: {
+		validateInput: ({resolvedData, addValidationError}) => {
+			const {username} = resolvedData;
+			if (username === 'edit-user' || username === 'verification') {
+				addValidationError(`Username cannot be ${username}`);
+			}
+		},
 		afterOperation: ({ operation, item, context }) => {
 			if (operation === 'create') {
 				context.db.Social.createOne({

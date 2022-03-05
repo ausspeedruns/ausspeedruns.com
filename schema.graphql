@@ -212,6 +212,7 @@ type User {
   runsCount(where: RunWhereInput! = {}): Int
   verified: Boolean
   state: UserStateType
+  sentVerification: DateTime
 }
 
 type PasswordState {
@@ -253,6 +254,7 @@ input UserWhereInput {
   runs: RunManyRelationFilter
   verified: BooleanFilter
   state: UserStateTypeNullableFilter
+  sentVerification: DateTimeNullableFilter
 }
 
 input SubmissionManyRelationFilter {
@@ -290,6 +292,7 @@ input UserOrderByInput {
   pronouns: OrderDirection
   verified: OrderDirection
   state: OrderDirection
+  sentVerification: OrderDirection
 }
 
 input UserUpdateInput {
@@ -306,6 +309,7 @@ input UserUpdateInput {
   runs: RunRelateToManyForUpdateInput
   verified: Boolean
   state: UserStateType
+  sentVerification: DateTime
 }
 
 input SocialRelateToOneForUpdateInput {
@@ -354,6 +358,7 @@ input UserCreateInput {
   runs: RunRelateToManyForCreateInput
   verified: Boolean
   state: UserStateType
+  sentVerification: DateTime
 }
 
 input SocialRelateToOneForCreateInput {

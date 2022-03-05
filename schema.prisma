@@ -39,6 +39,7 @@ model User {
   runs             Run[]        @relation("Run_runners")
   verified         Boolean      @default(false)
   state            String?
+  sentVerification DateTime?
   from_Post_author Post[]       @relation("Post_author")
 }
 

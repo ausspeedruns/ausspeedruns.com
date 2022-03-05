@@ -50,6 +50,8 @@ export default function SubmitGamePage() {
 		query: gql`
 			query Profile($userId: ID!) {
 				user(where: { id: $userId }) {
+					verified
+					dateOfBirth
 					socials {
 						discord
 					}
@@ -144,6 +146,23 @@ export default function SubmitGamePage() {
 		);
 	}
 
+	if (auth.ready && !auth.sessionData) {
+		return (
+			<ThemeProvider theme={theme}>
+				<Head>
+					<title>Game Submission - AusSpeedruns</title>
+				</Head>
+				<Navbar />
+				<main className={`content ${styles.content} ${styles.noEvents}`}>
+					<h2>Please sign in to submit games.</h2>
+					<LinkButton actionText="Sign In" iconRight={faArrowRight} link="/signin" />
+					<br />
+					<LinkButton actionText="Join" iconRight={faArrowRight} link="/signup" />
+				</main>
+			</ThemeProvider>
+		);
+	}
+
 	return (
 		<ThemeProvider theme={theme}>
 			<Head>
@@ -186,8 +205,17 @@ export default function SubmitGamePage() {
 						}
 					}}
 				>
-					{!DiscordRegex.test(queryResult?.data?.user?.socials?.discord ?? '') ? (
-						<div>Please set your Discord ID on your profile as this will be the primary form of communication.</div>
+					{queryResult?.data?.user?.socials?.discord !== '' ||
+					!queryResult.data.user.verified ||
+					!queryResult.data.user.dateOfBirth ? (
+						<>
+							<p>Please make sure you have these set on your profile:</p>
+							<ul>
+								<li>Verfied Email</li>
+								<li>Date of Birth</li>
+								<li>Discord ID</li>
+							</ul>
+						</>
 					) : (
 						<>
 							{eventsResult.data.events.length > 1 && (

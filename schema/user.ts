@@ -48,7 +48,7 @@ export const User: Lists.User = list({
 		submissions: relationship({ ref: 'Submission.runner', many: true, access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
 		roles: relationship({ ref: 'Role.users', many: true }),
 		runs: relationship({ ref: 'Run.runners', many: true }),
-		verified: checkbox({ defaultValue: false, access: {update: () => false} }),
+		verified: checkbox({ defaultValue: false, access: { update: () => false } }),
 		state: select({
 			type: 'enum',
 			options: [
@@ -63,19 +63,38 @@ export const User: Lists.User = list({
 				{ label: "Outside of Australia", value: "outer" },
 			]
 		}),
+		// Hacky way to do a server side function
+		sentVerification: timestamp({
+			//defaultValue: { kind: 'now' },
+			hooks: {
+				afterOperation: ({ context, item, operation }) => {
+					if (item.verified || operation !== 'update') return;
+					const sudoContext = context.sudo();
+					const verificationID = uuid().replaceAll('-', '');
+					console.log(verificationID)
+					sudoContext.db.Verification.createOne({
+						data: {
+							account: item.id,
+							code: verificationID,
+						}
+					});
+					sudoContext.exitSudo();
+				}
+			}
+		})
 	},
 	ui: {
 		labelField: 'username'
 	},
 	hooks: {
 		afterOperation: ({ operation, item, context }) => {
-			if (operation === 'create') {	
+			if (operation === 'create') {
 				context.db.Social.createOne({
 					data: {
 						user: { connect: { id: item.id } }
 					}
 				});
-				
+
 				const sudoContext = context.sudo();
 				const verificationID = uuid().replaceAll('-', '');
 				console.log(verificationID)

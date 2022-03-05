@@ -8,10 +8,6 @@
 	align-items: center;
 	width: 500px;
 
-	h1 {
-		color: $secondary;
-	}
-
 	form {
 		display: flex;
 		flex-direction: column;
@@ -25,4 +21,8 @@
 			margin-right: 0;
 		}
 	}
+}
+
+.spinner {
+	margin: 0 auto;
 }

@@ -105,7 +105,7 @@ const Navbar = ({ isLive }: NavbarProps) => {
 							<a href={globals.socialLinks.youtube}>
 								<FontAwesomeIcon icon={faYoutube} />
 								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>
-									Subscribe to AusSpeedruns on Youtube
+									Subscribe to AusSpeedruns
 								</span>
 							</a>
 						</li>

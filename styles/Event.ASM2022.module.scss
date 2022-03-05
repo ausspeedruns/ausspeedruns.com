@@ -11,6 +11,10 @@
 	width: 100%;
 	height: 25rem;
 
+	@include breakpoint($sm-zero-only) {
+		height: 20rem;
+	}
+
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
@@ -20,6 +24,10 @@
 	img {
 		width: 600px;
 		height: auto;
+
+		@include breakpoint($sm-zero-only) {
+			width: 80%;
+		}
 	}
 }
 
@@ -28,7 +36,8 @@
 	width: 100%;
 	height: 30rem;
 
-	.intro, .moreInfo {
+	.intro,
+	.moreInfo {
 		width: 50%;
 		text-align: center;
 		display: flex;
@@ -37,7 +46,7 @@
 		align-items: center;
 
 		h2 {
-			font-size: 1.5rem;
+			font-size: 1.2rem;
 
 			@include breakpoint($lg) {
 				font-size: 2rem;
@@ -45,7 +54,7 @@
 		}
 
 		p {
-			font-size: 1.2rem;
+			font-size: 1rem;
 			width: 80%;
 
 			@include breakpoint($lg) {
@@ -54,12 +63,12 @@
 			}
 		}
 	}
-	
+
 	.intro {
 		background: $primary;
 		color: $light-text;
 	}
-	
+
 	img {
 		object-fit: cover;
 		width: 50%;
@@ -73,7 +82,8 @@
 		position: relative;
 		display: block;
 
-		.intro, .moreInfo {
+		.intro,
+		.moreInfo {
 			position: absolute;
 			height: 100%;
 			width: 100%;
@@ -100,26 +110,33 @@
 	background-color: $color-off-white;
 	height: 30rem;
 	width: 100%;
-	
+
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	
+
 	font-size: 1.3rem;
+
+	@include breakpoint($sm-zero-only) {
+		font-size: 1rem;
+	}
 
 	h3 {
 		font-size: 1.8rem;
 	}
 
 	.information {
+		@include breakpoint($sm-zero-only) {
+			padding: 0 20px;
+		}
 		// display: flex;
 		// flex-direction: column;
-	
-		display: grid; 
-		grid-template-columns: 1fr 1fr; 
+
+		display: grid;
+		grid-template-columns: 1fr 1fr;
 		gap: 5px 0px;
-	
+
 		span:nth-child(odd) {
 			font-weight: bold;
 		}

@@ -1,5 +1,6 @@
 @use 'base';
 @import './colors.scss';
+@import './responsive.scss';
 
 .content {
 	flex-direction: column;
@@ -25,10 +26,14 @@
 			width: 60%;
 			margin: 8px 0;
 
+			@include breakpoint($sm-zero-only) {
+				width: 90%;
+			}
+
 			.articleTags {
 				display: flex;
 				flex-wrap: wrap;
-		
+
 				.articleTag {
 					display: flex;
 					align-items: center;
@@ -74,9 +79,9 @@
 				font-size: 1.5rem;
 				text-decoration: none;
 				color: $primary;
-			
+
 				&:hover {
-					color: lighten($primary, 10%)
+					color: lighten($primary, 10%);
 				}
 			}
 
@@ -89,7 +94,6 @@
 				border-top: $secondary 1px solid;
 			}
 		}
-
 	}
 
 	.authors {

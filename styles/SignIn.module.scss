@@ -8,14 +8,16 @@
 	align-items: center;
 	width: 500px;
 
+	@include breakpoint($sm-zero-only) {
+		width: auto;
+	}
+
 	form {
 		display: flex;
 		flex-direction: column;
 		width: 100%;
 
-		& > * {
-			margin: 0.5rem 0;
-		}
+		gap: 1rem;
 
 		a {
 			margin-right: 0;

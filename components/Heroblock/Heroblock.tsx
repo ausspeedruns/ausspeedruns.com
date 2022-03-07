@@ -1,10 +1,11 @@
 import React from 'react';
 import styles from './Heroblock.module.scss';
+import Image from 'next/image';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Countdown, { zeroPad, CountdownRenderProps } from 'react-countdown';
 import Button from '../Button/Button';
 import TwitchVideoEmbed from '../TwitchVideoEmbed/TwitchVideoEmbed';
-import { globals } from '../../pages/globals';
+import { globals } from '../../globals';
 import { AusSpeedrunsEvent } from '../../types/types';
 
 type HeroblockProps = {
@@ -97,7 +98,7 @@ const Heroblock = ({ event }: HeroblockProps) => {
 					)}
 				</div>
 				<div className={styles.logoBlock}>
-					<img src={require(`../../styles/img/${event.logo}`).default.src} />
+					<Image src={require(`../../styles/img/${event.logo}`).default} alt="Event Logo" />
 				</div>
 			</div>
 		</div>

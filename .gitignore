@@ -38,3 +38,5 @@ yarn-error.log*
 app.db
 public/images
 public/files
+
+.env

@@ -19,6 +19,7 @@ const PoliciesPage = () => {
 				<p>
 					<a
 						target="_blank"
+						rel="noreferrer"
 						href="https://docs.google.com/document/d/1xsmquXa8QzhzlZY59W5iTncvxhrPV2h1TZo8UNFZHUM/edit?usp=sharing"
 					>
 						External link to Google Doc containing all policies.

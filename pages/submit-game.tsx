@@ -229,7 +229,7 @@ export default function SubmitGamePage() {
 										required
 									>
 										{eventsResult.data.events.map((event) => {
-											return <MenuItem value={event.id}>{event.shortname}</MenuItem>;
+											return <MenuItem value={event.id} key={event.id}>{event.shortname}</MenuItem>;
 										})}
 									</Select>
 								</FormControl>
@@ -265,7 +265,7 @@ export default function SubmitGamePage() {
 								</Select>
 								<FormHelperText>
 									If unsure please search for the game title here:{' '}
-									<a href="https://www.classification.gov.au/" target="_blank">
+									<a href="https://www.classification.gov.au/" target="_blank" rel="noreferrer">
 										https://www.classification.gov.au/
 									</a>
 								</FormHelperText>

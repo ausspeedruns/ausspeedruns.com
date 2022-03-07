@@ -1,4 +1,4 @@
-import { Globals } from "../types/types";
+import { Globals } from "./types/types";
 
 export const globals: Globals = {
   events: {

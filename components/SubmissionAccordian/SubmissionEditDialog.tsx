@@ -158,7 +158,7 @@ const SubmissionEditDialog = ({ open, submission, handleClose }: SubmissionEditP
 					</Select>
 					<FormHelperText>
 						If unsure please search for the game title here:{' '}
-						<a href="https://www.classification.gov.au/" target="_blank">
+						<a href="https://www.classification.gov.au/" target="_blank" rel="noreferrer">
 							https://www.classification.gov.au/
 						</a>
 					</FormHelperText>

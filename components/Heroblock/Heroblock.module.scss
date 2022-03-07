@@ -24,6 +24,7 @@
       & > :last-child:not(:only-child) {
         margin-left: 10px;
         max-width: 66%;
+        padding: 0 7%;
       }
     }
 
@@ -57,14 +58,12 @@
       flex-grow: 1;
       align-items: center;
       justify-content: center;
-      img {
-        max-width: 80%;
-        margin: auto;
 
-        
-        @include breakpoint($lg) {
-          max-width: 600px;
-        }
+      max-width: 80%;
+      margin: auto;
+      
+      @include breakpoint($lg) {
+        max-width: 600px;
       }
     }
   }

@@ -49,6 +49,8 @@ export type UserPageData = {
 			shortname: string;
 			logo: {
 				url: string;
+				width: number;
+				height: number;
 			};
 		};
 	}[];
@@ -146,6 +148,8 @@ export default function ProfilePage() {
 							shortname
 							logo {
 								url
+								width
+								height
 							}
 						}
 					}
@@ -282,7 +286,7 @@ export default function ProfilePage() {
 								aria-label="basic tabs example"
 							>
 								{allSubmissionEvents.map((event) => (
-									<Tab label={event} />
+									<Tab label={event} key={event} />
 								))}
 							</Tabs>
 						</Box>
@@ -298,7 +302,7 @@ export default function ProfilePage() {
 					<div className={styles.upcomingRuns}>
 						<h3>Upcoming Runs</h3>
 						{upcomingRunsList.map((run) => {
-							return <RunUpcoming run={run} />;
+							return <RunUpcoming run={run} key={run.id} />;
 						})}
 					</div>
 				)}
@@ -312,7 +316,7 @@ export default function ProfilePage() {
 							aria-label="basic tabs example"
 						>
 							{allRunEvents.map((event) => (
-								<Tab label={event} />
+								<Tab label={event} key={event} />
 							))}
 						</Tabs>
 					</Box>

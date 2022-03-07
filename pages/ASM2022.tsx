@@ -1,19 +1,20 @@
 import Head from 'next/head';
+import Image from 'next/image';
 import React from 'react';
 import { gql } from '@keystone-6/core';
 import { useQuery } from 'urql';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
-import styles from '../../styles/Event.ASM2022.module.scss';
-import Navbar from '../../components/Navbar/Navbar';
-import Footer from '../../components/Footer/Footer';
-import Button from '../../components/Button/Button';
+import styles from '../styles/Event.ASM2022.module.scss';
+import Navbar from '../components/Navbar/Navbar';
+import Footer from '../components/Footer/Footer';
+import Button from '../components/Button/Button';
 
-import ASM2022Logo from '../../styles/img/ASM2022-Logo.svg';
-import StockPhoto1 from '../../styles/img/StockPhoto1.jpg';
-import StockPhoto2 from '../../styles/img/StockPhoto2.jpg';
-import StockPhoto3 from '../../styles/img/StockPhoto3.jpg';
-import DiscordEmbed from '../../components/DiscordEmbed';
+import ASM2022Logo from '../styles/img/ASM2022-Logo.svg';
+import StockPhoto1 from '../styles/img/StockPhoto1.jpg';
+import StockPhoto2 from '../styles/img/StockPhoto2.jpg';
+import StockPhoto3 from '../styles/img/StockPhoto3.jpg';
+import DiscordEmbed from '../components/DiscordEmbed';
 
 export default function EventPage() {
 	const [queryResult, profileQuery] = useQuery({
@@ -35,7 +36,9 @@ export default function EventPage() {
 			</Head>
 			<Navbar />
 			<header className={styles.header}>
-				<img src={ASM2022Logo.src} />
+				<div className={styles.logo}>
+					<Image src={ASM2022Logo} alt="Australian Speedrun Marathon 2022 Logo" />
+				</div>
 				{queryResult.data?.event.acceptingSubmissions && (
 					<Button actionText="Submissions are open!" link="/submit-game" iconRight={faArrowRight} />
 				)}
@@ -51,10 +54,14 @@ export default function EventPage() {
 							id tincidunt leo luctus.
 						</p>
 					</div>
-					<img src={StockPhoto1.src} />
+					<div className={styles.image}>
+						<Image layout="fill" objectFit="cover" src={StockPhoto1} alt="Runner speedrunning on stage" />
+					</div>
 				</div>
 				<div className={styles.contentRow}>
-					<img src={StockPhoto2.src} />
+					<div className={styles.image}>
+						<Image layout="fill" objectFit="cover" src={StockPhoto2} alt="The crowd cheering on the runner" />
+					</div>
 					<div className={styles.moreInfo}>
 						<p>
 							We will be releasing more information about the event soon.
@@ -79,7 +86,9 @@ export default function EventPage() {
 					</div>
 				</div>
 			</main>
-			<img className={styles.footer} src={StockPhoto3.src} />
+			<div className={styles.footer}>
+				<Image src={StockPhoto3} layout="fill" objectFit="cover" alt="Photo of the whole auditorium while the event runs" />
+			</div>
 			<Footer />
 		</div>
 	);

@@ -11,9 +11,7 @@
 			flex-direction: column;
 		}
 
-		img {
-			height: 50px;
-			width: auto;
+		.logo {
 			margin-right: 8px;
 
 			@include breakpoint($sm-zero-only) {

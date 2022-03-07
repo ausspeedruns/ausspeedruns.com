@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import styles from './RunUpcoming.module.scss';
 
 type Run = {
@@ -15,16 +16,30 @@ type Run = {
 			name: string;
 			logo: {
 				url: string;
+				width: number;
+				height: number;
 			};
 		};
 	};
 };
 
-const RunUpcoming = ({run}: Run) => {
+const LOGO_HEIGHT = 50;
+
+const RunUpcoming = ({ run }: Run) => {
+	const aspectRatio = run.event.logo.width / run.event.logo.height;
+
 	return (
 		<div className={styles.run}>
 			<div key={run.id} className={styles.header}>
-				<img src={run.event.logo.url} title={run.event.name} />
+				<div className={styles.logo}>
+					<Image
+						src={run.event.logo.url}
+						title={run.event.name}
+						width={LOGO_HEIGHT * aspectRatio}
+						height={LOGO_HEIGHT}
+						alt={`${run.event.name} logo`}
+					/>
+				</div>
 				<div className={styles.runInfo}>
 					<span>
 						<b>{run.game}</b> - {run.category}

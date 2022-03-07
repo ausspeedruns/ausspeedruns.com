@@ -10,7 +10,7 @@ import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 // import { faChevronRight, faCoins, faTicketAlt } from "@fortawesome/free-solid-svg-icons";
 import TwitchChatEmbed from "../components/TwitchChatEmbed/TwitchChatEmbed";
 import Ticker from "../components/Ticker/Ticker";
-import { globals } from "./globals";
+import { globals } from "../globals";
 import DiscordEmbed from '../components/DiscordEmbed';
 
 export default function Home() {

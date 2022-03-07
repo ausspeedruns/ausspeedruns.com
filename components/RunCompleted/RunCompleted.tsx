@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import YouTubeVideoEmbed from '../YouTubeVideoEmbed/YouTubeVideoEmbed';
 import styles from './RunCompleted.module.scss';
 
@@ -16,16 +17,30 @@ type Run = {
 			name: string;
 			logo: {
 				url: string;
+				width: number;
+				height: number;
 			};
 		};
 	};
 };
 
+const LOGO_HEIGHT = 70;
+
 const RunCompleted = ({ run }: Run) => {
+	const aspectRatio = run.event.logo.width / run.event.logo.height;
+
 	return (
 		<div className={styles.run}>
 			<div key={run.id} className={styles.header}>
-				<img src={run.event.logo.url} title={run.event.name} />
+				<div className={styles.logo}>
+					<Image
+						src={run.event.logo.url}
+						title={run.event.name}
+						width={LOGO_HEIGHT * aspectRatio}
+						height={LOGO_HEIGHT}
+						alt={`${run.event.name} logo`}
+					/>
+				</div>
 				<div className={styles.runInfo}>
 					<span>
 						<b>{run.game}</b> - {run.category}
@@ -39,7 +54,7 @@ const RunCompleted = ({ run }: Run) => {
 				<p>YouTube VOD to be uploaded soon!</p>
 			)}
 			{run.twitchVOD && (
-				<a href={run.twitchVOD} target="_blank">
+				<a href={run.twitchVOD} target="_blank" rel="noreferrer">
 					Twitch VOD
 				</a>
 			)}

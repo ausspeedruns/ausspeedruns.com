@@ -26,6 +26,9 @@
   }
 
   .title {
+    display: flex;
+    gap: 6px;
+    
     font-family: "Finger Paint";
     font-size: 1.2rem;
     font-weight: 500;
@@ -49,10 +52,6 @@
       &:visited:hover,
       &:visited:focus {
         color: $primary;
-
-        .logo {
-          background-image: url("../../styles/img/AusSpeedruns-Logo-Orange.svg");
-        }
       }
 
       &:visited {
@@ -66,13 +65,16 @@
       width: 40px;
       height: 40px;
       margin-right: 5px;
-      background: url("../../styles/img/AusSpeedruns-Logo-White.svg") no-repeat
-        center;
       background-size: contain;
 
       @include breakpoint($sm) {
         height: 50px;
         width: 50px;
+      }
+
+      &:hover {
+        fill: $primary;
+        cursor: pointer;
       }
     }
   }

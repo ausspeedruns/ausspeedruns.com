@@ -79,11 +79,9 @@ model Event {
   logo_extension       String?
   logo_width           Int?
   logo_height          Int?
-  logo_mode            String?
   logo_id              String?
-  pressKit_filesize    Int?
-  pressKit_mode        String?
   pressKit_filename    String?
+  pressKit_filesize    Int?
   from_Role_event      Role[]       @relation("Role_event")
 }
 

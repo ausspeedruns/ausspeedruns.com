@@ -9,7 +9,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import styles from './Footer.module.scss';
-import { globals } from '../../pages/globals';
+import { globals } from '../../globals';
 import Link from 'next/link';
 
 interface FooterProps {

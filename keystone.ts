@@ -1,4 +1,4 @@
-import { config, list } from '@keystone-6/core';
+import { config } from '@keystone-6/core';
 import { statelessSessions } from '@keystone-6/core/session';
 import { createAuth } from '@keystone-6/auth';
 
@@ -10,8 +10,10 @@ import { permissions, rules } from './schema/access';
 import { Run } from './schema/runs';
 import { Verification } from './schema/verification';
 
+import 'dotenv/config';
+
 const session = statelessSessions({
-  secret: ".MR-gkEFp'Hl0a]s4y7TJZ@:K?3x9u@CFC_+<^ldjpVL5:Fyi_2UB!)b*r3"
+  secret: process.env.SESSION_SECRET
 });
 
 const { withAuth } = createAuth({

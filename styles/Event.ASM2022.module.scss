@@ -21,7 +21,7 @@
 	align-items: center;
 	gap: 16px;
 
-	img {
+	.logo {
 		width: 600px;
 		height: auto;
 
@@ -69,8 +69,8 @@
 		color: $light-text;
 	}
 
-	img {
-		object-fit: cover;
+	.image {
+		position: relative;
 		width: 50%;
 	}
 
@@ -90,7 +90,7 @@
 			z-index: 2;
 		}
 
-		img {
+		.image {
 			position: absolute;
 			height: 100%;
 			width: 100%;
@@ -148,8 +148,7 @@
 }
 
 .footer {
-	object-fit: cover;
+	position: relative;
 	width: 100%;
 	height: 30rem;
-	margin-bottom: -4px;
 }

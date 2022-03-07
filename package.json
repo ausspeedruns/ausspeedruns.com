@@ -37,7 +37,6 @@
     "urql": "^2.2.0"
   },
   "devDependencies": {
-    "@urql/devtools": "^2.0.3",
     "eslint": "8.10.0",
     "eslint-config-next": "12.1.0"
   }

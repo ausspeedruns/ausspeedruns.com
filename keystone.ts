@@ -11,6 +11,7 @@ import { Run } from './schema/runs';
 import { Verification } from './schema/verification';
 
 import 'dotenv/config';
+import { BaseKeystoneTypeInfo, DatabaseConfig } from '@keystone-6/core/types';
 
 const session = statelessSessions({
   secret: process.env.SESSION_SECRET
@@ -41,9 +42,11 @@ const { withAuth } = createAuth({
   },
 });
 
+const dbConfig: DatabaseConfig<BaseKeystoneTypeInfo> = process.env.NODE_ENV === 'production' ? { provider: 'postgresql', url: process.env.DATABASE_URL } : { provider: 'sqlite', url: 'file:./app.db' };
+
 export default withAuth(
   config({
-    db: { provider: 'sqlite', url: 'file:./app.db' },
+    db: dbConfig,
     experimental: {
       generateNextGraphqlAPI: true,
       generateNodeAPI: true,

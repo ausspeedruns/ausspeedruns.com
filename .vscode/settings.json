@@ -1,6 +1,10 @@
 {
 	"appService.zipIgnorePattern": [
 		"node_modules{,/**}",
-		".vscode{,/**}"
-	]
+		".vscode{,/**}",
+		".keystone{,/**}",
+		".next{,/**}"
+	],
+	"appService.defaultWebAppToDeploy": "/subscriptions/b01dda27-86bc-4a4c-82ea-e7655e8cb184/resourceGroups/AusSpeedruns-Website/providers/Microsoft.Web/sites/asuruns-keystone-web",
+	"appService.deploySubpath": "."
 }

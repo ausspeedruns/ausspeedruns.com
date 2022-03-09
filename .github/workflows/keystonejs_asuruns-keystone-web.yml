@@ -24,7 +24,7 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          keystone postinstall --fix
+          npx keystone postinstall --fix
           npm run build --if-present
           npm run test --if-present
         env:

@@ -1,1 +1,0 @@
-npx keystone prisma migrate deploy

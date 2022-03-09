@@ -26,7 +26,7 @@ const { withAuth } = createAuth({
     // These fields are collected in the "Create First User" form
     fields: ['name', 'email', 'password', 'username', 'dateOfBirth'],
     itemData: {
-      role: {
+      roles: {
         create: {
           name: 'Admin',
           admin: true,
@@ -42,11 +42,9 @@ const { withAuth } = createAuth({
   },
 });
 
-const dbConfig: DatabaseConfig<BaseKeystoneTypeInfo> = process.env.NODE_ENV === 'production' ? { provider: 'postgresql', url: process.env.DATABASE_URL } : { provider: 'sqlite', url: 'file:./app.db' };
-
 export default withAuth(
   config({
-    db: dbConfig,
+    db: { provider: 'postgresql', url: process.env.DATABASE_URL },
     experimental: {
       generateNextGraphqlAPI: true,
       generateNodeAPI: true,

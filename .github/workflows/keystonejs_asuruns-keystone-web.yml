@@ -24,7 +24,6 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          npm audit
           npm run build --if-present
           npm run test --if-present
         env:

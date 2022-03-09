@@ -39,7 +39,4 @@ app.db
 public/images
 public/files
 
-schema.graphql
-schema.prisma
-
 .env

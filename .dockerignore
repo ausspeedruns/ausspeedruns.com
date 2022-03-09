@@ -1,0 +1,11 @@
+.git/
+.keystone/
+.next/
+.env
+.vscode/
+.github/
+Dockerfile
+.dockerignore
+node_modules
+npm-debug.log
+README.md

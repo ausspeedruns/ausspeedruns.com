@@ -71,6 +71,9 @@ export default withAuth(
         storagePath: 'public/files',
         baseUrl: '/files'
       }
+    },
+    server: {
+      port: 8000,
     }
   })
 );

@@ -28,6 +28,7 @@ jobs:
           npm run build --if-present
           npm run test --if-present
         env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
 
       - name: Upload artifact for deployment job
@@ -42,6 +43,8 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     steps:
       - name: Download artifact from build job
@@ -57,3 +60,7 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E6699C71F8524B70B34B5462D27FF31B }}
           package: .
+      
+      - name: Update database
+        run: node ./node_modules/@keystone-next/keystone/bin/cli.js prisma db push
+        working-directory: .release

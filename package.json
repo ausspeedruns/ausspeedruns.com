@@ -7,8 +7,7 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
-    "start:keystone": "keystone start",
-    "postinstall": "keystone prisma db push && keystone build"
+    "start:keystone": "keystone start"
   },
   "dependencies": {
     "@emotion/styled": "^11.8.1",

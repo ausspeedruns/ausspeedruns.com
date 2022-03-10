@@ -15,10 +15,11 @@ COPY . .
 ARG SESSION_SECRET
 ENV SESSION_SECRET ${SESSION_SECRET}
 
-RUN npx keystone postinstall --fix
+ARG DATABASE_URL
+ENV DATABASE_URL ${DATABASE_URL}
 
+RUN npx keystone postinstall --fix
 ENV NEXT_TELEMETRY_DISABLED 1
-RUN ls
 RUN npm run build
 
 # Production image, copy all the files and run next

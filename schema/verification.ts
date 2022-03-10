@@ -6,6 +6,8 @@ import { ListFilterAccessControl } from '@keystone-6/core/types';
 import { SessionContext } from './access';
 
 const filterVerification: ListFilterAccessControl<"query", Lists.Verification.TypeInfo> = ({ session }: SessionContext) => {
+	if (!session?.data) return false;
+	if (session.data.roles?.some(role => role.admin)) return true;
 	return { account: { equals: session?.data.id } };
 }
 
@@ -13,7 +15,7 @@ export const Verification: Lists.Verification = list({
 	access: {
 		operation: {
 			create: () => {return false},
-			update: () => {return false},
+			update: ({session}) => {return session.data.roles?.some(role => role.admin)},
 			// delete: () => {return false},
 		},
 		filter: {

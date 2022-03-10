@@ -5,7 +5,7 @@ import { BaseListTypeInfo } from '@keystone-6/core/types';
 const azureConfig: AzureStorageConfig = {
 	azureStorageOptions: {
 		account: process.env.AZURE_STORAGE_ACCOUNT_NAME,
-		accessKey: process.env.AZURE_STORAGE_ACCESS_KEY,
+		accessKey: process.env.AZURE_STORAGE_KEY,
 		container: process.env.AZURE_STORAGE_CONTAINER,
 	},
 }

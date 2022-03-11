@@ -1,6 +1,5 @@
-# Install dependencies only when needed
 FROM node:16-alpine AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -18,18 +17,28 @@ ENV SESSION_SECRET ${SESSION_SECRET}
 ARG DATABASE_URL
 ENV DATABASE_URL ${DATABASE_URL}
 
-RUN npx keystone postinstall --fix
-ENV NEXT_TELEMETRY_DISABLED 1
+# RUN node testing.js
+# RUN ls
+# RUN ls ./
+# RUN ls ..
+# COPY schema.graphql ./schema.graphql
+# COPY schema.prisma ./schema.prisma
+RUN npm run update-keystone
 RUN npm run build
 
-# Production image, copy all the files and run next
-FROM node:16-alpine AS runner
+FROM node:16-alpine AS prod
 WORKDIR /app
 
 ENV NODE_ENV production
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+ENV PORT 3000
+
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/keystone.ts ./keystone.ts
+COPY --from=builder /app/.keystone ./.keystone
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/schema.graphql ./schema.graphql
+COPY --from=builder /app/schema.prisma ./schema.prisma
 
 COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/public ./public
@@ -42,11 +51,7 @@ COPY --from=builder /app/schema.prisma ./schema.prisma
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-USER nextjs
-
 EXPOSE 3000
 EXPOSE 8000
 
-ENV PORT 3000
-
-CMD ["node", "server.js"]
+CMD ["npm", "run", "start"]

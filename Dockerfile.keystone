@@ -18,8 +18,9 @@ ENV SESSION_SECRET ${SESSION_SECRET}
 ARG DATABASE_URL
 ENV DATABASE_URL ${DATABASE_URL}
 
+ENV NODE_ENV production
 RUN npx keystone postinstall --fix
-RUN npx keystone build
+RUN npm run build:keystone
 
 # Production image, copy all the files and run keystone
 FROM node:16-alpine AS prod
@@ -27,7 +28,7 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-ENV PORT 2000
+ENV PORT 8000
 
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/keystone.ts ./keystone.ts
@@ -35,7 +36,8 @@ COPY --from=builder /app/.keystone ./.keystone
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/schema.graphql ./schema.graphql
 COPY --from=builder /app/schema.prisma ./schema.prisma
+COPY --from=builder /app/schema ./schema
 
-EXPOSE 2000
+EXPOSE 8000
 
 CMD ["npm", "run", "start:keystone"]

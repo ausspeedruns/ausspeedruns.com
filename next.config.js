@@ -1,5 +1,6 @@
-const { withKeystone } = require('@keystone-6/core/next');
+// const { withKeystone } = require('@keystone-6/core/next');
 const path = require('path');
+require('dotenv').config();
 
 // module.exports = withKeystone({
 //   reactStrictMode: true,
@@ -28,7 +29,7 @@ module.exports = {
 		return [
 			{
 				source: '/api/graphql',
-       			destination: `http://localhost:8000/api/graphql`,
+       			destination: `https://keystone.ausspeedruns.com/api/graphql`,
 			},
 		];
 	},

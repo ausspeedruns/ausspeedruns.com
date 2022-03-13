@@ -48,7 +48,7 @@ export const User: Lists.User = list({
 		submissions: relationship({ ref: 'Submission.runner', many: true, access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
 		roles: relationship({ ref: 'Role.users', many: true }),
 		runs: relationship({ ref: 'Run.runners', many: true }),
-		verified: checkbox({ defaultValue: false, access: { update: () => false } }),
+		verified: checkbox({ defaultValue: false, access: { update: ({ session }) => permissions.canManageUsers({ session }) } }),
 		state: select({
 			type: 'enum',
 			options: [
@@ -87,8 +87,8 @@ export const User: Lists.User = list({
 		labelField: 'username'
 	},
 	hooks: {
-		validateInput: ({resolvedData, addValidationError}) => {
-			const {username} = resolvedData;
+		validateInput: ({ resolvedData, addValidationError }) => {
+			const { username } = resolvedData;
 			if (username === 'edit-user' || username === 'verification') {
 				addValidationError(`Username cannot be ${username}`);
 			}

@@ -13,7 +13,8 @@ COPY . .
 
 ARG SESSION_SECRET
 ENV SESSION_SECRET ${SESSION_SECRET}
-
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV "production"
 ARG DATABASE_URL
 ENV DATABASE_URL ${DATABASE_URL}
 
@@ -21,8 +22,9 @@ ENV DATABASE_URL ${DATABASE_URL}
 # RUN ls
 # RUN ls ./
 # RUN ls ..
-# COPY schema.graphql ./schema.graphql
-# COPY schema.prisma ./schema.prisma
+# COPY schema.graphql ./app/schema.graphql
+# COPY schema.prisma ./app/schema.prisma
+# COPY /schema ./app/schema
 RUN npm run update-keystone
 RUN npm run build
 
@@ -39,12 +41,10 @@ COPY --from=builder /app/.keystone ./.keystone
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/schema.graphql ./schema.graphql
 COPY --from=builder /app/schema.prisma ./schema.prisma
+COPY --from=builder /app/schema ./schema
 
 COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/schema.graphql ./schema.graphql
-COPY --from=builder /app/schema.prisma ./schema.prisma
 
 # Automatically leverage output traces to reduce image size 
 # https://nextjs.org/docs/advanced-features/output-file-tracing

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { gql, useMutation } from 'urql';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -9,6 +9,12 @@ import Navbar from '../components/Navbar/Navbar';
 import styles from '../styles/SignIn.module.scss';
 import { theme } from '../components/mui-theme';
 import DiscordEmbed from '../components/DiscordEmbed';
+
+function calculateAge(birthday: number) {
+	var ageDifMs = Date.now() - birthday;
+	var ageDate = new Date(ageDifMs); // miliseconds from epoch
+	return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
 
 export default function SignUpPage() {
 	const [{ error, data }, signup] = useMutation(gql`
@@ -26,8 +32,13 @@ export default function SignUpPage() {
 	const [username, setUsername] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [dob, setDob] = useState(new Date().toLocaleDateString().split('/').reverse().join('-'));
 
-	const canSignUp = !Boolean(username) || !Boolean(email) || password.length < 8;
+	const canSignUp =
+		!Boolean(username) ||
+		!Boolean(email) ||
+		password.length < 8 ||
+		calculateAge(new Date(dob).getTime()) < 13;
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -78,6 +89,15 @@ export default function SignUpPage() {
 						}}
 						variant="outlined"
 						label="Username"
+					/>
+					<TextField
+						value={dob}
+						onChange={(e) => {
+							setDob(e.target.value);
+						}}
+						variant="outlined"
+						label="Date of Birth"
+						type="date"
 					/>
 					<Button type="submit" variant="contained" disabled={canSignUp}>
 						Sign Up

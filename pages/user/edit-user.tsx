@@ -61,9 +61,7 @@ export default function EditUser() {
 	const [updateResult, updateProfile] = useMutation(gql`
 		mutation UpdateProfile(
 			$userId: ID
-			$username: String
 			$name: String!
-			$email: String
 			$pronouns: String!
 			$socialId: ID
 			$discord: String!
@@ -73,7 +71,7 @@ export default function EditUser() {
 		) {
 			updateUser(
 				where: { id: $userId }
-				data: { name: $name, username: $username, email: $email, pronouns: $pronouns, dateOfBirth: $dateOfBirth }
+				data: { name: $name, username: $username, pronouns: $pronouns, dateOfBirth: $dateOfBirth }
 			) {
 				__typename
 			}
@@ -118,9 +116,8 @@ export default function EditUser() {
 		if (auth.ready) {
 			updateProfile({
 				userId: auth.sessionData.id,
-				username,
 				name,
-				email,
+				// email,
 				pronouns,
 				discord,
 				twitter,
@@ -171,18 +168,17 @@ export default function EditUser() {
 							)}
 							<h3>Personal Information</h3>
 							<div />
-							<div>Username</div>
-							<TextField required value={username} onChange={(e) => setUsername(e.target.value)} variant={'outlined'} />
+							{/* <div>Username</div>
+							<TextField required value={username} onChange={(e) => setUsername(e.target.value)} variant={'outlined'} /> */}
 							<div>Name</div>
-							<TextField required value={name} onChange={(e) => setName(e.target.value)} variant={'outlined'} />
-							<div>Email</div>
-							<TextField required value={email} onChange={(e) => setEmail(e.target.value)} variant={'outlined'} />
+							<TextField value={name} onChange={(e) => setName(e.target.value)} variant={'outlined'} />
+							<div>Email{verified ? ' ✓' : ''}</div>
+							<TextField disabled value={email} variant={'outlined'} />
 							<div>Pronouns</div>
 							<TextField value={pronouns} onChange={(e) => setPronouns(e.target.value)} variant={'outlined'} />
 							<div>Date of birth</div>
 							<div style={{ display: 'flex', justifyContent: 'center' }}>
 								<Input
-									required
 									fullWidth
 									type="date"
 									onChange={(e) => setDateOfBirth(e.target.value)}
@@ -212,7 +208,7 @@ export default function EditUser() {
 								value={discord}
 								variant={'outlined'}
 								onChange={(e) => setDiscord(e.target.value)}
-								onBlur={(e) => setDiscordWarning(!DiscordRegex.test(e.target.value))}
+								onBlur={(e) => setDiscordWarning(!DiscordRegex.test(e.target.value) && e.target.value !== '')}
 							/>
 							<div>Twitter</div>
 							<TextField
@@ -222,7 +218,7 @@ export default function EditUser() {
 								value={twitter}
 								variant={'outlined'}
 								onChange={(e) => setTwitter(e.target.value)}
-								onBlur={(e) => setTwitterWarning(!TwitterRegex.test(e.target.value))}
+								onBlur={(e) => setTwitterWarning(!TwitterRegex.test(e.target.value) && e.target.value !== '')}
 							/>
 							<div>Twitch</div>
 							<TextField
@@ -231,7 +227,7 @@ export default function EditUser() {
 								value={twitch}
 								variant={'outlined'}
 								onChange={(e) => setTwitch(e.target.value)}
-								onBlur={(e) => setTwitchWarning(!TwitchRegex.test(e.target.value))}
+								onBlur={(e) => setTwitchWarning(!TwitchRegex.test(e.target.value) && e.target.value !== '')}
 							/>
 						</div>
 					</>

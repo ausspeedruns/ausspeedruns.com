@@ -36,7 +36,7 @@ export const SignInPage: React.FC = () => {
 			return;
 		}
 		if (!email.length || !password.length) {
-			setError('Please enter a username and password.');
+			setError('Please enter an email and password.');
 			return;
 		}
 		setError('');
@@ -105,9 +105,8 @@ export const SignInPage: React.FC = () => {
 					{spinner && <CircularProgress className={styles.spinner} />}
 				</form>
 				<hr />
-				<div>
-					<Link href="/signup">Want to join instead?</Link>
-				</div>
+				<Link href="/signup">Want to join instead?</Link>
+				<Link href="/forgot-password">Forgot password?</Link>
 			</div>
 		</ThemeProvider>
 	);

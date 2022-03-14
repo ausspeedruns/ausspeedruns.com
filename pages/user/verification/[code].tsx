@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMutation, useQuery } from 'urql';
@@ -8,11 +8,6 @@ import { theme } from '../../../components/mui-theme';
 import Navbar from '../../../components/Navbar/Navbar';
 import { Button, ThemeProvider } from '@mui/material';
 import styles from '../../../styles/User.Verification.code.module.scss';
-
-type Event = {
-	name: string;
-	shortname: string;
-};
 
 export default function Verification() {
 	const router = useRouter();
@@ -30,8 +25,6 @@ export default function Verification() {
 		},
 	});
 
-	console.log(verificationResults);
-
 	const [deleteVerifResults, deleteVerification] = useMutation(gql`
 		mutation ($code: String) {
 			deleteVerification(where: { code: $code }) {
@@ -40,10 +33,12 @@ export default function Verification() {
 		}
 	`);
 
-	function returnHome() {
-		deleteVerification({ code: router.query.code });
-		router.push('/user/edit-user');
-	}
+	useEffect(() => {
+		if (!verificationResults.fetching && verificationResults.data.verification) {
+			deleteVerification({ code: router.query.code });
+			router.push('/user/edit-user');
+		}
+	}, [verificationResults]);
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -53,9 +48,7 @@ export default function Verification() {
 			<Navbar />
 			<div className={styles.content}>
 				<h2>Email verification</h2>
-				{!verificationResults.fetching && verificationResults.data.verification && (
-					<Button variant="contained" onClick={returnHome}>Verify email</Button>
-				)}
+				{verificationResults.fetching && <span>Loading</span>}
 				{!verificationResults.fetching && !verificationResults.data?.verification && (
 					<span>Expired/Incorrect verification code</span>
 				)}

@@ -16,6 +16,8 @@ const fieldModes = {
 			: 'hidden',
 };
 
+const BANNEDUSERNAMES = ['edit-user', 'verification', 'password-reset'];
+
 const fieldAccess = {
 	editSelfOrRead: <FieldAccessControl<Lists.User.TypeInfo>>{
 		update: ({ session, item }: any) => permissions.canManageUsers({ session }) || session.itemId === item.id
@@ -89,7 +91,7 @@ export const User: Lists.User = list({
 	hooks: {
 		validateInput: ({ resolvedData, addValidationError }) => {
 			const { username } = resolvedData;
-			if (username === 'edit-user' || username === 'verification') {
+			if (BANNEDUSERNAMES.includes(username)) {
 				addValidationError(`Username cannot be ${username}`);
 			}
 		},

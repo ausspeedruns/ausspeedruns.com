@@ -76,13 +76,7 @@ input StringFilter {
   contains: String
   startsWith: String
   endsWith: String
-  mode: QueryMode
   not: NestedStringFilter
-}
-
-enum QueryMode {
-  default
-  insensitive
 }
 
 input NestedStringFilter {
@@ -219,6 +213,9 @@ type User {
   verified: Boolean
   state: UserStateType
   sentVerification: DateTime
+  passwordResetToken: PasswordState
+  passwordResetIssuedAt: DateTime
+  passwordResetRedeemedAt: DateTime
 }
 
 type PasswordState {
@@ -261,6 +258,9 @@ input UserWhereInput {
   verified: BooleanFilter
   state: UserStateTypeNullableFilter
   sentVerification: DateTimeNullableFilter
+  passwordResetToken: PasswordFilter
+  passwordResetIssuedAt: DateTimeNullableFilter
+  passwordResetRedeemedAt: DateTimeNullableFilter
 }
 
 input SubmissionManyRelationFilter {
@@ -288,6 +288,10 @@ input UserStateTypeNullableFilter {
   not: UserStateTypeNullableFilter
 }
 
+input PasswordFilter {
+  isSet: Boolean!
+}
+
 input UserOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -299,6 +303,8 @@ input UserOrderByInput {
   verified: OrderDirection
   state: OrderDirection
   sentVerification: OrderDirection
+  passwordResetIssuedAt: OrderDirection
+  passwordResetRedeemedAt: OrderDirection
 }
 
 input UserUpdateInput {
@@ -316,6 +322,9 @@ input UserUpdateInput {
   verified: Boolean
   state: UserStateType
   sentVerification: DateTime
+  passwordResetToken: String
+  passwordResetIssuedAt: DateTime
+  passwordResetRedeemedAt: DateTime
 }
 
 input SocialRelateToOneForUpdateInput {
@@ -365,6 +374,9 @@ input UserCreateInput {
   verified: Boolean
   state: UserStateType
   sentVerification: DateTime
+  passwordResetToken: String
+  passwordResetIssuedAt: DateTime
+  passwordResetRedeemedAt: DateTime
 }
 
 input SocialRelateToOneForCreateInput {
@@ -567,28 +579,29 @@ type Event {
   ): [Run!]
   runsCount(where: RunWhereInput! = {}): Int
   acceptingSubmissions: Boolean
-  logo: AzureStorageImageFieldOutput
-  pressKit: AzureStorageFileFieldOutput
+  logo: ImageFieldOutput
+  pressKit: FileFieldOutput
+  submissionInstructions: String
 }
 
-interface AzureStorageImageFieldOutput {
+interface ImageFieldOutput {
   id: ID!
   filesize: Int!
   width: Int!
   height: Int!
-  extension: AzureStorageImageExtension!
+  extension: ImageExtension!
   ref: String!
   url: String!
 }
 
-enum AzureStorageImageExtension {
+enum ImageExtension {
   jpg
   png
   webp
   gif
 }
 
-interface AzureStorageFileFieldOutput {
+interface FileFieldOutput {
   filename: String!
   filesize: Int!
   ref: String!
@@ -600,17 +613,34 @@ input EventWhereUniqueInput {
   shortname: String
 }
 
-type AzureStorageImageFieldOutputType implements AzureStorageImageFieldOutput {
+type LocalImageFieldOutput implements ImageFieldOutput {
   id: ID!
   filesize: Int!
   width: Int!
   height: Int!
-  extension: AzureStorageImageExtension!
+  extension: ImageExtension!
   ref: String!
   url: String!
 }
 
-type AzureStorageFileFieldOutputType implements AzureStorageFileFieldOutput {
+type CloudImageFieldOutput implements ImageFieldOutput {
+  id: ID!
+  filesize: Int!
+  width: Int!
+  height: Int!
+  extension: ImageExtension!
+  ref: String!
+  url: String!
+}
+
+type LocalFileFieldOutput implements FileFieldOutput {
+  filename: String!
+  filesize: Int!
+  ref: String!
+  url: String!
+}
+
+type CloudFileFieldOutput implements FileFieldOutput {
   filename: String!
   filesize: Int!
   ref: String!
@@ -628,6 +658,7 @@ input EventWhereInput {
   submissions: SubmissionManyRelationFilter
   runs: RunManyRelationFilter
   acceptingSubmissions: BooleanFilter
+  submissionInstructions: StringFilter
 }
 
 input FloatNullableFilter {
@@ -647,6 +678,7 @@ input EventOrderByInput {
   shortname: OrderDirection
   raised: OrderDirection
   acceptingSubmissions: OrderDirection
+  submissionInstructions: OrderDirection
 }
 
 input EventUpdateInput {
@@ -656,11 +688,12 @@ input EventUpdateInput {
   submissions: SubmissionRelateToManyForUpdateInput
   runs: RunRelateToManyForUpdateInput
   acceptingSubmissions: Boolean
-  logo: AzureStorageImageFieldInput
-  pressKit: AzureStorageFileFieldInput
+  logo: ImageFieldInput
+  pressKit: FileFieldInput
+  submissionInstructions: String
 }
 
-input AzureStorageImageFieldInput {
+input ImageFieldInput {
   upload: Upload
   ref: String
 }
@@ -670,7 +703,7 @@ The `Upload` scalar type represents a file upload.
 """
 scalar Upload
 
-input AzureStorageFileFieldInput {
+input FileFieldInput {
   upload: Upload
   ref: String
 }
@@ -687,8 +720,9 @@ input EventCreateInput {
   submissions: SubmissionRelateToManyForCreateInput
   runs: RunRelateToManyForCreateInput
   acceptingSubmissions: Boolean
-  logo: AzureStorageImageFieldInput
-  pressKit: AzureStorageFileFieldInput
+  logo: ImageFieldInput
+  pressKit: FileFieldInput
+  submissionInstructions: String
 }
 
 type Role {
@@ -1077,6 +1111,12 @@ type Mutation {
   createInitialUser(
     data: CreateInitialUserInput!
   ): UserAuthenticationWithPasswordSuccess!
+  sendUserPasswordResetLink(email: String!): Boolean!
+  redeemUserPasswordResetToken(
+    email: String!
+    token: String!
+    password: String!
+  ): RedeemUserPasswordResetTokenResult
 }
 
 union UserAuthenticationWithPasswordResult =
@@ -1098,6 +1138,17 @@ input CreateInitialUserInput {
   email: String
   password: String
   dateOfBirth: DateTime
+}
+
+type RedeemUserPasswordResetTokenResult {
+  code: PasswordResetRedemptionErrorCode!
+  message: String!
+}
+
+enum PasswordResetRedemptionErrorCode {
+  FAILURE
+  TOKEN_EXPIRED
+  TOKEN_REDEEMED
 }
 
 type Query {
@@ -1167,9 +1218,18 @@ type Query {
   verificationsCount(where: VerificationWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
+  validateUserPasswordResetToken(
+    email: String!
+    token: String!
+  ): ValidateUserPasswordResetTokenResult
 }
 
 union AuthenticatedItem = User
+
+type ValidateUserPasswordResetTokenResult {
+  code: PasswordResetRedemptionErrorCode!
+  message: String!
+}
 
 type KeystoneMeta {
   adminMeta: KeystoneAdminMeta!
@@ -1241,6 +1301,11 @@ enum KeystoneAdminUIFieldMetaItemViewFieldMode {
   edit
   read
   hidden
+}
+
+enum QueryMode {
+  default
+  insensitive
 }
 
 type KeystoneAdminUISort {

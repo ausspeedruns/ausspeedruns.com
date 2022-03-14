@@ -25,8 +25,6 @@ import LinkButton from '../components/Button/Button';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import DiscordEmbed from '../components/DiscordEmbed';
 
-const DiscordRegex = /^.{3,32}#[0-9]{4}$/;
-
 type AgeRatingLiterals = 'm_or_lower' | 'ma15' | 'ra18';
 type RaceLiterals = 'no' | 'solo' | 'only';
 
@@ -63,12 +61,13 @@ export default function SubmitGamePage() {
 		},
 	});
 
-	const [eventsResult, eventsQuery] = useQuery<{ events: { shortname: string; id: string }[] }>({
+	const [eventsResult, eventsQuery] = useQuery<{ events: { shortname: string; id: string; submissionInstructions: string }[] }>({
 		query: gql`
 			query {
 				events(where: { acceptingSubmissions: { equals: true } }) {
 					id
 					shortname
+					submissionInstructions
 				}
 			}
 		`,
@@ -163,6 +162,8 @@ export default function SubmitGamePage() {
 		);
 	}
 
+	const currentEvent = eventsResult.data?.events.find((eventResult) => eventResult.id === event);
+
 	return (
 		<ThemeProvider theme={theme}>
 			<Head>
@@ -175,7 +176,7 @@ export default function SubmitGamePage() {
 			</Head>
 			<Navbar />
 			<main className={styles.content}>
-				<h1>{eventsResult.data?.events.find((eventResult) => eventResult.id === event)?.shortname} Game Submission</h1>
+				<h1>{currentEvent?.shortname} Game Submission</h1>
 				<form
 					className={styles.gameForm}
 					onSubmit={(e) => {
@@ -205,7 +206,7 @@ export default function SubmitGamePage() {
 						}
 					}}
 				>
-					{queryResult?.data?.user?.socials?.discord !== '' ||
+					{!queryResult?.data?.user?.socials?.discord ||
 					!queryResult.data.user.verified ||
 					!queryResult.data.user.dateOfBirth ? (
 						<>
@@ -306,6 +307,7 @@ export default function SubmitGamePage() {
 							)}
 							<TextField value={video} onChange={(e) => setVideo(e.target.value)} label="Video of the run" required />
 							{submissionResult.error && <h2>{submissionResult.error.message}</h2>}
+							<p>{currentEvent?.submissionInstructions}</p>
 							<Button variant="contained" type="submit">
 								Submit
 							</Button>

@@ -52,7 +52,6 @@ const SubmissionAccordian = ({ submission }: SubmissionProps) => {
 		default:
 			break;
 	}
-	console.log(colour);
 
 	return (
 		<StyledAccordian className={styles.submission}>

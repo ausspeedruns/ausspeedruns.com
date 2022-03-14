@@ -22,6 +22,14 @@ const { withAuth } = createAuth({
   identityField: 'email',
   secretField: 'password',
   sessionData: 'username id roles { admin canManageUsers canManageContent canReadRunnerInfo canReadRunnerMgmt }',
+  passwordResetLink: {
+    sendToken: async ({ itemId, identity, token, context }) => {
+      console.log('--------------- PASSWORD RESET ---------------');
+      console.log(identity);
+      console.log(token);
+      console.log('----------------------------------------------');
+    }
+  },
   initFirstItem: {
     // These fields are collected in the "Create First User" form
     fields: ['name', 'email', 'password', 'username', 'dateOfBirth'],
@@ -42,9 +50,11 @@ const { withAuth } = createAuth({
   },
 });
 
+const database: DatabaseConfig<BaseKeystoneTypeInfo> = process.env.NODE_ENV === "production" ? { provider: 'postgresql', url: process.env.DATABASE_URL } : { provider: 'sqlite', url: 'file:./app.db' };
+
 export default withAuth(
   config({
-    db: { provider: 'postgresql', url: process.env.DATABASE_URL },
+    db: database,
     experimental: {
       generateNextGraphqlAPI: true,
       generateNodeAPI: true,

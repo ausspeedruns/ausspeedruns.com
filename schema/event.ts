@@ -22,5 +22,6 @@ export const Event: Lists.Event = list({
 		acceptingSubmissions: checkbox(),
 		logo: image<Lists.Event.TypeInfo>(),
 		pressKit: file<Lists.Event.TypeInfo>(),
+		submissionInstructions: text(),
 	}
 });

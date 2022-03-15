@@ -52,6 +52,10 @@
       &:visited:hover,
       &:visited:focus {
         color: $primary;
+
+        svg {
+          fill: $primary;
+        }
       }
 
       &:visited {
@@ -70,11 +74,6 @@
       @include breakpoint($sm) {
         height: 50px;
         width: 50px;
-      }
-
-      &:hover {
-        fill: $primary;
-        cursor: pointer;
       }
     }
   }

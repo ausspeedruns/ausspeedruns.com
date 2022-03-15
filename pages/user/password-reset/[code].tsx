@@ -39,7 +39,7 @@ export default function PasswordResetPage() {
 			<main className={styles.content}>
 				<h1>Password Reset</h1>
 				<form
-					className={styles.gameForm}
+					className={styles.form}
 					onSubmit={(e) => {
 						e.preventDefault();
 						console.log({

@@ -5,6 +5,8 @@ import { permissions } from './access';
 import { FieldAccessControl } from '@keystone-6/core/types';
 import { v4 as uuid } from 'uuid';
 
+import { sendEmailVerification } from '../email/emails';
+
 const fieldModes = {
 	editSelfOrRead: ({ session, item }: any) =>
 		permissions.canManageUsers({ session }) || session.itemId === item.id
@@ -71,9 +73,12 @@ export const User: Lists.User = list({
 			hooks: {
 				afterOperation: ({ context, item, operation }) => {
 					if (item.verified || operation !== 'update') return;
+
 					const sudoContext = context.sudo();
 					const verificationID = uuid().replaceAll('-', '');
-					console.log(verificationID)
+
+					sendEmailVerification(item.email, verificationID);
+
 					sudoContext.db.Verification.createOne({
 						data: {
 							account: item.id,
@@ -105,7 +110,10 @@ export const User: Lists.User = list({
 
 				const sudoContext = context.sudo();
 				const verificationID = uuid().replaceAll('-', '');
-				console.log(verificationID)
+				
+				// console.log(verificationID)
+				sendEmailVerification(item.email, verificationID);
+
 				sudoContext.db.Verification.createOne({
 					data: {
 						account: item.id,

@@ -10,6 +10,8 @@ import { permissions, rules } from './schema/access';
 import { Run } from './schema/runs';
 import { Verification } from './schema/verification';
 
+import { sendForgottenPassword } from './email/emails';
+
 import 'dotenv/config';
 import { BaseKeystoneTypeInfo, DatabaseConfig } from '@keystone-6/core/types';
 
@@ -24,10 +26,11 @@ const { withAuth } = createAuth({
   sessionData: 'username id roles { admin canManageUsers canManageContent canReadRunnerInfo canReadRunnerMgmt }',
   passwordResetLink: {
     sendToken: async ({ itemId, identity, token, context }) => {
-      console.log('--------------- PASSWORD RESET ---------------');
-      console.log(identity);
-      console.log(token);
-      console.log('----------------------------------------------');
+      // console.log('--------------- PASSWORD RESET ---------------');
+      // console.log(identity);
+      // console.log(token);
+      // console.log('----------------------------------------------');
+      sendForgottenPassword(identity, token);
     }
   },
   initFirstItem: {

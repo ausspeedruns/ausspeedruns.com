@@ -48,10 +48,10 @@ export default function EventPage() {
 					<div className={styles.intro}>
 						<h2>Australian Speedrun Marathon 2022</h2>
 						<p>
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ultricies quam eros, vitae congue est auctor
-							et. Suspendisse eget libero tempor, egestas velit id, luctus risus. Fusce pharetra ut dolor id vehicula.
-							Vestibulum dignissim quam eget euismod ullamcorper. Suspendisse hendrerit massa non lectus pellentesque,
-							id tincidunt leo luctus.
+							ASM2022 is a speedrunning event, featuring exhibitions of talent from all across Australia, as our runners
+							try to complete some of your favourite games as quickly as possible. ASM2022 will be running for almost 5
+							consecutive days, with over 100 hours of content! This event will be livestreamed on twitch, as well as
+							viewable in person, in Adelaide, Australia!
 						</p>
 					</div>
 					<div className={styles.image}>
@@ -64,7 +64,7 @@ export default function EventPage() {
 					</div>
 					<div className={styles.moreInfo}>
 						<p>
-							The submission will open on the 25th of March and run until the 29th of April. We hope to have the
+							Submissions will open on the 25th of March and run until the 29th of April. We hope to have the
 							schedule released on the 9th of May.
 							<br />
 							<br />

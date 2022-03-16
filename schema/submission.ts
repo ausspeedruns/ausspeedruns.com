@@ -1,5 +1,5 @@
 import { list } from '@keystone-6/core';
-import { checkbox, relationship, select, text, timestamp } from '@keystone-6/core/fields';
+import { checkbox, json, relationship, select, text, timestamp } from '@keystone-6/core/fields';
 import { ItemContext, operations, permissions, SessionContext } from './access';
 import { Lists } from '.keystone/types';
 import { FieldAccessControl } from '@keystone-6/core/types';
@@ -42,6 +42,7 @@ export const Submission: Lists.Submission = list({
 		}),
 		donationIncentive: text(),
 		specialReqs: text(),
+		availability: json({ db: { map: 'availability_json' } }),
 		race: select({
 			type: 'enum',
 			options: [

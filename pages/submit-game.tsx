@@ -30,6 +30,12 @@ type RaceLiterals = 'no' | 'solo' | 'only';
 
 const EstimateRegex = /^\d{2}:\d{2}:\d{2}$/;
 
+function addDays(date: string | number | Date, days: number) {
+	var result = new Date(date);
+	result.setDate(result.getDate() + days);
+	return result;
+}
+
 export default function SubmitGamePage() {
 	const auth = useAuth();
 
@@ -45,6 +51,7 @@ export default function SubmitGamePage() {
 	const [racer, setRacer] = useState('');
 	const [video, setVideo] = useState('');
 	const [specialReqs, setSpecialReqs] = useState('');
+	const [availableDates, setAvailableDates] = useState<boolean[]>([]);
 	const [estimateError, setEstimateError] = useState(false);
 
 	// Query if able to submit game (has discord)
@@ -66,7 +73,7 @@ export default function SubmitGamePage() {
 	});
 
 	const [eventsResult, eventsQuery] = useQuery<{
-		events: { shortname: string; id: string; submissionInstructions: string }[];
+		events: { shortname: string; id: string; submissionInstructions: string; startDate: string; endDate: string }[];
 	}>({
 		query: gql`
 			query {
@@ -74,6 +81,8 @@ export default function SubmitGamePage() {
 					id
 					shortname
 					submissionInstructions
+					startDate
+					endDate
 				}
 			}
 		`,
@@ -90,6 +99,7 @@ export default function SubmitGamePage() {
 			$ageRating: SubmissionAgeRatingType!
 			$donationIncentive: String!
 			$specialReqs: String!
+			$availableDates: JSON!
 			$race: SubmissionRaceType!
 			$racer: String!
 			$coop: Boolean!
@@ -106,6 +116,7 @@ export default function SubmitGamePage() {
 					ageRating: $ageRating
 					donationIncentive: $donationIncentive
 					specialReqs: $specialReqs
+					availability: $availableDates
 					race: $race
 					racer: $racer
 					coop: $coop
@@ -173,7 +184,38 @@ export default function SubmitGamePage() {
 
 	const currentEvent = eventsResult.data?.events.find((eventResult) => eventResult.id === event);
 
-	const canSubmit = game && category && platform && estimate && !estimateError && event;
+	const canSubmit = game && category && platform && estimate && !estimateError && event && video && availableDates.some(day => day);
+
+	console.log(game, category, platform, estimate, !estimateError, event, video, availableDates.some(day => day))
+
+	let eventLength = 0;
+	if (currentEvent) {
+		eventLength =
+			// Subtract the two dates, add one since off by one error and divide days between
+			(new Date(currentEvent.endDate).getTime() - new Date(currentEvent.startDate).getTime() + 60 * 60 * 24 * 1000) /
+			(60 * 60 * 24 * 1000);
+	}
+
+	let dateCheckboxes = [];
+	for (let i = 0; i < eventLength; i++) {
+		const date = addDays(currentEvent.startDate, i);
+		dateCheckboxes.push(
+			<FormControlLabel
+				key={i}
+				control={
+					<Checkbox
+						onChange={(e) => {
+							const newDates = availableDates;
+							newDates[i] = e.target.checked;
+							setAvailableDates(newDates);
+							console.log(availableDates)
+						}}
+					/>
+				}
+				label={date.toLocaleDateString('en-AU', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' })}
+			/>
+		);
+	}
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -202,6 +244,7 @@ export default function SubmitGamePage() {
 								ageRating,
 								donationIncentive,
 								specialReqs,
+								availableDates,
 								race,
 								racer,
 								coop,
@@ -308,6 +351,9 @@ export default function SubmitGamePage() {
 								onChange={(e) => setSpecialReqs(e.target.value)}
 								label="Special Requirements to run your game (Leave blank if none)"
 							/>
+							<h3>Availability?</h3>
+							{dateCheckboxes}
+							<br />
 							<FormControlLabel
 								control={
 									<Checkbox onChange={(e) => setRace(e.target.checked ? 'solo' : 'no')} checked={race !== 'no'} />

@@ -410,6 +410,7 @@ type Submission {
   ageRating: SubmissionAgeRatingType
   donationIncentive: String
   specialReqs: String
+  availability: JSON
   race: SubmissionRaceType
   racer: String
   coop: Boolean
@@ -511,6 +512,7 @@ input SubmissionUpdateInput {
   ageRating: SubmissionAgeRatingType
   donationIncentive: String
   specialReqs: String
+  availability: JSON
   race: SubmissionRaceType
   racer: String
   coop: Boolean
@@ -546,6 +548,7 @@ input SubmissionCreateInput {
   ageRating: SubmissionAgeRatingType
   donationIncentive: String
   specialReqs: String
+  availability: JSON
   race: SubmissionRaceType
   racer: String
   coop: Boolean
@@ -568,6 +571,8 @@ type Event {
   id: ID!
   name: String
   shortname: String
+  startDate: DateTime
+  endDate: DateTime
   raised: Float
   submissions(
     where: SubmissionWhereInput! = {}
@@ -659,6 +664,8 @@ input EventWhereInput {
   id: IDFilter
   name: StringFilter
   shortname: StringFilter
+  startDate: DateTimeNullableFilter
+  endDate: DateTimeNullableFilter
   raised: FloatNullableFilter
   submissions: SubmissionManyRelationFilter
   runs: RunManyRelationFilter
@@ -681,6 +688,8 @@ input EventOrderByInput {
   id: OrderDirection
   name: OrderDirection
   shortname: OrderDirection
+  startDate: OrderDirection
+  endDate: OrderDirection
   raised: OrderDirection
   acceptingSubmissions: OrderDirection
   submissionInstructions: OrderDirection
@@ -689,6 +698,8 @@ input EventOrderByInput {
 input EventUpdateInput {
   name: String
   shortname: String
+  startDate: DateTime
+  endDate: DateTime
   raised: Float
   submissions: SubmissionRelateToManyForUpdateInput
   runs: RunRelateToManyForUpdateInput
@@ -721,6 +732,8 @@ input EventUpdateArgs {
 input EventCreateInput {
   name: String
   shortname: String
+  startDate: DateTime
+  endDate: DateTime
   raised: Float
   submissions: SubmissionRelateToManyForCreateInput
   runs: RunRelateToManyForCreateInput

@@ -58,6 +58,7 @@ model Submission {
   ageRating                   String?   @default("m_or_lower")
   donationIncentive           String    @default("")
   specialReqs                 String    @default("")
+  availability                String?   @map("availability_json")
   race                        String?   @default("no")
   racer                       String    @default("")
   coop                        Boolean   @default(false)
@@ -75,6 +76,8 @@ model Event {
   id                     String       @id @default(cuid())
   name                   String       @default("")
   shortname              String       @unique @default("")
+  startDate              DateTime?
+  endDate                DateTime?
   raised                 Float?
   submissions            Submission[] @relation("Submission_event")
   runs                   Run[]        @relation("Run_event")

@@ -230,7 +230,9 @@ export default function ProfilePage() {
 	const allSubmissionEvents = [
 		...Array.from(new Set(userData.submissions.map((submission) => submission.event.shortname))),
 	];
-	const allRunEvents = [...Array.from(new Set(userData.runs.map((run) => run.finalTime ? run.event.shortname : undefined)))];
+	const allRunEvents = [
+		...Array.from(new Set(userData.runs.map((run) => (run.finalTime ? run.event.shortname : undefined)))),
+	];
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -306,15 +308,11 @@ export default function ProfilePage() {
 						})}
 					</div>
 				)}
-				<hr />
+				{userData.runs.length > 0 && <hr />}
 				{/* Runs */}
 				<div className={styles.runs}>
 					<Box>
-						<Tabs
-							value={eventTab}
-							onChange={(_e, newVal) => setEventTab(newVal)}
-							aria-label="basic tabs example"
-						>
+						<Tabs value={eventTab} onChange={(_e, newVal) => setEventTab(newVal)} aria-label="basic tabs example">
 							{allRunEvents.map((event) => (
 								<Tab label={event} key={event} />
 							))}

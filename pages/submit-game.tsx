@@ -28,6 +28,8 @@ import DiscordEmbed from '../components/DiscordEmbed';
 type AgeRatingLiterals = 'm_or_lower' | 'ma15' | 'ra18';
 type RaceLiterals = 'no' | 'solo' | 'only';
 
+const EstimateRegex = /^\d{2}:\d{2}:\d{2}$/;
+
 export default function SubmitGamePage() {
 	const auth = useAuth();
 
@@ -42,6 +44,8 @@ export default function SubmitGamePage() {
 	const [coop, setCoop] = useState(false);
 	const [racer, setRacer] = useState('');
 	const [video, setVideo] = useState('');
+	const [specialReqs, setSpecialReqs] = useState('');
+	const [estimateError, setEstimateError] = useState(false);
 
 	// Query if able to submit game (has discord)
 	const [queryResult, profileQuery] = useQuery({
@@ -61,7 +65,9 @@ export default function SubmitGamePage() {
 		},
 	});
 
-	const [eventsResult, eventsQuery] = useQuery<{ events: { shortname: string; id: string; submissionInstructions: string }[] }>({
+	const [eventsResult, eventsQuery] = useQuery<{
+		events: { shortname: string; id: string; submissionInstructions: string }[];
+	}>({
 		query: gql`
 			query {
 				events(where: { acceptingSubmissions: { equals: true } }) {
@@ -83,6 +89,7 @@ export default function SubmitGamePage() {
 			$estimate: String
 			$ageRating: SubmissionAgeRatingType!
 			$donationIncentive: String!
+			$specialReqs: String!
 			$race: SubmissionRaceType!
 			$racer: String!
 			$coop: Boolean!
@@ -98,6 +105,7 @@ export default function SubmitGamePage() {
 					estimate: $estimate
 					ageRating: $ageRating
 					donationIncentive: $donationIncentive
+					specialReqs: $specialReqs
 					race: $race
 					racer: $racer
 					coop: $coop
@@ -123,13 +131,14 @@ export default function SubmitGamePage() {
 		setEstimate('');
 		setAgeRating('m_or_lower');
 		setDonationIncentive('');
+		setSpecialReqs('');
 		setRace('no');
 		setRacer('');
 		setCoop(false);
 		setVideo('');
 	}
 
-	if (!eventsResult.fetching && eventsResult.data.events.length === 0) {
+	if (!eventsResult.fetching && eventsResult.data?.events.length === 0) {
 		return (
 			<ThemeProvider theme={theme}>
 				<Head>
@@ -164,6 +173,8 @@ export default function SubmitGamePage() {
 
 	const currentEvent = eventsResult.data?.events.find((eventResult) => eventResult.id === event);
 
+	const canSubmit = game && category && platform && estimate && !estimateError && event;
+
 	return (
 		<ThemeProvider theme={theme}>
 			<Head>
@@ -190,6 +201,7 @@ export default function SubmitGamePage() {
 								estimate,
 								ageRating,
 								donationIncentive,
+								specialReqs,
 								race,
 								racer,
 								coop,
@@ -230,7 +242,11 @@ export default function SubmitGamePage() {
 										required
 									>
 										{eventsResult.data.events.map((event) => {
-											return <MenuItem value={event.id} key={event.id}>{event.shortname}</MenuItem>;
+											return (
+												<MenuItem value={event.id} key={event.id}>
+													{event.shortname}
+												</MenuItem>
+											);
 										})}
 									</Select>
 								</FormControl>
@@ -246,10 +262,20 @@ export default function SubmitGamePage() {
 							/>
 							<TextField
 								value={estimate}
-								onChange={(e) => setEstimate(e.target.value)}
+								onChange={(e) => {
+									setEstimate(e.target.value);
+
+									if (EstimateRegex.test(e.target.value)) {
+										setEstimateError(false);
+									}
+								}}
+								onBlur={() => {
+									setEstimateError(!EstimateRegex.test(estimate));
+								}}
 								label="Estimate"
 								helperText="e.g. 01:20:00 for 1 hour and 20 mins"
 								required
+								error={estimateError}
 							/>
 							<FormControl fullWidth>
 								<InputLabel id="age-rating-label">Age Rating</InputLabel>
@@ -277,6 +303,11 @@ export default function SubmitGamePage() {
 								label="Donation Incentive (Leave blank if none)"
 							/>
 
+							<TextField
+								value={specialReqs}
+								onChange={(e) => setSpecialReqs(e.target.value)}
+								label="Special Requirements to run your game (Leave blank if none)"
+							/>
 							<FormControlLabel
 								control={
 									<Checkbox onChange={(e) => setRace(e.target.checked ? 'solo' : 'no')} checked={race !== 'no'} />
@@ -308,7 +339,7 @@ export default function SubmitGamePage() {
 							<TextField value={video} onChange={(e) => setVideo(e.target.value)} label="Video of the run" required />
 							{submissionResult.error && <h2>{submissionResult.error.message}</h2>}
 							<p>{currentEvent?.submissionInstructions}</p>
-							<Button variant="contained" type="submit">
+							<Button variant="contained" type="submit" disabled={!canSubmit}>
 								Submit
 							</Button>
 						</>

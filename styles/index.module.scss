@@ -1,0 +1,69 @@
+@import './colors.scss';
+@import './responsive.scss';
+
+.archive {
+	width: 100%;
+	height: 28rem;
+	background-image: url('../styles/img/archive.png');
+	background-position: center;
+	background-size: cover;
+	color: $light-text;
+
+	
+	display: flex;
+	justify-content: center;
+
+	.content {
+		width: 100%;
+		padding: 50px 0;
+
+		@include breakpoint($md) {
+			flex-flow: row;
+			max-width: 1158px;
+
+			& > :first-child {
+			  margin-left: 10px;
+			  max-width: 66%;
+			  padding: 0 7%;
+			}
+	  
+			& > :last-child:not(:only-child) {
+				display: inline-block;
+				max-width: 33%;
+			}
+		}
+
+		.filler {
+			display: inline-block;
+			min-width: 66%;
+		}
+
+		.text {
+			// display: inline-block;
+			// max-width: 33%;
+			background-color: rgba(0, 0, 0, 0.733);
+			text-align: right;
+			padding: 25px;
+			// height: 100%;
+
+			// display: flex;
+			// flex-direction: column;
+			// justify-content: center;
+			// gap: 20px;
+
+
+			p {
+				max-width: 400px;
+			}
+
+			.countdown {
+				font-size: 1.75rem;
+				line-height: 3;
+			}
+
+			// a {
+			// 	padding-right: 0;
+			// }
+		}
+	}
+}

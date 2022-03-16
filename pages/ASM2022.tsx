@@ -64,9 +64,11 @@ export default function EventPage() {
 					</div>
 					<div className={styles.moreInfo}>
 						<p>
-							We will be releasing more information about the event soon.
+							The submission will open on the 25th of March and run until the 29th of April. We hope to have the
+							schedule released on the 9th of May.
 							<br />
-							Follow us on Twitter or Join the Discord to be notified as soon as possible!
+							<br />
+							Follow us on Twitter or Join the Discord to stay up to date with all the latest information!
 						</p>
 					</div>
 				</div>
@@ -82,12 +84,17 @@ export default function EventPage() {
 						<span>Submissions period</span>
 						<span>25 March - 29 April</span>
 						<span>Charity</span>
-						<span>Beyond Blue</span>
+						<span>TBA</span>
 					</div>
 				</div>
 			</main>
 			<div className={styles.footer}>
-				<Image src={StockPhoto3} layout="fill" objectFit="cover" alt="Photo of the whole auditorium while the event runs" />
+				<Image
+					src={StockPhoto3}
+					layout="fill"
+					objectFit="cover"
+					alt="Photo of the whole auditorium while the event runs"
+				/>
 			</div>
 			<Footer />
 		</div>

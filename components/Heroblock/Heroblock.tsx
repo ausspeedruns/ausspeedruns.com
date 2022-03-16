@@ -72,12 +72,10 @@ const Heroblock = ({ event }: HeroblockProps) => {
             />
           </h3> */}
 					<p>
-						Australian Speedrunners come together to raise money for Beyond Blue at ASM2022! More details about the event to come soon.
+						Australian Speedrunners come together to raise money for Charity at ASM2022!
 					</p>
 					<p>
-						Not finished watching amazing speedruns? Missed a game you wanted to watch? You can find videos of
-						individual runs from {globals.events.previous.shortName} and our previous events on our Youtube channel.
-					</p>
+Submission are open between 25th of March to the 29th of April. Purchasing tickets to come soon!</p>
 					{showVideoBlock && (
 						<Button
 							actionText="Donate"
@@ -89,11 +87,10 @@ const Heroblock = ({ event }: HeroblockProps) => {
 					)}
 					{!showVideoBlock && (
 						<Button
-							actionText="Watch again"
-							link={globals.socialLinks.youtube}
+							actionText="ASM2022"
+							link={'/ASM2022'}
 							iconRight={faChevronRight}
 							colorScheme={'secondary'}
-              target={'_blank'}
 						/>
 					)}
 				</div>

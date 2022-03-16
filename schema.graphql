@@ -409,6 +409,7 @@ type Submission {
   estimate: String
   ageRating: SubmissionAgeRatingType
   donationIncentive: String
+  specialReqs: String
   race: SubmissionRaceType
   racer: String
   coop: Boolean
@@ -453,6 +454,7 @@ input SubmissionWhereInput {
   estimate: StringFilter
   ageRating: SubmissionAgeRatingTypeNullableFilter
   donationIncentive: StringFilter
+  specialReqs: StringFilter
   race: SubmissionRaceTypeNullableFilter
   racer: StringFilter
   coop: BooleanFilter
@@ -491,6 +493,7 @@ input SubmissionOrderByInput {
   estimate: OrderDirection
   ageRating: OrderDirection
   donationIncentive: OrderDirection
+  specialReqs: OrderDirection
   race: OrderDirection
   racer: OrderDirection
   coop: OrderDirection
@@ -507,6 +510,7 @@ input SubmissionUpdateInput {
   estimate: String
   ageRating: SubmissionAgeRatingType
   donationIncentive: String
+  specialReqs: String
   race: SubmissionRaceType
   racer: String
   coop: Boolean
@@ -541,6 +545,7 @@ input SubmissionCreateInput {
   estimate: String
   ageRating: SubmissionAgeRatingType
   donationIncentive: String
+  specialReqs: String
   race: SubmissionRaceType
   racer: String
   coop: Boolean

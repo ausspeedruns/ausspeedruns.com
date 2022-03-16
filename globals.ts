@@ -16,9 +16,9 @@ export const globals: Globals = {
       }
     },
     current: {
-      fullName: 'ASM 2022',
-      preferredName: 'ASM 2022',
-      shortName: 'ASM 2022',
+      fullName: 'ASM2022',
+      preferredName: 'ASM2022',
+      shortName: 'ASM2022',
       dates: 'July 13 - 17, 2022',
       charity: {
         name: "Beyond Blue"

@@ -57,6 +57,7 @@ model Submission {
   estimate                    String    @default("")
   ageRating                   String?   @default("m_or_lower")
   donationIncentive           String    @default("")
+  specialReqs                 String    @default("")
   race                        String?   @default("no")
   racer                       String    @default("")
   coop                        Boolean   @default(false)

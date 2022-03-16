@@ -41,6 +41,7 @@ export const Submission: Lists.Submission = list({
 			defaultValue: "m_or_lower"
 		}),
 		donationIncentive: text(),
+		specialReqs: text(),
 		race: select({
 			type: 'enum',
 			options: [

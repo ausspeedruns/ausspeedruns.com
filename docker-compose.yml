@@ -1,0 +1,47 @@
+services:
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy:alpine
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - certs:/etc/nginx/certs
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  nginx-proxy-acme:
+    image: nginxproxy/acme-companion
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - acme:/etc/acme.sh
+    environment:
+      - DEFAULT_EMAIL=ewan.lyon@ausspeedruns.com
+  nextjs:
+    image: ausrunswebsitecontainersregistry.azurecr.io/ausruns/next
+    environment:
+      - VIRTUAL_HOST=beta.ausspeedruns.com
+      - LETSENCRYPT_HOST=beta.ausspeedruns.com
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_EMAIL=ewan.lyon@ausspeedruns.com
+  keystone:
+    image: ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone
+    environment:
+      - VIRTUAL_HOST=keystone.ausspeedruns.com
+      - LETSENCRYPT_HOST=keystone.ausspeedruns.com
+      - VIRTUAL_PORT=8000
+      - LETSENCRYPT_EMAIL=ewan.lyon@ausspeedruns.com
+      - AZURE_STORAGE_ACCOUNT_NAME=
+      - AZURE_STORAGE_CONTAINER=
+      - SESSION_SECRET=
+      - AZURE_STORAGE_KEY=
+      - DATABASE_URL=
+      - EMAIL_USER=
+      - EMAIL_PASS=
+
+volumes:
+  certs:
+  vhost:
+  html:
+  acme:

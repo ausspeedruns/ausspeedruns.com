@@ -2,7 +2,7 @@ import { list } from '@keystone-6/core';
 import { checkbox, password, relationship, select, text, timestamp } from '@keystone-6/core/fields';
 import { Lists } from '.keystone/types';
 import { permissions } from './access';
-import { FieldAccessControl } from '@keystone-6/core/types';
+import { FieldAccessControl, KeystoneContextFromListTypeInfo } from '@keystone-6/core/types';
 import { v4 as uuid } from 'uuid';
 
 import { sendEmailVerification } from '../email/emails';
@@ -74,18 +74,7 @@ export const User: Lists.User = list({
 				afterOperation: ({ context, item, operation }) => {
 					if (item.verified || operation !== 'update') return;
 
-					const sudoContext = context.sudo();
-					const verificationID = uuid().replaceAll('-', '');
-
-					sendEmailVerification(item.email, verificationID);
-
-					sudoContext.db.Verification.createOne({
-						data: {
-							account: item.id,
-							code: verificationID,
-						}
-					});
-					sudoContext.exitSudo();
+					SendVerification({ context, item });
 				}
 			}
 		})
@@ -108,19 +97,7 @@ export const User: Lists.User = list({
 					}
 				});
 
-				const sudoContext = context.sudo();
-				const verificationID = uuid().replaceAll('-', '');
-				
-				// console.log(verificationID)
-				sendEmailVerification(item.email, verificationID);
-
-				sudoContext.db.Verification.createOne({
-					data: {
-						account: item.id,
-						code: verificationID,
-					}
-				});
-				sudoContext.exitSudo();
+				SendVerification({ context, item });
 			}
 		}
 	}
@@ -191,3 +168,23 @@ export const Social = list({
 		user: relationship({ ref: 'User.socials' }),
 	}
 });
+
+async function SendVerification(data: { item: Lists.User.TypeInfo['item'], context: KeystoneContextFromListTypeInfo<Lists.User.TypeInfo> }) {
+	const { context, item } = data;
+
+	const sudoContext = context.sudo();
+	const verificationID = uuid().replaceAll('-', '');
+
+	const newVerification = await sudoContext.db.Verification.createOne({
+		data: {
+			account: item.id,
+			code: verificationID,
+		}
+	});
+
+	// console.log(verificationID);
+
+	sendEmailVerification(item.email, newVerification.code);
+
+	sudoContext.exitSudo();
+}

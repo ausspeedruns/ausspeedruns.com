@@ -1,7 +1,7 @@
 
 import { list } from '@keystone-6/core';
 import { Lists } from '.keystone/types';
-import { relationship, text } from '@keystone-6/core/fields';
+import { text } from '@keystone-6/core/fields';
 import { ListFilterAccessControl } from '@keystone-6/core/types';
 import { SessionContext } from './access';
 
@@ -14,7 +14,7 @@ const filterVerification: ListFilterAccessControl<"query", Lists.Verification.Ty
 export const Verification: Lists.Verification = list({
 	access: {
 		operation: {
-			create: () => {return false},
+			create: ({session}) => {return session.data.roles?.some(role => role.admin)},
 			update: ({session}) => {return session.data.roles?.some(role => role.admin)},
 			// delete: () => {return false},
 		},
@@ -34,5 +34,8 @@ export const Verification: Lists.Verification = list({
 				sudoContext.exitSudo();
 			}
 		}
-	}
+	},
+	// graphql: {
+	// 	omit: ['query']
+	// }
 });

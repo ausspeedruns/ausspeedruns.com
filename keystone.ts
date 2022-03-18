@@ -1,4 +1,4 @@
-import { config } from '@keystone-6/core';
+import { config, graphQLSchemaExtension, gql } from '@keystone-6/core';
 import { statelessSessions } from '@keystone-6/core/session';
 import { createAuth } from '@keystone-6/auth';
 
@@ -11,6 +11,7 @@ import { Run } from './schema/runs';
 import { Verification } from './schema/verification';
 
 import { sendForgottenPassword } from './email/emails';
+// import { Context } from '.keystone/types';
 
 import 'dotenv/config';
 import { BaseKeystoneTypeInfo, DatabaseConfig } from '@keystone-6/core/types';
@@ -63,6 +64,20 @@ export default withAuth(
       generateNodeAPI: true,
     },
     lists: { Post, User, Submission, Event, Role, Social, Run, Verification },
+    // extendGraphqlSchema: graphQLSchemaExtension<Context>({
+    //   typeDefs: gql`
+    //     type Query {
+    //       verification(where: VerificationWhereUniqueInput!): Verification
+    //     }
+    //   `,
+    //   resolvers: {
+    //     Query: {
+    //       verification: (source, args, context) => {
+    //         return context.sudo().db.Verification.findOne(args);
+    //       },
+    //     },
+    //   }
+    // }),
     session,
     ui: {
       isAccessAllowed: permissions.canManageContent

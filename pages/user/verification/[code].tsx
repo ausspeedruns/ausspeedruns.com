@@ -38,7 +38,7 @@ export default function Verification() {
 			deleteVerification({ code: router.query.code });
 			router.push('/user/edit-user');
 		}
-	}, [verificationResults]);
+	}, [verificationResults, router, deleteVerification]);
 
 	return (
 		<ThemeProvider theme={theme}>

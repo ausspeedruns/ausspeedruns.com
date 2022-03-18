@@ -4,6 +4,17 @@ import { ItemContext, operations, permissions, SessionContext } from './access';
 import { Lists } from '.keystone/types';
 import { FieldAccessControl } from '@keystone-6/core/types';
 
+function roundUpToNearest5(value: number) {
+	const remainder = value % 5;
+	let round = value;
+
+	if (remainder !== 0) {
+		round += 5 - remainder
+	}
+
+	return round;
+}
+
 export const Submission: Lists.Submission = list({
 	access: {
 		filter: {
@@ -30,7 +41,25 @@ export const Submission: Lists.Submission = list({
 		game: text({ validation: { isRequired: true } }),
 		category: text({ validation: { isRequired: true } }),
 		platform: text({ validation: { isRequired: true } }), // Potentially an enum with "other"?
-		estimate: text({ validation: { isRequired: true, match: { regex: /^\d{2}:\d{2}:\d{2}$/, explanation: 'Estimate invalid. Make sure its like 01:30:00.' } } }),
+		estimate: text({
+			validation: { isRequired: true, match: { regex: /^\d{1,2}:\d{2}:\d{2}$/, explanation: 'Estimate invalid. Make sure its like 01:30:00.' } }, hooks: {
+				resolveInput: ({resolvedData}) => {
+					let mutableEstimate = resolvedData.estimate.split(':');
+					// Hours
+					if (mutableEstimate[0].length === 1) {
+						mutableEstimate[0] = '0' + mutableEstimate[0];
+					}
+
+					// Remove seconds
+					mutableEstimate[2] = '00';
+
+					// Round up mins
+					mutableEstimate[1] = roundUpToNearest5(parseInt(mutableEstimate[1])).toString();
+
+					return mutableEstimate.join(':');
+				}
+			}
+		}),
 		ageRating: select({
 			type: 'enum',
 			options: [

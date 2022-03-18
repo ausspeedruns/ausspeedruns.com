@@ -4,6 +4,7 @@ import { Lists } from '.keystone/types';
 import { permissions } from './access';
 import { FieldAccessControl, KeystoneContextFromListTypeInfo } from '@keystone-6/core/types';
 import { v4 as uuid } from 'uuid';
+import { differenceInMinutes } from 'date-fns';
 
 import { sendEmailVerification } from '../email/emails';
 
@@ -56,6 +57,7 @@ export const User: Lists.User = list({
 		state: select({
 			type: 'enum',
 			options: [
+				{ label: "", value: "none" },
 				{ label: "Victoria", value: "vic" },
 				{ label: "New South Wales", value: "nsw" },
 				{ label: "Queensland", value: "qld" },
@@ -65,12 +67,22 @@ export const User: Lists.User = list({
 				{ label: "Northern Territory", value: "nt" },
 				{ label: "Tasmania", value: "tas" },
 				{ label: "Outside of Australia", value: "outer" },
-			]
+			],
+			defaultValue: "none",
+			db: {
+				isNullable: true
+			}
 		}),
 		// Hacky way to do a server side function
 		sentVerification: timestamp({
 			//defaultValue: { kind: 'now' },
 			hooks: {
+				validateInput: ({ resolvedData, addValidationError }) => {
+					const { sentVerification } = resolvedData;
+					if (differenceInMinutes(new Date(), new Date(sentVerification)) < 15) {
+						addValidationError(`Sending new verification too soon.`);
+					}
+				},
 				afterOperation: ({ context, item, operation }) => {
 					if (item.verified || operation !== 'update') return;
 

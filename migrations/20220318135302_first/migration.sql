@@ -2,7 +2,7 @@
 CREATE TYPE "PostRoleType" AS ENUM ('public', 'runner', 'tech', 'runner_management');
 
 -- CreateEnum
-CREATE TYPE "UserStateType" AS ENUM ('vic', 'nsw', 'qld', 'sa', 'wa', 'act', 'nt', 'tas', 'outer');
+CREATE TYPE "UserStateType" AS ENUM ('none', 'vic', 'nsw', 'qld', 'sa', 'wa', 'act', 'nt', 'tas', 'outer');
 
 -- CreateEnum
 CREATE TYPE "SubmissionAgeRatingType" AS ENUM ('m_or_lower', 'ma15', 'ra18');
@@ -42,8 +42,11 @@ CREATE TABLE "User" (
     "dateOfBirth" TIMESTAMP(3),
     "pronouns" TEXT NOT NULL DEFAULT E'',
     "verified" BOOLEAN NOT NULL DEFAULT false,
-    "state" "UserStateType",
+    "state" "UserStateType" DEFAULT E'none',
     "sentVerification" TIMESTAMP(3),
+    "passwordResetToken" TEXT,
+    "passwordResetIssuedAt" TIMESTAMP(3),
+    "passwordResetRedeemedAt" TIMESTAMP(3),
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -59,6 +62,8 @@ CREATE TABLE "Submission" (
     "estimate" TEXT NOT NULL DEFAULT E'',
     "ageRating" "SubmissionAgeRatingType" DEFAULT E'm_or_lower',
     "donationIncentive" TEXT NOT NULL DEFAULT E'',
+    "specialReqs" TEXT NOT NULL DEFAULT E'',
+    "availability_json" JSONB,
     "race" "SubmissionRaceType" DEFAULT E'no',
     "racer" TEXT NOT NULL DEFAULT E'',
     "coop" BOOLEAN NOT NULL DEFAULT false,
@@ -74,17 +79,18 @@ CREATE TABLE "Event" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL DEFAULT E'',
     "shortname" TEXT NOT NULL DEFAULT E'',
+    "startDate" TIMESTAMP(3),
+    "endDate" TIMESTAMP(3),
     "raised" DOUBLE PRECISION,
     "acceptingSubmissions" BOOLEAN NOT NULL DEFAULT false,
     "logo_filesize" INTEGER,
     "logo_extension" TEXT,
     "logo_width" INTEGER,
     "logo_height" INTEGER,
-    "logo_mode" TEXT,
     "logo_id" TEXT,
-    "pressKit_filesize" INTEGER,
-    "pressKit_mode" TEXT,
     "pressKit_filename" TEXT,
+    "pressKit_filesize" INTEGER,
+    "submissionInstructions" TEXT NOT NULL DEFAULT E'',
 
     CONSTRAINT "Event_pkey" PRIMARY KEY ("id")
 );

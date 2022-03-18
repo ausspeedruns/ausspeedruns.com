@@ -264,7 +264,7 @@ export default function ProfilePage() {
 				</div>
 				{/* Profile Information */}
 				<div className={styles.userInfo}>
-					{userData.state && (
+					{userData?.state !== 'none' && (
 						<>
 							<span>State</span>
 							<span>{StateCodeToString(userData.state)}</span>

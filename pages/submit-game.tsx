@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import {
+	Alert,
 	Button,
 	Checkbox,
 	FormControl,
@@ -12,6 +13,7 @@ import {
 	Radio,
 	RadioGroup,
 	Select,
+	Snackbar,
 	TextField,
 	ThemeProvider,
 } from '@mui/material';
@@ -28,7 +30,7 @@ import DiscordEmbed from '../components/DiscordEmbed';
 type AgeRatingLiterals = 'm_or_lower' | 'ma15' | 'ra18';
 type RaceLiterals = 'no' | 'solo' | 'only';
 
-const EstimateRegex = /^\d{2}:\d{2}:\d{2}$/;
+const EstimateRegex = /^\d{1,2}:\d{2}:\d{2}$/;
 
 function addDays(date: string | number | Date, days: number) {
 	var result = new Date(date);
@@ -53,6 +55,9 @@ export default function SubmitGamePage() {
 	const [specialReqs, setSpecialReqs] = useState('');
 	const [availableDates, setAvailableDates] = useState<boolean[]>([]);
 	const [estimateError, setEstimateError] = useState(false);
+
+	const [canSubmit, setCanSubmit] = useState(false);
+	const [successSubmit, setSuccessSubmit] = useState(false);
 
 	// Query if able to submit game (has discord)
 	const [queryResult, profileQuery] = useQuery({
@@ -135,6 +140,10 @@ export default function SubmitGamePage() {
 		}
 	}, [eventsResult]);
 
+	useEffect(() => {
+		setCanSubmit(game && category && platform && estimate && !estimateError && event && video && availableDates.some((day) => day));
+	}, [game, category, platform, estimate, estimateError, event, video, availableDates]);
+
 	function clearInputs() {
 		setGame('');
 		setCategory('');
@@ -147,6 +156,10 @@ export default function SubmitGamePage() {
 		setRacer('');
 		setCoop(false);
 		setVideo('');
+	}
+
+	function forceCanSubmitUpdate() {
+		setCanSubmit(game && category && platform && estimate && !estimateError && event && video && availableDates.some((day) => day));
 	}
 
 	if (!eventsResult.fetching && eventsResult.data?.events.length === 0) {
@@ -184,9 +197,16 @@ export default function SubmitGamePage() {
 
 	const currentEvent = eventsResult.data?.events.find((eventResult) => eventResult.id === event);
 
-	const canSubmit = game && category && platform && estimate && !estimateError && event && video && availableDates.some(day => day);
-
-	console.log(game, category, platform, estimate, !estimateError, event, video, availableDates.some(day => day))
+	// console.log(
+	// 	game,
+	// 	category,
+	// 	platform,
+	// 	estimate,
+	// 	!estimateError,
+	// 	event,
+	// 	video,
+	// 	availableDates.some((day) => day)
+	// );
 
 	let eventLength = 0;
 	if (currentEvent) {
@@ -208,7 +228,7 @@ export default function SubmitGamePage() {
 							const newDates = availableDates;
 							newDates[i] = e.target.checked;
 							setAvailableDates(newDates);
-							console.log(availableDates)
+							forceCanSubmitUpdate();
 						}}
 					/>
 				}
@@ -254,6 +274,7 @@ export default function SubmitGamePage() {
 								if (!result.error) {
 									clearInputs();
 									window.scrollY = 0;
+									setSuccessSubmit(true);
 								} else {
 									console.error(result.error);
 								}
@@ -316,7 +337,7 @@ export default function SubmitGamePage() {
 									setEstimateError(!EstimateRegex.test(estimate));
 								}}
 								label="Estimate"
-								helperText="e.g. 01:20:00 for 1 hour and 20 mins"
+								helperText="e.g. 01:20:00 for 1 hour and 20 mins. This will get rounded up automatically to the next 5 mins."
 								required
 								error={estimateError}
 							/>
@@ -351,7 +372,7 @@ export default function SubmitGamePage() {
 								onChange={(e) => setSpecialReqs(e.target.value)}
 								label="Special Requirements to run your game (Leave blank if none)"
 							/>
-							<h3>Availability?</h3>
+							<h3>Availability?*</h3>
 							{dateCheckboxes}
 							<br />
 							<FormControlLabel
@@ -391,6 +412,11 @@ export default function SubmitGamePage() {
 						</>
 					)}
 				</form>
+				<Snackbar open={successSubmit} autoHideDuration={6000} onClose={() => setSuccessSubmit(false)}>
+					<Alert onClose={() => setSuccessSubmit(false)} severity="success">
+						Successfully submitted run!
+					</Alert>
+				</Snackbar>
 			</main>
 		</ThemeProvider>
 	);

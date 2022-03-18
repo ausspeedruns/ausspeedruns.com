@@ -131,7 +131,7 @@ export default function EditUser() {
 				socialId,
 				dateOfBirth: new Date(dateOfBirth).toISOString(),
 				twitch,
-				state,
+				state: state ?? 'none',
 			}).then((res) => {
 				if (!res.error) {
 					// setProfileEditing(false);
@@ -206,7 +206,8 @@ export default function EditUser() {
 							/>
 						</LocalizationProvider>
 						<div>State</div>
-						<Select value={state} onChange={(e) => setState(e.target.value)}>
+						<Select value={state ?? 'none'} onChange={(e) => setState(e.target.value)}>
+							<MenuItem value="none"><i>No state</i></MenuItem>
 							<MenuItem value="vic">Victoria</MenuItem>
 							<MenuItem value="nsw">New South Wales</MenuItem>
 							<MenuItem value="qld">Queensland</MenuItem>

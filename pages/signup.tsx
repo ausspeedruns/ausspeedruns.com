@@ -9,17 +9,15 @@ import Navbar from '../components/Navbar/Navbar';
 import styles from '../styles/SignIn.module.scss';
 import { theme } from '../components/mui-theme';
 import DiscordEmbed from '../components/DiscordEmbed';
-
-function calculateAge(birthday: number) {
-	var ageDifMs = Date.now() - birthday;
-	var ageDate = new Date(ageDifMs); // miliseconds from epoch
-	return Math.abs(ageDate.getUTCFullYear() - 1970);
-}
+import { LocalizationProvider, DatePicker } from '@mui/lab';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import sub from 'date-fns/sub';
+import enLocale from 'date-fns/locale/en-AU';
 
 export default function SignUpPage() {
 	const [{ error, data }, signup] = useMutation(gql`
-		mutation ($username: String!, $email: String!, $password: String!) {
-			createUser(data: { username: $username, email: $email, password: $password }) {
+		mutation ($username: String!, $email: String!, $password: String!, $dob: DateTime!) {
+			createUser(data: { username: $username, email: $email, password: $password, dateOfBirth: $dob }) {
 				__typename
 				id
 			}
@@ -32,13 +30,14 @@ export default function SignUpPage() {
 	const [username, setUsername] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [dob, setDob] = useState(new Date().toLocaleDateString().split('/').reverse().join('-'));
+	const [dob, setDob] = useState(undefined);
+
+	const maxDate = sub(new Date(), { years: 13 });
 
 	const canSignUp =
 		!Boolean(username) ||
 		!Boolean(email) ||
-		password.length < 8 ||
-		calculateAge(new Date(dob).getTime()) < 13;
+		password.length < 8;
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -52,7 +51,7 @@ export default function SignUpPage() {
 				<form
 					onSubmit={(event) => {
 						event.preventDefault();
-						signup({ username, email, password }).then((result) => {
+						signup({ username, email, password, dob }).then((result) => {
 							if (result.data?.createUser) {
 								// FIXME: there's a cache issue with Urql where it's not reloading the
 								// current user properly if we do a client-side redirect here.
@@ -90,15 +89,18 @@ export default function SignUpPage() {
 						variant="outlined"
 						label="Username"
 					/>
-					<TextField
-						value={dob}
-						onChange={(e) => {
-							setDob(e.target.value);
-						}}
-						variant="outlined"
-						label="Date of Birth"
-						type="date"
-					/>
+					<LocalizationProvider dateAdapter={AdapterDateFns} locale={enLocale}>
+						<DatePicker
+							value={dob}
+							onChange={(newValue) => {
+								setDob(newValue);
+							}}
+							openTo={'year'}
+							maxDate={maxDate}
+							renderInput={(params) => <TextField {...params} />}
+							views={['year', 'month', 'day']}
+						/>
+					</LocalizationProvider>
 					<Button type="submit" variant="contained" disabled={canSignUp}>
 						Sign Up
 					</Button>

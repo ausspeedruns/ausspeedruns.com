@@ -5,13 +5,19 @@
 	flex-direction: column;
 	align-items: center;
 
+	.return {
+		color: $dark-text;
+		text-decoration: none;
+		margin-top: 16px;
+	}
+
 	.profileInformation {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 5px 0px;
 		grid-auto-flow: row;
 		align-items: baseline;
-		margin: 1rem 0 2rem 0;
+		margin-bottom: 2rem;
 	}
 
 	h3 {
@@ -23,7 +29,6 @@
 		font-size: 1.5rem;
 		text-decoration: none;
 		color: $primary;
-		margin: 1rem 0;
 
 		&:hover {
 			color: lighten($primary, 10%);

@@ -107,7 +107,7 @@ const Navbar = ({ isLive }: NavbarProps) => {
 							</Link>
 						</li>
 						<li className="social">
-							<a href={globals.socialLinks.twitch}>
+							<a href={globals.socialLinks.twitch} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faTwitch} />
 								<a className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Follow us on Twitch</a>
 							</a>
@@ -119,25 +119,25 @@ const Navbar = ({ isLive }: NavbarProps) => {
               </a>
             </li> */}
 						<li className="social">
-							<a href={globals.socialLinks.twitter}>
+							<a href={globals.socialLinks.twitter} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faTwitter} />
 								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Follow us on Twitter</span>
 							</a>
 						</li>
 						<li className="social">
-							<a href={globals.socialLinks.youtube}>
+							<a href={globals.socialLinks.youtube} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faYoutube} />
 								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Subscribe to AusSpeedruns</span>
 							</a>
 						</li>
 						<li className="social">
-							<a href={globals.socialLinks.discord}>
+							<a href={globals.socialLinks.discord} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faDiscord} />
 								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Join us on Discord</span>
 							</a>
 						</li>
 						<li className="social">
-							<a href={globals.socialLinks.instagram}>
+							<a href={globals.socialLinks.instagram} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faInstagram} />
 								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Follow us on Instagram</span>
 							</a>

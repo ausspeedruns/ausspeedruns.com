@@ -8,6 +8,13 @@ import Navbar from '../../components/Navbar/Navbar';
 import { useAuth } from '../../components/auth';
 import { theme } from '../../components/mui-theme';
 import DiscordEmbed from '../../components/DiscordEmbed';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Link from 'next/link';
+import { DatePicker, LocalizationProvider } from '@mui/lab';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import enLocale from 'date-fns/locale/en-AU';
+import sub from 'date-fns/sub';
 
 const DiscordRegex = /^.{3,32}#[0-9]{4}$/;
 const TwitterRegex = /^@(\w){1,15}$/;
@@ -30,7 +37,7 @@ export default function EditUser() {
 	const [discord, setDiscord] = useState('');
 	const [twitter, setTwitter] = useState('');
 	const [twitch, setTwitch] = useState('');
-	const [dateOfBirth, setDateOfBirth] = useState('');
+	const [dateOfBirth, setDateOfBirth] = useState<Date>(undefined);
 	const [verified, setVerified] = useState(false);
 
 	const [queryResult, profileQuery] = useQuery({
@@ -68,10 +75,11 @@ export default function EditUser() {
 			$twitter: String!
 			$twitch: String!
 			$dateOfBirth: DateTime!
+			$state: UserStateType!
 		) {
 			updateUser(
 				where: { id: $userId }
-				data: { name: $name, username: $username, pronouns: $pronouns, dateOfBirth: $dateOfBirth }
+				data: { name: $name, pronouns: $pronouns, dateOfBirth: $dateOfBirth, state: $state }
 			) {
 				__typename
 			}
@@ -107,7 +115,6 @@ export default function EditUser() {
 	}, [queryResult]);
 
 	const disableSave =
-		!Boolean(username) ||
 		!Boolean(email) ||
 		(twitter !== '' && !TwitterRegex.test(twitter)) ||
 		(discord !== '' && !DiscordRegex.test(discord));
@@ -124,6 +131,7 @@ export default function EditUser() {
 				socialId,
 				dateOfBirth: new Date(dateOfBirth).toISOString(),
 				twitch,
+				state,
 			}).then((res) => {
 				if (!res.error) {
 					// setProfileEditing(false);
@@ -144,6 +152,8 @@ export default function EditUser() {
 		}
 	}
 
+	const maxDate = sub(new Date(), { years: 13 });
+
 	return (
 		<ThemeProvider theme={theme}>
 			<Head>
@@ -153,84 +163,93 @@ export default function EditUser() {
 			<Navbar />
 			<div className={styles.content}>
 				<h1>{username}</h1>
+				<Link href={`/user/${username}`} passHref>
+					<a className={styles.return}>
+						<FontAwesomeIcon icon={faChevronLeft} /> Return
+					</a>
+				</Link>
 				{(queryResult.fetching || queryResult.data?.user === null) && <CircularProgress />}
 				{queryResult.error && <h2>{queryResult.error.message}</h2>}
 				{updateResult.error && <h2>{updateResult.error.message}</h2>}
 				{updateResult.data && <h2>Profile updated!</h2>}
 				{queryResult.data?.user && (
-					<>
-						<div className={styles.profileInformation}>
-							{!verified && (
-								<>
-									<div>Email not verified!</div>
-									<Button variant="contained" onClick={sendVerification}>Send verification</Button>
-								</>
-							)}
-							<h3>Personal Information</h3>
-							<div />
-							{/* <div>Username</div>
+					<div className={styles.profileInformation}>
+						{!verified && (
+							<>
+								<div>Email not verified!</div>
+								<Button variant="contained" onClick={sendVerification}>
+									Send verification
+								</Button>
+							</>
+						)}
+						<h3>Personal Information</h3>
+						<div />
+						{/* <div>Username</div>
 							<TextField required value={username} onChange={(e) => setUsername(e.target.value)} variant={'outlined'} /> */}
-							<div>Name</div>
-							<TextField value={name} onChange={(e) => setName(e.target.value)} variant={'outlined'} />
-							<div>Email{verified ? ' ✓' : ''}</div>
-							<TextField disabled value={email} variant={'outlined'} />
-							<div>Pronouns</div>
-							<TextField value={pronouns} onChange={(e) => setPronouns(e.target.value)} variant={'outlined'} />
-							<div>Date of birth</div>
-							<div style={{ display: 'flex', justifyContent: 'center' }}>
-								<Input
-									fullWidth
-									type="date"
-									onChange={(e) => setDateOfBirth(e.target.value)}
-									value={new Date(dateOfBirth).toLocaleDateString().split('/').reverse().join('-')}
-								/>
-							</div>
-							<div>State</div>
-							<Select value={state} onChange={(e) => setState(e.target.value)}>
-								<MenuItem value="vic">Victoria</MenuItem>
-								<MenuItem value="nsw">New South Wales</MenuItem>
-								<MenuItem value="qld">Queensland</MenuItem>
-								<MenuItem value="sa">South Australia</MenuItem>
-								<MenuItem value="nt">Northern Territory</MenuItem>
-								<MenuItem value="act">ACT</MenuItem>
-								<MenuItem value="tas">Tasmania</MenuItem>
-								<MenuItem value="wa">Western Australia</MenuItem>
-								<MenuItem value="outer">Outside of Australia</MenuItem>
-							</Select>
+						<div>Name</div>
+						<TextField value={name} onChange={(e) => setName(e.target.value)} variant={'outlined'} />
+						<div>Email{verified ? ' ✓' : ''}</div>
+						<TextField disabled value={email} variant={'outlined'} />
+						<div>Pronouns</div>
+						<TextField value={pronouns} onChange={(e) => setPronouns(e.target.value)} variant={'outlined'} />
+						<div>Date of birth</div>
+						<LocalizationProvider dateAdapter={AdapterDateFns} locale={enLocale}>
+							<DatePicker
+								value={dateOfBirth}
+								onChange={(newValue) => {
+									setDateOfBirth(newValue);
+								}}
+								openTo={'year'}
+								maxDate={maxDate}
+								renderInput={(params) => <TextField {...params} />}
+								views={['year', 'month', 'day']}
+							/>
+						</LocalizationProvider>
+						<div>State</div>
+						<Select value={state} onChange={(e) => setState(e.target.value)}>
+							<MenuItem value="vic">Victoria</MenuItem>
+							<MenuItem value="nsw">New South Wales</MenuItem>
+							<MenuItem value="qld">Queensland</MenuItem>
+							<MenuItem value="sa">South Australia</MenuItem>
+							<MenuItem value="nt">Northern Territory</MenuItem>
+							<MenuItem value="act">ACT</MenuItem>
+							<MenuItem value="tas">Tasmania</MenuItem>
+							<MenuItem value="wa">Western Australia</MenuItem>
+							<MenuItem value="outer">Outside of Australia</MenuItem>
+						</Select>
 
-							<h3>Socials</h3>
-							<div />
-							<div>Discord</div>
-							<TextField
-								error={discordWarning}
-								helperText="e.g. Clubwho#1337"
-								label={discordWarning ? 'Error' : undefined}
-								value={discord}
-								variant={'outlined'}
-								onChange={(e) => setDiscord(e.target.value)}
-								onBlur={(e) => setDiscordWarning(!DiscordRegex.test(e.target.value) && e.target.value !== '')}
-							/>
-							<div>Twitter</div>
-							<TextField
-								error={twitterWarning}
-								helperText="e.g. @Clubwhom"
-								label={twitterWarning ? 'Error' : undefined}
-								value={twitter}
-								variant={'outlined'}
-								onChange={(e) => setTwitter(e.target.value)}
-								onBlur={(e) => setTwitterWarning(!TwitterRegex.test(e.target.value) && e.target.value !== '')}
-							/>
-							<div>Twitch</div>
-							<TextField
-								error={twitchWarning}
-								label={twitchWarning ? 'Error' : undefined}
-								value={twitch}
-								variant={'outlined'}
-								onChange={(e) => setTwitch(e.target.value)}
-								onBlur={(e) => setTwitchWarning(!TwitchRegex.test(e.target.value) && e.target.value !== '')}
-							/>
-						</div>
-					</>
+						<h3>Socials</h3>
+						<div />
+						<div>Discord</div>
+						<TextField
+							error={discordWarning}
+							helperText="e.g. Clubwho#1337"
+							label={discordWarning ? 'Error' : undefined}
+							value={discord}
+							variant={'outlined'}
+							onChange={(e) => setDiscord(e.target.value)}
+							onBlur={(e) => setDiscordWarning(!DiscordRegex.test(e.target.value) && e.target.value !== '')}
+						/>
+						<div>Twitter</div>
+						<TextField
+							error={twitterWarning}
+							helperText="e.g. @Clubwhom"
+							label={twitterWarning ? 'Error' : undefined}
+							value={twitter}
+							variant={'outlined'}
+							onChange={(e) => setTwitter(e.target.value)}
+							onBlur={(e) => setTwitterWarning(!TwitterRegex.test(e.target.value) && e.target.value !== '')}
+						/>
+						<div>Twitch</div>
+						<TextField
+							error={twitchWarning}
+							label={twitchWarning ? 'Error' : undefined}
+							value={twitch}
+							variant={'outlined'}
+							onChange={(e) => setTwitch(e.target.value)}
+							onBlur={(e) => setTwitchWarning(!TwitchRegex.test(e.target.value) && e.target.value !== '')}
+						/>
+					</div>
 				)}
 				<Button variant="contained" disabled={disableSave} onClick={UpdateProfileButton}>
 					Save

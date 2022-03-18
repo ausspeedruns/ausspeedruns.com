@@ -36,7 +36,7 @@ const Footer = (props: FooterProps) => {
         <div className={`content ${styles.content}`}>
 					<ul>
 						<li className="social">
-							<a href={globals.socialLinks.twitch}>
+							<a href={globals.socialLinks.twitch} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faTwitch} />
 								<span className={styles.text}>Follow us on Twitch</span>
 							</a>
@@ -48,25 +48,25 @@ const Footer = (props: FooterProps) => {
               </a>
             </li> */}
 						<li className="social">
-							<a href={globals.socialLinks.twitter}>
+							<a href={globals.socialLinks.twitter} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faTwitter} />
 								<span className={styles.text}>Follow us on Twitter</span>
 							</a>
 						</li>
 						<li className="social">
-							<a href={globals.socialLinks.youtube}>
+							<a href={globals.socialLinks.youtube} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faYoutube} />
 								<span className={styles.text}>Subscribe on Youtube</span>
 							</a>
 						</li>
 						<li className="social">
-							<a href={globals.socialLinks.discord}>
+							<a href={globals.socialLinks.discord} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faDiscord} />
 								<span className={styles.text}>Join us on Discord</span>
 							</a>
 						</li>
 						<li className="social">
-							<a href={globals.socialLinks.instagram}>
+							<a href={globals.socialLinks.instagram} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faInstagram} />
 								<span className={styles.text}>Follow us on Instagram</span>
 							</a>

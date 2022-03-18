@@ -29,6 +29,7 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.env
 
 # vercel
 .vercel
@@ -39,4 +40,9 @@ app.db
 public/images
 public/files
 
-.env
+# I have no idea how to setup secrets so I just dont push this
+docker-compose.yml
+
+# Azurite Emulator
+__azurite_db_blob__.json
+__azurite_db_blob_extent__.json

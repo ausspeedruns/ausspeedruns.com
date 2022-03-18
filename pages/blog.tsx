@@ -25,13 +25,22 @@ type Post = {
 	role: string;
 };
 
-function reduceRoles(roles: { canReadRunnerInfo: boolean; canReadRunnerMgmt: boolean; canReadTech: boolean }[]) {
-	return roles.reduce((prev, current) => {
-		prev.canReadRunnerInfo ||= current.canReadRunnerInfo;
-		prev.canReadRunnerMgmt ||= current.canReadRunnerMgmt;
-		prev.canReadTech ||= current.canReadTech;
-		return prev;
-	});
+interface SessionRoles {
+	canReadRunnerInfo: boolean;
+	canReadRunnerMgmt: boolean;
+	canReadTech: boolean;
+}
+
+function reduceRoles(roles: SessionRoles[]) {
+	return roles.reduce(
+		(prev, current) => {
+			prev.canReadRunnerInfo ||= current.canReadRunnerInfo;
+			prev.canReadRunnerMgmt ||= current.canReadRunnerMgmt;
+			prev.canReadTech ||= current.canReadTech;
+			return prev;
+		},
+		{ canReadRunnerInfo: false, canReadRunnerMgmt: false, canReadTech: false }
+	);
 }
 
 export default function BlogPage() {

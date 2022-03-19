@@ -77,9 +77,9 @@ export const User: Lists.User = list({
 		sentVerification: timestamp({
 			//defaultValue: { kind: 'now' },
 			hooks: {
-				validateInput: ({ resolvedData, addValidationError }) => {
+				validateInput: ({ resolvedData, addValidationError, item }) => {
 					const { sentVerification } = resolvedData;
-					if (differenceInMinutes(new Date(), new Date(sentVerification)) < 15) {
+					if (item.sentVerification && differenceInMinutes(new Date(sentVerification), new Date(item.sentVerification)) < 15) {
 						addValidationError(`Sending new verification too soon.`);
 					}
 				},
@@ -194,7 +194,7 @@ async function SendVerification(data: { item: Lists.User.TypeInfo['item'], conte
 		}
 	});
 
-	// console.log(verificationID);
+	console.log(`${item.email} | ${item.id} | ${verificationID} | ${newVerification.code}`);
 
 	sendEmailVerification(item.email, newVerification.code);
 

@@ -56,6 +56,10 @@ export const Submission: Lists.Submission = list({
 					// Round up mins
 					mutableEstimate[1] = roundUpToNearest5(parseInt(mutableEstimate[1])).toString();
 
+					if (mutableEstimate[1].length === 1) {
+						mutableEstimate[1] = '0' + mutableEstimate[1];
+					}
+
 					return mutableEstimate.join(':');
 				}
 			}

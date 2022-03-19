@@ -14,6 +14,18 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import sub from 'date-fns/sub';
 import enLocale from 'date-fns/locale/en-AU';
 
+function HumanErrorMsg(error: string) {
+	switch (error) {
+		case '[GraphQL] Prisma error: Unique constraint failed on the fields: (`email`)':
+			return 'Error: Email already in use';
+		case '[GraphQL] Prisma error: Unique constraint failed on the fields: (`username`)':
+			return 'Error: Username already in use';
+
+		default:
+			return error;
+	}
+}
+
 export default function SignUpPage() {
 	const [{ error, data }, signup] = useMutation(gql`
 		mutation ($username: String!, $email: String!, $password: String!, $dob: DateTime!) {
@@ -34,10 +46,7 @@ export default function SignUpPage() {
 
 	const maxDate = sub(new Date(), { years: 13 });
 
-	const canSignUp =
-		!Boolean(username) ||
-		!Boolean(email) ||
-		password.length < 8;
+	const canSignUp = !Boolean(username) || !Boolean(email) || password.length < 8 || maxDate > new Date();
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -61,7 +70,7 @@ export default function SignUpPage() {
 						});
 					}}
 				>
-					{error && <div>{error.toString()}</div>}
+					{error && <div>{HumanErrorMsg(error.message)}</div>}
 					<TextField
 						value={email}
 						onChange={(e) => {
@@ -99,6 +108,7 @@ export default function SignUpPage() {
 							maxDate={maxDate}
 							renderInput={(params) => <TextField {...params} />}
 							views={['year', 'month', 'day']}
+							label="Date of Birth"
 						/>
 					</LocalizationProvider>
 					<Button type="submit" variant="contained" disabled={canSignUp}>

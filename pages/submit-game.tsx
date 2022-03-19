@@ -38,6 +38,17 @@ function addDays(date: string | number | Date, days: number) {
 	return result;
 }
 
+function HumanErrorMsg(error: string) {
+	// console.log(error.replace(/(\r\n|\n|\r)/gm, ""));
+	switch (error.replace(/(\r\n|\n|\r)/gm, "")) {
+		case `[GraphQL] You provided invalid data for this operation.  - Submission.estimate: Estimate invalid. Make sure its like 01:30:00.`:
+			return "Error: Estimate invalid. Make sure it's like HH:MM:SS. e.g. 01:30:00"
+	
+		default:
+			return error;
+	}
+}
+
 export default function SubmitGamePage() {
 	const auth = useAuth();
 
@@ -237,6 +248,8 @@ export default function SubmitGamePage() {
 		);
 	}
 
+	console.log(estimate, EstimateRegex.test(estimate));
+
 	return (
 		<ThemeProvider theme={theme}>
 			<Head>
@@ -337,7 +350,7 @@ export default function SubmitGamePage() {
 									setEstimateError(!EstimateRegex.test(estimate));
 								}}
 								label="Estimate"
-								helperText="e.g. 01:20:00 for 1 hour and 20 mins. This will get rounded up automatically to the next 5 mins."
+								helperText="e.g. 01:20:00 for 1 hour and 20 mins. This will automatically get rounded up the next 5 mins."
 								required
 								error={estimateError}
 							/>
@@ -404,8 +417,8 @@ export default function SubmitGamePage() {
 								</>
 							)}
 							<TextField value={video} onChange={(e) => setVideo(e.target.value)} label="Video of the run" required />
-							{submissionResult.error && <h2>{submissionResult.error.message}</h2>}
 							<p>{currentEvent?.submissionInstructions}</p>
+							{submissionResult.error && <h2>{HumanErrorMsg(submissionResult.error.message)}</h2>}
 							<Button variant="contained" type="submit" disabled={!canSubmit}>
 								Submit
 							</Button>

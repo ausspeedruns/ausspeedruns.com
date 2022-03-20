@@ -18,7 +18,7 @@ function RaceTypeLabels(raceType: string) {
 		case 'solo':
 			return 'Can run solo';
 		case 'only':
-			return 'Only run as race/coop';
+			return 'Only run as race/co-op';
 		default:
 			return `Unknown race type (${raceType})`;
 	}

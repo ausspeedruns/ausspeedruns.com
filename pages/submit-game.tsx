@@ -77,9 +77,7 @@ export default function SubmitGamePage() {
 				user(where: { id: $userId }) {
 					verified
 					dateOfBirth
-					socials {
-						discord
-					}
+					discord
 				}
 			}
 		`,
@@ -295,7 +293,7 @@ export default function SubmitGamePage() {
 						}
 					}}
 				>
-					{!queryResult?.data?.user?.socials?.discord ||
+					{!queryResult?.data?.user?.discord ||
 					!queryResult.data.user.verified ||
 					!queryResult.data.user.dateOfBirth ? (
 						<>
@@ -329,12 +327,14 @@ export default function SubmitGamePage() {
 								</FormControl>
 							)}
 
-							<TextField value={game} onChange={(e) => setGame(e.target.value)} label="Game Name" required />
-							<TextField value={category} onChange={(e) => setCategory(e.target.value)} label="Category" required />
+							<TextField value={game} onChange={(e) => setGame(e.target.value)} label="Game Name" autoComplete="game" inputProps={{ maxLength: 100 }} required />
+							<TextField value={category} onChange={(e) => setCategory(e.target.value)} label="Category" autoComplete="category" inputProps={{ maxLength: 100 }} required />
 							<TextField
 								value={platform}
 								onChange={(e) => setPlatform(e.target.value)}
 								label="Platform/Console"
+								autoComplete="platform"
+								inputProps={{ maxLength: 100 }}
 								required
 							/>
 							<TextField
@@ -352,6 +352,7 @@ export default function SubmitGamePage() {
 								label="Estimate"
 								helperText="e.g. 01:20:00 for 1 hour and 20 mins. This will automatically get rounded up the next 5 mins."
 								required
+								autoComplete="off"
 								error={estimateError}
 							/>
 							<FormControl fullWidth>
@@ -378,12 +379,16 @@ export default function SubmitGamePage() {
 								value={donationIncentive}
 								onChange={(e) => setDonationIncentive(e.target.value)}
 								label="Donation Incentive (Leave blank if none)"
+								autoComplete="off"
+								inputProps={{ maxLength: 100 }} 
 							/>
 
 							<TextField
 								value={specialReqs}
 								onChange={(e) => setSpecialReqs(e.target.value)}
 								label="Special Requirements to run your game (Leave blank if none)"
+								autoComplete="off"
+								inputProps={{ maxLength: 100 }} 
 							/>
 							<h3>Availability?*</h3>
 							{dateCheckboxes}
@@ -392,7 +397,7 @@ export default function SubmitGamePage() {
 								control={
 									<Checkbox onChange={(e) => setRace(e.target.checked ? 'solo' : 'no')} checked={race !== 'no'} />
 								}
-								label="Submit as a race/coop?"
+								label="Submit as a race/co-op?"
 							/>
 
 							{race !== 'no' && (
@@ -403,20 +408,20 @@ export default function SubmitGamePage() {
 									/>
 									<FormControl>
 										{/* Don't think "type" is a good descriptor */}
-										<FormLabel id="race-type-label">Race/Coop Type</FormLabel>
+										<FormLabel id="race-type-label">Race/Co-op Type</FormLabel>
 										<RadioGroup
 											aria-labelledby="race-type-label"
 											value={race}
 											onChange={(e) => setRace(e.target.value as RaceLiterals)}
 										>
 											<FormControlLabel value="solo" control={<Radio />} label="Possible to do solo" />
-											<FormControlLabel value="only" control={<Radio />} label="Only race/coop" />
+											<FormControlLabel value="only" control={<Radio />} label="Only race/co-op" />
 										</RadioGroup>
 									</FormControl>
-									<TextField value={racer} onChange={(e) => setRacer(e.target.value)} label="Name of other runner(s)" />
+									<TextField value={racer} onChange={(e) => setRacer(e.target.value)} label="Name of other runner(s)" autoComplete="off" inputProps={{ maxLength: 100 }} />
 								</>
 							)}
-							<TextField value={video} onChange={(e) => setVideo(e.target.value)} label="Video of the run" required />
+							<TextField value={video} onChange={(e) => setVideo(e.target.value)} label="Video of the run" autoComplete="off" inputProps={{ maxLength: 100 }} required />
 							<p>{currentEvent?.submissionInstructions}</p>
 							{submissionResult.error && <h2>{HumanErrorMsg(submissionResult.error.message)}</h2>}
 							<Button variant="contained" type="submit" disabled={!canSubmit}>

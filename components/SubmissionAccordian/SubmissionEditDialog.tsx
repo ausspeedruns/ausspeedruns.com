@@ -166,25 +166,25 @@ const SubmissionEditDialog = ({ open, submission, handleClose }: SubmissionEditP
 
 				<FormControlLabel
 					control={<Checkbox onChange={(e) => setRace(e.target.checked ? 'solo' : 'no')} checked={race !== 'no'} />}
-					label="Race/coop?"
+					label="Race/co-op?"
 				/>
 
 				{race !== 'no' && (
 					<>
 						<FormControlLabel
 							control={<Checkbox onChange={(e) => setCoop(e.target.checked)} checked={coop} />}
-							label="Coop"
+							label="Co-op"
 						/>
 						<FormControl>
 							{/* Don't think "type" is a good descriptor */}
-							<FormLabel id="race-type-label">Race/Coop Type</FormLabel>
+							<FormLabel id="race-type-label">Race/Co-op Type</FormLabel>
 							<RadioGroup
 								aria-labelledby="race-type-label"
 								value={race}
 								onChange={(e) => setRace(e.target.value as RaceLiterals)}
 							>
 								<FormControlLabel value="solo" control={<Radio />} label="Possible to do solo" />
-								<FormControlLabel value="only" control={<Radio />} label="Only race/coop" />
+								<FormControlLabel value="only" control={<Radio />} label="Only race/co-op" />
 							</RadioGroup>
 						</FormControl>
 						<TextField value={racer} onChange={(e) => setRacer(e.target.value)} label="Name of other player(s)" />

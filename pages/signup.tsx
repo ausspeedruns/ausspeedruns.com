@@ -26,6 +26,8 @@ function HumanErrorMsg(error: string) {
 	}
 }
 
+const UsernameRegex = /^[a-zA-Z0-9_][\w]{2,24}$/;
+
 export default function SignUpPage() {
 	const [{ error, data }, signup] = useMutation(gql`
 		mutation ($username: String!, $email: String!, $password: String!, $dob: DateTime!) {
@@ -46,7 +48,7 @@ export default function SignUpPage() {
 	const [dob, setDob] = useState(maxDate);
 	
 
-	const cantSignUp = !Boolean(username) || !Boolean(email)|| !Boolean(dob) || password.length < 8 || maxDate < new Date(dob);
+	const cantSignUp = !Boolean(username) || !Boolean(email)|| !Boolean(dob) || password.length < 8 || maxDate < new Date(dob) || !UsernameRegex.test(username);
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -79,6 +81,7 @@ export default function SignUpPage() {
 						variant="outlined"
 						label="Email"
 						type="email"
+						autoComplete="email"
 					/>
 					<TextField
 						value={password}
@@ -89,6 +92,7 @@ export default function SignUpPage() {
 						label="Password"
 						type="password"
 						helperText="Minimum 8 characters"
+						autoComplete="password"
 					/>
 					<TextField
 						value={username}
@@ -97,6 +101,9 @@ export default function SignUpPage() {
 						}}
 						variant="outlined"
 						label="Username"
+						error={!UsernameRegex.test(username) && username.length !== 0}
+						helperText="Letters, numbers and underscore allowed. 3-25 Characters."
+						inputProps={{ maxLength: 25 }}
 					/>
 					<LocalizationProvider dateAdapter={AdapterDateFns} locale={enLocale}>
 						<DatePicker

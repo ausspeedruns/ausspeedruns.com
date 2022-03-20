@@ -33,7 +33,6 @@ export default function EditUser() {
 	const [email, setEmail] = useState('');
 	const [state, setState] = useState('');
 	const [pronouns, setPronouns] = useState('');
-	const [socialId, setSocialId] = useState('');
 	const [discord, setDiscord] = useState('');
 	const [twitter, setTwitter] = useState('');
 	const [twitch, setTwitch] = useState('');
@@ -51,12 +50,9 @@ export default function EditUser() {
 					pronouns
 					state
 					verified
-					socials {
-						id
-						discord
-						twitter
-						twitch
-					}
+					discord
+					twitter
+					twitch
 				}
 			}
 		`,
@@ -70,7 +66,6 @@ export default function EditUser() {
 			$userId: ID
 			$name: String!
 			$pronouns: String!
-			$socialId: ID
 			$discord: String!
 			$twitter: String!
 			$twitch: String!
@@ -79,12 +74,16 @@ export default function EditUser() {
 		) {
 			updateUser(
 				where: { id: $userId }
-				data: { name: $name, pronouns: $pronouns, dateOfBirth: $dateOfBirth, state: $state }
+				data: {
+					name: $name
+					pronouns: $pronouns
+					dateOfBirth: $dateOfBirth
+					state: $state
+					discord: $discord
+					twitter: $twitter
+					twitch: $twitch
+				}
 			) {
-				__typename
-			}
-
-			updateSocial(where: { id: $socialId }, data: { discord: $discord, twitter: $twitter, twitch: $twitch }) {
 				__typename
 			}
 		}
@@ -105,11 +104,10 @@ export default function EditUser() {
 			setEmail(queryResult.data.user.email);
 			setPronouns(queryResult.data.user.pronouns);
 			setState(queryResult.data.user.state);
-			setSocialId(queryResult.data.user.socials.id);
-			setDiscord(queryResult.data.user.socials.discord);
-			setTwitter(queryResult.data.user.socials.twitter);
+			setDiscord(queryResult.data.user.discord);
+			setTwitter(queryResult.data.user.twitter);
 			setDateOfBirth(queryResult.data.user.dateOfBirth);
-			setTwitch(queryResult.data.user.socials.twitch);
+			setTwitch(queryResult.data.user.twitch);
 			setVerified(queryResult.data.user.verified);
 		}
 	}, [queryResult]);
@@ -128,7 +126,6 @@ export default function EditUser() {
 				pronouns,
 				discord,
 				twitter,
-				socialId,
 				dateOfBirth: new Date(dateOfBirth).toISOString(),
 				twitch,
 				state: state ?? 'none',
@@ -187,11 +184,23 @@ export default function EditUser() {
 						{/* <div>Username</div>
 							<TextField required value={username} onChange={(e) => setUsername(e.target.value)} variant={'outlined'} /> */}
 						<div>Name</div>
-						<TextField value={name} onChange={(e) => setName(e.target.value)} variant={'outlined'} />
+						<TextField
+							value={name}
+							onChange={(e) => setName(e.target.value)}
+							variant={'outlined'}
+							autoComplete="name"
+							inputProps={{ maxLength: 100 }}
+						/>
 						<div>Email{verified ? ' ✓' : ''}</div>
-						<TextField disabled value={email} variant={'outlined'} />
+						<TextField disabled value={email} variant={'outlined'} autoComplete="email" />
 						<div>Pronouns</div>
-						<TextField value={pronouns} onChange={(e) => setPronouns(e.target.value)} variant={'outlined'} />
+						<TextField
+							value={pronouns}
+							onChange={(e) => setPronouns(e.target.value)}
+							variant={'outlined'}
+							autoComplete="pronouns"
+							inputProps={{ maxLength: 100 }}
+						/>
 						<div>Date of birth</div>
 						<LocalizationProvider dateAdapter={AdapterDateFns} locale={enLocale}>
 							<DatePicker
@@ -207,7 +216,9 @@ export default function EditUser() {
 						</LocalizationProvider>
 						<div>State</div>
 						<Select value={state ?? 'none'} onChange={(e) => setState(e.target.value)}>
-							<MenuItem value="none"><i>No state</i></MenuItem>
+							<MenuItem value="none">
+								<i>No state</i>
+							</MenuItem>
 							<MenuItem value="vic">Victoria</MenuItem>
 							<MenuItem value="nsw">New South Wales</MenuItem>
 							<MenuItem value="qld">Queensland</MenuItem>
@@ -224,22 +235,24 @@ export default function EditUser() {
 						<div>Discord</div>
 						<TextField
 							error={discordWarning}
-							helperText="e.g. Clubwho#1337"
+							helperText="e.g. AusSpeedruns#1337"
 							label={discordWarning ? 'Error' : undefined}
 							value={discord}
 							variant={'outlined'}
 							onChange={(e) => setDiscord(e.target.value)}
 							onBlur={(e) => setDiscordWarning(!DiscordRegex.test(e.target.value) && e.target.value !== '')}
+							autoComplete="discord"
 						/>
 						<div>Twitter</div>
 						<TextField
 							error={twitterWarning}
-							helperText="e.g. @Clubwhom"
+							helperText="e.g. @AusSpeedruns"
 							label={twitterWarning ? 'Error' : undefined}
 							value={twitter}
 							variant={'outlined'}
 							onChange={(e) => setTwitter(e.target.value)}
 							onBlur={(e) => setTwitterWarning(!TwitterRegex.test(e.target.value) && e.target.value !== '')}
+							autoComplete="twitter"
 						/>
 						<div>Twitch</div>
 						<TextField
@@ -249,6 +262,8 @@ export default function EditUser() {
 							variant={'outlined'}
 							onChange={(e) => setTwitch(e.target.value)}
 							onBlur={(e) => setTwitchWarning(!TwitchRegex.test(e.target.value) && e.target.value !== '')}
+							helperText="e.g. AusSpeedruns"
+							autoComplete="twitch"
 						/>
 					</div>
 				)}

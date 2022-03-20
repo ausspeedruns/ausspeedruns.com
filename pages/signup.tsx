@@ -39,14 +39,14 @@ export default function SignUpPage() {
 		}
 	`);
 
+	const maxDate = sub(new Date(), { years: 13 });
 	const [username, setUsername] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [dob, setDob] = useState(undefined);
+	const [dob, setDob] = useState(maxDate);
+	
 
-	const maxDate = sub(new Date(), { years: 13 });
-
-	const canSignUp = !Boolean(username) || !Boolean(email) || password.length < 8 || maxDate > new Date();
+	const cantSignUp = !Boolean(username) || !Boolean(email)|| !Boolean(dob) || password.length < 8 || maxDate < new Date(dob);
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -111,7 +111,7 @@ export default function SignUpPage() {
 							label="Date of Birth"
 						/>
 					</LocalizationProvider>
-					<Button type="submit" variant="contained" disabled={canSignUp}>
+					<Button type="submit" variant="contained" disabled={cantSignUp}>
 						Sign Up
 					</Button>
 				</form>

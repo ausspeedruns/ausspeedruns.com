@@ -160,7 +160,13 @@ const Navbar = ({ isLive }: NavbarProps) => {
 										link={`/user/${auth.sessionData.username}`}
 										colorScheme={'orange'}
 									/>
-									<a className={styles.signout} onClick={() => auth.signOut()}>
+									<a
+										className={styles.signout}
+										onClick={() => {
+											auth.signOut();
+											top.location.href = '/';
+										}}
+									>
 										Sign out
 									</a>
 								</>

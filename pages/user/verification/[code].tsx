@@ -8,9 +8,11 @@ import { theme } from '../../../components/mui-theme';
 import Navbar from '../../../components/Navbar/Navbar';
 import { Button, ThemeProvider } from '@mui/material';
 import styles from '../../../styles/User.Verification.code.module.scss';
+import { useAuth } from '../../../components/auth';
 
 export default function Verification() {
 	const router = useRouter();
+	const auth = useAuth();
 
 	const [verificationResults, requery] = useQuery({
 		query: gql`
@@ -36,9 +38,13 @@ export default function Verification() {
 	useEffect(() => {
 		if (!verificationResults.fetching && verificationResults.data.verification) {
 			deleteVerification({ code: router.query.code });
-			router.push('/user/edit-user');
+			if (auth.ready && auth.sessionData) {
+				router.push('/');
+			} else {
+				router.push('/signin');
+			}
 		}
-	}, [verificationResults, router, deleteVerification]);
+	}, [verificationResults, router, deleteVerification, auth]);
 
 	return (
 		<ThemeProvider theme={theme}>

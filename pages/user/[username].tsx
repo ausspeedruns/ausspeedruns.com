@@ -21,11 +21,9 @@ export type UserPageData = {
 	username: string;
 	pronouns?: string;
 	state?: string;
-	socials: {
-		discord?: string;
-		twitter?: string;
-		twitch?: string;
-	};
+	discord?: string;
+	twitter?: string;
+	twitch?: string;
 	roles: {
 		id: string;
 		name: string;
@@ -121,10 +119,8 @@ export default function ProfilePage() {
 					username
 					pronouns
 					state
-					socials {
-						discord
-						twitter
-					}
+					discord
+					twitter
 					roles(where: { show: { equals: true } }) {
 						id
 						name

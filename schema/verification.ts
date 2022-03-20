@@ -5,11 +5,12 @@ import { text } from '@keystone-6/core/fields';
 import { ListFilterAccessControl } from '@keystone-6/core/types';
 import { SessionContext } from './access';
 
-const filterVerification: ListFilterAccessControl<"query", Lists.Verification.TypeInfo> = ({ session }: SessionContext) => {
-	if (!session?.data) return false;
-	if (session.data.roles?.some(role => role.admin)) return true;
-	return { account: { equals: session?.data.id } };
-}
+// const filterVerification: ListFilterAccessControl<"query", Lists.Verification.TypeInfo> = ({ session }: SessionContext) => {
+// 	// if (!session?.data) return false;
+// 	// if (session.data.roles?.some(role => role.admin)) return true;
+// 	// return { account: { equals: session?.data.id } };
+// 	return true;
+// }
 
 export const Verification: Lists.Verification = list({
 	access: {
@@ -18,9 +19,9 @@ export const Verification: Lists.Verification = list({
 			update: ({session}) => {return session.data.roles?.some(role => role.admin)},
 			// delete: () => {return false},
 		},
-		filter: {
-			query: filterVerification
-		}
+		// filter: {
+		// 	query: filterVerification
+		// }
 	},
 	fields: {
 		code: text({isIndexed: 'unique'}),
@@ -35,7 +36,7 @@ export const Verification: Lists.Verification = list({
 			}
 		}
 	},
-	// graphql: {
-	// 	omit: ['query']
-	// }
+	graphql: {
+		omit: ['query']
+	}
 });

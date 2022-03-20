@@ -2,7 +2,7 @@ import { config, graphQLSchemaExtension, gql } from '@keystone-6/core';
 import { statelessSessions } from '@keystone-6/core/session';
 import { createAuth } from '@keystone-6/auth';
 
-import { Role, Social, User } from './schema/user';
+import { Role, User } from './schema/user';
 import { Submission } from './schema/submission';
 import { Event } from './schema/event';
 import { Post } from './schema/post';
@@ -11,7 +11,7 @@ import { Run } from './schema/runs';
 import { Verification } from './schema/verification';
 
 import { sendForgottenPassword } from './email/emails';
-// import { Context } from '.keystone/types';
+import { Context } from '.keystone/types';
 
 import 'dotenv/config';
 import { BaseKeystoneTypeInfo, DatabaseConfig } from '@keystone-6/core/types';
@@ -54,7 +54,7 @@ const { withAuth } = createAuth({
   },
 });
 
-const database: DatabaseConfig<BaseKeystoneTypeInfo> = process.env.NODE_ENV === "production" ? { provider: 'postgresql', url: process.env.DATABASE_URL } : { provider: 'sqlite', url: 'file:./app.db' };
+const database: DatabaseConfig<BaseKeystoneTypeInfo> = process.env.NODE_ENV === "production" ? { provider: 'postgresql', url: process.env.DATABASE_URL, enableLogging: true } : { provider: 'sqlite', url: 'file:./app.db' };
 
 export default withAuth(
   config({
@@ -63,21 +63,37 @@ export default withAuth(
       generateNextGraphqlAPI: true,
       generateNodeAPI: true,
     },
-    lists: { Post, User, Submission, Event, Role, Social, Run, Verification },
-    // extendGraphqlSchema: graphQLSchemaExtension<Context>({
-    //   typeDefs: gql`
-    //     type Query {
-    //       verification(where: VerificationWhereUniqueInput!): Verification
-    //     }
-    //   `,
-    //   resolvers: {
-    //     Query: {
-    //       verification: (source, args, context) => {
-    //         return context.sudo().db.Verification.findOne(args);
-    //       },
-    //     },
-    //   }
-    // }),
+    lists: { Post, User, Submission, Event, Role, Run, Verification },
+    extendGraphqlSchema: graphQLSchemaExtension<Context>({
+      typeDefs: gql`
+        type Query {
+          verification(where: VerificationWhereUniqueInput!): Verification
+        }
+      `,
+      resolvers: {
+        Query: {
+          verification: async (source, args, context) => {
+            // Super duper hacky way but oh well
+            try {
+              if (!args?.where?.code) {
+                return null;
+              }
+  
+              const itemArr = await context.sudo().db.Verification.findMany({where: {code: {equals: args.where.code}}});
+  
+              if (itemArr.length === 1) {
+                return itemArr[0];
+              }
+  
+              return null;
+            } catch (error) {
+              console.log(error);
+              return null;
+            }
+          },
+        },
+      }
+    }),
     session,
     ui: {
       isAccessAllowed: permissions.canManageContent

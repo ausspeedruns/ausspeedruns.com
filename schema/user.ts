@@ -42,17 +42,16 @@ export const User: Lists.User = list({
 		}
 	},
 	fields: {
-		name: text({ access: fieldAccess.editSelfOrHidden, ui: { itemView: { fieldMode: fieldModes.editSelfOrHidden } } }),
-		username: text({ isIndexed: 'unique', validation: { isRequired: true }, access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
+		name: text({ access: fieldAccess.editSelfOrHidden, validation: { length: { max: 100 } }, ui: { itemView: { fieldMode: fieldModes.editSelfOrHidden } } }),
+		username: text({ isIndexed: 'unique', validation: { isRequired: true, match: { regex: /^[a-zA-Z0-9_][\w]{2,24}$/, explanation: 'Username must be 3-25 characters long and can only have: letters, numbers and underscore' } }, access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
 		email: text({ isIndexed: 'unique', validation: { isRequired: true }, access: fieldAccess.editSelfOrHidden, ui: { itemView: { fieldMode: fieldModes.editSelfOrHidden } } }),
 		password: password({ validation: { isRequired: true } }),
 		accountCreated: timestamp({ defaultValue: { kind: 'now' }, access: fieldAccess.readSelfOrHidden }),
 		dateOfBirth: timestamp({ access: fieldAccess.editSelfOrHidden, ui: { itemView: { fieldMode: fieldModes.editSelfOrHidden } } }),
-		pronouns: text({ access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
-		socials: relationship({ ref: 'Social.user', access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
+		pronouns: text({ access: fieldAccess.editSelfOrRead, validation: { length: { max: 100 } }, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
 		submissions: relationship({ ref: 'Submission.runner', many: true, access: fieldAccess.editSelfOrRead, ui: { itemView: { fieldMode: fieldModes.editSelfOrRead } } }),
-		roles: relationship({ ref: 'Role.users', many: true }),
-		runs: relationship({ ref: 'Run.runners', many: true }),
+		roles: relationship({ ref: 'Role.users', many: true, access: { update: ({ session }) => permissions.canManageUsers({ session }) } }),
+		runs: relationship({ ref: 'Run.runners', many: true, access: { update: ({ session }) => permissions.canManageUsers({ session }) } }),
 		verified: checkbox({ defaultValue: false, access: { update: ({ session }) => permissions.canManageUsers({ session }) } }),
 		state: select({
 			type: 'enum',
@@ -89,7 +88,35 @@ export const User: Lists.User = list({
 					SendVerification({ context, item });
 				}
 			}
-		})
+		}),
+		// SOCIALS
+		discord: text({
+			validation: {
+				isRequired: false,
+				match: {
+					regex: /(^.{3,32}#[0-9]{4}$)?/,
+					explanation: `Discord user ID is invalid. Make sure its like "Clubwho#1337".`
+				}
+			}
+		}),
+		twitter: text({
+			validation: {
+				isRequired: false,
+				match: {
+					regex: /(^@(\w){1,15}$)?/,
+					explanation: `Twitter handle is invalid. Make sure its like "@Clubwhom".`
+				}
+			}
+		}),
+		twitch: text({
+			validation: {
+				isRequired: false,
+				match: {
+					regex: /(^[a-zA-Z0-9][\w]{2,24}$)?/,
+					explanation: `Twitch name is invalid.`
+				}
+			}
+		}),
 	},
 	ui: {
 		labelField: 'username'
@@ -103,12 +130,6 @@ export const User: Lists.User = list({
 		},
 		afterOperation: ({ operation, item, context }) => {
 			if (operation === 'create') {
-				context.db.Social.createOne({
-					data: {
-						user: { connect: { id: item.id } }
-					}
-				});
-
 				SendVerification({ context, item });
 			}
 		}
@@ -148,39 +169,6 @@ export const Role = list({
 	},
 });
 
-export const Social = list({
-	fields: {
-		discord: text({
-			validation: {
-				isRequired: false,
-				match: {
-					regex: /(^.{3,32}#[0-9]{4}$)?/,
-					explanation: `Discord user ID is invalid. Make sure its like "Clubwho#1337".`
-				}
-			}
-		}),
-		twitter: text({
-			validation: {
-				isRequired: false,
-				match: {
-					regex: /(^@(\w){1,15}$)?/,
-					explanation: `Twitter handle is invalid. Make sure its like "@Clubwhom".`
-				}
-			}
-		}),
-		twitch: text({
-			validation: {
-				isRequired: false,
-				match: {
-					regex: /(^[a-zA-Z0-9][\w]{2,24}$)?/,
-					explanation: `Twitch name is invalid.`
-				}
-			}
-		}),
-		user: relationship({ ref: 'User.socials' }),
-	}
-});
-
 async function SendVerification(data: { item: Lists.User.TypeInfo['item'], context: KeystoneContextFromListTypeInfo<Lists.User.TypeInfo> }) {
 	const { context, item } = data;
 
@@ -194,7 +182,9 @@ async function SendVerification(data: { item: Lists.User.TypeInfo['item'], conte
 		}
 	});
 
-	console.log(`${item.email} | ${item.id} | ${verificationID} | ${newVerification.code}`);
+	console.log(`${item.email} | ${item.id} | ${verificationID}`);
+
+	// console.log(await sudoContext.db.Verification.findMany());
 
 	sendEmailVerification(item.email, newVerification.code);
 

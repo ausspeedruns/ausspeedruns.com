@@ -1,5 +1,7 @@
 const path = require('path');
-
+require("dotenv").config();
+// console.log(process.env);
+// console.log(process.env.NODE_ENV === 'production' ? `https://keystone.ausspeedruns.com/api/graphql` : `http://localhost:8000/api/graphql`);
 module.exports = {
 	reactStrictMode: true,
 	sassOptions: {
@@ -10,7 +12,7 @@ module.exports = {
 			{
 				source: '/api/graphql',
 				// destination: `http://localhost:8000/api/graphql`,
-       			destination: `https://keystone.ausspeedruns.com/api/graphql`,
+       			destination: process.env.NODE_ENV === 'production' ? `https://keystone.ausspeedruns.com/api/graphql` : `http://localhost:8000/api/graphql`,
 			},
 		];
 	},

@@ -38,12 +38,12 @@ export const Submission: Lists.Submission = list({
 	fields: {
 		runner: relationship({ ref: 'User.submissions', ui: { hideCreate: true, labelField: 'username' } }),
 		created: timestamp({ defaultValue: { kind: 'now' } }),
-		game: text({ validation: { isRequired: true } }),
-		category: text({ validation: { isRequired: true } }),
-		platform: text({ validation: { isRequired: true } }), // Potentially an enum with "other"?
+		game: text({ validation: { isRequired: true, length: { min: 1, max: 100 } } }),
+		category: text({ validation: { isRequired: true, length: { min: 1, max: 100 } } }),
+		platform: text({ validation: { isRequired: true, length: { min: 1, max: 100 } } }), // Potentially an enum with "other"?
 		estimate: text({
 			validation: { isRequired: true, match: { regex: /^\d{1,2}:\d{2}:\d{2}$/, explanation: 'Estimate invalid. Make sure its like 01:30:00.' } }, hooks: {
-				resolveInput: ({resolvedData}) => {
+				resolveInput: ({ resolvedData }) => {
 					let mutableEstimate = resolvedData.estimate.split(':');
 					// Hours
 					if (mutableEstimate[0].length === 1) {
@@ -73,8 +73,8 @@ export const Submission: Lists.Submission = list({
 			],
 			defaultValue: "m_or_lower"
 		}),
-		donationIncentive: text(),
-		specialReqs: text(),
+		donationIncentive: text({ validation: { length: { max: 100 } } }),
+		specialReqs: text({ validation: { length: { max: 100 } } }),
 		availability: json({ db: { map: 'availability_json' } }),
 		race: select({
 			type: 'enum',
@@ -85,9 +85,9 @@ export const Submission: Lists.Submission = list({
 			],
 			defaultValue: "no"
 		}),
-		racer: text(),
+		racer: text({ validation: { length: { max: 100 } } }),
 		coop: checkbox(),
-		video: text({ validation: { isRequired: true } }),
+		video: text({ validation: { isRequired: true, length: { max: 100 } } }),
 		status: select({
 			type: 'enum',
 			options: [

@@ -92,7 +92,7 @@ export default function BlogPage() {
 	}, [blogResults]);
 
 	return (
-		<div>
+		<div className={styles.app}>
 			<Head>
 				<title>Blog - AusSpeedruns</title>
 				<DiscordEmbed title="Blog - AusSpeedruns" description="AusSpeedruns blog" pageUrl="/blog" />

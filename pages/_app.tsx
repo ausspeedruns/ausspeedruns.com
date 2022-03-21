@@ -4,6 +4,7 @@ import '../styles/App.scss';
 import { createClient, Provider } from 'urql';
 
 import { AuthProvider } from '../components/auth';
+import CookieConsent from 'react-cookie-consent';
 
 export const client = createClient({
 	url: typeof window === undefined ? 'http://localhost:8000/api/graphql' : '/api/graphql',
@@ -14,6 +15,9 @@ function MyApp({ Component, pageProps }) {
 		<Provider value={client}>
 			<AuthProvider>
 				<Component {...pageProps} />
+				<CookieConsent debug buttonStyle={{ background: '#CC7722', color: '#FFFFFF' }}>
+					This website uses cookies to function.
+				</CookieConsent>
 			</AuthProvider>
 		</Provider>
 	);

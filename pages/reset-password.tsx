@@ -12,7 +12,7 @@ import DiscordEmbed from '../components/DiscordEmbed';
 import { useMutation } from 'urql';
 import { gql } from '@keystone-6/core';
 
-export const ForgotPasswordPage: React.FC = () => {
+export const ResetPasswordPage: React.FC = () => {
 	const [email, setEmail] = useState('');
 	const [error, setError] = useState('');
 	const [spinner, setSpinner] = useState(false);
@@ -51,16 +51,16 @@ export const ForgotPasswordPage: React.FC = () => {
 	return (
 		<ThemeProvider theme={theme}>
 			<Head>
-				<title>Forgot Password - AusSpeedruns</title>
+				<title>Reset Password - AusSpeedruns</title>
 				<DiscordEmbed
-					title="Forgot Password - AusSpeedruns"
-					description="Forgot Password to AusSpeedruns"
+					title="Reset Password - AusSpeedruns"
+					description="Reset Password to AusSpeedruns"
 					pageUrl="/signin"
 				/>
 			</Head>
 			<Navbar />
 			<div className={`${styles.content} ${styles.form}`}>
-				<h1>Forgot Password</h1>
+				<h1>Reset Password</h1>
 				<form
 					onSubmit={(event) => {
 						event.preventDefault();
@@ -89,4 +89,4 @@ export const ForgotPasswordPage: React.FC = () => {
 	);
 };
 
-export default ForgotPasswordPage;
+export default ResetPasswordPage;

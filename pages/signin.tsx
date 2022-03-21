@@ -106,7 +106,7 @@ export const SignInPage: React.FC = () => {
 				</form>
 				<hr />
 				<Link href="/signup">Want to join instead?</Link>
-				<Link href="/forgot-password">Forgot password?</Link>
+				<Link href="/reset-password">Forgot password?</Link>
 			</div>
 		</ThemeProvider>
 	);

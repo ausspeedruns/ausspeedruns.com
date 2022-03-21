@@ -128,9 +128,17 @@ export const User: Lists.User = list({
 				addValidationError(`Username cannot be ${username}`);
 			}
 		},
-		afterOperation: ({ operation, item, context }) => {
+		afterOperation: ({ operation, item, context, originalItem }) => {
 			if (operation === 'create') {
 				SendVerification({ context, item });
+			}
+
+			if (operation === 'update') {
+				// New email
+				if (item.email !== originalItem.email) {
+					context.sudo().db.User.updateOne({ where: { id: item.id }, data: { verified: false } });
+					SendVerification({ context, item });
+				}
 			}
 		}
 	}

@@ -1,10 +1,10 @@
 import mjml2html from 'mjml';
 
-export function generateForgottenPassword(email: string, code: string) {
+export function generateResetPassword(email: string, code: string) {
 	const { html } = mjml2html(`
 		<mjml>
 			<mj-head>
-				<mj-title>AusSpeedruns forgotten password</mj-title>
+				<mj-title>AusSpeedruns reset password</mj-title>
 				<mj-preview>Your link to reset your password is...</mj-preview>
 				<mj-style>
 				  .shadow {
@@ -20,7 +20,7 @@ export function generateForgottenPassword(email: string, code: string) {
 				</mj-section>
 				<mj-section padding="16px" background-color="#FFFFFF" css-class="shadow">
 					<mj-column>
-						<mj-text font-weight="bold" font-size="20px">AusSpeedruns forgotten password</mj-text>
+						<mj-text font-weight="bold" font-size="20px">AusSpeedruns reset password</mj-text>
 						<mj-text><a style="color: inherit;" href="https://beta.ausspeedruns.com/user/password-reset/${code}?email=${encodeURI(email)}">Reset password</a></mj-text>
 						<mj-text>If you did not request this then you can ignore it.</mj-text>
 						<mj-text>

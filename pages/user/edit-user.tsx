@@ -65,6 +65,7 @@ export default function EditUser() {
 		mutation UpdateProfile(
 			$userId: ID
 			$name: String!
+			$email: String!
 			$pronouns: String!
 			$discord: String!
 			$twitter: String!
@@ -76,6 +77,7 @@ export default function EditUser() {
 				where: { id: $userId }
 				data: {
 					name: $name
+					email: $email
 					pronouns: $pronouns
 					dateOfBirth: $dateOfBirth
 					state: $state
@@ -122,7 +124,7 @@ export default function EditUser() {
 			updateProfile({
 				userId: auth.sessionData.id,
 				name,
-				// email,
+				email,
 				pronouns,
 				discord,
 				twitter,
@@ -192,7 +194,12 @@ export default function EditUser() {
 							inputProps={{ maxLength: 100 }}
 						/>
 						<div>Email{verified ? ' ✓' : ''}</div>
-						<TextField disabled value={email} variant={'outlined'} autoComplete="email" />
+						<TextField
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							variant={'outlined'}
+							autoComplete="email"
+						/>
 						<div>Pronouns</div>
 						<TextField
 							value={pronouns}
@@ -229,7 +236,7 @@ export default function EditUser() {
 							<MenuItem value="wa">Western Australia</MenuItem>
 							<MenuItem value="outer">Outside of Australia</MenuItem>
 						</Select>
-
+						<Link href="/reset-password">Reset password</Link><div/>
 						<h3>Socials</h3>
 						<div />
 						<div>Discord</div>

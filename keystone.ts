@@ -10,7 +10,7 @@ import { permissions, rules } from './schema/access';
 import { Run } from './schema/runs';
 import { Verification } from './schema/verification';
 
-import { sendForgottenPassword } from './email/emails';
+import { sendResetPassword } from './email/emails';
 import { Context } from '.keystone/types';
 
 import 'dotenv/config';
@@ -31,7 +31,7 @@ const { withAuth } = createAuth({
       // console.log(identity);
       // console.log(token);
       // console.log('----------------------------------------------');
-      sendForgottenPassword(identity, token);
+      sendResetPassword(identity, token);
     }
   },
   initFirstItem: {

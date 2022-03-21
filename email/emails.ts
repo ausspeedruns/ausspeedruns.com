@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import { generateVerification } from './verification';
-import { generateForgottenPassword } from './forgot-password';
+import { generateResetPassword } from './reset-password';
 
 const transport = nodemailer.createTransport({
 	pool: true,
@@ -14,7 +14,7 @@ const transport = nodemailer.createTransport({
 });
 
 export async function sendEmailVerification(email: string, verificationCode: string) {
-	const html = await generateVerification(verificationCode);
+	const html = generateVerification(verificationCode);
 	// Text is meant to not have indenting since then the tabs are in the text too lol
 	let message = {
 		from: 'noreply@ausspeedruns.com',
@@ -39,14 +39,14 @@ ausspeedruns.com`,
 	});
 }
 
-export async function sendForgottenPassword(email: string, resetCode: string) {
-	const html = await generateForgottenPassword(email, resetCode);
+export async function sendResetPassword(email: string, resetCode: string) {
+	const html = generateResetPassword(email, resetCode);
 	// Text is meant to not have indenting since then the tabs are in the text too lol
 	let message = {
 		from: 'noreply@ausspeedruns.com',
 		to: email,
-		subject: 'AusSpeedruns forgotten password',
-		text: `AusSpeedruns forgotten password
+		subject: 'AusSpeedruns reset password',
+		text: `AusSpeedruns reset password
 
 Link to reset password: https://ausspeedruns.com/user/password-reset/${resetCode}?email=${encodeURI(email)}
 

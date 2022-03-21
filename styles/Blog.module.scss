@@ -2,7 +2,14 @@
 @import './colors.scss';
 @import './responsive.scss';
 
+.app {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
 .content {
+	margin-top: 0;
 	flex-direction: column;
 
 	h1 {
@@ -102,7 +109,5 @@
 }
 
 .footer {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
+	margin-top: auto;
 }

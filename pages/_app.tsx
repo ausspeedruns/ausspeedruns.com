@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }) {
 		<Provider value={client}>
 			<AuthProvider>
 				<Component {...pageProps} />
-				<CookieConsent debug buttonStyle={{ background: '#CC7722', color: '#FFFFFF' }}>
+				<CookieConsent buttonStyle={{ background: '#CC7722', color: '#FFFFFF' }}>
 					This website uses cookies to function.
 				</CookieConsent>
 			</AuthProvider>

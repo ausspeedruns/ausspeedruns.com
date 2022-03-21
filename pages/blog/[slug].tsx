@@ -99,5 +99,5 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
 	if (!post) {
 		return { notFound: true };
 	}
-	return { props: { post } };
+	return { props: { post }, revalidate: 60 };
 }

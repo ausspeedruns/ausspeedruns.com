@@ -17,7 +17,8 @@ import 'dotenv/config';
 import { BaseKeystoneTypeInfo, DatabaseConfig } from '@keystone-6/core/types';
 
 const session = statelessSessions({
-  secret: process.env.SESSION_SECRET
+  secret: process.env.SESSION_SECRET,
+  maxAge: 60 * 60 * 24 * 30 // 30 Days
 });
 
 const { withAuth } = createAuth({
@@ -54,7 +55,7 @@ const { withAuth } = createAuth({
   },
 });
 
-const database: DatabaseConfig<BaseKeystoneTypeInfo> = process.env.NODE_ENV === "production" ? { provider: 'postgresql', url: process.env.DATABASE_URL, enableLogging: true } : { provider: 'sqlite', url: 'file:./app.db' };
+const database: DatabaseConfig<BaseKeystoneTypeInfo> = process.env.NODE_ENV === "production" ? { provider: 'postgresql', url: process.env.DATABASE_URL } : { provider: 'sqlite', url: 'file:./app.db' };
 
 export default withAuth(
   config({

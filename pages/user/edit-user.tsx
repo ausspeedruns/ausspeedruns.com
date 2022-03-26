@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { gql, useMutation, useQuery } from 'urql';
 import Head from 'next/head';
-import { Button, CircularProgress, TextField, ThemeProvider, Input, Select, MenuItem } from '@mui/material';
+import {
+	Button,
+	CircularProgress,
+	TextField,
+	ThemeProvider,
+	Input,
+	Select,
+	MenuItem,
+	Alert,
+	Snackbar,
+} from '@mui/material';
 
 import styles from '../../styles/User.EditUser.module.scss';
 import Navbar from '../../components/Navbar/Navbar';
@@ -38,6 +48,9 @@ export default function EditUser() {
 	const [twitch, setTwitch] = useState('');
 	const [dateOfBirth, setDateOfBirth] = useState<Date>(undefined);
 	const [verified, setVerified] = useState(false);
+
+	const [sendVerificationSnack, setSendVerificationSnack] = useState(false);
+	const [sendVerificationSnackError, setSendVerificationSnackError] = useState(false);
 
 	const [queryResult, profileQuery] = useQuery({
 		query: gql`
@@ -98,6 +111,22 @@ export default function EditUser() {
 			}
 		}
 	`);
+
+	useEffect(() => {
+		console.log(updateVerificationTimeResult)
+		if (updateVerificationTimeResult.error) {
+			if (updateVerificationTimeResult.error.message === `[GraphQL] You provided invalid data for this operation.\n  - User.sentVerification: Sending new verification too soon.`) {
+				setSendVerificationSnack(true);
+				setSendVerificationSnackError(true);
+				console.log('Setting true')
+			}
+		}
+
+		if (updateVerificationTimeResult.data?.__typename === 'Verification') {
+			setSendVerificationSnack(true);
+			setSendVerificationSnackError(false);
+		}
+	}, [updateVerificationTimeResult]);
 
 	useEffect(() => {
 		if (!queryResult.fetching && queryResult.data?.user) {
@@ -236,7 +265,8 @@ export default function EditUser() {
 							<MenuItem value="wa">Western Australia</MenuItem>
 							<MenuItem value="outer">Outside of Australia</MenuItem>
 						</Select>
-						<Link href="/reset-password">Reset password</Link><div/>
+						<Link href="/reset-password">Reset password</Link>
+						<div />
 						<h3>Socials</h3>
 						<div />
 						<div>Discord</div>
@@ -278,6 +308,17 @@ export default function EditUser() {
 					Save
 				</Button>
 			</div>
+			<Snackbar open={sendVerificationSnack} autoHideDuration={10000} onClose={() => setSendVerificationSnack(false)}>
+				{sendVerificationSnackError ? (
+					<Alert onClose={() => setSendVerificationSnack(false)} variant="filled" severity="error">
+						Must wait 15 mins before sending another verification.
+					</Alert>
+				) : (
+					<Alert onClose={() => setSendVerificationSnack(false)} variant="filled" severity="success">
+						Verification email sent!
+					</Alert>
+				)}
+			</Snackbar>
 		</ThemeProvider>
 	);
 }

@@ -26,17 +26,12 @@ import Navbar from '../components/Navbar/Navbar';
 import LinkButton from '../components/Button/Button';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import DiscordEmbed from '../components/DiscordEmbed';
+import {addDays, differenceInDays} from 'date-fns';
 
 type AgeRatingLiterals = 'm_or_lower' | 'ma15' | 'ra18';
 type RaceLiterals = 'no' | 'solo' | 'only';
 
 const EstimateRegex = /^\d{1,2}:\d{2}:\d{2}$/;
-
-function addDays(date: string | number | Date, days: number) {
-	var result = new Date(date);
-	result.setDate(result.getDate() + days);
-	return result;
-}
 
 function HumanErrorMsg(error: string) {
 	// console.log(error.replace(/(\r\n|\n|\r)/gm, ""));
@@ -87,7 +82,7 @@ export default function SubmitGamePage() {
 	});
 
 	const [eventsResult, eventsQuery] = useQuery<{
-		events: { shortname: string; id: string; submissionInstructions: string; startDate: string; endDate: string }[];
+		events: { shortname: string; id: string; submissionInstructions: string; startDate: string; endDate: string; eventTimezone: string }[];
 	}>({
 		query: gql`
 			query {
@@ -97,6 +92,7 @@ export default function SubmitGamePage() {
 					submissionInstructions
 					startDate
 					endDate
+					eventTimezone
 				}
 			}
 		`,
@@ -219,15 +215,12 @@ export default function SubmitGamePage() {
 
 	let eventLength = 0;
 	if (currentEvent) {
-		eventLength =
-			// Subtract the two dates, add one since off by one error and divide days between
-			(new Date(currentEvent.endDate).getTime() - new Date(currentEvent.startDate).getTime() + 60 * 60 * 24 * 1000) /
-			(60 * 60 * 24 * 1000);
+		eventLength = differenceInDays(new Date(currentEvent.endDate), new Date(currentEvent.startDate)) + 1;
 	}
 
 	let dateCheckboxes = [];
 	for (let i = 0; i < eventLength; i++) {
-		const date = addDays(currentEvent.startDate, i);
+		const date = addDays(new Date(currentEvent.startDate), i);
 		dateCheckboxes.push(
 			<FormControlLabel
 				key={i}
@@ -241,12 +234,10 @@ export default function SubmitGamePage() {
 						}}
 					/>
 				}
-				label={date.toLocaleDateString('en-AU', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' })}
+				label={date.toLocaleDateString('en-AU', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric', timeZone: currentEvent.eventTimezone || 'Australia/Melbourne'  })}
 			/>
 		);
 	}
-
-	console.log(estimate, EstimateRegex.test(estimate));
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -431,7 +422,7 @@ export default function SubmitGamePage() {
 					)}
 				</form>
 				<Snackbar open={successSubmit} autoHideDuration={6000} onClose={() => setSuccessSubmit(false)}>
-					<Alert onClose={() => setSuccessSubmit(false)} severity="success">
+					<Alert onClose={() => setSuccessSubmit(false)} variant="filled" severity="success">
 						Successfully submitted run!
 					</Alert>
 				</Snackbar>

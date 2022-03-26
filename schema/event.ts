@@ -18,6 +18,7 @@ export const Event: Lists.Event = list({
 		shortname: text({ isIndexed: 'unique' }),
 		startDate: timestamp(),
 		endDate: timestamp(),
+		eventTimezone: text({label: 'Timezones in format of TZ database name: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'}),
 		raised: float(),
 		submissions: relationship({ ref: 'Submission.event', many: true, access: operations.admin }),
 		runs: relationship({ ref: 'Run.event', many: true }),

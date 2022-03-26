@@ -75,7 +75,7 @@ const Heroblock = ({ event }: HeroblockProps) => {
 						Australian Speedrunners come together to raise money for Charity at ASM2022!
 					</p>
 					<p>
-Submission are open between 25th of March to the 29th of April. Purchasing tickets to come soon!</p>
+Submission are now open! They will close on the 29th of April. Purchasing tickets to come soon!</p>
 					{showVideoBlock && (
 						<Button
 							actionText="Donate"

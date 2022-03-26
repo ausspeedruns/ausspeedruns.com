@@ -74,9 +74,11 @@ export const User: Lists.User = list({
 		}),
 		// Hacky way to do a server side function
 		sentVerification: timestamp({
-			// defaultValue: { kind: 'now' },
+			defaultValue: { kind: 'now' },
 			hooks: {
 				validateInput: ({ resolvedData, addValidationError, item, operation }) => {
+					if (operation === 'create') return;
+
 					const { sentVerification } = resolvedData;
 					if (item?.sentVerification && differenceInMinutes(new Date(sentVerification), new Date(item.sentVerification)) < 15) {
 						addValidationError(`Sending new verification too soon.`);

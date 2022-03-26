@@ -1,6 +1,6 @@
 import React from 'react';
 
-import AusSpeedrunsLogo from '../styles/img/FullLogo-White.png';
+import AusSpeedrunsLogo from '../styles/img/Ausspeedruns-logo-white.png';
 
 type DiscordEmbedProps = {
 	title: string;

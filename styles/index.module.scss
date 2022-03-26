@@ -4,11 +4,12 @@
 .archive {
 	width: 100%;
 	height: 28rem;
+	background-color: $color-teal;
+	background-blend-mode: multiply;
 	background-image: url('../styles/img/archive.png');
 	background-position: center;
 	background-size: cover;
 	color: $light-text;
-
 	
 	display: flex;
 	justify-content: center;

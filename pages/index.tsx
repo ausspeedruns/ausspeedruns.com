@@ -59,14 +59,14 @@ export default function Home() {
 						},
 						{
 							title: 'Get Involved',
-							description: `Submissions for ${current.shortName} will be open soon!`,
+							description: `Submissions for ${current.shortName} are open!`,
 							anchor: 'participate',
 							ctas: [
-								// {
-								//   actionText: "Submit your run",
-								//   link: "/submissions#submissionForm",
-								//   iconRight: faChevronRight
-								// },
+								{
+								  actionText: "Submit your run",
+								  link: "/submit-game",
+								  iconRight: faChevronRight
+								},
 								// {
 								//   actionText: "Buy a ticket",
 								//   link: current.website || "",

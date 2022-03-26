@@ -55,11 +55,11 @@ const { withAuth } = createAuth({
   },
 });
 
-const database: DatabaseConfig<BaseKeystoneTypeInfo> = process.env.NODE_ENV === "production" ? { provider: 'postgresql', url: process.env.DATABASE_URL } : { provider: 'sqlite', url: 'file:./app.db' };
+// const database: DatabaseConfig<BaseKeystoneTypeInfo> = process.env.NODE_ENV === "production" ? { provider: 'postgresql', url: process.env.DATABASE_URL, useMigrations: true } : { provider: 'sqlite', url: 'file:./app.db', useMigrations: true };
 
 export default withAuth(
   config({
-    db: database,
+    db: { provider: 'postgresql', url: process.env.DATABASE_URL, useMigrations: true },
     experimental: {
       generateNextGraphqlAPI: true,
       generateNodeAPI: true,

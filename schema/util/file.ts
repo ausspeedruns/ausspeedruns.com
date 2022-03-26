@@ -13,5 +13,4 @@ const azureConfig: AzureStorageConfig = {
 
 export function file<ListTypeInfo extends BaseListTypeInfo>(config?: FileFieldConfig<ListTypeInfo>) {
 	return azureStorageFile({azureStorageConfig: azureConfig, ...config});
-	// return process.env.NODE_ENV === 'production' ? azureStorageFile({azureStorageConfig: azureConfig, ...config}) : k6File(config);
 }

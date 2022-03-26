@@ -13,5 +13,4 @@ const azureConfig: AzureStorageConfig = {
 
 export function image<ListTypeInfo extends BaseListTypeInfo>(config?: ImageFieldConfig<ListTypeInfo>) {
 	return azureStorageImage({azureStorageConfig: azureConfig, ...config});
-	// return process.env.NODE_ENV === 'production' ? azureStorageImage({azureStorageConfig: azureConfig, ...config}) : k6Image(config);
 }

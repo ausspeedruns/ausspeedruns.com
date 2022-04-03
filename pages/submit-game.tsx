@@ -412,7 +412,7 @@ export default function SubmitGamePage() {
 									<TextField value={racer} onChange={(e) => setRacer(e.target.value)} label="Name of other runner(s)" autoComplete="off" inputProps={{ maxLength: 100 }} />
 								</>
 							)}
-							<TextField value={video} onChange={(e) => setVideo(e.target.value)} label="Video of the run" autoComplete="off" inputProps={{ maxLength: 100 }} required />
+							<TextField value={video} onChange={(e) => setVideo(e.target.value)} label="Video of your own run" autoComplete="off" inputProps={{ maxLength: 100 }} required />
 							<p>{currentEvent?.submissionInstructions}</p>
 							{submissionResult.error && <h2>{HumanErrorMsg(submissionResult.error.message)}</h2>}
 							<Button variant="contained" type="submit" disabled={!canSubmit}>

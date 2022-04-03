@@ -33,13 +33,15 @@ model User {
   accountCreated          DateTime?      @default(now())
   dateOfBirth             DateTime?
   pronouns                String         @default("")
-  socials                 Social?        @relation("Social_user")
   submissions             Submission[]   @relation("Submission_runner")
   roles                   Role[]         @relation("Role_users")
   runs                    Run[]          @relation("Run_runners")
   verified                Boolean        @default(false)
   state                   UserStateType? @default(none)
-  sentVerification        DateTime?
+  sentVerification        DateTime?      @default(now())
+  discord                 String         @default("")
+  twitter                 String         @default("")
+  twitch                  String         @default("")
   passwordResetToken      String?
   passwordResetIssuedAt   DateTime?
   passwordResetRedeemedAt DateTime?
@@ -78,6 +80,7 @@ model Event {
   shortname              String       @unique @default("")
   startDate              DateTime?
   endDate                DateTime?
+  eventTimezone          String       @default("")
   raised                 Float?
   submissions            Submission[] @relation("Submission_event")
   runs                   Run[]        @relation("Run_event")
@@ -110,15 +113,6 @@ model Role {
   textColour        RoleTextColourType?
 
   @@index([eventId])
-}
-
-model Social {
-  id      String  @id @default(cuid())
-  discord String  @default("")
-  twitter String  @default("")
-  twitch  String  @default("")
-  user    User?   @relation("Social_user", fields: [userId], references: [id])
-  userId  String? @unique @map("user")
 }
 
 model Run {

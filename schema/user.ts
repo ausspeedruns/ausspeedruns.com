@@ -119,6 +119,8 @@ export const User: Lists.User = list({
 				}
 			}
 		}),
+		// Ticketing
+		tickets: relationship({ ref: 'Ticket.user', ui: { hideCreate: true }}),
 	},
 	ui: {
 		labelField: 'username'

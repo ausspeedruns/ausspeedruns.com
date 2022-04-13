@@ -15,6 +15,7 @@ import { Context } from '.keystone/types';
 
 import 'dotenv/config';
 import { BaseKeystoneTypeInfo, DatabaseConfig } from '@keystone-6/core/types';
+import { Ticket } from './schema/tickets';
 
 const session = statelessSessions({
   secret: process.env.SESSION_SECRET,
@@ -64,7 +65,7 @@ export default withAuth(
       generateNextGraphqlAPI: true,
       generateNodeAPI: true,
     },
-    lists: { Post, User, Submission, Event, Role, Run, Verification },
+    lists: { Post, User, Submission, Event, Role, Run, Verification, Ticket },
     extendGraphqlSchema: graphQLSchemaExtension<Context>({
       typeDefs: gql`
         type Query {

@@ -51,6 +51,14 @@ type Query {
   ): [Run!]
   run(where: RunWhereUniqueInput!): Run
   runsCount(where: RunWhereInput! = {}): Int
+  tickets(
+    where: TicketWhereInput! = {}
+    orderBy: [TicketOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Ticket!]
+  ticket(where: TicketWhereUniqueInput!): Ticket
+  ticketsCount(where: TicketWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
   validateUserPasswordResetToken(
@@ -279,6 +287,7 @@ type User {
   discord: String
   twitter: String
   twitch: String
+  tickets: Ticket
   passwordResetToken: PasswordState
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -327,6 +336,7 @@ input UserWhereInput {
   discord: StringFilter
   twitter: StringFilter
   twitch: StringFilter
+  tickets: TicketWhereInput
   passwordResetToken: PasswordFilter
   passwordResetIssuedAt: DateTimeNullableFilter
   passwordResetRedeemedAt: DateTimeNullableFilter
@@ -396,6 +406,7 @@ input UserUpdateInput {
   discord: String
   twitter: String
   twitch: String
+  tickets: TicketRelateToOneForUpdateInput
   passwordResetToken: String
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -422,6 +433,12 @@ input RunRelateToManyForUpdateInput {
   connect: [RunWhereUniqueInput!]
 }
 
+input TicketRelateToOneForUpdateInput {
+  create: TicketCreateInput
+  connect: TicketWhereUniqueInput
+  disconnect: Boolean
+}
+
 input UserUpdateArgs {
   where: UserWhereUniqueInput!
   data: UserUpdateInput!
@@ -444,6 +461,7 @@ input UserCreateInput {
   discord: String
   twitter: String
   twitch: String
+  tickets: TicketRelateToOneForCreateInput
   passwordResetToken: String
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -462,6 +480,11 @@ input RoleRelateToManyForCreateInput {
 input RunRelateToManyForCreateInput {
   create: [RunCreateInput!]
   connect: [RunWhereUniqueInput!]
+}
+
+input TicketRelateToOneForCreateInput {
+  create: TicketCreateInput
+  connect: TicketWhereUniqueInput
 }
 
 type Submission {
@@ -658,6 +681,13 @@ type Event {
   logo: AzureStorageImageFieldOutput
   pressKit: AzureStorageFileFieldOutput
   submissionInstructions: String
+  tickets(
+    where: TicketWhereInput! = {}
+    orderBy: [TicketOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Ticket!]
+  ticketsCount(where: TicketWhereInput! = {}): Int
 }
 
 interface AzureStorageImageFieldOutput {
@@ -721,6 +751,7 @@ input EventWhereInput {
   runs: RunManyRelationFilter
   acceptingSubmissions: BooleanFilter
   submissionInstructions: StringFilter
+  tickets: TicketManyRelationFilter
 }
 
 input FloatNullableFilter {
@@ -732,6 +763,12 @@ input FloatNullableFilter {
   gt: Float
   gte: Float
   not: FloatNullableFilter
+}
+
+input TicketManyRelationFilter {
+  every: TicketWhereInput
+  some: TicketWhereInput
+  none: TicketWhereInput
 }
 
 input EventOrderByInput {
@@ -759,6 +796,7 @@ input EventUpdateInput {
   logo: AzureStorageImageFieldInput
   pressKit: AzureStorageFileFieldInput
   submissionInstructions: String
+  tickets: TicketRelateToManyForUpdateInput
 }
 
 input AzureStorageImageFieldInput {
@@ -774,6 +812,13 @@ scalar Upload
 input AzureStorageFileFieldInput {
   upload: Upload
   ref: String
+}
+
+input TicketRelateToManyForUpdateInput {
+  disconnect: [TicketWhereUniqueInput!]
+  set: [TicketWhereUniqueInput!]
+  create: [TicketCreateInput!]
+  connect: [TicketWhereUniqueInput!]
 }
 
 input EventUpdateArgs {
@@ -794,6 +839,12 @@ input EventCreateInput {
   logo: AzureStorageImageFieldInput
   pressKit: AzureStorageFileFieldInput
   submissionInstructions: String
+  tickets: TicketRelateToManyForCreateInput
+}
+
+input TicketRelateToManyForCreateInput {
+  create: [TicketCreateInput!]
+  connect: [TicketWhereUniqueInput!]
 }
 
 type Role {
@@ -1047,6 +1098,98 @@ input VerificationCreateInput {
   account: String
 }
 
+type Ticket {
+  id: ID!
+  user: User
+  event: Event
+  taken: Boolean
+  method: TicketMethodType
+  ticketID: String
+  paid: Boolean
+  notes: String
+  numberOfTickets: Int
+  totalCost: Float
+}
+
+enum TicketMethodType {
+  bank
+  stripe
+}
+
+input TicketWhereUniqueInput {
+  id: ID
+}
+
+input TicketWhereInput {
+  AND: [TicketWhereInput!]
+  OR: [TicketWhereInput!]
+  NOT: [TicketWhereInput!]
+  id: IDFilter
+  user: UserWhereInput
+  event: EventWhereInput
+  taken: BooleanFilter
+  method: TicketMethodTypeNullableFilter
+  ticketID: StringFilter
+  paid: BooleanFilter
+  notes: StringFilter
+  numberOfTickets: IntNullableFilter
+}
+
+input TicketMethodTypeNullableFilter {
+  equals: TicketMethodType
+  in: [TicketMethodType!]
+  notIn: [TicketMethodType!]
+  not: TicketMethodTypeNullableFilter
+}
+
+input IntNullableFilter {
+  equals: Int
+  in: [Int!]
+  notIn: [Int!]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: IntNullableFilter
+}
+
+input TicketOrderByInput {
+  id: OrderDirection
+  taken: OrderDirection
+  method: OrderDirection
+  ticketID: OrderDirection
+  paid: OrderDirection
+  notes: OrderDirection
+  numberOfTickets: OrderDirection
+}
+
+input TicketUpdateInput {
+  user: UserRelateToOneForUpdateInput
+  event: EventRelateToOneForUpdateInput
+  taken: Boolean
+  method: TicketMethodType
+  ticketID: String
+  paid: Boolean
+  notes: String
+  numberOfTickets: Int
+}
+
+input TicketUpdateArgs {
+  where: TicketWhereUniqueInput!
+  data: TicketUpdateInput!
+}
+
+input TicketCreateInput {
+  user: UserRelateToOneForCreateInput
+  event: EventRelateToOneForCreateInput
+  taken: Boolean
+  method: TicketMethodType
+  ticketID: String
+  paid: Boolean
+  notes: String
+  numberOfTickets: Int
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -1104,6 +1247,12 @@ type Mutation {
   updateVerifications(data: [VerificationUpdateArgs!]!): [Verification]
   deleteVerification(where: VerificationWhereUniqueInput!): Verification
   deleteVerifications(where: [VerificationWhereUniqueInput!]!): [Verification]
+  createTicket(data: TicketCreateInput!): Ticket
+  createTickets(data: [TicketCreateInput!]!): [Ticket]
+  updateTicket(where: TicketWhereUniqueInput!, data: TicketUpdateInput!): Ticket
+  updateTickets(data: [TicketUpdateArgs!]!): [Ticket]
+  deleteTicket(where: TicketWhereUniqueInput!): Ticket
+  deleteTickets(where: [TicketWhereUniqueInput!]!): [Ticket]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!

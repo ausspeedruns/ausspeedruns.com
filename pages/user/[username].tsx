@@ -15,6 +15,7 @@ import SubmissionAccordian from '../../components/SubmissionAccordian/Submission
 import RunUpcoming from '../../components/RunUpcoming/RunUpcoming';
 import RunCompleted from '../../components/RunCompleted/RunCompleted';
 import DiscordEmbed from '../../components/DiscordEmbed';
+import Ticket from '../../components/Ticket/Ticket';
 
 export type UserPageData = {
 	id: string;
@@ -73,6 +74,17 @@ export type UserPageData = {
 		runner: {
 			username: string;
 		};
+	}[];
+	tickets: {
+		ticketID: string;
+		totalCost: number;
+		paid: boolean;
+		event: {
+			shortname: string;
+		}
+		numberOfTickets: number;
+		method: "bank" | "stripe";
+		taken: boolean;
 	}[];
 };
 
@@ -170,6 +182,17 @@ export default function ProfilePage() {
 							name
 							shortname
 						}
+					}
+					tickets {
+						ticketID
+						totalCost
+						paid
+						event {
+							shortname
+						}
+						numberOfTickets
+						method
+						taken
 					}
 				}
 			}
@@ -291,6 +314,16 @@ export default function ProfilePage() {
 						{userData.submissions.map((submission) => {
 							if (submission.event.shortname !== allSubmissionEvents[submissionTab]) return;
 							return <SubmissionAccordian key={submission.id} submission={submission} />;
+						})}
+					</div>
+				)}
+
+				{/* Tickets */}
+				{userData.tickets.length > 0 && (
+					<div className={styles.submissions}>
+						<h3>Tickets (Private)</h3>
+						{userData.tickets.map((ticket) => {
+							return <Ticket ticketData={ticket} />
 						})}
 					</div>
 				)}

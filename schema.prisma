@@ -42,7 +42,7 @@ model User {
   discord                 String         @default("")
   twitter                 String         @default("")
   twitch                  String         @default("")
-  tickets                 Ticket?        @relation("Ticket_user")
+  tickets                 Ticket[]       @relation("Ticket_user")
   passwordResetToken      String?
   passwordResetIssuedAt   DateTime?
   passwordResetRedeemedAt DateTime?
@@ -150,7 +150,7 @@ model Verification {
 model Ticket {
   id              String           @id @default(cuid())
   user            User?            @relation("Ticket_user", fields: [userId], references: [id])
-  userId          String?          @unique @map("user")
+  userId          String?          @map("user")
   event           Event?           @relation("Ticket_event", fields: [eventId], references: [id])
   eventId         String?          @map("event")
   taken           Boolean          @default(false)
@@ -160,6 +160,7 @@ model Ticket {
   notes           String           @default("")
   numberOfTickets Int?
 
+  @@index([userId])
   @@index([eventId])
 }
 

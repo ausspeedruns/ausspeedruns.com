@@ -287,7 +287,13 @@ type User {
   discord: String
   twitter: String
   twitch: String
-  tickets: Ticket
+  tickets(
+    where: TicketWhereInput! = {}
+    orderBy: [TicketOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Ticket!]
+  ticketsCount(where: TicketWhereInput! = {}): Int
   passwordResetToken: PasswordState
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -336,7 +342,7 @@ input UserWhereInput {
   discord: StringFilter
   twitter: StringFilter
   twitch: StringFilter
-  tickets: TicketWhereInput
+  tickets: TicketManyRelationFilter
   passwordResetToken: PasswordFilter
   passwordResetIssuedAt: DateTimeNullableFilter
   passwordResetRedeemedAt: DateTimeNullableFilter
@@ -365,6 +371,12 @@ input UserStateTypeNullableFilter {
   in: [UserStateType!]
   notIn: [UserStateType!]
   not: UserStateTypeNullableFilter
+}
+
+input TicketManyRelationFilter {
+  every: TicketWhereInput
+  some: TicketWhereInput
+  none: TicketWhereInput
 }
 
 input PasswordFilter {
@@ -406,7 +418,7 @@ input UserUpdateInput {
   discord: String
   twitter: String
   twitch: String
-  tickets: TicketRelateToOneForUpdateInput
+  tickets: TicketRelateToManyForUpdateInput
   passwordResetToken: String
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -433,10 +445,11 @@ input RunRelateToManyForUpdateInput {
   connect: [RunWhereUniqueInput!]
 }
 
-input TicketRelateToOneForUpdateInput {
-  create: TicketCreateInput
-  connect: TicketWhereUniqueInput
-  disconnect: Boolean
+input TicketRelateToManyForUpdateInput {
+  disconnect: [TicketWhereUniqueInput!]
+  set: [TicketWhereUniqueInput!]
+  create: [TicketCreateInput!]
+  connect: [TicketWhereUniqueInput!]
 }
 
 input UserUpdateArgs {
@@ -461,7 +474,7 @@ input UserCreateInput {
   discord: String
   twitter: String
   twitch: String
-  tickets: TicketRelateToOneForCreateInput
+  tickets: TicketRelateToManyForCreateInput
   passwordResetToken: String
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -482,9 +495,9 @@ input RunRelateToManyForCreateInput {
   connect: [RunWhereUniqueInput!]
 }
 
-input TicketRelateToOneForCreateInput {
-  create: TicketCreateInput
-  connect: TicketWhereUniqueInput
+input TicketRelateToManyForCreateInput {
+  create: [TicketCreateInput!]
+  connect: [TicketWhereUniqueInput!]
 }
 
 type Submission {
@@ -765,12 +778,6 @@ input FloatNullableFilter {
   not: FloatNullableFilter
 }
 
-input TicketManyRelationFilter {
-  every: TicketWhereInput
-  some: TicketWhereInput
-  none: TicketWhereInput
-}
-
 input EventOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -814,13 +821,6 @@ input AzureStorageFileFieldInput {
   ref: String
 }
 
-input TicketRelateToManyForUpdateInput {
-  disconnect: [TicketWhereUniqueInput!]
-  set: [TicketWhereUniqueInput!]
-  create: [TicketCreateInput!]
-  connect: [TicketWhereUniqueInput!]
-}
-
 input EventUpdateArgs {
   where: EventWhereUniqueInput!
   data: EventUpdateInput!
@@ -840,11 +840,6 @@ input EventCreateInput {
   pressKit: AzureStorageFileFieldInput
   submissionInstructions: String
   tickets: TicketRelateToManyForCreateInput
-}
-
-input TicketRelateToManyForCreateInput {
-  create: [TicketCreateInput!]
-  connect: [TicketWhereUniqueInput!]
 }
 
 type Role {

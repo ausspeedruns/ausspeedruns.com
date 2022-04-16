@@ -155,13 +155,15 @@ model Ticket {
   eventId         String?          @map("event")
   taken           Boolean          @default(false)
   method          TicketMethodType
-  ticketID        String           @default("")
+  ticketID        String           @unique @default("")
   paid            Boolean          @default(false)
   notes           String           @default("")
   numberOfTickets Int?
+  stripeID        String           @default("")
 
   @@index([userId])
   @@index([eventId])
+  @@index([stripeID])
 }
 
 enum PostRoleType {

@@ -30,7 +30,7 @@ export const Ticket: Lists.Ticket = list({
 				isRequired: true
 			}
 		}),
-		ticketID: text(),
+		ticketID: text({ isIndexed: 'unique' }),
 		paid: checkbox({ defaultValue: false }),
 		notes: text(),
 		numberOfTickets: integer(),
@@ -45,10 +45,11 @@ export const Ticket: Lists.Ticket = list({
 					return 35 * numberOfTickets;
 				}
 			})
-		})
+		}),
+		stripeID: text({ isIndexed: true }),
 	},
 	hooks: {
-		resolveInput: ({operation, resolvedData}) => {
+		resolveInput: ({ operation, resolvedData }) => {
 			if (operation === 'create') {
 				// Set TicketID
 				resolvedData.ticketID = `T-${nanoid()}`;

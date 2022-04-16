@@ -81,6 +81,11 @@ export type UserPageData = {
 		paid: boolean;
 		event: {
 			shortname: string;
+			logo: {
+				url: string;
+				width: number;
+				height: number;
+			};
 		}
 		numberOfTickets: number;
 		method: "bank" | "stripe";
@@ -189,6 +194,11 @@ export default function ProfilePage() {
 						paid
 						event {
 							shortname
+							logo {
+								url
+								width
+								height
+							}
 						}
 						numberOfTickets
 						method
@@ -323,7 +333,7 @@ export default function ProfilePage() {
 					<div className={styles.submissions}>
 						<h3>Tickets (Private)</h3>
 						{userData.tickets.map((ticket) => {
-							return <Ticket ticketData={ticket} />
+							return <Ticket key={ticket.ticketID} ticketData={ticket} />
 						})}
 					</div>
 				)}

@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { loadStripe } from '@stripe/stripe-js';
 import { Box, Button, TextField, ThemeProvider } from '@mui/material';
-import { useMutation } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { gql } from '@keystone-6/core';
 
 import styles from '../../styles/ASM2022.Tickets.module.scss';
@@ -22,20 +22,53 @@ const stripePromise = loadStripe(
 const Tickets = () => {
 	const auth = useAuth();
 	const [noOfTickets, setNoOfTickets] = useState(1);
+	const [deletedTicket, setDeletedTicket] = useState(false);
+	const [stripeID, setStripeID] = useState<string>();
 
+	const [getTicketIDRes, getTicketID] = useQuery({
+		query: gql`
+			query ($stripeID: String) {
+				tickets(where: { stripeID: { equals: $stripeID } }) {
+					id
+				}
+			}
+		`,
+		pause: !stripeID,
+		variables: { stripeID },
+	});
 
+	const [deleteStripeTicketRes, deleteStripeTicket] = useMutation(gql`
+		mutation ($rawID: ID) {
+			deleteTicket(where: { id: $rawID }) {
+				__typename
+			}
+		}
+	`);
 
 	useEffect(() => {
 		// Check to see if this is a redirect back from Checkout
 		const query = new URLSearchParams(window.location.search);
-		if (query.get('success')) {
-			// console.log('Order placed! You will receive an email confirmation.');
-		}
 
-		if (query.get('canceled')) {
-			// console.log('Order canceled -- continue to shop around and checkout when you're ready.');
+		// console.log(query.get('cancelled'), query.get('session_id'), deletedTicket, getTicketIDRes);
+
+		if (query.get('cancelled') && !deletedTicket) {
+			setStripeID(query.get('session_id'));
+
+			if (getTicketIDRes.data?.tickets.length !== 1) {
+				// Got either 0 or too many
+				return;
+			}
+
+			deleteStripeTicket({ rawID: getTicketIDRes.data.tickets[0].id }).then((res) => {
+				if (!res.error) {
+					setDeletedTicket(true);
+					console.log('Successfully removed a dead ticket :D');
+				} else {
+					console.log(res.error);
+				}
+			});
 		}
-	}, []);
+	}, [getTicketIDRes, deleteStripeTicket, deletedTicket]);
 
 	const [generateBankTicketsRes, generateBankTickets] = useMutation(gql`
 		mutation ($userID: ID, $numberOfTickets: Int) {
@@ -58,6 +91,11 @@ const Tickets = () => {
 
 	// console.log(generateBankTicketsRes);
 	const successfulTicket = !generateBankTicketsRes.error && generateBankTicketsRes?.data?.createTicket.ticketID;
+
+	let accId = '';
+	if (auth.ready) {
+		accId = auth.sessionData.id;
+	}
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -85,7 +123,7 @@ const Tickets = () => {
 							slightly extra due to a processing fee.
 						</p>
 					</section>
-					<form action="/api/checkout_sessions" method="POST" className={styles.form}>
+					<form action={`/api/checkout_ticket?account=${accId}`} method="POST" className={styles.form}>
 						<section>
 							<h2>Stripe</h2>
 							<p>Clicking on checkout will redirect you to the stripe checkout. </p>
@@ -110,8 +148,15 @@ const Tickets = () => {
 								style={{ maxWidth: 70 }}
 								size="small"
 							></TextField>
-							<Button variant="contained" color="primary" fullWidth disabled={isNaN(noOfTickets)} onClick={generateTickets}>
-								Generate {noOfTickets > 1 && noOfTickets} Ticket{noOfTickets > 1 && 's'} ${isNaN(noOfTickets) ? '∞' : noOfTickets * 35}
+							<Button
+								variant="contained"
+								color="primary"
+								fullWidth
+								disabled={isNaN(noOfTickets)}
+								onClick={generateTickets}
+							>
+								Generate {noOfTickets > 1 && noOfTickets} Ticket{noOfTickets > 1 && 's'} $
+								{isNaN(noOfTickets) ? '∞' : noOfTickets * 35}
 							</Button>
 						</div>
 						{successfulTicket && <ASMTicket ticketData={generateBankTicketsRes.data.createTicket} />}
@@ -132,7 +177,7 @@ interface ASMTicketProps {
 }
 
 const ASMTicket: React.FC<ASMTicketProps> = (props: ASMTicketProps) => {
-	console.log(props)
+	console.log(props);
 	const { totalCost, ticketID, numberOfTickets } = props.ticketData;
 	return (
 		<Box className={styles.generatedTickets} sx={{ boxShadow: 8 }}>
@@ -153,8 +198,8 @@ const ASMTicket: React.FC<ASMTicketProps> = (props: ASMTicketProps) => {
 				<span>{numberOfTickets}</span>
 			</div>
 			<p>
-				You <b>MUST</b> send the Ticket ID as the "reference". Failure to do so will result in your ticket not being
-				paid.
+				You <b>MUST</b> send the Ticket ID as the &quot;reference&quot;. Failure to do so will result in your ticket not
+				being paid.
 			</p>
 		</Box>
 	);

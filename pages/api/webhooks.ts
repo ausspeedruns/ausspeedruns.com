@@ -2,6 +2,11 @@ import Stripe from 'stripe';
 import { buffer } from 'micro';
 import Cors from 'micro-cors';
 import type { IncomingMessage } from 'http';
+import { createClient, gql } from 'urql';
+
+const urqlClient = createClient({
+  url: 'http://localhost:8000/api/graphql',
+});
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2020-08-27' });
 
@@ -42,23 +47,30 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
     console.log('✅ Success:', event.id);
 
     switch (event.type) {
-      case 'payment_intent.succeeded': {
-        const paymentIntent = event.data.object as Record<string, any>;
-        console.log(`PaymentIntent status: ${paymentIntent.status}`);
+      // case 'payment_intent.succeeded': {
+      //   const paymentIntent = event.data.object as Record<string, any>;
+      //   console.log(`PaymentIntent status: ${paymentIntent.status}`);
+      //   break;
+      // }
+      // case 'payment_intent.payment_failed': {
+      //   const paymentIntent = event.data.object as Record<string, any>;
+      //   console.log(
+      //     `❌ Payment failed: ${paymentIntent.last_payment_error?.message}`
+      //   );
+      //   break;
+      // }
+      // case 'charge.succeeded': {
+      //   const charge = event.data.object as Record<string, any>;
+      //   console.log(`Charge id: ${charge.id}`);
+      //   break;
+      // }
+      case 'checkout.session.completed':
+        const checkout = event.data.object as Record<string, any>;
+        console.log(`Checkout id: ${checkout.id}`);
+        stripe.checkout.sessions.listLineItems(checkout.id, {}).then(data => {
+          fulfillOrder(checkout.id, data.data[0].quantity);
+        });
         break;
-      }
-      case 'payment_intent.payment_failed': {
-        const paymentIntent = event.data.object as Record<string, any>;
-        console.log(
-          `❌ Payment failed: ${paymentIntent.last_payment_error?.message}`
-        );
-        break;
-      }
-      case 'charge.succeeded': {
-        const charge = event.data.object as Record<string, any>;
-        console.log(`Charge id: ${charge.id}`);
-        break;
-      }
       default: {
         console.warn(`Unhandled event type: ${event.type}`);
         break;
@@ -72,5 +84,42 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
     res.status(405).end('Method Not Allowed');
   }
 };
+
+const fulfillOrder = async (sessionId: any, quantity: number) => {
+  // TODO: fill me in
+  console.log("Fulfilling order", sessionId);
+
+  // Get ticket id
+  const dirtyTicketResults = await urqlClient.query(gql`
+    query ($stripeID: String) {
+      tickets(where: {stripeID: {equals: $stripeID}}) {
+        id
+      }
+    }
+  `, { stripeID: sessionId }).toPromise();
+
+  console.log(JSON.stringify(dirtyTicketResults));
+  // Check if Ticket ID is unique
+  if (dirtyTicketResults.data.tickets.length !== 1) {
+    // Got either 0 or too many
+    return;
+  }
+
+  const rawID = dirtyTicketResults.data.tickets[0].id;
+
+  // Calc total
+  // Should get this from stripe via https://stripe.com/docs/payments/checkout/adjustable-quantity
+  // but the documentation is wrong/old and idk what to do
+
+  // Update ticket information
+  const mutRes = await urqlClient.mutation(gql`
+    mutation ($rawID: String, $quantity: Int) {
+      updateTicket(where: {id: $rawID}, data:{ paid: true, numberOfTickets: $quantity }) {
+        __typename
+      }
+    }
+  `, { rawID, quantity }).toPromise();
+  console.log(mutRes);
+}
 
 export default cors(webhookHandler);

@@ -1,7 +1,9 @@
 import { Box } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
+import JSBarcode from 'jsbarcode';
 
 import styles from './Ticket.module.scss';
+import Image from 'next/image';
 
 interface Props {
 	ticketData: {
@@ -11,11 +13,18 @@ interface Props {
 		numberOfTickets: number;
 		method: 'bank' | 'stripe';
 		taken: boolean;
-		event?: {
+		event: {
 			shortname: string;
+			logo: {
+				url: string;
+				width: number;
+				height: number;
+			};
 		};
 	};
 }
+
+const LOGO_HEIGHT = 50;
 
 const Ticket: React.FC<Props> = (props: Props) => {
 	const { numberOfTickets, paid, ticketID, totalCost, method, taken, event } = props.ticketData;
@@ -27,19 +36,33 @@ const Ticket: React.FC<Props> = (props: Props) => {
 		status = 'Paid';
 	}
 
+	useEffect(() => {
+		if (!paid) return;
+		JSBarcode(`#ticketBarcode-${ticketID}`, ticketID, { displayValue: false });
+	}, [ticketID, paid]);
+
+	const aspectRatio = event.logo.width / event.logo.height;
+
 	return (
 		<Box className={styles.ticket} sx={{ boxShadow: 8 }}>
 			<div className={styles.ticketID}>
+				<Image
+					src={event.logo.url}
+					title={event.shortname}
+					width={LOGO_HEIGHT * aspectRatio}
+					height={LOGO_HEIGHT}
+					alt={`${event.shortname} logo`}
+					className={styles.eventLogo}
+				/>
+				{paid && <canvas id={`ticketBarcode-${ticketID}`}></canvas>}
 				<span>Ticket ID</span>
 				<span className={styles.label}>{ticketID}</span>
 			</div>
 			<div className={styles.informationGrid}>
-				{event?.shortname && (
-					<>
-						<span>Event</span>
-						<span>{event.shortname}</span>
-					</>
-				)}
+				<>
+					<span>Event</span>
+					<span>{event.shortname}</span>
+				</>
 				{method === 'bank' && !paid && (
 					<>
 						<span>BSB</span>
@@ -61,7 +84,7 @@ const Ticket: React.FC<Props> = (props: Props) => {
 				<>
 					<p>Currently unpaid. Allow 7 days for the ticket to be updated.</p>
 					<p>
-						You <b>MUST</b> send the Ticket ID as the "reference". Failure to do so will result in your ticket not being
+						You <b>MUST</b> send the Ticket ID as the &quot;reference&quot;. Failure to do so will result in your ticket not being
 						paid.
 					</p>
 				</>

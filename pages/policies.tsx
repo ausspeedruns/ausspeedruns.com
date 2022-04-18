@@ -20,9 +20,9 @@ const PoliciesPage = () => {
 					<a
 						target="_blank"
 						rel="noreferrer"
-						href="https://docs.google.com/document/d/1xsmquXa8QzhzlZY59W5iTncvxhrPV2h1TZo8UNFZHUM/edit?usp=sharing"
+						href="https://ausspeedruns.sharepoint.com/:w:/s/Main/EWHKLtTIsUROj6JbarbggWgBZTwBVK-FCRPNH19vf4dJAA?rtime=UxFMYhYh2kg"
 					>
-						External link to Google Doc containing all policies.
+						External link to Sharepoint containing all policies.
 					</a>
 				</p>
 

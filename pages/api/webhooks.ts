@@ -66,13 +66,12 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
       // }
       case 'checkout.session.completed':
         const checkout = event.data.object as Record<string, any>;
-        console.log(`Checkout id: ${checkout.id}`);
         stripe.checkout.sessions.listLineItems(checkout.id, {}).then(data => {
           fulfillOrder(checkout.id, data.data[0].quantity);
         });
         break;
       default: {
-        console.warn(`Unhandled event type: ${event.type}`);
+        // console.warn(`Unhandled event type: ${event.type}`);
         break;
       }
     }
@@ -85,41 +84,15 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
   }
 };
 
-const fulfillOrder = async (sessionId: any, quantity: number) => {
-  // TODO: fill me in
-  console.log("Fulfilling order", sessionId);
-
-  // Get ticket id
-  const dirtyTicketResults = await urqlClient.query(gql`
-    query ($stripeID: String) {
-      tickets(where: {stripeID: {equals: $stripeID}}) {
-        id
-      }
-    }
-  `, { stripeID: sessionId }).toPromise();
-
-  console.log(JSON.stringify(dirtyTicketResults));
-  // Check if Ticket ID is unique
-  if (dirtyTicketResults.data.tickets.length !== 1) {
-    // Got either 0 or too many
-    return;
-  }
-
-  const rawID = dirtyTicketResults.data.tickets[0].id;
-
-  // Calc total
-  // Should get this from stripe via https://stripe.com/docs/payments/checkout/adjustable-quantity
-  // but the documentation is wrong/old and idk what to do
-
+const fulfillOrder = async (sessionID: any, quantity: number) => {
   // Update ticket information
   const mutRes = await urqlClient.mutation(gql`
-    mutation ($rawID: String, $quantity: Int) {
-      updateTicket(where: {id: $rawID}, data:{ paid: true, numberOfTickets: $quantity }) {
+    mutation ($sessionID: String, $quantity: Int) {
+      updateTicket(where: { stripeID: $sessionID }, data:{ paid: true, numberOfTickets: $quantity }) {
         __typename
       }
     }
-  `, { rawID, quantity }).toPromise();
-  console.log(mutRes);
+  `, { sessionID, quantity }).toPromise();
 }
 
 export default cors(webhookHandler);

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
 import { loadStripe } from '@stripe/stripe-js';
 import { Box, Button, TextField, ThemeProvider } from '@mui/material';
 import { useMutation, useQuery } from 'urql';
@@ -23,23 +24,10 @@ const Tickets = () => {
 	const auth = useAuth();
 	const [noOfTickets, setNoOfTickets] = useState(1);
 	const [deletedTicket, setDeletedTicket] = useState(false);
-	const [stripeID, setStripeID] = useState<string>();
-
-	const [getTicketIDRes, getTicketID] = useQuery({
-		query: gql`
-			query ($stripeID: String) {
-				tickets(where: { stripeID: { equals: $stripeID } }) {
-					id
-				}
-			}
-		`,
-		pause: !stripeID,
-		variables: { stripeID },
-	});
 
 	const [deleteStripeTicketRes, deleteStripeTicket] = useMutation(gql`
-		mutation ($rawID: ID) {
-			deleteTicket(where: { id: $rawID }) {
+		mutation ($sessionID: String) {
+			deleteTicket(where: { stripeID: $sessionID }) {
 				__typename
 			}
 		}
@@ -51,28 +39,39 @@ const Tickets = () => {
 
 		// console.log(query.get('cancelled'), query.get('session_id'), deletedTicket, getTicketIDRes);
 
-		if (query.get('cancelled') && !deletedTicket) {
-			setStripeID(query.get('session_id'));
-
-			if (getTicketIDRes.data?.tickets.length !== 1) {
-				// Got either 0 or too many
-				return;
-			}
-
-			deleteStripeTicket({ rawID: getTicketIDRes.data.tickets[0].id }).then((res) => {
+		if (query.get('cancelled') && query.get('session_id') && !deletedTicket) {
+			deleteStripeTicket({ sessionID: query.get('session_id') }).then((res) => {
 				if (!res.error) {
 					setDeletedTicket(true);
 					console.log('Successfully removed a dead ticket :D');
 				} else {
-					console.log(res.error);
+					console.error(res.error);
 				}
 			});
 		}
-	}, [getTicketIDRes, deleteStripeTicket, deletedTicket]);
+	}, [deleteStripeTicket, deletedTicket]);
+
+	const [purchasedTicketsRes, purchasedTickets] = useQuery({
+		query: gql`
+			query ($userID: ID) {
+				tickets(where: { user: { id: { equals: $userID } } }) {
+					ticketID
+				}
+			}
+		`,
+		pause: !auth.ready || !auth?.sessionData?.id,
+	});
 
 	const [generateBankTicketsRes, generateBankTickets] = useMutation(gql`
 		mutation ($userID: ID, $numberOfTickets: Int) {
-			createTicket(data: { user: { connect: { id: $userID } }, numberOfTickets: $numberOfTickets, method: bank }) {
+			createTicket(
+				data: {
+					user: { connect: { id: $userID } }
+					event: { connect: { shortname: "ASM2022" } }
+					numberOfTickets: $numberOfTickets
+					method: bank
+				}
+			) {
 				ticketID
 				totalCost
 				numberOfTickets
@@ -94,7 +93,12 @@ const Tickets = () => {
 
 	let accId = '';
 	if (auth.ready) {
-		accId = auth.sessionData.id;
+		accId = auth.sessionData?.id;
+	}
+
+	let accUsername = '';
+	if (auth.ready) {
+		accUsername = auth.sessionData?.username;
 	}
 
 	return (
@@ -114,52 +118,86 @@ const Tickets = () => {
 					<div className={styles.image}>
 						<Image objectFit="contain" src={ASM2022Logo} alt="ASM2022 Logo" />
 					</div>
-					<section>
-						<h3>Ticket Information</h3>
+					{purchasedTicketsRes.data?.tickets.length > 0 && auth.ready && (
+						<section className={styles.linkToProfile}>
+							<span>
+								View your tickets on <Link href={`/user/${auth.sessionData.username}#tickets`}>your profile!</Link>
+							</span>
+						</section>
+					)}
+					<section className={styles.fullWidth}>
+						<h2>Ticket Information</h2>
 						<p>Ticket to ASM2022 taking place in Adelaide, July 13-17.</p>
+						<p>Ticket price: $35 AUD.</p>
 						<p>All attendees, including runners and staff must purchase tickets to attend the event.</p>
 						<p>
 							We have two methods to buy a ticket for ASM. Stripe and Bank Transfer. Paying with Stripe will cost
 							slightly extra due to a processing fee.
 						</p>
 					</section>
-					<form action={`/api/checkout_ticket?account=${accId}`} method="POST" className={styles.form}>
-						<section>
-							<h2>Stripe</h2>
-							<p>Clicking on checkout will redirect you to the stripe checkout. </p>
-						</section>
-						<section>
-							<Button type="submit" role="link" variant="contained" color="primary" fullWidth>
+					<hr />
+					{auth.ready && !auth?.sessionData && (
+						<section className={styles.loginError}>You must be logged in to purchase tickets.</section>
+					)}
+					<section className={styles.paymentMethod}>
+						<h2>Stripe</h2>
+						<p>Clicking on checkout will redirect you to the stripe checkout. </p>
+						<form action={`/api/checkout_ticket?account=${accId}&username=${accUsername}`} method="POST">
+							<Button
+								type="submit"
+								role="link"
+								variant="contained"
+								color="primary"
+								fullWidth
+								disabled={!auth.ready || (auth.ready && !auth.sessionData)}
+							>
 								Checkout $35.80
 							</Button>
-						</section>
-					</form>
-
-					<section>
-						<h2>Bank Transfer</h2>
+						</form>
 					</section>
-					<section>
+					<section className={styles.paymentMethod}>
+						<h2>Bank Transfer (Australia Only)</h2>
 						<div className={styles.bankTransferButton}>
 							<TextField
 								type="number"
 								inputProps={{ min: 1 }}
 								value={noOfTickets}
 								onChange={(e) => setNoOfTickets(parseInt(e.target.value))}
-								style={{ maxWidth: 70 }}
+								// style={{ maxWidth: 70 }}
 								size="small"
+								color="secondary"
+								label="Number of tickets"
 							></TextField>
 							<Button
 								variant="contained"
 								color="primary"
 								fullWidth
-								disabled={isNaN(noOfTickets)}
+								disabled={isNaN(noOfTickets) || noOfTickets <= 0 || !auth.ready || (auth.ready && !auth.sessionData)}
 								onClick={generateTickets}
 							>
 								Generate {noOfTickets > 1 && noOfTickets} Ticket{noOfTickets > 1 && 's'} $
-								{isNaN(noOfTickets) ? '∞' : noOfTickets * 35}
+								{isNaN(noOfTickets) || noOfTickets <= 0 ? '∞' : noOfTickets * 35}
 							</Button>
 						</div>
 						{successfulTicket && <ASMTicket ticketData={generateBankTicketsRes.data.createTicket} />}
+					</section>
+					<hr />
+					<section className={styles.fullWidth}>
+						<h2>Refund Policy</h2>
+						<p>
+							AusSpeedruns does not offer any refunds for purchased ASM2022 tickets, except as required by Australian
+							law (e.g. the Australian Consumer Law), and as per our{' '}
+							<a
+								target="_blank"
+								rel="noreferrer"
+								href="https://ausspeedruns.sharepoint.com/:w:/s/Main/EWHKLtTIsUROj6JbarbggWgBZTwBVK-FCRPNH19vf4dJAA?rtime=UxFMYhYh2kg"
+							>
+								COVID Policy
+							</a>
+							. Individual exceptions may be considered on a case by case basis, however we acknowledge our full
+							discretion to not grant exceptions that are sought.
+						</p>
+						<p>Please contact Sten via the AusSpeedruns Discord for any inquries.</p>
 					</section>
 				</main>
 				<Footer className={styles.footer} />
@@ -193,7 +231,7 @@ const ASMTicket: React.FC<ASMTicketProps> = (props: ASMTicketProps) => {
 				<span>Ticket ID</span>
 				<span>{ticketID}</span>
 				<span>Amount</span>
-				<span>${totalCost}</span>
+				<span>${totalCost} AUD</span>
 				<span>Number of tickets</span>
 				<span>{numberOfTickets}</span>
 			</div>
@@ -201,6 +239,7 @@ const ASMTicket: React.FC<ASMTicketProps> = (props: ASMTicketProps) => {
 				You <b>MUST</b> send the Ticket ID as the &quot;reference&quot;. Failure to do so will result in your ticket not
 				being paid.
 			</p>
+			<p>The ticket will take up to 7 days to update.</p>
 		</Box>
 	);
 };

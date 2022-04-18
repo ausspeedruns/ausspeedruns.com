@@ -1105,6 +1105,7 @@ type Ticket {
   numberOfTickets: Int
   totalCost: Float
   stripeID: String
+  created: DateTime
 }
 
 enum TicketMethodType {
@@ -1115,6 +1116,7 @@ enum TicketMethodType {
 input TicketWhereUniqueInput {
   id: ID
   ticketID: String
+  stripeID: String
 }
 
 input TicketWhereInput {
@@ -1131,6 +1133,7 @@ input TicketWhereInput {
   notes: StringFilter
   numberOfTickets: IntNullableFilter
   stripeID: StringFilter
+  created: DateTimeNullableFilter
 }
 
 input TicketMethodTypeNullableFilter {
@@ -1160,6 +1163,7 @@ input TicketOrderByInput {
   notes: OrderDirection
   numberOfTickets: OrderDirection
   stripeID: OrderDirection
+  created: OrderDirection
 }
 
 input TicketUpdateInput {
@@ -1172,6 +1176,7 @@ input TicketUpdateInput {
   notes: String
   numberOfTickets: Int
   stripeID: String
+  created: DateTime
 }
 
 input TicketUpdateArgs {
@@ -1189,6 +1194,7 @@ input TicketCreateInput {
   notes: String
   numberOfTickets: Int
   stripeID: String
+  created: DateTime
 }
 
 """

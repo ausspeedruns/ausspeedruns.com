@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Ticket" ALTER COLUMN "ticketID" SET DEFAULT E'T-2SAXYXDCU';

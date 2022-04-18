@@ -159,11 +159,11 @@ model Ticket {
   paid            Boolean          @default(false)
   notes           String           @default("")
   numberOfTickets Int?
-  stripeID        String           @default("")
+  stripeID        String           @unique @default("")
+  created         DateTime?        @default(now())
 
   @@index([userId])
   @@index([eventId])
-  @@index([stripeID])
 }
 
 enum PostRoleType {

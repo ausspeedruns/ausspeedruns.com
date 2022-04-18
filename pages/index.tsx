@@ -36,18 +36,18 @@ export default function Home() {
 				{/* <EventDetails event={current} /> */}
 				<div className={styles.archive}>
 					<div className={styles.content}>
-            <div className={styles.filler}></div>
-            <div className={styles.text}>
-              <h2>Missed a run?</h2>
-              <p>Check our YouTube for runs from previous events.</p>
-              <Button
-                actionText="Watch again"
-                link={globals.socialLinks.youtube}
-                iconRight={faChevronRight}
-                colorScheme={'secondary'}
-                target={'_blank'}
-              />
-            </div>
+						<div className={styles.filler}></div>
+						<div className={styles.text}>
+							<h2>Missed a run?</h2>
+							<p>Check our YouTube for runs from previous events.</p>
+							<Button
+								actionText="Watch again"
+								link={globals.socialLinks.youtube}
+								iconRight={faChevronRight}
+								colorScheme={'secondary'}
+								target={'_blank'}
+							/>
+						</div>
 					</div>
 				</div>
 				<TileGroup
@@ -63,9 +63,9 @@ export default function Home() {
 							anchor: 'participate',
 							ctas: [
 								{
-								  actionText: "Submit your run",
-								  link: "/submit-game",
-								  iconRight: faChevronRight
+									actionText: 'Submit your run',
+									link: '/submit-game',
+									iconRight: faChevronRight,
 								},
 								// {
 								//   actionText: "Buy a ticket",

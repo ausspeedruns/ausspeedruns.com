@@ -70,7 +70,7 @@ const Ticket: React.FC<Props> = (props: Props) => {
 						<span>Account #</span>
 						<span>30-192-8208</span>
 						<span>Amount</span>
-						<span>${totalCost}</span>
+						<span>${totalCost} AUD</span>
 					</>
 				)}
 				<span>Ticket ID</span>

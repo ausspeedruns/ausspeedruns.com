@@ -15,6 +15,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				throw new Error('No account ID');
 			}
 
+			if (!req.query.username) {
+				throw new Error('No username');
+			}
+
 			// Create Checkout Sessions from body params.
 			const session = await stripe.checkout.sessions.create({
 				line_items: [
@@ -29,20 +33,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					},
 				],
 				mode: 'payment',
-				success_url: `${req.headers.origin}/ASM2022/tickets?success=true`,
+				success_url: `${req.headers.origin}/user/${req.query.username}#tickets`,
 				cancel_url: `${req.headers.origin}/ASM2022/tickets?cancelled=true&session_id={CHECKOUT_SESSION_ID}`,
 			});
 
 			// Generate ticket code
 			urqlClient.mutation(gql`
 				mutation ($userID: ID, $stripeID: String) {
-					createTicket(data: { user: { connect: { id: $userID } }, numberOfTickets: 1, method: stripe, stripeID: $stripeID }) {
+					createTicket(data: { user: { connect: { id: $userID } }, event: { connect: { shortname:"ASM2022" } }, numberOfTickets: 1, method: stripe, stripeID: $stripeID }) {
 						ticketID
 					}
 				}
-			`, { userID: req.query.account, stripeID: session.id }).toPromise().then(result => {
-				console.log(result);
-			});
+			`, { userID: req.query.account, stripeID: session.id }).toPromise();
 
 			res.redirect(303, session.url);
 		} catch (err) {

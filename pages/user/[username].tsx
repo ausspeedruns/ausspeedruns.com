@@ -331,7 +331,7 @@ export default function ProfilePage() {
 				{/* Tickets */}
 				{userData.tickets.length > 0 && (
 					<div className={styles.submissions}>
-						<h3>Tickets (Private)</h3>
+						<h3 id="tickets">Tickets (Private)</h3>
 						{userData.tickets.map((ticket) => {
 							return <Ticket key={ticket.ticketID} ticketData={ticket} />
 						})}

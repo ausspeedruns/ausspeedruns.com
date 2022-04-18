@@ -1,4 +1,5 @@
 @import "../../styles/colors.scss";
+@import "../../styles/responsive.scss";
 
 .ticket {
 	border: 5px solid $primary;
@@ -9,6 +10,14 @@
 
 	background-image: url('../../styles/img/TicketWatermark.png');
 	background-size: 60px;
+
+	@include breakpoint($sm-zero-only) {
+		width: 100%;
+	}
+
+	.eventLogo {
+		image-rendering: pixelated;
+	}
 
 	.ticketID {
 		display: flex;

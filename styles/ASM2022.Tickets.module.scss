@@ -1,5 +1,6 @@
 @use 'base';
 @import './colors.scss';
+@import './responsive.scss';
 
 .app {
 	min-height: 100vh;
@@ -15,10 +16,51 @@
 	.image {
 		width: 50%;
 		height: auto;
+
+		@include breakpoint($sm-zero-only) {
+			width: 100%;
+		}
 	}
 
-	.bankTransferButton {
+	.linkToProfile {
+		margin: 1rem 0;
+		font-size: 1.2rem;
+		border: 3px $primary solid;
+		width: 100%;
+		text-align: center;
+		padding: 0.5rem;
+		border-radius: 10px;
+	}
+
+	.fullWidth {
+		width: 100%;
+	}
+
+	hr {
+		width: 100%;
+	}
+
+	.loginError {
+		font-weight: bold;
+		font-style: italic;
+		font-size: 1.5rem;
+	}
+
+	.paymentMethod {
 		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		width: 50%;
+		margin: 1rem 0;
+
+		@include breakpoint($sm-zero-only) {
+			width: 100%;
+		}
+
+		.bankTransferButton {
+			display: flex;
+			gap: 8px;
+		}
 	}
 
 	.generatedTickets {
@@ -47,7 +89,6 @@
 			grid-template-columns: 50% 50%;
 			gap: 2px 5px;
 
-
 			span:nth-child(odd) {
 				text-align: right;
 			}
@@ -61,16 +102,6 @@
 			text-align: center;
 			margin-top: 1rem;
 		}
-	}
-}
-
-.form {
-	section {
-		background: #ffffff;
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		justify-content: space-between;
 	}
 }
 

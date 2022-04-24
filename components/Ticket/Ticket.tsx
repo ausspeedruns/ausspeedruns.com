@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import JSBarcode from 'jsbarcode';
 
 import styles from './Ticket.module.scss';
@@ -28,6 +28,7 @@ const LOGO_HEIGHT = 50;
 
 const Ticket: React.FC<Props> = (props: Props) => {
 	const { numberOfTickets, paid, ticketID, totalCost, method, taken, event } = props.ticketData;
+	const barcodeRef = useRef<SVGSVGElement>();
 
 	let status = 'Unpaid';
 	if (taken) {
@@ -37,9 +38,10 @@ const Ticket: React.FC<Props> = (props: Props) => {
 	}
 
 	useEffect(() => {
-		if (!paid) return;
-		JSBarcode(`#ticketBarcode-${ticketID}`, ticketID, { displayValue: false });
-	}, [ticketID, paid]);
+		if (barcodeRef.current && paid) {
+			JSBarcode(barcodeRef.current, ticketID, { displayValue: false });
+		}
+	}, [ticketID, paid, barcodeRef]);
 
 	const aspectRatio = event.logo.width / event.logo.height;
 
@@ -54,7 +56,7 @@ const Ticket: React.FC<Props> = (props: Props) => {
 					alt={`${event.shortname} logo`}
 					className={styles.eventLogo}
 				/>
-				{paid && <canvas id={`ticketBarcode-${ticketID}`}></canvas>}
+				{paid && <svg ref={barcodeRef} className={styles.barcode}></svg>}
 				<span>Ticket ID</span>
 				<span className={styles.label}>{ticketID}</span>
 			</div>
@@ -84,8 +86,8 @@ const Ticket: React.FC<Props> = (props: Props) => {
 				<>
 					<p>Currently unpaid. Allow 7 days for the ticket to be updated.</p>
 					<p>
-						You <b>MUST</b> send the Ticket ID as the &quot;reference&quot;. Failure to do so will result in your ticket not being
-						paid.
+						You <b>MUST</b> send the Ticket ID as the &quot;reference&quot;. Failure to do so will result in your ticket
+						not being paid.
 					</p>
 				</>
 			)}

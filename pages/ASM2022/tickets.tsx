@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { loadStripe } from '@stripe/stripe-js';
-import { Box, Button, TextField, ThemeProvider } from '@mui/material';
+import { Box, Button, CircularProgress, Skeleton, TextField, ThemeProvider, Tooltip } from '@mui/material';
 import { useMutation, useQuery } from 'urql';
 import { gql } from '@keystone-6/core';
 
@@ -24,6 +24,8 @@ const Tickets = () => {
 	const auth = useAuth();
 	const [noOfTickets, setNoOfTickets] = useState(1);
 	const [deletedTicket, setDeletedTicket] = useState(false);
+	const [genTicketLoading, setGenTicketLoading] = useState(false);
+	const [waitForTicket, setWaitForTicket] = useState(false);
 
 	const [deleteStripeTicketRes, deleteStripeTicket] = useMutation(gql`
 		mutation ($sessionID: String) {
@@ -79,6 +81,30 @@ const Tickets = () => {
 		}
 	`);
 
+	const successfulTicket = !generateBankTicketsRes.error && generateBankTicketsRes?.data?.createTicket.ticketID;
+
+	useEffect(() => {
+		let timeout: NodeJS.Timeout;
+		if (genTicketLoading) {
+			timeout = setTimeout(() => {
+				setWaitForTicket(true);
+			}, 2500);
+		}
+		return () => clearTimeout(timeout);
+	}, [genTicketLoading, successfulTicket]);
+
+	useEffect(() => {
+		let interval: NodeJS.Timer;
+		if (waitForTicket) {
+			interval = setInterval(() => {
+				if (successfulTicket) {
+					setGenTicketLoading(false);
+				}
+			}, 500);
+		}
+		return () => clearInterval(interval);
+	}, [waitForTicket, successfulTicket]);
+
 	function generateTickets() {
 		if (!auth.ready) {
 			console.error('Tried to generate tickets but auth was not ready');
@@ -86,10 +112,8 @@ const Tickets = () => {
 		}
 
 		generateBankTickets({ userID: auth.sessionData.id, numberOfTickets: noOfTickets });
+		setGenTicketLoading(true);
 	}
-
-	// console.log(generateBankTicketsRes);
-	const successfulTicket = !generateBankTicketsRes.error && generateBankTicketsRes?.data?.createTicket.ticketID;
 
 	let accId = '';
 	if (auth.ready) {
@@ -168,18 +192,30 @@ const Tickets = () => {
 								color="secondary"
 								label="Number of tickets"
 							></TextField>
+							{/* <Tooltip title={successfulTicket ? "Refresh the page if you need to generate more" : undefined} arrow> */}
 							<Button
 								variant="contained"
 								color="primary"
 								fullWidth
-								disabled={isNaN(noOfTickets) || noOfTickets <= 0 || !auth.ready || (auth.ready && !auth.sessionData)}
+								disabled={
+									isNaN(noOfTickets) ||
+									noOfTickets <= 0 ||
+									!auth.ready ||
+									(auth.ready && !auth.sessionData) ||
+									genTicketLoading ||
+									successfulTicket
+								}
 								onClick={generateTickets}
 							>
 								Generate {noOfTickets > 1 && noOfTickets} Ticket{noOfTickets > 1 && 's'} $
 								{isNaN(noOfTickets) || noOfTickets <= 0 ? '∞' : noOfTickets * 35}
 							</Button>
+							{/* </Tooltip> */}
 						</div>
-						{successfulTicket && <ASMTicket ticketData={generateBankTicketsRes.data.createTicket} />}
+						{successfulTicket && !genTicketLoading && (
+							<ASMTicket ticketData={generateBankTicketsRes.data.createTicket} />
+						)}
+						{genTicketLoading && <ASMTicketSkeleton />}
 					</section>
 					<hr />
 					<section className={styles.fullWidth}>
@@ -240,6 +276,30 @@ const ASMTicket: React.FC<ASMTicketProps> = (props: ASMTicketProps) => {
 				being paid.
 			</p>
 			<p>The ticket will take up to 7 days to update.</p>
+		</Box>
+	);
+};
+
+const ASMTicketSkeleton: React.FC = () => {
+	return (
+		<Box className={[styles.generatedTicketsSkeleton, styles.animation].join(' ')} sx={{ boxShadow: 8 }}>
+			<div className={styles.ticketID}>
+				<Skeleton variant="text" width={100} />
+				<Skeleton variant="rectangular" width={240} height={80} />
+			</div>
+			<div className={styles.informationGrid}>
+				<Skeleton variant="text" />
+				<Skeleton variant="text" />
+				<Skeleton variant="text" />
+				<Skeleton variant="text" />
+				<Skeleton variant="text" />
+			</div>
+			<p>
+				<Skeleton variant="rectangular" height={80} />
+			</p>
+			<p>
+				<Skeleton variant="text" />
+			</p>
 		</Box>
 	);
 };

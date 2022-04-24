@@ -19,6 +19,10 @@
 		image-rendering: pixelated;
 	}
 
+	.barcode {
+		width: 100%;
+	}
+
 	.ticketID {
 		display: flex;
 		flex-direction: column;

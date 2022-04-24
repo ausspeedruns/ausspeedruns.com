@@ -214,7 +214,6 @@ export default function ProfilePage() {
 
 	useEffect(() => {
 		setLoading(true);
-		console.log(queryResult);
 		if (!queryResult.fetching) {
 			if (queryResult.data?.user) {
 				setLoading(false);

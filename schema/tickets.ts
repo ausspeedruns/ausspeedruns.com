@@ -67,18 +67,20 @@ export const Ticket: Lists.Ticket = list({
 	},
 	hooks: {
 		resolveInput: ({ operation, resolvedData }) => {
+			const mutableData = {...resolvedData};
+
 			if (operation === 'create') {
 				// Set TicketID
-				resolvedData.ticketID = `T-${nanoid()}`;
+				mutableData.ticketID = `T-${nanoid()}`;
 
 				// Set the stripe ID to just be something random since it has to be unique
 				// When the method is bank the stripe id SHOULD NEVER BE USED!!!!
 				if (resolvedData.method === 'bank') {
-					resolvedData.stripeID = uuid();
+					mutableData.stripeID = uuid();
 				}
 			}
 
-			return resolvedData;
+			return mutableData;
 		}
 	}
 });

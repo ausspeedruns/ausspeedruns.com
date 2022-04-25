@@ -27,6 +27,20 @@ const Tickets = () => {
 	const [genTicketLoading, setGenTicketLoading] = useState(false);
 	const [waitForTicket, setWaitForTicket] = useState(false);
 
+	const [profileQueryRes, profileQuery] = useQuery({
+		query: gql`
+			query Profile($userId: ID!) {
+				user(where: { id: $userId }) {
+					verified
+				}
+			}
+		`,
+		variables: {
+			userId: auth.ready ? auth.sessionData?.id ?? '' : '',
+		},
+		pause: !auth.ready || !auth?.sessionData?.id
+	});
+
 	const [deleteStripeTicketRes, deleteStripeTicket] = useMutation(gql`
 		mutation ($sessionID: String) {
 			deleteTicket(where: { stripeID: $sessionID }) {
@@ -45,7 +59,7 @@ const Tickets = () => {
 			deleteStripeTicket({ sessionID: query.get('session_id') }).then((res) => {
 				if (!res.error) {
 					setDeletedTicket(true);
-					console.log('Successfully removed a dead ticket :D');
+					// console.log('Successfully removed a dead ticket :D');
 				} else {
 					console.error(res.error);
 				}
@@ -62,6 +76,9 @@ const Tickets = () => {
 			}
 		`,
 		pause: !auth.ready || !auth?.sessionData?.id,
+		variables: {
+			userID: auth.ready ? auth.sessionData?.id ?? '' : '',
+		}
 	});
 
 	const [generateBankTicketsRes, generateBankTickets] = useMutation(gql`
@@ -161,7 +178,12 @@ const Tickets = () => {
 					</section>
 					<hr />
 					{auth.ready && !auth?.sessionData && (
-						<section className={styles.loginError}>You must be logged in to purchase tickets.</section>
+						<section className={styles.loginError}>
+							You must be logged in and email verified to purchase tickets.
+						</section>
+					)}
+					{(auth.ready && auth?.sessionData && !profileQueryRes.data?.user?.verified) && (
+						<section className={styles.loginError}>Your email must be verified to purchase tickets.</section>
 					)}
 					<section className={styles.paymentMethod}>
 						<h2>Stripe</h2>
@@ -173,7 +195,7 @@ const Tickets = () => {
 								variant="contained"
 								color="primary"
 								fullWidth
-								disabled={!auth.ready || (auth.ready && !auth.sessionData)}
+								disabled={!auth.ready || (auth.ready && !auth.sessionData) || !profileQueryRes.data?.user?.verified}
 							>
 								Checkout $35.80
 							</Button>
@@ -203,7 +225,8 @@ const Tickets = () => {
 									!auth.ready ||
 									(auth.ready && !auth.sessionData) ||
 									genTicketLoading ||
-									successfulTicket
+									successfulTicket ||
+									!profileQueryRes.data?.user?.verified
 								}
 								onClick={generateTickets}
 							>
@@ -251,7 +274,6 @@ interface ASMTicketProps {
 }
 
 const ASMTicket: React.FC<ASMTicketProps> = (props: ASMTicketProps) => {
-	console.log(props);
 	const { totalCost, ticketID, numberOfTickets } = props.ticketData;
 	return (
 		<Box className={styles.generatedTickets} sx={{ boxShadow: 8 }}>

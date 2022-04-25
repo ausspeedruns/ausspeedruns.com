@@ -42,6 +42,7 @@ export default function EventPage() {
 				{queryResult.data?.event.acceptingSubmissions && (
 					<Button actionText="Submissions are open!" link="/submit-game" iconRight={faArrowRight} />
 				)}
+				<Button actionText="Purchase tickets" link="/ASM2022/tickets" iconRight={faArrowRight} />
 			</header>
 			<main>
 				<div className={styles.contentRow}>

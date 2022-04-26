@@ -38,7 +38,7 @@ const Tickets = () => {
 		variables: {
 			userId: auth.ready ? auth.sessionData?.id ?? '' : '',
 		},
-		pause: !auth.ready || !auth?.sessionData?.id
+		pause: !auth.ready || !auth?.sessionData?.id,
 	});
 
 	const [deleteStripeTicketRes, deleteStripeTicket] = useMutation(gql`
@@ -78,7 +78,7 @@ const Tickets = () => {
 		pause: !auth.ready || !auth?.sessionData?.id,
 		variables: {
 			userID: auth.ready ? auth.sessionData?.id ?? '' : '',
-		}
+		},
 	});
 
 	const [generateBankTicketsRes, generateBankTickets] = useMutation(gql`
@@ -182,7 +182,7 @@ const Tickets = () => {
 							You must be logged in and email verified to purchase tickets.
 						</section>
 					)}
-					{(auth.ready && auth?.sessionData && !profileQueryRes.data?.user?.verified) && (
+					{auth.ready && auth?.sessionData && !profileQueryRes.data?.user?.verified && (
 						<section className={styles.loginError}>Your email must be verified to purchase tickets.</section>
 					)}
 					<section className={styles.paymentMethod}>
@@ -197,7 +197,7 @@ const Tickets = () => {
 								fullWidth
 								disabled={!auth.ready || (auth.ready && !auth.sessionData) || !profileQueryRes.data?.user?.verified}
 							>
-								Checkout $35.80
+								Checkout $35.50 each
 							</Button>
 						</form>
 					</section>
@@ -294,8 +294,8 @@ const ASMTicket: React.FC<ASMTicketProps> = (props: ASMTicketProps) => {
 				<span>{numberOfTickets}</span>
 			</div>
 			<p>
-				You <b>MUST</b> send the Ticket ID as the &quot;reference&quot;. Failure to do so will result in your ticket not
-				being paid.
+				You <b>MUST</b> send the Ticket ID as the &quot;reference&quot;. Failure to do so will result in your ticket
+				marked as not being paid.
 			</p>
 			<p>The ticket will take up to 7 days to update.</p>
 		</Box>

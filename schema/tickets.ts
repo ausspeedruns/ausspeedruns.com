@@ -8,7 +8,7 @@ import { FieldAccessControl } from '@keystone-6/core/types';
 
 // Ticket ID Alphabet
 // Has IOZ removed to reduce chance of people getting confused
-const nanoid = customAlphabet('0123456789ABCDEFGHJKLMNPQRSTUVWXY', 9);
+const nanoid = customAlphabet('123456789ABCDEFGHJKLMNPQRSTUVWXY', 9);
 
 const fieldAccess = {
 	editSelfOrRead: <FieldAccessControl<Lists.Ticket.TypeInfo>>{

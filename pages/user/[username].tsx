@@ -86,9 +86,9 @@ export type UserPageData = {
 				width: number;
 				height: number;
 			};
-		}
+		};
 		numberOfTickets: number;
-		method: "bank" | "stripe";
+		method: 'bank' | 'stripe';
 		taken: boolean;
 	}[];
 };
@@ -188,7 +188,7 @@ export default function ProfilePage() {
 							shortname
 						}
 					}
-					tickets {
+					tickets(where: { OR: [{ method: { equals: bank } }, { paid: { equals: true } }] }) {
 						ticketID
 						totalCost
 						paid
@@ -332,7 +332,7 @@ export default function ProfilePage() {
 					<div className={styles.submissions}>
 						<h3 id="tickets">Tickets (Private)</h3>
 						{userData.tickets.map((ticket) => {
-							return <Ticket key={ticket.ticketID} ticketData={ticket} />
+							return <Ticket key={ticket.ticketID} ticketData={ticket} />;
 						})}
 					</div>
 				)}

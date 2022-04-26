@@ -67,6 +67,97 @@ type Query {
   ): ValidateUserPasswordResetTokenResult
 }
 
+type Mutation {
+  """
+   Update stripe ticket
+  """
+  confirmStripe(
+    stripeID: String!
+    numberOfTickets: Int!
+    apiKey: String!
+  ): Ticket
+
+  """
+   Generate a ticket
+  """
+  generateTicket(
+    userID: ID!
+    numberOfTickets: Int!
+    method: TicketMethodType!
+    event: String!
+    stripeID: String
+    apiKey: String!
+  ): Ticket
+  createPost(data: PostCreateInput!): Post
+  createPosts(data: [PostCreateInput!]!): [Post]
+  updatePost(where: PostWhereUniqueInput!, data: PostUpdateInput!): Post
+  updatePosts(data: [PostUpdateArgs!]!): [Post]
+  deletePost(where: PostWhereUniqueInput!): Post
+  deletePosts(where: [PostWhereUniqueInput!]!): [Post]
+  createUser(data: UserCreateInput!): User
+  createUsers(data: [UserCreateInput!]!): [User]
+  updateUser(where: UserWhereUniqueInput!, data: UserUpdateInput!): User
+  updateUsers(data: [UserUpdateArgs!]!): [User]
+  deleteUser(where: UserWhereUniqueInput!): User
+  deleteUsers(where: [UserWhereUniqueInput!]!): [User]
+  createSubmission(data: SubmissionCreateInput!): Submission
+  createSubmissions(data: [SubmissionCreateInput!]!): [Submission]
+  updateSubmission(
+    where: SubmissionWhereUniqueInput!
+    data: SubmissionUpdateInput!
+  ): Submission
+  updateSubmissions(data: [SubmissionUpdateArgs!]!): [Submission]
+  deleteSubmission(where: SubmissionWhereUniqueInput!): Submission
+  deleteSubmissions(where: [SubmissionWhereUniqueInput!]!): [Submission]
+  createEvent(data: EventCreateInput!): Event
+  createEvents(data: [EventCreateInput!]!): [Event]
+  updateEvent(where: EventWhereUniqueInput!, data: EventUpdateInput!): Event
+  updateEvents(data: [EventUpdateArgs!]!): [Event]
+  deleteEvent(where: EventWhereUniqueInput!): Event
+  deleteEvents(where: [EventWhereUniqueInput!]!): [Event]
+  createRole(data: RoleCreateInput!): Role
+  createRoles(data: [RoleCreateInput!]!): [Role]
+  updateRole(where: RoleWhereUniqueInput!, data: RoleUpdateInput!): Role
+  updateRoles(data: [RoleUpdateArgs!]!): [Role]
+  deleteRole(where: RoleWhereUniqueInput!): Role
+  deleteRoles(where: [RoleWhereUniqueInput!]!): [Role]
+  createRun(data: RunCreateInput!): Run
+  createRuns(data: [RunCreateInput!]!): [Run]
+  updateRun(where: RunWhereUniqueInput!, data: RunUpdateInput!): Run
+  updateRuns(data: [RunUpdateArgs!]!): [Run]
+  deleteRun(where: RunWhereUniqueInput!): Run
+  deleteRuns(where: [RunWhereUniqueInput!]!): [Run]
+  createVerification(data: VerificationCreateInput!): Verification
+  createVerifications(data: [VerificationCreateInput!]!): [Verification]
+  updateVerification(
+    where: VerificationWhereUniqueInput!
+    data: VerificationUpdateInput!
+  ): Verification
+  updateVerifications(data: [VerificationUpdateArgs!]!): [Verification]
+  deleteVerification(where: VerificationWhereUniqueInput!): Verification
+  deleteVerifications(where: [VerificationWhereUniqueInput!]!): [Verification]
+  createTicket(data: TicketCreateInput!): Ticket
+  createTickets(data: [TicketCreateInput!]!): [Ticket]
+  updateTicket(where: TicketWhereUniqueInput!, data: TicketUpdateInput!): Ticket
+  updateTickets(data: [TicketUpdateArgs!]!): [Ticket]
+  deleteTicket(where: TicketWhereUniqueInput!): Ticket
+  deleteTickets(where: [TicketWhereUniqueInput!]!): [Ticket]
+  endSession: Boolean!
+  authenticateUserWithPassword(
+    email: String!
+    password: String!
+  ): UserAuthenticationWithPasswordResult
+  createInitialUser(
+    data: CreateInitialUserInput!
+  ): UserAuthenticationWithPasswordSuccess!
+  sendUserPasswordResetLink(email: String!): Boolean!
+  redeemUserPasswordResetToken(
+    email: String!
+    token: String!
+    password: String!
+  ): RedeemUserPasswordResetTokenResult
+}
+
 type Post {
   id: ID!
   title: String
@@ -1204,77 +1295,6 @@ scalar JSON
   @specifiedBy(
     url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf"
   )
-
-type Mutation {
-  createPost(data: PostCreateInput!): Post
-  createPosts(data: [PostCreateInput!]!): [Post]
-  updatePost(where: PostWhereUniqueInput!, data: PostUpdateInput!): Post
-  updatePosts(data: [PostUpdateArgs!]!): [Post]
-  deletePost(where: PostWhereUniqueInput!): Post
-  deletePosts(where: [PostWhereUniqueInput!]!): [Post]
-  createUser(data: UserCreateInput!): User
-  createUsers(data: [UserCreateInput!]!): [User]
-  updateUser(where: UserWhereUniqueInput!, data: UserUpdateInput!): User
-  updateUsers(data: [UserUpdateArgs!]!): [User]
-  deleteUser(where: UserWhereUniqueInput!): User
-  deleteUsers(where: [UserWhereUniqueInput!]!): [User]
-  createSubmission(data: SubmissionCreateInput!): Submission
-  createSubmissions(data: [SubmissionCreateInput!]!): [Submission]
-  updateSubmission(
-    where: SubmissionWhereUniqueInput!
-    data: SubmissionUpdateInput!
-  ): Submission
-  updateSubmissions(data: [SubmissionUpdateArgs!]!): [Submission]
-  deleteSubmission(where: SubmissionWhereUniqueInput!): Submission
-  deleteSubmissions(where: [SubmissionWhereUniqueInput!]!): [Submission]
-  createEvent(data: EventCreateInput!): Event
-  createEvents(data: [EventCreateInput!]!): [Event]
-  updateEvent(where: EventWhereUniqueInput!, data: EventUpdateInput!): Event
-  updateEvents(data: [EventUpdateArgs!]!): [Event]
-  deleteEvent(where: EventWhereUniqueInput!): Event
-  deleteEvents(where: [EventWhereUniqueInput!]!): [Event]
-  createRole(data: RoleCreateInput!): Role
-  createRoles(data: [RoleCreateInput!]!): [Role]
-  updateRole(where: RoleWhereUniqueInput!, data: RoleUpdateInput!): Role
-  updateRoles(data: [RoleUpdateArgs!]!): [Role]
-  deleteRole(where: RoleWhereUniqueInput!): Role
-  deleteRoles(where: [RoleWhereUniqueInput!]!): [Role]
-  createRun(data: RunCreateInput!): Run
-  createRuns(data: [RunCreateInput!]!): [Run]
-  updateRun(where: RunWhereUniqueInput!, data: RunUpdateInput!): Run
-  updateRuns(data: [RunUpdateArgs!]!): [Run]
-  deleteRun(where: RunWhereUniqueInput!): Run
-  deleteRuns(where: [RunWhereUniqueInput!]!): [Run]
-  createVerification(data: VerificationCreateInput!): Verification
-  createVerifications(data: [VerificationCreateInput!]!): [Verification]
-  updateVerification(
-    where: VerificationWhereUniqueInput!
-    data: VerificationUpdateInput!
-  ): Verification
-  updateVerifications(data: [VerificationUpdateArgs!]!): [Verification]
-  deleteVerification(where: VerificationWhereUniqueInput!): Verification
-  deleteVerifications(where: [VerificationWhereUniqueInput!]!): [Verification]
-  createTicket(data: TicketCreateInput!): Ticket
-  createTickets(data: [TicketCreateInput!]!): [Ticket]
-  updateTicket(where: TicketWhereUniqueInput!, data: TicketUpdateInput!): Ticket
-  updateTickets(data: [TicketUpdateArgs!]!): [Ticket]
-  deleteTicket(where: TicketWhereUniqueInput!): Ticket
-  deleteTickets(where: [TicketWhereUniqueInput!]!): [Ticket]
-  endSession: Boolean!
-  authenticateUserWithPassword(
-    email: String!
-    password: String!
-  ): UserAuthenticationWithPasswordResult
-  createInitialUser(
-    data: CreateInitialUserInput!
-  ): UserAuthenticationWithPasswordSuccess!
-  sendUserPasswordResetLink(email: String!): Boolean!
-  redeemUserPasswordResetToken(
-    email: String!
-    token: String!
-    password: String!
-  ): RedeemUserPasswordResetTokenResult
-}
 
 union UserAuthenticationWithPasswordResult =
     UserAuthenticationWithPasswordSuccess

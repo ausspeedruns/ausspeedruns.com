@@ -6,7 +6,7 @@ import { createClient, gql } from 'urql';
 
 const urqlClient = createClient({
   // url: 'http://localhost:8000/api/graphql',
-	url: process.env.KEYSTONE_URL,
+  url: process.env.KEYSTONE_URL,
 });
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2020-08-27' });
@@ -88,12 +88,12 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
 const fulfillOrder = async (sessionID: any, quantity: number) => {
   // Update ticket information
   const mutRes = await urqlClient.mutation(gql`
-    mutation ($sessionID: String, $quantity: Int) {
-      updateTicket(where: { stripeID: $sessionID }, data:{ paid: true, numberOfTickets: $quantity }) {
+    mutation ($sessionID: String!, $quantity: Int!, $apiKey: String!) {
+      confirmStripe(stripeID: $sessionID, numberOfTickets: $quantity, apiKey: $apiKey) {
         __typename
       }
     }
-  `, { sessionID, quantity }).toPromise();
+  `, { sessionID, quantity, apiKey: process.env.API_KEY }).toPromise();
 }
 
 export default cors(webhookHandler);

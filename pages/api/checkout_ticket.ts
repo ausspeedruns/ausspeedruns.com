@@ -20,6 +20,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				throw new Error('No username');
 			}
 
+			if (!req.query.event) {
+				throw new Error('Missing event');
+			}
+
 			// Create Checkout Sessions from body params.
 			const session = await stripe.checkout.sessions.create({
 				line_items: [
@@ -40,12 +44,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 			// Generate ticket code
 			urqlClient.mutation(gql`
-				mutation ($userID: ID, $stripeID: String) {
-					createTicket(data: { user: { connect: { id: $userID } }, event: { connect: { shortname:"ASM2022" } }, numberOfTickets: 1, method: stripe, stripeID: $stripeID }) {
-						ticketID
+				mutation ($userID: ID!, $stripeID: String, $event: String!, $apiKey: String!) {
+					generateTicket(
+						userID: $userID
+						event: $event
+						numberOfTickets: 1
+						method: stripe
+						stripeID: $stripeID
+						apiKey: $apiKey
+					) {
+						__typename
 					}
 				}
-			`, { userID: req.query.account, stripeID: session.id }).toPromise();
+			`, { userID: req.query.account, stripeID: session.id, event: req.query.event, apiKey: process.env.API_KEY }).toPromise();
 
 			res.redirect(303, session.url);
 		} catch (err) {

@@ -4,8 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { loadStripe } from '@stripe/stripe-js';
 import { Box, Button, CircularProgress, Skeleton, TextField, ThemeProvider, Tooltip } from '@mui/material';
-import { useMutation, useQuery } from 'urql';
+import { useMutation, UseMutationResponse, useQuery } from 'urql';
 import { gql } from '@keystone-6/core';
+import useSWR, { Fetcher } from 'swr';
 
 import styles from '../../styles/ASM2022.Tickets.module.scss';
 import Navbar from '../../components/Navbar/Navbar';
@@ -20,12 +21,34 @@ const stripePromise = loadStripe(
 	'pk_test_51J5TzBKT8G4cNWT5xLEWYnNaZYaHYunLI5yYQ8TqbYdffm8Iwxp20YjShZKXAZOukignMZNtmXFxMHWl9la17mVL00YAz9Qg4s'
 );
 
+interface BankTicketResponse {
+	generateTicket: {
+		ticketID: string,
+		totalCost: number,
+		numberOfTickets: number,
+		error?: Record<string, any>,
+	}
+}
+
+const bankTicketsFetcher = async (url: string) => {
+	const res = await fetch(url)
+	const data = await res.json()
+
+	if (res.status !== 200) {
+		throw new Error(data.message)
+	}
+	return data
+}
+
 const Tickets = () => {
 	const auth = useAuth();
 	const [noOfTickets, setNoOfTickets] = useState(1);
 	const [deletedTicket, setDeletedTicket] = useState(false);
 	const [genTicketLoading, setGenTicketLoading] = useState(false);
 	const [waitForTicket, setWaitForTicket] = useState(false);
+	const [bankTicketsData, setBankTicketsData] = useState<UseMutationResponse<BankTicketResponse, object>[0]>(undefined);
+
+	// const bankTicketResponse = useSWR<BankTicketResponse>(genTicketLoading ? `/api/create_bank_ticket?account=${auth.ready ? auth?.sessionData.id : ''}&tickets=${noOfTickets}&event=ASM2022` : null, bankTicketsFetcher);
 
 	const [profileQueryRes, profileQuery] = useQuery({
 		query: gql`
@@ -81,24 +104,26 @@ const Tickets = () => {
 		},
 	});
 
-	const [generateBankTicketsRes, generateBankTickets] = useMutation(gql`
-		mutation ($userID: ID, $numberOfTickets: Int) {
-			createTicket(
-				data: {
-					user: { connect: { id: $userID } }
-					event: { connect: { shortname: "ASM2022" } }
-					numberOfTickets: $numberOfTickets
-					method: bank
-				}
-			) {
-				ticketID
-				totalCost
-				numberOfTickets
-			}
-		}
-	`);
+	// const [generateBankTicketsRes, generateBankTickets] = useMutation(gql`
+	// 	mutation ($userID: ID, $numberOfTickets: Int) {
+	// 		createTicket(
+	// 			data: {
+	// 				user: { connect: { id: $userID } }
+	// 				event: { connect: { shortname: "ASM2022" } }
+	// 				numberOfTickets: $numberOfTickets
+	// 				method: bank
+	// 			}
+	// 		) {
+	// 			ticketID
+	// 			totalCost
+	// 			numberOfTickets
+	// 		}
+	// 	}
+	// `);
 
-	const successfulTicket = !generateBankTicketsRes.error && generateBankTicketsRes?.data?.createTicket.ticketID;
+	// const successfulTicket = !generateBankTicketsRes.error && generateBankTicketsRes?.data?.createTicket.ticketID;
+	// const successfulTicket = !bankTicketResponse.error && Boolean(bankTicketResponse?.data?.ticketID);
+	const successfulTicket = Boolean(bankTicketsData) && !Boolean(bankTicketsData.error);
 
 	useEffect(() => {
 		let timeout: NodeJS.Timeout;
@@ -122,14 +147,20 @@ const Tickets = () => {
 		return () => clearInterval(interval);
 	}, [waitForTicket, successfulTicket]);
 
-	function generateTickets() {
+	async function generateTickets() {
 		if (!auth.ready) {
 			console.error('Tried to generate tickets but auth was not ready');
 			return;
 		}
 
-		generateBankTickets({ userID: auth.sessionData.id, numberOfTickets: noOfTickets });
 		setGenTicketLoading(true);
+		const res = await fetch(`/api/create_bank_ticket?account=${auth.ready ? auth?.sessionData.id : ''}&tickets=${noOfTickets}&event=ASM2022`)
+		// generateBankTickets({ userID: auth.sessionData.id, numberOfTickets: noOfTickets });
+		if (res.status === 200) {
+			setBankTicketsData(await res.json());
+		} else {
+			console.log(res);
+		}
 	}
 
 	let accId = '';
@@ -188,7 +219,7 @@ const Tickets = () => {
 					<section className={styles.paymentMethod}>
 						<h2>Stripe</h2>
 						<p>Clicking on checkout will redirect you to the stripe checkout. </p>
-						<form action={`/api/checkout_ticket?account=${accId}&username=${accUsername}`} method="POST">
+						<form action={`/api/checkout_ticket?account=${accId}&username=${accUsername}&event=ASM2022`} method="POST">
 							<Button
 								type="submit"
 								role="link"
@@ -235,10 +266,11 @@ const Tickets = () => {
 							</Button>
 							{/* </Tooltip> */}
 						</div>
+						{bankTicketsData?.error && <p>It seems like there was an error. Please try again or let Clubwho know on Discord!</p>}
 						{successfulTicket && !genTicketLoading && (
-							<ASMTicket ticketData={generateBankTicketsRes.data.createTicket} />
+							<ASMTicket ticketData={bankTicketsData.data.generateTicket} />
 						)}
-						{genTicketLoading && <ASMTicketSkeleton />}
+						{genTicketLoading && !bankTicketsData?.error && <ASMTicketSkeleton />}
 					</section>
 					<hr />
 					<section className={styles.fullWidth}>

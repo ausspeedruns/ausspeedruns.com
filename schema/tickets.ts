@@ -1,36 +1,30 @@
-import { graphql, list } from '@keystone-6/core';
+import { graphql, graphQLSchemaExtension, list } from '@keystone-6/core';
 import { checkbox, integer, relationship, select, text, timestamp, virtual } from '@keystone-6/core/fields';
-import { operations, permissions } from './access';
+import { operations, permissions, SessionContext } from './access';
 import { Lists } from '.keystone/types';
 import { customAlphabet } from 'nanoid';
 import { v4 as uuid } from 'uuid';
-import { FieldAccessControl } from '@keystone-6/core/types';
+import { ListFilterAccessControl } from '@keystone-6/core/types';
 
 // Ticket ID Alphabet
 // Has IOZ removed to reduce chance of people getting confused
 const nanoid = customAlphabet('123456789ABCDEFGHJKLMNPQRSTUVWXY', 9);
 
-const fieldAccess = {
-	editSelfOrRead: <FieldAccessControl<Lists.Ticket.TypeInfo>>{
-		update: ({ session, item }: any) => permissions.canManageUsers({ session }) || session.itemId === item.id
-	},
-	editSelfOrHidden: <FieldAccessControl<Lists.Ticket.TypeInfo>>{
-		update: ({ session, item }: any) => permissions.canManageUsers({ session }) || session.itemId === item.id,
-		read: ({ session, item }: any) => permissions.canManageUsers({ session }) || session.itemId === item.id,
-	},
-	readSelfOrHidden: <FieldAccessControl<Lists.Ticket.TypeInfo>>{
-		update: permissions.canManageUsers,
-		read: ({ session, item }: any) => permissions.canManageUsers({ session }) || session.itemId === item.id,
-	},
+const filterTickets: ListFilterAccessControl<"query", Lists.Ticket.TypeInfo> = ({ session }: SessionContext) => {
+	if (!session?.data) return false;
+	if (session.data.roles?.some(role => role.canReadRunnerMgmt)) return true;
+	return { user: { id: { equals: session.data.id } } };
 }
 
 export const Ticket: Lists.Ticket = list({
 	access: {
-		// operation: {
-		// 	create: operations.admin,
-		// 	update: operations.runnerMgmt,
-		// 	query: operations.runnerMgmt,
-		// }
+		operation: {
+			create: operations.runnerMgmt,
+			update: operations.runnerMgmt,
+		},
+		filter: {
+			query: filterTickets,
+		},
 	},
 	fields: {
 		user: relationship({ ref: 'User.tickets', ui: { hideCreate: true, labelField: 'username' } }),
@@ -48,17 +42,21 @@ export const Ticket: Lists.Ticket = list({
 		}),
 		ticketID: text({ isIndexed: 'unique' }),
 		paid: checkbox({ defaultValue: false }),
-		notes: text(),
+		notes: text({ access: { update: permissions.canManageUsers, read: permissions.canManageUsers } }),
 		numberOfTickets: integer(),
 		totalCost: virtual({
 			field: graphql.field({
 				type: graphql.Float,
 				resolve: async (item, args, context) => {
-					const { numberOfTickets } = await context.query.Ticket.findOne({
+					const result = await context.query.Ticket.findOne({
 						where: { id: item.id },
 						query: 'numberOfTickets'
 					});
-					return 35 * numberOfTickets;
+					if (result) {
+						return 35 * result.numberOfTickets;
+					}
+
+					return 35 * item.numberOfTickets;
 				}
 			})
 		}),
@@ -67,7 +65,7 @@ export const Ticket: Lists.Ticket = list({
 	},
 	hooks: {
 		resolveInput: ({ operation, resolvedData }) => {
-			const mutableData = {...resolvedData};
+			const mutableData = { ...resolvedData };
 
 			if (operation === 'create') {
 				// Set TicketID
@@ -84,3 +82,16 @@ export const Ticket: Lists.Ticket = list({
 		}
 	}
 });
+
+// Extended schema for NextJS API
+
+// Tickets must be private to all except user and runner managers
+// Tickets cannot be edited by anyone except runner managers
+// Tickets cannot be deleted by anyone except admins
+
+// API Requests
+// mutation ($userID: ID, $stripeID: String) {
+// 	createTicket(data: { user: { connect: { id: $userID } }, event: { connect: { shortname:"ASM2022" } }, numberOfTickets: 1, method: stripe, stripeID: $stripeID }) {
+// 		ticketID
+// 	}
+// }

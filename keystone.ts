@@ -1,6 +1,8 @@
+import 'dotenv/config';
 import { config, graphQLSchemaExtension, gql } from '@keystone-6/core';
 import { statelessSessions } from '@keystone-6/core/session';
 import { createAuth } from '@keystone-6/auth';
+import { v4 as uuid } from 'uuid';
 
 import { Role, User } from './schema/user';
 import { Submission } from './schema/submission';
@@ -9,13 +11,11 @@ import { Post } from './schema/post';
 import { permissions, rules } from './schema/access';
 import { Run } from './schema/runs';
 import { Verification } from './schema/verification';
+import { Ticket } from './schema/tickets';
 
 import { sendResetPassword } from './email/emails';
 import { Context } from '.keystone/types';
 
-import 'dotenv/config';
-import { BaseKeystoneTypeInfo, DatabaseConfig } from '@keystone-6/core/types';
-import { Ticket } from './schema/tickets';
 
 const session = statelessSessions({
   secret: process.env.SESSION_SECRET,
@@ -71,6 +71,14 @@ export default withAuth(
         type Query {
           verification(where: VerificationWhereUniqueInput!): Verification
         }
+
+        type Mutation {
+          """ Update stripe ticket """
+          confirmStripe(stripeID: String!, numberOfTickets: Int!, apiKey: String!): Ticket
+
+          """ Generate a ticket """
+          generateTicket(userID: ID!, numberOfTickets: Int!, method: TicketMethodType!, event: String!, stripeID: String, apiKey: String!): Ticket
+        }
       `,
       resolvers: {
         Query: {
@@ -80,13 +88,13 @@ export default withAuth(
               if (!args?.where?.code) {
                 return null;
               }
-  
-              const itemArr = await context.sudo().db.Verification.findMany({where: {code: {equals: args.where.code}}});
-  
+
+              const itemArr = await context.sudo().db.Verification.findMany({ where: { code: { equals: args.where.code } } });
+
               if (itemArr.length === 1) {
                 return itemArr[0];
               }
-  
+
               return null;
             } catch (error) {
               console.log(error);
@@ -94,6 +102,34 @@ export default withAuth(
             }
           },
         },
+        Mutation: {
+          confirmStripe: (root, { stripeID, numberOfTickets, apiKey }, context) => {
+            if (apiKey !== process.env.API_KEY) return;
+            // if (apiKey !== process.env.API_KEY) {
+            //   // Debug only
+            //   console.log(`Tried to confirm stripe but had an API key error. Got ${apiKey}, expected ${process.env.API_KEY}`);
+            //   return;
+            // }
+
+            return context.sudo().db.Ticket.updateOne({
+              where: { stripeID },
+              data: { paid: true, numberOfTickets }
+            });
+          },
+          generateTicket: (root, { userID, numberOfTickets, method, event, stripeID, apiKey }, context) => {
+            if (apiKey !== process.env.API_KEY) return;
+
+            return context.sudo().db.Ticket.createOne({
+              data: {
+                user: { connect: { id: userID } },
+                numberOfTickets,
+                method,
+                event: { connect: { shortname: event } },
+                stripeID: stripeID ?? uuid(),
+              }
+            });
+          }
+        }
       }
     }),
     session,

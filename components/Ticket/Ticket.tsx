@@ -86,8 +86,7 @@ const Ticket: React.FC<Props> = (props: Props) => {
 				<>
 					<p>Currently unpaid. Allow 7 days for the ticket to be updated.</p>
 					<p>
-						You <b>MUST</b> send the Ticket ID as the &quot;reference&quot;. Failure to do so will result in your ticket
-						not being paid.
+						You <b>MUST</b> send the Ticket ID as the &quot;reference&quot;. Failure to do so will result in your ticket marked as not being paid.
 					</p>
 				</>
 			)}

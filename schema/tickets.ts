@@ -10,10 +10,22 @@ import { ListFilterAccessControl } from '@keystone-6/core/types';
 // Has IOZ removed to reduce chance of people getting confused
 const nanoid = customAlphabet('123456789ABCDEFGHJKLMNPQRSTUVWXY', 9);
 
-const filterTickets: ListFilterAccessControl<"query", Lists.Ticket.TypeInfo> = ({ session }: SessionContext) => {
-	if (!session?.data) return false;
-	if (session.data.roles?.some(role => role.canReadRunnerMgmt)) return true;
-	return { user: { id: { equals: session.data.id } } };
+const filterTickets = {
+	query: ({ session }: SessionContext) => {
+		if (!session?.data) return false;
+		if (session.data.roles?.some(role => role.canReadRunnerMgmt)) return true;
+		return { user: { id: { equals: session.data.id } } };
+	},
+	update: ({ session }: SessionContext) => {
+		if (!session?.data) return false;
+		if (session.data.roles?.some(role => role.canReadRunnerMgmt)) return true;
+		return { user: { id: { equals: session.data.id } } };
+	},
+	delete: ({ session }: SessionContext) => {
+		if (!session?.data) return false;
+		if (session.data.roles?.some(role => role.canReadRunnerMgmt)) return true;
+		return { user: { id: { equals: session.data.id } } };
+	},
 }
 
 export const Ticket: Lists.Ticket = list({
@@ -22,9 +34,7 @@ export const Ticket: Lists.Ticket = list({
 			create: operations.runnerMgmt,
 			update: operations.runnerMgmt,
 		},
-		filter: {
-			query: filterTickets,
-		},
+		filter: filterTickets,
 	},
 	fields: {
 		user: relationship({ ref: 'User.tickets', ui: { hideCreate: true, labelField: 'username' } }),

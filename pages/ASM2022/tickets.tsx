@@ -61,6 +61,10 @@ const Tickets = () => {
 		pause: !auth.ready || !auth?.sessionData?.id,
 	});
 
+	const successfulTicket = Boolean(bankTicketsData) && !Boolean(bankTicketsData.error);
+	const disableBuying = !auth.ready || (auth.ready && !auth.sessionData) || !profileQueryRes.data?.user?.verified;
+	const disableBank = disableBuying || isNaN(noOfTickets) || noOfTickets <= 0 || genTicketLoading || successfulTicket;
+
 	const [deleteStripeTicketRes, deleteStripeTicket] = useMutation(gql`
 		mutation ($sessionID: String) {
 			deleteTicket(where: { stripeID: $sessionID }) {
@@ -101,7 +105,6 @@ const Tickets = () => {
 		},
 	});
 
-	const successfulTicket = Boolean(bankTicketsData) && !Boolean(bankTicketsData.error);
 
 	useEffect(() => {
 		let timeout: NodeJS.Timeout;
@@ -130,6 +133,8 @@ const Tickets = () => {
 			console.error('Tried to generate tickets but auth was not ready');
 			return;
 		}
+
+		if (disableBuying) return;
 
 		setGenTicketLoading(true);
 		const res = await fetch(`/api/create_bank_ticket?account=${auth.ready ? auth?.sessionData.id : ''}&tickets=${noOfTickets}&event=ASM2022`)
@@ -204,7 +209,7 @@ const Tickets = () => {
 								variant="contained"
 								color="primary"
 								fullWidth
-								disabled={!auth.ready || (auth.ready && !auth.sessionData) || !profileQueryRes.data?.user?.verified}
+								disabled={disableBuying}
 							>
 								Checkout $35.50 each
 							</Button>
@@ -228,15 +233,7 @@ const Tickets = () => {
 								variant="contained"
 								color="primary"
 								fullWidth
-								disabled={
-									isNaN(noOfTickets) ||
-									noOfTickets <= 0 ||
-									!auth.ready ||
-									(auth.ready && !auth.sessionData) ||
-									genTicketLoading ||
-									successfulTicket ||
-									!profileQueryRes.data?.user?.verified
-								}
+								disabled={disableBank}
 								onClick={generateTickets}
 							>
 								Generate {noOfTickets > 1 && noOfTickets} Ticket{noOfTickets > 1 && 's'} $

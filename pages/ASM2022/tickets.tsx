@@ -6,7 +6,6 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Box, Button, CircularProgress, Skeleton, TextField, ThemeProvider, Tooltip } from '@mui/material';
 import { useMutation, UseMutationResponse, useQuery } from 'urql';
 import { gql } from '@keystone-6/core';
-import useSWR, { Fetcher } from 'swr';
 
 import styles from '../../styles/ASM2022.Tickets.module.scss';
 import Navbar from '../../components/Navbar/Navbar';
@@ -47,8 +46,6 @@ const Tickets = () => {
 	const [genTicketLoading, setGenTicketLoading] = useState(false);
 	const [waitForTicket, setWaitForTicket] = useState(false);
 	const [bankTicketsData, setBankTicketsData] = useState<UseMutationResponse<BankTicketResponse, object>[0]>(undefined);
-
-	// const bankTicketResponse = useSWR<BankTicketResponse>(genTicketLoading ? `/api/create_bank_ticket?account=${auth.ready ? auth?.sessionData.id : ''}&tickets=${noOfTickets}&event=ASM2022` : null, bankTicketsFetcher);
 
 	const [profileQueryRes, profileQuery] = useQuery({
 		query: gql`
@@ -104,25 +101,6 @@ const Tickets = () => {
 		},
 	});
 
-	// const [generateBankTicketsRes, generateBankTickets] = useMutation(gql`
-	// 	mutation ($userID: ID, $numberOfTickets: Int) {
-	// 		createTicket(
-	// 			data: {
-	// 				user: { connect: { id: $userID } }
-	// 				event: { connect: { shortname: "ASM2022" } }
-	// 				numberOfTickets: $numberOfTickets
-	// 				method: bank
-	// 			}
-	// 		) {
-	// 			ticketID
-	// 			totalCost
-	// 			numberOfTickets
-	// 		}
-	// 	}
-	// `);
-
-	// const successfulTicket = !generateBankTicketsRes.error && generateBankTicketsRes?.data?.createTicket.ticketID;
-	// const successfulTicket = !bankTicketResponse.error && Boolean(bankTicketResponse?.data?.ticketID);
 	const successfulTicket = Boolean(bankTicketsData) && !Boolean(bankTicketsData.error);
 
 	useEffect(() => {

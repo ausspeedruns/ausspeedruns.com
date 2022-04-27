@@ -86,7 +86,7 @@ export default withAuth(
             // Super duper hacky way but oh well
             try {
               if (!args?.where?.code) {
-                return null;
+                throw new Error("Missing code query");
               }
 
               const itemArr = await context.sudo().db.Verification.findMany({ where: { code: { equals: args.where.code } } });
@@ -95,16 +95,15 @@ export default withAuth(
                 return itemArr[0];
               }
 
-              return null;
+              throw new Error("Couldn't find code or found too many.");
             } catch (error) {
-              console.log(error);
-              return null;
+              throw new Error(error);
             }
           },
         },
         Mutation: {
           confirmStripe: (root, { stripeID, numberOfTickets, apiKey }, context) => {
-            if (apiKey !== process.env.API_KEY) return;
+            if (apiKey !== process.env.API_KEY) throw new Error("Incorrect API Key");
             // if (apiKey !== process.env.API_KEY) {
             //   // Debug only
             //   console.log(`Tried to confirm stripe but had an API key error. Got ${apiKey}, expected ${process.env.API_KEY}`);
@@ -116,8 +115,16 @@ export default withAuth(
               data: { paid: true, numberOfTickets }
             });
           },
-          generateTicket: (root, { userID, numberOfTickets, method, event, stripeID, apiKey }, context) => {
-            if (apiKey !== process.env.API_KEY) return;
+          generateTicket: async (root, { userID, numberOfTickets, method, event, stripeID, apiKey }, context) => {
+            if (apiKey !== process.env.API_KEY) throw new Error("Incorrect API Key");
+
+            // Check user is verified
+            const userVerified = await context.sudo().query.User.findOne({where: {id: userID}, query: 'verified'});
+
+            if (!userVerified.verified) {
+              // console.log(`Unverified user ${userID} tried to generate ticket.`)
+              throw new Error('Unverified user.');
+            }
 
             return context.sudo().db.Ticket.createOne({
               data: {

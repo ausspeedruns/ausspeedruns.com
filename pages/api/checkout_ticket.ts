@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			});
 
 			// Generate ticket code
-			urqlClient.mutation(gql`
+			const returnData = await urqlClient.mutation(gql`
 				mutation ($userID: ID!, $stripeID: String, $event: String!, $apiKey: String!) {
 					generateTicket(
 						userID: $userID
@@ -57,6 +57,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					}
 				}
 			`, { userID: req.query.account, stripeID: session.id, event: req.query.event, apiKey: process.env.API_KEY }).toPromise();
+
+			if (returnData.error) {
+				throw new Error(JSON.stringify(returnData.error));
+			}
 
 			res.redirect(303, session.url);
 		} catch (err) {

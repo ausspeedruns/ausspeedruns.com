@@ -26,6 +26,7 @@ type Run = {
 const LOGO_HEIGHT = 50;
 
 const RunUpcoming = ({ run }: Run) => {
+	if (!run.event) return <></>;
 	const aspectRatio = run.event.logo.width / run.event.logo.height;
 
 	return (

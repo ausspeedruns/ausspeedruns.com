@@ -792,6 +792,8 @@ type Event {
     skip: Int! = 0
   ): [Ticket!]
   ticketsCount(where: TicketWhereInput! = {}): Int
+  acceptingTickets: Boolean
+  scheduleReleased: Boolean
 }
 
 interface AzureStorageImageFieldOutput {
@@ -856,6 +858,8 @@ input EventWhereInput {
   acceptingSubmissions: BooleanFilter
   submissionInstructions: StringFilter
   tickets: TicketManyRelationFilter
+  acceptingTickets: BooleanFilter
+  scheduleReleased: BooleanFilter
 }
 
 input FloatNullableFilter {
@@ -879,6 +883,8 @@ input EventOrderByInput {
   raised: OrderDirection
   acceptingSubmissions: OrderDirection
   submissionInstructions: OrderDirection
+  acceptingTickets: OrderDirection
+  scheduleReleased: OrderDirection
 }
 
 input EventUpdateInput {
@@ -895,6 +901,8 @@ input EventUpdateInput {
   pressKit: AzureStorageFileFieldInput
   submissionInstructions: String
   tickets: TicketRelateToManyForUpdateInput
+  acceptingTickets: Boolean
+  scheduleReleased: Boolean
 }
 
 input AzureStorageImageFieldInput {
@@ -931,6 +939,8 @@ input EventCreateInput {
   pressKit: AzureStorageFileFieldInput
   submissionInstructions: String
   tickets: TicketRelateToManyForCreateInput
+  acceptingTickets: Boolean
+  scheduleReleased: Boolean
 }
 
 type Role {

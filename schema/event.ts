@@ -26,6 +26,8 @@ export const Event: Lists.Event = list({
 		logo: image<Lists.Event.TypeInfo>(),
 		pressKit: file<Lists.Event.TypeInfo>(),
 		submissionInstructions: text(),
-		tickets: relationship({ ref: 'Ticket.event', many: true })
+		tickets: relationship({ ref: 'Ticket.event', many: true }),
+		acceptingTickets: checkbox(),
+		scheduleReleased: checkbox(),
 	}
 });

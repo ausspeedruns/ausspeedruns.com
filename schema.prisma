@@ -95,6 +95,8 @@ model Event {
   pressKit_filesize      Int?
   submissionInstructions String       @default("")
   tickets                Ticket[]     @relation("Ticket_event")
+  acceptingTickets       Boolean      @default(false)
+  scheduleReleased       Boolean      @default(false)
   from_Role_event        Role[]       @relation("Role_event")
 }
 

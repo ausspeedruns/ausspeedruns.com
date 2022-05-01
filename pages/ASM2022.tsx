@@ -17,12 +17,13 @@ import StockPhoto3 from '../styles/img/StockPhoto3.jpg';
 import DiscordEmbed from '../components/DiscordEmbed';
 
 export default function EventPage() {
-	const [queryResult, profileQuery] = useQuery({
+	const [queryResult, eventQuery] = useQuery({
 		query: gql`
 			query {
 				event(where: { shortname: "ASM2022" }) {
 					id
 					acceptingSubmissions
+					acceptingTickets
 				}
 			}
 		`,
@@ -39,10 +40,13 @@ export default function EventPage() {
 				<div className={styles.logo}>
 					<Image src={ASM2022Logo} alt="Australian Speedrun Marathon 2022 Logo" />
 				</div>
-				{queryResult.data?.event.acceptingSubmissions && (
+				{queryResult.data?.event?.acceptingSubmissions && (
 					<Button actionText="Submissions are open!" link="/submit-game" iconRight={faArrowRight} />
 				)}
-				<Button actionText="Purchase tickets" link="/ASM2022/tickets" iconRight={faArrowRight} />
+
+				{queryResult.data?.event?.acceptingTickets && (
+					<Button actionText="Purchase tickets" link="/ASM2022/tickets" iconRight={faArrowRight} />
+				)}
 			</header>
 			<main>
 				<div className={styles.contentRow}>
@@ -65,8 +69,8 @@ export default function EventPage() {
 					</div>
 					<div className={styles.moreInfo}>
 						<p>
-							Submissions will open on the 25th of March and run until the 29th of April. We hope to have the
-							schedule released on the 9th of May.
+							Submissions will open on the 25th of March and run until the 29th of April. We hope to have the schedule
+							released on the 9th of May.
 							<br />
 							<br />
 							Follow us on Twitter or Join the Discord to stay up to date with all the latest information!
@@ -85,7 +89,7 @@ export default function EventPage() {
 						<span>Submissions period</span>
 						<span>25 March - 29 April</span>
 						<span>Charity</span>
-						<span>TBA</span>
+						<span>Game On Cancer</span>
 					</div>
 				</div>
 			</main>

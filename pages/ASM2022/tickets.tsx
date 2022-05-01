@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { loadStripe } from '@stripe/stripe-js';
-import { Box, Button, CircularProgress, Skeleton, TextField, ThemeProvider, Tooltip } from '@mui/material';
+import { Box, Button, Skeleton, TextField, ThemeProvider } from '@mui/material';
 import { useMutation, UseMutationResponse, useQuery } from 'urql';
 import { gql } from '@keystone-6/core';
 
@@ -16,7 +16,6 @@ import { useAuth } from '../../components/auth';
 
 import ASM2022Logo from '../../styles/img/ASM2022-Logo.svg';
 
-console.log(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 interface BankTicketResponse {
@@ -28,23 +27,13 @@ interface BankTicketResponse {
 	};
 }
 
-const bankTicketsFetcher = async (url: string) => {
-	const res = await fetch(url);
-	const data = await res.json();
-
-	if (res.status !== 200) {
-		throw new Error(data.message);
-	}
-	return data;
-};
-
 const Tickets = () => {
 	const auth = useAuth();
 	const [noOfTickets, setNoOfTickets] = useState(1);
 	const [deletedTicket, setDeletedTicket] = useState(false);
 	const [genTicketLoading, setGenTicketLoading] = useState(false);
 	const [waitForTicket, setWaitForTicket] = useState(false);
-	const [bankTicketsData, setBankTicketsData] = useState<UseMutationResponse<BankTicketResponse, object>[0]>(undefined);
+	const [bankTicketsData, setBankTicketsData] = useState<UseMutationResponse<BankTicketResponse, object>[0]>(null);
 
 	const [profileQueryRes, profileQuery] = useQuery({
 		query: gql`
@@ -155,6 +144,8 @@ const Tickets = () => {
 	if (auth.ready) {
 		accUsername = auth.sessionData?.username;
 	}
+
+	if (bankTicketsData?.error) console.error(bankTicketsData.error);
 
 	return (
 		<ThemeProvider theme={theme}>

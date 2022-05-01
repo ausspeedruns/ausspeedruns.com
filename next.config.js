@@ -11,7 +11,7 @@ module.exports = {
 			{
 				source: '/api/graphql',
 				// destination: `http://localhost:8000/api/graphql`,
-       			destination: process.env.NODE_ENV === 'production' ? `https://betakeystone.ausspeedruns.com/api/graphql` : `http://localhost:8000/api/graphql`,
+       			destination: process.env.NODE_ENV === 'production' ? `https://keystone.ausspeedruns.com/api/graphql` : `http://localhost:8000/api/graphql`,
 			},
 		];
 	},

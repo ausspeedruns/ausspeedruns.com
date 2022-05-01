@@ -3,7 +3,7 @@
 .run {
 	display: flex;
 	flex-direction: column;
-	
+
 	.header {
 		display: flex;
 
@@ -13,6 +13,7 @@
 
 		.logo {
 			margin-right: 8px;
+			image-rendering: pixelated;
 
 			@include breakpoint($sm-zero-only) {
 				height: auto;

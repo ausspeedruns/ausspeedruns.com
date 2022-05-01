@@ -16,28 +16,27 @@ import { useAuth } from '../../components/auth';
 
 import ASM2022Logo from '../../styles/img/ASM2022-Logo.svg';
 
-const stripePromise = loadStripe(
-	'pk_test_51J5TzBKT8G4cNWT5xLEWYnNaZYaHYunLI5yYQ8TqbYdffm8Iwxp20YjShZKXAZOukignMZNtmXFxMHWl9la17mVL00YAz9Qg4s'
-);
+console.log(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 interface BankTicketResponse {
 	generateTicket: {
-		ticketID: string,
-		totalCost: number,
-		numberOfTickets: number,
-		error?: Record<string, any>,
-	}
+		ticketID: string;
+		totalCost: number;
+		numberOfTickets: number;
+		error?: Record<string, any>;
+	};
 }
 
 const bankTicketsFetcher = async (url: string) => {
-	const res = await fetch(url)
-	const data = await res.json()
+	const res = await fetch(url);
+	const data = await res.json();
 
 	if (res.status !== 200) {
-		throw new Error(data.message)
+		throw new Error(data.message);
 	}
-	return data
-}
+	return data;
+};
 
 const Tickets = () => {
 	const auth = useAuth();
@@ -105,7 +104,6 @@ const Tickets = () => {
 		},
 	});
 
-
 	useEffect(() => {
 		let timeout: NodeJS.Timeout;
 		if (genTicketLoading) {
@@ -137,7 +135,9 @@ const Tickets = () => {
 		if (disableBuying) return;
 
 		setGenTicketLoading(true);
-		const res = await fetch(`/api/create_bank_ticket?account=${auth.ready ? auth?.sessionData.id : ''}&tickets=${noOfTickets}&event=ASM2022`)
+		const res = await fetch(
+			`/api/create_bank_ticket?account=${auth.ready ? auth?.sessionData.id : ''}&tickets=${noOfTickets}&event=ASM2022`
+		);
 		// generateBankTickets({ userID: auth.sessionData.id, numberOfTickets: noOfTickets });
 		if (res.status === 200) {
 			setBankTicketsData(await res.json());
@@ -203,14 +203,7 @@ const Tickets = () => {
 						<h2>Stripe</h2>
 						<p>Clicking on checkout will redirect you to the stripe checkout. </p>
 						<form action={`/api/checkout_ticket?account=${accId}&username=${accUsername}&event=ASM2022`} method="POST">
-							<Button
-								type="submit"
-								role="link"
-								variant="contained"
-								color="primary"
-								fullWidth
-								disabled={disableBuying}
-							>
+							<Button type="submit" role="link" variant="contained" color="primary" fullWidth disabled={disableBuying}>
 								Checkout $35.50 each
 							</Button>
 						</form>
@@ -229,22 +222,16 @@ const Tickets = () => {
 								label="Number of tickets"
 							></TextField>
 							{/* <Tooltip title={successfulTicket ? "Refresh the page if you need to generate more" : undefined} arrow> */}
-							<Button
-								variant="contained"
-								color="primary"
-								fullWidth
-								disabled={disableBank}
-								onClick={generateTickets}
-							>
+							<Button variant="contained" color="primary" fullWidth disabled={disableBank} onClick={generateTickets}>
 								Generate {noOfTickets > 1 && noOfTickets} Ticket{noOfTickets > 1 && 's'} $
 								{isNaN(noOfTickets) || noOfTickets <= 0 ? '∞' : noOfTickets * 35}
 							</Button>
 							{/* </Tooltip> */}
 						</div>
-						{bankTicketsData?.error && <p>It seems like there was an error. Please try again or let Clubwho know on Discord!</p>}
-						{successfulTicket && !genTicketLoading && (
-							<ASMTicket ticketData={bankTicketsData.data.generateTicket} />
+						{bankTicketsData?.error && (
+							<p>It seems like there was an error. Please try again or let Clubwho know on Discord!</p>
 						)}
+						{successfulTicket && !genTicketLoading && <ASMTicket ticketData={bankTicketsData.data.generateTicket} />}
 						{genTicketLoading && !bankTicketsData?.error && <ASMTicketSkeleton />}
 					</section>
 					<hr />

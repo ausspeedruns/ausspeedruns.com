@@ -45,7 +45,7 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
     }
 
     // Successfully constructed event.
-    console.log('✅ Success:', event.id);
+    // console.log('✅ Success:', event.id);
 
     switch (event.type) {
       // case 'payment_intent.succeeded': {

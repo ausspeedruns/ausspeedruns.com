@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Heroblock.module.scss';
 import Image from 'next/image';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faTicket } from '@fortawesome/free-solid-svg-icons';
 import Countdown, { zeroPad, CountdownRenderProps } from 'react-countdown';
 import Button from '../Button/Button';
 import TwitchVideoEmbed from '../TwitchVideoEmbed/TwitchVideoEmbed';
@@ -71,27 +71,22 @@ const Heroblock = ({ event }: HeroblockProps) => {
               zeroPadTime={2}
             />
           </h3> */}
-					<p>
-						Australian Speedrunners come together to raise money for Charity at ASM2022!
-					</p>
-					<p>
-Submission are now open! They will close on the 29th of April. Purchasing tickets to come soon!</p>
+					<p>Australian Speedrunners come together to raise money for Cure Cancer Australia at ASM2022!</p>
+					<p>Tickets are now available!</p>
 					{showVideoBlock && (
 						<Button
 							actionText="Donate"
 							link={globals.donateLink}
 							iconRight={faChevronRight}
 							colorScheme={'secondary'}
-              target={'_blank'}
+							target={'_blank'}
 						/>
 					)}
 					{!showVideoBlock && (
-						<Button
-							actionText="ASM2022"
-							link={'/ASM2022'}
-							iconRight={faChevronRight}
-							colorScheme={'secondary'}
-						/>
+						<>
+							<Button actionText="ASM2022" link={'/ASM2022'} iconRight={faChevronRight} colorScheme={'secondary'} />
+							<Button actionText="Purchase Tickets" link={'/ASM2022/tickets'} iconRight={faTicket} colorScheme={'secondary'} />
+						</>
 					)}
 				</div>
 				<div className={styles.logoBlock}>

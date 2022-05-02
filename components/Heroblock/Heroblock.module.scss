@@ -49,6 +49,10 @@
         line-height: 3;
 
       }
+
+      a {
+        margin-bottom: 16px;
+      }
     }
 
     .logoBlock {
@@ -61,7 +65,7 @@
 
       max-width: 80%;
       margin: auto;
-      
+
       @include breakpoint($lg) {
         max-width: 600px;
       }

@@ -1,9 +1,10 @@
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 import { gql } from '@keystone-6/core';
 import { useQuery } from 'urql';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faTicket } from '@fortawesome/free-solid-svg-icons';
 
 import styles from '../styles/Event.ASM2022.module.scss';
 import Navbar from '../components/Navbar/Navbar';
@@ -24,6 +25,7 @@ export default function EventPage() {
 					id
 					acceptingSubmissions
 					acceptingTickets
+					scheduleReleased
 				}
 			}
 		`,
@@ -45,7 +47,11 @@ export default function EventPage() {
 				)}
 
 				{queryResult.data?.event?.acceptingTickets && (
-					<Button actionText="Purchase tickets" link="/ASM2022/tickets" iconRight={faArrowRight} />
+					<Button actionText="Purchase tickets" link="/ASM2022/tickets" iconRight={faTicket} />
+				)}
+
+				{queryResult.data?.event?.scheduleReleased && (
+					<Button actionText="Schedule" link="/schedule" iconRight={faArrowRight} />
 				)}
 			</header>
 			<main>
@@ -69,8 +75,11 @@ export default function EventPage() {
 					</div>
 					<div className={styles.moreInfo}>
 						<p>
-							Submissions will open on the 25th of March and run until the 29th of April. We hope to have the schedule
-							released on the 9th of May.
+							Checkout the schedule{' '}
+							<Link href="/schedule">
+								here
+							</Link>
+							!
 							<br />
 							<br />
 							Follow us on Twitter or Join the Discord to stay up to date with all the latest information!

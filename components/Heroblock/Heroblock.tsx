@@ -72,7 +72,7 @@ const Heroblock = ({ event }: HeroblockProps) => {
             />
           </h3> */}
 					<p>Australian Speedrunners come together to raise money for Cure Cancer Australia at ASM2022!</p>
-					<p>Tickets are now available!</p>
+					<p>Tickets and the schedule are now available!</p>
 					{showVideoBlock && (
 						<Button
 							actionText="Donate"
@@ -86,6 +86,7 @@ const Heroblock = ({ event }: HeroblockProps) => {
 						<>
 							<Button actionText="ASM2022" link={'/ASM2022'} iconRight={faChevronRight} colorScheme={'secondary'} />
 							<Button actionText="Purchase Tickets" link={'/ASM2022/tickets'} iconRight={faTicket} colorScheme={'secondary'} />
+							<Button actionText="Schedule" link={'/schedule'} iconRight={faChevronRight} colorScheme={'secondary'} />
 						</>
 					)}
 				</div>

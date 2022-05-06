@@ -1,0 +1,119 @@
+@use 'base';
+@import './responsive.scss';
+@import './colors.scss';
+
+.content {
+	flex-flow: column;
+}
+
+.eventLogo {
+	width: 50%;
+	margin: auto;
+	image-rendering: pixelated;
+}
+
+.eventLabel {
+	text-align: center;
+	margin-top: 1rem;
+	font-size: 1.8rem;
+	font-weight: bold;
+}
+
+.eventTimeFrame {
+	text-align: center;
+	margin-top: -1.8rem;
+	font-size: 1.4rem;
+}
+
+.scheduleKey {
+	& > span {
+		padding-bottom: 4px;
+	}
+
+	.scheduleHeader {
+		display: grid;
+		grid-template-columns: min-content repeat(3, 1fr);
+		border: 1px solid $secondary;
+		border-radius: 5px;
+
+		span {
+			padding: 8px;
+		}
+
+		.topRow {
+			border-bottom: 1px solid $secondary;
+		}
+
+		.notLast {
+			border-right: 1px solid $secondary;
+		}
+
+		.donationIncentive {
+			grid-column: 3 / 5;
+		}
+	}
+}
+
+.localTimeToggle {
+	margin: 0.5rem auto !important;
+}
+
+.schedule {
+	// border: 1px solid $color-off-white;
+
+	.dateDivider {
+		border-bottom: 5px solid $primary;
+		color: $secondary;
+		font-weight: bold;
+		font-size: 1.3rem;
+		padding: 1rem;
+		margin: 1rem 0;
+	}
+
+	.setupBuffer {
+		font-style: italic;
+		background: transparentize($secondary, $amount: 0.8);
+		text-align: center;
+		padding: 0.5rem;
+		font-size: 1.2rem;
+		border-bottom: 2px solid $secondary;
+	}
+
+	.run {
+		padding: 4px;
+		display: grid;
+		grid-template-columns: min-content repeat(3, 1fr);
+		border-bottom: 2px solid $secondary;
+
+		&:nth-child(odd) {
+			background: $color-off-white;
+		}
+
+		& > span {
+			padding: 4px;
+		}
+
+		.time {
+			white-space: nowrap;
+			text-transform: uppercase;
+			margin-right: 8px;
+		}
+
+		.categoryExtras {
+			font-weight: bold;
+			// margin-left: -4px;
+		}
+
+		a {
+			color: $dark-text;
+			// text-decoration: none;
+			// font-weight: 600;
+			// margin: 0 -2px;
+		}
+
+		.donationIncentive {
+			grid-column: 3 / 5;
+			font-style: italic;
+		}
+	}
+}

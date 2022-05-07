@@ -10,7 +10,7 @@
 	background-position: center;
 	background-size: cover;
 	color: $light-text;
-	
+
 	display: flex;
 	justify-content: center;
 
@@ -27,7 +27,7 @@
 			  max-width: 66%;
 			  padding: 0 7%;
 			}
-	  
+
 			& > :last-child:not(:only-child) {
 				display: inline-block;
 				max-width: 33%;
@@ -42,7 +42,7 @@
 		.text {
 			// display: inline-block;
 			// max-width: 33%;
-			background-color: rgba(0, 0, 0, 0.733);
+			// background-color: rgba(0, 0, 0, 0.733);
 			text-align: right;
 			padding: 25px;
 			// height: 100%;

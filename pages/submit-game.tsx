@@ -26,7 +26,7 @@ import Navbar from '../components/Navbar/Navbar';
 import LinkButton from '../components/Button/Button';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import DiscordEmbed from '../components/DiscordEmbed';
-import {addDays, differenceInDays} from 'date-fns';
+import { addDays, differenceInDays } from 'date-fns';
 
 type AgeRatingLiterals = 'm_or_lower' | 'ma15' | 'ra18';
 type RaceLiterals = 'no' | 'solo' | 'only';
@@ -35,10 +35,10 @@ const EstimateRegex = /^\d{1,2}:\d{2}:\d{2}$/;
 
 function HumanErrorMsg(error: string) {
 	// console.log(error.replace(/(\r\n|\n|\r)/gm, ""));
-	switch (error.replace(/(\r\n|\n|\r)/gm, "")) {
+	switch (error.replace(/(\r\n|\n|\r)/gm, '')) {
 		case `[GraphQL] You provided invalid data for this operation.  - Submission.estimate: Estimate invalid. Make sure its like 01:30:00.`:
-			return "Error: Estimate invalid. Make sure it's like HH:MM:SS. e.g. 01:30:00"
-	
+			return "Error: Estimate invalid. Make sure it's like HH:MM:SS. e.g. 01:30:00";
+
 		default:
 			return error;
 	}
@@ -61,6 +61,7 @@ export default function SubmitGamePage() {
 	const [specialReqs, setSpecialReqs] = useState('');
 	const [availableDates, setAvailableDates] = useState<boolean[]>([]);
 	const [estimateError, setEstimateError] = useState(false);
+	const [backup, setBackup] = useState(false);
 
 	const [canSubmit, setCanSubmit] = useState(false);
 	const [successSubmit, setSuccessSubmit] = useState(false);
@@ -82,17 +83,26 @@ export default function SubmitGamePage() {
 	});
 
 	const [eventsResult, eventsQuery] = useQuery<{
-		events: { shortname: string; id: string; submissionInstructions: string; startDate: string; endDate: string; eventTimezone: string }[];
+		events: {
+			shortname: string;
+			id: string;
+			submissionInstructions: string;
+			startDate: string;
+			endDate: string;
+			eventTimezone: string;
+			acceptingBackups: boolean;
+		}[];
 	}>({
 		query: gql`
 			query {
-				events(where: { acceptingSubmissions: { equals: true } }) {
+				events(where: { OR: [{ acceptingSubmissions: { equals: true } }, { acceptingBackups: { equals: true } }] }) {
 					id
 					shortname
 					submissionInstructions
 					startDate
 					endDate
 					eventTimezone
+					acceptingBackups
 				}
 			}
 		`,
@@ -144,10 +154,22 @@ export default function SubmitGamePage() {
 			setEvent(eventsResult.data.events[0].id);
 		}
 	}, [eventsResult]);
+	
+	const currentEvent = eventsResult.data?.events.find((eventResult) => eventResult.id === event);
 
 	useEffect(() => {
-		setCanSubmit(game && category && platform && estimate && !estimateError && event && video && availableDates.some((day) => day));
-	}, [game, category, platform, estimate, estimateError, event, video, availableDates]);
+		setCanSubmit(
+			game &&
+				category &&
+				platform &&
+				estimate &&
+				!estimateError &&
+				event &&
+				video &&
+				availableDates.some((day) => day) &&
+				(currentEvent?.acceptingBackups ? backup : true)
+		);
+	}, [game, category, platform, estimate, estimateError, event, video, availableDates, currentEvent, backup]);
 
 	function clearInputs() {
 		setGame('');
@@ -164,7 +186,9 @@ export default function SubmitGamePage() {
 	}
 
 	function forceCanSubmitUpdate() {
-		setCanSubmit(game && category && platform && estimate && !estimateError && event && video && availableDates.some((day) => day));
+		setCanSubmit(
+			game && category && platform && estimate && !estimateError && event && video && availableDates.some((day) => day)
+		);
 	}
 
 	if (!eventsResult.fetching && eventsResult.data?.events.length === 0) {
@@ -200,8 +224,6 @@ export default function SubmitGamePage() {
 		);
 	}
 
-	const currentEvent = eventsResult.data?.events.find((eventResult) => eventResult.id === event);
-
 	// console.log(
 	// 	game,
 	// 	category,
@@ -234,7 +256,13 @@ export default function SubmitGamePage() {
 						}}
 					/>
 				}
-				label={date.toLocaleDateString('en-AU', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric', timeZone: currentEvent.eventTimezone || 'Australia/Melbourne'  })}
+				label={date.toLocaleDateString('en-AU', {
+					weekday: 'long',
+					day: '2-digit',
+					month: '2-digit',
+					year: 'numeric',
+					timeZone: currentEvent.eventTimezone || 'Australia/Melbourne',
+				})}
 			/>
 		);
 	}
@@ -251,12 +279,14 @@ export default function SubmitGamePage() {
 			</Head>
 			<Navbar />
 			<main className={styles.content}>
-				<h1>{currentEvent?.shortname} Game Submission</h1>
+				<h1>
+					{currentEvent?.shortname} {currentEvent?.acceptingBackups ? 'Backup' : 'Game'} Submission
+				</h1>
 				<form
 					className={styles.gameForm}
 					onSubmit={(e) => {
 						e.preventDefault();
-						if (auth.ready) {
+						if (auth.ready && canSubmit) {
 							createSubmission({
 								userId: auth.sessionData.id,
 								game,
@@ -311,6 +341,7 @@ export default function SubmitGamePage() {
 											return (
 												<MenuItem value={event.id} key={event.id}>
 													{event.shortname}
+													{event.acceptingBackups ? ' (Backups)' : ''}
 												</MenuItem>
 											);
 										})}
@@ -318,8 +349,29 @@ export default function SubmitGamePage() {
 								</FormControl>
 							)}
 
-							<TextField value={game} onChange={(e) => setGame(e.target.value)} label="Game Name" autoComplete="game" inputProps={{ maxLength: 100 }} required />
-							<TextField value={category} onChange={(e) => setCategory(e.target.value)} label="Category" autoComplete="category" inputProps={{ maxLength: 100 }} required />
+							{currentEvent?.acceptingBackups && (
+								<FormControlLabel
+									control={<Checkbox onChange={(e) => setBackup(e.target.checked)} value={backup} />}
+									label="You understand that this is a submission for backup games"
+								/>
+							)}
+
+							<TextField
+								value={game}
+								onChange={(e) => setGame(e.target.value)}
+								label="Game Name"
+								autoComplete="game"
+								inputProps={{ maxLength: 100 }}
+								required
+							/>
+							<TextField
+								value={category}
+								onChange={(e) => setCategory(e.target.value)}
+								label="Category"
+								autoComplete="category"
+								inputProps={{ maxLength: 100 }}
+								required
+							/>
 							<TextField
 								value={platform}
 								onChange={(e) => setPlatform(e.target.value)}
@@ -371,7 +423,7 @@ export default function SubmitGamePage() {
 								onChange={(e) => setDonationIncentive(e.target.value)}
 								label="Donation Incentive (Leave blank if none)"
 								autoComplete="off"
-								inputProps={{ maxLength: 100 }} 
+								inputProps={{ maxLength: 100 }}
 							/>
 
 							<TextField
@@ -379,7 +431,7 @@ export default function SubmitGamePage() {
 								onChange={(e) => setSpecialReqs(e.target.value)}
 								label="Special Requirements to run your game (Leave blank if none)"
 								autoComplete="off"
-								inputProps={{ maxLength: 100 }} 
+								inputProps={{ maxLength: 100 }}
 							/>
 							<h3>Availability?*</h3>
 							{dateCheckboxes}
@@ -409,10 +461,23 @@ export default function SubmitGamePage() {
 											<FormControlLabel value="only" control={<Radio />} label="Only race/co-op" />
 										</RadioGroup>
 									</FormControl>
-									<TextField value={racer} onChange={(e) => setRacer(e.target.value)} label="Name of other runner(s)" autoComplete="off" inputProps={{ maxLength: 100 }} />
+									<TextField
+										value={racer}
+										onChange={(e) => setRacer(e.target.value)}
+										label="Name of other runner(s)"
+										autoComplete="off"
+										inputProps={{ maxLength: 100 }}
+									/>
 								</>
 							)}
-							<TextField value={video} onChange={(e) => setVideo(e.target.value)} label="Video of your own run" autoComplete="off" inputProps={{ maxLength: 100 }} required />
+							<TextField
+								value={video}
+								onChange={(e) => setVideo(e.target.value)}
+								label="Video of your own run"
+								autoComplete="off"
+								inputProps={{ maxLength: 100 }}
+								required
+							/>
 							<p>{currentEvent?.submissionInstructions}</p>
 							{submissionResult.error && <h2>{HumanErrorMsg(submissionResult.error.message)}</h2>}
 							<Button variant="contained" type="submit" disabled={!canSubmit}>

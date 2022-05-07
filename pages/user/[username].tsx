@@ -59,7 +59,7 @@ export type UserPageData = {
 		category: string;
 		platform: string;
 		estimate: string;
-		status: string;
+		status: 'submitted' | 'accepted' | 'backup' | 'rejected';
 		donationIncentive?: string;
 		race?: string;
 		racer?: string;
@@ -70,10 +70,13 @@ export type UserPageData = {
 			id: string;
 			name: string;
 			shortname: string;
+			acceptingSubmissions: boolean;
+			acceptingBackups: boolean;
 		};
 		runner: {
 			username: string;
 		};
+		willingBackup: boolean;
 	}[];
 	tickets: {
 		ticketID: string;
@@ -186,7 +189,10 @@ export default function ProfilePage() {
 							id
 							name
 							shortname
+							acceptingSubmissions
+							acceptingBackups
 						}
+						willingBackup
 					}
 					tickets(where: { OR: [{ method: { equals: bank } }, { paid: { equals: true } }] }) {
 						ticketID
@@ -322,7 +328,7 @@ export default function ProfilePage() {
 						</Box>
 						{userData.submissions.map((submission) => {
 							if (submission.event.shortname !== allSubmissionEvents[submissionTab]) return;
-							return <SubmissionAccordian key={submission.id} submission={submission} />;
+							return <SubmissionAccordian key={submission.id} submission={submission} event={submission.event} />;
 						})}
 					</div>
 				)}

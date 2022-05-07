@@ -11,6 +11,7 @@ import SubmissionEditDialog from './SubmissionEditDialog';
 
 type SubmissionProps = {
 	submission: UserPageData['submissions'][0];
+	event: { acceptingSubmissions: boolean; acceptingBackups: boolean };
 };
 
 function RaceTypeLabels(raceType: string) {
@@ -28,7 +29,7 @@ const StyledAccordian = styled(Accordion)(({ theme }) => ({
 	backgroundColor: '#F9F9F9',
 }));
 
-const SubmissionAccordian = ({ submission }: SubmissionProps) => {
+const SubmissionAccordian = ({ submission, event }: SubmissionProps) => {
 	const [editDialog, setEditDialog] = useState(false);
 
 	const closeDialog = () => {
@@ -69,8 +70,8 @@ const SubmissionAccordian = ({ submission }: SubmissionProps) => {
 			<AccordionDetails className={styles.submissionDetails}>
 				<span>Event</span>
 				<span>{submission.event.name}</span>
-				<span />
-				<span />
+				{submission.willingBackup ? <span>Willing to be backup</span> : <div />}
+				<div />
 				<span>Game</span>
 				<span>{submission.game}</span>
 				<span>Category</span>
@@ -100,14 +101,15 @@ const SubmissionAccordian = ({ submission }: SubmissionProps) => {
 					</>
 				)}
 			</AccordionDetails>
-			{submission.status === 'submitted' && (
-				<AccordionActions>
-					<Button color="primary" variant="contained" onClick={() => setEditDialog(true)}>
-						Edit
-					</Button>
-				</AccordionActions>
-			)}
-			<SubmissionEditDialog submission={submission} handleClose={closeDialog} open={editDialog} />
+			{(submission.status === 'submitted' || submission.status === 'rejected') &&
+				(event.acceptingSubmissions || event.acceptingBackups) && (
+					<AccordionActions>
+						<Button color="primary" variant="contained" onClick={() => setEditDialog(true)}>
+							Edit
+						</Button>
+					</AccordionActions>
+				)}
+			<SubmissionEditDialog submission={submission} event={event} handleClose={closeDialog} open={editDialog} />
 		</StyledAccordian>
 	);
 };

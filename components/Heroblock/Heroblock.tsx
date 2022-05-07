@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Heroblock.module.scss';
 import Image from 'next/image';
-import { faChevronRight, faTicket } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faChevronRight, faTicket } from '@fortawesome/free-solid-svg-icons';
 import Countdown, { zeroPad, CountdownRenderProps } from 'react-countdown';
 import Button from '../Button/Button';
 import TwitchVideoEmbed from '../TwitchVideoEmbed/TwitchVideoEmbed';
@@ -86,7 +86,7 @@ const Heroblock = ({ event }: HeroblockProps) => {
 						<>
 							<Button actionText="ASM2022" link={'/ASM2022'} iconRight={faChevronRight} colorScheme={'secondary'} />
 							<Button actionText="Purchase Tickets" link={'/ASM2022/tickets'} iconRight={faTicket} colorScheme={'secondary'} />
-							<Button actionText="Schedule" link={'/schedule'} iconRight={faChevronRight} colorScheme={'secondary'} />
+							<Button actionText="Schedule" link={'/schedule'} iconRight={faCalendar} colorScheme={'secondary'} />
 						</>
 					)}
 				</div>

@@ -59,6 +59,14 @@ type Query {
   ): [Ticket!]
   ticket(where: TicketWhereUniqueInput!): Ticket
   ticketsCount(where: TicketWhereInput! = {}): Int
+  volunteers(
+    where: VolunteerWhereInput! = {}
+    orderBy: [VolunteerOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Volunteer!]
+  volunteer(where: VolunteerWhereUniqueInput!): Volunteer
+  volunteersCount(where: VolunteerWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
   validateUserPasswordResetToken(
@@ -142,6 +150,15 @@ type Mutation {
   updateTickets(data: [TicketUpdateArgs!]!): [Ticket]
   deleteTicket(where: TicketWhereUniqueInput!): Ticket
   deleteTickets(where: [TicketWhereUniqueInput!]!): [Ticket]
+  createVolunteer(data: VolunteerCreateInput!): Volunteer
+  createVolunteers(data: [VolunteerCreateInput!]!): [Volunteer]
+  updateVolunteer(
+    where: VolunteerWhereUniqueInput!
+    data: VolunteerUpdateInput!
+  ): Volunteer
+  updateVolunteers(data: [VolunteerUpdateArgs!]!): [Volunteer]
+  deleteVolunteer(where: VolunteerWhereUniqueInput!): Volunteer
+  deleteVolunteers(where: [VolunteerWhereUniqueInput!]!): [Volunteer]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -385,6 +402,13 @@ type User {
     skip: Int! = 0
   ): [Ticket!]
   ticketsCount(where: TicketWhereInput! = {}): Int
+  volunteer(
+    where: VolunteerWhereInput! = {}
+    orderBy: [VolunteerOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Volunteer!]
+  volunteerCount(where: VolunteerWhereInput! = {}): Int
   passwordResetToken: PasswordState
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -434,6 +458,7 @@ input UserWhereInput {
   twitter: StringFilter
   twitch: StringFilter
   tickets: TicketManyRelationFilter
+  volunteer: VolunteerManyRelationFilter
   passwordResetToken: PasswordFilter
   passwordResetIssuedAt: DateTimeNullableFilter
   passwordResetRedeemedAt: DateTimeNullableFilter
@@ -468,6 +493,12 @@ input TicketManyRelationFilter {
   every: TicketWhereInput
   some: TicketWhereInput
   none: TicketWhereInput
+}
+
+input VolunteerManyRelationFilter {
+  every: VolunteerWhereInput
+  some: VolunteerWhereInput
+  none: VolunteerWhereInput
 }
 
 input PasswordFilter {
@@ -510,6 +541,7 @@ input UserUpdateInput {
   twitter: String
   twitch: String
   tickets: TicketRelateToManyForUpdateInput
+  volunteer: VolunteerRelateToManyForUpdateInput
   passwordResetToken: String
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -543,6 +575,13 @@ input TicketRelateToManyForUpdateInput {
   connect: [TicketWhereUniqueInput!]
 }
 
+input VolunteerRelateToManyForUpdateInput {
+  disconnect: [VolunteerWhereUniqueInput!]
+  set: [VolunteerWhereUniqueInput!]
+  create: [VolunteerCreateInput!]
+  connect: [VolunteerWhereUniqueInput!]
+}
+
 input UserUpdateArgs {
   where: UserWhereUniqueInput!
   data: UserUpdateInput!
@@ -566,6 +605,7 @@ input UserCreateInput {
   twitter: String
   twitch: String
   tickets: TicketRelateToManyForCreateInput
+  volunteer: VolunteerRelateToManyForCreateInput
   passwordResetToken: String
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -591,6 +631,11 @@ input TicketRelateToManyForCreateInput {
   connect: [TicketWhereUniqueInput!]
 }
 
+input VolunteerRelateToManyForCreateInput {
+  create: [VolunteerCreateInput!]
+  connect: [VolunteerWhereUniqueInput!]
+}
+
 type Submission {
   id: ID!
   runner: User
@@ -609,6 +654,7 @@ type Submission {
   video: String
   status: SubmissionStatusType
   event: Event
+  willingBackup: Boolean
 }
 
 enum SubmissionAgeRatingType {
@@ -654,6 +700,7 @@ input SubmissionWhereInput {
   video: StringFilter
   status: SubmissionStatusTypeNullableFilter
   event: EventWhereInput
+  willingBackup: BooleanFilter
 }
 
 input SubmissionAgeRatingTypeNullableFilter {
@@ -692,6 +739,7 @@ input SubmissionOrderByInput {
   coop: OrderDirection
   video: OrderDirection
   status: OrderDirection
+  willingBackup: OrderDirection
 }
 
 input SubmissionUpdateInput {
@@ -711,6 +759,7 @@ input SubmissionUpdateInput {
   video: String
   status: SubmissionStatusType
   event: EventRelateToOneForUpdateInput
+  willingBackup: Boolean
 }
 
 input UserRelateToOneForUpdateInput {
@@ -747,6 +796,7 @@ input SubmissionCreateInput {
   video: String
   status: SubmissionStatusType
   event: EventRelateToOneForCreateInput
+  willingBackup: Boolean
 }
 
 input UserRelateToOneForCreateInput {
@@ -794,6 +844,15 @@ type Event {
   ticketsCount(where: TicketWhereInput! = {}): Int
   acceptingTickets: Boolean
   scheduleReleased: Boolean
+  acceptingVolunteers: Boolean
+  acceptingBackups: Boolean
+  volunteer(
+    where: VolunteerWhereInput! = {}
+    orderBy: [VolunteerOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Volunteer!]
+  volunteerCount(where: VolunteerWhereInput! = {}): Int
 }
 
 interface AzureStorageImageFieldOutput {
@@ -860,6 +919,9 @@ input EventWhereInput {
   tickets: TicketManyRelationFilter
   acceptingTickets: BooleanFilter
   scheduleReleased: BooleanFilter
+  acceptingVolunteers: BooleanFilter
+  acceptingBackups: BooleanFilter
+  volunteer: VolunteerManyRelationFilter
 }
 
 input FloatNullableFilter {
@@ -885,6 +947,8 @@ input EventOrderByInput {
   submissionInstructions: OrderDirection
   acceptingTickets: OrderDirection
   scheduleReleased: OrderDirection
+  acceptingVolunteers: OrderDirection
+  acceptingBackups: OrderDirection
 }
 
 input EventUpdateInput {
@@ -903,6 +967,9 @@ input EventUpdateInput {
   tickets: TicketRelateToManyForUpdateInput
   acceptingTickets: Boolean
   scheduleReleased: Boolean
+  acceptingVolunteers: Boolean
+  acceptingBackups: Boolean
+  volunteer: VolunteerRelateToManyForUpdateInput
 }
 
 input AzureStorageImageFieldInput {
@@ -941,6 +1008,9 @@ input EventCreateInput {
   tickets: TicketRelateToManyForCreateInput
   acceptingTickets: Boolean
   scheduleReleased: Boolean
+  acceptingVolunteers: Boolean
+  acceptingBackups: Boolean
+  volunteer: VolunteerRelateToManyForCreateInput
 }
 
 type Role {
@@ -1296,6 +1366,121 @@ input TicketCreateInput {
   numberOfTickets: Int
   stripeID: String
   created: DateTime
+}
+
+type Volunteer {
+  id: ID!
+  volunteer: User
+  jobType: VolunteerJobTypeType
+  eventHostTime: Int
+  maxDailyHostTime: Int
+  dayTimes: JSON
+  specificGame: String
+  specificRunner: String
+  additionalInfo: String
+  experience: String
+  socialMediaAvaialbility: String
+  favMeme: String
+  runnerManagementAvaialbility: String
+  techAvailablity: String
+  techExperience: String
+  event: Event
+}
+
+enum VolunteerJobTypeType {
+  host
+  social
+  runMgmt
+  tech
+}
+
+input VolunteerWhereUniqueInput {
+  id: ID
+}
+
+input VolunteerWhereInput {
+  AND: [VolunteerWhereInput!]
+  OR: [VolunteerWhereInput!]
+  NOT: [VolunteerWhereInput!]
+  id: IDFilter
+  volunteer: UserWhereInput
+  jobType: VolunteerJobTypeTypeNullableFilter
+  eventHostTime: IntNullableFilter
+  maxDailyHostTime: IntNullableFilter
+  specificGame: StringFilter
+  specificRunner: StringFilter
+  additionalInfo: StringFilter
+  experience: StringFilter
+  socialMediaAvaialbility: StringFilter
+  favMeme: StringFilter
+  runnerManagementAvaialbility: StringFilter
+  techAvailablity: StringFilter
+  techExperience: StringFilter
+  event: EventWhereInput
+}
+
+input VolunteerJobTypeTypeNullableFilter {
+  equals: VolunteerJobTypeType
+  in: [VolunteerJobTypeType!]
+  notIn: [VolunteerJobTypeType!]
+  not: VolunteerJobTypeTypeNullableFilter
+}
+
+input VolunteerOrderByInput {
+  id: OrderDirection
+  jobType: OrderDirection
+  eventHostTime: OrderDirection
+  maxDailyHostTime: OrderDirection
+  specificGame: OrderDirection
+  specificRunner: OrderDirection
+  additionalInfo: OrderDirection
+  experience: OrderDirection
+  socialMediaAvaialbility: OrderDirection
+  favMeme: OrderDirection
+  runnerManagementAvaialbility: OrderDirection
+  techAvailablity: OrderDirection
+  techExperience: OrderDirection
+}
+
+input VolunteerUpdateInput {
+  volunteer: UserRelateToOneForUpdateInput
+  jobType: VolunteerJobTypeType
+  eventHostTime: Int
+  maxDailyHostTime: Int
+  dayTimes: JSON
+  specificGame: String
+  specificRunner: String
+  additionalInfo: String
+  experience: String
+  socialMediaAvaialbility: String
+  favMeme: String
+  runnerManagementAvaialbility: String
+  techAvailablity: String
+  techExperience: String
+  event: EventRelateToOneForUpdateInput
+}
+
+input VolunteerUpdateArgs {
+  where: VolunteerWhereUniqueInput!
+  data: VolunteerUpdateInput!
+}
+
+input VolunteerCreateInput {
+  volunteer: UserRelateToOneForCreateInput
+  jobType: VolunteerJobTypeType
+  eventHostTime: Int
+  maxDailyHostTime: Int
+  dayTimes: JSON
+  specificGame: String
+  specificRunner: String
+  additionalInfo: String
+  experience: String
+  socialMediaAvaialbility: String
+  favMeme: String
+  runnerManagementAvaialbility: String
+  techAvailablity: String
+  techExperience: String
+  event: EventRelateToOneForCreateInput
 }
 
 """

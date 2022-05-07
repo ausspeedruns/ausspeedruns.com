@@ -4,7 +4,7 @@ import Link from 'next/link';
 import React from 'react';
 import { gql } from '@keystone-6/core';
 import { useQuery } from 'urql';
-import { faArrowRight, faTicket } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faCalendar, faPerson, faTicket } from '@fortawesome/free-solid-svg-icons';
 
 import styles from '../styles/Event.ASM2022.module.scss';
 import Navbar from '../components/Navbar/Navbar';
@@ -26,6 +26,8 @@ export default function EventPage() {
 					acceptingSubmissions
 					acceptingTickets
 					scheduleReleased
+					acceptingVolunteers
+					acceptingBackups
 				}
 			}
 		`,
@@ -42,17 +44,27 @@ export default function EventPage() {
 				<div className={styles.logo}>
 					<Image src={ASM2022Logo} alt="Australian Speedrun Marathon 2022 Logo" />
 				</div>
-				{queryResult.data?.event?.acceptingSubmissions && (
-					<Button actionText="Submissions are open!" link="/submit-game" iconRight={faArrowRight} />
-				)}
+				<div className={styles.buttons}>
+					{queryResult.data?.event?.acceptingSubmissions && (
+						<Button actionText="Submissions are open!" link="/submit-game" iconRight={faArrowRight} />
+					)}
 
-				{queryResult.data?.event?.acceptingTickets && (
-					<Button actionText="Purchase tickets" link="/ASM2022/tickets" iconRight={faTicket} />
-				)}
+					{queryResult.data?.event?.acceptingBackups && (
+						<Button actionText="Backup submissions are open!" link="/submit-game" iconRight={faArrowRight} />
+					)}
 
-				{queryResult.data?.event?.scheduleReleased && (
-					<Button actionText="Schedule" link="/schedule" iconRight={faArrowRight} />
-				)}
+					{queryResult.data?.event?.acceptingTickets && (
+						<Button actionText="Purchase tickets" link="/ASM2022/tickets" iconRight={faTicket} />
+					)}
+
+					{queryResult.data?.event?.scheduleReleased && (
+						<Button actionText="Schedule" link="/schedule" iconRight={faCalendar} />
+					)}
+
+					{queryResult.data?.event?.acceptingVolunteers && (
+						<Button actionText="Be a volunteer!" link="/volunteers" iconRight={faPerson} />
+					)}
+				</div>
 			</header>
 			<main>
 				<div className={styles.contentRow}>
@@ -75,10 +87,7 @@ export default function EventPage() {
 					</div>
 					<div className={styles.moreInfo}>
 						<p>
-							Checkout the schedule{' '}
-							<Link href="/schedule">
-								here
-							</Link>
+							Checkout the schedule <Link href="/schedule">here</Link>
 							!
 							<br />
 							<br />

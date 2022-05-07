@@ -45,7 +45,7 @@ export const Submission: Lists.Submission = list({
 			validation: { isRequired: true, match: { regex: /^\d{1,2}:\d{2}:\d{2}$/, explanation: 'Estimate invalid. Make sure its like 01:30:00.' } }, hooks: {
 				resolveInput: ({ resolvedData }) => {
 					if (!resolvedData.estimate) return;
-					
+
 					let mutableEstimate = resolvedData.estimate.split(':');
 					// Hours
 					if (mutableEstimate[0].length === 1) {
@@ -101,6 +101,7 @@ export const Submission: Lists.Submission = list({
 			defaultValue: "submitted"
 		}),
 		event: relationship({ ref: 'Event.submissions', ui: { hideCreate: true, labelField: 'shortname' } }),
+		willingBackup: checkbox({ defaultValue: false }),
 	},
 	ui: {
 		labelField: 'game'

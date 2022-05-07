@@ -30,12 +30,14 @@ type RaceLiterals = 'no' | 'solo' | 'only';
 type SubmissionEditProps = {
 	open: boolean;
 	submission: UserPageData['submissions'][0];
+	event: { acceptingSubmissions: boolean; acceptingBackups: boolean };
 	handleClose: () => void;
 };
 
-const SubmissionEditDialog = ({ open, submission, handleClose }: SubmissionEditProps) => {
+const SubmissionEditDialog = ({ open, submission, handleClose, event }: SubmissionEditProps) => {
 	const [deleteDialog, setDeleteDialog] = useState(false);
 
+	const [backup, setBackup] = useState(submission.willingBackup);
 	const [game, setGame] = useState(submission.game);
 	const [category, setCategory] = useState(submission.category);
 	const [estimate, setEstimate] = useState(submission.estimate);
@@ -86,7 +88,16 @@ const SubmissionEditDialog = ({ open, submission, handleClose }: SubmissionEditP
 		}
 	`);
 
-	// Mutation for game submission
+	// Mutation for backup
+	const [backupResult, editBackup] = useMutation(gql`
+		mutation ($submissionID: ID, $willingBackup: Boolean!) {
+			updateSubmission(where: { id: $submissionID }, data: { willingBackup: $willingBackup }) {
+				__typename
+			}
+		}
+	`);
+
+	// Mutation for deleting game submission
 	const [deleteResult, deleteSubmission] = useMutation(gql`
 		mutation ($submissionID: ID) {
 			deleteSubmission(where: { id: $submissionID }) {
@@ -96,6 +107,7 @@ const SubmissionEditDialog = ({ open, submission, handleClose }: SubmissionEditP
 	`);
 
 	const UpdateSubmission = () => {
+		if (!event.acceptingSubmissions) return;
 		editSubmission({
 			submissionID: submission.id,
 			game,
@@ -117,6 +129,20 @@ const SubmissionEditDialog = ({ open, submission, handleClose }: SubmissionEditP
 		});
 	};
 
+	const BackupSubmission = () => {
+		if (!event.acceptingBackups && submission.status !== 'accepted') return;
+		editBackup({
+			submissionID: submission.id,
+			willingBackup: backup,
+		}).then((result) => {
+			if (!result.error) {
+				handleClose();
+			} else {
+				console.error(result.error);
+			}
+		});
+	};
+
 	const DeleteSubmission = () => {
 		deleteSubmission({ submissionID: submission.id });
 	};
@@ -127,23 +153,51 @@ const SubmissionEditDialog = ({ open, submission, handleClose }: SubmissionEditP
 				Edit {submission.game} - {submission.category}
 			</DialogTitle>
 			<DialogContent className={styles.content} style={{ paddingTop: 8 }}>
-				<TextField label="Game" value={game} onChange={(e) => setGame(e.target.value)} />
-				<TextField label="Category" value={category} onChange={(e) => setCategory(e.target.value)} />
+				{event.acceptingBackups && (
+					<FormControlLabel
+						control={<Checkbox onChange={(e) => setBackup(e.target.checked)} checked={backup} />}
+						label="Willing to be backup?"
+					/>
+				)}
 				<TextField
+					disabled={!event.acceptingSubmissions}
+					label="Game"
+					value={game}
+					onChange={(e) => setGame(e.target.value)}
+				/>
+				<TextField
+					disabled={!event.acceptingSubmissions}
+					label="Category"
+					value={category}
+					onChange={(e) => setCategory(e.target.value)}
+				/>
+				<TextField
+					disabled={!event.acceptingSubmissions}
 					label="Estimate"
 					helperText="e.g. 01:20:00 for 1 hour and 20 mins"
 					required
 					value={estimate}
 					onChange={(e) => setEstimate(e.target.value)}
 				/>
-				<TextField label="Platform/Console" value={platform} onChange={(e) => setPlatform(e.target.value)} />
-				<TextField label="Video" value={video} onChange={(e) => setVideo(e.target.value)} />
 				<TextField
+					disabled={!event.acceptingSubmissions}
+					label="Platform/Console"
+					value={platform}
+					onChange={(e) => setPlatform(e.target.value)}
+				/>
+				<TextField
+					disabled={!event.acceptingSubmissions}
+					label="Video"
+					value={video}
+					onChange={(e) => setVideo(e.target.value)}
+				/>
+				<TextField
+					disabled={!event.acceptingSubmissions}
 					label="Donation Incentive"
 					value={donationIncentive}
 					onChange={(e) => setDonationIncentive(e.target.value)}
 				/>
-				<FormControl fullWidth>
+				<FormControl fullWidth disabled={!event.acceptingSubmissions}>
 					<InputLabel id="age-rating-label">Age Rating</InputLabel>
 					<Select
 						labelId="age-rating-label"
@@ -165,6 +219,7 @@ const SubmissionEditDialog = ({ open, submission, handleClose }: SubmissionEditP
 				</FormControl>
 
 				<FormControlLabel
+					disabled={!event.acceptingSubmissions}
 					control={<Checkbox onChange={(e) => setRace(e.target.checked ? 'solo' : 'no')} checked={race !== 'no'} />}
 					label="Race/co-op?"
 				/>
@@ -172,10 +227,11 @@ const SubmissionEditDialog = ({ open, submission, handleClose }: SubmissionEditP
 				{race !== 'no' && (
 					<>
 						<FormControlLabel
+							disabled={!event.acceptingSubmissions}
 							control={<Checkbox onChange={(e) => setCoop(e.target.checked)} checked={coop} />}
 							label="Co-op"
 						/>
-						<FormControl>
+						<FormControl disabled={!event.acceptingSubmissions}>
 							{/* Don't think "type" is a good descriptor */}
 							<FormLabel id="race-type-label">Race/Co-op Type</FormLabel>
 							<RadioGroup
@@ -192,10 +248,20 @@ const SubmissionEditDialog = ({ open, submission, handleClose }: SubmissionEditP
 				)}
 			</DialogContent>
 			<DialogActions style={{ justifyContent: 'space-between' }}>
-				<Button color="error" variant="outlined" onClick={() => setDeleteDialog(true)}>
+				<Button
+					disabled={!event.acceptingSubmissions}
+					color="error"
+					variant="outlined"
+					onClick={() => setDeleteDialog(true)}
+				>
 					Delete
 				</Button>
-				<Button color="primary" variant="contained" onClick={UpdateSubmission}>
+				<Button
+					disabled={!event.acceptingSubmissions && !event.acceptingBackups}
+					color="primary"
+					variant="contained"
+					onClick={event.acceptingBackups ? BackupSubmission : UpdateSubmission}
+				>
 					Update
 				</Button>
 			</DialogActions>

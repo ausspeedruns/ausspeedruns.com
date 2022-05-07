@@ -43,6 +43,7 @@ model User {
   twitter                 String         @default("")
   twitch                  String         @default("")
   tickets                 Ticket[]       @relation("Ticket_user")
+  volunteer               Volunteer[]    @relation("Volunteer_volunteer")
   passwordResetToken      String?
   passwordResetIssuedAt   DateTime?
   passwordResetRedeemedAt DateTime?
@@ -69,6 +70,7 @@ model Submission {
   status                      SubmissionStatusType?    @default(submitted)
   event                       Event?                   @relation("Submission_event", fields: [eventId], references: [id])
   eventId                     String?                  @map("event")
+  willingBackup               Boolean                  @default(false)
   from_Run_originalSubmission Run[]                    @relation("Run_originalSubmission")
 
   @@index([runnerId])
@@ -97,6 +99,9 @@ model Event {
   tickets                Ticket[]     @relation("Ticket_event")
   acceptingTickets       Boolean      @default(false)
   scheduleReleased       Boolean      @default(false)
+  acceptingVolunteers    Boolean      @default(false)
+  acceptingBackups       Boolean      @default(false)
+  volunteer              Volunteer[]  @relation("Volunteer_event")
   from_Role_event        Role[]       @relation("Role_event")
 }
 
@@ -168,6 +173,30 @@ model Ticket {
   @@index([eventId])
 }
 
+model Volunteer {
+  id                           String                @id @default(cuid())
+  volunteer                    User?                 @relation("Volunteer_volunteer", fields: [volunteerId], references: [id])
+  volunteerId                  String?               @map("volunteer")
+  jobType                      VolunteerJobTypeType?
+  eventHostTime                Int?                  @default(0)
+  maxDailyHostTime             Int?                  @default(0)
+  dayTimes                     Json?
+  specificGame                 String                @default("")
+  specificRunner               String                @default("")
+  additionalInfo               String                @default("")
+  experience                   String                @default("")
+  socialMediaAvaialbility      String                @default("")
+  favMeme                      String                @default("")
+  runnerManagementAvaialbility String                @default("")
+  techAvailablity              String                @default("")
+  techExperience               String                @default("")
+  event                        Event?                @relation("Volunteer_event", fields: [eventId], references: [id])
+  eventId                      String?               @map("event")
+
+  @@index([volunteerId])
+  @@index([eventId])
+}
+
 enum PostRoleType {
   public
   runner
@@ -215,4 +244,11 @@ enum RoleTextColourType {
 enum TicketMethodType {
   bank
   stripe
+}
+
+enum VolunteerJobTypeType {
+  host
+  social
+  runMgmt
+  tech
 }

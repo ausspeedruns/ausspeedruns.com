@@ -40,6 +40,7 @@ const SubmissionAccordian = ({ submission, event }: SubmissionProps) => {
 	const raceOrCoop = submission.coop ? 'Coop' : 'Race';
 
 	let colour = '';
+	let fontColor = '';
 	switch (submission.status) {
 		case 'accepted':
 			colour = '#64ba69';
@@ -49,6 +50,7 @@ const SubmissionAccordian = ({ submission, event }: SubmissionProps) => {
 			break;
 		case 'rejected':
 			colour = '#ef5350';
+			fontColor = '#FFFFFF';
 			break;
 		default:
 			break;
@@ -58,7 +60,7 @@ const SubmissionAccordian = ({ submission, event }: SubmissionProps) => {
 		<StyledAccordian className={styles.submission}>
 			<AccordionSummary expandIcon={<FontAwesomeIcon icon={faAngleDown} />} className={styles.submissionHeader}>
 				{submission.status !== 'submitted' && (
-					<span className={styles.submissionStatus} style={{ backgroundColor: colour }}>
+					<span className={styles.submissionStatus} style={{ backgroundColor: colour, color: fontColor }}>
 						{submission.status}
 					</span>
 				)}

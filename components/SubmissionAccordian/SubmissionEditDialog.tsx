@@ -243,7 +243,12 @@ const SubmissionEditDialog = ({ open, submission, handleClose, event }: Submissi
 								<FormControlLabel value="only" control={<Radio />} label="Only race/co-op" />
 							</RadioGroup>
 						</FormControl>
-						<TextField value={racer} onChange={(e) => setRacer(e.target.value)} label="Name of other player(s)" />
+						<TextField
+							disabled={!event.acceptingSubmissions}
+							value={racer}
+							onChange={(e) => setRacer(e.target.value)}
+							label="Name of other player(s)"
+						/>
 					</>
 				)}
 			</DialogContent>

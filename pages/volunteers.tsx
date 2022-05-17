@@ -62,7 +62,7 @@ export default function SubmitGamePage() {
 	const [favMeme, setFavMeme] = useState('');
 
 	// Runner Management
-	const [runnerManagementAvaialbility, setRunnerManagementAvaialbility] = useState('');
+	const [runnerManagementAvailability, setrunnerManagementAvailability] = useState('');
 
 	// Tech
 	const [techAvailablity, setTechAvailablity] = useState('');
@@ -118,9 +118,8 @@ export default function SubmitGamePage() {
 			$specificRunner: String
 			$additionalInfo: String
 			$experience: String
-			$socialMediaAvaialbility: String
 			$favMeme: String
-			$runnerManagementAvaialbility: String
+			$runnerManagementAvailability: String
 			$techAvailablity: String
 			$techExperience: String
 			$eventId: ID
@@ -136,9 +135,8 @@ export default function SubmitGamePage() {
 					specificRunner: $specificRunner
 					additionalInfo: $additionalInfo
 					experience: $experience
-					socialMediaAvaialbility: $socialMediaAvaialbility
 					favMeme: $favMeme
-					runnerManagementAvaialbility: $runnerManagementAvaialbility
+					runnerManagementAvailability: $runnerManagementAvailability
 					techAvailablity: $techAvailablity
 					techExperience: $techExperience
 					event: { connect: { id: $eventId } }
@@ -171,7 +169,7 @@ export default function SubmitGamePage() {
 		setSocialMediaAvaialbility('');
 		setFavMeme('');
 
-		setRunnerManagementAvaialbility('');
+		setrunnerManagementAvailability('');
 
 		setTechAvailablity('');
 		setTechExperience('');
@@ -193,12 +191,12 @@ export default function SubmitGamePage() {
 			}
 			break;
 		case 'runMgmt':
-			if (!runnerManagementAvaialbility) {
+			if (!runnerManagementAvailability) {
 				disableSend = true;
 			}
 			break;
 		case 'social':
-			if (!socialMediaAvaialbility) {
+			if (!dayTimes) {
 				disableSend = true;
 			}
 			break;
@@ -251,7 +249,7 @@ export default function SubmitGamePage() {
 				<title>{TITLE}</title>
 				<DiscordEmbed
 					title={TITLE}
-					description="Submit your speedrun to the AusSpeedrun Marathon"
+					description="Volunteer for AusSpeedrun Marathons!"
 					pageUrl="/submit-game"
 				/>
 			</Head>
@@ -275,9 +273,8 @@ export default function SubmitGamePage() {
 								specificRunner,
 								additionalInfo,
 								experience,
-								socialMediaAvaialbility,
 								favMeme,
-								runnerManagementAvaialbility,
+								runnerManagementAvailability,
 								techAvailablity,
 								techExperience,
 								eventId: event,
@@ -408,7 +405,7 @@ export default function SubmitGamePage() {
 
 							{jobType === 'social' && (
 								<>
-									<p>In charge of making and sending tweets of upcoming runs.</p>
+									<p>In charge of creating and posting social media content throughout the event (ie. tweets of upcoming runs, Instagram stories, photos).</p>
 									<FormControl fullWidth>
 										<InputLabel id="socialmedia-experience-label">Experience level</InputLabel>
 										<Select
@@ -424,14 +421,8 @@ export default function SubmitGamePage() {
 										</Select>
 									</FormControl>
 									<div className={styles.question}>
-										<span>Availability through event?*</span>
-										<TextField
-											multiline
-											fullWidth
-											value={socialMediaAvaialbility}
-											onChange={(e) => setSocialMediaAvaialbility(e.target.value)}
-											minRows={4}
-										/>
+										<span>What times are you available to host on each day?*</span>
+										{hostDates}
 									</div>
 									<div className={styles.question}>
 										<span>Post a link to your favourite meme</span>
@@ -442,15 +433,18 @@ export default function SubmitGamePage() {
 
 							{jobType === 'runMgmt' && (
 								<>
-									<p>Helping runners with questions and making sure they exist idk im not a copywriter pls help sten</p>
+									<p>
+										Assisting runners with any queries they may have throughout the events, making sure runners are
+										present for their runs, checking vaccination status of and handing out passes to attendees.
+									</p>
 									<div className={styles.question}>
 										<span>
 											What is your availability? This should include the setup day as well as the actual marathon days.*
 										</span>
 										<TextField
 											fullWidth
-											value={runnerManagementAvaialbility}
-											onChange={(e) => setRunnerManagementAvaialbility(e.target.value)}
+											value={runnerManagementAvailability}
+											onChange={(e) => setrunnerManagementAvailability(e.target.value)}
 											label=""
 											required
 											multiline

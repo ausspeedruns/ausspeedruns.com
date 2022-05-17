@@ -1,6 +1,13 @@
 -- CreateEnum
 CREATE TYPE "VolunteerJobTypeType" AS ENUM ('host', 'social', 'runMgmt', 'tech');
 
+-- AlterTable
+ALTER TABLE "Event" ADD COLUMN     "acceptingBackups" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "acceptingVolunteers" BOOLEAN NOT NULL DEFAULT false;
+
+-- AlterTable
+ALTER TABLE "Submission" ADD COLUMN     "willingBackup" BOOLEAN NOT NULL DEFAULT false;
+
 -- CreateTable
 CREATE TABLE "Volunteer" (
     "id" TEXT NOT NULL,
@@ -8,12 +15,12 @@ CREATE TABLE "Volunteer" (
     "jobType" "VolunteerJobTypeType",
     "eventHostTime" INTEGER DEFAULT 0,
     "maxDailyHostTime" INTEGER DEFAULT 0,
-    "dayTimes" TEXT NOT NULL DEFAULT E'',
+    "dayTimes" JSONB,
     "specificGame" TEXT NOT NULL DEFAULT E'',
     "specificRunner" TEXT NOT NULL DEFAULT E'',
     "additionalInfo" TEXT NOT NULL DEFAULT E'',
     "experience" TEXT NOT NULL DEFAULT E'',
-    "socialMediaAvaialbility" TEXT NOT NULL DEFAULT E'',
+    "favMeme" TEXT NOT NULL DEFAULT E'',
     "runnerManagementAvaialbility" TEXT NOT NULL DEFAULT E'',
     "techAvailablity" TEXT NOT NULL DEFAULT E'',
     "techExperience" TEXT NOT NULL DEFAULT E'',

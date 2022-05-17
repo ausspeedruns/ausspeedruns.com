@@ -1379,9 +1379,8 @@ type Volunteer {
   specificRunner: String
   additionalInfo: String
   experience: String
-  socialMediaAvaialbility: String
   favMeme: String
-  runnerManagementAvaialbility: String
+  runnerManagementAvailability: String
   techAvailablity: String
   techExperience: String
   event: Event
@@ -1411,9 +1410,8 @@ input VolunteerWhereInput {
   specificRunner: StringFilter
   additionalInfo: StringFilter
   experience: StringFilter
-  socialMediaAvaialbility: StringFilter
   favMeme: StringFilter
-  runnerManagementAvaialbility: StringFilter
+  runnerManagementAvailability: StringFilter
   techAvailablity: StringFilter
   techExperience: StringFilter
   event: EventWhereInput
@@ -1435,9 +1433,8 @@ input VolunteerOrderByInput {
   specificRunner: OrderDirection
   additionalInfo: OrderDirection
   experience: OrderDirection
-  socialMediaAvaialbility: OrderDirection
   favMeme: OrderDirection
-  runnerManagementAvaialbility: OrderDirection
+  runnerManagementAvailability: OrderDirection
   techAvailablity: OrderDirection
   techExperience: OrderDirection
 }
@@ -1452,9 +1449,8 @@ input VolunteerUpdateInput {
   specificRunner: String
   additionalInfo: String
   experience: String
-  socialMediaAvaialbility: String
   favMeme: String
-  runnerManagementAvaialbility: String
+  runnerManagementAvailability: String
   techAvailablity: String
   techExperience: String
   event: EventRelateToOneForUpdateInput
@@ -1475,9 +1471,8 @@ input VolunteerCreateInput {
   specificRunner: String
   additionalInfo: String
   experience: String
-  socialMediaAvaialbility: String
   favMeme: String
-  runnerManagementAvaialbility: String
+  runnerManagementAvailability: String
   techAvailablity: String
   techExperience: String
   event: EventRelateToOneForCreateInput

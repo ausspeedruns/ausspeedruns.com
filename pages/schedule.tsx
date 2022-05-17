@@ -16,7 +16,7 @@ export default function Schedule() {
 			</Head>
 			<Navbar />
 			<main className={styles.content}>
-				<Image src={ASM2022Logo} width={600} height={150} />
+				<Image src={ASM2022Logo} width={600} height={150} title="ASM2022 Logo" alt="ASM2022 Logo" />
 				<h1>ASM2022 Schedule</h1>
 				<a href="https://horaro.org/asm2022/schedule" target="_blank" rel="noreferrer">View externally on Horaro</a>
 				<div className={styles.iframeContainer}>

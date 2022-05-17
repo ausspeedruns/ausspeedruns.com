@@ -125,6 +125,7 @@ export default function SubmitGamePage() {
 			$coop: Boolean!
 			$video: String
 			$eventId: ID
+			$willingBackup: Boolean!
 		) {
 			createSubmission(
 				data: {
@@ -142,6 +143,7 @@ export default function SubmitGamePage() {
 					coop: $coop
 					video: $video
 					event: { connect: { id: $eventId } }
+					willingBackup: $willingBackup
 				}
 			) {
 				__typename
@@ -154,7 +156,7 @@ export default function SubmitGamePage() {
 			setEvent(eventsResult.data.events[0].id);
 		}
 	}, [eventsResult]);
-	
+
 	const currentEvent = eventsResult.data?.events.find((eventResult) => eventResult.id === event);
 
 	useEffect(() => {
@@ -302,6 +304,7 @@ export default function SubmitGamePage() {
 								coop,
 								video,
 								eventId: event,
+								willingBackup: currentEvent?.acceptingBackups
 							}).then((result) => {
 								if (!result.error) {
 									clearInputs();

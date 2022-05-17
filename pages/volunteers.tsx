@@ -344,6 +344,8 @@ export default function SubmitGamePage() {
 									<p>
 										You are the voice of the event reading off donations and letting the viewers know about the charity
 										and any sponsors.
+										<br/>
+										Any queries please contact werster on Discord.
 									</p>
 									<div className={styles.question}>
 										<span>What is the maximum amount of hours you are comfortable hosting for the entire event?*</span>
@@ -405,7 +407,9 @@ export default function SubmitGamePage() {
 
 							{jobType === 'social' && (
 								<>
-									<p>In charge of creating and posting social media content throughout the event (ie. tweets of upcoming runs, Instagram stories, photos).</p>
+									<p>In charge of creating and posting social media content throughout the event (ie. tweets of upcoming runs, Instagram stories, photos).
+										<br/>
+										Any queries please contact Nase on Discord.</p>
 									<FormControl fullWidth>
 										<InputLabel id="socialmedia-experience-label">Experience level</InputLabel>
 										<Select
@@ -421,7 +425,7 @@ export default function SubmitGamePage() {
 										</Select>
 									</FormControl>
 									<div className={styles.question}>
-										<span>What times are you available to host on each day?*</span>
+										<span>What times are you available on each day?*</span>
 										{hostDates}
 									</div>
 									<div className={styles.question}>
@@ -436,6 +440,8 @@ export default function SubmitGamePage() {
 									<p>
 										Assisting runners with any queries they may have throughout the events, making sure runners are
 										present for their runs, checking vaccination status of and handing out passes to attendees.
+										<br/>
+										Any queries please contact Sten on Discord.
 									</p>
 									<div className={styles.question}>
 										<span>
@@ -458,6 +464,8 @@ export default function SubmitGamePage() {
 								<>
 									<p>
 										Setting up next runs and managing the stream. Some roles vary in difficulty and experience required.
+										<br/>
+										Any queries please contact nei or Clubwho on Discord.
 									</p>
 									<div className={styles.question}>
 										<span>

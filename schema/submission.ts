@@ -26,7 +26,7 @@ export const Submission: Lists.Submission = list({
 			update: ({ session }: SessionContext) => {
 				if (!session?.data) return false;
 				if (session.data.roles?.some(role => role.canManageContent)) return true;
-				return { runner: { username: { equals: session.data.username } }, status: { equals: "submitted" } }
+				return { runner: { username: { equals: session.data.username } }, status: { in: ['submitted', 'rejected'] } }
 			},
 			delete: ({ session }: SessionContext) => {
 				if (!session?.data) return false;

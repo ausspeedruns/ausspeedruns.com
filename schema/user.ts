@@ -123,6 +123,8 @@ export const User: Lists.User = list({
 		tickets: relationship({ ref: 'Ticket.user', ui: { hideCreate: true }, many: true}),
 		// Volunteer
 		volunteer: relationship({ ref: 'Volunteer.volunteer', ui: { hideCreate: true }, many: true}),
+		// Store
+		shirts: relationship({ ref: 'ShirtOrder.user', ui: { hideCreate: true }, many: true}),
 	},
 	ui: {
 		labelField: 'username'

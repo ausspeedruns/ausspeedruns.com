@@ -44,6 +44,7 @@ model User {
   twitch                  String         @default("")
   tickets                 Ticket[]       @relation("Ticket_user")
   volunteer               Volunteer[]    @relation("Volunteer_volunteer")
+  shirts                  ShirtOrder[]   @relation("ShirtOrder_user")
   passwordResetToken      String?
   passwordResetIssuedAt   DateTime?
   passwordResetRedeemedAt DateTime?
@@ -196,6 +197,23 @@ model Volunteer {
   @@index([eventId])
 }
 
+model ShirtOrder {
+  id       String               @id @default(cuid())
+  user     User?                @relation("ShirtOrder_user", fields: [userId], references: [id])
+  userId   String?              @map("user")
+  taken    Boolean              @default(false)
+  method   ShirtOrderMethodType
+  shirtID  String               @unique @default("")
+  paid     Boolean              @default(false)
+  notes    String               @default("")
+  size     ShirtOrderSizeType
+  colour   ShirtOrderColourType
+  stripeID String               @unique @default("")
+  created  DateTime?            @default(now())
+
+  @@index([userId])
+}
+
 enum PostRoleType {
   public
   runner
@@ -250,4 +268,24 @@ enum VolunteerJobTypeType {
   social
   runMgmt
   tech
+}
+
+enum ShirtOrderMethodType {
+  bank
+  stripe
+}
+
+enum ShirtOrderSizeType {
+  xs
+  s
+  m
+  l
+  xl
+  xl2
+  xl3
+}
+
+enum ShirtOrderColourType {
+  blue
+  purple
 }

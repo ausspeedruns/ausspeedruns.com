@@ -67,6 +67,14 @@ type Query {
   ): [Volunteer!]
   volunteer(where: VolunteerWhereUniqueInput!): Volunteer
   volunteersCount(where: VolunteerWhereInput! = {}): Int
+  shirtOrders(
+    where: ShirtOrderWhereInput! = {}
+    orderBy: [ShirtOrderOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [ShirtOrder!]
+  shirtOrder(where: ShirtOrderWhereUniqueInput!): ShirtOrder
+  shirtOrdersCount(where: ShirtOrderWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
   validateUserPasswordResetToken(
@@ -96,6 +104,23 @@ type Mutation {
     stripeID: String
     apiKey: String!
   ): Ticket
+
+  """
+   Update stripe shirt
+  """
+  confirmShirtStripe(stripeID: String!, apiKey: String!): ShirtOrder
+
+  """
+   Generate a shirt
+  """
+  generateShirt(
+    userID: ID!
+    size: ShirtOrderSizeType!
+    method: TicketMethodType!
+    colour: ShirtOrderColourType!
+    stripeID: String
+    apiKey: String!
+  ): ShirtOrder
   createPost(data: PostCreateInput!): Post
   createPosts(data: [PostCreateInput!]!): [Post]
   updatePost(where: PostWhereUniqueInput!, data: PostUpdateInput!): Post
@@ -159,6 +184,15 @@ type Mutation {
   updateVolunteers(data: [VolunteerUpdateArgs!]!): [Volunteer]
   deleteVolunteer(where: VolunteerWhereUniqueInput!): Volunteer
   deleteVolunteers(where: [VolunteerWhereUniqueInput!]!): [Volunteer]
+  createShirtOrder(data: ShirtOrderCreateInput!): ShirtOrder
+  createShirtOrders(data: [ShirtOrderCreateInput!]!): [ShirtOrder]
+  updateShirtOrder(
+    where: ShirtOrderWhereUniqueInput!
+    data: ShirtOrderUpdateInput!
+  ): ShirtOrder
+  updateShirtOrders(data: [ShirtOrderUpdateArgs!]!): [ShirtOrder]
+  deleteShirtOrder(where: ShirtOrderWhereUniqueInput!): ShirtOrder
+  deleteShirtOrders(where: [ShirtOrderWhereUniqueInput!]!): [ShirtOrder]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -409,6 +443,13 @@ type User {
     skip: Int! = 0
   ): [Volunteer!]
   volunteerCount(where: VolunteerWhereInput! = {}): Int
+  shirts(
+    where: ShirtOrderWhereInput! = {}
+    orderBy: [ShirtOrderOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [ShirtOrder!]
+  shirtsCount(where: ShirtOrderWhereInput! = {}): Int
   passwordResetToken: PasswordState
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -459,6 +500,7 @@ input UserWhereInput {
   twitch: StringFilter
   tickets: TicketManyRelationFilter
   volunteer: VolunteerManyRelationFilter
+  shirts: ShirtOrderManyRelationFilter
   passwordResetToken: PasswordFilter
   passwordResetIssuedAt: DateTimeNullableFilter
   passwordResetRedeemedAt: DateTimeNullableFilter
@@ -499,6 +541,12 @@ input VolunteerManyRelationFilter {
   every: VolunteerWhereInput
   some: VolunteerWhereInput
   none: VolunteerWhereInput
+}
+
+input ShirtOrderManyRelationFilter {
+  every: ShirtOrderWhereInput
+  some: ShirtOrderWhereInput
+  none: ShirtOrderWhereInput
 }
 
 input PasswordFilter {
@@ -542,6 +590,7 @@ input UserUpdateInput {
   twitch: String
   tickets: TicketRelateToManyForUpdateInput
   volunteer: VolunteerRelateToManyForUpdateInput
+  shirts: ShirtOrderRelateToManyForUpdateInput
   passwordResetToken: String
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -582,6 +631,13 @@ input VolunteerRelateToManyForUpdateInput {
   connect: [VolunteerWhereUniqueInput!]
 }
 
+input ShirtOrderRelateToManyForUpdateInput {
+  disconnect: [ShirtOrderWhereUniqueInput!]
+  set: [ShirtOrderWhereUniqueInput!]
+  create: [ShirtOrderCreateInput!]
+  connect: [ShirtOrderWhereUniqueInput!]
+}
+
 input UserUpdateArgs {
   where: UserWhereUniqueInput!
   data: UserUpdateInput!
@@ -606,6 +662,7 @@ input UserCreateInput {
   twitch: String
   tickets: TicketRelateToManyForCreateInput
   volunteer: VolunteerRelateToManyForCreateInput
+  shirts: ShirtOrderRelateToManyForCreateInput
   passwordResetToken: String
   passwordResetIssuedAt: DateTime
   passwordResetRedeemedAt: DateTime
@@ -634,6 +691,11 @@ input TicketRelateToManyForCreateInput {
 input VolunteerRelateToManyForCreateInput {
   create: [VolunteerCreateInput!]
   connect: [VolunteerWhereUniqueInput!]
+}
+
+input ShirtOrderRelateToManyForCreateInput {
+  create: [ShirtOrderCreateInput!]
+  connect: [ShirtOrderWhereUniqueInput!]
 }
 
 type Submission {
@@ -1476,6 +1538,128 @@ input VolunteerCreateInput {
   techAvailablity: String
   techExperience: String
   event: EventRelateToOneForCreateInput
+}
+
+type ShirtOrder {
+  id: ID!
+  user: User
+  taken: Boolean
+  method: ShirtOrderMethodType
+  shirtID: String
+  paid: Boolean
+  notes: String
+  size: ShirtOrderSizeType
+  colour: ShirtOrderColourType
+  stripeID: String
+  created: DateTime
+}
+
+enum ShirtOrderMethodType {
+  bank
+  stripe
+}
+
+enum ShirtOrderSizeType {
+  xs
+  s
+  m
+  l
+  xl
+  xl2
+  xl3
+}
+
+enum ShirtOrderColourType {
+  blue
+  purple
+}
+
+input ShirtOrderWhereUniqueInput {
+  id: ID
+  shirtID: String
+  stripeID: String
+}
+
+input ShirtOrderWhereInput {
+  AND: [ShirtOrderWhereInput!]
+  OR: [ShirtOrderWhereInput!]
+  NOT: [ShirtOrderWhereInput!]
+  id: IDFilter
+  user: UserWhereInput
+  taken: BooleanFilter
+  method: ShirtOrderMethodTypeNullableFilter
+  shirtID: StringFilter
+  paid: BooleanFilter
+  notes: StringFilter
+  size: ShirtOrderSizeTypeNullableFilter
+  colour: ShirtOrderColourTypeNullableFilter
+  stripeID: StringFilter
+  created: DateTimeNullableFilter
+}
+
+input ShirtOrderMethodTypeNullableFilter {
+  equals: ShirtOrderMethodType
+  in: [ShirtOrderMethodType!]
+  notIn: [ShirtOrderMethodType!]
+  not: ShirtOrderMethodTypeNullableFilter
+}
+
+input ShirtOrderSizeTypeNullableFilter {
+  equals: ShirtOrderSizeType
+  in: [ShirtOrderSizeType!]
+  notIn: [ShirtOrderSizeType!]
+  not: ShirtOrderSizeTypeNullableFilter
+}
+
+input ShirtOrderColourTypeNullableFilter {
+  equals: ShirtOrderColourType
+  in: [ShirtOrderColourType!]
+  notIn: [ShirtOrderColourType!]
+  not: ShirtOrderColourTypeNullableFilter
+}
+
+input ShirtOrderOrderByInput {
+  id: OrderDirection
+  taken: OrderDirection
+  method: OrderDirection
+  shirtID: OrderDirection
+  paid: OrderDirection
+  notes: OrderDirection
+  size: OrderDirection
+  colour: OrderDirection
+  stripeID: OrderDirection
+  created: OrderDirection
+}
+
+input ShirtOrderUpdateInput {
+  user: UserRelateToOneForUpdateInput
+  taken: Boolean
+  method: ShirtOrderMethodType
+  shirtID: String
+  paid: Boolean
+  notes: String
+  size: ShirtOrderSizeType
+  colour: ShirtOrderColourType
+  stripeID: String
+  created: DateTime
+}
+
+input ShirtOrderUpdateArgs {
+  where: ShirtOrderWhereUniqueInput!
+  data: ShirtOrderUpdateInput!
+}
+
+input ShirtOrderCreateInput {
+  user: UserRelateToOneForCreateInput
+  taken: Boolean
+  method: ShirtOrderMethodType
+  shirtID: String
+  paid: Boolean
+  notes: String
+  size: ShirtOrderSizeType
+  colour: ShirtOrderColourType
+  stripeID: String
+  created: DateTime
 }
 
 """

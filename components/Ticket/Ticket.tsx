@@ -43,19 +43,21 @@ const Ticket: React.FC<Props> = (props: Props) => {
 		}
 	}, [ticketID, paid, barcodeRef]);
 
-	const aspectRatio = event.logo.width / event.logo.height;
+	const aspectRatio = event.logo?.width / event.logo?.height;
 
 	return (
 		<Box className={styles.ticket} sx={{ boxShadow: 8 }}>
 			<div className={styles.ticketID}>
-				<Image
-					src={event.logo.url}
-					title={event.shortname}
-					width={LOGO_HEIGHT * aspectRatio}
-					height={LOGO_HEIGHT}
-					alt={`${event.shortname} logo`}
-					className={styles.eventLogo}
-				/>
+				{event.logo && (
+					<Image
+						src={event.logo.url}
+						title={event.shortname}
+						width={LOGO_HEIGHT * aspectRatio}
+						height={LOGO_HEIGHT}
+						alt={`${event.shortname} logo`}
+						className={styles.eventLogo}
+					/>
+				)}
 				{paid && <svg ref={barcodeRef} className={styles.barcode}></svg>}
 				<span>Ticket ID</span>
 				<span className={styles.label}>{ticketID}</span>
@@ -86,7 +88,8 @@ const Ticket: React.FC<Props> = (props: Props) => {
 				<>
 					<p>Currently unpaid. Allow 7 days for the ticket to be updated.</p>
 					<p>
-						You <b>MUST</b> send the Ticket ID as the &quot;reference&quot;. Failure to do so will result in your ticket marked as not being paid.
+						You <b>MUST</b> send the Ticket ID as the &quot;reference&quot;. Failure to do so will result in your ticket
+						marked as not being paid.
 					</p>
 				</>
 			)}

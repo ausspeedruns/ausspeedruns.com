@@ -16,6 +16,7 @@ import { Ticket } from './schema/tickets';
 import { sendResetPassword } from './email/emails';
 import { Context } from '.keystone/types';
 import { Volunteer } from './schema/volunteers';
+import { ShirtOrder } from './schema/orders';
 
 
 const session = statelessSessions({
@@ -66,7 +67,7 @@ export default withAuth(
       generateNextGraphqlAPI: true,
       generateNodeAPI: true,
     },
-    lists: { Post, User, Submission, Event, Role, Run, Verification, Ticket, Volunteer },
+    lists: { Post, User, Submission, Event, Role, Run, Verification, Ticket, Volunteer, ShirtOrder },
     extendGraphqlSchema: graphQLSchemaExtension<Context>({
       typeDefs: gql`
         type Query {
@@ -79,6 +80,12 @@ export default withAuth(
 
           """ Generate a ticket """
           generateTicket(userID: ID!, numberOfTickets: Int!, method: TicketMethodType!, event: String!, stripeID: String, apiKey: String!): Ticket
+
+          """ Update stripe shirt """
+          confirmShirtStripe(stripeID: String!, apiKey: String!): ShirtOrder
+
+          """ Generate a shirt """
+          generateShirt(userID: ID!, size: ShirtOrderSizeType!, method: TicketMethodType!, colour: ShirtOrderColourType!, stripeID: String, apiKey: String!): ShirtOrder
         }
       `,
       resolvers: {
@@ -133,6 +140,35 @@ export default withAuth(
                 numberOfTickets,
                 method,
                 event: { connect: { shortname: event } },
+                stripeID: stripeID ?? uuid(),
+              }
+            });
+          },
+          confirmShirtStripe: (root, { stripeID, apiKey }, context) => {
+            if (apiKey !== process.env.API_KEY) throw new Error("Incorrect API Key");
+
+            return context.sudo().db.ShirtOrder.updateOne({
+              where: { stripeID },
+              data: { paid: true }
+            });
+          },
+          generateShirt: async (root, { userID, size, colour, method, stripeID, apiKey }, context) => {
+            if (apiKey !== process.env.API_KEY) throw new Error("Incorrect API Key");
+
+            // Check user is verified
+            const userVerified = await context.sudo().query.User.findOne({where: {id: userID}, query: 'verified'});
+
+            if (!userVerified.verified) {
+              // console.log(`Unverified user ${userID} tried to generate ticket.`)
+              throw new Error('Unverified user.');
+            }
+
+            return context.sudo().db.ShirtOrder.createOne({
+              data: {
+                user: { connect: { id: userID } },
+                size,
+                colour,
+                method,
                 stripeID: stripeID ?? uuid(),
               }
             });

@@ -16,6 +16,7 @@ import RunUpcoming from '../../components/RunUpcoming/RunUpcoming';
 import RunCompleted from '../../components/RunCompleted/RunCompleted';
 import DiscordEmbed from '../../components/DiscordEmbed';
 import Ticket from '../../components/Ticket/Ticket';
+import ASMShirt from '../../components/ShirtOrder/ShirtOrder';
 
 export type UserPageData = {
 	id: string;
@@ -93,6 +94,12 @@ export type UserPageData = {
 		numberOfTickets: number;
 		method: 'bank' | 'stripe';
 		taken: boolean;
+	}[];
+	shirts: {
+		paid: boolean;
+		size: string;
+		colour: 'blue' | 'purple';
+		shirtID: string;
 	}[];
 };
 
@@ -209,6 +216,12 @@ export default function ProfilePage() {
 						numberOfTickets
 						method
 						taken
+					}
+					shirts(where: { OR: [{ method: { equals: bank } }, { paid: { equals: true } }] }) {
+						shirtID
+						paid
+						size
+						colour
 					}
 				}
 			}
@@ -339,6 +352,16 @@ export default function ProfilePage() {
 						<h3 id="tickets">Tickets (Private)</h3>
 						{userData.tickets.map((ticket) => {
 							return <Ticket key={ticket.ticketID} ticketData={ticket} />;
+						})}
+					</div>
+				)}
+
+				{/* Tickets */}
+				{userData.tickets.length > 0 && (
+					<div className={styles.submissions}>
+						<h3 id="shirts">Shirt Orders (Private)</h3>
+						{userData.shirts.map((shirt) => {
+							return <ASMShirt key={shirt.shirtID} shirtData={shirt} />;
 						})}
 					</div>
 				)}

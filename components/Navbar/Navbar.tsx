@@ -95,13 +95,13 @@ const Navbar = ({ isLive }: NavbarProps) => {
 							</Link>
 						</li>
 						<li>
-							{isMobile ? <FontAwesomeIcon icon={faBook} /> : ''}
+							{isMobile ? <FontAwesomeIcon className={styles.icon} icon={faBook} /> : ''}
 							<Link href="/blog" passHref>
 								<a className={styles.text}>Blog</a>
 							</Link>
 						</li>
 						<li>
-							{isMobile ? <FontAwesomeIcon icon={faUsers} /> : ''}
+							{isMobile ? <FontAwesomeIcon className={styles.icon} icon={faUsers} /> : ''}
 							<Link href="/#participate" passHref>
 								<a className={styles.text}>Get Involved</a>
 							</Link>

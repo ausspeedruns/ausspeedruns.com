@@ -10,10 +10,11 @@ export type ButtonProps = {
 	iconRight?: IconProp;
 	colorScheme?: 'primary' | 'secondary' | 'secondary lightHover' | 'secondary inverted' | 'primary lightHover' | 'orange';
 	target?: HTMLAttributeAnchorTarget;
+	rel?: string;
 	type?: string;
 };
 
-const Button = ({ actionText, link, iconLeft, iconRight, colorScheme = 'primary', target = '_self', type }: ButtonProps) => {
+const Button = ({ actionText, link, iconLeft, iconRight, rel, colorScheme = 'primary', target = '_self', type }: ButtonProps) => {
 	return (
 		<a
 			className={`${styles.button} ${colorScheme
@@ -22,6 +23,7 @@ const Button = ({ actionText, link, iconLeft, iconRight, colorScheme = 'primary'
 				.join(' ')}`}
 			href={link}
 			target={target}
+			rel={rel}
 			type={type}
 		>
 			{iconLeft && <FontAwesomeIcon icon={iconLeft} />}

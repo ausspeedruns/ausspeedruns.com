@@ -16,7 +16,7 @@ export const globals: Globals = {
       }
     },
     current: {
-      fullName: 'ASM2022',
+      fullName: 'Australian Speedrun Marathon 2022',
       preferredName: 'ASM2022',
       shortName: 'ASM2022',
       dates: 'July 13 - 17, 2022',

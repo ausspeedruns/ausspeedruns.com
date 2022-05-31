@@ -4,18 +4,21 @@ import Link from 'next/link';
 import React from 'react';
 import { gql } from '@keystone-6/core';
 import { useQuery } from 'urql';
-import { faArrowRight, faCalendar, faPerson, faTicket } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faCalendar, faPerson, faShirt, faTicket } from '@fortawesome/free-solid-svg-icons';
 
 import styles from '../styles/Event.ASM2022.module.scss';
 import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
 import Button from '../components/Button/Button';
+import DiscordEmbed from '../components/DiscordEmbed';
 
 import ASM2022Logo from '../styles/img/ASM2022-Logo.svg';
 import StockPhoto1 from '../styles/img/StockPhoto1.jpg';
 import StockPhoto2 from '../styles/img/StockPhoto2.jpg';
 import StockPhoto3 from '../styles/img/StockPhoto3.jpg';
-import DiscordEmbed from '../components/DiscordEmbed';
+import GoCStockPhoto1 from '../styles/img/GoCStockPhoto1.png';
+
+const selloutDate = new Date(Date.UTC(2022, 5, 16, 14, 30, 0, 0));
 
 export default function EventPage() {
 	const [queryResult, eventQuery] = useQuery({
@@ -64,6 +67,18 @@ export default function EventPage() {
 					{queryResult.data?.event?.acceptingVolunteers && (
 						<Button actionText="Be a volunteer!" link="/volunteers" iconRight={faPerson} />
 					)}
+
+					{new Date() < selloutDate && (
+						<Button actionText="Buy the ASM2022 Shirt! (Limited Time)" link="/store" iconRight={faShirt} />
+					)}
+
+					<Button
+						actionText="Learn more about Game on Cancer"
+						link="https://gameoncancer.com.au/"
+						iconRight={faArrowRight}
+						target="_blank"
+						rel="noopener noreferrer"
+					/>
 				</div>
 			</header>
 			<main>
@@ -93,6 +108,18 @@ export default function EventPage() {
 							<br />
 							Follow us on Twitter or Join the Discord to stay up to date with all the latest information!
 						</p>
+					</div>
+				</div>
+				<div className={styles.contentRow}>
+					<div className={styles.moreInfo}>
+						<p>
+							We are super excited to be supporting Cure Cancer through its Game on Cancer inititive. Cure Cancer has
+							been raising money for 55 years to fund early career cancer researchers. Over 540 research grants have
+							been funded thanks to Cure Cancer donors and partners.
+						</p>
+					</div>
+					<div className={styles.image}>
+						<Image layout="fill" objectFit="cover" src={GoCStockPhoto1} alt="Game on Cancer Logo" />
 					</div>
 				</div>
 				<div className={styles.informationSection}>

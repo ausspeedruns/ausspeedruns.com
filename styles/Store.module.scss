@@ -34,6 +34,10 @@
 		justify-content: center;
 		gap: 1rem;
 
+		@include breakpoint($sm-zero-only) {
+			grid-template-columns: 100%;
+		}
+
 		.imageContainer {
 			border: 5px solid $primary;
 			border-radius: 10px;
@@ -59,11 +63,22 @@
 		display: flex;
 		gap: 1rem;
 
+		@include breakpoint($sm-zero-only) {
+			flex-direction: column-reverse;
+			width: 100%;
+			justify-content: center;
+		}
+
 		.image {
 			// height: 5rem;
 			width: 22rem;
 			// padding: 3rem;
+
+			@include breakpoint($sm-zero-only) {
+				width: 100%;
+			}
 		}
+
 
 		table,
 		th,

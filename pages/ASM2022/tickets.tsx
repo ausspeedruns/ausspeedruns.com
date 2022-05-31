@@ -180,6 +180,9 @@ const Tickets = () => {
 							We have two methods to buy a ticket for ASM. Stripe and Bank Transfer. Paying with Stripe will cost
 							slightly extra due to a processing fee.
 						</p>
+						<p>
+							We will have personalised tickets if you purchase before June 17th.
+						</p>
 					</section>
 					<hr />
 					{auth.ready && !auth?.sessionData && (

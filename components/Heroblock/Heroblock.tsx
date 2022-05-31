@@ -15,11 +15,12 @@ type HeroblockProps = {
 const Heroblock = ({ event }: HeroblockProps) => {
 	const showVideoBlock = false;
 	const countdownRender = ({ days, hours, minutes, seconds, milliseconds, completed }: CountdownRenderProps) => {
+		console.log("Hello")
 		// if (completed || (days <= 1 && hours < 1  && minutes < 20)) {
 		//   setShowVideoBlock(true)
 		// }
 
-		if (completed) return <span></span>;
+		if (completed) return <></>;
 		else if (days > 0)
 			return (
 				<span>
@@ -60,17 +61,13 @@ const Heroblock = ({ event }: HeroblockProps) => {
 			<div className={`${styles.content} content`}>
 				{showVideoBlock && <TwitchVideoEmbed channel="ausspeedruns" parent={window.location.hostname} />}
 				<div className={styles.ctaBlock}>
-					<h1>{event.fullName}</h1>
+					<h1>{event.preferredName}</h1>
 					<h2>{event.dates}</h2>
+					<h3 className="countdown monospaced">
+						<Countdown date={Date.UTC(2022, 6, 13, 0, 30, 0, 0)} renderer={countdownRender} zeroPadTime={2} />
+					</h3>
 					<br />
 					{/* <h2>ASM2021 raised a total of ${ASM_2021_TOTAL_RAISED}</h2> */}
-					{/* <h3 className="countdown monospaced">
-            <Countdown
-              date={Date.parse(globals.events.current.date)}
-              renderer={countdownRender}
-              zeroPadTime={2}
-            />
-          </h3> */}
 					<p>Australian Speedrunners come together to raise money for Cure Cancer Australia at ASM2022!</p>
 					<p>Tickets and the schedule are now available!</p>
 					{showVideoBlock && (
@@ -85,13 +82,19 @@ const Heroblock = ({ event }: HeroblockProps) => {
 					{!showVideoBlock && (
 						<>
 							<Button actionText="ASM2022" link={'/ASM2022'} iconRight={faChevronRight} colorScheme={'secondary'} />
-							<Button actionText="Purchase Tickets" link={'/ASM2022/tickets'} iconRight={faTicket} colorScheme={'secondary'} />
+							<Button
+								actionText="Purchase Tickets"
+								link={'/ASM2022/tickets'}
+								iconRight={faTicket}
+								colorScheme={'secondary'}
+							/>
 							<Button actionText="Schedule" link={'/schedule'} iconRight={faCalendar} colorScheme={'secondary'} />
 						</>
 					)}
 				</div>
 				<div className={styles.logoBlock}>
 					<Image src={require(`../../styles/img/${event.logo}`).default} alt="Event Logo" />
+					<Image src={require(`../../styles/img/GoCCCWhite.svg`).default} alt="Game on Cancer Logo" />
 				</div>
 			</div>
 		</div>

@@ -23,6 +23,9 @@ type Post = {
 		username: string;
 	}[];
 	role: string;
+	event?: {
+		shortname: string;
+	};
 };
 
 interface SessionRoles {
@@ -50,8 +53,8 @@ export default function BlogPage() {
 
 	const [blogResults, blogQuery] = useQuery({
 		query: gql`
-			query ($roles: [PostRoleType!]) {
-				posts(where: { published: { equals: true }, role: { in: $roles } }) {
+			query {
+				posts(orderBy: { publishedDate: desc }) {
 					id
 					title
 					slug
@@ -62,34 +65,15 @@ export default function BlogPage() {
 					editedDate
 					intro
 					role
+					event {
+						shortname
+					}
 				}
 			}
 		`,
-		variables: { roles },
 	});
 
-	useEffect(() => {
-		if (auth.ready && auth.sessionData) {
-			const reducedRoles = reduceRoles(auth.sessionData.roles);
-
-			const readable = [];
-			if (reducedRoles.canReadRunnerInfo) readable.push('runner');
-			if (reducedRoles.canReadRunnerMgmt) readable.push('runner_management');
-			if (reducedRoles.canReadTech) readable.push('tech');
-			setRole(['public', ...readable]);
-			// blogQuery({roles: ['public', ...readable]});
-		}
-	}, [auth]);
-
-	useEffect(() => {
-		if (!blogResults.fetching && blogResults.data) {
-			setViewablePosts(blogResults.data.posts);
-		}
-
-		if (blogResults.error) {
-			console.error(blogResults.error);
-		}
-	}, [blogResults]);
+	console.log(blogResults);
 
 	return (
 		<div className={styles.app}>
@@ -103,7 +87,7 @@ export default function BlogPage() {
 				<div className={styles.blogPosts}>
 					<ul>
 						{/* Render each post with a link to the content page */}
-						{viewablePosts.map((post) => (
+						{blogResults.data?.posts.map((post) => (
 							<BlogLink key={post.slug} post={post} />
 						))}
 					</ul>
@@ -119,7 +103,9 @@ const BlogLink = ({ post }: { post: Post }) => {
 		<li key={post.id}>
 			<div className={styles.linkTitle}>
 				<div className={styles.articleTags}>
-					<ArticleTag tag={post.role} />
+					{post.event && <ArticleTag event tag={post.event.shortname} />}
+
+					<ArticleTag tag={post?.role} />
 					<Link href={`/blog/${post.slug}`}>{post.title}</Link>
 				</div>
 				<span className={styles.date}>{new Date(post.publishedDate).toLocaleDateString()}</span>
@@ -134,26 +120,12 @@ const BlogLink = ({ post }: { post: Post }) => {
 	);
 };
 
-const TagColours = {
-	tech: {
-		color: '#fff',
-		background: '#000',
-	},
-	runner: {
-		color: '#fff',
-		background: '#290099',
-	},
-	runnermanagement: {
-		color: '#000000',
-		background: '#00ce67',
-		label: 'Runner Management',
-	},
-};
+const ArticleTag = ({ tag, event }: { tag?: string; event?: boolean }) => {
+	if (!tag || tag === 'public') return <></>;
 
-const ArticleTag = ({ tag }: { tag: string }) => {
-	if (tag === 'public') return <></>;
-
-	return <div className={[styles.articleTag, styles[tag]].join(' ')}>{tag.replaceAll('_', ' ')}</div>;
+	return (
+		<div className={[styles.articleTag, styles[tag], event ? styles.event : ''].join(' ')}>{tag.replaceAll('_', ' ')}</div>
+	);
 };
 
 // Here we use the Lists API to load all the posts we want to display

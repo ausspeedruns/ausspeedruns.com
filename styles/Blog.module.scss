@@ -55,19 +55,21 @@
 				}
 
 				// Tag colours
-				.tech {
-					color: #fff;
-					background: #000;
-				}
 
 				.runner {
 					color: #fff;
 					background: #290099;
 				}
 
-				.runner_management {
+				.staff {
 					color: #000000;
 					background: #00ce67;
+				}
+
+				.event {
+					font-weight: bold;
+					color: #ffffff;
+					background: $secondary;
 				}
 			}
 

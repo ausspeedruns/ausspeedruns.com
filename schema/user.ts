@@ -120,11 +120,11 @@ export const User: Lists.User = list({
 			}
 		}),
 		// Ticketing
-		tickets: relationship({ ref: 'Ticket.user', ui: { hideCreate: true }, many: true}),
+		tickets: relationship({ ref: 'Ticket.user', ui: { hideCreate: true }, many: true }),
 		// Volunteer
-		volunteer: relationship({ ref: 'Volunteer.volunteer', ui: { hideCreate: true }, many: true}),
+		volunteer: relationship({ ref: 'Volunteer.volunteer', ui: { hideCreate: true }, many: true }),
 		// Store
-		shirts: relationship({ ref: 'ShirtOrder.user', ui: { hideCreate: true }, many: true}),
+		shirts: relationship({ ref: 'ShirtOrder.user', ui: { hideCreate: true }, many: true }),
 	},
 	ui: {
 		labelField: 'username'
@@ -168,9 +168,8 @@ export const Role = list({
 		admin: checkbox({ defaultValue: false }),
 		canManageContent: checkbox({ defaultValue: false }),
 		canManageUsers: checkbox({ defaultValue: false }),
-		canReadTech: checkbox({ defaultValue: false }),
-		canReadRunnerInfo: checkbox({ defaultValue: false }),
-		canReadRunnerMgmt: checkbox({ defaultValue: false }),
+		runner: checkbox({ defaultValue: false }),
+		volunteer: checkbox({ defaultValue: false }),
 		users: relationship({ ref: 'User.roles', many: true }),
 		event: relationship({ ref: 'Event' }),
 		show: checkbox({ defaultValue: false }),

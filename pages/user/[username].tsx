@@ -394,13 +394,3 @@ export default function ProfilePage() {
 		</ThemeProvider>
 	);
 }
-
-type SubmissionPanelProps = {
-	value: number;
-	index: number;
-	children: React.ReactChild;
-};
-
-function SubmissionPanel({ value, index, children }: SubmissionPanelProps) {
-	return <div hidden={value !== index}>{value === index && children}</div>;
-}

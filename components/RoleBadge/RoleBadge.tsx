@@ -17,7 +17,7 @@ interface Props {
 export const RoleBadge: React.FC<Props> = (props: Props) => {
 	return (
 		<div className={styles.roleBody} style={{ backgroundColor: props.role.colour, color: props.role.textColour }}>
-			<span>{props.role.event ? `${props.role.event.shortname} ${props.role.name}` : props.role.name}</span>
+			<span>{props.role.name}</span>
 		</div>
 	);
 };

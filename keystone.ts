@@ -28,7 +28,7 @@ const { withAuth } = createAuth({
   listKey: 'User',
   identityField: 'email',
   secretField: 'password',
-  sessionData: 'username id roles { admin canManageUsers canManageContent canReadRunnerInfo canReadRunnerMgmt }',
+  sessionData: 'username id roles { admin canManageUsers canManageContent runner volunteer event { shortname } }',
   passwordResetLink: {
     sendToken: async ({ itemId, identity, token, context }) => {
       // console.log('--------------- PASSWORD RESET ---------------');

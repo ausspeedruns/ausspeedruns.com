@@ -5,11 +5,13 @@ export type SessionContext = {
 			id: string;
 			roles: {
 				admin: boolean;
-				canReadTech: boolean;
-				canReadRunnerInfo: boolean;
-				canReadRunnerMgmt: boolean;
-				canManageContent: boolean;
 				canManageUsers: boolean;
+				canManageContent: boolean;
+				runner: boolean;
+				volunteer: boolean;
+				event: {
+					shortname: string;
+				};
 			}[];
 		};
 		itemId: string;
@@ -25,7 +27,6 @@ export const isSignedIn = ({ session }: SessionContext) => {
 
 export const operations = {
 	admin: ({ session }: SessionContext ) => session?.data.roles?.some(role => role.admin),
-	runnerMgmt: ({ session }: SessionContext ) => session?.data.roles?.some(role => role.canReadRunnerMgmt),
 }
 
 export const permissions = {

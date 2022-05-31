@@ -43,9 +43,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 						id
 						username
 						roles {
-							canReadTech
-							canReadRunnerInfo
-							canReadRunnerMgmt
+							runner
+							volunteer
 						}
 					}
 				}

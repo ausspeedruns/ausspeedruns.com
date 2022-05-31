@@ -226,6 +226,7 @@ type Post {
   role: PostRoleType
   content: Post_content_Document
   intro: String
+  event: Event
 }
 
 scalar DateTime
@@ -234,8 +235,7 @@ scalar DateTime
 enum PostRoleType {
   public
   runner
-  tech
-  runner_management
+  staff
 }
 
 type Post_content_Document {
@@ -260,6 +260,7 @@ input PostWhereInput {
   editedDate: DateTimeNullableFilter
   role: PostRoleTypeNullableFilter
   intro: StringFilter
+  event: EventWhereInput
 }
 
 input IDFilter {
@@ -362,6 +363,7 @@ input PostUpdateInput {
   role: PostRoleType
   content: JSON
   intro: String
+  event: EventRelateToOneForUpdateInput
 }
 
 input UserRelateToManyForUpdateInput {
@@ -369,6 +371,12 @@ input UserRelateToManyForUpdateInput {
   set: [UserWhereUniqueInput!]
   create: [UserCreateInput!]
   connect: [UserWhereUniqueInput!]
+}
+
+input EventRelateToOneForUpdateInput {
+  create: EventCreateInput
+  connect: EventWhereUniqueInput
+  disconnect: Boolean
 }
 
 input PostUpdateArgs {
@@ -386,11 +394,17 @@ input PostCreateInput {
   role: PostRoleType
   content: JSON
   intro: String
+  event: EventRelateToOneForCreateInput
 }
 
 input UserRelateToManyForCreateInput {
   create: [UserCreateInput!]
   connect: [UserWhereUniqueInput!]
+}
+
+input EventRelateToOneForCreateInput {
+  create: EventCreateInput
+  connect: EventWhereUniqueInput
 }
 
 type User {
@@ -830,12 +844,6 @@ input UserRelateToOneForUpdateInput {
   disconnect: Boolean
 }
 
-input EventRelateToOneForUpdateInput {
-  create: EventCreateInput
-  connect: EventWhereUniqueInput
-  disconnect: Boolean
-}
-
 input SubmissionUpdateArgs {
   where: SubmissionWhereUniqueInput!
   data: SubmissionUpdateInput!
@@ -864,11 +872,6 @@ input SubmissionCreateInput {
 input UserRelateToOneForCreateInput {
   create: UserCreateInput
   connect: UserWhereUniqueInput
-}
-
-input EventRelateToOneForCreateInput {
-  create: EventCreateInput
-  connect: EventWhereUniqueInput
 }
 
 type Event {
@@ -1081,9 +1084,8 @@ type Role {
   admin: Boolean
   canManageContent: Boolean
   canManageUsers: Boolean
-  canReadTech: Boolean
-  canReadRunnerInfo: Boolean
-  canReadRunnerMgmt: Boolean
+  runner: Boolean
+  volunteer: Boolean
   users(
     where: UserWhereInput! = {}
     orderBy: [UserOrderByInput!]! = []
@@ -1115,9 +1117,8 @@ input RoleWhereInput {
   admin: BooleanFilter
   canManageContent: BooleanFilter
   canManageUsers: BooleanFilter
-  canReadTech: BooleanFilter
-  canReadRunnerInfo: BooleanFilter
-  canReadRunnerMgmt: BooleanFilter
+  runner: BooleanFilter
+  volunteer: BooleanFilter
   users: UserManyRelationFilter
   event: EventWhereInput
   show: BooleanFilter
@@ -1138,9 +1139,8 @@ input RoleOrderByInput {
   admin: OrderDirection
   canManageContent: OrderDirection
   canManageUsers: OrderDirection
-  canReadTech: OrderDirection
-  canReadRunnerInfo: OrderDirection
-  canReadRunnerMgmt: OrderDirection
+  runner: OrderDirection
+  volunteer: OrderDirection
   show: OrderDirection
   colour: OrderDirection
   textColour: OrderDirection
@@ -1151,9 +1151,8 @@ input RoleUpdateInput {
   admin: Boolean
   canManageContent: Boolean
   canManageUsers: Boolean
-  canReadTech: Boolean
-  canReadRunnerInfo: Boolean
-  canReadRunnerMgmt: Boolean
+  runner: Boolean
+  volunteer: Boolean
   users: UserRelateToManyForUpdateInput
   event: EventRelateToOneForUpdateInput
   show: Boolean
@@ -1171,9 +1170,8 @@ input RoleCreateInput {
   admin: Boolean
   canManageContent: Boolean
   canManageUsers: Boolean
-  canReadTech: Boolean
-  canReadRunnerInfo: Boolean
-  canReadRunnerMgmt: Boolean
+  runner: Boolean
+  volunteer: Boolean
   users: UserRelateToManyForCreateInput
   event: EventRelateToOneForCreateInput
   show: Boolean

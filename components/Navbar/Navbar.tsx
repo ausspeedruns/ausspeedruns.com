@@ -109,7 +109,7 @@ const Navbar = ({ isLive }: NavbarProps) => {
 						<li className="social">
 							<a href={globals.socialLinks.twitch} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faTwitch} />
-								<a className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Follow us on Twitch</a>
+								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Follow us on Twitch</span>
 							</a>
 						</li>
 						{/* <li className="social">

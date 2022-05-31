@@ -22,6 +22,10 @@ model Post {
   role          PostRoleType?
   content       Json          @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   intro         String        @default("")
+  event         Event?        @relation("Post_event", fields: [eventId], references: [id])
+  eventId       String?       @map("event")
+
+  @@index([eventId])
 }
 
 model User {
@@ -103,24 +107,24 @@ model Event {
   acceptingVolunteers    Boolean      @default(false)
   acceptingBackups       Boolean      @default(false)
   volunteer              Volunteer[]  @relation("Volunteer_event")
+  from_Post_event        Post[]       @relation("Post_event")
   from_Role_event        Role[]       @relation("Role_event")
 }
 
 model Role {
-  id                String              @id @default(cuid())
-  name              String              @default("")
-  admin             Boolean             @default(false)
-  canManageContent  Boolean             @default(false)
-  canManageUsers    Boolean             @default(false)
-  canReadTech       Boolean             @default(false)
-  canReadRunnerInfo Boolean             @default(false)
-  canReadRunnerMgmt Boolean             @default(false)
-  users             User[]              @relation("Role_users")
-  event             Event?              @relation("Role_event", fields: [eventId], references: [id])
-  eventId           String?             @map("event")
-  show              Boolean             @default(false)
-  colour            String              @default("#ffffff")
-  textColour        RoleTextColourType?
+  id               String              @id @default(cuid())
+  name             String              @default("")
+  admin            Boolean             @default(false)
+  canManageContent Boolean             @default(false)
+  canManageUsers   Boolean             @default(false)
+  runner           Boolean             @default(false)
+  volunteer        Boolean             @default(false)
+  users            User[]              @relation("Role_users")
+  event            Event?              @relation("Role_event", fields: [eventId], references: [id])
+  eventId          String?             @map("event")
+  show             Boolean             @default(false)
+  colour           String              @default("#ffffff")
+  textColour       RoleTextColourType?
 
   @@index([eventId])
 }
@@ -217,8 +221,7 @@ model ShirtOrder {
 enum PostRoleType {
   public
   runner
-  tech
-  runner_management
+  staff
 }
 
 enum UserStateType {

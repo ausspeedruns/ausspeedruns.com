@@ -68,7 +68,14 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
       case 'checkout.session.completed':
         const checkout = event.data.object as Record<string, any>;
         stripe.checkout.sessions.listLineItems(checkout.id, {}).then(data => {
-          fulfillOrder(checkout.id, data.data[0].quantity);
+          // This is mega dumb btw
+          if (data.data[0].description === "ASM2022 Shirt") {
+            // SHIRT
+            fulfillShirtOrder(checkout.id);
+          } else {
+            // TICKET
+            fulfillOrder(checkout.id, data.data[0].quantity);
+          }
         });
         break;
       default: {
@@ -97,3 +104,14 @@ const fulfillOrder = async (sessionID: any, quantity: number) => {
 }
 
 export default cors(webhookHandler);
+
+async function fulfillShirtOrder(sessionID: any) {
+  // Update shirt information
+  const mutRes = await urqlClient.mutation(gql`
+    mutation ($sessionID: String!, $apiKey: String!) {
+      confirmShirtStripe(stripeID: $sessionID, apiKey: $apiKey) {
+        __typename
+      }
+    }
+  `, { sessionID, apiKey: process.env.API_KEY }).toPromise();
+}

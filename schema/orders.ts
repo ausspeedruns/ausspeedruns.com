@@ -13,17 +13,17 @@ const nanoid = customAlphabet('123456789ABCDEFGHJKLMNPQRSTUVWXY', 9);
 const filterShirts = {
 	query: ({ session }: SessionContext) => {
 		if (!session?.data) return false;
-		if (session.data.roles?.some(role => role.canReadRunnerMgmt)) return true;
+		if (session.data.roles?.some(role => role.canManageContent)) return true;
 		return { user: { id: { equals: session.data.id } } };
 	},
 	update: ({ session }: SessionContext) => {
 		if (!session?.data) return false;
-		if (session.data.roles?.some(role => role.canReadRunnerMgmt)) return true;
+		if (session.data.roles?.some(role => role.canManageContent)) return true;
 		return { user: { id: { equals: session.data.id } } };
 	},
 	delete: ({ session }: SessionContext) => {
 		if (!session?.data) return false;
-		if (session.data.roles?.some(role => role.canReadRunnerMgmt)) return true;
+		if (session.data.roles?.some(role => role.canManageContent)) return true;
 		return { user: { id: { equals: session.data.id } } };
 	},
 }
@@ -31,8 +31,8 @@ const filterShirts = {
 export const ShirtOrder: Lists.ShirtOrder = list({
 	access: {
 		operation: {
-			create: operations.runnerMgmt,
-			update: operations.runnerMgmt,
+			create: operations.canManageContent,
+			update: operations.canManageContent,
 		},
 		filter: filterShirts,
 	},

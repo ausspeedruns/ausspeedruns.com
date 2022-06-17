@@ -27,6 +27,7 @@ export const isSignedIn = ({ session }: SessionContext) => {
 
 export const operations = {
 	admin: ({ session }: SessionContext ) => session?.data.roles?.some(role => role.admin),
+	canManageContent: ({ session }: SessionContext ) => session?.data.roles?.some(role => role.canManageContent),
 }
 
 export const permissions = {

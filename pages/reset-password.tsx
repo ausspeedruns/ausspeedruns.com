@@ -29,12 +29,12 @@ export const ResetPasswordPage: React.FC = () => {
 			setError('Please enter an email.');
 			return;
 		}
-		console.log(email);
+		// console.log(email);
 		resetMutation({ email });
 		setError('');
 	};
 
-	console.log(resetResult);
+	// console.log(resetResult);
 	useEffect(() => {
 		if (error) {
 			setSpinner(false);

@@ -197,7 +197,7 @@ async function SendVerification(data: { item: Lists.User.TypeInfo['item'], conte
 		}
 	});
 
-	console.log(`${item.email} | ${item.id} | ${verificationID}`);
+	// console.log(`${item.email} | ${item.id} | ${verificationID}`);
 
 	// console.log(await sudoContext.db.Verification.findMany());
 

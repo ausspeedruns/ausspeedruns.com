@@ -42,21 +42,21 @@ export default function PasswordResetPage() {
 					className={styles.form}
 					onSubmit={(e) => {
 						e.preventDefault();
-						console.log({
-							email: router.query.email,
-							password,
-							token: router.query.code,
-						});
+						// console.log({
+						// 	email: router.query.email,
+						// 	password,
+						// 	token: router.query.code,
+						// });
 						resetPassword({
 							email: router.query.email,
 							password,
 							token: router.query.code,
 						}).then((result) => {
-							console.log('Reset result', result)
+							// console.log('Reset result', result)
 							if (!result.error && !['TOKEN_REDEEMED', 'TOKEN_EXPIRED', 'FAILURE'].includes(result.data.code)) {
 								if (auth.ready) {
 									auth.signIn({ email: router.query.email as string, password }).then(signInResult => {
-										console.log('Sign in result', signInResult)
+										// console.log('Sign in result', signInResult)
 										signInResult.success ? top.location.href = '/' : router.push('/signin');
 									});
 								} else {

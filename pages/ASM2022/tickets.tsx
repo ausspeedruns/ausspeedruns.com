@@ -181,7 +181,7 @@ const Tickets = () => {
 							slightly extra due to a processing fee.
 						</p>
 						<p>
-							We will have personalised tickets if you purchase before June 17th.
+							We will have personalised tickets if you purchase before June 19th.
 						</p>
 					</section>
 					<hr />

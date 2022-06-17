@@ -911,6 +911,7 @@ type Event {
   scheduleReleased: Boolean
   acceptingVolunteers: Boolean
   acceptingBackups: Boolean
+  acceptingShirts: Boolean
   volunteer(
     where: VolunteerWhereInput! = {}
     orderBy: [VolunteerOrderByInput!]! = []
@@ -986,6 +987,7 @@ input EventWhereInput {
   scheduleReleased: BooleanFilter
   acceptingVolunteers: BooleanFilter
   acceptingBackups: BooleanFilter
+  acceptingShirts: BooleanFilter
   volunteer: VolunteerManyRelationFilter
 }
 
@@ -1014,6 +1016,7 @@ input EventOrderByInput {
   scheduleReleased: OrderDirection
   acceptingVolunteers: OrderDirection
   acceptingBackups: OrderDirection
+  acceptingShirts: OrderDirection
 }
 
 input EventUpdateInput {
@@ -1034,6 +1037,7 @@ input EventUpdateInput {
   scheduleReleased: Boolean
   acceptingVolunteers: Boolean
   acceptingBackups: Boolean
+  acceptingShirts: Boolean
   volunteer: VolunteerRelateToManyForUpdateInput
 }
 
@@ -1075,6 +1079,7 @@ input EventCreateInput {
   scheduleReleased: Boolean
   acceptingVolunteers: Boolean
   acceptingBackups: Boolean
+  acceptingShirts: Boolean
   volunteer: VolunteerRelateToManyForCreateInput
 }
 

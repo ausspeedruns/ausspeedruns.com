@@ -15,7 +15,6 @@ type HeroblockProps = {
 const Heroblock = ({ event }: HeroblockProps) => {
 	const showVideoBlock = false;
 	const countdownRender = ({ days, hours, minutes, seconds, milliseconds, completed }: CountdownRenderProps) => {
-		console.log("Hello")
 		// if (completed || (days <= 1 && hours < 1  && minutes < 20)) {
 		//   setShowVideoBlock(true)
 		// }

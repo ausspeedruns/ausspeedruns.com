@@ -18,8 +18,6 @@ import StockPhoto2 from '../styles/img/StockPhoto2.jpg';
 import StockPhoto3 from '../styles/img/StockPhoto3.jpg';
 import GoCStockPhoto1 from '../styles/img/GoCStockPhoto1.png';
 
-const selloutDate = new Date(Date.UTC(2022, 5, 16, 14, 30, 0, 0));
-
 export default function EventPage() {
 	const [queryResult, eventQuery] = useQuery({
 		query: gql`
@@ -31,6 +29,7 @@ export default function EventPage() {
 					scheduleReleased
 					acceptingVolunteers
 					acceptingBackups
+					acceptingShirts
 				}
 			}
 		`,
@@ -68,7 +67,7 @@ export default function EventPage() {
 						<Button actionText="Be a volunteer!" link="/volunteers" iconRight={faPerson} />
 					)}
 
-					{new Date() < selloutDate && (
+					{queryResult.data?.event?.acceptingShirts && (
 						<Button actionText="Buy the ASM2022 Shirt! (Limited Time)" link="/store" iconRight={faShirt} />
 					)}
 
@@ -113,7 +112,7 @@ export default function EventPage() {
 				<div className={styles.contentRow}>
 					<div className={styles.moreInfo}>
 						<p>
-							We are super excited to be supporting Cure Cancer through its Game on Cancer inititive. Cure Cancer has
+							We are super excited to be supporting Cure Cancer through its Game on Cancer initiative. Cure Cancer has
 							been raising money for 55 years to fund early career cancer researchers. Over 540 research grants have
 							been funded thanks to Cure Cancer donors and partners.
 						</p>

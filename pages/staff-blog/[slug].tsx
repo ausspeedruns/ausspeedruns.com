@@ -59,8 +59,51 @@ function AuthorNames(authors: string[]) {
 	});
 }
 
-export default function PostPage({ post }: { post: Post }) {
+export default function PostPage() {
 	const router = useRouter();
+
+	const [queryPost, requeryPost] = useQuery<{post: Post}>({
+		query: gql`
+			query ($post: String) {
+				post(where: { slug: $post }) {
+					id
+					title
+					content {
+						document
+					}
+					publishedDate
+					editedDate
+					author {
+						username
+					}
+				}
+			}
+		`,
+		variables: {
+			post: router.query.slug,
+		},
+	});
+
+	if (queryPost.fetching) {
+		return (
+			<div className={styles.app}>
+				<Navbar />
+				<main className={styles.content}>Loading...</main>
+			</div>
+		);
+	}
+
+	if (queryPost.error || !queryPost.data) {
+		console.error(queryPost.error);
+		return (
+			<div className={styles.app}>
+				<Navbar />
+				<main className={styles.content}>Error</main>
+			</div>
+		);
+	}
+
+	const post = queryPost.data.post;
 	const authorString = AuthorNames(post.author.map((author) => author.username));
 
 	return (
@@ -74,7 +117,11 @@ export default function PostPage({ post }: { post: Post }) {
 				<h1 className={styles.title}>{post.title}</h1>
 				<div className={styles.metaData}>
 					<span>By {authorString}</span>
-					<span>Published {new Date(post.publishedDate).toLocaleString('en-AU', { hour12: true })}</span>
+					{post.publishedDate ? (
+						<span>Published {new Date(post.publishedDate).toLocaleString('en-AU', { hour12: true })}</span>
+					) : (
+						<span>Not yet published</span>
+					)}
 				</div>
 				{post.editedDate && (
 					<span className={styles.edited}>
@@ -86,28 +133,4 @@ export default function PostPage({ post }: { post: Post }) {
 			<Footer className={styles.footer} />
 		</div>
 	);
-}
-
-export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-	const posts = (await query.Post.findMany({
-		query: `slug`,
-	})) as { slug: string }[];
-
-	const paths = posts.filter(({ slug }) => !!slug).map(({ slug }) => `/blog/${slug}`);
-
-	return {
-		paths,
-		fallback: false,
-	};
-}
-
-export async function getStaticProps({ params }: GetStaticPropsContext) {
-	const post = (await query.Post.findOne({
-		where: { slug: params!.slug as string },
-		query: 'id title content { document } publishedDate editedDate author { username }',
-	})) as Post | null;
-	if (!post) {
-		return { notFound: true };
-	}
-	return { props: { post }, revalidate: 60 };
 }

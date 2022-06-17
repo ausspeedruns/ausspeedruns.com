@@ -106,6 +106,7 @@ model Event {
   scheduleReleased       Boolean      @default(false)
   acceptingVolunteers    Boolean      @default(false)
   acceptingBackups       Boolean      @default(false)
+  acceptingShirts        Boolean      @default(false)
   volunteer              Volunteer[]  @relation("Volunteer_event")
   from_Post_event        Post[]       @relation("Post_event")
   from_Role_event        Role[]       @relation("Role_event")

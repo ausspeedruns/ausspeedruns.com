@@ -7,7 +7,7 @@ export const Run: Lists.Run = list({
 	access: {
 		operation: {
 			create: operations.admin,
-			update: operations.runnerMgmt,
+			update: operations.canManageContent,
 		}
 	},
 	fields: {

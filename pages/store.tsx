@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import Link from 'next/link';
 import { loadStripe } from '@stripe/stripe-js';
-import { Box, Button, Skeleton, TextField, ThemeProvider, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { useMutation, UseMutationResponse, useQuery } from 'urql';
+import { Box, Button, Skeleton, ThemeProvider, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { UseMutationResponse, useQuery } from 'urql';
 import { gql } from '@keystone-6/core';
 
 import styles from '../styles/Store.module.scss';
@@ -22,8 +21,10 @@ import ShirtMeasurements from '../styles/img/ShirtMeasurements.png';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
-const selloutDate = new Date(Date.UTC(2022, 5, 16, 14, 30, 0, 0));
+const selloutDate = new Date(Date.UTC(2022, 5, 17, 4, 30, 0, 0));
 
+console.log(selloutDate.toLocaleString())
+console.log(new Date().toLocaleString())
 function returnTimeRemainaing(currentTime: Date, endDate: Date) {
 	const remainingTime = new Date(endDate.getTime() - currentTime.getTime());
 	return `${Math.round(
@@ -56,6 +57,9 @@ const Store = () => {
 				user(where: { id: $userId }) {
 					verified
 				}
+				event(where: { shortname: "ASM2022" }) {
+					acceptingShirts
+				}
 			}
 		`,
 		variables: {
@@ -65,12 +69,13 @@ const Store = () => {
 	});
 
 	const successfulShirt = Boolean(bankShirtData) && !Boolean(bankShirtData.error);
+
 	const disableBuying =
 		!auth.ready ||
 		(auth.ready && !auth.sessionData) ||
 		!profileQueryRes.data?.user?.verified ||
-		(shirtColour === 'purple' && ['xs', '2xl', '3xl'].includes(shirtSize)) ||
-		selloutDate.getTime() - currentTime.getTime() <= 0;
+		(shirtColour === 'purple' && ['xs', 'xl2', 'xl3'].includes(shirtSize)) ||
+		!profileQueryRes.data?.event.acceptingShirts;
 	const disableBank = disableBuying || genShirtLoading || successfulShirt;
 
 	useEffect(() => {
@@ -153,12 +158,12 @@ const Store = () => {
 					</div>
 					<section className={styles.itemContent}>
 						<div className={styles.imageContainer}>
-							<Image src={shirtColour === 'blue' ? ShirtBlue : ShirtPurple} />
+							<Image src={shirtColour === 'blue' ? ShirtBlue : ShirtPurple} alt="Shirt design" />
 						</div>
 						<div>
 							<h2>ASM2022 Shirt</h2>
 							<p>
-								Selling out June 17th.
+								Selling out June 17th ACST.
 								<br />
 								Time remaining: {returnTimeRemainaing(currentTime, selloutDate)}.
 							</p>
@@ -171,12 +176,14 @@ const Store = () => {
 								Design by{' '}
 								<a href="https://twitter.com/StubaScuba" target="_blank" rel="noopener noreferrer">
 									StubaScuba
+								</a> and <a href="https://twitter.com/stylonide" target="_blank" rel="noopener noreferrer">
+									Stylonide
 								</a>
 								. Complete shirt design not finalised.
 							</p>
 							<p>
 								Please note that any shirt ordered using the bank transfer method will be considered cancelled if
-								payment is not cleared in the AusSpeedruns bank account before June 17.
+								payment is not cleared in the AusSpeedruns bank account before June 17 ACST.
 							</p>
 
 							<h2>Size</h2>
@@ -258,7 +265,11 @@ const Store = () => {
 					<h2>Garment Sizing</h2>
 					<div className={styles.sizing}>
 						<div className={styles.image}>
-							<Image src={ShirtMeasurements} layout="responsive" />
+							<Image
+								src={ShirtMeasurements}
+								layout="responsive"
+								alt="Shirt with markers showing where the width and length are measured from"
+							/>
 						</div>
 						<table>
 							<tr>

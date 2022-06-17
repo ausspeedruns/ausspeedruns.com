@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				line_items: [
 					{
 						// Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-						price: 'ASM2022SHIRTTEST',
+						price: 'ASM2022SHIRT',
 						quantity: 1,
 					},
 				],

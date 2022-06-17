@@ -113,12 +113,12 @@ export default function EditUser() {
 	`);
 
 	useEffect(() => {
-		console.log(updateVerificationTimeResult)
+		// console.log(updateVerificationTimeResult)
 		if (updateVerificationTimeResult.error) {
 			if (updateVerificationTimeResult.error.message === `[GraphQL] You provided invalid data for this operation.\n  - User.sentVerification: Sending new verification too soon.`) {
 				setSendVerificationSnack(true);
 				setSendVerificationSnackError(true);
-				console.log('Setting true')
+				// console.log('Setting true')
 			}
 		}
 

@@ -28,29 +28,7 @@ type Post = {
 	};
 };
 
-interface SessionRoles {
-	canReadRunnerInfo: boolean;
-	canReadRunnerMgmt: boolean;
-	canReadTech: boolean;
-}
-
-function reduceRoles(roles: SessionRoles[]) {
-	return roles.reduce(
-		(prev, current) => {
-			prev.canReadRunnerInfo ||= current.canReadRunnerInfo;
-			prev.canReadRunnerMgmt ||= current.canReadRunnerMgmt;
-			prev.canReadTech ||= current.canReadTech;
-			return prev;
-		},
-		{ canReadRunnerInfo: false, canReadRunnerMgmt: false, canReadTech: false }
-	);
-}
-
 export default function BlogPage() {
-	const auth = useAuth();
-	const [roles, setRole] = useState(['public']);
-	const [viewablePosts, setViewablePosts] = useState<Post[]>([]);
-
 	const [blogResults, blogQuery] = useQuery({
 		query: gql`
 			query {
@@ -72,8 +50,6 @@ export default function BlogPage() {
 			}
 		`,
 	});
-
-	console.log(blogResults);
 
 	return (
 		<div className={styles.app}>
@@ -99,6 +75,7 @@ export default function BlogPage() {
 }
 
 const BlogLink = ({ post }: { post: Post }) => {
+	const linkHref = post.role === 'public' ? `/blog/${post.slug}` : `/staff-blog/${post.slug}`;
 	return (
 		<li key={post.id}>
 			<div className={styles.linkTitle}>
@@ -106,7 +83,7 @@ const BlogLink = ({ post }: { post: Post }) => {
 					{post.event && <ArticleTag event tag={post.event.shortname} />}
 
 					<ArticleTag tag={post?.role} />
-					<Link href={`/blog/${post.slug}`}>{post.title}</Link>
+					<Link href={linkHref}>{post.title}</Link>
 				</div>
 				<span className={styles.date}>{new Date(post.publishedDate).toLocaleDateString()}</span>
 			</div>

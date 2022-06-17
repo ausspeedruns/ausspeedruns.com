@@ -19,7 +19,7 @@ const ASMShirt: React.FC<ASMShirtProps> = (props: ASMShirtProps) => {
 	return (
 		<Box className={styles.generatedShirts} sx={{ boxShadow: 8 }}>
 			<div className={styles.image}>
-				<Image src={colour === 'blue' ? ShirtBlue : ShirtPurple} layout="responsive" objectFit="contain" />
+				<Image src={colour === 'blue' ? ShirtBlue : ShirtPurple} layout="responsive" objectFit="contain" alt="Shirt" />
 			</div>
 			<div className={styles.basicInfo}>
 				<span className={styles.label}>{shirtID}</span>
@@ -65,9 +65,9 @@ function sizeToName(size: string) {
 		case 'xl':
 			return 'Extra Large';
 		case 'xl2':
-			return '2x Extra Large';
+			return '2 Extra Large';
 		case 'xl3':
-			return '3x Extra Large';
+			return '3 Extra Large';
 		default:
 			return size;
 	}

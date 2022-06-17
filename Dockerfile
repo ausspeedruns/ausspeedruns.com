@@ -22,13 +22,6 @@ ENV API_KEY ${API_KEY}
 ARG NEXT_PUBLIC_STRIPE_PUBLIC_KEY
 ENV NEXT_PUBLIC_STRIPE_PUBLIC_KEY ${NEXT_PUBLIC_STRIPE_PUBLIC_KEY}
 
-# RUN node testing.js
-# RUN ls
-# RUN ls ./
-# RUN ls ..
-# COPY schema.graphql ./app/schema.graphql
-# COPY schema.prisma ./app/schema.prisma
-# COPY /schema ./app/schema
 RUN npm run update-keystone
 RUN npm run build:next
 
@@ -40,12 +33,7 @@ ENV NODE_ENV production
 ENV PORT 3000
 
 COPY --from=builder /app/package.json ./package.json
-# COPY --from=builder /app/keystone.ts ./keystone.ts
-# COPY --from=builder /app/.keystone ./.keystone
 COPY --from=builder /app/node_modules ./node_modules
-# COPY --from=builder /app/schema.graphql ./schema.graphql
-# COPY --from=builder /app/schema.prisma ./schema.prisma
-# COPY --from=builder /app/schema ./schema
 
 COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/public ./public

@@ -2,6 +2,7 @@ import { list } from '@keystone-6/core';
 import { Lists } from '.keystone/types';
 import { integer, json, relationship, select, text } from '@keystone-6/core/fields';
 import { SessionContext } from './access';
+import { availability } from './fields/availability';
 
 export const Volunteer: Lists.Volunteer = list({
 	access: {
@@ -36,7 +37,7 @@ export const Volunteer: Lists.Volunteer = list({
 		}),
 		eventHostTime: integer({ defaultValue: 0 }),
 		maxDailyHostTime: integer({ defaultValue: 0 }),
-		dayTimes: json(),
+		dayTimes: json({ defaultValue: [] }),
 		specificGame: text(),
 		specificRunner: text(),
 		additionalInfo: text(),

@@ -186,7 +186,7 @@ model Volunteer {
   jobType                      VolunteerJobTypeType?
   eventHostTime                Int?                  @default(0)
   maxDailyHostTime             Int?                  @default(0)
-  dayTimes                     Json?
+  dayTimes                     Json?                 @default("[]")
   specificGame                 String                @default("")
   specificRunner               String                @default("")
   additionalInfo               String                @default("")

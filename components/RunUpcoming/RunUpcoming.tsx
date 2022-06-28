@@ -27,20 +27,24 @@ const LOGO_HEIGHT = 50;
 
 const RunUpcoming = ({ run }: Run) => {
 	if (!run.event) return <></>;
-	const aspectRatio = run.event.logo.width / run.event.logo.height;
+
+	let aspectRatio;
+	if (run.event.logo) aspectRatio = run.event.logo.width / run.event.logo.height;
 
 	return (
 		<div className={styles.run}>
 			<div key={run.id} className={styles.header}>
-				<div className={styles.logo}>
-					<Image
-						src={run.event.logo.url}
-						title={run.event.name}
-						width={LOGO_HEIGHT * aspectRatio}
-						height={LOGO_HEIGHT}
-						alt={`${run.event.name} logo`}
-					/>
-				</div>
+				{run.event.logo && (
+					<div className={styles.logo}>
+						<Image
+							src={run.event.logo.url}
+							title={run.event.name}
+							width={LOGO_HEIGHT * aspectRatio}
+							height={LOGO_HEIGHT}
+							alt={`${run.event.name} logo`}
+						/>
+					</div>
+				)}
 				<div className={styles.runInfo}>
 					<span>
 						<b>{run.game}</b> - {run.category}

@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult, InferGetStaticPropsType } from 'next';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
-import { query } from '.keystone/api';
 
 import Navbar from '../../components/Navbar/Navbar';
 import styles from '../../styles/Blog.slug.module.scss';

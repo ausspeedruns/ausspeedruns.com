@@ -46,3 +46,6 @@ docker-compose.yml
 # Azurite Emulator
 __azurite_db_blob__.json
 __azurite_db_blob_extent__.json
+
+# Sponsors (Just in case since we aren't really authorised to distribute them)
+/styles/img/sponsors

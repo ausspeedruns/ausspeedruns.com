@@ -131,16 +131,18 @@ export default function EventSchedule() {
 				{eventsResult.fetching && <CircularProgress />}
 				{!eventsResult.error && !eventsResult.fetching && event && (
 					<>
-						<div className={styles.eventLogo}>
-							<Image
-								src={event.logo.url}
-								alt={`${event.shortname} Logo`}
-								title={`${event.shortname} Logo`}
-								height={event.logo.height}
-								width={event.logo.width}
-								layout="responsive"
-							/>
-						</div>
+						{event.logo && (
+							<div className={styles.eventLogo}>
+								<Image
+									src={event.logo.url}
+									alt={`${event.shortname} Logo`}
+									title={`${event.shortname} Logo`}
+									height={event.logo.height}
+									width={event.logo.width}
+									layout="responsive"
+								/>
+							</div>
+						)}
 
 						<p className={styles.eventLabel}>{event.shortname} Schedule</p>
 						<p className={styles.eventTimeFrame}>13 July - 17 July</p>
@@ -261,7 +263,10 @@ const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 		<div className={styles.run}>
 			<span className={styles.time}>{convertedTimezone}</span>
 			<span className={styles.game}>{run.game}</span>
-			<span className={styles.category}>{categoryExtras}{run.category}</span>
+			<span className={styles.category}>
+				{categoryExtras}
+				{run.category}
+			</span>
 			<span className={styles.runners}>{runnerParsing(run.runners)}</span>
 			<span className={styles.estimate}>{run.estimate.substring(0, 5)}</span>
 			<span className={styles.platform}>{run.platform}</span>

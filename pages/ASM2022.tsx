@@ -16,7 +16,11 @@ import ASM2022Logo from '../styles/img/ASM2022-Logo.svg';
 import StockPhoto1 from '../styles/img/StockPhoto1.jpg';
 import StockPhoto2 from '../styles/img/StockPhoto2.jpg';
 import StockPhoto3 from '../styles/img/StockPhoto3.jpg';
-import GoCStockPhoto1 from '../styles/img/GoCStockPhoto1.png';
+import GoCStockPhoto1 from '../styles/img/sponsors/GameOnCancer/GoCStockPhoto1.png';
+
+import GoCLogo from '../styles/img/sponsors/GameOnCancer/GoCCCWhite.svg';
+import HyperX from '../styles/img/sponsors/HyperX/HyperX Solid White.svg';
+import Landfall from '../styles/img/sponsors/Landfall.png';
 
 export default function EventPage() {
 	const [queryResult, eventQuery] = useQuery({
@@ -42,7 +46,7 @@ export default function EventPage() {
 				<DiscordEmbed title="ASM2022 - AusSpeedruns" pageUrl="/event/ASM2022" />
 			</Head>
 			<Navbar />
-			<header className={styles.header}>
+			<div className={styles.header}>
 				<div className={styles.logo}>
 					<Image src={ASM2022Logo} alt="Australian Speedrun Marathon 2022 Logo" />
 				</div>
@@ -79,7 +83,7 @@ export default function EventPage() {
 						rel="noopener noreferrer"
 					/>
 				</div>
-			</header>
+			</div>
 			<main>
 				<div className={styles.contentRow}>
 					<div className={styles.intro}>
@@ -121,6 +125,24 @@ export default function EventPage() {
 						<Image layout="fill" objectFit="cover" src={GoCStockPhoto1} alt="Game on Cancer Logo" />
 					</div>
 				</div>
+				<div className={styles.sponsors}>
+					<div className={styles.main}>
+						{/* <div className={styles.sponsor}>
+							<span>Charity</span>
+							<Image src={GoCLogo} width={500} height={200} />
+						</div> */}
+						<div className={styles.sponsor}>
+							<span>Major Partner</span>
+							<Image src={HyperX} width={500} height={200} />
+						</div>
+					</div>
+					<div className={styles.secondary}>
+						<div className={styles.sponsor}>
+							<span>Minor Partner</span>
+							<Image src={Landfall} width={200} height={153} />
+						</div>
+					</div>
+				</div>
 				<div className={styles.informationSection}>
 					<h3>Information</h3>
 					<div className={styles.information}>
@@ -134,6 +156,12 @@ export default function EventPage() {
 						<span>25 March - 29 April</span>
 						<span>Charity</span>
 						<span>Game On Cancer</span>
+						<span>Games</span>
+						<span>66</span>
+						<span>Event Duration</span>
+						<span>105 Hours</span>
+						<span>Number of Speedrunners</span>
+						<span>57</span>
 					</div>
 				</div>
 			</main>

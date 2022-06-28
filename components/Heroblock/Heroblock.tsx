@@ -93,7 +93,7 @@ const Heroblock = ({ event }: HeroblockProps) => {
 				</div>
 				<div className={styles.logoBlock}>
 					<Image src={require(`../../styles/img/${event.logo}`).default} alt="Event Logo" />
-					<Image src={require(`../../styles/img/GoCCCWhite.svg`).default} alt="Game on Cancer Logo" />
+					<Image src={require(`../../styles/img/sponsors/GameOnCancer/GoCCCWhite.svg`).default} alt="Game on Cancer Logo" />
 				</div>
 			</div>
 		</div>

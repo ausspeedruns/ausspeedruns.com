@@ -75,6 +75,14 @@ type Query {
   ): [ShirtOrder!]
   shirtOrder(where: ShirtOrderWhereUniqueInput!): ShirtOrder
   shirtOrdersCount(where: ShirtOrderWhereInput! = {}): Int
+  incentives(
+    where: IncentiveWhereInput! = {}
+    orderBy: [IncentiveOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Incentive!]
+  incentive(where: IncentiveWhereUniqueInput!): Incentive
+  incentivesCount(where: IncentiveWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
   validateUserPasswordResetToken(
@@ -193,6 +201,15 @@ type Mutation {
   updateShirtOrders(data: [ShirtOrderUpdateArgs!]!): [ShirtOrder]
   deleteShirtOrder(where: ShirtOrderWhereUniqueInput!): ShirtOrder
   deleteShirtOrders(where: [ShirtOrderWhereUniqueInput!]!): [ShirtOrder]
+  createIncentive(data: IncentiveCreateInput!): Incentive
+  createIncentives(data: [IncentiveCreateInput!]!): [Incentive]
+  updateIncentive(
+    where: IncentiveWhereUniqueInput!
+    data: IncentiveUpdateInput!
+  ): Incentive
+  updateIncentives(data: [IncentiveUpdateArgs!]!): [Incentive]
+  deleteIncentive(where: IncentiveWhereUniqueInput!): Incentive
+  deleteIncentives(where: [IncentiveWhereUniqueInput!]!): [Incentive]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -919,6 +936,13 @@ type Event {
     skip: Int! = 0
   ): [Volunteer!]
   volunteerCount(where: VolunteerWhereInput! = {}): Int
+  donationIncentives(
+    where: IncentiveWhereInput! = {}
+    orderBy: [IncentiveOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Incentive!]
+  donationIncentivesCount(where: IncentiveWhereInput! = {}): Int
 }
 
 interface AzureStorageImageFieldOutput {
@@ -989,6 +1013,7 @@ input EventWhereInput {
   acceptingBackups: BooleanFilter
   acceptingShirts: BooleanFilter
   volunteer: VolunteerManyRelationFilter
+  donationIncentives: IncentiveManyRelationFilter
 }
 
 input FloatNullableFilter {
@@ -1000,6 +1025,12 @@ input FloatNullableFilter {
   gt: Float
   gte: Float
   not: FloatNullableFilter
+}
+
+input IncentiveManyRelationFilter {
+  every: IncentiveWhereInput
+  some: IncentiveWhereInput
+  none: IncentiveWhereInput
 }
 
 input EventOrderByInput {
@@ -1039,6 +1070,7 @@ input EventUpdateInput {
   acceptingBackups: Boolean
   acceptingShirts: Boolean
   volunteer: VolunteerRelateToManyForUpdateInput
+  donationIncentives: IncentiveRelateToManyForUpdateInput
 }
 
 input AzureStorageImageFieldInput {
@@ -1054,6 +1086,13 @@ scalar Upload
 input AzureStorageFileFieldInput {
   upload: Upload
   ref: String
+}
+
+input IncentiveRelateToManyForUpdateInput {
+  disconnect: [IncentiveWhereUniqueInput!]
+  set: [IncentiveWhereUniqueInput!]
+  create: [IncentiveCreateInput!]
+  connect: [IncentiveWhereUniqueInput!]
 }
 
 input EventUpdateArgs {
@@ -1081,6 +1120,12 @@ input EventCreateInput {
   acceptingBackups: Boolean
   acceptingShirts: Boolean
   volunteer: VolunteerRelateToManyForCreateInput
+  donationIncentives: IncentiveRelateToManyForCreateInput
+}
+
+input IncentiveRelateToManyForCreateInput {
+  create: [IncentiveCreateInput!]
+  connect: [IncentiveWhereUniqueInput!]
 }
 
 type Role {
@@ -1206,6 +1251,13 @@ type Run {
   twitchVOD: String
   youtubeVOD: String
   event: Event
+  donationIncentiveObject(
+    where: IncentiveWhereInput! = {}
+    orderBy: [IncentiveOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Incentive!]
+  donationIncentiveObjectCount(where: IncentiveWhereInput! = {}): Int
   scheduledTime: DateTime
 }
 
@@ -1232,6 +1284,7 @@ input RunWhereInput {
   twitchVOD: StringFilter
   youtubeVOD: StringFilter
   event: EventWhereInput
+  donationIncentiveObject: IncentiveManyRelationFilter
   scheduledTime: DateTimeNullableFilter
 }
 
@@ -1266,6 +1319,7 @@ input RunUpdateInput {
   twitchVOD: String
   youtubeVOD: String
   event: EventRelateToOneForUpdateInput
+  donationIncentiveObject: IncentiveRelateToManyForUpdateInput
   scheduledTime: DateTime
 }
 
@@ -1295,6 +1349,7 @@ input RunCreateInput {
   twitchVOD: String
   youtubeVOD: String
   event: EventRelateToOneForCreateInput
+  donationIncentiveObject: IncentiveRelateToManyForCreateInput
   scheduledTime: DateTime
 }
 
@@ -1663,6 +1718,73 @@ input ShirtOrderCreateInput {
   colour: ShirtOrderColourType
   stripeID: String
   created: DateTime
+}
+
+type Incentive {
+  id: ID!
+  run: Run
+  event: Event
+  title: String
+  type: String
+  data: JSON
+  active: Boolean
+}
+
+input IncentiveWhereUniqueInput {
+  id: ID
+}
+
+input IncentiveWhereInput {
+  AND: [IncentiveWhereInput!]
+  OR: [IncentiveWhereInput!]
+  NOT: [IncentiveWhereInput!]
+  id: IDFilter
+  run: RunWhereInput
+  event: EventWhereInput
+  title: StringFilter
+  type: StringFilter
+  active: BooleanFilter
+}
+
+input IncentiveOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  type: OrderDirection
+  active: OrderDirection
+}
+
+input IncentiveUpdateInput {
+  run: RunRelateToOneForUpdateInput
+  event: EventRelateToOneForUpdateInput
+  title: String
+  type: String
+  data: JSON
+  active: Boolean
+}
+
+input RunRelateToOneForUpdateInput {
+  create: RunCreateInput
+  connect: RunWhereUniqueInput
+  disconnect: Boolean
+}
+
+input IncentiveUpdateArgs {
+  where: IncentiveWhereUniqueInput!
+  data: IncentiveUpdateInput!
+}
+
+input IncentiveCreateInput {
+  run: RunRelateToOneForCreateInput
+  event: EventRelateToOneForCreateInput
+  title: String
+  type: String
+  data: JSON
+  active: Boolean
+}
+
+input RunRelateToOneForCreateInput {
+  create: RunCreateInput
+  connect: RunWhereUniqueInput
 }
 
 """

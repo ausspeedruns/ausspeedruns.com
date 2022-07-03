@@ -33,5 +33,6 @@ export const Event: Lists.Event = list({
 		acceptingBackups: checkbox(),
 		acceptingShirts: checkbox(),
 		volunteer: relationship({ ref: 'Volunteer.event', ui: { hideCreate: true }, many: true, access: operations.admin }),
+		donationIncentives: relationship({ ref: 'Incentive.event', many: true }),
 	}
 });

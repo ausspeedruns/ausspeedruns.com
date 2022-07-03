@@ -10,6 +10,7 @@ export function CustomNavigation({ lists, authenticatedItem }: NavigationProps) 
 			<ListNavItems lists={lists} />
             <NavItem href="/runs-manager"><img src={ASIcon.src} height={17} /> Runs Manager</NavItem>
             <NavItem href="/ticket-pickup"><img src={ASIcon.src} height={17} /> Ticket Pickup/Podium</NavItem>
+            <NavItem href="/incentives-dashboard"><img src={ASIcon.src} height={17} /> Incentives Dashboard</NavItem>
 		</NavigationContainer>
 	);
 }

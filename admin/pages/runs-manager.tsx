@@ -268,6 +268,8 @@ export default function RunsManager() {
 								<p>
 									Game <b>{runData.game}</b>
 									<br />
+									Category <b>{runData.category}</b>
+									<br />
 									Runner{runData.runners.length > 1 ? 's' : ''}{' '}
 									<b>
 										{runData.runners.map((runner) => (
@@ -345,7 +347,7 @@ function renderRunRow(props: ListChildComponentProps) {
 	return (
 		<ListItem style={style} key={data.id} component="div" disablePadding>
 			<ListItemButton onClick={() => data.setSelectedRunIndex(index)}>
-				<ListItemText primary={`${data.game} - ${data.runners.map((runner) => runner.username).join(', ')}`} />
+				<ListItemText primary={`${data.game} - ${data.category} - ${data.runners.map((runner) => runner.username).join(', ')}`} />
 			</ListItemButton>
 		</ListItem>
 	);

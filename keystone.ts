@@ -17,6 +17,7 @@ import { sendResetPassword } from './email/emails';
 import { Context } from '.keystone/types';
 import { Volunteer } from './schema/volunteers';
 import { ShirtOrder } from './schema/orders';
+import { Incentive } from './schema/incentives';
 
 
 const session = statelessSessions({
@@ -67,7 +68,7 @@ export default withAuth(
       generateNextGraphqlAPI: true,
       generateNodeAPI: true,
     },
-    lists: { Post, User, Submission, Event, Role, Run, Verification, Ticket, Volunteer, ShirtOrder },
+    lists: { Post, User, Submission, Event, Role, Run, Verification, Ticket, Volunteer, ShirtOrder, Incentive },
     extendGraphqlSchema: graphQLSchemaExtension<Context>({
       typeDefs: gql`
         type Query {

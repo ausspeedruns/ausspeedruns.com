@@ -25,6 +25,7 @@ export const Run: Lists.Run = list({
 		twitchVOD: text(),
 		youtubeVOD: text(),
 		event: relationship({ ref: 'Event.runs', ui: { hideCreate: true, labelField: 'shortname' } }),
+		donationIncentiveObject: relationship({ ref: 'Incentive.run', many: true }),
 		// runLabel: virtual({
 		// 	field: graphql.field({
 		// 		type: graphql.String,

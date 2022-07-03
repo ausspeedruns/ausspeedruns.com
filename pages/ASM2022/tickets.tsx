@@ -16,7 +16,7 @@ import { useAuth } from '../../components/auth';
 
 import ASM2022Logo from '../../styles/img/ASM2022-Logo.svg';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
+// const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 interface BankTicketResponse {
 	generateTicket: {
@@ -29,55 +29,55 @@ interface BankTicketResponse {
 
 const Tickets = () => {
 	const auth = useAuth();
-	const [noOfTickets, setNoOfTickets] = useState(1);
-	const [deletedTicket, setDeletedTicket] = useState(false);
-	const [genTicketLoading, setGenTicketLoading] = useState(false);
-	const [waitForTicket, setWaitForTicket] = useState(false);
-	const [bankTicketsData, setBankTicketsData] = useState<UseMutationResponse<BankTicketResponse, object>[0]>(null);
+	// const [noOfTickets, setNoOfTickets] = useState(1);
+	// const [deletedTicket, setDeletedTicket] = useState(false);
+	// const [genTicketLoading, setGenTicketLoading] = useState(false);
+	// const [waitForTicket, setWaitForTicket] = useState(false);
+	// const [bankTicketsData, setBankTicketsData] = useState<UseMutationResponse<BankTicketResponse, object>[0]>(null);
 
-	const [profileQueryRes, profileQuery] = useQuery({
-		query: gql`
-			query Profile($userId: ID!) {
-				user(where: { id: $userId }) {
-					verified
-				}
-			}
-		`,
-		variables: {
-			userId: auth.ready ? auth.sessionData?.id ?? '' : '',
-		},
-		pause: !auth.ready || !auth?.sessionData?.id,
-	});
+	// const [profileQueryRes, profileQuery] = useQuery({
+	// 	query: gql`
+	// 		query Profile($userId: ID!) {
+	// 			user(where: { id: $userId }) {
+	// 				verified
+	// 			}
+	// 		}
+	// 	`,
+	// 	variables: {
+	// 		userId: auth.ready ? auth.sessionData?.id ?? '' : '',
+	// 	},
+	// 	pause: !auth.ready || !auth?.sessionData?.id,
+	// });
 
-	const successfulTicket = Boolean(bankTicketsData) && !Boolean(bankTicketsData.error);
-	const disableBuying = !auth.ready || (auth.ready && !auth.sessionData) || !profileQueryRes.data?.user?.verified;
-	const disableBank = disableBuying || isNaN(noOfTickets) || noOfTickets <= 0 || genTicketLoading || successfulTicket;
+	// const successfulTicket = Boolean(bankTicketsData) && !Boolean(bankTicketsData.error);
+	// const disableBuying = !auth.ready || (auth.ready && !auth.sessionData) || !profileQueryRes.data?.user?.verified;
+	// const disableBank = disableBuying || isNaN(noOfTickets) || noOfTickets <= 0 || genTicketLoading || successfulTicket;
 
-	const [deleteStripeTicketRes, deleteStripeTicket] = useMutation(gql`
-		mutation ($sessionID: String) {
-			deleteTicket(where: { stripeID: $sessionID }) {
-				__typename
-			}
-		}
-	`);
+	// const [deleteStripeTicketRes, deleteStripeTicket] = useMutation(gql`
+	// 	mutation ($sessionID: String) {
+	// 		deleteTicket(where: { stripeID: $sessionID }) {
+	// 			__typename
+	// 		}
+	// 	}
+	// `);
 
-	useEffect(() => {
-		// Check to see if this is a redirect back from Checkout
-		const query = new URLSearchParams(window.location.search);
+	// useEffect(() => {
+	// 	// Check to see if this is a redirect back from Checkout
+	// 	const query = new URLSearchParams(window.location.search);
 
-		// console.log(query.get('cancelled'), query.get('session_id'), deletedTicket, getTicketIDRes);
+	// 	// console.log(query.get('cancelled'), query.get('session_id'), deletedTicket, getTicketIDRes);
 
-		if (query.get('cancelled') && query.get('session_id') && !deletedTicket) {
-			deleteStripeTicket({ sessionID: query.get('session_id') }).then((res) => {
-				if (!res.error) {
-					setDeletedTicket(true);
-					// console.log('Successfully removed a dead ticket :D');
-				} else {
-					console.error(res.error);
-				}
-			});
-		}
-	}, [deleteStripeTicket, deletedTicket]);
+	// 	if (query.get('cancelled') && query.get('session_id') && !deletedTicket) {
+	// 		deleteStripeTicket({ sessionID: query.get('session_id') }).then((res) => {
+	// 			if (!res.error) {
+	// 				setDeletedTicket(true);
+	// 				// console.log('Successfully removed a dead ticket :D');
+	// 			} else {
+	// 				console.error(res.error);
+	// 			}
+	// 		});
+	// 	}
+	// }, [deleteStripeTicket, deletedTicket]);
 
 	const [purchasedTicketsRes, purchasedTickets] = useQuery({
 		query: gql`
@@ -93,59 +93,59 @@ const Tickets = () => {
 		},
 	});
 
-	useEffect(() => {
-		let timeout: NodeJS.Timeout;
-		if (genTicketLoading) {
-			timeout = setTimeout(() => {
-				setWaitForTicket(true);
-			}, 2500);
-		}
-		return () => clearTimeout(timeout);
-	}, [genTicketLoading, successfulTicket]);
+	// useEffect(() => {
+	// 	let timeout: NodeJS.Timeout;
+	// 	if (genTicketLoading) {
+	// 		timeout = setTimeout(() => {
+	// 			setWaitForTicket(true);
+	// 		}, 2500);
+	// 	}
+	// 	return () => clearTimeout(timeout);
+	// }, [genTicketLoading, successfulTicket]);
 
-	useEffect(() => {
-		let interval: NodeJS.Timer;
-		if (waitForTicket) {
-			interval = setInterval(() => {
-				if (successfulTicket) {
-					setGenTicketLoading(false);
-				}
-			}, 500);
-		}
-		return () => clearInterval(interval);
-	}, [waitForTicket, successfulTicket]);
+	// useEffect(() => {
+	// 	let interval: NodeJS.Timer;
+	// 	if (waitForTicket) {
+	// 		interval = setInterval(() => {
+	// 			if (successfulTicket) {
+	// 				setGenTicketLoading(false);
+	// 			}
+	// 		}, 500);
+	// 	}
+	// 	return () => clearInterval(interval);
+	// }, [waitForTicket, successfulTicket]);
 
-	async function generateTickets() {
-		if (!auth.ready) {
-			console.error('Tried to generate tickets but auth was not ready');
-			return;
-		}
+	// async function generateTickets() {
+	// 	if (!auth.ready) {
+	// 		console.error('Tried to generate tickets but auth was not ready');
+	// 		return;
+	// 	}
 
-		if (disableBuying) return;
+	// 	if (disableBuying) return;
 
-		setGenTicketLoading(true);
-		const res = await fetch(
-			`/api/create_bank_ticket?account=${auth.ready ? auth?.sessionData.id : ''}&tickets=${noOfTickets}&event=ASM2022`
-		);
-		// generateBankTickets({ userID: auth.sessionData.id, numberOfTickets: noOfTickets });
-		if (res.status === 200) {
-			setBankTicketsData(await res.json());
-		} else {
-			console.log(res);
-		}
-	}
+	// 	setGenTicketLoading(true);
+	// 	const res = await fetch(
+	// 		`/api/create_bank_ticket?account=${auth.ready ? auth?.sessionData.id : ''}&tickets=${noOfTickets}&event=ASM2022`
+	// 	);
+	// 	// generateBankTickets({ userID: auth.sessionData.id, numberOfTickets: noOfTickets });
+	// 	if (res.status === 200) {
+	// 		setBankTicketsData(await res.json());
+	// 	} else {
+	// 		console.log(res);
+	// 	}
+	// }
 
-	let accId = '';
-	if (auth.ready) {
-		accId = auth.sessionData?.id;
-	}
+	// let accId = '';
+	// if (auth.ready) {
+	// 	accId = auth.sessionData?.id;
+	// }
 
-	let accUsername = '';
-	if (auth.ready) {
-		accUsername = auth.sessionData?.username;
-	}
+	// let accUsername = '';
+	// if (auth.ready) {
+	// 	accUsername = auth.sessionData?.username;
+	// }
 
-	if (bankTicketsData?.error) console.error(bankTicketsData.error);
+	// if (bankTicketsData?.error) console.error(bankTicketsData.error);
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -180,12 +180,11 @@ const Tickets = () => {
 							We have two methods to buy a ticket for ASM. Stripe and Bank Transfer. Paying with Stripe will cost
 							slightly extra due to a processing fee.
 						</p>
-						<p>
-							We will have personalised tickets if you purchase before June 19th.
-						</p>
+						<p>We will have personalised tickets if you purchase before June 19th.</p>
 					</section>
 					<hr />
-					{auth.ready && !auth?.sessionData && (
+					<section className={styles.loginError}>Online purchases now unavailable. You can buy tickets at the event.</section>
+					{/* {auth.ready && !auth?.sessionData && (
 						<section className={styles.loginError}>
 							You must be logged in and email verified to purchase tickets.
 						</section>
@@ -210,24 +209,20 @@ const Tickets = () => {
 								inputProps={{ min: 1 }}
 								value={noOfTickets}
 								onChange={(e) => setNoOfTickets(parseInt(e.target.value))}
-								// style={{ maxWidth: 70 }}
 								size="small"
 								color="secondary"
 								label="Number of tickets"
-							></TextField>
-							{/* <Tooltip title={successfulTicket ? "Refresh the page if you need to generate more" : undefined} arrow> */}
-							<Button variant="contained" color="primary" fullWidth disabled={disableBank} onClick={generateTickets}>
+							></TextField><Button variant="contained" color="primary" fullWidth disabled={disableBank} onClick={generateTickets}>
 								Generate {noOfTickets > 1 && noOfTickets} Ticket{noOfTickets > 1 && 's'} $
 								{isNaN(noOfTickets) || noOfTickets <= 0 ? '∞' : noOfTickets * 35}
 							</Button>
-							{/* </Tooltip> */}
 						</div>
 						{bankTicketsData?.error && (
 							<p>It seems like there was an error. Please try again or let Clubwho know on Discord!</p>
 						)}
 						{successfulTicket && !genTicketLoading && <ASMTicket ticketData={bankTicketsData.data.generateTicket} />}
 						{genTicketLoading && !bankTicketsData?.error && <ASMTicketSkeleton />}
-					</section>
+					</section> */}
 					<hr />
 					<section className={styles.fullWidth}>
 						<h2>Refund Policy</h2>

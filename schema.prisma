@@ -108,6 +108,7 @@ model Event {
   acceptingBackups       Boolean      @default(false)
   acceptingShirts        Boolean      @default(false)
   volunteer              Volunteer[]  @relation("Volunteer_event")
+  donationIncentives     Incentive[]  @relation("Incentive_event")
   from_Post_event        Post[]       @relation("Post_event")
   from_Role_event        Role[]       @relation("Role_event")
 }
@@ -131,24 +132,25 @@ model Role {
 }
 
 model Run {
-  id                   String      @id @default(cuid())
-  runners              User[]      @relation("Run_runners")
-  originalSubmission   Submission? @relation("Run_originalSubmission", fields: [originalSubmissionId], references: [id])
-  originalSubmissionId String?     @map("originalSubmission")
-  game                 String      @default("")
-  category             String      @default("")
-  platform             String      @default("")
-  estimate             String      @default("")
-  finalTime            String      @default("")
-  donationIncentive    String      @default("")
-  race                 Boolean     @default(false)
-  racer                String      @default("")
-  coop                 Boolean     @default(false)
-  twitchVOD            String      @default("")
-  youtubeVOD           String      @default("")
-  event                Event?      @relation("Run_event", fields: [eventId], references: [id])
-  eventId              String?     @map("event")
-  scheduledTime        DateTime?
+  id                      String      @id @default(cuid())
+  runners                 User[]      @relation("Run_runners")
+  originalSubmission      Submission? @relation("Run_originalSubmission", fields: [originalSubmissionId], references: [id])
+  originalSubmissionId    String?     @map("originalSubmission")
+  game                    String      @default("")
+  category                String      @default("")
+  platform                String      @default("")
+  estimate                String      @default("")
+  finalTime               String      @default("")
+  donationIncentive       String      @default("")
+  race                    Boolean     @default(false)
+  racer                   String      @default("")
+  coop                    Boolean     @default(false)
+  twitchVOD               String      @default("")
+  youtubeVOD              String      @default("")
+  event                   Event?      @relation("Run_event", fields: [eventId], references: [id])
+  eventId                 String?     @map("event")
+  donationIncentiveObject Incentive[] @relation("Incentive_run")
+  scheduledTime           DateTime?
 
   @@index([originalSubmissionId])
   @@index([eventId])
@@ -217,6 +219,21 @@ model ShirtOrder {
   created  DateTime?            @default(now())
 
   @@index([userId])
+}
+
+model Incentive {
+  id      String  @id @default(cuid())
+  run     Run?    @relation("Incentive_run", fields: [runId], references: [id])
+  runId   String? @map("run")
+  event   Event?  @relation("Incentive_event", fields: [eventId], references: [id])
+  eventId String? @map("event")
+  title   String  @default("")
+  type    String  @default("")
+  data    Json?
+  active  Boolean @default(false)
+
+  @@index([runId])
+  @@index([eventId])
 }
 
 enum PostRoleType {

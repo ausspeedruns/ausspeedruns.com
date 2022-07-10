@@ -23,8 +23,6 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 const selloutDate = new Date(Date.UTC(2022, 5, 17, 4, 30, 0, 0));
 
-console.log(selloutDate.toLocaleString())
-console.log(new Date().toLocaleString())
 function returnTimeRemainaing(currentTime: Date, endDate: Date) {
 	const remainingTime = new Date(endDate.getTime() - currentTime.getTime());
 	return `${Math.round(

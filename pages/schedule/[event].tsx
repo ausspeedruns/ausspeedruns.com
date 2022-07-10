@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { gql, useQuery } from 'urql';
 import DiscordEmbed from '../../components/DiscordEmbed';
 import Navbar from '../../components/Navbar/Navbar';
+import { format } from 'date-fns';
 
 import styles from '../../styles/Schedule.event.module.scss';
 import { theme } from '../../components/mui-theme';

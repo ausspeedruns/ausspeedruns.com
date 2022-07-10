@@ -26,23 +26,23 @@ const Ticker = () => {
     return null
   }
 
-  const getNextTick = () => {
-    fetch(`https://australia-southeast1-utility-tempo-317111.cloudfunctions.net/grab_schedule`, {method: "GET"})
-    .then(response => response.json())
-    .then(res => {
-      const { previous, current, next } = res.data.ticker
-      setPrevGame(convertToAgendaItem(previous?.data))
-      setCurrentGame(convertToAgendaItem(current?.data))
-      setNextGame(convertToAgendaItem(next?.data))
-    })
-  }
+  // const getNextTick = () => {
+  //   fetch(`https://australia-southeast1-utility-tempo-317111.cloudfunctions.net/grab_schedule`, {method: "GET"})
+  //   .then(response => response.json())
+  //   .then(res => {
+  //     const { previous, current, next } = res.data.ticker
+  //     setPrevGame(convertToAgendaItem(previous?.data))
+  //     setCurrentGame(convertToAgendaItem(current?.data))
+  //     setNextGame(convertToAgendaItem(next?.data))
+  //   })
+  // }
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      getNextTick();
-    }, 5000);
-    return () => clearInterval(interval);
-  });
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     getNextTick();
+  //   }, 5000);
+  //   return () => clearInterval(interval);
+  // });
 
   return (
     <div className={styles.ticker}>

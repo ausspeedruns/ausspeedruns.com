@@ -1,0 +1,265 @@
+@use 'base';
+@import './colors.scss';
+@import './responsive.scss';
+
+.eventLive {
+	color: $light-text;
+	background: $goc-main;
+	background-image: url('../../styles/img/EventLiveBackground.png');
+	background-size: contain;
+	background-position: center;
+	image-rendering: pixelated;
+	padding: 2rem;
+
+	@include breakpoint($sm-zero-only) {
+		padding: 0;
+	}
+
+	.logo {
+		margin: auto;
+		width: fit-content;
+		margin-bottom: 0.5rem;
+		@include breakpoint($sm-zero-only) {
+			padding: 1rem;
+		}
+	}
+
+	h2,
+	h3 {
+		text-align: center;
+	}
+
+	.link {
+		text-align: center;
+	}
+
+	.eventInfo {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		@include breakpoint($sm-zero-only) {
+			flex-direction: column;
+		}
+
+		h2 {
+			margin: 0;
+		}
+
+		.link {
+			margin: 1rem;
+
+			a {
+				width: 100%;
+				font-size: 1.5rem;
+			}
+		}
+	}
+
+	.onDeck {
+		display: flex;
+		width: 80%;
+		margin: auto;
+		justify-content: space-between;
+
+		@include breakpoint($sm-zero-only) {
+			flex-direction: column;
+		}
+
+		.columnLeft,
+		.columnMiddle,
+		.columnRight {
+			display: flex;
+			flex-direction: column;
+
+			h4 {
+				color: $goc-orange;
+				font-weight: bold;
+				font-size: 1.5rem;
+				margin-bottom: -0.8rem;
+
+				@include breakpoint($sm-zero-only) {
+					font-size: 1rem;
+					margin-bottom: -0.2rem;
+				}
+			}
+
+			h3 {
+				font-size: 2rem;
+
+				@include breakpoint($sm-zero-only) {
+					font-size: 1.5rem;
+				}
+			}
+		}
+
+		.columnLeft h4 {
+			text-align: left;
+
+			@include breakpoint($sm-zero-only) {
+				text-align: center;
+			}
+		}
+
+		.columnMiddle h4 {
+			text-align: center;
+		}
+
+		.columnRight h4 {
+			text-align: right;
+
+			@include breakpoint($sm-zero-only) {
+				text-align: center;
+			}
+		}
+	}
+
+	.twitch {
+		display: flex;
+		width: 80%;
+		margin: auto;
+		justify-content: space-between;
+		padding-top: 1rem;
+		// height: 40rem;
+
+		@include breakpoint($sm-zero-only) {
+			flex-direction: column;
+			align-items: center;
+			width: 100%;
+		}
+
+		.twitchVideo,
+		.twitchChat {
+			border: 8px solid $goc-orange;
+			box-sizing: border-box;
+		}
+
+		.twitchVideo {
+			width: 70%;
+
+			@include breakpoint($sm-zero-only) {
+				width: 100%;
+			}
+		}
+
+		.twitchChat {
+			width: 27%;
+
+			@include breakpoint($sm-zero-only) {
+				display: none;
+			}
+		}
+	}
+
+	.incentive,
+	.upcoming {
+		position: relative;
+		margin: auto;
+		margin-top: 1rem;
+		box-sizing: border-box;
+		display: flex;
+		justify-content: center;
+
+		.liveContent {
+			padding: 1rem;
+		}
+	}
+
+	.edgeImageStart,
+	.edgeImageEnd {
+		width: 10%;
+		background-size: contain;
+		background-repeat: no-repeat;
+		image-rendering: pixelated;
+		background-position: right center;
+
+		@include breakpoint($sm-zero-only) {
+			width: 0%;
+		}
+	}
+
+	// .edgeImageStart{
+	// }
+
+	.edgeImageEnd {
+		transform: scaleX(-1);
+	}
+
+	.incentive {
+		.liveContent {
+			background-color: $goc-orange;
+			// width: 50%;
+
+			@include breakpoint($sm-zero-only) {
+				width: 100%;
+			}
+		}
+
+		.edgeImageStart,
+		.edgeImageEnd {
+			background-image: url('../../styles/img/ChallengesBGEDGE.png');
+
+			@include breakpoint($sm-zero-only) {
+				background-image: none;
+			}
+		}
+
+		.divider {
+			margin: auto;
+			margin-top: 10px;
+			width: 80%;
+			height: 10px;
+			background-color: $goc-main-dark;
+		}
+	}
+
+	.upcoming {
+		@include breakpoint($sm-zero-only) {
+			margin-top: 0;
+		}
+
+		.liveContent {
+			background-color: $goc-main-dark;
+			font-size: 1.2rem;
+			width: 50%;
+			word-break: break-all;
+
+			@include breakpoint($sm-zero-only) {
+				width: 100%;
+			}
+
+			.info {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+
+			span {
+				margin-bottom: 0.5rem;
+			}
+
+			.subtitle {
+				color: $goc-accent;
+				font-weight: bold;
+				margin-bottom: 0;
+			}
+
+			.link {
+				margin-top: 1rem;
+
+				span {
+					margin: 0;
+				}
+			}
+		}
+
+		.edgeImageStart,
+		.edgeImageEnd {
+			background-image: url('../../styles/img/UpNextBGEDGE.png');
+
+			@include breakpoint($sm-zero-only) {
+				background-image: none;
+			}
+		}
+	}
+}

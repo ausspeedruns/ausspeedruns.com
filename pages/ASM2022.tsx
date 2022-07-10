@@ -51,6 +51,13 @@ export default function EventPage() {
 					<Image src={ASM2022Logo} alt="Australian Speedrun Marathon 2022 Logo" />
 				</div>
 				<div className={styles.buttons}>
+					<Button
+						actionText="Donate"
+						link="https://tiltify.com/@ausspeedruns/aus-speedrun-marathon-2022"
+						target="_blank"
+						rel="noopener noreferrer"
+					/>
+
 					{queryResult.data?.event?.acceptingSubmissions && (
 						<Button actionText="Submissions are open!" link="/submit-game" iconRight={faArrowRight} />
 					)}
@@ -74,6 +81,8 @@ export default function EventPage() {
 					{queryResult.data?.event?.acceptingShirts && (
 						<Button actionText="Buy the ASM2022 Shirt! (Limited Time)" link="/store" iconRight={faShirt} />
 					)}
+
+					<Button actionText="Donation Challenges" link="/ASM2022/challenges" iconRight={faArrowRight} />
 
 					<Button
 						actionText="Learn more about Game on Cancer"
@@ -133,13 +142,13 @@ export default function EventPage() {
 						</div> */}
 						<div className={styles.sponsor}>
 							<span>Major Partner</span>
-							<Image src={HyperX} width={500} height={200} />
+							<Image src={HyperX} width={500} height={200} alt="HyperX Logo" />
 						</div>
 					</div>
 					<div className={styles.secondary}>
 						<div className={styles.sponsor}>
 							<span>Minor Partner</span>
-							<Image src={Landfall} width={200} height={153} />
+							<Image src={Landfall} width={200} height={153} alt="Landfall Games Logo" />
 						</div>
 					</div>
 				</div>
@@ -156,12 +165,12 @@ export default function EventPage() {
 						<span>25 March - 29 April</span>
 						<span>Charity</span>
 						<span>Game On Cancer</span>
-						<span>Games</span>
+						<span>Number of Games</span>
 						<span>66</span>
 						<span>Event Duration</span>
 						<span>105 Hours</span>
 						<span>Number of Speedrunners</span>
-						<span>57</span>
+						<span>70</span>
 					</div>
 				</div>
 			</main>

@@ -9,7 +9,7 @@ import { Button } from '@keystone-ui/button';
 import { Select, FieldContainer, FieldLabel, TextInput, Checkbox } from '@keystone-ui/fields';
 import { Accordion, AccordionDetails, AccordionSummary, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { FixedSizeList, ListChildComponentProps } from 'react-window';
+import { VariableSizeList, ListChildComponentProps } from 'react-window';
 import { useToasts } from '@keystone-ui/toast';
 import { Goal, War } from '../../schema/incentives';
 
@@ -36,6 +36,7 @@ const INCENTIVES_QUERY = gql`
 			donationIncentives(orderBy: { id: asc }) {
 				id
 				title
+				notes
 				type
 				run {
 					id
@@ -51,12 +52,13 @@ const INCENTIVES_QUERY = gql`
 `;
 
 const NEW_INCENTIVE_MUTATION = gql`
-	mutation ($run: ID, $runEvent: String, $title: String, $type: String, $data: JSON) {
+	mutation ($run: ID, $runEvent: String, $title: String, $notes: String, $type: String, $data: JSON) {
 		createIncentive(
 			data: {
 				run: { connect: { id: $run } }
 				event: { connect: { shortname: $runEvent } }
 				title: $title
+				notes: $notes
 				type: $type
 				data: $data
 				active: true
@@ -92,6 +94,7 @@ export default function RunsManager() {
 
 	const [newIncentiveTitle, setNewIncentiveTitle] = React.useState('');
 	const [newIncentiveRun, setNewIncentiveRun] = React.useState({ label: '', value: '' });
+	const [newIncentiveNotes, setNewIncentiveNotes] = React.useState('');
 	const [newIncentiveType, setNewIncentiveType] = React.useState(incentiveTypes[0]);
 	const [newIncentiveData, setNewIncentiveData] = React.useState<Goal | War | undefined>(undefined);
 
@@ -109,7 +112,7 @@ export default function RunsManager() {
 		label: `${run.game} - ${run.category}`,
 	}));
 
-	const sortedIncentives = structuredClone(eventData.data?.event.donationIncentives) ?? [];
+	const sortedIncentives = eventData.data?.event.donationIncentives.map((a) => ({ ...a })) ?? [];
 	sortedIncentives.sort(
 		(a, b) => new Date(a.run?.scheduledTime ?? 0).getTime() - new Date(b.run?.scheduledTime ?? 0).getTime()
 	);
@@ -136,6 +139,7 @@ export default function RunsManager() {
 			setNewIncentiveData({ goal: 0, current: 0 });
 			setNewIncentiveRun({ value: '', label: '' });
 			setNewIncentiveTitle('');
+			setNewIncentiveNotes('');
 			setNewIncentiveType(incentiveTypes[0]);
 
 			addToast({
@@ -218,6 +222,7 @@ export default function RunsManager() {
 				run: newIncentiveRun.value,
 				runEvent,
 				title: newIncentiveTitle,
+				notes: newIncentiveNotes,
 				type: newIncentiveType.value,
 				data: newIncentiveData,
 			},
@@ -263,6 +268,14 @@ export default function RunsManager() {
 								/>
 							</FieldContainer>
 						</Inline>
+						<FieldContainer>
+							<FieldLabel>Notes/Instructions</FieldLabel>
+							<TextInput
+								onChange={(e) => setNewIncentiveNotes(e.target.value)}
+								value={newIncentiveNotes}
+								disabled={!selectedEvent.value}
+							/>
+						</FieldContainer>
 						<FieldContainer>
 							<FieldLabel>Type</FieldLabel>
 							<Select
@@ -345,10 +358,13 @@ export default function RunsManager() {
 			{eventData?.data?.event && (
 				<>
 					<div css={{ border: '1px solid #e1e5e9', borderRadius: 6, display: 'flex', marginTop: 16 }}>
-						<FixedSizeList
+						<VariableSizeList
 							height={650}
 							width={400}
-							itemSize={46}
+							estimatedItemSize={65}
+							itemSize={(index) => {
+								return 65 + ((sortedIncentives[index].title.length + sortedIncentives[index].run.game.length) > 50 ? 65 : 0);
+							}}
 							itemCount={eventData.data.event.donationIncentivesCount}
 							overscanCount={5}
 							itemData={sortedIncentives.map((incentive) => ({
@@ -358,7 +374,7 @@ export default function RunsManager() {
 							css={{ borderRight: '1px solid #e1e5e9', background: '#fafbfc' }}
 						>
 							{renderRunRow}
-						</FixedSizeList>
+						</VariableSizeList>
 						{incentiveData && (
 							<div css={{ flexGrow: 1, padding: '0 16px', minWidth: 800 }}>
 								<h1>{incentiveData.title}</h1>
@@ -369,6 +385,8 @@ export default function RunsManager() {
 									Game <b>{incentiveData.run.game}</b>
 									<br />
 									Type <b css={{ textTransform: 'capitalize' }}>{incentiveData.type}</b>
+									<br />
+									Notes <b>{incentiveData.notes}</b>
 								</p>
 								<Stack gap="medium">
 									{incentiveData.type === 'goal' && (
@@ -415,7 +433,7 @@ export default function RunsManager() {
 															<TextInput
 																placeholder="Name"
 																onChange={(e) => {
-																	const mutableOptions = structuredClone((incentiveRawData as War).options);
+																	const mutableOptions = (incentiveRawData as War).options.map((a) => ({ ...a }));
 																	mutableOptions[i].name = e.target.value;
 																	setIncentiveRawData({ ...incentiveRawData, options: mutableOptions });
 																}}
@@ -425,7 +443,7 @@ export default function RunsManager() {
 																placeholder="Amount"
 																type="number"
 																onChange={(e) => {
-																	const mutableOptions = structuredClone((incentiveRawData as War).options);
+																	const mutableOptions = (incentiveRawData as War).options.map((a) => ({ ...a }));
 																	mutableOptions[i].total = parseFloat(e.target.value);
 																	setIncentiveRawData({ ...incentiveRawData, options: mutableOptions });
 																}}
@@ -486,9 +504,9 @@ function renderRunRow(props: ListChildComponentProps) {
 	// console.log(data);
 
 	return (
-		<ListItem style={style} key={data.id} component="div" disablePadding>
+		<ListItem style={{...style, background: data.active ? undefined : '#e46060' }} key={data.id} component="div" disablePadding>
 			<ListItemButton onClick={() => data.setSelectedIncentiveIndex(index)}>
-				<ListItemText primary={`${data.title} - ${data.run.game}`} />
+				<ListItemText primary={`${data.title} - ${data.run.game}`} secondary={data.active ? 'Active' : 'Closed'} />
 			</ListItemButton>
 		</ListItem>
 	);

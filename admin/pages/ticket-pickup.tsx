@@ -159,7 +159,6 @@ export default function RunsManager() {
 					background={invalidTicket ? 'red200' : 'orange100'}
 					css={{ borderWidth: '1px', borderColor: invalidTicket ? palette.red600 : palette.orange400 }}
 				>
-					{console.log(ticketQuery.data?.ticket)}
 					<p>
 						<span css={{ fontSize: '4rem', fontWeight: 'bold', display: 'block', textAlign: 'center' }}>
 							{ticketQuery.data.ticket.user.username}

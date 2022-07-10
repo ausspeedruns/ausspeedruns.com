@@ -16,9 +16,10 @@ import DiscordEmbed from '../components/DiscordEmbed';
 import styles from '../styles/index.module.scss';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Button from '../components/Button/Button';
+import { EventLive } from '../components/EventLive/EventLive';
 
 export default function Home() {
-	const eventLive = false;
+	const eventLive = true;
 	const {
 		events: { previous, current, next },
 	} = globals;
@@ -30,9 +31,8 @@ export default function Home() {
 			</Head>
 			<Navbar isLive={eventLive} />
 			<main>
-				<Heroblock event={current} />
-				{eventLive && <Ticker />}
-				{eventLive && <TwitchChatEmbed channel="ausspeedruns" parent={window.location.hostname} />}
+				{!eventLive && <Heroblock event={current} />}
+				{eventLive && <EventLive event={current.preferredName} />}
 				{/* <EventDetails event={current} /> */}
 				<div className={styles.archive}>
 					<div className={styles.content}>
@@ -56,29 +56,6 @@ export default function Home() {
 							title: 'About AusSpeedruns',
 							description:
 								'Also known as Australian Speedrunners, AusSpeedruns is a not-for-profit organisation that brings together the best speedrunners in Australia to raise money and awareness for charity at events across Australia.',
-						},
-						{
-							title: 'Get Involved',
-							description: `Submissions for ${current.shortName} are open!`,
-							anchor: 'participate',
-							ctas: [
-								{
-									actionText: 'Submit your run',
-									link: '/submit-game',
-									iconRight: faChevronRight,
-								},
-								// {
-								//   actionText: "Buy a ticket",
-								//   link: current.website || "",
-								//   iconLeft: faTicketAlt,
-
-								// },
-								{
-									actionText: 'Join our discord',
-									link: globals.socialLinks.discord,
-									iconLeft: faDiscord,
-								},
-							],
 						},
 						{
 							title: 'Previous event',

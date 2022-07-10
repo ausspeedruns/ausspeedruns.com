@@ -228,6 +228,7 @@ model Incentive {
   event   Event?  @relation("Incentive_event", fields: [eventId], references: [id])
   eventId String? @map("event")
   title   String  @default("")
+  notes   String  @default("")
   type    String  @default("")
   data    Json?
   active  Boolean @default(false)

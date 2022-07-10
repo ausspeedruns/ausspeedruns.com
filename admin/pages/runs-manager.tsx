@@ -9,7 +9,7 @@ import { useMutation, useQuery, gql, useLazyQuery } from '@keystone-6/core/admin
 import { Button } from '@keystone-ui/button';
 import { Select, FieldContainer, FieldLabel, TextInput, DatePicker } from '@keystone-ui/fields';
 import { ListItem, ListItemButton, ListItemText } from '@mui/material';
-import { FixedSizeList, ListChildComponentProps } from 'react-window';
+import { VariableSizeList, ListChildComponentProps } from 'react-window';
 import { format, parse, parseISO } from 'date-fns';
 import { useToasts } from '@keystone-ui/toast';
 
@@ -197,7 +197,7 @@ export default function RunsManager() {
 				event: { connect: { shortname: selectedEvent.value } },
 			};
 		});
-		console.log(runCreateInput);
+		// console.log(runCreateInput);
 
 		await submissionsToRunsMutation({ variables: { runs: runCreateInput } });
 		eventData.refetch();
@@ -237,17 +237,20 @@ export default function RunsManager() {
 						Convert accepted submissions to runs
 					</Button>
 					<div css={{ border: '1px solid #e1e5e9', borderRadius: 6, display: 'flex', marginTop: 16 }}>
-						<FixedSizeList
+						<VariableSizeList
 							height={650}
-							width={300}
-							itemSize={46}
+							width={350}
+							estimatedItemSize={50}
+							itemSize={(index) => {
+								return 50 + (eventData.data.event.runs[index].game.length > 20 ? 60 : 0);
+							}}
 							itemCount={eventData.data.event.runsCount}
 							overscanCount={5}
 							itemData={eventData.data.event.runs.map((run) => ({ ...run, setSelectedRunIndex }))}
 							css={{ borderRight: '1px solid #e1e5e9', background: '#fafbfc' }}
 						>
 							{renderRunRow}
-						</FixedSizeList>
+						</VariableSizeList>
 						{runData && (
 							<div css={{ flexGrow: 1, paddingLeft: 16 }}>
 								<h1>{runData.game}</h1>
@@ -347,7 +350,10 @@ function renderRunRow(props: ListChildComponentProps) {
 	return (
 		<ListItem style={style} key={data.id} component="div" disablePadding>
 			<ListItemButton onClick={() => data.setSelectedRunIndex(index)}>
-				<ListItemText primary={`${data.game} - ${data.category} - ${data.runners.map((runner) => runner.username).join(', ')}`} />
+				<ListItemText
+					primary={data.game}
+					secondary={`${data.category} - ${data.runners.map((runner) => runner.username).join(', ')}`}
+				/>
 			</ListItemButton>
 		</ListItem>
 	);

@@ -74,6 +74,7 @@ const Footer = (props: FooterProps) => {
 					</ul>
 					<div className={styles.miscLinks}>
 						<Link href="/policies">Policies</Link>
+						{/* <Link href="/prize-terms">Prize Terms</Link> */}
 						<Link href="/press-kit">Press Kit</Link>
 					</div>
 				</div>

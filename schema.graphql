@@ -1725,6 +1725,7 @@ type Incentive {
   run: Run
   event: Event
   title: String
+  notes: String
   type: String
   data: JSON
   active: Boolean
@@ -1742,6 +1743,7 @@ input IncentiveWhereInput {
   run: RunWhereInput
   event: EventWhereInput
   title: StringFilter
+  notes: StringFilter
   type: StringFilter
   active: BooleanFilter
 }
@@ -1749,6 +1751,7 @@ input IncentiveWhereInput {
 input IncentiveOrderByInput {
   id: OrderDirection
   title: OrderDirection
+  notes: OrderDirection
   type: OrderDirection
   active: OrderDirection
 }
@@ -1757,6 +1760,7 @@ input IncentiveUpdateInput {
   run: RunRelateToOneForUpdateInput
   event: EventRelateToOneForUpdateInput
   title: String
+  notes: String
   type: String
   data: JSON
   active: Boolean
@@ -1777,6 +1781,7 @@ input IncentiveCreateInput {
   run: RunRelateToOneForCreateInput
   event: EventRelateToOneForCreateInput
   title: String
+  notes: String
   type: String
   data: JSON
   active: Boolean

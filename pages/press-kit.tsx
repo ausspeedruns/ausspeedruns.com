@@ -22,8 +22,6 @@ const PressKit = () => {
 		`,
 	});
 
-	console.log(pressKitResult.error);
-
 	return (
 		<div className={styles.app}>
 			<Head>

@@ -14,6 +14,7 @@ export const Incentive: Lists.Incentive = list({
 		run: relationship({ ref: 'Run.donationIncentiveObject', ui: { hideCreate: true, labelField: 'game' } }),
 		event: relationship({ ref: 'Event.donationIncentives', ui: { hideCreate: true, labelField: 'shortname' } }),
 		title: text({ validation: { isRequired: true } }),
+		notes: text(),
 		type: text({ validation: { isRequired: true } }),
 		data: json(),
 		active: checkbox(),

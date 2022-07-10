@@ -17,6 +17,7 @@ import {
 	faChevronRight,
 	faCoins,
 	faBook,
+	faCalendar,
 } from '@fortawesome/free-solid-svg-icons';
 import { globals } from '../../globals';
 import Button from '../Button/Button';
@@ -82,12 +83,20 @@ const Navbar = ({ isLive }: NavbarProps) => {
               </a>
             </li> */}
 						{isLive && (
-							<li>
-								<a href={globals.incentivesLink}>
+							<>
+								<li>
 									{isMobile ? <FontAwesomeIcon icon={faCoins} /> : ''}
-									<span className={styles.text}>Incentives</span>
-								</a>
-							</li>
+									<Link href="/ASM2022/challenges" passHref>
+										<a className={styles.text}>Challenges</a>
+									</Link>
+								</li>
+								<li>
+									{isMobile ? <FontAwesomeIcon icon={faCalendar} /> : ''}
+									<Link href="/schedule" passHref>
+										<a className={styles.text}>Schedule</a>
+									</Link>
+								</li>
+							</>
 						)}
 						<li>
 							<Link href="/ASM2022" passHref>
@@ -98,12 +107,6 @@ const Navbar = ({ isLive }: NavbarProps) => {
 							{isMobile ? <FontAwesomeIcon className={styles.icon} icon={faBook} /> : ''}
 							<Link href="/blog" passHref>
 								<a className={styles.text}>Blog</a>
-							</Link>
-						</li>
-						<li>
-							{isMobile ? <FontAwesomeIcon className={styles.icon} icon={faUsers} /> : ''}
-							<Link href="/#participate" passHref>
-								<a className={styles.text}>Get Involved</a>
 							</Link>
 						</li>
 						<li className="social">
@@ -148,7 +151,7 @@ const Navbar = ({ isLive }: NavbarProps) => {
 									actionText="Donate"
 									link={globals.donateLink}
 									iconRight={faChevronRight}
-									colorScheme={'secondary inverted'}
+									colorScheme={'orange'}
 								/>
 							</li>
 						)}
@@ -158,7 +161,7 @@ const Navbar = ({ isLive }: NavbarProps) => {
 									<Button
 										actionText={auth.sessionData.username}
 										link={`/user/${auth.sessionData.username}`}
-										colorScheme={'orange'}
+										colorScheme={'secondary inverted'}
 									/>
 									<a
 										className={styles.signout}

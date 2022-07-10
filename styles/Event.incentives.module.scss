@@ -1,0 +1,176 @@
+@use 'base';
+@import './colors.scss';
+@import './responsive.scss';
+
+.app {
+	background: $goc-main;
+	background-image: url('./img/EventLiveBackground.png');
+	background-size: contain;
+	background-position: center;
+	image-rendering: pixelated;
+}
+
+.content {
+	// display: flex;
+	// flex-direction: column;
+	flex-flow: column;
+	color: $light-text;
+
+	// align-items: center;
+	h2,
+	h3 {
+		text-align: center;
+	}
+
+	h3 {
+		font-size: 2rem;
+	}
+
+	.instructions {
+		text-align: center;
+		font-size: 1.2rem;
+		margin: 1rem 0;
+		font-style: italic;
+
+		.emphasis {
+			text-decoration: underline;
+		}
+	}
+
+	.soon {
+		background-color: $goc-orange;
+		margin: 1rem 0 3rem;
+	}
+
+	.divider {
+		background-color: $goc-main-dark;
+		height: 5px;
+		width: 100%;
+		margin: 1rem 0;
+	}
+
+	.incentiveDivider {
+		margin: auto;
+		width: 50%;
+		background-color: $goc-accent;
+		height: 2px;
+	}
+}
+
+.goal,
+.war {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 1rem;
+
+	.title {
+		display: block;
+		font-size: 1.5rem;
+		// margin-bottom: 0.5rem;
+	}
+
+	.gameinfo {
+		font-size: 1.2rem;
+
+		.game {
+			font-weight: bold;
+			text-overflow: ellipsis;
+		}
+	}
+}
+
+.goal {
+	.current {
+		font-size: 1.5rem;
+		font-style: italic;
+		margin: 0.5rem 0;
+	}
+
+	.progress {
+		width: 100%;
+		height: 2rem;
+		background-color: $goc-main-dark;
+
+		.bar {
+			background-color: $goc-accent;
+			height: 100%;
+			width: 0%;
+
+			transition-duration: 1s;
+		}
+	}
+}
+
+.war {
+	.options {
+		display: flex;
+		gap: 1rem;
+		margin-top: 1rem;
+		// justify-content: center;
+
+		@include breakpoint($sm-zero-only) {
+			flex-direction: column;
+		}
+
+		.option {
+			display: flex;
+			padding: 1rem;
+			background: $goc-main-dark;
+			font-size: 1.2rem;
+
+			@include breakpoint($sm-zero-only) {
+				flex-direction: column;
+			}
+
+			.vertical {
+				display: flex;
+				flex-direction: column;
+				width: fit-content;
+
+				.name {
+					white-space: nowrap;
+					font-weight: bold;
+				}
+			}
+
+			.progress {
+				margin-left: 1rem;
+				height: 100%;
+				width: 0.75rem;
+				background-color: $goc-main;
+				position: relative;
+
+				@include breakpoint($sm-zero-only) {
+					height: 0.75rem;
+					width: 100%;
+					margin-left: 0;
+					margin-top: 0.5rem;
+				}
+
+				.bar {
+					position: absolute;
+					bottom: 0;
+					background-color: $goc-accent;
+					@include breakpoint($md) {
+						width: 100% !important;
+					}
+
+					@include breakpoint($sm-zero-only) {
+						height: 100% !important;
+					}
+				}
+			}
+		}
+	}
+
+	.noOptions {
+		font-size: 1.8rem;
+		font-style: italic;
+		text-align: center;
+
+		@include breakpoint($sm-zero-only) {
+			font-size: 1.5rem;
+		}
+	}
+}

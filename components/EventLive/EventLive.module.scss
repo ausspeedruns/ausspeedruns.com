@@ -40,6 +40,7 @@
 
 		@include breakpoint($sm-zero-only) {
 			flex-direction: column;
+			margin-bottom: 10px;
 		}
 
 		h2 {

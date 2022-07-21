@@ -34,7 +34,7 @@ interface Size {
 	height: number | undefined;
 }
 
-const Navbar = ({ isLive }: NavbarProps) => {
+const Navbar = ({ isLive = true }: NavbarProps) => {
 	const auth = useAuth();
 	const [isOpen, setIsOpen] = useState<Boolean>(false);
 	const [isMobile, setIsMobile] = useState<Boolean>(true);
@@ -94,6 +94,12 @@ const Navbar = ({ isLive }: NavbarProps) => {
 									{isMobile ? <FontAwesomeIcon icon={faCalendar} /> : ''}
 									<Link href="/schedule" passHref>
 										<a className={styles.text}>Schedule</a>
+									</Link>
+								</li>
+								<li>
+									{isMobile ? <FontAwesomeIcon icon={faCoins} /> : ''}
+									<Link href="/prizes" passHref>
+										<a className={styles.text}>Prizes</a>
 									</Link>
 								</li>
 							</>

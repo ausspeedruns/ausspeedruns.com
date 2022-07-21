@@ -6,17 +6,17 @@ import Heroblock from '../components/Heroblock/Heroblock';
 import EventDetails from '../components/EventDetails/EventDetails';
 import TileGroup from '../components/Tiles/TileGroup';
 import Footer from '../components/Footer/Footer';
-import { faDiscord } from '@fortawesome/free-brands-svg-icons';
-// import { faChevronRight, faCoins, faTicketAlt } from "@fortawesome/free-solid-svg-icons";
-import TwitchChatEmbed from '../components/TwitchChatEmbed/TwitchChatEmbed';
-import Ticker from '../components/Ticker/Ticker';
 import { globals } from '../globals';
 import DiscordEmbed from '../components/DiscordEmbed';
+import Image from 'next/image';
 
 import styles from '../styles/index.module.scss';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Button from '../components/Button/Button';
 import { EventLive } from '../components/EventLive/EventLive';
+
+import HyperX from '../styles/img/sponsors/HyperX/HyperX Solid White.svg';
+import Landfall from '../styles/img/sponsors/Landfall.png';
 
 export default function Home() {
 	const eventLive = true;
@@ -47,6 +47,24 @@ export default function Home() {
 								colorScheme={'secondary'}
 								target={'_blank'}
 							/>
+						</div>
+					</div>
+				</div>
+				<div className={styles.sponsors}>
+					<div className={styles.main}>
+						{/* <div className={styles.sponsor}>
+							<span>Charity</span>
+							<Image src={GoCLogo} width={500} height={200} />
+						</div> */}
+						<div className={styles.sponsor}>
+							<span>Major Partner</span>
+							<Image src={HyperX} width={500} height={200} alt="HyperX Logo" />
+						</div>
+					</div>
+					<div className={styles.secondary}>
+						<div className={styles.sponsor}>
+							<span>Minor Partner</span>
+							<Image src={Landfall} width={200} height={153} alt="Landfall Games Logo" />
 						</div>
 					</div>
 				</div>

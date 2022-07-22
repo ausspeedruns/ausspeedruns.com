@@ -1,11 +1,10 @@
 @import "../../styles/responsive.scss";
 @import "../../styles/colors.scss";
 
-.heroblock {
+.lasteventblock {
   width: 100%;
   background: url("../../styles/img/hero-image.png") no-repeat;
   background-size: cover;
-  background-position: center;
   color: $hero-text;
 
   .content {
@@ -71,6 +70,11 @@
 
       @include breakpoint($lg) {
         max-width: 600px;
+      }
+
+      .total {
+        font-size: 4rem;
+        font-weight: bold;
       }
     }
   }

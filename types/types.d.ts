@@ -13,6 +13,7 @@ export type AusSpeedrunsEvent = {
 	submissionFormUrl?: string,
 	website?: string,
 	logo?: string,
+	heroImage?: string,
 }
 
 export type EventsLineUp = {

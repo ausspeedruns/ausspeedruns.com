@@ -34,7 +34,7 @@ interface Size {
 	height: number | undefined;
 }
 
-const Navbar = ({ isLive = true }: NavbarProps) => {
+const Navbar = ({ isLive = false }: NavbarProps) => {
 	const auth = useAuth();
 	const [isOpen, setIsOpen] = useState<Boolean>(false);
 	const [isMobile, setIsMobile] = useState<Boolean>(true);

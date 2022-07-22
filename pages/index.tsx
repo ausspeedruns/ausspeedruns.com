@@ -14,12 +14,13 @@ import styles from '../styles/index.module.scss';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Button from '../components/Button/Button';
 import { EventLive } from '../components/EventLive/EventLive';
+import LastEventBlock from '../components/LastEventBlock/LastEventBlock';
 
 import HyperX from '../styles/img/sponsors/HyperX/HyperX Solid White.svg';
 import Landfall from '../styles/img/sponsors/Landfall.png';
 
 export default function Home() {
-	const eventLive = true;
+	const eventLive = false;
 	const {
 		events: { previous, current, next },
 	} = globals;
@@ -32,7 +33,8 @@ export default function Home() {
 			<Navbar isLive={eventLive} />
 			<main>
 				{!eventLive && <Heroblock event={current} />}
-				{eventLive && <EventLive event={current.preferredName} />}
+				<LastEventBlock event={previous} />
+				{/* {eventLive && <EventLive event={current.preferredName} />} */}
 				{/* <EventDetails event={current} /> */}
 				<div className={styles.archive}>
 					<div className={styles.content}>

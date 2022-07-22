@@ -56,19 +56,19 @@ const Heroblock = ({ event }: HeroblockProps) => {
 	};
 
 	return (
-		<div className={styles.heroblock}>
+		<div className={styles.heroblock} style={{backgroundImage: `url(${require(`../../styles/img/${event.heroImage}`).default.src}`}}>
 			<div className={`${styles.content} content`}>
 				{showVideoBlock && <TwitchVideoEmbed channel="ausspeedruns" parent={window.location.hostname} />}
 				<div className={styles.ctaBlock}>
 					<h1>{event.preferredName}</h1>
 					<h2>{event.dates}</h2>
 					<h3 className="countdown monospaced">
-						<Countdown date={Date.UTC(2022, 6, 13, 0, 30, 0, 0)} renderer={countdownRender} zeroPadTime={2} />
+						<Countdown date={Date.UTC(2022, 9, 7, 0, 0, 0, 0)} renderer={countdownRender} zeroPadTime={2} />
 					</h3>
 					<br />
 					{/* <h2>ASM2021 raised a total of ${ASM_2021_TOTAL_RAISED}</h2> */}
-					<p>Australian Speedrunners come together to raise money for Cure Cancer Australia at ASM2022!</p>
-					<p>Tickets and the schedule are now available!</p>
+					<p>Submissions to open soon</p>
+					<p></p>
 					{showVideoBlock && (
 						<Button
 							actionText="Donate"
@@ -80,14 +80,14 @@ const Heroblock = ({ event }: HeroblockProps) => {
 					)}
 					{!showVideoBlock && (
 						<>
-							<Button actionText="ASM2022" link={'/ASM2022'} iconRight={faChevronRight} colorScheme={'secondary'} />
+							{/* <Button actionText={event.preferredName} link={'/ASM2022'} iconRight={faChevronRight} colorScheme={'secondary'} /> */}
 							<Button
 								actionText="Purchase Tickets"
-								link={'/ASM2022/tickets'}
+								link={event.website}
 								iconRight={faTicket}
 								colorScheme={'secondary'}
 							/>
-							<Button actionText="Schedule" link={'/schedule'} iconRight={faCalendar} colorScheme={'secondary'} />
+							{/* <Button actionText="Schedule" link={'/schedule'} iconRight={faCalendar} colorScheme={'secondary'} /> */}
 						</>
 					)}
 				</div>

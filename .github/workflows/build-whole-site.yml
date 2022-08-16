@@ -28,8 +28,8 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ausruns/next:latest
-          cache-from: type=registry,ref=ausruns/next:latest
+          tags: ausrunswebsitecontainersregistry/ausruns/next:latest
+          cache-from: type=registry,ref=ausrunswebsitecontainersregistry/ausruns/next:latest
           cache-to: type=inline
           secrets: |
             DATABASE_URL=${{ secrets.DATABASE_URL }}
@@ -41,9 +41,9 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ausruns/keystone:latest
+          tags: ausrunswebsitecontainersregistry/ausruns/keystone:latest
           file: "Dockerfile.keystone"
-          cache-from: type=registry,ref=ausruns/keystone:latest
+          cache-from: type=registry,ref=ausrunswebsitecontainersregistry/ausruns/keystone:latest
           cache-to: type=inline
           secrets: |
             DATABASE_URL=${{ secrets.DATABASE_URL }}

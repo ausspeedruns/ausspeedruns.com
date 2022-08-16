@@ -96,6 +96,7 @@
       margin-left: 1rem;
       font-weight: 500;
       cursor: pointer;
+      white-space: nowrap;
     }
 
     .join {
@@ -103,6 +104,7 @@
 
       a {
         font-weight: 500;
+        white-space: nowrap;
       }
     }
 
@@ -128,6 +130,10 @@
 
     @include breakpoint($sm) {
       display: block !important;
+    }
+
+    li {
+      fill-rule: evenodd;
     }
   }
 

@@ -27,6 +27,7 @@ import LinkButton from '../components/Button/Button';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import DiscordEmbed from '../components/DiscordEmbed';
 import { addDays, differenceInDays } from 'date-fns';
+import { DocumentRenderer } from '@keystone-6/document-renderer';
 
 type AgeRatingLiterals = 'm_or_lower' | 'ma15' | 'ra18';
 type RaceLiterals = 'no' | 'solo' | 'only';
@@ -61,7 +62,7 @@ export default function SubmitGamePage() {
 	const [specialReqs, setSpecialReqs] = useState('');
 	const [availableDates, setAvailableDates] = useState<boolean[]>([]);
 	const [estimateError, setEstimateError] = useState(false);
-	const [backup, setBackup] = useState(false);
+	const [backup, setBackup] = useState(true);
 
 	const [canSubmit, setCanSubmit] = useState(false);
 	const [successSubmit, setSuccessSubmit] = useState(false);
@@ -86,11 +87,14 @@ export default function SubmitGamePage() {
 		events: {
 			shortname: string;
 			id: string;
-			submissionInstructions: string;
+			submissionInstructions: {
+				document: any;
+			};
 			startDate: string;
 			endDate: string;
 			eventTimezone: string;
 			acceptingBackups: boolean;
+			acceptingSubmissions: boolean;
 		}[];
 	}>({
 		query: gql`
@@ -98,15 +102,18 @@ export default function SubmitGamePage() {
 				events(where: { OR: [{ acceptingSubmissions: { equals: true } }, { acceptingBackups: { equals: true } }] }) {
 					id
 					shortname
-					submissionInstructions
+					submissionInstructions { document }
 					startDate
 					endDate
 					eventTimezone
 					acceptingBackups
+					acceptingSubmissions
 				}
 			}
 		`,
 	});
+
+	console.log(eventsResult)
 
 	// Mutation for game submission
 	const [submissionResult, createSubmission] = useMutation(gql`
@@ -282,7 +289,8 @@ export default function SubmitGamePage() {
 			<Navbar />
 			<main className={styles.content}>
 				<h1>
-					{currentEvent?.shortname} {currentEvent?.acceptingBackups ? 'Backup' : 'Game'} Submission
+					{currentEvent?.shortname}{' '}
+					{currentEvent?.acceptingBackups && !currentEvent?.acceptingSubmissions ? 'Backup' : 'Game'} Submission
 				</h1>
 				<form
 					className={styles.gameForm}
@@ -304,7 +312,7 @@ export default function SubmitGamePage() {
 								coop,
 								video,
 								eventId: event,
-								willingBackup: currentEvent?.acceptingBackups
+								willingBackup: currentEvent?.acceptingBackups,
 							}).then((result) => {
 								if (!result.error) {
 									clearInputs();
@@ -317,14 +325,11 @@ export default function SubmitGamePage() {
 						}
 					}}
 				>
-					{!queryResult?.data?.user?.discord ||
-					!queryResult.data.user.verified ||
-					!queryResult.data.user.dateOfBirth ? (
+					{!queryResult?.data?.user?.discord || !queryResult.data.user.verified ? (
 						<>
 							<p>Please make sure you have these set on your profile:</p>
 							<ul>
 								<li>Verfied Email</li>
-								<li>Date of Birth</li>
 								<li>Discord ID</li>
 							</ul>
 						</>
@@ -352,13 +357,14 @@ export default function SubmitGamePage() {
 								</FormControl>
 							)}
 
-							{currentEvent?.acceptingBackups && (
+							{currentEvent?.acceptingBackups && !currentEvent?.acceptingSubmissions && (
 								<FormControlLabel
 									control={<Checkbox onChange={(e) => setBackup(e.target.checked)} value={backup} />}
 									label="You understand that this is a submission for backup games"
 								/>
 							)}
 
+							<h3>Basic game info</h3>
 							<TextField
 								value={game}
 								onChange={(e) => setGame(e.target.value)}
@@ -421,24 +427,29 @@ export default function SubmitGamePage() {
 									</a>
 								</FormHelperText>
 							</FormControl>
+
+							<h3>Run misc</h3>
 							<TextField
 								value={donationIncentive}
 								onChange={(e) => setDonationIncentive(e.target.value)}
 								label="Donation Incentive (Leave blank if none)"
+								helperText="Include an estimate on how much extra time it would take if any."
 								autoComplete="off"
-								inputProps={{ maxLength: 100 }}
+								inputProps={{ maxLength: 300 }}
 							/>
 
 							<TextField
 								value={specialReqs}
 								onChange={(e) => setSpecialReqs(e.target.value)}
 								label="Special Requirements to run your game (Leave blank if none)"
+								helperText="This involves any: mods, downpatches, software, controllers (if a PC game) and any other requirements."
 								autoComplete="off"
-								inputProps={{ maxLength: 100 }}
+								inputProps={{ maxLength: 300 }}
 							/>
 							<h3>Availability?*</h3>
 							{dateCheckboxes}
 							<br />
+							<h3>Race/Co-op Info</h3>
 							<FormControlLabel
 								control={
 									<Checkbox onChange={(e) => setRace(e.target.checked ? 'solo' : 'no')} checked={race !== 'no'} />
@@ -473,6 +484,8 @@ export default function SubmitGamePage() {
 									/>
 								</>
 							)}
+
+							<h3>Final run info</h3>
 							<TextField
 								value={video}
 								onChange={(e) => setVideo(e.target.value)}
@@ -481,7 +494,14 @@ export default function SubmitGamePage() {
 								inputProps={{ maxLength: 100 }}
 								required
 							/>
-							<p>{currentEvent?.submissionInstructions}</p>
+
+							{currentEvent?.acceptingBackups && currentEvent?.acceptingSubmissions && (
+								<FormControlLabel
+									control={<Checkbox onChange={(e) => setBackup(e.target.checked)} value={backup} checked={backup} />}
+									label="Allow as backup run"
+								/>
+							)}
+							<DocumentRenderer document={currentEvent?.submissionInstructions.document} />
 							{submissionResult.error && <h2>{HumanErrorMsg(submissionResult.error.message)}</h2>}
 							<Button variant="contained" type="submit" disabled={!canSubmit}>
 								Submit

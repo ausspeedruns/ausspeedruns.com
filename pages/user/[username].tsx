@@ -18,6 +18,110 @@ import DiscordEmbed from '../../components/DiscordEmbed';
 import Ticket from '../../components/Ticket/Ticket';
 import ASMShirt from '../../components/ShirtOrder/ShirtOrder';
 
+const USER_QUERY = gql`
+	query Profile($username: String, $currentTime: DateTime) {
+		user(where: { username: $username }) {
+			id
+			username
+			pronouns
+			state
+			discord
+			twitter
+			roles(where: { show: { equals: true } }) {
+				id
+				name
+				event {
+					shortname
+				}
+				colour
+				textColour
+			}
+			runs {
+				id
+				game
+				category
+				finalTime
+				platform
+				youtubeVOD
+				twitchVOD
+				scheduledTime
+				event {
+					name
+					shortname
+					logo {
+						url
+						width
+						height
+					}
+				}
+			}
+			submissions(where: { event: { endDate: { gt: $currentTime } } }) {
+				id
+				runner {
+					username
+				}
+				game
+				category
+				platform
+				estimate
+				ageRating
+				donationIncentive
+				status
+				race
+				racer
+				coop
+				video
+				event {
+					id
+					name
+					shortname
+					acceptingSubmissions
+					acceptingBackups
+					startDate
+					endDate
+					eventTimezone
+				}
+				willingBackup
+				specialReqs
+				availability
+			}
+			tickets(
+				where: {
+					AND: [
+						{ OR: [{ method: { equals: bank } }, { paid: { equals: true } }] }
+						{ event: { endDate: { gt: $currentTime } } }
+					]
+				}
+			) {
+				ticketID
+				totalCost
+				paid
+				event {
+					shortname
+					logo {
+						url
+						width
+						height
+					}
+				}
+				numberOfTickets
+				method
+				taken
+			}
+			shirts(
+				where: {
+					AND: [{ OR: [{ method: { equals: bank } }, { paid: { equals: true } }] }, { taken: { equals: true } }]
+				}
+			) {
+				shirtID
+				paid
+				size
+				colour
+			}
+		}
+	}
+`;
+
 export type UserPageData = {
 	id: string;
 	username: string;
@@ -73,11 +177,16 @@ export type UserPageData = {
 			shortname: string;
 			acceptingSubmissions: boolean;
 			acceptingBackups: boolean;
+			startDate: string;
+			endDate: string;
+			eventTimezone: string;
 		};
 		runner: {
 			username: string;
 		};
 		willingBackup: boolean;
+		specialReqs: string;
+		availability: boolean[];
 	}[];
 	tickets: {
 		ticketID: string;
@@ -134,100 +243,16 @@ export default function ProfilePage() {
 
 	const [submissionTab, setSubmissionTab] = useState(0);
 	const [eventTab, setEventTab] = useState(0);
+	const [currentTime] = useState(new Date().toISOString());
 
 	// User inputs
 	const [userData, setUserData] = useState<UserPageData>(null);
 	const [loading, setLoading] = useState(false);
 	const [queryResult, profileQuery] = useQuery({
-		query: gql`
-			query Profile($username: String) {
-				user(where: { username: $username }) {
-					id
-					username
-					pronouns
-					state
-					discord
-					twitter
-					roles(where: { show: { equals: true } }) {
-						id
-						name
-						event {
-							shortname
-						}
-						colour
-						textColour
-					}
-					runs {
-						id
-						game
-						category
-						finalTime
-						platform
-						youtubeVOD
-						twitchVOD
-						scheduledTime
-						event {
-							name
-							shortname
-							logo {
-								url
-								width
-								height
-							}
-						}
-					}
-					submissions {
-						id
-						runner {
-							username
-						}
-						game
-						category
-						platform
-						estimate
-						ageRating
-						donationIncentive
-						status
-						race
-						racer
-						coop
-						video
-						event {
-							id
-							name
-							shortname
-							acceptingSubmissions
-							acceptingBackups
-						}
-						willingBackup
-					}
-					tickets(where: { OR: [{ method: { equals: bank } }, { paid: { equals: true } }] }) {
-						ticketID
-						totalCost
-						paid
-						event {
-							shortname
-							logo {
-								url
-								width
-								height
-							}
-						}
-						numberOfTickets
-						method
-						taken
-					}
-					shirts(where: { OR: [{ method: { equals: bank } }, { paid: { equals: true } }] }) {
-						shirtID
-						paid
-						size
-						colour
-					}
-				}
-			}
-		`,
+		query: USER_QUERY,
 		variables: {
 			username: router.query.username,
+			currentTime: currentTime,
 		},
 	});
 
@@ -380,9 +405,10 @@ export default function ProfilePage() {
 				<div className={styles.runs}>
 					<Box>
 						<Tabs value={eventTab} onChange={(_e, newVal) => setEventTab(newVal)} aria-label="basic tabs example">
-							{allRunEvents.map((event) => (
-								<Tab label={event} key={event} />
-							))}
+							{allRunEvents.map((event) => {
+								if (!event) return;
+								return <Tab label={event} key={event} />;
+							})}
 						</Tabs>
 					</Box>
 					{userData.runs.map((run) => {

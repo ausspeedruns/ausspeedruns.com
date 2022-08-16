@@ -67,7 +67,7 @@ const Heroblock = ({ event }: HeroblockProps) => {
 					</h3>
 					<br />
 					{/* <h2>ASM2021 raised a total of ${ASM_2021_TOTAL_RAISED}</h2> */}
-					<p>Submissions to open soon</p>
+					<p>Schedule releasing soon!</p>
 					<p></p>
 					{showVideoBlock && (
 						<Button
@@ -80,13 +80,14 @@ const Heroblock = ({ event }: HeroblockProps) => {
 					)}
 					{!showVideoBlock && (
 						<>
-							{/* <Button actionText={event.preferredName} link={'/ASM2022'} iconRight={faChevronRight} colorScheme={'secondary'} /> */}
+							<Button actionText={event.preferredName} link={'/ASAP2022'} iconRight={faChevronRight} colorScheme={'secondary'} />
 							<Button
 								actionText="Purchase Tickets"
 								link={event.website}
 								iconRight={faTicket}
 								colorScheme={'secondary'}
 							/>
+							{/* <Button actionText="Submit your run!" link={'/submit-game'} iconRight={faChevronRight} colorScheme={'secondary'} /> */}
 							{/* <Button actionText="Schedule" link={'/schedule'} iconRight={faCalendar} colorScheme={'secondary'} /> */}
 						</>
 					)}

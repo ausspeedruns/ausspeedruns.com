@@ -100,7 +100,7 @@ model Event {
   logo_id                String?
   pressKit_filename      String?
   pressKit_filesize      Int?
-  submissionInstructions String       @default("")
+  submissionInstructions Json         @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   tickets                Ticket[]     @relation("Ticket_event")
   acceptingTickets       Boolean      @default(false)
   scheduleReleased       Boolean      @default(false)
@@ -109,6 +109,7 @@ model Event {
   acceptingShirts        Boolean      @default(false)
   volunteer              Volunteer[]  @relation("Volunteer_event")
   donationIncentives     Incentive[]  @relation("Incentive_event")
+  postEventPage          Json         @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   from_Post_event        Post[]       @relation("Post_event")
   from_Role_event        Role[]       @relation("Role_event")
 }

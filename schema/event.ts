@@ -1,5 +1,6 @@
 import { list } from '@keystone-6/core';
 import { checkbox, float, relationship, text, timestamp } from '@keystone-6/core/fields';
+import { document } from '@keystone-6/fields-document';
 import { operations } from './access';
 import { Lists } from '.keystone/types';
 
@@ -25,7 +26,18 @@ export const Event: Lists.Event = list({
 		acceptingSubmissions: checkbox(),
 		logo: image<Lists.Event.TypeInfo>(),
 		pressKit: file<Lists.Event.TypeInfo>(),
-		submissionInstructions: text(),
+		submissionInstructions: document({
+			formatting: true,
+			links: true,
+			layouts: [
+				[1, 1],
+				[1, 1, 1],
+				[2, 1],
+				[1, 2],
+				[1, 2, 1]
+			],
+			dividers: true
+		}),
 		tickets: relationship({ ref: 'Ticket.event', many: true }),
 		acceptingTickets: checkbox(),
 		scheduleReleased: checkbox(),
@@ -34,5 +46,17 @@ export const Event: Lists.Event = list({
 		acceptingShirts: checkbox(),
 		volunteer: relationship({ ref: 'Volunteer.event', ui: { hideCreate: true }, many: true, access: operations.admin }),
 		donationIncentives: relationship({ ref: 'Incentive.event', many: true }),
+		postEventPage: document({
+			formatting: true,
+			links: true,
+			layouts: [
+				[1, 1],
+				[1, 1, 1],
+				[2, 1],
+				[1, 2],
+				[1, 2, 1]
+			],
+			dividers: true
+		}),
 	}
 });

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { styled } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
@@ -11,7 +11,13 @@ import SubmissionEditDialog from './SubmissionEditDialog';
 
 type SubmissionProps = {
 	submission: UserPageData['submissions'][0];
-	event: { acceptingSubmissions: boolean; acceptingBackups: boolean };
+	event: {
+		acceptingSubmissions: boolean;
+		acceptingBackups: boolean;
+		startDate: string;
+		endDate: string;
+		eventTimezone: string;
+	};
 };
 
 function RaceTypeLabels(raceType: string) {

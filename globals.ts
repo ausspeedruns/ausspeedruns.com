@@ -16,9 +16,9 @@ export const globals: Globals = {
       heroImage: 'ASM2022Hero.jpg',
     },
     current: {
-      fullName: 'PAX Australia 2022',
-      preferredName: 'PAX 2022',
-      shortName: 'PAX2022',
+      fullName: 'AusSpeedruns At PAX Australia 2022',
+      preferredName: 'ASAP 2022',
+      shortName: 'ASAP2022',
       website: "https://aus.paxsite.com",
       dates: "October 7 - 9, 2022",
       charity: {

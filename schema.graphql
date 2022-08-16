@@ -916,7 +916,7 @@ type Event {
   acceptingSubmissions: Boolean
   logo: AzureStorageImageFieldOutput
   pressKit: AzureStorageFileFieldOutput
-  submissionInstructions: String
+  submissionInstructions: Event_submissionInstructions_Document
   tickets(
     where: TicketWhereInput! = {}
     orderBy: [TicketOrderByInput!]! = []
@@ -943,6 +943,7 @@ type Event {
     skip: Int! = 0
   ): [Incentive!]
   donationIncentivesCount(where: IncentiveWhereInput! = {}): Int
+  postEventPage: Event_postEventPage_Document
 }
 
 interface AzureStorageImageFieldOutput {
@@ -967,6 +968,14 @@ interface AzureStorageFileFieldOutput {
   filesize: Int!
   ref: String!
   url: String!
+}
+
+type Event_submissionInstructions_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+type Event_postEventPage_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
 }
 
 input EventWhereUniqueInput {
@@ -1005,7 +1014,6 @@ input EventWhereInput {
   submissions: SubmissionManyRelationFilter
   runs: RunManyRelationFilter
   acceptingSubmissions: BooleanFilter
-  submissionInstructions: StringFilter
   tickets: TicketManyRelationFilter
   acceptingTickets: BooleanFilter
   scheduleReleased: BooleanFilter
@@ -1042,7 +1050,6 @@ input EventOrderByInput {
   eventTimezone: OrderDirection
   raised: OrderDirection
   acceptingSubmissions: OrderDirection
-  submissionInstructions: OrderDirection
   acceptingTickets: OrderDirection
   scheduleReleased: OrderDirection
   acceptingVolunteers: OrderDirection
@@ -1062,7 +1069,7 @@ input EventUpdateInput {
   acceptingSubmissions: Boolean
   logo: AzureStorageImageFieldInput
   pressKit: AzureStorageFileFieldInput
-  submissionInstructions: String
+  submissionInstructions: JSON
   tickets: TicketRelateToManyForUpdateInput
   acceptingTickets: Boolean
   scheduleReleased: Boolean
@@ -1071,6 +1078,7 @@ input EventUpdateInput {
   acceptingShirts: Boolean
   volunteer: VolunteerRelateToManyForUpdateInput
   donationIncentives: IncentiveRelateToManyForUpdateInput
+  postEventPage: JSON
 }
 
 input AzureStorageImageFieldInput {
@@ -1112,7 +1120,7 @@ input EventCreateInput {
   acceptingSubmissions: Boolean
   logo: AzureStorageImageFieldInput
   pressKit: AzureStorageFileFieldInput
-  submissionInstructions: String
+  submissionInstructions: JSON
   tickets: TicketRelateToManyForCreateInput
   acceptingTickets: Boolean
   scheduleReleased: Boolean
@@ -1121,6 +1129,7 @@ input EventCreateInput {
   acceptingShirts: Boolean
   volunteer: VolunteerRelateToManyForCreateInput
   donationIncentives: IncentiveRelateToManyForCreateInput
+  postEventPage: JSON
 }
 
 input IncentiveRelateToManyForCreateInput {

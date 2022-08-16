@@ -17,6 +17,7 @@ import {
 	Select,
 	TextField,
 } from '@mui/material';
+import { addDays, differenceInDays } from 'date-fns';
 import React, { useState } from 'react';
 import { useMutation } from 'urql';
 
@@ -30,7 +31,13 @@ type RaceLiterals = 'no' | 'solo' | 'only';
 type SubmissionEditProps = {
 	open: boolean;
 	submission: UserPageData['submissions'][0];
-	event: { acceptingSubmissions: boolean; acceptingBackups: boolean };
+	event: {
+		acceptingSubmissions: boolean;
+		acceptingBackups: boolean;
+		startDate: string;
+		endDate: string;
+		eventTimezone: string;
+	};
 	handleClose: () => void;
 };
 
@@ -48,6 +55,8 @@ const SubmissionEditDialog = ({ open, submission, handleClose, event }: Submissi
 	const [video, setVideo] = useState(submission.video);
 	const [ageRating, setAgeRating] = useState(submission.ageRating);
 	const [donationIncentive, setDonationIncentive] = useState(submission.donationIncentive);
+	const [specialRequirements, setSpecialRequirements] = useState(submission.specialReqs);
+	const [availableDates, setAvailableDates] = useState<boolean[]>(submission.availability);
 
 	const closeDeleteDialog = () => {
 		setDeleteDialog(false);
@@ -67,6 +76,8 @@ const SubmissionEditDialog = ({ open, submission, handleClose, event }: Submissi
 			$racer: String!
 			$coop: Boolean!
 			$video: String
+			$specialReqs: String!
+			$willingBackup: Boolean!
 		) {
 			updateSubmission(
 				where: { id: $submissionID }
@@ -81,6 +92,8 @@ const SubmissionEditDialog = ({ open, submission, handleClose, event }: Submissi
 					racer: $racer
 					coop: $coop
 					video: $video
+					specialReqs: $specialReqs
+					willingBackup: $willingBackup
 				}
 			) {
 				__typename
@@ -120,6 +133,8 @@ const SubmissionEditDialog = ({ open, submission, handleClose, event }: Submissi
 			racer,
 			coop,
 			video,
+			specialReqs: specialRequirements,
+			willingBackup: backup,
 		}).then((result) => {
 			if (!result.error) {
 				handleClose();
@@ -147,18 +162,43 @@ const SubmissionEditDialog = ({ open, submission, handleClose, event }: Submissi
 		deleteSubmission({ submissionID: submission.id });
 	};
 
+	const eventLength = differenceInDays(new Date(event.endDate), new Date(event.startDate)) + 1;
+
+	let dateCheckboxes = [];
+	for (let i = 0; i < eventLength; i++) {
+		const date = addDays(new Date(event.startDate), i);
+		dateCheckboxes.push(
+			<FormControlLabel
+				key={i}
+				control={
+					<Checkbox
+						onChange={(e) => {
+							const newDates = availableDates;
+							newDates[i] = e.target.checked;
+							setAvailableDates(newDates);
+						}}
+						checked={availableDates[i]}
+					/>
+				}
+				label={date.toLocaleDateString('en-AU', {
+					weekday: 'long',
+					day: '2-digit',
+					month: '2-digit',
+					year: 'numeric',
+					timeZone: event.eventTimezone || 'Australia/Melbourne',
+				})}
+			/>
+		);
+	}
+
 	return (
 		<Dialog onClose={handleClose} open={open}>
 			<DialogTitle>
 				Edit {submission.game} - {submission.category}
 			</DialogTitle>
 			<DialogContent className={styles.content} style={{ paddingTop: 8 }}>
-				{event.acceptingBackups && (
-					<FormControlLabel
-						control={<Checkbox onChange={(e) => setBackup(e.target.checked)} checked={backup} />}
-						label="Willing to be backup?"
-					/>
-				)}
+				<h3>Basic Run Info</h3>
+
 				<TextField
 					disabled={!event.acceptingSubmissions}
 					label="Game"
@@ -185,18 +225,6 @@ const SubmissionEditDialog = ({ open, submission, handleClose, event }: Submissi
 					value={platform}
 					onChange={(e) => setPlatform(e.target.value)}
 				/>
-				<TextField
-					disabled={!event.acceptingSubmissions}
-					label="Video"
-					value={video}
-					onChange={(e) => setVideo(e.target.value)}
-				/>
-				<TextField
-					disabled={!event.acceptingSubmissions}
-					label="Donation Incentive"
-					value={donationIncentive}
-					onChange={(e) => setDonationIncentive(e.target.value)}
-				/>
 				<FormControl fullWidth disabled={!event.acceptingSubmissions}>
 					<InputLabel id="age-rating-label">Age Rating</InputLabel>
 					<Select
@@ -217,7 +245,24 @@ const SubmissionEditDialog = ({ open, submission, handleClose, event }: Submissi
 						</a>
 					</FormHelperText>
 				</FormControl>
+				<h3>Run misc</h3>
+				<TextField
+					disabled={!event.acceptingSubmissions}
+					label="Donation Incentive"
+					value={donationIncentive}
+					onChange={(e) => setDonationIncentive(e.target.value)}
+					inputProps={{ maxLength: 300 }}
+				/>
+				<TextField
+					disabled={!event.acceptingSubmissions}
+					label="Special Requirements"
+					value={specialRequirements}
+					onChange={(e) => setSpecialRequirements(e.target.value)}
+					inputProps={{ maxLength: 300 }}
+					helperText="This involves any: mods, downpatches, software, controllers (if a PC game) and any other requirements."
+				/>
 
+				<h3>Race/Co-op Info</h3>
 				<FormControlLabel
 					disabled={!event.acceptingSubmissions}
 					control={<Checkbox onChange={(e) => setRace(e.target.checked ? 'solo' : 'no')} checked={race !== 'no'} />}
@@ -251,6 +296,21 @@ const SubmissionEditDialog = ({ open, submission, handleClose, event }: Submissi
 						/>
 					</>
 				)}
+				<h3>Availability</h3>
+				{dateCheckboxes}
+				<h3>Final run info</h3>
+				<TextField
+					disabled={!event.acceptingSubmissions}
+					label="Video"
+					value={video}
+					onChange={(e) => setVideo(e.target.value)}
+				/>
+				{event.acceptingBackups && (
+					<FormControlLabel
+						control={<Checkbox onChange={(e) => setBackup(e.target.checked)} checked={backup} />}
+						label="Willing to be backup?"
+					/>
+				)}
 			</DialogContent>
 			<DialogActions style={{ justifyContent: 'space-between' }}>
 				<Button
@@ -265,7 +325,7 @@ const SubmissionEditDialog = ({ open, submission, handleClose, event }: Submissi
 					disabled={!event.acceptingSubmissions && !event.acceptingBackups}
 					color="primary"
 					variant="contained"
-					onClick={event.acceptingBackups ? BackupSubmission : UpdateSubmission}
+					onClick={event.acceptingBackups && !event.acceptingSubmissions ? BackupSubmission : UpdateSubmission}
 				>
 					Update
 				</Button>

@@ -1,6 +1,6 @@
 # AusSpeedruns website
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+> Website that runs ausspeedruns.com and it's back-end CMS
 
 ## Getting Started
 
@@ -12,28 +12,3 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to see the website.
 Open [http://localhost:8000](http://localhost:8000) to access the KeystoneJS admin UI.
-
-## TODO (Due March 18th)
-
-- Emailing
-  - Verification
-  - Password reset
-  - Mailing list
-- About us page
-- Testing
-- ASM2022 Press kit
-- Use more HTML semantic tags
-
-### Closer to ASM2022
-
-- Ticket purchasing
-- Donations
-  - Incentives
-
-## Nice to have
-
-- Previous events page
-  - Runs
-  - Schedule
-  - Photos
-  - General Information about the event

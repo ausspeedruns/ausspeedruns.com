@@ -75,8 +75,8 @@ export const Submission: Lists.Submission = list({
 			],
 			defaultValue: "m_or_lower"
 		}),
-		donationIncentive: text({ validation: { length: { max: 100 } } }),
-		specialReqs: text({ validation: { length: { max: 100 } } }),
+		donationIncentive: text({ validation: { length: { max: 300 } } }),
+		specialReqs: text({ validation: { length: { max: 300 } } }),
 		availability: json({ db: { map: 'availability_json' } }),
 		race: select({
 			type: 'enum',

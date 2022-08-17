@@ -47,7 +47,7 @@ jobs:
         name: Build NextJS and push
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: ./main/
           push: true
           tags: ausrunswebsitecontainersregistry/ausruns/next:latest
           cache-from: type=registry,ref=ausrunswebsitecontainersregistry/ausruns/next:latest
@@ -61,7 +61,7 @@ jobs:
         name: Build KeystoneJS and push
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: ./main/
           push: true
           tags: ausrunswebsitecontainersregistry/ausruns/keystone:latest
           file: "Dockerfile.keystone"

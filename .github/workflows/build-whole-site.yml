@@ -32,10 +32,10 @@ jobs:
           cache-from: type=registry,ref=ausrunswebsitecontainersregistry/ausruns/next:latest
           cache-to: type=inline
           secrets: |
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
-            SESSION_SECRET=${{ secrets.SESSION_SECRET }}
-            API_KEY=${{ secrets.API_KEY }}
-            NEXT_PUBLIC_STRIPE_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_STRIPE_PUBLIC_KEY }}
+            "DATABASE_URL=${{ secrets.DATABASE_URL }}"
+            "SESSION_SECRET=${{ secrets.SESSION_SECRET }}"
+            "API_KEY=${{ secrets.API_KEY }}"
+            "NEXT_PUBLIC_STRIPE_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_STRIPE_PUBLIC_KEY }}"
       -
         name: Build KeystoneJS and push
         uses: docker/build-push-action@v3
@@ -46,6 +46,6 @@ jobs:
           cache-from: type=registry,ref=ausrunswebsitecontainersregistry/ausruns/keystone:latest
           cache-to: type=inline
           secrets: |
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
-            SESSION_SECRET=${{ secrets.SESSION_SECRET }}
+            "DATABASE_URL=${{ secrets.DATABASE_URL }}"
+            "SESSION_SECRET=${{ secrets.SESSION_SECRET }}"
 

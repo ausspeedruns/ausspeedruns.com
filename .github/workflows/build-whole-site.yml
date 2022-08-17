@@ -27,7 +27,9 @@ jobs:
           token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
       -
         name: Move sponsors to right place
-        run: mv asr-private/sponsors styles/img/
+        run: |
+          ls
+          mv asr-private/sponsors styles/img/
       -
         name: Set up Node
         uses: actions/setup-node@v3

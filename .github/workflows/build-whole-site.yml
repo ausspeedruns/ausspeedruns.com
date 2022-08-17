@@ -49,8 +49,8 @@ jobs:
         with:
           context: ./main/
           push: true
-          tags: ausrunswebsitecontainersregistry/ausruns/next:latest
-          cache-from: type=registry,ref=ausrunswebsitecontainersregistry/ausruns/next:latest
+          tags: ausrunswebsitecontainersregistry.azurecr.io/ausruns/next:latest
+          cache-from: type=registry,ref=ausrunswebsitecontainersregistry.azurecr.io/ausruns/next:latest
           cache-to: type=inline
           build-args: |
             "DATABASE_URL=${{ secrets.DATABASE_URL }}"
@@ -63,9 +63,9 @@ jobs:
         with:
           context: ./main/
           push: true
-          tags: ausrunswebsitecontainersregistry/ausruns/keystone:latest
+          tags: ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest
           file: "Dockerfile.keystone"
-          cache-from: type=registry,ref=ausrunswebsitecontainersregistry/ausruns/keystone:latest
+          cache-from: type=registry,ref=ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest
           cache-to: type=inline
           build-args: |
             "DATABASE_URL=${{ secrets.DATABASE_URL }}"

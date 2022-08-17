@@ -6,7 +6,7 @@ name: Build whole site
 on:
   push:
     branches:
-      - cicd-testing
+      - main
   workflow_dispatch:
 
 jobs:

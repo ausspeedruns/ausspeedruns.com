@@ -12,14 +12,20 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-ARG SESSION_SECRET
-ENV SESSION_SECRET ${SESSION_SECRET}
+# ARG SESSION_SECRET
+# ENV SESSION_SECRET ${SESSION_SECRET}
 
-ARG DATABASE_URL
-ENV DATABASE_URL ${DATABASE_URL}
+# ARG DATABASE_URL
+# ENV DATABASE_URL ${DATABASE_URL}
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN --mount=type=secret,id=SESSION_SECRET \
+  --mount=type=secret,id=DATABASE_URL \
+   export SESSION_SECRET=$(cat /run/secrets/SESSION_SECRET) && \
+   export DATABASE_URL=$(cat /run/secrets/DATABASE_URL)
+
 RUN npx keystone postinstall --fix
 RUN npm run build:keystone
 

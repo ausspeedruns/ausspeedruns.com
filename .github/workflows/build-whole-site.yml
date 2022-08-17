@@ -64,7 +64,7 @@ jobs:
           context: ./main/
           push: true
           tags: ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest
-          file: "Dockerfile.keystone"
+          file: "./main/Dockerfile.keystone"
           cache-from: type=registry,ref=ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest
           cache-to: type=inline
           build-args: |
@@ -72,5 +72,8 @@ jobs:
             "SESSION_SECRET=${{ secrets.SESSION_SECRET }}"
       -
         name: Update Prisma
+        working-directory: ./main
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npx keystone prisma migrate deploy
 

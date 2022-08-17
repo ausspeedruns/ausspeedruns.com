@@ -70,10 +70,4 @@ jobs:
           build-args: |
             "DATABASE_URL=${{ secrets.DATABASE_URL }}"
             "SESSION_SECRET=${{ secrets.SESSION_SECRET }}"
-      -
-        name: Update Prisma
-        working-directory: ./main
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: npx keystone prisma migrate deploy
 

@@ -14,6 +14,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
+        name: Checkout public
+        uses: actions/checkout@v3
+        with:
+          path: main
+      -
+        name: Checkout private
+        uses: actions/checkout@v3
+        with:
+          repository: ausspeedruns/ausspeedruns.com-private
+          path: asr-private
+          token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
+      -
+        name: Move sponsors to right place
+        run: mv asr-private/sponsors styles/img/
+      -
+        name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       -
@@ -27,6 +47,7 @@ jobs:
         name: Build NextJS and push
         uses: docker/build-push-action@v3
         with:
+          context: .
           push: true
           tags: ausrunswebsitecontainersregistry/ausruns/next:latest
           cache-from: type=registry,ref=ausrunswebsitecontainersregistry/ausruns/next:latest
@@ -40,6 +61,7 @@ jobs:
         name: Build KeystoneJS and push
         uses: docker/build-push-action@v3
         with:
+          context: .
           push: true
           tags: ausrunswebsitecontainersregistry/ausruns/keystone:latest
           file: "Dockerfile.keystone"
@@ -48,4 +70,7 @@ jobs:
           build-args: |
             "DATABASE_URL=${{ secrets.DATABASE_URL }}"
             "SESSION_SECRET=${{ secrets.SESSION_SECRET }}"
+      -
+        name: Update Prisma
+        run: npx keystone prisma migrate deploy
 

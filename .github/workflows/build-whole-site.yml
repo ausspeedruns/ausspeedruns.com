@@ -31,7 +31,7 @@ jobs:
           tags: ausrunswebsitecontainersregistry/ausruns/next:latest
           cache-from: type=registry,ref=ausrunswebsitecontainersregistry/ausruns/next:latest
           cache-to: type=inline
-          secrets: |
+          build-args: |
             "DATABASE_URL=${{ secrets.DATABASE_URL }}"
             "SESSION_SECRET=${{ secrets.SESSION_SECRET }}"
             "API_KEY=${{ secrets.API_KEY }}"
@@ -45,7 +45,7 @@ jobs:
           file: "Dockerfile.keystone"
           cache-from: type=registry,ref=ausrunswebsitecontainersregistry/ausruns/keystone:latest
           cache-to: type=inline
-          secrets: |
+          build-args: |
             "DATABASE_URL=${{ secrets.DATABASE_URL }}"
             "SESSION_SECRET=${{ secrets.SESSION_SECRET }}"
 

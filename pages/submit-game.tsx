@@ -370,6 +370,7 @@ export default function SubmitGamePage() {
 								onChange={(e) => setGame(e.target.value)}
 								label="Game Name"
 								autoComplete="game"
+								helperText="Do not use uncommon acronyms."
 								inputProps={{ maxLength: 100 }}
 								required
 							/>

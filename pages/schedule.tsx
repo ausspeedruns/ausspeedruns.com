@@ -5,22 +5,25 @@ import Footer from '../components/Footer/Footer';
 import Navbar from '../components/Navbar/Navbar';
 import styles from '../styles/Schedule.module.scss';
 
-import ASM2022Logo from '../styles/img/ASM2022-Logo.svg';
+import ASAP2022Logo from '../styles/img/PAX2022 Logo WhiteBG.png';
+
+const aspectRatio = ASAP2022Logo.width / ASAP2022Logo.height;
+const imageHeight = 150;
 
 export default function Schedule() {
 	return (
 		<div>
 			<Head>
-				<title>ASM2022 Schedule - AusSpeedruns</title>
-				<DiscordEmbed title="ASM2022 Schedule" />
+				<title>ASAP2022 Schedule - AusSpeedruns</title>
+				<DiscordEmbed title="ASAP2022 Schedule" />
 			</Head>
 			<Navbar />
 			<main className={styles.content}>
-				<Image src={ASM2022Logo} width={600} height={150} title="ASM2022 Logo" alt="ASM2022 Logo" />
-				<h1>ASM2022 Schedule</h1>
-				<a href="https://horaro.org/asm2022/schedule" target="_blank" rel="noreferrer">View externally on Horaro</a>
+				<Image src={ASAP2022Logo} width={aspectRatio * imageHeight} height={imageHeight} title="ASAP2022 Logo" alt="ASAP2022 Logo" />
+				<h1>ASAP2022 Schedule</h1>
+				<a href="https://horaro.org/asap2022/schedule" target="_blank" rel="noreferrer">View externally on Horaro</a>
 				<div className={styles.iframeContainer}>
-					<iframe src="https://horaro.org/asm2022/schedule" />
+					<iframe src="https://horaro.org/asap2022/schedule" />
 				</div>
 			</main>
 			<Footer />

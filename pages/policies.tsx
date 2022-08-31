@@ -20,7 +20,7 @@ const PoliciesPage = () => {
 					<a
 						target="_blank"
 						rel="noreferrer"
-						href="https://ausspeedruns.sharepoint.com/:w:/s/Main/EWHKLtTIsUROj6JbarbggWgBZTwBVK-FCRPNH19vf4dJAA?rtime=UxFMYhYh2kg"
+						href="http://policies.ausspeedruns.com/"
 					>
 						External link to Sharepoint containing all policies.
 					</a>

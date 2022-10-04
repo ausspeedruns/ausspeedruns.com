@@ -56,7 +56,7 @@ const Heroblock = ({ event }: HeroblockProps) => {
 	};
 
 	return (
-		<div className={styles.heroblock} style={{backgroundImage: `url(${require(`../../styles/img/${event.heroImage}`).default.src}`}}>
+		<section className={styles.heroblock} style={{backgroundImage: `url(${require(`../../styles/img/${event.heroImage}`).default.src}`}}>
 			<div className={`${styles.content} content`}>
 				{showVideoBlock && <TwitchVideoEmbed channel="ausspeedruns" parent={window.location.hostname} />}
 				<div className={styles.ctaBlock}>
@@ -97,7 +97,7 @@ const Heroblock = ({ event }: HeroblockProps) => {
 					<Image src={require(`../../styles/img/sponsors/GameOnCancer/GoCCCWhite.svg`).default} alt="Game on Cancer Logo" />
 				</div>
 			</div>
-		</div>
+		</section>
 	);
 };
 

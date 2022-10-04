@@ -17,7 +17,7 @@ export const globals: Globals = {
     },
     current: {
       fullName: 'AusSpeedruns At PAX Australia 2022',
-      preferredName: 'ASAP 2022',
+      preferredName: 'ASAP2022',
       shortName: 'ASAP2022',
       website: "https://aus.paxsite.com",
       dates: "October 7 - 9, 2022",

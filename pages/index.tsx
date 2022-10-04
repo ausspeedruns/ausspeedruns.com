@@ -20,7 +20,7 @@ import HyperX from '../styles/img/sponsors/HyperX/HyperX Solid White.svg';
 import Landfall from '../styles/img/sponsors/Landfall.png';
 
 export default function Home() {
-	const eventLive = false;
+	const eventLive = true;
 	const {
 		events: { previous, current, next },
 	} = globals;
@@ -33,10 +33,9 @@ export default function Home() {
 			<Navbar isLive={eventLive} />
 			<main>
 				{!eventLive && <Heroblock event={current} />}
+				{eventLive && <EventLive event={current.preferredName} />}
 				<LastEventBlock event={previous} />
-				{/* {eventLive && <EventLive event={current.preferredName} />} */}
-				{/* <EventDetails event={current} /> */}
-				<div className={styles.archive}>
+				<section className={styles.archive}>
 					<div className={styles.content}>
 						<div className={styles.filler}></div>
 						<div className={styles.text}>
@@ -51,8 +50,8 @@ export default function Home() {
 							/>
 						</div>
 					</div>
-				</div>
-				<div className={styles.sponsors}>
+				</section>
+				<section className={styles.sponsors}>
 					<div className={styles.main}>
 						{/* <div className={styles.sponsor}>
 							<span>Charity</span>
@@ -69,7 +68,7 @@ export default function Home() {
 							<Image src={Landfall} width={200} height={153} alt="Landfall Games Logo" />
 						</div>
 					</div>
-				</div>
+				</section>
 				<TileGroup
 					tiles={[
 						{

@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { War as WarData } from '../../schema/incentives';
-import styles from '../../styles/Event.incentives.module.scss';
+import styles from '../../styles/Event.incentives.ASAP2022.module.scss';
 import { BaseIncentiveData } from './IncentiveType';
 
 export interface WarProps extends BaseIncentiveData, WarData {

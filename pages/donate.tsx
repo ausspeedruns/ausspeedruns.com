@@ -13,7 +13,7 @@ import { Incentive } from '../components/Incentives/Incentive';
 
 const INCENTIVES_QUERY = gql`
 	query {
-		event(where: { shortname: "ASM2022" }) {
+		event(where: { shortname: "ASAP2022" }) {
 			donationIncentives(take: 3, where: { active: { equals: true } }) {
 				title
 				type
@@ -47,10 +47,10 @@ const DonatePage = () => {
 				<title>Donate - AusSpeedruns</title>
 				<DiscordEmbed title="Donate - AusSpeedruns" description="Donate to ASM2022!" pageUrl="/donate" />
 			</Head>
-			<Navbar />
+			<Navbar isLive/>
 			<main className={styles.content}>
 				<h2 className={styles.title}>Donate</h2>
-				<div className={styles.incentives}>
+				<section className={styles.incentives}>
 					<h2>
 						Be sure to mention which donation challenge you want your money to go towards in the donation message!
 					</h2>
@@ -70,38 +70,38 @@ const DonatePage = () => {
 					<div className={styles.link}>
 						<Button
 							actionText="Check out more challenges!"
-							link="/ASM2022/challenges"
+							link="/ASAP2022/challenges"
 							colorScheme="secondary inverted"
 						/>
 					</div>
-				</div>
-				<div className={styles.prizes}>
+				</section>
+				<section className={styles.prizes}>
 					<h2>Prizes</h2>
 					<div className={styles.prizeList}>
-						<div className={styles.prize}>
+						{/* <div className={styles.prize}>
 							<span>2 to giveaway!</span>
 							<h2>HyperX Cloud II Headset</h2>
 							<h3>Minimum $40 Donation</h3>
 							<span>AUS Only</span>
-						</div>
+						</div> */}
 						<div className={styles.prize}>
-							<span>2 to giveaway!</span>
-							<h2>HyperX Cloud Earbuds</h2>
-							<h3>Minimum $20 Donation</h3>
+							<span>5 to giveaway!</span>
+							<h2>HyperX Cloud Mix Earbuds</h2>
+							<h3>Minimum $25 Donation</h3>
 							<span>AUS Only</span>
 						</div>
-						<div className={styles.prize}>
+						{/* <div className={styles.prize}>
 							<span>8 to giveaway!</span>
 							<h2>Landfall Games Bundle</h2>
 							<h3>Minimum $10 Donation</h3>
 							<span>Totally Accurate Battle Simulator, Clustertruck and Knightfall</span>
-						</div>
+						</div> */}
 					</div>
-				</div>
+				</section>
 				<div className={styles.donate}>
 					<Button
 						actionText="Donate"
-						link="https://tiltify.com/@ausspeedruns/aus-speedrun-marathon-2022/donate"
+						link="https://tiltify.com/@ausspeedruns/asap2022/donate"
 						target="_blank"
 						rel="noopener noreferrer"
 						iconRight={faChevronRight}

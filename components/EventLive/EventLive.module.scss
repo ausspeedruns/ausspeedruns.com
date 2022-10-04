@@ -5,10 +5,9 @@
 .eventLive {
 	color: $light-text;
 	background: $goc-main;
-	background-image: url('../../styles/img/EventLiveBackground.png');
-	background-size: contain;
+	background-image: url('../../styles/img/ASAPBackground.png');
+	background-size: cover;
 	background-position: center;
-	image-rendering: pixelated;
 	padding: 2rem;
 
 	@include breakpoint($sm-zero-only) {
@@ -74,7 +73,7 @@
 			flex-direction: column;
 
 			h4 {
-				color: $goc-orange;
+				color: $pax-main;
 				font-weight: bold;
 				font-size: 1.5rem;
 				margin-bottom: -0.8rem;
@@ -131,7 +130,7 @@
 
 		.twitchVideo,
 		.twitchChat {
-			border: 8px solid $goc-orange;
+			border: 8px solid $pax-main;
 			box-sizing: border-box;
 		}
 
@@ -166,42 +165,14 @@
 		}
 	}
 
-	.edgeImageStart,
-	.edgeImageEnd {
-		width: 10%;
-		background-size: contain;
-		background-repeat: no-repeat;
-		image-rendering: pixelated;
-		background-position: right center;
-
-		@include breakpoint($sm-zero-only) {
-			width: 0%;
-		}
-	}
-
-	// .edgeImageStart{
-	// }
-
-	.edgeImageEnd {
-		transform: scaleX(-1);
-	}
-
 	.incentive {
 		.liveContent {
-			background-color: $goc-orange;
+			background-color: #000;
+			border: 2px solid $pax-main;
 			// width: 50%;
 
 			@include breakpoint($sm-zero-only) {
 				width: 100%;
-			}
-		}
-
-		.edgeImageStart,
-		.edgeImageEnd {
-			background-image: url('../../styles/img/ChallengesBGEDGE.png');
-
-			@include breakpoint($sm-zero-only) {
-				background-image: none;
 			}
 		}
 
@@ -210,7 +181,7 @@
 			margin-top: 10px;
 			width: 80%;
 			height: 10px;
-			background-color: $goc-main-dark;
+			background-color: $pax-main;
 		}
 	}
 
@@ -220,9 +191,10 @@
 		}
 
 		.liveContent {
-			background-color: $goc-main-dark;
+			background-color: #000;
+			border: 2px solid $pax-main;
 			font-size: 1.2rem;
-			width: 50%;
+			width: fit-content;
 			word-break: break-all;
 
 			@include breakpoint($sm-zero-only) {
@@ -248,18 +220,13 @@
 			.link {
 				margin-top: 1rem;
 
+				a {
+					margin: 0;
+				}
+
 				span {
 					margin: 0;
 				}
-			}
-		}
-
-		.edgeImageStart,
-		.edgeImageEnd {
-			background-image: url('../../styles/img/UpNextBGEDGE.png');
-
-			@include breakpoint($sm-zero-only) {
-				background-image: none;
 			}
 		}
 	}

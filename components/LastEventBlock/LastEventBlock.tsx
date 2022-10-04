@@ -13,7 +13,7 @@ type LastEventBlockProps = {
 
 const Heroblock = ({ event }: LastEventBlockProps) => {
 	return (
-		<div
+		<section
 			className={styles.lasteventblock}
 			style={{ backgroundImage: `url(${require(`../../styles/img/${event.heroImage}`).default.src}` }}
 		>
@@ -41,7 +41,7 @@ const Heroblock = ({ event }: LastEventBlockProps) => {
 					<span className={styles.total}>${event.total}</span>
 				</div>
 			</div>
-		</div>
+		</section>
 	);
 };
 

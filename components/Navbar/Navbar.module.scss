@@ -14,7 +14,9 @@
     display: flex;
     align-items: center;
     flex-flow: wrap;
-    max-width: 60%;
+    padding-left: 8rem;
+    padding-right: 8rem;
+    max-width: 2000px;
 
     @include breakpoint($sm) {
       flex-direction: column;

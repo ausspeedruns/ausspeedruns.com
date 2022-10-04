@@ -99,7 +99,7 @@ const Navbar = ({ isLive = false }: NavbarProps) => {
 							<>
 								<li>
 									{isMobile ? <FontAwesomeIcon icon={faCoins} /> : ''}
-									<Link href="/ASM2022/challenges" passHref>
+									<Link href="/ASAP2022/challenges" passHref>
 										<a className={styles.text}>Challenges</a>
 									</Link>
 								</li>

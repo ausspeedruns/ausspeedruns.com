@@ -8,13 +8,13 @@ type TileGroupProps = {
 
 const TileGroup = ({tiles} : TileGroupProps) => {
   return (
-    <div className={styles.tileGroup}>
+    <section className={styles.tileGroup}>
       <div className={`${styles.content} content`}>
-        { tiles.map( (tile, key) => 
+        { tiles.map( (tile, key) =>
           <Tile key={key} {...tile} />
         )}
       </div>
-    </div>
+    </section>
   );
 };
 

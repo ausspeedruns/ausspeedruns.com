@@ -7,8 +7,8 @@
 	flex-direction: column;
 	min-height: 100vh;
 	background: $goc-main;
-	background-image: url('./img/EventLiveBackground.png');
-	background-size: contain;
+	background-image: url('./img/ASAPBackground.png');
+	background-size: cover;
 	background-position: center;
 	image-rendering: pixelated;
 }
@@ -42,7 +42,7 @@
 		.divider {
 			margin: auto;
 			width: 90%;
-			background-color: $goc-accent;
+			background-color: $pax-main;
 			height: 5px;
 		}
 	}
@@ -71,7 +71,8 @@
 			.prize {
 				width: fit-content;
 				max-width: 300px;
-				background-color: $goc-orange;
+				background-color: #000;
+				border: 1px solid $pax-main;
 				padding: 1rem;
 
 				h3 {

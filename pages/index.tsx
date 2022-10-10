@@ -20,7 +20,7 @@ import HyperX from '../styles/img/sponsors/HyperX/HyperX Solid White.svg';
 import Landfall from '../styles/img/sponsors/Landfall.png';
 
 export default function Home() {
-	const eventLive = true;
+	const eventLive = false;
 	const {
 		events: { previous, current, next },
 	} = globals;
@@ -32,8 +32,9 @@ export default function Home() {
 			</Head>
 			<Navbar isLive={eventLive} />
 			<main>
-				{!eventLive && <Heroblock event={current} />}
-				{eventLive && <EventLive event={current.preferredName} />}
+				{/* {!eventLive && <Heroblock event={current} />}
+				{eventLive && <EventLive event={current.preferredName} />} */}
+				<LastEventBlock event={current} backgroundPos="center" />
 				<LastEventBlock event={previous} />
 				<section className={styles.archive}>
 					<div className={styles.content}>

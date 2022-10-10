@@ -14,7 +14,7 @@ const PoliciesPage = () => {
 				<title>ASM2022 Prizes - AusSpeedruns</title>
 				<DiscordEmbed title="ASM2022 Prizes - AusSpeedruns" description="AusSpeedruns's Prizes" pageUrl="/prizes" />
 			</Head>
-			<Navbar isLive/>
+			<Navbar />
 			<main className={styles.content}>
 				<h2>Prizes</h2>
 				<p>

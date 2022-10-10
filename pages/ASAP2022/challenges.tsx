@@ -59,7 +59,7 @@ const Challenges = () => {
 				<title>ASAP2022 Donation Challenges - AusSpeedruns</title>
 				<DiscordEmbed title="ASAP2022 Donation Challenges - AusSpeedruns" pageUrl="/ASAP2022/challenges" />
 			</Head>
-			<Navbar isLive />
+			<Navbar />
 			<main className={styles.content}>
 				<h2>Donation Challenges</h2>
 				<div className={styles.instructions}>

@@ -21,6 +21,7 @@ export const globals: Globals = {
       shortName: 'ASAP2022',
       website: "https://aus.paxsite.com",
       dates: "October 7 - 9, 2022",
+      total: "8,162",
       charity: {
         name: "Game On Cancer"
       },

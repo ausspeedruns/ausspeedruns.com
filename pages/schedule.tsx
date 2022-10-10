@@ -17,7 +17,7 @@ export default function Schedule() {
 				<title>ASAP2022 Schedule - AusSpeedruns</title>
 				<DiscordEmbed title="ASAP2022 Schedule" />
 			</Head>
-			<Navbar isLive/>
+			<Navbar />
 			<main className={styles.content}>
 				<Image src={ASAP2022Logo} width={aspectRatio * imageHeight} height={imageHeight} title="ASAP2022 Logo" alt="ASAP2022 Logo" />
 				<h1>ASAP2022 Schedule</h1>

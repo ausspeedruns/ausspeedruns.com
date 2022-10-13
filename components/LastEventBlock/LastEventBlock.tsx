@@ -16,7 +16,7 @@ const Heroblock = ({ event, backgroundPos }: LastEventBlockProps) => {
 	return (
 		<section
 			className={styles.lasteventblock}
-			style={{ backgroundImage: `url(${require(`../../styles/img/${event.heroImage}`).default.src}`, backgroundPosition: backgroundPos }}
+			style={{ backgroundImage: `url(${require(`../../styles/img/${event.heroImage}`).default.src})`, backgroundPosition: backgroundPos }}
 		>
 			<div className={`${styles.content} content`}>
 				<div className={styles.ctaBlock}>

@@ -26,7 +26,7 @@ export const globals: Globals = {
         name: "Game On Cancer"
       },
       logo: 'PAX2022 Logo White.png',
-      heroImage: 'PAX2022Hero.png',
+      heroImage: 'PAX2022HeroPost.png',
     },
     next: {
       fullName: 'Australian Speedrun Marathon 2023',

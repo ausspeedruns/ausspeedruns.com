@@ -121,7 +121,7 @@ const Store = () => {
 		if (res.status === 200) {
 			setBankShirtData(await res.json());
 		} else {
-			console.log(res);
+			console.error(res);
 		}
 	}
 

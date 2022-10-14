@@ -4,13 +4,13 @@ import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 
-import { UserPageData } from '../../pages/user/[username]';
+import { UserPagePrivateData } from '../../pages/user/[username]';
 
 import styles from './SubmissionAccordian.module.scss';
 import SubmissionEditDialog from './SubmissionEditDialog';
 
 type SubmissionProps = {
-	submission: UserPageData['submissions'][0];
+	submission: UserPagePrivateData['user']['submissions'][0];
 	event: {
 		acceptingSubmissions: boolean;
 		acceptingBackups: boolean;

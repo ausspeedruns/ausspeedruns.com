@@ -21,7 +21,7 @@ import { addDays, differenceInDays } from 'date-fns';
 import React, { useState } from 'react';
 import { useMutation } from 'urql';
 
-import { UserPageData } from '../../pages/user/[username]';
+import { UserPagePrivateData } from '../../pages/user/[username]';
 
 import styles from './SubmissionEditDialog.module.scss';
 
@@ -30,7 +30,7 @@ type RaceLiterals = 'no' | 'solo' | 'only';
 
 type SubmissionEditProps = {
 	open: boolean;
-	submission: UserPageData['submissions'][0];
+	submission: UserPagePrivateData['user']['submissions'][0];
 	event: {
 		acceptingSubmissions: boolean;
 		acceptingBackups: boolean;

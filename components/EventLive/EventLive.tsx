@@ -78,7 +78,7 @@ export const EventLive = (props: EventProps) => {
 		}
 	}
 
-	console.log(eventQuery.data);
+	// console.log(eventQuery.data);
 
 	const currentRunIndex = nextRunIndex - 1;
 

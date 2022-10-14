@@ -270,6 +270,15 @@ export default function ProfilePage(ssrData) {
 		query: USER_QUERY,
 		variables: { username: ssrData.username },
 	});
+	
+	const [{ data: privateDataResults }] = useQuery<UserPagePrivateData>({
+		query: USER_PRIVATE_QUERY,
+		variables: {
+			username: ssrData.username,
+			currentTime: currentTime,
+		},
+		pause: !auth.ready && (auth.ready ? !(auth.sessionData.username == ssrData.username) : true),
+	});
 
 	if (!publicDataResults) {
 		return (
@@ -284,15 +293,6 @@ export default function ProfilePage(ssrData) {
 			</ThemeProvider>
 		);
 	}
-
-	const [{ data: privateDataResults }] = useQuery<UserPagePrivateData>({
-		query: USER_PRIVATE_QUERY,
-		variables: {
-			username: ssrData.username,
-			currentTime: currentTime,
-		},
-		pause: !auth.ready && (auth.ready ? auth.sessionData.username == ssrData.username : true),
-	});
 
 	const upcomingRunsList = publicDataResults.runs.filter((run) => !run.finalTime);
 
@@ -412,8 +412,8 @@ export default function ProfilePage(ssrData) {
 					{publicDataResults.runs.map((run) => {
 						if (!run.finalTime) return;
 						return (
-							<div hidden={run.event.shortname !== allRunEvents[eventTab]}>
-								<RunCompleted key={run.id} run={run} />
+							<div key={run.id} hidden={run.event.shortname !== allRunEvents[eventTab]}>
+								<RunCompleted run={run} />
 							</div>
 						);
 					})}

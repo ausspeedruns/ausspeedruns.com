@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { gql, useQuery } from 'urql';
+import { cacheExchange, dedupExchange, fetchExchange, gql, ssrExchange, useQuery } from 'urql';
+import { initUrqlClient, withUrqlClient } from 'next-urql';
 import Head from 'next/head';
 import { Box, IconButton, Tab, Tabs, ThemeProvider } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -17,9 +18,10 @@ import RunCompleted from '../../components/RunCompleted/RunCompleted';
 import DiscordEmbed from '../../components/DiscordEmbed';
 import Ticket from '../../components/Ticket/Ticket';
 import ASMShirt from '../../components/ShirtOrder/ShirtOrder';
+import Footer from '../../components/Footer/Footer';
 
 const USER_QUERY = gql`
-	query Profile($username: String, $currentTime: DateTime) {
+	query Profile($username: String) {
 		user(where: { username: $username }) {
 			id
 			username
@@ -55,6 +57,13 @@ const USER_QUERY = gql`
 					}
 				}
 			}
+		}
+	}
+`;
+
+const USER_PRIVATE_QUERY = gql`
+	query Profile($username: String, $currentTime: DateTime) {
+		user(where: { username: $username }) {
 			submissions(where: { event: { endDate: { gt: $currentTime } } }) {
 				id
 				runner {
@@ -122,94 +131,101 @@ const USER_QUERY = gql`
 	}
 `;
 
-export type UserPageData = {
-	id: string;
-	username: string;
-	pronouns?: string;
-	state?: string;
-	discord?: string;
-	twitter?: string;
-	twitch?: string;
-	roles: {
+type UserPageData = {
+	user: {
 		id: string;
-		name: string;
-		event?: {
-			shortname: string;
-		};
-		colour: string;
-		textColour: string;
-	}[];
-	runs: {
-		id: string;
-		game: string;
-		category: string;
-		finalTime?: string;
-		platform: string;
-		twitchVOD?: string;
-		youtubeVOD?: string;
-		scheduledTime: string;
-		event: {
-			name: string;
-			shortname: string;
-			logo: {
-				url: string;
-				width: number;
-				height: number;
-			};
-		};
-	}[];
-	submissions: {
-		id: string;
-		game: string;
-		category: string;
-		platform: string;
-		estimate: string;
-		status: 'submitted' | 'accepted' | 'backup' | 'rejected';
-		donationIncentive?: string;
-		race?: string;
-		racer?: string;
-		coop?: boolean;
-		video: string;
-		ageRating?: string;
-		event: {
+		username: string;
+		pronouns?: string;
+		state?: string;
+		discord?: string;
+		twitter?: string;
+		twitch?: string;
+		roles: {
 			id: string;
 			name: string;
-			shortname: string;
-			acceptingSubmissions: boolean;
-			acceptingBackups: boolean;
-			startDate: string;
-			endDate: string;
-			eventTimezone: string;
-		};
-		runner: {
-			username: string;
-		};
-		willingBackup: boolean;
-		specialReqs: string;
-		availability: boolean[];
-	}[];
-	tickets: {
-		ticketID: string;
-		totalCost: number;
-		paid: boolean;
-		event: {
-			shortname: string;
-			logo: {
-				url: string;
-				width: number;
-				height: number;
+			event?: {
+				shortname: string;
 			};
-		};
-		numberOfTickets: number;
-		method: 'bank' | 'stripe';
-		taken: boolean;
-	}[];
-	shirts: {
-		paid: boolean;
-		size: string;
-		colour: 'blue' | 'purple';
-		shirtID: string;
-	}[];
+			colour: string;
+			textColour: string;
+		}[];
+		runs: {
+			id: string;
+			game: string;
+			category: string;
+			finalTime?: string;
+			platform: string;
+			twitchVOD?: string;
+			youtubeVOD?: string;
+			scheduledTime: string;
+			event: {
+				name: string;
+				shortname: string;
+				logo: {
+					url: string;
+					width: number;
+					height: number;
+				};
+			};
+		}[];
+	};
+};
+
+export type UserPagePrivateData = {
+	user: {
+		submissions: {
+			id: string;
+			game: string;
+			category: string;
+			platform: string;
+			estimate: string;
+			status: 'submitted' | 'accepted' | 'backup' | 'rejected';
+			donationIncentive?: string;
+			race?: string;
+			racer?: string;
+			coop?: boolean;
+			video: string;
+			ageRating?: string;
+			event: {
+				id: string;
+				name: string;
+				shortname: string;
+				acceptingSubmissions: boolean;
+				acceptingBackups: boolean;
+				startDate: string;
+				endDate: string;
+				eventTimezone: string;
+			};
+			runner: {
+				username: string;
+			};
+			willingBackup: boolean;
+			specialReqs: string;
+			availability: boolean[];
+		}[];
+		tickets: {
+			ticketID: string;
+			totalCost: number;
+			paid: boolean;
+			event: {
+				shortname: string;
+				logo: {
+					url: string;
+					width: number;
+					height: number;
+				};
+			};
+			numberOfTickets: number;
+			method: 'bank' | 'stripe';
+			taken: boolean;
+		}[];
+		shirts: {
+			paid: boolean;
+			size: string;
+			colour: 'blue' | 'purple';
+			shirtID: string;
+		}[];
+	};
 };
 
 function StateCodeToString(stateCode: string) {
@@ -237,7 +253,7 @@ function StateCodeToString(stateCode: string) {
 	}
 }
 
-export default function ProfilePage() {
+export default function ProfilePage(ssrData) {
 	const router = useRouter();
 	const auth = useAuth();
 
@@ -246,43 +262,16 @@ export default function ProfilePage() {
 	const [currentTime] = useState(new Date().toISOString());
 
 	// User inputs
-	const [userData, setUserData] = useState<UserPageData>(null);
-	const [loading, setLoading] = useState(false);
-	const [queryResult, profileQuery] = useQuery({
-		query: USER_QUERY,
-		variables: {
-			username: router.query.username,
-			currentTime: currentTime,
+	const [
+		{
+			data: { user: publicDataResults },
 		},
+	] = useQuery<UserPageData>({
+		query: USER_QUERY,
+		variables: { username: ssrData.username },
 	});
 
-	useEffect(() => {
-		setLoading(true);
-		if (!queryResult.fetching) {
-			if (queryResult.data?.user) {
-				setLoading(false);
-				setUserData(queryResult.data.user);
-			} else {
-				setLoading(false);
-			}
-		}
-	}, [queryResult]);
-
-	if (loading) {
-		return (
-			<ThemeProvider theme={theme}>
-				<Head>
-					<title>{router.query.username} - AusSpeedruns</title>
-				</Head>
-				<Navbar />
-				<div className={styles.content}>
-					<h2>Loading</h2>
-				</div>
-			</ThemeProvider>
-		);
-	}
-
-	if (!userData) {
+	if (!publicDataResults) {
 		return (
 			<ThemeProvider theme={theme}>
 				<Head>
@@ -296,30 +285,40 @@ export default function ProfilePage() {
 		);
 	}
 
-	const upcomingRunsList = userData.runs.filter((run) => !run.finalTime);
+	const [{ data: privateDataResults }] = useQuery<UserPagePrivateData>({
+		query: USER_PRIVATE_QUERY,
+		variables: {
+			username: ssrData.username,
+			currentTime: currentTime,
+		},
+		pause: !auth.ready && (auth.ready ? auth.sessionData.username == ssrData.username : true),
+	});
 
+	const upcomingRunsList = publicDataResults.runs.filter((run) => !run.finalTime);
+
+	// Get all event names for tabs
 	// Would just do [...new Set(****)] buuuuuuuut... https://stackoverflow.com/questions/33464504/using-spread-syntax-and-new-set-with-typescript
 	const allSubmissionEvents = [
-		...Array.from(new Set(userData.submissions.map((submission) => submission.event.shortname))),
+		...Array.from(new Set(privateDataResults?.user.submissions.map((submission) => submission.event.shortname))),
 	];
 	const allRunEvents = [
-		...Array.from(new Set(userData.runs.map((run) => (run.finalTime ? run.event.shortname : undefined)))),
+		...Array.from(new Set(publicDataResults.runs.map((run) => (run.finalTime ? run.event.shortname : undefined)))).filter((el) => typeof el !== 'undefined'),
 	];
 
 	return (
 		<ThemeProvider theme={theme}>
 			<Head>
-				<title>{router.query.username} - AusSpeedruns</title>
+				<title>{publicDataResults.username} - AusSpeedruns</title>
 				<DiscordEmbed
-					title={`${router.query.username}'s Profile - AusSpeedruns`}
-					pageUrl={`/user/${router.query.username}`}
+					title={`${publicDataResults.username}'s Profile - AusSpeedruns`}
+					pageUrl={`/user/${publicDataResults.username}`}
 				/>
 			</Head>
 			<Navbar />
 			<div className={styles.content}>
 				<div className={styles.profileHeader}>
-					<h1>{userData.username}</h1>
-					{auth.ready && auth.sessionData?.id === userData.id && (
+					<h1>{publicDataResults.username}</h1>
+					{auth.ready && auth.sessionData?.id === publicDataResults.id && (
 						<div>
 							<IconButton style={{ float: 'right' }} onClick={() => router.push('/user/edit-user')}>
 								<FontAwesomeIcon icon={faEdit} />
@@ -330,27 +329,27 @@ export default function ProfilePage() {
 				<hr />
 				{/* Role List */}
 				<div className={styles.roleList}>
-					{userData.roles.map((role) => {
+					{publicDataResults.roles.map((role) => {
 						return <RoleBadge key={role.id} role={role} />;
 					})}
 				</div>
 				{/* Profile Information */}
 				<div className={styles.userInfo}>
-					{userData?.state !== 'none' && (
+					{publicDataResults?.state !== 'none' && (
 						<>
 							<span>State</span>
-							<span>{StateCodeToString(userData.state)}</span>
+							<span>{StateCodeToString(publicDataResults.state)}</span>
 						</>
 					)}
-					{userData.pronouns && (
+					{publicDataResults.pronouns && (
 						<>
 							<span>Pronouns</span>
-							<span>{userData.pronouns}</span>
+							<span>{publicDataResults.pronouns}</span>
 						</>
 					)}
 				</div>
 				{/* Submissions */}
-				{userData.submissions.length > 0 && (
+				{privateDataResults?.user.submissions.length > 0 && (
 					<div className={styles.submissions}>
 						<h3>Submissions (Private)</h3>
 						<Box>
@@ -364,7 +363,7 @@ export default function ProfilePage() {
 								))}
 							</Tabs>
 						</Box>
-						{userData.submissions.map((submission) => {
+						{privateDataResults.user.submissions.map((submission) => {
 							if (submission.event.shortname !== allSubmissionEvents[submissionTab]) return;
 							return <SubmissionAccordian key={submission.id} submission={submission} event={submission.event} />;
 						})}
@@ -372,20 +371,20 @@ export default function ProfilePage() {
 				)}
 
 				{/* Tickets */}
-				{userData.tickets.length > 0 && (
+				{privateDataResults?.user.tickets.length > 0 && (
 					<div className={styles.submissions}>
 						<h3 id="tickets">Tickets (Private)</h3>
-						{userData.tickets.map((ticket) => {
+						{privateDataResults.user.tickets.map((ticket) => {
 							return <Ticket key={ticket.ticketID} ticketData={ticket} />;
 						})}
 					</div>
 				)}
 
 				{/* Tickets */}
-				{userData.tickets.length > 0 && (
+				{privateDataResults?.user.tickets.length > 0 && (
 					<div className={styles.submissions}>
 						<h3 id="shirts">Shirt Orders (Private)</h3>
-						{userData.shirts.map((shirt) => {
+						{privateDataResults.user.shirts.map((shirt) => {
 							return <ASMShirt key={shirt.shirtID} shirtData={shirt} />;
 						})}
 					</div>
@@ -400,23 +399,47 @@ export default function ProfilePage() {
 						})}
 					</div>
 				)}
-				{userData.runs.length > 0 && <hr />}
+
+				{publicDataResults.runs.length > 0 && <hr />}
+
 				{/* Runs */}
 				<div className={styles.runs}>
 					<Box>
-						<Tabs value={eventTab} onChange={(_e, newVal) => setEventTab(newVal)} aria-label="basic tabs example">
-							{allRunEvents.map((event) => {
-								if (!event) return;
-								return <Tab label={event} key={event} />;
-							})}
+						<Tabs value={eventTab} onChange={(_e, newVal) => setEventTab(newVal)}>
+							{allRunEvents.map((event) => <Tab label={event} key={event} />)}
 						</Tabs>
 					</Box>
-					{userData.runs.map((run) => {
-						if (!run.finalTime || run.event.shortname !== allRunEvents[eventTab]) return;
-						return <RunCompleted key={run.id} run={run} />;
+					{publicDataResults.runs.map((run) => {
+						if (!run.finalTime) return;
+						return (
+							<div hidden={run.event.shortname !== allRunEvents[eventTab]}>
+								<RunCompleted key={run.id} run={run} />
+							</div>
+						);
 					})}
 				</div>
 			</div>
+			<Footer />
 		</ThemeProvider>
 	);
+}
+
+export async function getServerSideProps({ params }) {
+	const ssrCache = ssrExchange({ isClient: false });
+	const client = initUrqlClient(
+		{
+			url: 'http://localhost:8000/api/graphql',
+			exchanges: [dedupExchange, cacheExchange, ssrCache, fetchExchange],
+		},
+		false
+	);
+
+	await client.query(USER_QUERY, params).toPromise();
+
+	return {
+		props: {
+			urqlState: ssrCache.extractData(),
+			username: params.username,
+		},
+	};
 }

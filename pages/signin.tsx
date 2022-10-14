@@ -40,7 +40,7 @@ export const SignInPage: React.FC = () => {
 			return;
 		}
 		setError('');
-		const result = await auth.signIn({ email, password });
+		const result = await auth.signIn({ email: email.toLowerCase(), password });
 		if (result.success) {
 			// FIXME: there's a cache issue with Urql where it's not reloading the
 			// current user properly if we do a client-side redirect here.
@@ -48,8 +48,8 @@ export const SignInPage: React.FC = () => {
 			top.location.href = '/';
 		} else if (result.success === false) {
 			// This is silly ofc but TypeScript wasn't detecting that it was false
-			setEmail('');
-			setPassword('');
+			// setEmail('');
+			// setPassword('');
 			setError(result.message);
 		}
 	};

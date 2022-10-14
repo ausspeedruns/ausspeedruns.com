@@ -13,7 +13,6 @@
 
 		.logo {
 			margin-right: 8px;
-			image-rendering: pixelated;
 
 			@include breakpoint($sm-zero-only) {
 				height: auto;

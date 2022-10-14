@@ -42,6 +42,7 @@
     "mjml": "^4.12.0",
     "nanoid": "^3.3.2",
     "next": "12.1.0",
+    "next-urql": "^4.0.0",
     "nodemailer": "^6.7.2",
     "npm-run-all": "^4.1.5",
     "react": "17.0.2",
@@ -55,7 +56,7 @@
     "sharp": "^0.30.2",
     "stripe": "^8.216.0",
     "typescript": "^4.6.2",
-    "urql": "^2.2.0",
+    "urql": "^3.0.3",
     "vanilla-cookieconsent": "^2.8.0"
   },
   "devDependencies": {

@@ -1,26 +1,26 @@
 // import '../styles/globals.css'
 import '../styles/global.scss';
 import '../styles/App.scss';
-import { createClient, Provider } from 'urql';
+import { withUrqlClient } from 'next-urql';
+import { dedupExchange, cacheExchange, fetchExchange } from '@urql/core';
 
 import { AuthProvider } from '../components/auth';
 import CookieConsent from 'react-cookie-consent';
 
-export const client = createClient({
-	url: typeof window === undefined ? 'http://localhost:8000/api/graphql' : '/api/graphql',
-});
-
-function MyApp({ Component, pageProps }) {
+function AusSpeedrunsWebsite({ Component, pageProps }) {
 	return (
-		<Provider value={client}>
-			<AuthProvider>
-				<Component {...pageProps} />
-				<CookieConsent style={{fontSize: "1.5rem"}} buttonStyle={{ background: '#CC7722', color: '#FFFFFF', fontSize: "1.5rem" }}>
-					This website uses cookies to function.
-				</CookieConsent>
-			</AuthProvider>
-		</Provider>
+		<AuthProvider>
+			<Component {...pageProps} />
+			<CookieConsent
+				style={{ fontSize: '1.5rem' }}
+				buttonStyle={{ background: '#CC7722', color: '#FFFFFF', fontSize: '1.5rem' }}
+			>
+				This website uses cookies to function.
+			</CookieConsent>
+		</AuthProvider>
 	);
 }
 
-export default MyApp;
+export default withUrqlClient((_ssrExchange, ctx) => ({
+	url: typeof window === undefined ? 'http://localhost:8000/api/graphql' : '/api/graphql',
+}))(AusSpeedrunsWebsite);

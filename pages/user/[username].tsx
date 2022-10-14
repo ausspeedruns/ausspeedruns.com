@@ -428,7 +428,7 @@ export async function getServerSideProps({ params }) {
 	const ssrCache = ssrExchange({ isClient: false });
 	const client = initUrqlClient(
 		{
-			url: 'http://localhost:8000/api/graphql',
+			url: process.env.NODE_ENV === 'production' ? 'https://keystone.ausspeedruns.com/api/graphql' : 'http://localhost:8000/api/graphql',
 			exchanges: [dedupExchange, cacheExchange, ssrCache, fetchExchange],
 		},
 		false

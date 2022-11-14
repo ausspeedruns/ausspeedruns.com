@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { InferGetStaticPropsType } from 'next';
+import React from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 
-import { query } from '.keystone/api';
 import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
 import styles from '../styles/Blog.module.scss';
-import { useAuth } from '../components/auth';
-import { useQuery } from 'urql';
-import { gql } from '@keystone-6/core';
+import { useQuery, gql } from 'urql';
 import DiscordEmbed from '../components/DiscordEmbed';
 
 type Post = {

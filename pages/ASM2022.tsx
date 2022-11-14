@@ -2,8 +2,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import { gql } from '@keystone-6/core';
-import { useQuery } from 'urql';
+import { useQuery, gql } from 'urql';
 import { faArrowRight, faCalendar, faPerson, faShirt, faTicket } from '@fortawesome/free-solid-svg-icons';
 
 import styles from '../styles/Event.ASM2022.module.scss';

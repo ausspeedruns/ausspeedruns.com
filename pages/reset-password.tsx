@@ -9,8 +9,7 @@ import Navbar from '../components/Navbar/Navbar';
 import Head from 'next/head';
 import { theme } from '../components/mui-theme';
 import DiscordEmbed from '../components/DiscordEmbed';
-import { useMutation } from 'urql';
-import { gql } from '@keystone-6/core';
+import { useMutation, gql } from 'urql';
 
 export const ResetPasswordPage: React.FC = () => {
 	const [email, setEmail] = useState('');

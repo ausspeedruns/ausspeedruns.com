@@ -3,8 +3,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { loadStripe } from '@stripe/stripe-js';
 import { Box, Button, Skeleton, ThemeProvider, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { UseMutationResponse, useQuery } from 'urql';
-import { gql } from '@keystone-6/core';
+import { UseMutationResponse, useQuery, gql } from 'urql';
 
 import styles from '../styles/Store.module.scss';
 import Navbar from '../components/Navbar/Navbar';

@@ -4,8 +4,7 @@ import Head from 'next/head';
 import styles from '../styles/PressKit.module.scss';
 import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
-import { useQuery } from 'urql';
-import { gql } from '@keystone-6/core';
+import { useQuery, gql } from 'urql';
 import DiscordEmbed from '../components/DiscordEmbed';
 
 const PressKit = () => {

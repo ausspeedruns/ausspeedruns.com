@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useMutation, useQuery } from 'urql';
-import { gql } from '@keystone-6/core';
+import { useMutation, useQuery, gql } from 'urql';
 
 import { theme } from '../../../components/mui-theme';
 import Navbar from '../../../components/Navbar/Navbar';
-import { Button, ThemeProvider } from '@mui/material';
+import { ThemeProvider } from '@mui/material';
 import styles from '../../../styles/User.Verification.code.module.scss';
 import { useAuth } from '../../../components/auth';
 
@@ -17,7 +16,7 @@ export default function Verification() {
 	const [verificationResults, requery] = useQuery({
 		query: gql`
 			query Verify($code: String) {
-				verification(where: { code: $code }) {
+				accountVerification(where: { code: $code }) {
 					__typename
 				}
 			}

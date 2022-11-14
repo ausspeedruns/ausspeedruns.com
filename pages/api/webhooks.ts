@@ -9,7 +9,7 @@ const urqlClient = createClient({
   url: process.env.KEYSTONE_URL,
 });
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2020-08-27' });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2022-08-01' });
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 

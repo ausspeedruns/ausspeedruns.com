@@ -7,7 +7,6 @@ import {
 	// faFacebook,
 } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
 import styles from './Footer.module.scss';
 import { globals } from '../../globals';
 import Link from 'next/link';
@@ -15,25 +14,25 @@ import Link from 'next/link';
 interface FooterProps {
 	className?: string;
 	hideAcknowledgement?: boolean;
+	style?: React.CSSProperties;
 }
 
 const Footer = (props: FooterProps) => {
 	return (
-		<div className={props.className}>
+		<div className={props.className} style={props.style}>
 			{!props.hideAcknowledgement && (
 				<div className={styles.acknowledgement}>
 					<div className="content">
 						<p>
-							In the spirit of reconciliation, AusSpeedruns acknowledges the Traditional Custodians of
-							country throughout Australia and their connections to land, sea and community. We pay our respect to their
-							elders past and present and extend that respect to all Aboriginal and Torres Strait Islander peoples
-							today.
+							In the spirit of reconciliation, AusSpeedruns acknowledges the Traditional Custodians of country
+							throughout Australia and their connections to land, sea and community. We pay our respect to their elders
+							past and present and extend that respect to all Aboriginal and Torres Strait Islander peoples today.
 						</p>
 					</div>
 				</div>
 			)}
 			<div className={styles.footer}>
-        <div className={`content ${styles.content}`}>
+				<div className={`content ${styles.content}`}>
 					<ul>
 						<li className="social">
 							<a href={globals.socialLinks.twitch} target="_blank" rel="noreferrer">

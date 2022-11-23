@@ -120,6 +120,13 @@ const Navbar = ({ isLive = false }: NavbarProps) => {
 						<li>
 							{/* @ts-ignore */}
 							{isMobile ? <FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo} /> : ''}
+							<Link href="/ASGX2023" passHref>
+								<a className={styles.text}>ASGX2023</a>
+							</Link>
+						</li>
+						<li>
+							{/* @ts-ignore */}
+							{isMobile ? <FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo} /> : ''}
 							<Link href="/ASAP2022" passHref>
 								<a className={styles.text}>ASAP2022</a>
 							</Link>

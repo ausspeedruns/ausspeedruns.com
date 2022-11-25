@@ -138,12 +138,12 @@ const Navbar = ({ isLive = false }: NavbarProps) => {
 								<a className={styles.text}>ASM2022</a>
 							</Link>
 						</li>
-						<li>
+						{/* <li>
 							{isMobile ? <FontAwesomeIcon width={20} className={styles.icon} icon={faBook} /> : ''}
 							<Link href="/blog" passHref>
 								<a className={styles.text}>Blog</a>
 							</Link>
-						</li>
+						</li> */}
 						<li className="social">
 							<a href={globals.socialLinks.twitch} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon width={20} icon={faTwitch} />

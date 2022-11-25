@@ -1,10 +1,11 @@
 import { format } from 'date-fns';
-import { Goal as GoalData } from '../../schema/incentives';
 import styles from '../../styles/Event.incentives.ASAP2022.module.scss';
 import { BaseIncentiveData } from './IncentiveType';
 
-export interface GoalProps extends BaseIncentiveData, GoalData {
+export interface GoalProps extends BaseIncentiveData {
 	type: 'goal';
+	goal: number;
+	current: number;
 }
 export const Goal: React.FC<GoalProps> = (props) => {
 	const time = new Date(props.run.scheduledTime);

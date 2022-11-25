@@ -1,4 +1,4 @@
-import { gql } from '@keystone-6/core';
+import { gql } from 'urql';
 import {
 	Button,
 	Checkbox,

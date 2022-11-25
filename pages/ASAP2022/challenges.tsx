@@ -1,8 +1,6 @@
 import Head from 'next/head';
 import { gql, useQuery } from 'urql';
-import { format } from 'date-fns';
 
-import { War as WarData } from '../../schema/incentives';
 import styles from '../../styles/Event.incentives.ASAP2022.module.scss';
 
 import Navbar from '../../components/Navbar/Navbar';

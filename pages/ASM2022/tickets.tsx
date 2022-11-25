@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { loadStripe } from '@stripe/stripe-js';
 import { Box, Button, Skeleton, TextField, ThemeProvider } from '@mui/material';
 import { useMutation, UseMutationResponse, useQuery } from 'urql';
-import { gql } from '@keystone-6/core';
+import { gql } from 'urql';
 
 import styles from '../../styles/ASM2022.Tickets.module.scss';
 import Navbar from '../../components/Navbar/Navbar';

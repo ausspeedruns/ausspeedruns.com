@@ -240,7 +240,7 @@ export const componentBlocks = {
 					}}
 				>
 					<ImageContainer>
-						<img src={props.fields.imageUrl.value} alt={props.fields.imageAlt.value} />
+						<Image src={props.fields.imageUrl.value} alt={props.fields.imageAlt.value} />
 					</ImageContainer>
 					<ParagraphContainer>
 						<p>{props.fields.content.value}</p>

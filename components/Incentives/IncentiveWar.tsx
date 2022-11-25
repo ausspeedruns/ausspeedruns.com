@@ -1,10 +1,13 @@
 import { format } from 'date-fns';
-import { War as WarData } from '../../schema/incentives';
 import styles from '../../styles/Event.incentives.ASAP2022.module.scss';
 import { BaseIncentiveData } from './IncentiveType';
 
-export interface WarProps extends BaseIncentiveData, WarData {
+export interface WarProps extends BaseIncentiveData {
 	type: 'war';
+	options: {
+		name: string;
+		total: number;
+	}[];
 }
 export const War: React.FC<WarProps> = (props) => {
 	const time = new Date(props.run.scheduledTime);

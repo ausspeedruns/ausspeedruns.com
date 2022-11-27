@@ -21,9 +21,8 @@ ARG API_KEY
 ENV API_KEY ${API_KEY}
 ARG NEXT_PUBLIC_STRIPE_PUBLIC_KEY
 ENV NEXT_PUBLIC_STRIPE_PUBLIC_KEY ${NEXT_PUBLIC_STRIPE_PUBLIC_KEY}
-
-RUN npm run update-keystone
-RUN npm run build:next
+	
+RUN npm run build
 
 FROM node:16-alpine AS prod
 WORKDIR /app

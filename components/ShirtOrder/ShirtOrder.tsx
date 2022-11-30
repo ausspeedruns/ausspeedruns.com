@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import styles from './ShirtOrder.module.scss';
 
 import ShirtBlue from '../../styles/img/ShirtBlue.png';

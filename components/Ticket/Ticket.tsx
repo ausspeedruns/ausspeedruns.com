@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import JSBarcode from 'jsbarcode';
 
 import styles from './Ticket.module.scss';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 
 interface Props {
 	ticketData: {

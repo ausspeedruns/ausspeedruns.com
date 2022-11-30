@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import YouTubeVideoEmbed from '../YouTubeVideoEmbed/YouTubeVideoEmbed';
 import styles from './RunCompleted.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

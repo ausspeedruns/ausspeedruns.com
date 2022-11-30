@@ -2,7 +2,7 @@ import React from 'react';
 import { NotEditable, component, fields } from '@keystone-6/fields-document/component-blocks';
 
 import styled from '@emotion/styled';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import Button from '../Button/ButtonEmotion';
 import { faArrowRight, faTicket, faCalendar, faPerson, faShirt } from '@fortawesome/free-solid-svg-icons';
 import { Theme, Media } from '../../styles/colors';

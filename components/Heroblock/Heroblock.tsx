@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Heroblock.module.scss';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { faCalendar, faChevronRight, faTicket } from '@fortawesome/free-solid-svg-icons';
 import Countdown, { zeroPad, CountdownRenderProps } from 'react-countdown';
 import Button from '../Button/Button';

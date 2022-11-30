@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import DiscordEmbed from '../components/DiscordEmbed';
 import Footer from '../components/Footer/Footer';
 import Navbar from '../components/Navbar/Navbar';

@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './LastEventBlock.module.scss';

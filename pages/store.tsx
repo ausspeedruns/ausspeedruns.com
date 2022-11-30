@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { loadStripe } from '@stripe/stripe-js';
 import { Box, Button, Skeleton, ThemeProvider, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { UseMutationResponse, useQuery, gql } from 'urql';

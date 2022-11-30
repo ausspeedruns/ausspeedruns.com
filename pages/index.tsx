@@ -8,7 +8,7 @@ import TileGroup from '../components/Tiles/TileGroup';
 import Footer from '../components/Footer/Footer';
 import { globals } from '../globals';
 import DiscordEmbed from '../components/DiscordEmbed';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 
 import styles from '../styles/index.module.scss';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';

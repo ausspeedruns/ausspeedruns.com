@@ -1,7 +1,7 @@
 import { CircularProgress, FormControlLabel, FormGroup, Switch, ThemeProvider } from '@mui/material';
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { useRouter } from 'next/router';
 import { gql, useQuery } from 'urql';
 import DiscordEmbed from '../../components/DiscordEmbed';

@@ -1,5 +1,5 @@
 import styles from './EventLive.module.scss';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import useInterval from '../useInterval';
 import { gql, useQuery } from 'urql';
 import { format } from 'date-fns';

@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import Image from "next/legacy/image";
+import Image from "next/image";
 import styles from './ShirtOrder.module.scss';
 
 import ShirtBlue from '../../styles/img/ShirtBlue.png';
@@ -17,9 +17,17 @@ interface ASMShirtProps {
 const ASMShirt: React.FC<ASMShirtProps> = (props: ASMShirtProps) => {
 	const { shirtID, size, colour, paid } = props.shirtData;
 	return (
-		<Box className={styles.generatedShirts} sx={{ boxShadow: 8 }}>
+        <Box className={styles.generatedShirts} sx={{ boxShadow: 8 }}>
 			<div className={styles.image}>
-				<Image src={colour === 'blue' ? ShirtBlue : ShirtPurple} layout="responsive" objectFit="contain" alt="Shirt" />
+				<Image
+                    src={colour === 'blue' ? ShirtBlue : ShirtPurple}
+                    alt="Shirt"
+                    sizes="100vw"
+                    style={{
+                        width: "100%",
+                        height: "auto",
+                        objectFit: "contain"
+                    }} />
 			</div>
 			<div className={styles.basicInfo}>
 				<span className={styles.label}>{shirtID}</span>
@@ -49,7 +57,7 @@ const ASMShirt: React.FC<ASMShirtProps> = (props: ASMShirtProps) => {
 				</div>
 			)}
 		</Box>
-	);
+    );
 };
 
 function sizeToName(size: string) {

@@ -8,7 +8,7 @@ import TileGroup from '../components/Tiles/TileGroup';
 import Footer from '../components/Footer/Footer';
 import { globals } from '../globals';
 import DiscordEmbed from '../components/DiscordEmbed';
-import Image from "next/legacy/image";
+import Image from "next/image";
 
 import styles from '../styles/index.module.scss';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -25,7 +25,7 @@ export default function Home() {
 		events: { previous, current, next },
 	} = globals;
 	return (
-		<div>
+        <div>
 			<Head>
 				<title>AusSpeedruns</title>
 				<DiscordEmbed title="AusSpeedruns" description="Home of the AusSpeedruns events" pageUrl="/" />
@@ -60,13 +60,29 @@ export default function Home() {
 						</div> */}
 						<div className={styles.sponsor}>
 							<span>Major Partner</span>
-							<Image src={HyperX} width={500} height={200} alt="HyperX Logo" />
+							<Image
+                                src={HyperX}
+                                width={500}
+                                height={200}
+                                alt="HyperX Logo"
+                                style={{
+                                    maxWidth: "100%",
+                                    height: "auto"
+                                }} />
 						</div>
 					</div>
 					<div className={styles.secondary}>
 						<div className={styles.sponsor}>
 							<span>Minor Partner</span>
-							<Image src={Landfall} width={200} height={153} alt="Landfall Games Logo" />
+							<Image
+                                src={Landfall}
+                                width={200}
+                                height={153}
+                                alt="Landfall Games Logo"
+                                style={{
+                                    maxWidth: "100%",
+                                    height: "auto"
+                                }} />
 						</div>
 					</div>
 				</section>
@@ -92,5 +108,5 @@ export default function Home() {
 				<Footer />
 			</footer>
 		</div>
-	);
+    );
 }

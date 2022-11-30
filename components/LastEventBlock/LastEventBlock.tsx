@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './LastEventBlock.module.scss';
@@ -14,7 +14,7 @@ type LastEventBlockProps = {
 
 const Heroblock = ({ event, backgroundPos }: LastEventBlockProps) => {
 	return (
-		<section
+        <section
 			className={styles.lasteventblock}
 			style={{ backgroundImage: `url(${require(`../../styles/img/${event.heroImage}`).default.src})`, backgroundPosition: backgroundPos }}
 		>
@@ -38,12 +38,18 @@ const Heroblock = ({ event, backgroundPos }: LastEventBlockProps) => {
 					/>
 				</div>
 				<div className={styles.logoBlock}>
-					<Image src={require(`../../styles/img/${event.logo}`).default} alt="Event Logo" />
+					<Image
+                        src={require(`../../styles/img/${event.logo}`).default}
+                        alt="Event Logo"
+                        style={{
+                            maxWidth: "100%",
+                            height: "auto"
+                        }} />
 					<span className={styles.total}>${event.total}</span>
 				</div>
 			</div>
 		</section>
-	);
+    );
 };
 
 export default Heroblock;

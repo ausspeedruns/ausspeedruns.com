@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from "next/legacy/image";
+import Image from "next/image";
 import styles from './RunUpcoming.module.scss';
 
 type Run = {
@@ -32,17 +32,20 @@ const RunUpcoming = ({ run }: Run) => {
 	if (run.event.logo) aspectRatio = run.event.logo.width / run.event.logo.height;
 
 	return (
-		<div className={styles.run}>
+        <div className={styles.run}>
 			<div key={run.id} className={styles.header}>
 				{run.event.logo && (
 					<div className={styles.logo}>
 						<Image
-							src={run.event.logo.url}
-							title={run.event.name}
-							width={LOGO_HEIGHT * aspectRatio}
-							height={LOGO_HEIGHT}
-							alt={`${run.event.name} logo`}
-						/>
+                            src={run.event.logo.url}
+                            title={run.event.name}
+                            width={LOGO_HEIGHT * aspectRatio}
+                            height={LOGO_HEIGHT}
+                            alt={`${run.event.name} logo`}
+                            style={{
+                                maxWidth: "100%",
+                                height: "auto"
+                            }} />
 					</div>
 				)}
 				<div className={styles.runInfo}>
@@ -64,7 +67,7 @@ const RunUpcoming = ({ run }: Run) => {
 				</div>
 			</div>
 		</div>
-	);
+    );
 };
 
 export default RunUpcoming;

@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import JSBarcode from 'jsbarcode';
 
 import styles from './Ticket.module.scss';
-import Image from "next/legacy/image";
+import Image from "next/image";
 
 interface Props {
 	ticketData: {
@@ -46,17 +46,20 @@ const Ticket: React.FC<Props> = (props: Props) => {
 	const aspectRatio = event.logo?.width / event.logo?.height;
 
 	return (
-		<Box className={styles.ticket} sx={{ boxShadow: 8 }}>
+        <Box className={styles.ticket} sx={{ boxShadow: 8 }}>
 			<div className={styles.ticketID}>
 				{event.logo && (
 					<Image
-						src={event.logo.url}
-						title={event.shortname}
-						width={LOGO_HEIGHT * aspectRatio}
-						height={LOGO_HEIGHT}
-						alt={`${event.shortname} logo`}
-						className={styles.eventLogo}
-					/>
+                        src={event.logo.url}
+                        title={event.shortname}
+                        width={LOGO_HEIGHT * aspectRatio}
+                        height={LOGO_HEIGHT}
+                        alt={`${event.shortname} logo`}
+                        className={styles.eventLogo}
+                        style={{
+                            maxWidth: "100%",
+                            height: "auto"
+                        }} />
 				)}
 				{paid && <svg ref={barcodeRef} className={styles.barcode}></svg>}
 				<span>Ticket ID</span>
@@ -94,7 +97,7 @@ const Ticket: React.FC<Props> = (props: Props) => {
 				</>
 			)}
 		</Box>
-	);
+    );
 };
 
 export default Ticket;

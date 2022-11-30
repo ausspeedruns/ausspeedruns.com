@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { loadStripe } from '@stripe/stripe-js';
 import { Box, Button, Skeleton, ThemeProvider, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { UseMutationResponse, useQuery, gql } from 'urql';
@@ -137,7 +137,7 @@ const Store = () => {
 	if (bankShirtData?.error) console.error(bankShirtData.error);
 
 	return (
-		<ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
 			<div className={styles.app}>
 				<Head>
 					<title>ASM2022 Shirt - AusSpeedruns</title>
@@ -151,11 +151,25 @@ const Store = () => {
 				<main className={styles.content}>
 					{/* <h1>ASM2022 Tickets</h1> */}
 					<div className={styles.image}>
-						<Image objectFit="contain" src={ASM2022Logo} alt="ASM2022 Logo" />
+						<Image
+                            src={ASM2022Logo}
+                            alt="ASM2022 Logo"
+                            style={{
+                                maxWidth: "100%",
+                                height: "auto",
+                                objectFit: "contain"
+                            }} />
 					</div>
 					<section className={styles.itemContent}>
 						<div className={styles.imageContainer}>
-							<Image src={shirtColour === 'blue' ? ShirtBlue : ShirtPurple} alt="Shirt design" />
+							<Image
+                                src={shirtColour === 'blue' ? ShirtBlue : ShirtPurple}
+                                alt="Shirt design"
+                                style={{
+                                    maxWidth: "100%",
+                                    height: "auto",
+                                    objectFit: "contain"
+                                }} />
 						</div>
 						<div>
 							<h2>ASM2022 Shirt</h2>
@@ -263,10 +277,13 @@ const Store = () => {
 					<div className={styles.sizing}>
 						<div className={styles.image}>
 							<Image
-								src={ShirtMeasurements}
-								layout="responsive"
-								alt="Shirt with markers showing where the width and length are measured from"
-							/>
+                                src={ShirtMeasurements}
+                                alt="Shirt with markers showing where the width and length are measured from"
+                                sizes="100vw"
+                                style={{
+                                    width: "100%",
+                                    height: "auto"
+                                }} />
 						</div>
 						<table>
 							<tr>
@@ -331,7 +348,7 @@ const Store = () => {
 				<Footer className={styles.footer} />
 			</div>
 		</ThemeProvider>
-	);
+    );
 };
 
 const ASMShirtSkeleton: React.FC = () => {

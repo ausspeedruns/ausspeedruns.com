@@ -1,7 +1,7 @@
 import { CircularProgress, FormControlLabel, FormGroup, Switch, ThemeProvider } from '@mui/material';
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { useRouter } from 'next/router';
 import { gql, useQuery } from 'urql';
 import DiscordEmbed from '../../components/DiscordEmbed';
@@ -122,7 +122,7 @@ export default function EventSchedule() {
 	const event = eventsResult.data?.event;
 
 	return (
-		<ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
 			<Head>
 				<title>{router.query.event} Schedule - AusSpeedruns</title>
 				<DiscordEmbed title="AusSpeedruns Schedule" />
@@ -135,13 +135,16 @@ export default function EventSchedule() {
 						{event.logo && (
 							<div className={styles.eventLogo}>
 								<Image
-									src={event.logo.url}
-									alt={`${event.shortname} Logo`}
-									title={`${event.shortname} Logo`}
-									height={event.logo.height}
-									width={event.logo.width}
-									layout="responsive"
-								/>
+                                    src={event.logo.url}
+                                    alt={`${event.shortname} Logo`}
+                                    title={`${event.shortname} Logo`}
+                                    height={event.logo.height}
+                                    width={event.logo.width}
+                                    sizes="100vw"
+                                    style={{
+                                        width: "100%",
+                                        height: "auto"
+                                    }} />
 							</div>
 						)}
 
@@ -174,7 +177,7 @@ export default function EventSchedule() {
 			</main>
 			<Footer />
 		</ThemeProvider>
-	);
+    );
 }
 
 interface DateDividerProps {

@@ -270,7 +270,7 @@ export default function ProfilePage(ssrData) {
 		query: USER_QUERY,
 		variables: { username: ssrData.username },
 	});
-	
+
 	const [{ data: privateDataResults }] = useQuery<UserPagePrivateData>({
 		query: USER_PRIVATE_QUERY,
 		variables: {
@@ -302,22 +302,21 @@ export default function ProfilePage(ssrData) {
 		...Array.from(new Set(privateDataResults?.user.submissions.map((submission) => submission.event.shortname))),
 	];
 	const allRunEvents = [
-		...Array.from(new Set(publicDataResults.runs.map((run) => (run.finalTime ? run.event.shortname : undefined)))).filter((el) => typeof el !== 'undefined'),
+		...Array.from(
+			new Set(publicDataResults.runs.map((run) => (run.finalTime ? run.event.shortname : undefined)))
+		).filter((el) => typeof el !== 'undefined'),
 	];
 
 	return (
 		<ThemeProvider theme={theme}>
 			<Head>
-				<title>{publicDataResults.username} - AusSpeedruns</title>
-				<DiscordEmbed
-					title={`${publicDataResults.username}'s Profile - AusSpeedruns`}
-					pageUrl={`/user/${publicDataResults.username}`}
-				/>
+				<title>{`${ssrData.username} - AusSpeedruns`}</title>
+				<DiscordEmbed title={`${ssrData.username}'s Profile - AusSpeedruns`} pageUrl={`/user/${ssrData.username}`} />
 			</Head>
 			<Navbar />
 			<div className={styles.content}>
 				<div className={styles.profileHeader}>
-					<h1>{publicDataResults.username}</h1>
+					<h1>{ssrData.username}</h1>
 					{auth.ready && auth.sessionData?.id === publicDataResults.id && (
 						<div>
 							<IconButton style={{ float: 'right' }} onClick={() => router.push('/user/edit-user')}>
@@ -406,7 +405,9 @@ export default function ProfilePage(ssrData) {
 				<div className={styles.runs}>
 					<Box>
 						<Tabs value={eventTab} onChange={(_e, newVal) => setEventTab(newVal)}>
-							{allRunEvents.map((event) => <Tab label={event} key={event} />)}
+							{allRunEvents.map((event) => (
+								<Tab label={event} key={event} />
+							))}
 						</Tabs>
 					</Box>
 					{publicDataResults.runs.map((run) => {
@@ -428,7 +429,10 @@ export async function getServerSideProps({ params }) {
 	const ssrCache = ssrExchange({ isClient: false });
 	const client = initUrqlClient(
 		{
-			url: process.env.NODE_ENV === 'production' ? 'https://keystone.ausspeedruns.com/api/graphql' : 'http://localhost:8000/api/graphql',
+			url:
+				process.env.NODE_ENV === 'production'
+					? 'https://keystone.ausspeedruns.com/api/graphql'
+					: 'http://localhost:8000/api/graphql',
 			exchanges: [dedupExchange, cacheExchange, ssrCache, fetchExchange],
 		},
 		false

@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import Image from "next/legacy/image";
+import Image from "next/image";
 import DiscordEmbed from '../components/DiscordEmbed';
 import Footer from '../components/Footer/Footer';
 import Navbar from '../components/Navbar/Navbar';
@@ -12,14 +12,23 @@ const imageHeight = 150;
 
 export default function Schedule() {
 	return (
-		<div>
+        <div>
 			<Head>
 				<title>ASAP2022 Schedule - AusSpeedruns</title>
 				<DiscordEmbed title="ASAP2022 Schedule" />
 			</Head>
 			<Navbar />
 			<main className={styles.content}>
-				<Image src={ASAP2022Logo} width={aspectRatio * imageHeight} height={imageHeight} title="ASAP2022 Logo" alt="ASAP2022 Logo" />
+				<Image
+                    src={ASAP2022Logo}
+                    width={aspectRatio * imageHeight}
+                    height={imageHeight}
+                    title="ASAP2022 Logo"
+                    alt="ASAP2022 Logo"
+                    style={{
+                        maxWidth: "100%",
+                        height: "auto"
+                    }} />
 				<h1>ASAP2022 Schedule</h1>
 				<a href="https://horaro.org/asap2022/schedule" target="_blank" rel="noreferrer">View externally on Horaro</a>
 				<div className={styles.iframeContainer}>
@@ -28,5 +37,5 @@ export default function Schedule() {
 			</main>
 			<Footer />
 		</div>
-	);
+    );
 }

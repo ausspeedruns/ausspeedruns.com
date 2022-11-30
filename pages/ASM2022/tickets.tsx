@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import Image from "next/legacy/image";
+import Image from "next/image";
 import Link from 'next/link';
 import { loadStripe } from '@stripe/stripe-js';
 import { Box, Button, Skeleton, TextField, ThemeProvider } from '@mui/material';
@@ -148,7 +148,7 @@ const Tickets = () => {
 	// if (bankTicketsData?.error) console.error(bankTicketsData.error);
 
 	return (
-		<ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
 			<div className={styles.app}>
 				<Head>
 					<title>ASM2022 Tickets - AusSpeedruns</title>
@@ -162,7 +162,14 @@ const Tickets = () => {
 				<main className={styles.content}>
 					{/* <h1>ASM2022 Tickets</h1> */}
 					<div className={styles.image}>
-						<Image objectFit="contain" src={ASM2022Logo} alt="ASM2022 Logo" />
+						<Image
+                            src={ASM2022Logo}
+                            alt="ASM2022 Logo"
+                            style={{
+                                maxWidth: "100%",
+                                height: "auto",
+                                objectFit: "contain"
+                            }} />
 					</div>
 					{purchasedTicketsRes.data?.tickets.length > 0 && auth.ready && (
 						<section className={styles.linkToProfile}>
@@ -245,7 +252,7 @@ const Tickets = () => {
 				<Footer className={styles.footer} />
 			</div>
 		</ThemeProvider>
-	);
+    );
 };
 
 interface ASMTicketProps {

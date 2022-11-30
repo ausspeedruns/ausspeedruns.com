@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import Image from "next/legacy/image";
+import Image from "next/image";
 import Link from 'next/link';
 import React from 'react';
 import { useQuery, gql } from 'urql';
@@ -39,7 +39,7 @@ export default function EventPage() {
 	});
 
 	return (
-		<div>
+        <div>
 			<Head>
 				<title>ASM2022 - AusSpeedruns</title>
 				<DiscordEmbed title="ASM2022 - AusSpeedruns" pageUrl="/event/ASM2022" />
@@ -47,7 +47,13 @@ export default function EventPage() {
 			<Navbar />
 			<div className={styles.header}>
 				<div className={styles.logo}>
-					<Image src={ASM2022Logo} alt="Australian Speedrun Marathon 2022 Logo" />
+					<Image
+                        src={ASM2022Logo}
+                        alt="Australian Speedrun Marathon 2022 Logo"
+                        style={{
+                            maxWidth: "100%",
+                            height: "auto"
+                        }} />
 				</div>
 				<div className={styles.buttons}>
 					<Button
@@ -104,12 +110,26 @@ export default function EventPage() {
 						</p>
 					</div>
 					<div className={styles.image}>
-						<Image layout="fill" objectFit="cover" src={StockPhoto1} alt="Runner speedrunning on stage" />
+						<Image
+                            src={StockPhoto1}
+                            alt="Runner speedrunning on stage"
+                            fill
+                            sizes="100vw"
+                            style={{
+                                objectFit: "cover"
+                            }} />
 					</div>
 				</div>
 				<div className={styles.contentRow}>
 					<div className={styles.image}>
-						<Image layout="fill" objectFit="cover" src={StockPhoto2} alt="The crowd cheering on the runner" />
+						<Image
+                            src={StockPhoto2}
+                            alt="The crowd cheering on the runner"
+                            fill
+                            sizes="100vw"
+                            style={{
+                                objectFit: "cover"
+                            }} />
 					</div>
 					<div className={styles.moreInfo}>
 						<p>
@@ -130,7 +150,14 @@ export default function EventPage() {
 						</p>
 					</div>
 					<div className={styles.image}>
-						<Image layout="fill" objectFit="cover" src={GoCStockPhoto1} alt="Game on Cancer Logo" />
+						<Image
+                            src={GoCStockPhoto1}
+                            alt="Game on Cancer Logo"
+                            fill
+                            sizes="100vw"
+                            style={{
+                                objectFit: "cover"
+                            }} />
 					</div>
 				</div>
 				<div className={styles.sponsors}>
@@ -141,13 +168,29 @@ export default function EventPage() {
 						</div> */}
 						<div className={styles.sponsor}>
 							<span>Major Partner</span>
-							<Image src={HyperX} width={500} height={200} alt="HyperX Logo" />
+							<Image
+                                src={HyperX}
+                                width={500}
+                                height={200}
+                                alt="HyperX Logo"
+                                style={{
+                                    maxWidth: "100%",
+                                    height: "auto"
+                                }} />
 						</div>
 					</div>
 					<div className={styles.secondary}>
 						<div className={styles.sponsor}>
 							<span>Minor Partner</span>
-							<Image src={Landfall} width={200} height={153} alt="Landfall Games Logo" />
+							<Image
+                                src={Landfall}
+                                width={200}
+                                height={153}
+                                alt="Landfall Games Logo"
+                                style={{
+                                    maxWidth: "100%",
+                                    height: "auto"
+                                }} />
 						</div>
 					</div>
 				</div>
@@ -175,13 +218,15 @@ export default function EventPage() {
 			</main>
 			<div className={styles.footer}>
 				<Image
-					src={StockPhoto3}
-					layout="fill"
-					objectFit="cover"
-					alt="Photo of the whole auditorium while the event runs"
-				/>
+                    src={StockPhoto3}
+                    alt="Photo of the whole auditorium while the event runs"
+                    fill
+                    sizes="100vw"
+                    style={{
+                        objectFit: "cover"
+                    }} />
 			</div>
 			<Footer />
 		</div>
-	);
+    );
 }

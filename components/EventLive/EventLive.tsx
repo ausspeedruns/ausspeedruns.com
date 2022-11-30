@@ -1,5 +1,5 @@
 import styles from './EventLive.module.scss';
-import Image from "next/legacy/image";
+import Image from "next/image";
 import useInterval from '../useInterval';
 import { gql, useQuery } from 'urql';
 import { format } from 'date-fns';
@@ -86,7 +86,15 @@ export const EventLive = (props: EventProps) => {
         <div className={styles.eventLive}>
 			<div className={styles.logo}>
 				<Link href="/ASM2022" passHref legacyBehavior>
-					<Image src={ASM2022Logo} width={600} height={aspectRatio * 600} alt="ASM2022 Logo" />
+					<Image
+                        src={ASM2022Logo}
+                        width={600}
+                        height={aspectRatio * 600}
+                        alt="ASM2022 Logo"
+                        style={{
+                            maxWidth: "100%",
+                            height: "auto"
+                        }} />
 				</Link>
 			</div>
 			<div className={styles.eventInfo}>
@@ -94,7 +102,15 @@ export const EventLive = (props: EventProps) => {
 				<div className={styles.link}>
 					<Button actionText="Donate!" link="/donate" colorScheme="primary" />
 				</div>
-				<Image src={GameOnCancer} width={200} height={gocAspectRatio * 200} alt="Game on Cancer Logo" />
+				<Image
+                    src={GameOnCancer}
+                    width={200}
+                    height={gocAspectRatio * 200}
+                    alt="Game on Cancer Logo"
+                    style={{
+                        maxWidth: "100%",
+                        height: "auto"
+                    }} />
 			</div>
 
 			<div className={styles.onDeck}>

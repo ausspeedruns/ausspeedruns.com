@@ -2,7 +2,7 @@ import React from 'react';
 import { NotEditable, component, fields } from '@keystone-6/fields-document/component-blocks';
 
 import styled from '@emotion/styled';
-import Image from "next/legacy/image";
+import Image from "next/image";
 import Button from '../Button/ButtonEmotion';
 import { faArrowRight, faTicket, faCalendar, faPerson, faShirt } from '@fortawesome/free-solid-svg-icons';
 import { Theme, Media } from '../../styles/colors';
@@ -231,7 +231,7 @@ export const componentBlocks = {
 	imageParagraph: component({
 		preview(props) {
 			return (
-				<ImageParagraphContainer
+                <ImageParagraphContainer
 					contentEditable={false}
 					style={{
 						color: props.fields.textDark.value ? Theme.darkText : Theme.lightText,
@@ -240,13 +240,19 @@ export const componentBlocks = {
 					}}
 				>
 					<ImageContainer>
-						<Image src={props.fields.imageUrl.value} alt={props.fields.imageAlt.value} />
+						<Image
+                            src={props.fields.imageUrl.value}
+                            alt={props.fields.imageAlt.value}
+                            style={{
+                                maxWidth: "100%",
+                                height: "auto"
+                            }} />
 					</ImageContainer>
 					<ParagraphContainer>
 						<p>{props.fields.content.value}</p>
 					</ParagraphContainer>
 				</ImageParagraphContainer>
-			);
+            );
 		},
 		label: 'Image + Paragraph',
 		schema: {

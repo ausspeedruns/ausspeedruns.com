@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Heroblock.module.scss';
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { faCalendar, faChevronRight, faTicket } from '@fortawesome/free-solid-svg-icons';
 import Countdown, { zeroPad, CountdownRenderProps } from 'react-countdown';
 import Button from '../Button/Button';
@@ -56,7 +56,7 @@ const Heroblock = ({ event }: HeroblockProps) => {
 	};
 
 	return (
-		<section className={styles.heroblock} style={{backgroundImage: `url(${require(`../../styles/img/${event.heroImage}`).default.src}`}}>
+        <section className={styles.heroblock} style={{backgroundImage: `url(${require(`../../styles/img/${event.heroImage}`).default.src}`}}>
 			<div className={`${styles.content} content`}>
 				{showVideoBlock && <TwitchVideoEmbed channel="ausspeedruns" parent={window.location.hostname} />}
 				<div className={styles.ctaBlock}>
@@ -93,12 +93,24 @@ const Heroblock = ({ event }: HeroblockProps) => {
 					)}
 				</div>
 				<div className={styles.logoBlock}>
-					<Image src={require(`../../styles/img/${event.logo}`).default} alt="Event Logo" />
-					<Image src={require(`../../styles/img/sponsors/GameOnCancer/GoCCCWhite.svg`).default} alt="Game on Cancer Logo" />
+					<Image
+                        src={require(`../../styles/img/${event.logo}`).default}
+                        alt="Event Logo"
+                        style={{
+                            maxWidth: "100%",
+                            height: "auto"
+                        }} />
+					<Image
+                        src={require(`../../styles/img/sponsors/GameOnCancer/GoCCCWhite.svg`).default}
+                        alt="Game on Cancer Logo"
+                        style={{
+                            maxWidth: "100%",
+                            height: "auto"
+                        }} />
 				</div>
 			</div>
 		</section>
-	);
+    );
 };
 
 export default Heroblock;

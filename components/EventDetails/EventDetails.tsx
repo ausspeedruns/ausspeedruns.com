@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './EventDetails.module.scss';
-import Image from "next/legacy/image";
+import Image from "next/image";
 import beyondBlue from '../../styles/img/sponsors/bblue-blue.png';
 // import oaksHotels from "../../styles/img/oaks-hotels.png";
 // import landfall from "../../styles/img/Landfall_Logo_1.png";
@@ -13,7 +13,7 @@ type EventDetailsProps = {
 
 const EventDetails = ({ event }: EventDetailsProps) => {
 	return (
-		<div className={styles.eventDetails}>
+        <div className={styles.eventDetails}>
 			<div className={`${styles.content} content`}>
 				<h2>About {event.fullName}</h2>
 				{/* <p></p> */}
@@ -23,7 +23,13 @@ const EventDetails = ({ event }: EventDetailsProps) => {
 						<div className={styles.charity}>
 							<a href={globals.donateLink}>
                 <div className={styles.logo}>
-                  <Image src={beyondBlue} alt="Proudly supporting Beyond Blue" />
+                  <Image
+                      src={beyondBlue}
+                      alt="Proudly supporting Beyond Blue"
+                      style={{
+                          maxWidth: "100%",
+                          height: "auto"
+                      }} />
                 </div>
 								<span className="sr-only">Proudly supporting Beyond Blue</span>
 							</a>
@@ -45,7 +51,7 @@ const EventDetails = ({ event }: EventDetailsProps) => {
 				</p>
 			</div>
 		</div>
-	);
+    );
 };
 
 export default EventDetails;

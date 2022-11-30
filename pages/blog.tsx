@@ -73,13 +73,13 @@ export default function BlogPage() {
 const BlogLink = ({ post }: { post: Post }) => {
 	const linkHref = post.role === 'public' ? `/blog/${post.slug}` : `/staff-blog/${post.slug}`;
 	return (
-		<li key={post.id}>
+        <li key={post.id}>
 			<div className={styles.linkTitle}>
 				<div className={styles.articleTags}>
 					{post.event && <ArticleTag event tag={post.event.shortname} />}
 
 					<ArticleTag tag={post?.role} />
-					<Link href={linkHref}>{post.title}</Link>
+					<Link href={linkHref} legacyBehavior>{post.title}</Link>
 				</div>
 				<span className={styles.date}>{new Date(post.publishedDate).toLocaleDateString()}</span>
 			</div>
@@ -90,7 +90,7 @@ const BlogLink = ({ post }: { post: Post }) => {
 		</span> */}
 			<hr />
 		</li>
-	);
+    );
 };
 
 const ArticleTag = ({ tag, event }: { tag?: string; event?: boolean }) => {

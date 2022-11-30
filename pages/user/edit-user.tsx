@@ -183,7 +183,7 @@ export default function EditUser() {
 	const maxDate = sub(new Date(), { years: 13 });
 
 	return (
-		<ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
 			<Head>
 				<title>Edit User - AusSpeedruns</title>
 				<DiscordEmbed title={`Edit User - AusSpeedruns`} pageUrl="/user/edit-user" />
@@ -191,11 +191,9 @@ export default function EditUser() {
 			<Navbar />
 			<div className={styles.content}>
 				<h1>{username}</h1>
-				<Link href={`/user/${username}`} passHref>
-					<a className={styles.return}>
-						<FontAwesomeIcon icon={faChevronLeft} /> Return
-					</a>
-				</Link>
+				<Link href={`/user/${username}`} passHref className={styles.return}>
+                    <FontAwesomeIcon icon={faChevronLeft} /> Return
+                </Link>
 				{(queryResult.fetching || queryResult.data?.user === null) && <CircularProgress />}
 				{queryResult.error && <h2>{queryResult.error.message}</h2>}
 				{updateResult.error && <h2>{updateResult.error.message}</h2>}
@@ -320,5 +318,5 @@ export default function EditUser() {
 				)}
 			</Snackbar>
 		</ThemeProvider>
-	);
+    );
 }

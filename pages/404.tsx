@@ -8,7 +8,7 @@ const responses: JSX.Element[] = [
 
 export default function Custom404() {
 	return (
-		<main style={{ height: '100%', width: '100%' }}>
+        <main style={{ height: '100%', width: '100%' }}>
 			<div
 				style={{
 					display: 'flex',
@@ -22,9 +22,9 @@ export default function Custom404() {
 				<h1>Error 404 - Page not found</h1>
 				{responses[~~(Math.random() * responses.length)]}
 				<Link href="/">
-					<a>Go back home</a>
+					Go back home
 				</Link>
 			</div>
 		</main>
-	);
+    );
 }

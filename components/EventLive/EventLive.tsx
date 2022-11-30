@@ -83,9 +83,9 @@ export const EventLive = (props: EventProps) => {
 	const currentRunIndex = nextRunIndex - 1;
 
 	return (
-		<div className={styles.eventLive}>
+        <div className={styles.eventLive}>
 			<div className={styles.logo}>
-				<Link href="/ASM2022" passHref>
+				<Link href="/ASM2022" passHref legacyBehavior>
 					<Image src={ASM2022Logo} width={600} height={aspectRatio * 600} alt="ASM2022 Logo" />
 				</Link>
 			</div>
@@ -175,5 +175,5 @@ export const EventLive = (props: EventProps) => {
 				</section>
 			)}
 		</div>
-	);
+    );
 };

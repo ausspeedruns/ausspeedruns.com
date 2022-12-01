@@ -230,7 +230,12 @@ export const EventComponentRenderers: InferRenderersForComponentBlocks<typeof co
 			>
 				{props.event.data.logo && (
 					<div className={styles.logo}>
-						<Image src={props.event.data.logo} alt={`${props.event.data.shortname} Logo`} />
+						<Image
+							src={props.event.data.logo.src}
+							alt={`${props.event.data.shortname} Logo`}
+							fill
+							style={{ objectFit: 'contain' }}
+						/>
 					</div>
 				)}
 				<div className={styles.buttons}>

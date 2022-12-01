@@ -142,12 +142,10 @@ export default function PostPage() {
 				<title>Blog WIP - AusSpeedruns</title>
 				<DiscordEmbed title={`Blog WIP  - Blog Post - AusSpeedruns`} pageUrl={`/blog/${router.query.slug}`} />
 			</Head>
-			<Navbar />
 			<main className={styles.content}>
 				<h1 className={styles.title}>Blog under reconstruction</h1>
 				<p>Blog should be backup &quot;soon&quot; -Clubwho</p>
 			</main>
-			<Footer className={styles.footer} />
 		</div>
 	);
 }

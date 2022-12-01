@@ -50,7 +50,6 @@ export default function Verification() {
 			<Head>
 				<title>Email Verification - AusSpeedruns</title>
 			</Head>
-			<Navbar />
 			<div className={styles.content}>
 				<h2>Email verification</h2>
 				{verificationResults.fetching && <span>Loading</span>}

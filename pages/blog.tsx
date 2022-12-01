@@ -53,7 +53,6 @@ export default function BlogPage() {
 				<title>Blog - AusSpeedruns</title>
 				<DiscordEmbed title="Blog - AusSpeedruns" description="AusSpeedruns blog" pageUrl="/blog" />
 			</Head>
-			<Navbar />
 			<main className={styles.content}>
 				<h1>Blog</h1>
 				<div className={styles.blogPosts}>
@@ -65,7 +64,6 @@ export default function BlogPage() {
 					</ul>
 				</div>
 			</main>
-			<Footer className={styles.footer} />
 		</div>
 	);
 }

@@ -253,7 +253,6 @@ export default function SubmitGamePage() {
 					pageUrl="/submit-game"
 				/>
 			</Head>
-			<Navbar />
 			<main className={styles.content}>
 				<h1>
 					{eventsResult.data?.events.find((eventResult) => eventResult.id === event)?.shortname} Volunteer Submission

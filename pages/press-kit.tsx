@@ -31,7 +31,6 @@ const PressKit = () => {
 					pageUrl="/press-kit"
 				/>
 			</Head>
-			<Navbar />
 			<main className={styles.content}>
 				<h2>Press Kit</h2>
 				<p>
@@ -60,7 +59,6 @@ const PressKit = () => {
 					})}
 				</div>
 			</main>
-			<Footer className={styles.footer} />
 		</div>
 	);
 };

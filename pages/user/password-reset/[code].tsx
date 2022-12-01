@@ -35,7 +35,6 @@ export default function PasswordResetPage() {
 			<Head>
 				<title>Password Reset - AusSpeedruns</title>
 			</Head>
-			<Navbar />
 			<main className={styles.content}>
 				<h1>Password Reset</h1>
 				<form

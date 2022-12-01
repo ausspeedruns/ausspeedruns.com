@@ -47,7 +47,6 @@ const DonatePage = () => {
 				<title>Donate - AusSpeedruns</title>
 				<DiscordEmbed title="Donate - AusSpeedruns" description="Donate to ASM2022!" pageUrl="/donate" />
 			</Head>
-			<Navbar />
 			<main className={styles.content}>
 				<h2 className={styles.title}>Donate</h2>
 				<section className={styles.incentives}>
@@ -108,7 +107,6 @@ const DonatePage = () => {
 					/>
 				</div>
 			</main>
-			<Footer className={styles.footer} />
 		</div>
 	);
 };

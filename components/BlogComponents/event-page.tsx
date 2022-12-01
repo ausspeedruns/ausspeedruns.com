@@ -198,13 +198,13 @@ export const componentBlocks = {
 
 						{/* <Button actionText="Donation Challenges" link="/ASM2022/challenges" iconRight={faArrowRight} /> */}
 
-						<Button
+						{/* <Button
 							actionText="Learn more about Game on Cancer"
 							link={props.fields.charityLink.value}
 							iconRight={faArrowRight}
 							target="_blank"
 							rel="noopener noreferrer"
-						/>
+						/> */}
 					</ButtonContainer>
 				</HeaderContainer>
 			);
@@ -243,10 +243,8 @@ export const componentBlocks = {
 						<Image
                             src={props.fields.imageUrl.value}
                             alt={props.fields.imageAlt.value}
-                            style={{
-                                maxWidth: "100%",
-                                height: "auto"
-                            }} />
+							fill
+							/>
 					</ImageContainer>
 					<ParagraphContainer>
 						<p>{props.fields.content.value}</p>

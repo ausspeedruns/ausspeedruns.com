@@ -127,7 +127,6 @@ export default function EventSchedule() {
 				<title>{router.query.event} Schedule - AusSpeedruns</title>
 				<DiscordEmbed title="AusSpeedruns Schedule" />
 			</Head>
-			<Navbar />
 			<main className={styles.content}>
 				{eventsResult.fetching && <CircularProgress />}
 				{!eventsResult.error && !eventsResult.fetching && event && (
@@ -175,7 +174,6 @@ export default function EventSchedule() {
 					</>
 				)}
 			</main>
-			<Footer />
 		</ThemeProvider>
     );
 }

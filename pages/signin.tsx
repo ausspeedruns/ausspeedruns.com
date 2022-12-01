@@ -66,7 +66,6 @@ export const SignInPage: React.FC = () => {
 				<title>Sign In - AusSpeedruns</title>
 				<DiscordEmbed title="Sign In - AusSpeedruns" description="Sign In to AusSpeedruns" pageUrl="/signin" />
 			</Head>
-			<Navbar />
 			<div className={`${styles.content} ${styles.form}`}>
 				<h1>Sign In</h1>
 				<form

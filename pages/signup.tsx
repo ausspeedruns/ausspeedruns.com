@@ -56,7 +56,6 @@ export default function SignUpPage() {
 				<title>Sign Up - AusSpeedruns</title>
 				<DiscordEmbed title="Sign Up - AusSpeedruns" description="Sign Up to AusSpeedruns" pageUrl="/signup" />
 			</Head>
-			<Navbar />
 			<div className={`${styles.content} ${styles.form}`}>
 				<h1>Join</h1>
 				<form

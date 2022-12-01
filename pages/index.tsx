@@ -20,7 +20,6 @@ import HyperX from '../styles/img/sponsors/HyperX/HyperX Solid White.svg';
 import Landfall from '../styles/img/sponsors/Landfall.png';
 
 export default function Home() {
-	const eventLive = false;
 	const {
 		events: { previous, current, next },
 	} = globals;
@@ -30,7 +29,6 @@ export default function Home() {
 				<title>AusSpeedruns</title>
 				<DiscordEmbed title="AusSpeedruns" description="Home of the AusSpeedruns events" pageUrl="/" />
 			</Head>
-			<Navbar isLive={eventLive} />
 			<main>
 				{/* {!eventLive && <Heroblock event={current} />}
 				{eventLive && <EventLive event={current.preferredName} />} */}
@@ -52,12 +50,8 @@ export default function Home() {
 						</div>
 					</div>
 				</section>
-				<section className={styles.sponsors}>
+				{/* <section className={styles.sponsors}>
 					<div className={styles.main}>
-						{/* <div className={styles.sponsor}>
-							<span>Charity</span>
-							<Image src={GoCLogo} width={500} height={200} />
-						</div> */}
 						<div className={styles.sponsor}>
 							<span>Major Partner</span>
 							<Image
@@ -85,7 +79,7 @@ export default function Home() {
                                 }} />
 						</div>
 					</div>
-				</section>
+				</section> */}
 				<TileGroup
 					tiles={[
 						{
@@ -104,9 +98,6 @@ export default function Home() {
 					]}
 				/>
 			</main>
-			<footer>
-				<Footer />
-			</footer>
 		</div>
     );
 }

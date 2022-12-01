@@ -13,7 +13,6 @@ const PoliciesPage = () => {
 				<title>Policies - AusSpeedruns</title>
 				<DiscordEmbed title="Policies - AusSpeedruns" description="AusSpeedruns's policies" pageUrl="/policies" />
 			</Head>
-			<Navbar />
 			<main className={styles.content}>
 				<h2>Policies</h2>
 				<p>
@@ -373,7 +372,6 @@ const PoliciesPage = () => {
 					</p>
 				</div>
 			</main>
-			<Footer className={styles.footer} />
 		</div>
 	);
 };

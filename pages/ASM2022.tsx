@@ -44,7 +44,6 @@ export default function EventPage() {
 				<title>ASM2022 - AusSpeedruns</title>
 				<DiscordEmbed title="ASM2022 - AusSpeedruns" pageUrl="/event/ASM2022" />
 			</Head>
-			<Navbar />
 			<div className={styles.header}>
 				<div className={styles.logo}>
 					<Image
@@ -226,7 +225,6 @@ export default function EventPage() {
                         objectFit: "cover"
                     }} />
 			</div>
-			<Footer />
 		</div>
     );
 }

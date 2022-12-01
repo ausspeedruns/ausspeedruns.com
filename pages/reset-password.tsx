@@ -57,7 +57,6 @@ export const ResetPasswordPage: React.FC = () => {
 					pageUrl="/signin"
 				/>
 			</Head>
-			<Navbar />
 			<div className={`${styles.content} ${styles.form}`}>
 				<h1>Reset Password</h1>
 				<form

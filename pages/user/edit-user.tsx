@@ -188,7 +188,6 @@ export default function EditUser() {
 				<title>Edit User - AusSpeedruns</title>
 				<DiscordEmbed title={`Edit User - AusSpeedruns`} pageUrl="/user/edit-user" />
 			</Head>
-			<Navbar />
 			<div className={styles.content}>
 				<h1>{username}</h1>
 				<Link href={`/user/${username}`} passHref className={styles.return}>

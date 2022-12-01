@@ -176,7 +176,7 @@ export default function SubmitGamePage() {
 				event &&
 				video &&
 				availableDates.some((day) => day) &&
-				(currentEvent?.acceptingBackups ? backup : true)
+				(currentEvent?.acceptingBackups && !currentEvent.acceptingSubmissions ? backup : true)
 		);
 	}, [game, category, platform, estimate, estimateError, event, video, availableDates, currentEvent, backup]);
 
@@ -206,7 +206,6 @@ export default function SubmitGamePage() {
 				<Head>
 					<title>Game Submission - AusSpeedruns</title>
 				</Head>
-				<Navbar />
 				<main className={`content ${styles.content} ${styles.noEvents}`}>
 					<h2>Unfortunately we have no events currently accepting submissions.</h2>
 					<p>Follow us on Twitter and Join our Discord to stay up to date!</p>
@@ -222,7 +221,6 @@ export default function SubmitGamePage() {
 				<Head>
 					<title>Game Submission - AusSpeedruns</title>
 				</Head>
-				<Navbar />
 				<main className={`content ${styles.content} ${styles.noEvents}`}>
 					<h2>Please sign in to submit games.</h2>
 					<LinkButton actionText="Sign In" iconRight={faArrowRight} link="/signin" />
@@ -286,7 +284,6 @@ export default function SubmitGamePage() {
 					pageUrl="/submit-game"
 				/>
 			</Head>
-			<Navbar />
 			<main className={styles.content}>
 				<h1>
 					{currentEvent?.shortname}{' '}
@@ -370,7 +367,6 @@ export default function SubmitGamePage() {
 								onChange={(e) => setGame(e.target.value)}
 								label="Game Name"
 								autoComplete="game"
-								helperText="Do not use uncommon acronyms."
 								inputProps={{ maxLength: 100 }}
 								required
 							/>
@@ -379,6 +375,7 @@ export default function SubmitGamePage() {
 								onChange={(e) => setCategory(e.target.value)}
 								label="Category"
 								autoComplete="category"
+								helperText="Do not use uncommon acronyms."
 								inputProps={{ maxLength: 100 }}
 								required
 							/>
@@ -460,6 +457,7 @@ export default function SubmitGamePage() {
 
 							{race !== 'no' && (
 								<>
+									<p style={{textAlign: 'center', fontWeight: 'bold'}}>IMPORTANT! All other runners must also submit the game.</p>
 									<FormControlLabel
 										control={<Checkbox onChange={(e) => setCoop(e.target.checked)} checked={coop} />}
 										label="Coop"

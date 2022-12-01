@@ -313,7 +313,6 @@ export default function ProfilePage(ssrData) {
 				<title>{`${ssrData.username} - AusSpeedruns`}</title>
 				<DiscordEmbed title={`${ssrData.username}'s Profile - AusSpeedruns`} pageUrl={`/user/${ssrData.username}`} />
 			</Head>
-			<Navbar />
 			<div className={styles.content}>
 				<div className={styles.profileHeader}>
 					<h1>{ssrData.username}</h1>
@@ -420,7 +419,6 @@ export default function ProfilePage(ssrData) {
 					})}
 				</div>
 			</div>
-			<Footer />
 		</ThemeProvider>
 	);
 }

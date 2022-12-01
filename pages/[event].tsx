@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { gql, ssrExchange, cacheExchange, dedupExchange, fetchExchange } from 'urql';
+import { gql, ssrExchange, cacheExchange, dedupExchange, fetchExchange, useQuery } from 'urql';
 import { InferRenderersForComponentBlocks } from '@keystone-6/fields-document/component-blocks';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
@@ -10,7 +10,7 @@ import { initUrqlClient } from 'next-urql';
 import { GetServerSideProps } from 'next';
 import { componentBlocks } from '../components/BlogComponents/event-page';
 
-const EVENT_QUERY = gql`
+const QUERY_EVENT = gql`
 	query ($event: String!) {
 		event(where: { shortname: $event }) {
 			id
@@ -21,12 +21,28 @@ const EVENT_QUERY = gql`
 			acceptingVolunteers
 			acceptingBackups
 			acceptingShirts
-			postEventPage {
+			eventPage {
 				document(hydrateRelationships: true)
 			}
 		}
 	}
 `;
+
+interface QUERY_EVENT_RESULTS {
+	event: {
+		id: string;
+		shortname: string;
+		acceptingSubmissions: boolean;
+		acceptingTickets: boolean;
+		scheduleReleased: boolean;
+		acceptingVolunteers: boolean;
+		acceptingBackups: boolean;
+		acceptingShirts: boolean;
+		eventPage: {
+			document: any;
+		};
+	};
+}
 
 function convertPropsToComponentData(props: object) {
 	let componentData: Record<string, any> = {};
@@ -96,8 +112,8 @@ function documentTrim(document: any[]) {
 	return mutableDocument;
 }
 
-export default function EventPage({ event }: EventQuery) {
-	const trimmedDocument = documentTrim(event?.postEventPage.document);
+export default function EventPage({ event }: QUERY_EVENT_RESULTS) {
+	const trimmedDocument = documentTrim(event?.eventPage.document);
 
 	return (
 		<div>
@@ -105,29 +121,11 @@ export default function EventPage({ event }: EventQuery) {
 				<title>{event.shortname} - AusSpeedruns</title>
 				<DiscordEmbed title={`${event.shortname} - AusSpeedruns`} pageUrl={`/event/${event.shortname}`} />
 			</Head>
-			<Navbar />
 			<main>
 				<DocumentRenderer document={trimmedDocument} componentBlocks={componentBlockRenderers} />
 			</main>
-			<Footer style={{ marginTop: -5 }} />
 		</div>
 	);
-}
-
-interface EventQuery {
-	event: {
-		id: string;
-		shortname: string;
-		acceptingSubmissions: boolean;
-		acceptingTickets: boolean;
-		scheduleReleased: boolean;
-		acceptingVolunteers: boolean;
-		acceptingBackups: boolean;
-		acceptingShirts: boolean;
-		postEventPage: {
-			document: any;
-		};
-	};
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -143,7 +141,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 		false
 	);
 
-	const data = await client.query<EventQuery>(EVENT_QUERY, ctx.params).toPromise();
+	const data = await client.query<QUERY_EVENT_RESULTS>(QUERY_EVENT, ctx.params).toPromise();
 
 	if (!data?.data || !data.data.event) {
 		return {

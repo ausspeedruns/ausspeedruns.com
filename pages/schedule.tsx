@@ -17,7 +17,6 @@ export default function Schedule() {
 				<title>ASAP2022 Schedule - AusSpeedruns</title>
 				<DiscordEmbed title="ASAP2022 Schedule" />
 			</Head>
-			<Navbar />
 			<main className={styles.content}>
 				<Image
                     src={ASAP2022Logo}
@@ -35,7 +34,6 @@ export default function Schedule() {
 					<iframe src="https://horaro.org/asap2022/schedule" />
 				</div>
 			</main>
-			<Footer />
 		</div>
     );
 }

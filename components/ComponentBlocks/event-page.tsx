@@ -1,11 +1,17 @@
 import React from 'react';
-import { NotEditable, component, fields } from '@keystone-6/fields-document/component-blocks';
+import {
+	NotEditable,
+	component,
+	fields,
+	InferRenderersForComponentBlocks,
+} from '@keystone-6/fields-document/component-blocks';
 
 import styled from '@emotion/styled';
-import Image from "next/image";
-import Button from '../Button/ButtonEmotion';
+import Image from 'next/image';
+import Button from '../Button/Button';
 import { faArrowRight, faTicket, faCalendar, faPerson, faShirt } from '@fortawesome/free-solid-svg-icons';
 import { Theme, Media } from '../../styles/colors';
+import styles from './event-page.module.scss';
 
 interface HeaderProps {
 	image: string;
@@ -145,69 +151,10 @@ const SoloImage = styled.img`
 	object-fit: cover;
 `;
 
-// naming the export componentBlocks is important because the Admin UI
-// expects to find the components like on the componentBlocks export
-export const componentBlocks = {
+const componentBlocks = {
 	header: component({
-		preview(props) {
-			return (
-				<HeaderContainer
-					contentEditable={false}
-					image={props.fields.backgroundImage.value}
-					position={props.fields.backgroundSettings.fields.position.value}
-					cover={props.fields.backgroundSettings.fields.cover.value}
-					repeat={props.fields.backgroundSettings.fields.repeat.value}
-				>
-					<HeaderLogo>
-						{/* <Image src={props.fields.event?.value?.data?.logo ?? ''} alt="AusSpeedruns At PAX 2022 Logo" /> */}
-					</HeaderLogo>
-					<ButtonContainer>
-						{props.fields.donateLink.value && (
-							<Button
-								actionText="Donate"
-								link={props.fields.donateLink.value}
-								target="_blank"
-								rel="noopener noreferrer"
-							/>
-						)}
-
-						{props.fields.event.value?.data?.acceptingSubmissions && (
-							<Button actionText="Submissions are open!" link="/submit-game" iconRight={faArrowRight} />
-						)}
-
-						{props.fields.event.value?.data?.acceptingBackups &&
-							!props.fields.event.value?.data?.acceptingSubmissions && (
-								<Button actionText="Backup submissions are open!" link="/submit-game" iconRight={faArrowRight} />
-							)}
-
-						{props.fields.ticketLink.value && (
-							<Button actionText="Purchase tickets" link={props.fields.ticketLink.value} iconRight={faTicket} />
-						)}
-
-						{props.fields.event.value?.data?.scheduleReleased && (
-							<Button actionText="Schedule" link="/schedule" iconRight={faCalendar} />
-						)}
-
-						{props.fields.event.value?.data?.acceptingVolunteers && (
-							<Button actionText="Be a volunteer!" link="/volunteers" iconRight={faPerson} />
-						)}
-
-						{props.fields.event.value?.data?.acceptingShirts && (
-							<Button actionText="Buy the ASM2022 Shirt! (Limited Time)" link="/store" iconRight={faShirt} />
-						)}
-
-						{/* <Button actionText="Donation Challenges" link="/ASM2022/challenges" iconRight={faArrowRight} /> */}
-
-						{/* <Button
-							actionText="Learn more about Game on Cancer"
-							link={props.fields.charityLink.value}
-							iconRight={faArrowRight}
-							target="_blank"
-							rel="noopener noreferrer"
-						/> */}
-					</ButtonContainer>
-				</HeaderContainer>
-			);
+		preview() {
+			return <></>;
 		},
 		label: 'Header',
 		schema: {
@@ -229,28 +176,8 @@ export const componentBlocks = {
 		},
 	}),
 	imageParagraph: component({
-		preview(props) {
-			return (
-                <ImageParagraphContainer
-					contentEditable={false}
-					style={{
-						color: props.fields.textDark.value ? Theme.darkText : Theme.lightText,
-						background: props.fields.colour.value,
-						flexDirection: props.fields.swapSides.value ? 'row-reverse' : 'row',
-					}}
-				>
-					<ImageContainer>
-						<Image
-                            src={props.fields.imageUrl.value}
-                            alt={props.fields.imageAlt.value}
-							fill
-							/>
-					</ImageContainer>
-					<ParagraphContainer>
-						<p>{props.fields.content.value}</p>
-					</ParagraphContainer>
-				</ImageParagraphContainer>
-            );
+		preview() {
+			return <></>;
 		},
 		label: 'Image + Paragraph',
 		schema: {
@@ -263,24 +190,8 @@ export const componentBlocks = {
 		},
 	}),
 	infoTable: component({
-		preview(props) {
-			return (
-				<InfoTableContainer>
-					<h3>Information</h3>
-					<InformationTable>
-						<tbody>
-							{props.fields.info.elements.map((info) => {
-								return (
-									<tr key={info.fields.info.value}>
-										<td>{info.fields.label.value}</td>
-										<td>{info.fields.info.value}</td>
-									</tr>
-								);
-							})}
-						</tbody>
-					</InformationTable>
-				</InfoTableContainer>
-			);
+		preview() {
+			return <></>;
 		},
 		label: 'Information Table',
 		schema: {
@@ -293,8 +204,8 @@ export const componentBlocks = {
 		},
 	}),
 	fullWidthImage: component({
-		preview(props) {
-			return <SoloImage src={props.fields.url.value} style={{ height: props.fields.height.value }} />;
+		preview() {
+			return <></>;
 		},
 		label: 'Full Width Image',
 		schema: {
@@ -302,4 +213,100 @@ export const componentBlocks = {
 			height: fields.text({ label: 'Height', defaultValue: '30rem' }),
 		},
 	}),
+};
+
+export const EventComponentRenderers: InferRenderersForComponentBlocks<typeof componentBlocks> = {
+	header: (props) => {
+		return (
+			<div
+				className={styles.header}
+				contentEditable={false}
+				style={{
+					backgroundImage: `url("${props.backgroundImage}")`,
+					backgroundPosition: props.backgroundSettings.position,
+					backgroundSize: props.backgroundSettings.cover ? 'cover' : 'contain',
+					backgroundRepeat: props.backgroundSettings.repeat,
+				}}
+			>
+				{props.event.data.logo && (
+					<div className={styles.logo}>
+						<Image src={props.event.data.logo} alt={`${props.event.data.shortname} Logo`} />
+					</div>
+				)}
+				<div className={styles.buttons}>
+					{props.donateLink && (
+						<Button actionText="Donate" link={props.donateLink} target="_blank" rel="noopener noreferrer" />
+					)}
+
+					{props.event?.data?.acceptingSubmissions && (
+						<Button actionText="Submissions are open!" link="/submit-game" iconRight={faArrowRight} />
+					)}
+
+					{props.event?.data?.acceptingBackups && !props.event?.data?.acceptingSubmissions && (
+						<Button actionText="Backup submissions are open!" link="/submit-game" iconRight={faArrowRight} />
+					)}
+
+					{props.ticketLink && <Button actionText="Purchase tickets" link={props.ticketLink} iconRight={faTicket} />}
+
+					{props.event?.data?.scheduleReleased && (
+						<Button actionText="Schedule" link="/schedule" iconRight={faCalendar} />
+					)}
+
+					{props.event?.data?.acceptingVolunteers && (
+						<Button actionText="Be a volunteer!" link="/volunteers" iconRight={faPerson} />
+					)}
+				</div>
+			</div>
+		);
+	},
+	imageParagraph: (props) => {
+		return (
+			<div
+				className={styles.imageParagraph}
+				contentEditable={false}
+				style={{
+					color: props.textDark ? Theme.darkText : Theme.lightText,
+					background: props.colour,
+					flexDirection: props.swapSides ? 'row-reverse' : 'row',
+				}}
+			>
+				<div className={styles.image}>
+					<Image src={props.imageUrl} alt={props.imageAlt} fill style={{ objectFit: 'cover' }} />
+				</div>
+				<div className={styles.content} style={{ background: `${props.colour}d9` }}>
+					<p>{props.content}</p>
+				</div>
+			</div>
+		);
+	},
+	infoTable: (props) => {
+		return (
+			<section className={styles.informationSection}>
+				<h3>Information</h3>
+				<table className={styles.information}>
+					<tbody>
+						{props.info.map((info) => {
+							return (
+								<tr key={info.info}>
+									<td>{info.label}</td>
+									<td>{info.info}</td>
+								</tr>
+							);
+						})}
+					</tbody>
+				</table>
+			</section>
+		);
+	},
+	fullWidthImage: (props) => {
+		return (
+			<Image
+				className={styles.footerImage}
+				src={props.url}
+				style={{ height: props.height, objectFit: 'cover' }}
+				fill
+				alt=""
+			/>
+		);
+	},
 };

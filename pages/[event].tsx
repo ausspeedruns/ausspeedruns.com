@@ -1,14 +1,11 @@
 import Head from 'next/head';
 import { gql, ssrExchange, cacheExchange, dedupExchange, fetchExchange, useQuery } from 'urql';
-import { InferRenderersForComponentBlocks } from '@keystone-6/fields-document/component-blocks';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
-import Navbar from '../components/Navbar/Navbar';
-import Footer from '../components/Footer/Footer';
 import DiscordEmbed from '../components/DiscordEmbed';
 import { initUrqlClient } from 'next-urql';
 import { GetServerSideProps } from 'next';
-import { componentBlocks } from '../components/BlogComponents/event-page';
+import { EventComponentRenderers } from '../components/ComponentBlocks/event-page';
 
 const QUERY_EVENT = gql`
 	query ($event: String!) {
@@ -78,22 +75,6 @@ function convertPropsToComponentData(props: object) {
 	return componentData;
 }
 
-const componentBlockRenderers: InferRenderersForComponentBlocks<typeof componentBlocks> = {
-	header: (props) => {
-		console.log(props, convertPropsToComponentData(props));
-		return <componentBlocks.header.preview fields={convertPropsToComponentData(props)} />;
-	},
-	imageParagraph: (props) => {
-		return <componentBlocks.imageParagraph.preview fields={convertPropsToComponentData(props)} />;
-	},
-	infoTable: (props) => {
-		return <componentBlocks.infoTable.preview fields={convertPropsToComponentData(props)} />;
-	},
-	fullWidthImage: (props) => {
-		return <componentBlocks.fullWidthImage.preview fields={convertPropsToComponentData(props)} />;
-	},
-};
-
 function documentTrim(document: any[]) {
 	const mutableDocument = [...document];
 
@@ -122,7 +103,7 @@ export default function EventPage({ event }: QUERY_EVENT_RESULTS) {
 				<DiscordEmbed title={`${event.shortname} - AusSpeedruns`} pageUrl={`/event/${event.shortname}`} />
 			</Head>
 			<main>
-				<DocumentRenderer document={trimmedDocument} componentBlocks={componentBlockRenderers} />
+				<DocumentRenderer document={trimmedDocument} componentBlocks={EventComponentRenderers} />
 			</main>
 		</div>
 	);

@@ -6,18 +6,14 @@ import { useQuery, gql } from 'urql';
 import { faArrowRight, faCalendar, faPerson, faShirt, faTicket } from '@fortawesome/free-solid-svg-icons';
 
 import styles from '../styles/Event.ASAP2022.module.scss';
-import Navbar from '../components/Navbar/Navbar';
-import Footer from '../components/Footer/Footer';
 import Button from '../components/Button/Button';
 import DiscordEmbed from '../components/DiscordEmbed';
 
 import PAX2022Logo from '../styles/img/PAX2022 Logo White.png';
 import StockPhoto1 from '../styles/img/PAXStock1.jpeg';
-import StockPhoto2 from '../styles/img/StockPhoto2.jpg';
 import StockPhoto3 from '../styles/img/PAXStock2.jpg';
 import GoCStockPhoto1 from '../styles/img/sponsors/GameOnCancer/GoCStockPhoto1.png';
 
-import GoCLogo from '../styles/img/sponsors/GameOnCancer/GoCCCWhite.svg';
 import HyperX from '../styles/img/sponsors/HyperX/HyperX Solid White.svg';
 import Landfall from '../styles/img/sponsors/Landfall.png';
 

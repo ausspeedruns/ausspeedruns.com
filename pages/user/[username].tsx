@@ -286,7 +286,6 @@ export default function ProfilePage(ssrData) {
 				<Head>
 					<title>{router.query.username} - AusSpeedruns</title>
 				</Head>
-				<Navbar />
 				<div className={styles.content}>
 					<h2>Could not find {router.query.username}</h2>
 				</div>

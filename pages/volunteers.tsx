@@ -521,7 +521,6 @@ const NoAuth: React.FC = () => {
 			<Head>
 				<title>{TITLE}</title>
 			</Head>
-			<Navbar />
 			<main className={`content ${styles.content} ${styles.noEvents}`}>
 				<h2>Please sign in to Volunteer.</h2>
 				<LinkButton actionText="Sign In" iconRight={faArrowRight} link="/signin" />
@@ -538,7 +537,6 @@ const NoEvent: React.FC = () => {
 			<Head>
 				<title>{TITLE}</title>
 			</Head>
-			<Navbar />
 			<main className={`content ${styles.content} ${styles.noEvents}`}>
 				<h2>Unfortunately we have no events currently accepting volunteers.</h2>
 				<p>Follow us on Twitter and Join our Discord to stay up to date!</p>

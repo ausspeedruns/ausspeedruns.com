@@ -44,4 +44,4 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start:next"]
+CMD ["npm", "run", "start"]

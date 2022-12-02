@@ -14,7 +14,6 @@
 		// height: 20rem;
 		padding: 2rem 0;
 		background-size: cover;
-		image-rendering: pixelated;
 	}
 
 	display: flex;
@@ -25,7 +24,8 @@
 
 	.logo {
 		width: 700px;
-		height: auto;
+		height: 100px;
+		position: relative;
 
 		@include breakpoint($sm-zero-only) {
 			width: 80%;

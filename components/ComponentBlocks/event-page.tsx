@@ -170,6 +170,7 @@ const componentBlocks = {
 				cover: fields.checkbox({ label: 'Background Cover?', defaultValue: true }),
 				repeat: fields.text({ label: 'Background Repeat', defaultValue: 'no-repeat' }),
 			}),
+			eventLogoBackup: fields.url({ label: 'eventLogoBackup' }),
 			donateLink: fields.url({ label: 'Donate URL' }),
 			charityLink: fields.url({ label: 'Charity URL' }),
 			ticketLink: fields.text({ label: 'Ticket Link' }),
@@ -228,16 +229,14 @@ export const EventComponentRenderers: InferRenderersForComponentBlocks<typeof co
 					backgroundRepeat: props.backgroundSettings.repeat,
 				}}
 			>
-				{props.event.data.logo && (
-					<div className={styles.logo}>
-						<Image
-							src={props.event.data.logo.src}
-							alt={`${props.event.data.shortname} Logo`}
-							fill
-							style={{ objectFit: 'contain' }}
-						/>
-					</div>
-				)}
+				<div className={styles.logo}>
+					<Image
+						src={props.event.data.logo?.src ?? props.eventLogoBackup}
+						alt={`${props.event.data.shortname} Logo`}
+						style={{ objectFit: 'contain' }}
+						fill
+					/>
+				</div>
 				<div className={styles.buttons}>
 					{props.donateLink && (
 						<Button actionText="Donate" link={props.donateLink} target="_blank" rel="noopener noreferrer" />

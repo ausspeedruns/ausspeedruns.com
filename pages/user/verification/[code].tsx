@@ -24,6 +24,7 @@ export default function Verification() {
 		variables: {
 			code: router.query.code,
 		},
+		pause: !router.query.code
 	});
 
 	const [deleteVerifResults, deleteVerification] = useMutation(gql`
@@ -35,7 +36,8 @@ export default function Verification() {
 	`);
 
 	useEffect(() => {
-		if (!verificationResults.fetching && verificationResults.data.verification) {
+		console.log(verificationResults)
+		if (!verificationResults.fetching && verificationResults.data?.accountVerification) {
 			deleteVerification({ code: router.query.code });
 			if (auth.ready && auth.sessionData) {
 				router.push('/');

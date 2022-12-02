@@ -1,28 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { gql, useMutation, useQuery } from 'urql';
 import Head from 'next/head';
-import {
-	Button,
-	CircularProgress,
-	TextField,
-	ThemeProvider,
-	Input,
-	Select,
-	MenuItem,
-	Alert,
-	Snackbar,
-} from '@mui/material';
+import { Button, CircularProgress, TextField, ThemeProvider, Select, MenuItem, Alert, Snackbar } from '@mui/material';
 
 import styles from '../../styles/User.EditUser.module.scss';
-import Navbar from '../../components/Navbar/Navbar';
 import { useAuth } from '../../components/auth';
 import { theme } from '../../components/mui-theme';
 import DiscordEmbed from '../../components/DiscordEmbed';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
-import { DatePicker, LocalizationProvider } from '@mui/lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import enLocale from 'date-fns/locale/en-AU';
 import sub from 'date-fns/sub';
 
@@ -115,7 +104,10 @@ export default function EditUser() {
 	useEffect(() => {
 		// console.log(updateVerificationTimeResult)
 		if (updateVerificationTimeResult.error) {
-			if (updateVerificationTimeResult.error.message === `[GraphQL] You provided invalid data for this operation.\n  - User.sentVerification: Sending new verification too soon.`) {
+			if (
+				updateVerificationTimeResult.error.message ===
+				`[GraphQL] You provided invalid data for this operation.\n  - User.sentVerification: Sending new verification too soon.`
+			) {
 				setSendVerificationSnack(true);
 				setSendVerificationSnackError(true);
 				// console.log('Setting true')
@@ -183,7 +175,7 @@ export default function EditUser() {
 	const maxDate = sub(new Date(), { years: 13 });
 
 	return (
-        <ThemeProvider theme={theme}>
+		<ThemeProvider theme={theme}>
 			<Head>
 				<title>Edit User - AusSpeedruns</title>
 				<DiscordEmbed title={`Edit User - AusSpeedruns`} pageUrl="/user/edit-user" />
@@ -191,8 +183,8 @@ export default function EditUser() {
 			<div className={styles.content}>
 				<h1>{username}</h1>
 				<Link href={`/user/${username}`} passHref className={styles.return}>
-                    <FontAwesomeIcon icon={faChevronLeft} /> Return
-                </Link>
+					<FontAwesomeIcon icon={faChevronLeft} /> Return
+				</Link>
 				{(queryResult.fetching || queryResult.data?.user === null) && <CircularProgress />}
 				{queryResult.error && <h2>{queryResult.error.message}</h2>}
 				{updateResult.error && <h2>{updateResult.error.message}</h2>}
@@ -317,5 +309,5 @@ export default function EditUser() {
 				)}
 			</Snackbar>
 		</ThemeProvider>
-    );
+	);
 }

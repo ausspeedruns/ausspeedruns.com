@@ -2,15 +2,14 @@ import { useEffect, useState } from 'react';
 import { gql, useMutation } from 'urql';
 import Head from 'next/head';
 import Link from 'next/link';
-import { Button, Checkbox, FormControlLabel, TextField, ThemeProvider, Tooltip } from '@mui/material';
+import { Button, TextField, ThemeProvider } from '@mui/material';
 
-import Navbar from '../components/Navbar/Navbar';
 // import Footer from '../components/Footer/Footer';
 import styles from '../styles/SignIn.module.scss';
 import { theme } from '../components/mui-theme';
 import DiscordEmbed from '../components/DiscordEmbed';
-import { LocalizationProvider, DatePicker } from '@mui/lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import sub from 'date-fns/sub';
 import enLocale from 'date-fns/locale/en-AU';
 

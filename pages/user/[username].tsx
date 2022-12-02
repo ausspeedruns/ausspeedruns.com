@@ -298,11 +298,11 @@ export default function ProfilePage(ssrData) {
 	// Get all event names for tabs
 	// Would just do [...new Set(****)] buuuuuuuut... https://stackoverflow.com/questions/33464504/using-spread-syntax-and-new-set-with-typescript
 	const allSubmissionEvents = [
-		...Array.from(new Set(privateDataResults?.user.submissions.map((submission) => submission.event.shortname))),
+		...Array.from(new Set(privateDataResults?.user.submissions.map((submission) => submission.event?.shortname))),
 	];
 	const allRunEvents = [
 		...Array.from(
-			new Set(publicDataResults.runs.map((run) => (run.finalTime ? run.event.shortname : undefined)))
+			new Set(publicDataResults.runs.map((run) => (run.finalTime ? run.event?.shortname : undefined)))
 		).filter((el) => typeof el !== 'undefined'),
 	];
 
@@ -361,7 +361,7 @@ export default function ProfilePage(ssrData) {
 							</Tabs>
 						</Box>
 						{privateDataResults.user.submissions.map((submission) => {
-							if (submission.event.shortname !== allSubmissionEvents[submissionTab]) return;
+							if (submission.event?.shortname !== allSubmissionEvents[submissionTab]) return;
 							return <SubmissionAccordian key={submission.id} submission={submission} event={submission.event} />;
 						})}
 					</div>
@@ -411,7 +411,7 @@ export default function ProfilePage(ssrData) {
 					{publicDataResults.runs.map((run) => {
 						if (!run.finalTime) return;
 						return (
-							<div key={run.id} hidden={run.event.shortname !== allRunEvents[eventTab]}>
+							<div key={run.id} hidden={run.event?.shortname !== allRunEvents[eventTab]}>
 								<RunCompleted run={run} />
 							</div>
 						);

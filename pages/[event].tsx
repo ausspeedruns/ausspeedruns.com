@@ -99,7 +99,7 @@ export default function EventPage({ event }: QUERY_EVENT_RESULTS) {
 	return (
 		<div>
 			<Head>
-				<title>{event.shortname} - AusSpeedruns</title>
+				<title>{`${event.shortname} - AusSpeedruns`}</title>
 				<DiscordEmbed title={`${event.shortname} - AusSpeedruns`} pageUrl={`/event/${event.shortname}`} />
 			</Head>
 			<main>

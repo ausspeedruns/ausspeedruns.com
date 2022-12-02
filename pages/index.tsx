@@ -8,16 +8,11 @@ import TileGroup from '../components/Tiles/TileGroup';
 import Footer from '../components/Footer/Footer';
 import { globals } from '../globals';
 import DiscordEmbed from '../components/DiscordEmbed';
-import Image from "next/image";
 
 import styles from '../styles/index.module.scss';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Button from '../components/Button/Button';
-import { EventLive } from '../components/EventLive/EventLive';
 import LastEventBlock from '../components/LastEventBlock/LastEventBlock';
-
-import HyperX from '../styles/img/sponsors/HyperX/HyperX Solid White.svg';
-import Landfall from '../styles/img/sponsors/Landfall.png';
 
 export default function Home() {
 	const {
@@ -32,6 +27,7 @@ export default function Home() {
 			<main>
 				{/* {!eventLive && <Heroblock event={current} />}
 				{eventLive && <EventLive event={current.preferredName} />} */}
+				<Heroblock event={next} />
 				<LastEventBlock event={current} backgroundPos="center" />
 				<LastEventBlock event={previous} />
 				<section className={styles.archive}>

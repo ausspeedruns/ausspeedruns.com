@@ -299,7 +299,7 @@ export default function SubmitGamePage() {
 						</>
 					) : (
 						<>
-							{eventsResult.data.events.length > 1 && (
+							{eventsResult.data?.events.length > 1 && (
 								<FormControl fullWidth>
 									<InputLabel id="event-label">Event</InputLabel>
 									<Select
@@ -344,7 +344,7 @@ export default function SubmitGamePage() {
 										You are the voice of the event reading off donations and letting the viewers know about the charity
 										and any sponsors.
 										<br/>
-										Any queries please contact werster on Discord.
+										Any queries please contact <i>werster</i> on Discord.
 									</p>
 									<div className={styles.question}>
 										<span>What is the maximum amount of hours you are comfortable hosting for the entire event?*</span>
@@ -408,7 +408,7 @@ export default function SubmitGamePage() {
 								<>
 									<p>In charge of creating and posting social media content throughout the event (ie. tweets of upcoming runs, Instagram stories, photos).
 										<br/>
-										Any queries please contact Nase on Discord.</p>
+										Any queries please contact <i>Nase</i> on Discord.</p>
 									<FormControl fullWidth>
 										<InputLabel id="socialmedia-experience-label">Experience level</InputLabel>
 										<Select
@@ -440,7 +440,7 @@ export default function SubmitGamePage() {
 										Assisting runners with any queries they may have throughout the events, making sure runners are
 										present for their runs, checking vaccination status of and handing out passes to attendees.
 										<br/>
-										Any queries please contact Sten on Discord.
+										Any queries please contact <i>Sten</i> on Discord.
 									</p>
 									<div className={styles.question}>
 										<span>
@@ -464,7 +464,7 @@ export default function SubmitGamePage() {
 									<p>
 										Setting up next runs and managing the stream. Some roles vary in difficulty and experience required.
 										<br/>
-										Any queries please contact nei or Clubwho on Discord.
+										Any queries please contact <i>nei</i> or <i>Clubwho</i> on Discord.
 									</p>
 									<div className={styles.question}>
 										<span>

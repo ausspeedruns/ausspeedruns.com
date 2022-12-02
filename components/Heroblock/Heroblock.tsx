@@ -56,18 +56,18 @@ const Heroblock = ({ event }: HeroblockProps) => {
 	};
 
 	return (
-        <section className={styles.heroblock} style={{backgroundImage: `url(${require(`../../styles/img/${event.heroImage}`).default.src}`}}>
+        <section className={styles.heroblock} style={{backgroundImage: `url("${require(`../../styles/img/${event.heroImage}`).default.src}")`}}>
 			<div className={`${styles.content} content`}>
 				{showVideoBlock && <TwitchVideoEmbed channel="ausspeedruns" parent={window.location.hostname} />}
 				<div className={styles.ctaBlock}>
 					<h1>{event.preferredName}</h1>
 					<h2>{event.dates}</h2>
 					<h3 className="countdown monospaced">
-						<Countdown date={Date.UTC(2022, 9, 7, 0, 0, 0, 0)} renderer={countdownRender} zeroPadTime={2} />
+						<Countdown date={Date.UTC(2023, 2, 11, 0, 0, 0, 0)} renderer={countdownRender} zeroPadTime={2} />
 					</h3>
 					<br />
 					{/* <h2>ASM2021 raised a total of ${ASM_2021_TOTAL_RAISED}</h2> */}
-					<p>We will be at PAX Aus! Schedule has been released.</p>
+					<p>We will be at The Game Expo! Game submissions for ASGX2023 are OPEN!</p>
 					<p></p>
 					{showVideoBlock && (
 						<Button
@@ -80,7 +80,7 @@ const Heroblock = ({ event }: HeroblockProps) => {
 					)}
 					{!showVideoBlock && (
 						<>
-							<Button actionText={event.preferredName} link={'/ASAP2022'} iconRight={faChevronRight} colorScheme={'secondary'} />
+							<Button actionText={event.preferredName} link={'/ASGX2023'} iconRight={faChevronRight} colorScheme={'secondary'} />
 							<Button
 								actionText="Purchase Tickets"
 								link={event.website}
@@ -88,7 +88,7 @@ const Heroblock = ({ event }: HeroblockProps) => {
 								colorScheme={'secondary'}
 							/>
 							{/* <Button actionText="Submit your run!" link={'/submit-game'} iconRight={faChevronRight} colorScheme={'secondary'} /> */}
-							<Button actionText="Schedule" link={'/schedule'} iconRight={faCalendar} colorScheme={'secondary'} />
+							{/* <Button actionText="Schedule" link={'/schedule'} iconRight={faCalendar} colorScheme={'secondary'} /> */}
 						</>
 					)}
 				</div>
@@ -96,13 +96,6 @@ const Heroblock = ({ event }: HeroblockProps) => {
 					<Image
                         src={require(`../../styles/img/${event.logo}`).default}
                         alt="Event Logo"
-                        style={{
-                            maxWidth: "100%",
-                            height: "auto"
-                        }} />
-					<Image
-                        src={require(`../../styles/img/sponsors/GameOnCancer/GoCCCWhite.svg`).default}
-                        alt="Game on Cancer Logo"
                         style={{
                             maxWidth: "100%",
                             height: "auto"

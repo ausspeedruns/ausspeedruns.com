@@ -3,10 +3,10 @@
 
 .heroblock {
   width: 100%;
-  background: url("../../styles/img/hero-image.png") no-repeat;
+  // background: url("../../styles/img/hero-image.png") no-repeat;
   background-size: cover;
   background-position: center;
-  color: $hero-text;
+  color: $dark-text;
 
   .content {
     display: flex;

@@ -29,10 +29,13 @@ export const globals: Globals = {
       heroImage: 'PAX2022HeroPost.png',
     },
     next: {
-      fullName: 'Australian Speedrun Marathon 2023',
-      preferredName: 'ASM2023',
-      shortName: 'ASM2023',
-      dates: "2023"
+      fullName: 'AusSpeedruns Game Expo 2023',
+      preferredName: 'ASGX2023',
+      shortName: 'ASGX2023',
+      dates: "March 11 - 12, 2023",
+      heroImage: 'ASGX Repeating Background.png',
+      logo: 'ASGX2023 Logo.png',
+      website: 'https://www.thegameexpo.com/'
     },
     oldEvents: {
       'ASM2021': {

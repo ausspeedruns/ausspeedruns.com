@@ -91,42 +91,14 @@ const Navbar = ({ events = [] }: NavbarProps) => {
 						AusSpeedruns
 					</Link>
 				</div>
-				<button className="menu-toggle" onClick={() => setIsOpen(!isOpen)} aria-expanded={isOpen.valueOf()}>
+				<button className={styles.menuToggle} onClick={() => setIsOpen(!isOpen)} aria-expanded={isOpen.valueOf()}>
 					{!isOpen ? <FontAwesomeIcon icon={faBars} /> : <FontAwesomeIcon icon={faTimes} />}
-					<span className="sr-only">Menu</span>
+					<span>Menu</span>
 				</button>
 				{isMobile ? <div className={styles.break}></div> : ''}
 
 				<nav className={`${styles.mainmenu} ${isOpen ? styles.menuopen : styles.menuclosed}`} aria-label="Main menu">
 					<ul>
-						{/* <li>
-              <a href={globals.scheduleLink}>
-                { isMobile ? (<FontAwesomeIcon icon={faCalendarAlt} />) : '' }
-                <span className={styles.text}>Schedule</span>
-              </a>
-            </li> */}
-						{/* {isLive && (
-							<>
-								<li>
-									{isMobile ? <FontAwesomeIcon icon={faCoins} /> : ''}
-									<Link href="/ASAP2022/challenges" passHref className={styles.text}>
-										Challenges
-									</Link>
-								</li>
-								<li>
-									{isMobile ? <FontAwesomeIcon icon={faCalendar} /> : ''}
-									<Link href="/schedule" passHref className={styles.text}>
-										Schedule
-									</Link>
-								</li>
-								<li>
-									{isMobile ? <FontAwesomeIcon icon={faCoins} /> : ''}
-									<Link href="/prizes" passHref className={styles.text}>
-										Prizes
-									</Link>
-								</li>
-							</>
-						)} */}
 						{upcomingOrLiveEvents.map((event) => {
 							return (
 								<li key={event.shortname}>
@@ -139,80 +111,43 @@ const Navbar = ({ events = [] }: NavbarProps) => {
 							);
 						})}
 						<li>
-							<div className={styles.dropdown}>
-								<a className={styles.dropbtn}>
-									{isMobile ? (
-										// @ts-ignore
-										<FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo} />
-									) : (
-										''
-									)}
-									Past Events
-								</a>
-								<div className={styles.dropdownContent}>
-									{pastEvents.map((event) => {
-										return (
-											<Link key={event.shortname} href={`/${event.shortname}`} passHref className={styles.text}>
-												{event.shortname}
-											</Link>
-										);
-									})}
-								</div>
-							</div>
-						</li>
-						{/* <li>
-							{isMobile ? <FontAwesomeIcon width={20} className={styles.icon} icon={faBook} /> : ''}
-							<Link href="/blog" passHref>
-								<a className={styles.text}>Blog</a>
+							{/* @ts-ignore */}
+							{isMobile ? <FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo} /> : ''}
+							<Link href={`/events`} passHref className={styles.text}>
+								Past Events
 							</Link>
-						</li> */}
-						<li className="social">
+						</li>
+						<li>
 							<a href={globals.socialLinks.twitch} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon width={20} icon={faTwitch} />
 								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Twitch</span>
 							</a>
 						</li>
-						{/* <li className="social">
-              <a href={globals.socialLinks.facebook}>
-                <FontAwesomeIcon icon={faFacebook} />
-                <span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Like us on Facebook</span>
-              </a>
-            </li> */}
-						<li className="social">
+						<li>
 							<a href={globals.socialLinks.twitter} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon width={20} icon={faTwitter} />
 								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Twitter</span>
 							</a>
 						</li>
-						<li className="social">
+						<li>
 							<a href={globals.socialLinks.youtube} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon width={20} icon={faYoutube} />
 								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>YouTube</span>
 							</a>
 						</li>
-						<li className="social">
+						<li>
 							<a href={globals.socialLinks.discord} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon width={20} icon={faDiscord} />
 								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Discord</span>
 							</a>
 						</li>
-						<li className="social">
+						<li>
 							<a href={globals.socialLinks.instagram} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon width={20} icon={faInstagram} />
 								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Instagram</span>
 							</a>
 						</li>
-						{/* {isLive && (
-							<li className={styles.cta}>
-								<Button
-									actionText="Donate"
-									link={globals.donateLink}
-									iconRight={faChevronRight}
-									colorScheme={'orange'}
-								/>
-							</li>
-						)} */}
-						<li>
+						<li className={styles.auth}>
 							{auth.ready && auth.sessionData ? (
 								<>
 									<Button

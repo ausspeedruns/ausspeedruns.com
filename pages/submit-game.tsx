@@ -102,7 +102,9 @@ export default function SubmitGamePage() {
 				events(where: { OR: [{ acceptingSubmissions: { equals: true } }, { acceptingBackups: { equals: true } }] }) {
 					id
 					shortname
-					submissionInstructions { document }
+					submissionInstructions {
+						document
+					}
 					startDate
 					endDate
 					eventTimezone
@@ -112,8 +114,6 @@ export default function SubmitGamePage() {
 			}
 		`,
 	});
-
-	console.log(eventsResult)
 
 	// Mutation for game submission
 	const [submissionResult, createSubmission] = useMutation(gql`
@@ -346,7 +346,7 @@ export default function SubmitGamePage() {
 											return (
 												<MenuItem value={event.id} key={event.id}>
 													{event.shortname}
-													{event.acceptingBackups ? ' (Backups)' : ''}
+													{event.acceptingBackups && !event.acceptingSubmissions ? ' (Backups)' : ''}
 												</MenuItem>
 											);
 										})}
@@ -457,7 +457,9 @@ export default function SubmitGamePage() {
 
 							{race !== 'no' && (
 								<>
-									<p style={{textAlign: 'center', fontWeight: 'bold'}}>IMPORTANT! All other runners must also submit the game.</p>
+									<p style={{ textAlign: 'center', fontWeight: 'bold' }}>
+										IMPORTANT! All other runners must also submit the game.
+									</p>
 									<FormControlLabel
 										control={<Checkbox onChange={(e) => setCoop(e.target.checked)} checked={coop} />}
 										label="Coop"
@@ -500,7 +502,9 @@ export default function SubmitGamePage() {
 									label="Allow as backup run"
 								/>
 							)}
-							<DocumentRenderer document={currentEvent?.submissionInstructions.document} />
+							{currentEvent?.submissionInstructions.document && (
+								<DocumentRenderer document={currentEvent.submissionInstructions.document} />
+							)}
 							{submissionResult.error && <h2>{HumanErrorMsg(submissionResult.error.message)}</h2>}
 							<Button variant="contained" type="submit" disabled={!canSubmit}>
 								Submit

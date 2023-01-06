@@ -21,11 +21,13 @@ module.exports = {
 	images: {
 		domains: [
 			'localhost',
+			'127.0.0.1',
 			'ausspeedruns.com',
 			'beta.ausspeedruns.com',
 			'ausrunsstoragebeta.blob.core.windows.net',
 			'ausrunsstoragebeta.blob.core.windows.net',
 			'ausrunsstorage.blob.core.windows.net',
+			'ausspeedruns.sharepoint.com',
 		],
 	},
 	output: 'standalone',

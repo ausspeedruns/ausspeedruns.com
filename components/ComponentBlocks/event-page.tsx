@@ -1,155 +1,15 @@
 import React from 'react';
 import {
-	NotEditable,
 	component,
 	fields,
 	InferRenderersForComponentBlocks,
 } from '@keystone-6/fields-document/component-blocks';
 
-import styled from '@emotion/styled';
 import Image from 'next/image';
 import Button from '../Button/Button';
 import { faArrowRight, faTicket, faCalendar, faPerson, faShirt } from '@fortawesome/free-solid-svg-icons';
-import { Theme, Media } from '../../styles/colors';
+import { Theme } from '../../styles/colors';
 import styles from './event-page.module.scss';
-
-interface HeaderProps {
-	image: string;
-	position: string;
-	cover: boolean;
-	repeat: string;
-}
-
-const HeaderContainer = styled.div<HeaderProps>`
-	background-image: url('${(props) => props.image}');
-	background-position: ${(props) => props.position};
-	background-size: ${(props) => (props.cover ? 'cover' : 'contain')};
-	background-repeat: ${(props) => props.repeat};
-	box-shadow: inset 0 0 20px 0px black;
-	background-color: #024759;
-	width: 100%;
-	min-height: 25rem;
-
-	@media (min-width: ${Media.sm}) {
-		// height: 20rem;
-		padding: 2rem 0;
-		background-size: cover;
-	}
-
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
-	align-items: center;
-	gap: 16px;
-`;
-
-const HeaderLogo = styled.div`
-	width: 700px;
-	height: auto;
-
-	@media (min-width: ${Media.sm}) {
-		width: 80%;
-	}
-`;
-
-const ButtonContainer = styled.div`
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 20px;
-
-	@media (max-width: ${Media.sm}) {
-		grid-template-columns: 80%;
-		justify-content: center;
-	}
-`;
-
-const ImageParagraphContainer = styled.div`
-	width: 100%;
-	display: flex;
-	height: 30rem;
-`;
-
-const ImageContainer = styled.div`
-	position: relative;
-	width: 50%;
-
-	img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-`;
-
-const ParagraphContainer = styled.div`
-	width: 50%;
-	text-align: center;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-
-	h2 {
-		font-size: 1.2rem;
-
-		@media (min-width: ${Media.lg}) {
-			font-size: 2rem;
-		}
-	}
-
-	p {
-		font-size: 1rem;
-		width: 80%;
-
-		@media (min-width: ${Media.lg}) {
-			font-size: 1.4rem;
-			width: 70%;
-		}
-	}
-`;
-
-const InfoTableContainer = styled.div`
-	box-shadow: inset 0 0 20px 0px black;
-	background-color: $color-off-white;
-	height: 30rem;
-	width: 100%;
-
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-
-	font-size: 1.3rem;
-
-	@media (max-width: ${Media.sm}) {
-		font-size: 1rem;
-	}
-
-	h3 {
-		font-size: 1.8rem;
-	}
-
-	.information {
-	}
-`;
-
-const InformationTable = styled.table`
-	@media (min-width: ${Media.sm}) {
-		padding: 0 20px;
-	}
-
-	td:nth-of-type(odd) {
-		font-weight: bold;
-	}
-
-	td:nth-of-type(even) {
-		text-align: right;
-	}
-`;
-
-const SoloImage = styled.img`
-	width: 100%;
-	object-fit: cover;
-`;
 
 const componentBlocks = {
 	header: component({

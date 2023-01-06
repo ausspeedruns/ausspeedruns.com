@@ -9,22 +9,27 @@
   width: 100%;
   background: $secondary;
   height: auto;
+  z-index: 2;
+  position: relative;
+  padding: 0 1rem;
 
   .content {
     display: flex;
     align-items: center;
     flex-flow: wrap;
-    padding-left: 8rem;
-    padding-right: 8rem;
     max-width: 2000px;
 
     @include breakpoint($sm) {
       flex-direction: column;
       justify-content: space-between;
     }
-
+    
     @include breakpoint($md) {
       flex-flow: row nowrap;
+    }
+
+    @include breakpoint($lg) {
+      padding: 0 8rem;
     }
   }
 
@@ -46,6 +51,7 @@
       align-items: center;
       text-decoration: none;
       color: $light-text;
+      white-space: nowrap;
 
       &:-webkit-any-link {
         color: $light-text;
@@ -122,8 +128,11 @@
 
 
   .mainmenu {
+    width: 100%;
+
     &.menuopen {
       display: block;
+      border-top: 2px solid white;
     }
 
     &.menuclosed {
@@ -136,6 +145,13 @@
 
     li {
       fill-rule: evenodd;
+    }
+  }
+
+  .menuToggle {
+    span {
+      margin-left: 8px;
+      font-size: 1rem;
     }
   }
 
@@ -163,44 +179,6 @@
   // }
 }
 
-.dropbtn {
-  color: $light-text;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
+.auth {
+  justify-content: center;
 }
-
-.dropdown {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.dropdownContent {
-  display: none;
-  position: absolute;
-  background-color: $secondary;
-  width: 100%;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  top: 54px;
-  text-align: center;
-}
-
-.dropdownContent a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropbtn:hover {
-  color: $light-text !important;
-  text-decoration: none;
-}
-
-.dropdownContent a:hover {background-color: #ddd;}
-
-.dropdown:hover .dropdownContent {display: block;}
-
-.dropdown:hover .dropbtn {background-color: $primary;}

@@ -25,7 +25,7 @@ function HumanErrorMsg(error: string) {
 	}
 }
 
-const UsernameRegex = /^[a-zA-Z0-9_][\w]{2,24}$/;
+const UsernameRegex = /^[a-zA-Z0-9_-][\w-]{2,24}$/;
 
 export default function SignUpPage() {
 	const [{ error, data }, signup] = useMutation(gql`
@@ -100,7 +100,7 @@ export default function SignUpPage() {
 						variant="outlined"
 						label="Username"
 						error={!UsernameRegex.test(username) && username.length !== 0}
-						helperText="Letters, numbers and underscore allowed. 3-25 Characters."
+						helperText="Letters, numbers, underscores and hyphens allowed. 3-25 Characters."
 						inputProps={{ maxLength: 25 }}
 					/>
 					<LocalizationProvider dateAdapter={AdapterDateFns} locale={enLocale}>

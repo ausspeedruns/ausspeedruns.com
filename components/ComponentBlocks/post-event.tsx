@@ -32,7 +32,7 @@ const componentBlocks = {
 			amount: fields.text({ label: 'Amount Raised' }),
 		},
 	}),
-	allRuns: component({
+	AllRuns: component({
 		preview() {
 			return <></>;
 		},
@@ -101,7 +101,7 @@ export const PostEventComponentRenderers: InferRenderersForComponentBlocks<typeo
 			</div>
 		);
 	},
-	allRuns: (props) => {
+	AllRuns: (props) => {
 		const [search, setSearch] = useState('');
 
 		if (!props.event) return <></>;
@@ -235,6 +235,7 @@ export const PostEventComponentRenderers: InferRenderersForComponentBlocks<typeo
 		return (
 			<figure className={styles.image}>
 				<div className={styles.image}>
+					{/* eslint-disable-next-line @next/next/no-img-element */}
 					<img src={props.imgUrl} alt={props.caption} />
 				</div>
 				<figcaption>{props.caption}</figcaption>

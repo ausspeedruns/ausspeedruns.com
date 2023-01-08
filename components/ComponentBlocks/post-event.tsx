@@ -17,8 +17,11 @@ const componentBlocks = {
 		},
 		label: 'Event Logo',
 		schema: {
-			url: fields.url({ label: 'Logo URL' }),
-			altText: fields.text({ label: 'Alt text' }),
+			eventLogo: fields.relationship({
+				label: 'Event',
+				listKey: 'Event',
+				selection: '',
+			}),
 		},
 	}),
 	raisedAmount: component({
@@ -128,7 +131,7 @@ export const PostEventComponentRenderers: InferRenderersForComponentBlocks<typeo
 	eventLogo: (props) => {
 		return (
 			<div className={styles.eventLogo}>
-				<Image src={props.url} fill alt={props.altText} />
+				<Image src={props.eventLogo.data.logo.url} fill alt={`${props.eventLogo.data.name} Logo`} />
 			</div>
 		);
 	},
@@ -232,9 +235,7 @@ export const PostEventComponentRenderers: InferRenderersForComponentBlocks<typeo
 											<div className={styles.metadata}>
 												<div className={styles.column}>
 													<span className={styles.label}>Run by</span>
-													<div>
-														{RunnerLinks(runners, run.race, styles.runnerLink)}
-													</div>
+													<div>{RunnerLinks(runners, run.race, styles.runnerLink)}</div>
 													<span className={styles.label}>Final Time</span>
 													<span className={styles.finalTime}>{run.finalTime}</span>
 													<span className={styles.label}>Console</span>

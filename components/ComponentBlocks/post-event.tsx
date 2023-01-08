@@ -82,6 +82,48 @@ interface AllRunsEvent {
 	}[];
 }
 
+function GetRunnerElement(runner: { id?: string; username: string }, className?: string) {
+	if (runner.id) {
+		return (
+			<Link key={runner.id} className={className} href={`/user/${runner.username}`}>
+				{runner.username}
+			</Link>
+		);
+	}
+
+	return (
+		<span key={runner.username} className={className}>
+			{runner.username}
+		</span>
+	);
+}
+
+function RunnerLinks(runners: { id?: string; username: string }[], race = false, className?: string) {
+	return runners.map((runner, i) => {
+		// If only one name or second last in the list to not include a comma
+		if (runners.length === 1 || i === runners.length - 2) {
+			return GetRunnerElement(runner, className);
+		}
+
+		// End of names
+		if (i === runners.length - 1) {
+			return (
+				<>
+					<span> {race ? 'vs' : 'and'} </span>
+					{GetRunnerElement(runner, className)}
+				</>
+			);
+		}
+
+		return (
+			<>
+				{GetRunnerElement(runner, className)}
+				<span>, </span>
+			</>
+		);
+	});
+}
+
 export const PostEventComponentRenderers: InferRenderersForComponentBlocks<typeof componentBlocks> = {
 	eventLogo: (props) => {
 		return (
@@ -191,21 +233,7 @@ export const PostEventComponentRenderers: InferRenderersForComponentBlocks<typeo
 												<div className={styles.column}>
 													<span className={styles.label}>Run by</span>
 													<div>
-														{runners.map((runner) => {
-															if (runner.id) {
-																return (
-																	<Link key={runner.id} className={styles.runnerLink} href={`/user/${runner.username}`}>
-																		{runner.username}
-																	</Link>
-																);
-															}
-
-															return (
-																<span key={runner.username} className={styles.genericRunner}>
-																	{runner.username}
-																</span>
-															);
-														})}
+														{RunnerLinks(runners, run.race, styles.runnerLink)}
 													</div>
 													<span className={styles.label}>Final Time</span>
 													<span className={styles.finalTime}>{run.finalTime}</span>

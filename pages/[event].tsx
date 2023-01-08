@@ -71,7 +71,7 @@ interface QUERY_LIVE_EVENT_RESULTS {
 		eventPage: {
 			document: any;
 		};
-		ogImage: {
+		ogImage?: {
 			url: string;
 		};
 	};
@@ -87,7 +87,7 @@ interface QUERY_PAST_EVENT_RESULTS {
 		postEventBackground: {
 			url: string;
 		};
-		ogImage: {
+		ogImage?: {
 			url: string;
 		};
 	};
@@ -123,8 +123,8 @@ export default function EventPage(eventData: LivePageData | PastPageData) {
 				<DiscordEmbed
 					title={`${eventData.event.shortname} - AusSpeedruns`}
 					pageUrl={`/event/${eventData.event.shortname}`}
+					imageSrc={eventData.event.ogImage?.url}
 				/>
-				{eventData.event.ogImage && <meta property="og:image" content={eventData.event.ogImage.url} />}
 			</Head>
 			<main
 				className={eventData.past === true ? styles.postEvent : ''}

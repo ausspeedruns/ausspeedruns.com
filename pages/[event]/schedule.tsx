@@ -77,7 +77,7 @@ interface QUERY_EVENT_RESULTS {
 			height: number;
 			width: number;
 		};
-		ogImage: {
+		ogImage?: {
 			url: string;
 		};
 		runs: {
@@ -211,8 +211,7 @@ export default function EventSchedule({ event }: QUERY_EVENT_RESULTS) {
 		<ThemeProvider theme={theme}>
 			<Head>
 				<title>{event.shortname} Schedule - AusSpeedruns</title>
-				<DiscordEmbed title={`${event.shortname} Schedule`} />
-				{event.ogImage && <meta property="og:image" content={event.ogImage.url} />}
+				<DiscordEmbed title={`${event.shortname} Schedule`} imageSrc={event.ogImage?.url} />
 			</Head>
 			<main className={styles.content}>
 				{event.logo && (
@@ -453,7 +452,7 @@ const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 				{categoryExtras}
 				{run.category}
 			</span>
-			<span className={styles.runners}>{run.runners.length > 0 ? runnerParsing(run.runners): run.racer}</span>
+			<span className={styles.runners}>{run.runners.length > 0 ? runnerParsing(run.runners) : run.racer}</span>
 			<span className={styles.estimate}>
 				{run.estimate.split(':')[0].padStart(2, '0')}:{run.estimate.split(':')[1]}
 			</span>

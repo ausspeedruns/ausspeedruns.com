@@ -138,9 +138,10 @@ export const PostEventComponentRenderers: InferRenderersForComponentBlocks<typeo
 							donationIncentive: false,
 							search,
 						}).map((run) => {
-							let runners = run.runners;
-							if (runners.length === 0) {
-								runners = [{ id: undefined, username: run.racer }];
+							let runners: { id?: string; username: string }[] = [];
+							runners.push(...run.runners);
+							if (run.racer) {
+								runners.push({ id: undefined, username: run.racer });
 							}
 
 							// const expanded = openedRuns.includes(run.id);

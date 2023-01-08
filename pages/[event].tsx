@@ -124,7 +124,7 @@ export default function EventPage(eventData: LivePageData | PastPageData) {
 					title={`${eventData.event.shortname} - AusSpeedruns`}
 					pageUrl={`/event/${eventData.event.shortname}`}
 				/>
-				<meta property="og:image" content={eventData.event.ogImage.url} />
+				{eventData.event.ogImage && <meta property="og:image" content={eventData.event.ogImage.url} />}
 			</Head>
 			<main
 				className={eventData.past === true ? styles.postEvent : ''}

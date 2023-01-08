@@ -377,8 +377,8 @@ export default function ProfilePage(ssrData) {
 					</div>
 				)}
 
-				{/* Tickets */}
-				{privateDataResults?.user.tickets.length > 0 && (
+				{/* Shirt Orders */}
+				{privateDataResults?.user.shirts.length > 0 && (
 					<div className={styles.submissions}>
 						<h3 id="shirts">Shirt Orders (Private)</h3>
 						{privateDataResults.user.shirts.map((shirt) => {
@@ -403,7 +403,7 @@ export default function ProfilePage(ssrData) {
 				<div className={styles.runs}>
 					<Box>
 						<Tabs value={eventTab} onChange={(_e, newVal) => setEventTab(newVal)}>
-							{allRunEvents.map((event) => (
+							{allRunEvents.reverse().map((event) => (
 								<Tab label={event} key={event} />
 							))}
 						</Tabs>

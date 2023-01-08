@@ -212,7 +212,7 @@ export default function EventSchedule({ event }: QUERY_EVENT_RESULTS) {
 			<Head>
 				<title>{event.shortname} Schedule - AusSpeedruns</title>
 				<DiscordEmbed title={`${event.shortname} Schedule`} />
-				<meta property="og:image" content={event.ogImage.url} />
+				{event.ogImage && <meta property="og:image" content={event.ogImage.url} />}
 			</Head>
 			<main className={styles.content}>
 				{event.logo && (

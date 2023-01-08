@@ -38,7 +38,7 @@ interface QUERY_EVENT_RESULTS {
 		id: string;
 		startDate: string;
 		endDate: string;
-		raised: string;
+		raised: number;
 		shortname: string;
 		name: string;
 		logo?: {
@@ -52,9 +52,6 @@ interface QUERY_EVENT_RESULTS {
 			url: string;
 		};
 		heroImage?: {
-			url: string;
-		};
-		ogImage?: {
 			url: string;
 		};
 	}[];
@@ -116,7 +113,7 @@ function EventBlock({ event }: EventBlockProps) {
 
 	let raisedString: string;
 	if (event.raised) {
-		raisedString = `$${event.raised}`;
+		raisedString = `$${event.raised.toLocaleString()}`;
 	}
 
 	// let imageSize;

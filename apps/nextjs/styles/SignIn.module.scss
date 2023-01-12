@@ -1,0 +1,31 @@
+@use 'base';
+@import "./responsive.scss";
+@import "./colors.scss";
+
+.form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 500px;
+
+	@include breakpoint($sm-zero-only) {
+		width: auto;
+	}
+
+	form {
+		margin-top: 1rem;
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+
+		gap: 1rem;
+
+		a {
+			margin-right: 0;
+		}
+	}
+}
+
+.spinner {
+	margin: 0 auto;
+}

@@ -1,0 +1,304 @@
+@import '../../styles/colors.scss';
+@import '../../styles/responsive.scss';
+
+.eventLogo {
+	max-width: 90%;
+	height: 10rem;
+	margin: auto;
+	position: relative;
+	margin-bottom: 2rem;
+
+	img {
+		object-fit: contain;
+	}
+
+	@include breakpoint($lg) {
+		max-width: 50%;
+	}
+}
+
+.raisedAmount {
+	border: 7px solid $primary;
+	border-radius: 12px;
+	padding: 1rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: fit-content;
+	margin: auto;
+	margin-bottom: 2rem;
+	font-size: 2rem;
+	flex-direction: column;
+
+	.amount {
+		font-weight: 900;
+		font-size: 3rem;
+	}
+
+	.charityImage {
+		max-width: 50%;
+		max-height: 8rem;
+
+		img {
+			object-fit: contain;
+			width: 100% !important;
+			position: relative !important;
+			height: unset !important;
+			max-height: inherit;
+		}
+	}
+
+	@include breakpoint($md) {
+		flex-direction: row;
+
+		.amount {
+			margin-right: 8px;
+		}
+
+		.charityImage {
+			margin-left: 1rem;
+		}
+	}
+}
+
+.allRunsContainer {
+	width: 100%;
+	box-sizing: border-box;
+	height: 40rem;
+	border-radius: 20px;
+	border: 5px solid $secondary;
+	margin: auto;
+	padding: 1.5rem;
+	// box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+
+	.header {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		padding-bottom: 0.5rem;
+		border-bottom: 2px solid $primary;
+
+		.event {
+			font-size: 1.5rem;
+			font-weight: 600;
+		}
+
+		@include breakpoint($sm-zero-only) {
+			align-items: center;
+		}
+	}
+
+	.runList {
+		display: block;
+		width: 100%;
+		overflow-y: scroll;
+		overflow-x: hidden;
+		height: 90%;
+		border-spacing: 0;
+		font-size: 16px;
+
+		.runListHeader {
+			width: 100%;
+			position: sticky;
+			top: 0;
+			background: #ffffff;
+			border-bottom: 2px solid $primary;
+			display: flex;
+			justify-content: space-between;
+			z-index: 3;
+
+			span {
+				white-space: nowrap;
+				border-right: 1px solid $secondary;
+				text-align: center;
+				padding: 4px;
+				width: 15%;
+			}
+
+			.runNumber {
+				width: 3%;
+			}
+
+			.game {
+				width: 35%;
+				text-align: left;
+			}
+
+			.category {
+				width: 20%;
+				text-align: left;
+			}
+
+			.runners {
+				width: 20%;
+				text-align: left;
+			}
+
+			.platform {
+				width: 12%;
+			}
+
+			.finalTime {
+				width: 10%;
+				flex-grow: 1;
+			}
+
+			span:last-of-type {
+				border-right: 0;
+			}
+
+			@include breakpoint($xs) {
+				.game {
+					width: 100%;
+					text-align: left;
+				}
+
+				.category {
+					display: none;
+				}
+
+				.runners {
+					display: none;
+				}
+
+				.platform {
+					display: none;
+				}
+
+				.finalTime {
+					display: none;
+				}
+			}
+		}
+
+		.runs {
+			position: relative;
+			z-index: 0;
+		}
+
+		.run {
+			width: 100%;
+
+			.runListHeader {
+				border: 0;
+				border-bottom: 1px solid $secondary;
+				padding: 0;
+
+				span {
+					border: 0;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden;
+				}
+			}
+
+			.runData {
+				border-top: 4px solid $secondary;
+				padding-left: 0;
+				padding-top: 0;
+				padding-bottom: 0;
+				display: flex;
+				gap: 12px;
+
+				.youtube {
+					position: relative;
+					width: 60%;
+					height: auto;
+
+					iframe {
+						position: absolute;
+						top: 0;
+						left: 0;
+						width: 100%;
+						height: 100%;
+					}
+				}
+
+				// iframe {
+				// 	flex-grow: 1;
+				// }
+
+				.data {
+					padding-bottom: 1rem;
+					padding-top: 0.5rem;
+					flex-grow: 1;
+
+					h2,
+					h3 {
+						margin: 0;
+					}
+
+					.runGameAndCategory {
+						display: flex;
+						flex-direction: column;
+						width: 80%;
+					}
+
+					.metadata {
+						display: flex;
+
+						.column {
+							display: flex;
+							flex-direction: column;
+							flex-grow: 1;
+						}
+
+						.column:last-of-type {
+							justify-content: flex-end;
+						}
+
+						.label {
+							margin-top: 1rem;
+						}
+
+						.runnerLink,
+						.genericRunner,
+						.finalTime,
+						.platform {
+							font-size: 1.1rem;
+							font-weight: bold;
+						}
+
+						.runnerLink {
+							color: $dark-text;
+						}
+
+						.twitch {
+							text-decoration: none;
+							margin: 0 auto;
+
+							button {
+								background-color: $twitch;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.image {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin: 3rem 0;
+
+	.image {
+		max-width: 80%;
+		max-height: 30rem;
+		object-fit: contain;
+		margin: auto;
+		margin-bottom: 0.5rem;
+		position: relative;
+	}
+
+	figcaption {
+		display: inline-block;
+		font-style: italic;
+		font-size: 1.3rem;
+		margin: auto;
+		margin-top: 0.5rem;
+	}
+}

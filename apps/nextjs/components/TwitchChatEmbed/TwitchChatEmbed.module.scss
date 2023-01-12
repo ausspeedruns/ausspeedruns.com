@@ -1,0 +1,76 @@
+@import "../../styles/colors.scss";
+@import "../../styles/responsive.scss";
+
+.twitchChat {
+  width: 100%;
+  height: 100%;
+  // background: $color-white;
+
+  .content {
+    display: flex;
+    height: 100%;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    // padding: 16px 0 0;
+
+    @include breakpoint($sm) {
+      margin-bottom: -40px;
+    }
+
+
+    .toggleChat {
+      align-self: flex-end;
+      background: transparent;
+      border: 1px solid $accent;
+      color: $accent;
+      border-radius: 4px;
+      padding: 6px 12px;
+      display: inline-flex;
+      align-items: center;
+
+      &:hover, &:focus {
+        background: $accent;
+        color: $color-white;
+      }
+
+      svg {
+        margin: 3px 3px 3px 6px;
+
+        &.fa-chevron-down {
+          margin-top: 4px;
+        }
+      }
+    }
+  }
+}
+
+.twitchChatEmbed {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding-top: 100%; /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
+
+  @include breakpoint($lg) {
+    padding-top: calc(
+      (56.25% / 3) * 2
+    ); /* Half the screen width so half the height */
+  }
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+}
+
+.chatIframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}

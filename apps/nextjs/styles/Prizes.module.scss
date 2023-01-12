@@ -1,0 +1,44 @@
+@use 'base';
+@import './colors.scss';
+
+.app {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+.content {
+	margin: 0 auto;
+	display: block;
+}
+
+.footer {
+	margin-top: auto;
+}
+
+.prizeterms {
+	h1 {
+		font-family: "Noto Sans", Verdana, Geneva, Tahoma, sans-serif;
+		border-bottom: 1px solid $primary;
+		margin-bottom: 1rem;
+	}
+
+	max-height: 40rem;
+	overflow: scroll;
+
+	.indented {
+		margin-left: 2rem;
+	}
+
+	ol {
+		list-style-type: decimal;
+
+		li {
+			margin: 0.75rem 0;
+		}
+
+		ol {
+			list-style-type: lower-alpha;
+		}
+	}
+}

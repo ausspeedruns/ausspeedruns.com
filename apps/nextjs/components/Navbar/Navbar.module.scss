@@ -1,0 +1,184 @@
+@import "../../styles/colors.scss";
+@import "../../styles/responsive.scss";
+@import "../../styles/nav-lists.scss";
+
+.navbar {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  width: 100%;
+  background: $secondary;
+  height: auto;
+  z-index: 2;
+  position: relative;
+  padding: 0 1rem;
+
+  .content {
+    display: flex;
+    align-items: center;
+    flex-flow: wrap;
+    max-width: 2000px;
+
+    @include breakpoint($sm) {
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
+    @include breakpoint($md) {
+      flex-flow: row nowrap;
+    }
+
+    @include breakpoint($lg) {
+      padding: 0 8rem;
+    }
+  }
+
+  .title {
+    display: flex;
+    gap: 6px;
+
+    font-family: "Finger Paint";
+    font-size: 1.2rem;
+    font-weight: 500;
+    flex-grow: 1;
+
+    @include breakpoint($sm) {
+      font-size: 1.5rem;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: $light-text;
+      white-space: nowrap;
+
+      &:-webkit-any-link {
+        color: $light-text;
+      }
+
+      &:hover,
+      &:focus,
+      &:visited:hover,
+      &:visited:focus {
+        color: $primary;
+
+        svg {
+          fill: $primary;
+        }
+      }
+
+      &:visited {
+        color: $light-text;
+        text-decoration: none;
+      }
+
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      margin-right: 5px;
+      background-size: contain;
+
+      @include breakpoint($sm) {
+        height: 50px;
+        width: 50px;
+      }
+    }
+  }
+
+  nav {
+    display: flex;
+    flex-flow: column wrap;
+
+    @include breakpoint($xs) {
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    @include nav-lists;
+
+    .signout {
+      margin-left: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .join {
+      color: $light-text;
+
+      a {
+        font-weight: 500;
+        white-space: nowrap;
+      }
+    }
+
+    .icon {
+      color: $light-text;
+    }
+  }
+
+  .break {
+    flex-basis: 100%;
+    height: 0;
+  }
+
+
+  .mainmenu {
+    width: 100%;
+
+    &.menuopen {
+      display: block;
+      border-top: 2px solid white;
+    }
+
+    &.menuclosed {
+      display: none;
+    }
+
+    @include breakpoint($sm) {
+      display: block !important;
+    }
+
+    li {
+      fill-rule: evenodd;
+    }
+  }
+
+  .menuToggle {
+    span {
+      margin-left: 8px;
+      font-size: 1rem;
+    }
+  }
+
+  button {
+    background: none;
+    border: none;
+    color: $light-text;
+
+    @include breakpoint($sm) {
+      display: none;
+    }
+
+    &:hover {
+      color: $primary;
+    }
+
+    .user {
+      background-color: $primary;
+      border-radius: 100%;
+    }
+  }
+
+  // .cta > .button {
+  //   padding: 6px 32px;
+  // }
+}
+
+.auth {
+  justify-content: center;
+}

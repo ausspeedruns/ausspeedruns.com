@@ -1,0 +1,35 @@
+@use 'base';
+@import './colors.scss';
+
+.app {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.content {
+	margin: 0 auto;
+	flex-direction: column;
+
+	.ausspeedrunsLogo {
+		font-size: 1.3rem;
+	}
+
+	.colourBox {
+		height: 100px;
+		width: 100px;
+		border-radius: 15px;
+	}
+
+	.orange {
+		background: $primary
+	}
+
+	.blue {
+		background: $secondary
+	}
+}
+
+.footer {
+	margin-top: auto;
+}

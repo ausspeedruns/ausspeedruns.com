@@ -1,0 +1,75 @@
+// @import "../../styles/styles.scss";
+@import "../../styles/colors.scss";
+@import "../../styles/responsive.scss";
+
+.eventDetails {
+  width: 100%;
+  background: $color-white;
+
+  .content {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+
+    h2,
+    h3 {
+      color: $secondary;
+    }
+
+    .charitiesAndSponsors {
+      display: grid;
+      text-align: center;
+      grid-template-rows: 1fr;
+      grid-template-columns: 1fr;
+
+      @include breakpoint($md) {
+        grid-template-rows: 1fr;
+        // grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .charities,
+    .sponsors {
+      display: flex;
+      flex-flow: column wrap;
+      justify-content: space-evenly;
+      align-items: center;
+      margin: 24px 0;
+    }
+
+    .logo {
+      max-width: 100%;
+      width: 400px;
+    }
+
+    .sponsor {
+      // background: $color-white;
+      // border-radius: 4px;
+      // padding: 24px 24px 32px;
+      // box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
+      padding: 8px;
+      img {
+        max-width: 200px;
+        max-height: 200px;
+      }
+    }
+
+    @include breakpoint($lg) {
+      .charities:not(:only-child) {
+        border-right: 1px solid $color-grey;
+      }
+    }
+
+    a {
+      color: $secondary;
+      text-decoration: none;
+
+      &:hover,
+      &:focus {
+        color: $primary;
+        text-decoration: underline;
+      }
+    }
+  }
+}

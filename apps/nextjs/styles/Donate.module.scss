@@ -1,0 +1,110 @@
+@use 'base';
+@import './colors.scss';
+@import './responsive.scss';
+
+.app {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	background: $goc-main;
+	background-image: url('./img/ASAPBackground.png');
+	background-size: cover;
+	background-position: center;
+	image-rendering: pixelated;
+}
+
+.content {
+	margin: 0 auto;
+	display: block;
+	color: $light-text;
+
+	.title {
+		font-size: 3rem;
+	}
+
+	h2 {
+		text-align: center;
+	}
+
+	.incentives {
+		h2 {
+			font-weight: normal;
+			width: 60%;
+			margin-left: auto;
+			margin-right: auto;
+
+			@include breakpoint($sm-zero-only) {
+				font-size: 1.2rem;
+				width: 100%;
+			}
+		}
+
+		.divider {
+			margin: auto;
+			width: 90%;
+			background-color: $pax-main;
+			height: 5px;
+		}
+	}
+
+	.link {
+		text-align: center;
+	}
+
+	.prizes {
+		margin-top: 2rem;
+
+		p {
+			text-align: center;
+		}
+
+		.prizeList {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 15px;
+
+			@include breakpoint($sm-zero-only) {
+				flex-direction: column;
+			}
+
+			.prize {
+				width: fit-content;
+				max-width: 300px;
+				background-color: #000;
+				border: 1px solid $pax-main;
+				padding: 1rem;
+
+				h3 {
+					font-weight: normal;
+					text-align: center;
+				}
+
+				span {
+					display: block;
+					text-align: center;
+				}
+			}
+		}
+	}
+
+	.donate {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: 3rem;
+		font-size: 3rem;
+
+		@include breakpoint($sm-zero-only) {
+			margin: 3rem 0;
+		}
+
+		a {
+			width: 90%;
+		}
+	}
+}
+
+.footer {
+	margin-top: auto;
+}

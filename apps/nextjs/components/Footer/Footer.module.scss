@@ -1,0 +1,29 @@
+@import "../../styles/colors.scss";
+@import "../../styles/nav-lists.scss";
+
+.footer {
+  background-color: $nav-background;
+  color: $light-text;
+
+  @include nav-lists;
+
+  .content {
+    flex-direction: column;
+    gap: 8px;
+
+    .miscLinks {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      
+      a {
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.acknowledgement {
+  background-color: $primary;
+  color: $light-text;
+}

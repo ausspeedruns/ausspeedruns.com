@@ -1,0 +1,30 @@
+@import '../../styles/responsive.scss';
+
+.run {
+	display: flex;
+	flex-direction: column;
+
+	.header {
+		display: flex;
+
+		@include breakpoint($sm-zero-only) {
+			flex-direction: column;
+		}
+
+		.logo {
+			margin-right: 8px;
+
+			@include breakpoint($sm-zero-only) {
+				height: auto;
+				margin-right: 0;
+			}
+		}
+
+		.runInfo {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-evenly;
+			font-size: 1.1rem;
+		}
+	}
+}

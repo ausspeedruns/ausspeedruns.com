@@ -1,6 +1,57 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
+node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env
+
+# vercel
+.vercel
+
+# keystone
+.keystone
+app.db
+public/images
+public/files
+
+# I have no idea how to setup secrets so I just dont push this
+docker-compose.yml
+
+# Azurite Emulator
+__azurite_db_blob__.json
+__azurite_db_blob_extent__.json
+
+# Sponsors (Just in case since we aren't really authorised to distribute them)
+/styles/img/sponsors
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
 /node_modules
 /.pnp
 .pnp.js
@@ -44,6 +95,7 @@ public/files
 docker-compose.yml
 
 # Azurite Emulator
+/azurite
 __azurite_db_blob__.json
 __azurite_db_blob_extent__.json
 

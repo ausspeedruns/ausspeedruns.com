@@ -1,0 +1,46 @@
+name: Build keystone
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-keystone:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout public
+        uses: actions/checkout@v3
+        with:
+          path: main
+      -
+        name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: ausrunswebsitecontainersregistry.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+      -
+        name: Build KeystoneJS and push
+        uses: docker/build-push-action@v3
+        with:
+          context: ./main/
+          push: true
+          tags: ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest
+          file: "./main/Dockerfile"
+          cache-from: type=registry,ref=ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest
+          cache-to: type=inline
+          build-args: |
+            "DATABASE_URL=${{ secrets.DATABASE_URL }}"
+            "SESSION_SECRET=${{ secrets.SESSION_SECRET }}"
+

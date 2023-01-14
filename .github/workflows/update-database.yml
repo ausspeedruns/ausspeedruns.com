@@ -3,7 +3,7 @@ name: Update database
 on:
   push:
     paths:
-      - 'migrations/**'
+      - 'apps/keystone/migrations/**'
   workflow_dispatch:
 
 jobs:

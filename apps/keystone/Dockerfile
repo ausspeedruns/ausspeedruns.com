@@ -8,9 +8,6 @@ RUN npm ci
 
 # Rebuild the source code only when needed
 FROM node:16-alpine AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
 
 ARG SESSION_SECRET
 ENV SESSION_SECRET ${SESSION_SECRET}
@@ -20,9 +17,16 @@ ENV DATABASE_URL ${DATABASE_URL}
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
+
+# https://github.com/prisma/prisma/issues/14043#issuecomment-1228288524
 RUN apk add --update --no-cache openssl1.1-compat
-RUN npx keystone postinstall --fix
-RUN npm run build
+
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/package.json ./
+COPY ./apps/keystone .
+
+RUN npx keystone postinstall --fix && npx keystone build
 
 # Production image, copy all the files and run keystone
 FROM node:16-alpine AS prod
@@ -44,4 +48,4 @@ EXPOSE 8000
 
 RUN apk add --update --no-cache openssl1.1-compat
 
-CMD ["npm", "run", "start"]
+CMD ["npx", "keystone", "start"]

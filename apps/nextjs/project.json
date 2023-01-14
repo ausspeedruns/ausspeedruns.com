@@ -57,6 +57,19 @@
       "options": {
         "lintFilePatterns": ["apps/nextjs/**/*.{ts,tsx,js,jsx}"]
       }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "options": {
+        "tags": ["ausrunswebsitecontainersregistry.azurecr.io/ausruns/next:latest"]
+      }
+    },
+    "container-push": {
+      "executor": "@nx-tools/nx-container:build",
+      "options": {
+        "push": true,
+        "tags": ["ausrunswebsitecontainersregistry.azurecr.io/ausruns/next:latest"]
+      }
     }
   },
   "tags": []

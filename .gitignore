@@ -1,5 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# nx
+dist
+.nx-container
+
 # dependencies
 node_modules
 /.pnp
@@ -100,4 +104,7 @@ __azurite_db_blob__.json
 __azurite_db_blob_extent__.json
 
 # Sponsors (Just in case since we aren't really authorised to distribute them)
-/styles/img/sponsors
+apps/nextjs/styles/img/sponsors
+
+# Next.js
+.next

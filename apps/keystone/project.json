@@ -1,27 +1,51 @@
 {
-  "root": "apps/keystone",
-  "sourceRoot": "apps/keystone",
-  "projectType": "application",
-  "targets": {
-    "build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "apps/keystone",
-        "command": "npx keystone build"
-      }
-    },
-    "serve": {
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "apps/keystone",
-        "command": "npx keystone dev"
-      },
-      "configurations": {
-        "production": {
-          "command": "npx keystone start"
-        }
-      }
-    }
-  },
-  "tags": []
+	"name": "keystone",
+	"root": "apps/keystone",
+	"sourceRoot": "apps/keystone",
+	"projectType": "application",
+	"targets": {
+		"build": {
+			"executor": "nx:run-commands",
+			"options": {
+				"cwd": "apps/keystone",
+				"command": "npx keystone build"
+			}
+		},
+		"serve": {
+			"executor": "nx:run-commands",
+			"options": {
+				"cwd": "apps/keystone",
+				"command": "npx keystone dev"
+			},
+			"configurations": {
+				"production": {
+					"command": "npx keystone start"
+				}
+			}
+		},
+		"container": {
+			"executor": "@nx-tools/nx-container:build",
+			"options": {
+				"engine": "docker",
+				"tags": [
+					"ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest"
+				],
+				"build-args": [
+					"SESSION_SECRET=e3f9abb4-9120-4aba-8262-4a1835745ff7",
+					"DATABASE_URL=postgres://postgres:postgres@localhost:5432/keystone"
+				]
+			}
+		},
+		"container-push": {
+			"executor": "@nx-tools/nx-container:build",
+			"options": {
+				"engine": "docker",
+				"push": true,
+				"tags": [
+					"ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest"
+				]
+			}
+		}
+	},
+	"tags": []
 }

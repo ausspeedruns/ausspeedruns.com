@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-site:
+  build-containers:
     runs-on: ubuntu-latest
     steps:
       -
@@ -43,8 +43,10 @@ jobs:
       -
         name: 'Install Dependencies'
         run: npm install
+        working-directory: ./main
       -
         name: Derive appropriate SHAs for base and head for `nx affected` commands
+        working-directory: ./main
         uses: nrwl/nx-set-shas@v3
       - name: 'Build images'
         run: INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} INPUT_BUILD_ARGS=SESSION_SECRET=${{ secrets.SESSION_SECRET }},DATABASE_URL=${{ secrets.DATABASE_URL }} npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container

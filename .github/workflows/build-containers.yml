@@ -42,13 +42,13 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
       -
         name: 'Install Dependencies'
-        run: npm install
         working-directory: ./main
+        run: npm install
       -
         name: Derive appropriate SHAs for base and head for `nx affected` commands
-        working-directory: ./main
         uses: nrwl/nx-set-shas@v3
-      - name: 'Build images'
+      - 
+        name: 'Build images'
         run: INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} INPUT_BUILD_ARGS=SESSION_SECRET=${{ secrets.SESSION_SECRET }},DATABASE_URL=${{ secrets.DATABASE_URL }} npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container
       # -
       #   name: Build affected docker files

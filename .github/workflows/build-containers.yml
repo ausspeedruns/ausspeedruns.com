@@ -1,0 +1,65 @@
+name: Build Containers
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-site:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout public
+        uses: actions/checkout@v3
+        with:
+          path: main
+      -
+        name: Checkout private
+        uses: actions/checkout@v3
+        with:
+          repository: ausspeedruns/ausspeedruns.com-private
+          path: asr-private
+          token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
+      -
+        name: Move sponsors to right place
+        run: mv asr-private/sponsors main/apps/nextjs/styles/img/
+      -
+        name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: ausrunswebsitecontainersregistry.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+      -
+        name: 'Install Dependencies'
+        run: npm install
+      -
+        name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v3
+      - name: 'Build images'
+        run: INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} INPUT_BUILD_ARGS=SESSION_SECRET=${{ secrets.SESSION_SECRET }},DATABASE_URL=${{ secrets.DATABASE_URL }} npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container
+      # -
+      #   name: Build affected docker files
+      #   uses: docker/build-push-action@v3
+      #   with:
+      #     context: ./main/
+      #     push: true
+      #     tags: ausrunswebsitecontainersregistry.azurecr.io/ausruns/next:latest
+      #     cache-from: type=registry,ref=ausrunswebsitecontainersregistry.azurecr.io/ausruns/next:latest
+      #     cache-to: type=inline
+      #     build-args: |
+      #       "DATABASE_URL=${{ secrets.DATABASE_URL }}"
+      #       "SESSION_SECRET=${{ secrets.SESSION_SECRET }}"
+      #       "API_KEY=${{ secrets.API_KEY }}"
+      #       "NEXT_PUBLIC_STRIPE_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_STRIPE_PUBLIC_KEY }}"
+

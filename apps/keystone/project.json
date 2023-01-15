@@ -29,10 +29,6 @@
 				"engine": "docker",
 				"tags": [
 					"ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest"
-				],
-				"build-args": [
-					"SESSION_SECRET=e3f9abb4-9120-4aba-8262-4a1835745ff7",
-					"DATABASE_URL=postgres://postgres:postgres@localhost:5432/keystone"
 				]
 			}
 		},

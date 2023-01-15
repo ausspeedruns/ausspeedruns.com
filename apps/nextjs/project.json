@@ -65,7 +65,7 @@
 					"ausrunswebsitecontainersregistry.azurecr.io/ausruns/next:latest"
 				]
 			},
-			"dependsOn": ["^build"]
+			"dependsOn": ["build"]
 		},
 		"container-push": {
 			"executor": "@nx-tools/nx-container:build",
@@ -75,7 +75,7 @@
 					"ausrunswebsitecontainersregistry.azurecr.io/ausruns/next:latest"
 				]
 			},
-			"dependsOn": ["^build"]
+			"dependsOn": ["build"]
 		}
 	},
 	"tags": []

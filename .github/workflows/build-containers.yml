@@ -52,6 +52,7 @@ jobs:
       #     working-directory: ./main
       - 
         name: 'Build images'
+        working-directory: ./main
         run: INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} INPUT_BUILD_ARGS=SESSION_SECRET=${{ secrets.SESSION_SECRET }},DATABASE_URL=${{ secrets.DATABASE_URL }} npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container
       # -
       #   name: Build affected docker files

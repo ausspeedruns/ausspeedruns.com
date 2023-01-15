@@ -45,11 +45,11 @@ jobs:
         name: 'Install Dependencies'
         working-directory: ./main
         run: npm install
-      # -
-      #   name: Derive appropriate SHAs for base and head for `nx affected` commands
-      #   uses: nrwl/nx-set-shas@v3
-      #   with:
-      #     working-directory: ./main
+      -
+        name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v3
+        with:
+          working-directory: ./main
       - 
         name: 'Build images'
         working-directory: ./main

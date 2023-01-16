@@ -20,6 +20,12 @@ const EventLogo = styled.img`
 	object-fit: contain;
 `;
 
+const AmountRaisedContainer = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 8px;
+`;
+
 const AmountRaisedValue = styled.span`
 	font-weight: bold;
 	font-size: 2rem;
@@ -51,11 +57,11 @@ export const componentBlocks = {
 	raisedAmount: component({
 		preview(props) {
 			return (
-				<div>
+				<AmountRaisedContainer>
 					<AmountRaisedValue>{props.fields.amount.value}</AmountRaisedValue>
 					<span> raised for </span>
 					<AmountRaisedImage src={props.fields.charityImage.value} alt={props.fields.charityName.value} />
-				</div>
+				</AmountRaisedContainer>
 			);
 		},
 		label: 'Raised Amount',

@@ -5,7 +5,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY dist/apps/nextjs/package.json ./
 # Need to manually install the required dependencies because of https://github.com/nrwl/nx/issues/14275 I think
-RUN npm install --omit=dev && npm install @fontsource/finger-paint@^4.5.10 @fontsource/noto-sans@^4.5.11 @fontsource/roboto-mono@^4.5.8 @fortawesome/fontawesome-svg-core@^6.2.1 @fortawesome/free-brands-svg-icons@^6.2.1 @fortawesome/free-regular-svg-icons@^6.2.1 @fortawesome/free-solid-svg-icons@^6.2.1 @fortawesome/react-fontawesome@^0.2.0 @keystone-6/document-renderer@^1.1.2 @mui/icons-material@^5.10.16 @mui/lab@^5.0.0-alpha.110 @mui/material@^5.10.16 @mui/x-date-pickers@^5.0.9 date-fns@^2.29.3 date-fns-tz@^1.3.7 jsbarcode@^3.11.5 next-urql@^4.0.0 react@^18.2.0 react-cookie-consent@^8.0.1 react-dom@^18.2.0 react-router-dom@^6.4.3 sharp@^0.31.2 urql@^3.0.3
+RUN npm install --omit=dev && npm install @emotion/styled@^11.10.5 @fontsource/finger-paint@^4.5.10 @fontsource/noto-sans@^4.5.11 @fontsource/roboto-mono@^4.5.8 @fortawesome/fontawesome-svg-core@^6.2.1 @fortawesome/free-brands-svg-icons@^6.2.1 @fortawesome/free-regular-svg-icons@^6.2.1 @fortawesome/free-solid-svg-icons@^6.2.1 @fortawesome/react-fontawesome@^0.2.0 @keystone-6/document-renderer@^1.1.2 @mui/icons-material@^5.10.16 @mui/lab@^5.0.0-alpha.110 @mui/material@^5.10.16 @mui/x-date-pickers@^5.0.9 date-fns@^2.29.3 date-fns-tz@^1.3.7 jsbarcode@^3.11.5 next-urql@^4.0.0 react@^18.2.0 react-cookie-consent@^8.0.1 react-dom@^18.2.0 react-router-dom@^6.4.3 sharp@^0.31.2 urql@^3.0.3
 
 # Production image, copy all the files and run next
 FROM node:18.12.1-alpine as runner

@@ -25,7 +25,6 @@ module.exports = withNx({
 			"ausspeedruns.com",
 			"beta.ausspeedruns.com",
 			"ausrunsstoragebeta.blob.core.windows.net",
-			"ausrunsstoragebeta.blob.core.windows.net",
 			"ausrunsstorage.blob.core.windows.net",
 			"ausspeedruns.sharepoint.com",
 		],

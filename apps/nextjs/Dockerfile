@@ -18,6 +18,8 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/package.json ./package.json
 COPY dist/apps/nextjs/public ./public
 COPY dist/apps/nextjs/.next ./.next
+COPY dist/apps/nextjs/next.config.js ./next.config.js
+COPY dist/apps/nextjs/with-nx.js ./with-nx.js
 RUN chown -R node:node .
 USER node
 EXPOSE 3000

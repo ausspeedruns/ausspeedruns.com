@@ -46,53 +46,6 @@ export default function Home() {
 						</div>
 					</div>
 				</section>
-				{/* <section className={styles.sponsors}>
-					<div className={styles.main}>
-						<div className={styles.sponsor}>
-							<span>Major Partner</span>
-							<Image
-                                src={HyperX}
-                                width={500}
-                                height={200}
-                                alt="HyperX Logo"
-                                style={{
-                                    maxWidth: "100%",
-                                    height: "auto"
-                                }} />
-						</div>
-					</div>
-					<div className={styles.secondary}>
-						<div className={styles.sponsor}>
-							<span>Minor Partner</span>
-							<Image
-                                src={Landfall}
-                                width={200}
-                                height={153}
-                                alt="Landfall Games Logo"
-                                style={{
-                                    maxWidth: "100%",
-                                    height: "auto"
-                                }} />
-						</div>
-					</div>
-				</section> */}
-				<TileGroup
-					tiles={[
-						{
-							title: 'About AusSpeedruns',
-							description:
-								'Also known as Australian Speedrunners, AusSpeedruns is a not-for-profit organisation that brings together the best speedrunners in Australia to raise money and awareness for charity at events across Australia.',
-						},
-						{
-							title: 'Previous event',
-							description: `Our last event was ${previous.fullName}, where our community helped us raise over $${
-								previous.total
-							} for ${
-								previous.charity!.name
-							}. We'd like to thank all the members of our community, our sponsors, runners and event staff for helping us run such a successful event.`,
-						},
-					]}
-				/>
 			</main>
 		</div>
     );

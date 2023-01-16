@@ -99,7 +99,7 @@ public/files
 docker-compose.yml
 
 # Azurite Emulator
-/azurite
+azurite
 __azurite_db_blob__.json
 __azurite_db_blob_extent__.json
 

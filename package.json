@@ -2,16 +2,9 @@
 	"name": "ausspeedruns.com",
 	"private": true,
 	"scripts": {
-		"keystone:build": "keystone build",
-		"keystone:dev": "keystone dev",
-		"keystone:start": "keystone start",
-		"keystone:update-keystone": "keystone postinstall --fix",
-		"keystone:dev:azurite-blob": "azurite-blob -l ./azurite --blobPort 9999",
-		"keystone:seed": "keystone --seed-data",
-		"nextjs:build": "next build",
-		"nextjs:dev": "next dev",
-		"nextjs:lint": "next lint",
-		"nextjs:start": "next start"
+		"keystone": "npx nx run keystone:serve",
+		"nextjs": "npx nx run nextjs:serve",
+		"dev": "npx nx run-many --target=serve"
 	},
 	"dependencies": {
 		"@emotion/styled": "^11.10.5",

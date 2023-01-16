@@ -29,4 +29,7 @@ module.exports = withNx({
 			"ausspeedruns.sharepoint.com",
 		],
 	},
+	nx: {
+		svgr: true,
+	},
 });

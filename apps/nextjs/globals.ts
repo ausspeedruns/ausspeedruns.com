@@ -12,7 +12,7 @@ export const globals: Globals = {
       charity: {
         name: "Game On Cancer"
       },
-      logo: 'ASM2022-Logo.svg',
+      logo: 'ASM2022 Logo Full.png',
       heroImage: 'ASM2022Hero.jpg',
     },
     current: {

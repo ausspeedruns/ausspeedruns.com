@@ -5,17 +5,17 @@
 	"projectType": "application",
 	"targets": {
 		"build": {
-			"executor": "nx:run-commands",
-			"options": {
-				"cwd": "apps/keystone",
-				"command": "npx keystone build"
-			}
+			"command": "npx keystone build"
 		},
 		"serve": {
 			"executor": "nx:run-commands",
 			"options": {
 				"cwd": "apps/keystone",
-				"command": "npx keystone dev"
+				"commands": [
+					"npx azurite-blob -l ./azurite --blobPort 9999",
+					"npx keystone dev"
+				],
+				"parallel": true
 			},
 			"configurations": {
 				"production": {
@@ -41,6 +41,9 @@
 					"ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest"
 				]
 			}
+		},
+		"seed": {
+			"command": "npx keystone --seed-data"
 		}
 	},
 	"tags": []

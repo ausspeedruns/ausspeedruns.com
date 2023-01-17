@@ -1,0 +1,212 @@
+@use "base";
+@import "./colors.scss";
+@import "./responsive.scss";
+
+.aboutUs {
+	@include breakpoint($md) {
+		p {
+			font-size: 1.5rem;
+		}
+
+		.amountRaised {
+			font-size: 1.5rem;
+		}
+	}
+}
+
+.heroContainer {
+	min-height: 90vh;
+	position: relative;
+
+	.carousel {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+
+		* {
+			height: 100%;
+			background-color: $primary;
+		}
+
+		img {
+			object-fit: cover;
+			mix-blend-mode: multiply;
+			z-index: 1;
+		}
+	}
+
+	.overlay {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		color: $light-text;
+		font-size: 2rem;
+		gap: 3rem;
+		z-index: 2;
+		text-align: center;
+
+		img {
+			object-fit: contain;
+			width: 90%;
+		}
+	}
+}
+
+.definition {
+	margin: auto;
+	max-width: 720px;
+
+	h2 {
+		font-size: 3rem;
+		font-weight: 900;
+	}
+
+	.pronounciation {
+		display: block;
+		margin-top: -0.8rem;
+	}
+
+	p {
+		margin-top: 1rem;
+
+		.noun {
+			font-style: italic;
+			display: block;
+		}
+	}
+}
+
+.tagline {
+	margin-top: 2rem;
+	text-align: center;
+}
+
+.description {
+	background-color: $secondary;
+	color: $light-text;
+	padding: 2rem 0;
+
+	.tagline {
+		margin: 0 auto;
+	}
+}
+
+.events {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+
+	.event {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: #c72;
+		background-blend-mode: multiply;
+		background-position: center;
+		background-size: cover;
+		min-height: 40vh;
+	}
+
+	@include breakpoint(
+		(
+			max: 1100px,
+		)
+	) {
+		grid-template-columns: 100%;
+	}
+}
+
+.charities {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 2rem 0;
+	gap: 6rem;
+
+	.amountRaised {
+		display: flex;
+		flex-direction: column;
+
+		.amount {
+			font-weight: bold;
+			color: $secondary;
+			font-size: 7rem;
+
+			.dollarSymbol {
+				font-size: 5rem;
+			}
+		}
+
+		@include breakpoint((max: 700px)) {
+			.amount {
+				font-size: 20vw;
+
+				.dollarSymbol {
+					font-size: 12vw;
+				}
+			}
+		}
+	}
+
+	img {
+		object-fit: contain;
+	}
+
+	@include breakpoint(
+		(
+			max: 1400px,
+		)
+	) {
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	@include breakpoint(
+		(
+			max: 850px,
+		)
+	) {
+		img {
+			width: 90vw;
+		}
+	}
+}
+
+.callToAction {
+	background-color: $primary;
+	color: $light-text;
+	padding: 2rem 0;
+
+	.tagline {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	.buttons {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-bottom: 40px;
+		flex-direction: column;
+		gap: 1rem;
+
+		@include breakpoint($md) {
+			flex-direction: row;
+		}
+	}
+}
+
+.contact {
+	padding: 2rem 0;
+
+	.tagline {
+		margin-top: 0;
+	}
+
+	a {
+		display: inline;
+	}
+}

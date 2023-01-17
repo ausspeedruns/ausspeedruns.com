@@ -44,12 +44,7 @@ const Heroblock = ({ event, backgroundPos }: LastEventBlockProps) => {
 				</div>
 				<div className={styles.logoBlock}>
 					<Image
-						src={
-							event.logo === "ASM2022 Logo Full.png"
-								? require(`../../styles/img/ASM2022 Logo Full.png`)
-										.default
-								: require(`../../styles/img/${event.logo}`)
-						}
+						src={require(`../../styles/img/${event.logo}`)}
 						alt="Event Logo"
 						style={{
 							maxWidth: "100%",

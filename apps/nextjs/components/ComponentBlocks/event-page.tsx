@@ -99,7 +99,7 @@ export const EventComponentRenderers: InferRenderersForComponentBlocks<typeof co
 				</div>
 				<div className={styles.buttons}>
 					{props.donateLink && (
-						<Button actionText="Donate" link={props.donateLink} target="_blank" rel="noopener noreferrer" />
+						<Button actionText="Donate" link={props.donateLink} openInNewTab />
 					)}
 
 					{props.event?.data?.acceptingSubmissions && (

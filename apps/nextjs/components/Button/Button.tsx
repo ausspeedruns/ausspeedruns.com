@@ -1,7 +1,7 @@
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { HTMLAttributeAnchorTarget } from 'react';
-import styles from './Button.module.scss';
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { HTMLAttributeAnchorTarget } from "react";
+import styles from "./Button.module.scss";
 
 export type ButtonProps = {
 	actionText: string;
@@ -9,15 +9,16 @@ export type ButtonProps = {
 	iconLeft?: IconProp;
 	iconRight?: IconProp;
 	colorScheme?:
-		| 'primary'
-		| 'secondary'
-		| 'secondary lightHover'
-		| 'secondary inverted'
-		| 'primary lightHover'
-		| 'orange';
+		| "primary"
+		| "secondary"
+		| "secondary lightHover"
+		| "secondary inverted"
+		| "primary lightHover"
+		| "orange";
 	target?: HTMLAttributeAnchorTarget;
 	rel?: string;
 	type?: string;
+	openInNewTab?: boolean;
 };
 
 const Button = ({
@@ -26,21 +27,26 @@ const Button = ({
 	iconLeft,
 	iconRight,
 	rel,
-	colorScheme = 'primary',
-	target = '_self',
+	colorScheme = "primary",
+	target = "_self",
 	type,
+	openInNewTab,
 }: ButtonProps) => {
+	if (openInNewTab) {
+		rel = "noopener noreferrer";
+		target = "_blank";
+	}
+
 	return (
 		<a
 			className={`${styles.button} ${colorScheme
-				.split(' ')
+				.split(" ")
 				.map((scheme) => styles[scheme])
-				.join(' ')}`}
+				.join(" ")}`}
 			href={link}
 			target={target}
 			rel={rel}
-			type={type}
-		>
+			type={type}>
 			{iconLeft && <FontAwesomeIcon icon={iconLeft} />}
 			<span>{actionText}</span>
 			{iconRight && <FontAwesomeIcon icon={iconRight} />}

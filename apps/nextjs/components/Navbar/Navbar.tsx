@@ -113,6 +113,13 @@ const Navbar = ({ events = [] }: NavbarProps) => {
 						<li>
 							{/* @ts-ignore */}
 							{isMobile ? <FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo} /> : ''}
+							<Link href={`/about`} passHref className={styles.text}>
+								About Us
+							</Link>
+						</li>
+						<li>
+							{/* @ts-ignore */}
+							{isMobile ? <FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo} /> : ''}
 							<Link href={`/events`} passHref className={styles.text}>
 								Past Events
 							</Link>

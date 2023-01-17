@@ -2,7 +2,7 @@ const withNx = require("@nrwl/next/plugins/with-nx");
 const path = require("path");
 require("dotenv").config();
 
-module.exports = withNx({
+const nextConfig = {
 	reactStrictMode: true,
 	sassOptions: {
 		includePaths: [path.join(__dirname, "styles")],
@@ -30,6 +30,8 @@ module.exports = withNx({
 		],
 	},
 	nx: {
-		svgr: true,
+		svgr: false,
 	},
-});
+};
+
+module.exports = withNx(nextConfig);

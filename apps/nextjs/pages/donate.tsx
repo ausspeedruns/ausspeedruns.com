@@ -101,8 +101,7 @@ const DonatePage = () => {
 					<Button
 						actionText="Donate"
 						link="https://tiltify.com/@ausspeedruns/asap2022/donate"
-						target="_blank"
-						rel="noopener noreferrer"
+						openInNewTab
 						iconRight={faChevronRight}
 					/>
 				</div>

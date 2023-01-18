@@ -2,6 +2,29 @@ const withNx = require("@nrwl/next/plugins/with-nx");
 const path = require("path");
 require("dotenv").config();
 
+const socialMedias = [
+	{
+		name: "twitch",
+		link: "https://www.twitch.tv/ausspeedruns",
+	},
+	{
+		name: "instagram",
+		link: "https://www.instagram.com/ausspeedruns",
+	},
+	{
+		name: "discord",
+		link: "https://discord.com/invite/2xFkJta",
+	},
+	{
+		name: "twitter",
+		link: "https://twitter.com/AusSpeedruns",
+	},
+	{
+		name: "youtube",
+		link: "https://www.youtube.com/ausspeedruns",
+	},
+];
+
 const nextConfig = {
 	reactStrictMode: true,
 	sassOptions: {
@@ -31,6 +54,16 @@ const nextConfig = {
 	},
 	nx: {
 		svgr: false,
+	},
+	async redirects() {
+		return socialMedias.map((social) => {
+			return {
+				source: `/${social.name}`,
+				destination: social.link,
+				permanent: true,
+				basePath: false,
+			};
+		});
 	},
 };
 

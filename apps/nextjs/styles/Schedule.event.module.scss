@@ -10,6 +10,10 @@
 	display: grid;
 	grid-template-columns: 70% 30%;
 	gap: 1rem;
+
+	@include breakpoint($xs) {
+		grid-template-columns: 1fr;
+	}
 }
 
 .currentRun {

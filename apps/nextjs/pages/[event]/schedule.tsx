@@ -1,6 +1,5 @@
 import {
 	Chip,
-	CircularProgress,
 	FormControlLabel,
 	FormGroup,
 	Switch,
@@ -10,9 +9,7 @@ import {
 	ToggleButtonGroup,
 } from '@mui/material';
 import Head from 'next/head';
-import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import { gql, ssrExchange, cacheExchange, dedupExchange, fetchExchange, useQuery } from 'urql';
 import DiscordEmbed from '../../components/DiscordEmbed';
 import { format } from 'date-fns';
@@ -266,7 +263,7 @@ export default function EventSchedule({ event }: QUERY_EVENT_RESULTS) {
 						<FormGroup>
 							<FormControlLabel
 								className={styles.localTimeToggle}
-								control={<Switch onChange={(e) => setSettings({ showLocalTime: e.target.checked, ...settings })} />}
+								control={<Switch onChange={(e) => setSettings({ ...settings, showLocalTime: e.target.checked })} />}
 								label={`Show in Event Time? (${event.eventTimezone})`}
 							/>
 						</FormGroup>
@@ -431,10 +428,9 @@ const runItemOptions: Intl.DateTimeFormatOptions = {
 const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 	const { run } = props;
 
-	// As much as I want the local timezone to be IN the "en-AU" date format. It would probably fuck people up still or something >:(
 	const convertedTimezone = props.showLocalTime
-		? new Date(run.scheduledTime).toLocaleTimeString(undefined, { ...runItemOptions, timeZone: props.eventTimezone })
-		: new Date(run.scheduledTime).toLocaleTimeString(undefined, runItemOptions);
+		? new Date(run.scheduledTime).toLocaleTimeString("en-AU", { ...runItemOptions, timeZone: props.eventTimezone })
+		: new Date(run.scheduledTime).toLocaleTimeString("en-AU", runItemOptions);
 
 	if (run.game === 'Setup Buffer') {
 		return <div className={styles.setupBuffer}>{run.estimate.split(':')[1]} min Setup Buffer</div>;

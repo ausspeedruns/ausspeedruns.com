@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Heroblock.module.scss";
 import Image from "next/image";
-import { faChevronRight, faTicket } from "@fortawesome/free-solid-svg-icons";
+import { faCalendar, faChevronRight, faTicket } from "@fortawesome/free-solid-svg-icons";
 import Button from "../Button/Button";
 import { AusSpeedrunsEvent } from "../../types/types";
 
@@ -102,13 +102,18 @@ const Heroblock = ({ event }: HeroblockProps) => {
 					</h3>
 					<br />
 					<p>
-						We will be at The Game Expo! Submissions have CLOSED.
-						The schedule will be released shortly!
+						We will be at The Game Expo! The schedule has been released!
 					</p>
 					<Button
 						actionText={event.preferredName}
 						link={"/ASGX2023"}
 						iconRight={faChevronRight}
+						colorScheme={"secondary"}
+					/>
+					<Button
+						actionText="Schedule"
+						link={"/ASGX2023/schedule"}
+						iconRight={faCalendar}
 						colorScheme={"secondary"}
 					/>
 					<Button

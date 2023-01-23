@@ -50,6 +50,9 @@
 		"@nrwl/react": {
 			"application": {
 				"babel": true
+			},
+			"library": {
+				"unitTestRunner": "vitest"
 			}
 		},
 		"@nrwl/next": {

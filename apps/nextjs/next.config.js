@@ -56,14 +56,21 @@ const nextConfig = {
 		svgr: false,
 	},
 	async redirects() {
-		return socialMedias.map((social) => {
-			return {
-				source: `/${social.name}`,
-				destination: social.link,
+		return [
+			...socialMedias.map((social) => {
+				return {
+					source: `/${social.name}`,
+					destination: social.link,
+					permanent: true,
+					basePath: false,
+				};
+			}),
+			{
+				source: "/schedule/:slug",
+				destination: "/:slug/schedule",
 				permanent: true,
-				basePath: false,
-			};
-		});
+			},
+		];
 	},
 };
 

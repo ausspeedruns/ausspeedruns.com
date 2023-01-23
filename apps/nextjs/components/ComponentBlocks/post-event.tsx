@@ -1,94 +1,36 @@
-import React, { Suspense, useState } from 'react';
-import { component, fields, InferRenderersForComponentBlocks } from '@keystone-6/fields-document/component-blocks';
+import React, { Suspense, useState } from "react";
+import {
+	component,
+	fields,
+	InferRenderersForComponentBlocks,
+} from "@keystone-6/fields-document/component-blocks";
 
-import Image from 'next/image';
-import styles from './post-event.module.scss';
-import { Accordion, AccordionDetails, AccordionSummary, Button, TextField } from '@mui/material';
-import Balancer from 'react-wrap-balancer';
-import { FilterRuns } from '../run-utils';
-import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTwitch } from '@fortawesome/free-brands-svg-icons';
+import Image from "next/image";
+import styles from "./post-event.module.scss";
+import {
+	Accordion,
+	AccordionDetails,
+	AccordionSummary,
+	Button,
+	TextField,
+} from "@mui/material";
+import Balancer from "react-wrap-balancer";
+import { FilterRuns } from "../run-utils";
+import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTwitch } from "@fortawesome/free-brands-svg-icons";
+import { PostEventRenderers, AllRunsEvent } from "@ausspeedruns/component-blocks";
 
-const componentBlocks = {
-	eventLogo: component({
-		preview() {
-			return <></>;
-		},
-		label: 'Event Logo',
-		schema: {
-			eventLogo: fields.relationship({
-				label: 'Event',
-				listKey: 'Event',
-				selection: '',
-			}),
-		},
-	}),
-	raisedAmount: component({
-		preview() {
-			return <></>;
-		},
-		label: 'Raised Amount',
-		schema: {
-			charityName: fields.text({ label: 'Charity Name ' }),
-			charityImage: fields.url({ label: 'Charity URL' }),
-			amount: fields.text({ label: 'Amount Raised' }),
-		},
-	}),
-	AllRuns: component({
-		preview() {
-			return <></>;
-		},
-		label: 'All runs list',
-		schema: {
-			event: fields.relationship({
-				label: 'Event',
-				listKey: 'Event',
-				selection: '',
-			}),
-		},
-	}),
-	image: component({
-		preview() {
-			return <></>;
-		},
-		label: 'Image',
-		schema: {
-			imgUrl: fields.url({ label: 'Image URL' }),
-			caption: fields.text({ label: '' }),
-		},
-	}),
-};
-
-interface AllRunsEvent {
-	id: string;
-	startDate: string;
-	shortname: string;
-	runs: {
-		id: string;
-		game: string;
-		category: string;
-		runners: {
-			id: string;
-			username: string;
-		}[];
-		finalTime: string;
-		platform: string;
-		youtubeVOD: string;
-		twitchVOD: string;
-		race: boolean;
-		coop: boolean;
-		donationIncentiveObject: {
-			title: string;
-		}[];
-		racer: string;
-	}[];
-}
-
-function GetRunnerElement(runner: { id?: string; username: string }, className?: string) {
+function GetRunnerElement(
+	runner: { id?: string; username: string },
+	className?: string,
+) {
 	if (runner.id) {
 		return (
-			<Link key={runner.id} className={className} href={`/user/${runner.username}`}>
+			<Link
+				key={runner.id}
+				className={className}
+				href={`/user/${runner.username}`}>
 				{runner.username}
 			</Link>
 		);
@@ -101,7 +43,11 @@ function GetRunnerElement(runner: { id?: string; username: string }, className?:
 	);
 }
 
-function RunnerLinks(runners: { id?: string; username: string }[], race = false, className?: string) {
+function RunnerLinks(
+	runners: { id?: string; username: string }[],
+	race = false,
+	className?: string,
+) {
 	return runners.map((runner, i) => {
 		// If only one name or second last in the list to not include a comma
 		if (runners.length === 1 || i === runners.length - 2) {
@@ -112,7 +58,7 @@ function RunnerLinks(runners: { id?: string; username: string }[], race = false,
 		if (i === runners.length - 1) {
 			return (
 				<>
-					<span> {race ? 'vs' : 'and'} </span>
+					<span> {race ? "vs" : "and"} </span>
 					{GetRunnerElement(runner, className)}
 				</>
 			);
@@ -127,11 +73,15 @@ function RunnerLinks(runners: { id?: string; username: string }[], race = false,
 	});
 }
 
-export const PostEventComponentRenderers: InferRenderersForComponentBlocks<typeof componentBlocks> = {
+export const PostEventComponentRenderers: PostEventRenderers = {
 	eventLogo: (props) => {
 		return (
 			<div className={styles.eventLogo}>
-				<Image src={props.eventLogo.data.logo.url} fill alt={`${props.eventLogo.data.name} Logo`} />
+				<Image
+					src={props.eventLogo.data.logo.url}
+					fill
+					alt={`${props.eventLogo.data.name} Logo`}
+				/>
 			</div>
 		);
 	},
@@ -141,13 +91,17 @@ export const PostEventComponentRenderers: InferRenderersForComponentBlocks<typeo
 				<span className={styles.amount}>{props.amount}</span>
 				raised for
 				<div className={styles.charityImage}>
-					<Image src={props.charityImage} alt={props.charityName} fill />
+					<Image
+						src={props.charityImage}
+						alt={props.charityName}
+						fill
+					/>
 				</div>
 			</div>
 		);
 	},
 	AllRuns: (props) => {
-		const [search, setSearch] = useState('');
+		const [search, setSearch] = useState("");
 
 		if (!props.event) return <></>;
 
@@ -157,7 +111,9 @@ export const PostEventComponentRenderers: InferRenderersForComponentBlocks<typeo
 		return (
 			<div className={styles.allRunsContainer}>
 				<div className={styles.header}>
-					<span className={styles.event}>{eventData.shortname} Runs</span>
+					<span className={styles.event}>
+						{eventData.shortname} Runs
+					</span>
 					<TextField
 						label="Search"
 						color="primary"
@@ -183,10 +139,14 @@ export const PostEventComponentRenderers: InferRenderersForComponentBlocks<typeo
 							donationIncentive: false,
 							search,
 						}).map((run) => {
-							let runners: { id?: string; username: string }[] = [];
+							let runners: { id?: string; username: string }[] =
+								[];
 							runners.push(...run.runners);
 							if (run.racer) {
-								runners.push({ id: undefined, username: run.racer });
+								runners.push({
+									id: undefined,
+									username: run.racer,
+								});
 							}
 
 							// const expanded = openedRuns.includes(run.id);
@@ -199,32 +159,57 @@ export const PostEventComponentRenderers: InferRenderersForComponentBlocks<typeo
 									// expanded={expanded}
 									// onChange={handleRunChange(run.id)}
 								>
-									<AccordionSummary className={styles.runListHeader}>
+									<AccordionSummary
+										className={styles.runListHeader}>
 										{/* <span className={styles.runNumber}>{runIndex.get(run.id)}</span> */}
-										<span className={styles.game}>{run.game}</span>
-										<span className={styles.category}>{run.category}</span>
-										<span className={styles.runners}>{runners.map((runner) => runner.username).join(', ')}</span>
-										<span className={styles.platform}>{run.platform}</span>
-										<span className={styles.finalTime}>{run.finalTime}</span>
+										<span className={styles.game}>
+											{run.game}
+										</span>
+										<span className={styles.category}>
+											{run.category}
+										</span>
+										<span className={styles.runners}>
+											{runners
+												.map(
+													(runner) => runner.username,
+												)
+												.join(", ")}
+										</span>
+										<span className={styles.platform}>
+											{run.platform}
+										</span>
+										<span className={styles.finalTime}>
+											{run.finalTime}
+										</span>
 									</AccordionSummary>
-									<AccordionDetails className={styles.runData}>
+									<AccordionDetails
+										className={styles.runData}>
 										<div className={styles.youtube}>
 											{run.youtubeVOD ? (
 												<iframe
 													width="100%"
 													height="100%"
-													src={`https://www.youtube-nocookie.com/embed/${run.youtubeVOD.split('?v=')[1]}`}
+													src={`https://www.youtube-nocookie.com/embed/${
+														run.youtubeVOD.split(
+															"?v=",
+														)[1]
+													}`}
 													title="YouTube video player"
 													frameBorder="0"
 													allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 													allowFullScreen
 												/>
 											) : (
-												<span>YouTube VOD coming soon!</span>
+												<span>
+													YouTube VOD coming soon!
+												</span>
 											)}
 										</div>
 										<div className={styles.data}>
-											<div className={styles.runGameAndCategory}>
+											<div
+												className={
+													styles.runGameAndCategory
+												}>
 												<Balancer ratio={0.4}>
 													<h2>{run.game}</h2>
 												</Balancer>
@@ -234,17 +219,62 @@ export const PostEventComponentRenderers: InferRenderersForComponentBlocks<typeo
 											</div>
 											<div className={styles.metadata}>
 												<div className={styles.column}>
-													<span className={styles.label}>Run by</span>
-													<div>{RunnerLinks(runners, run.race, styles.runnerLink)}</div>
-													<span className={styles.label}>Final Time</span>
-													<span className={styles.finalTime}>{run.finalTime}</span>
-													<span className={styles.label}>Console</span>
-													<span className={styles.platform}>{run.platform}</span>
+													<span
+														className={
+															styles.label
+														}>
+														Run by
+													</span>
+													<div>
+														{RunnerLinks(
+															runners,
+															run.race,
+															styles.runnerLink,
+														)}
+													</div>
+													<span
+														className={
+															styles.label
+														}>
+														Final Time
+													</span>
+													<span
+														className={
+															styles.finalTime
+														}>
+														{run.finalTime}
+													</span>
+													<span
+														className={
+															styles.label
+														}>
+														Console
+													</span>
+													<span
+														className={
+															styles.platform
+														}>
+														{run.platform}
+													</span>
 												</div>
 												<div className={styles.column}>
 													{run.twitchVOD && (
-														<a href={run.twitchVOD} target="_blank" rel="noopener noreferrer" className={styles.twitch}>
-															<Button variant="contained" startIcon={<FontAwesomeIcon icon={faTwitch} />}>
+														<a
+															href={run.twitchVOD}
+															target="_blank"
+															rel="noopener noreferrer"
+															className={
+																styles.twitch
+															}>
+															<Button
+																variant="contained"
+																startIcon={
+																	<FontAwesomeIcon
+																		icon={
+																			faTwitch
+																		}
+																	/>
+																}>
 																Twitch
 															</Button>
 														</a>

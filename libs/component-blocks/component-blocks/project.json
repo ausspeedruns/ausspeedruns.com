@@ -1,0 +1,26 @@
+{
+	"name": "component-blocks-component-blocks",
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/component-blocks/component-blocks/src",
+	"projectType": "library",
+	"tags": [],
+	"targets": {
+		"lint": {
+			"executor": "@nrwl/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": [
+					"libs/component-blocks/component-blocks/**/*.{ts,tsx,js,jsx}"
+				]
+			}
+		},
+		"test": {
+			"executor": "@nrwl/vite:test",
+			"outputs": ["coverage/libs/component-blocks/component-blocks"],
+			"options": {
+				"passWithNoTests": true,
+				"reportsDirectory": "../../../coverage/libs/component-blocks/component-blocks"
+			}
+		}
+	}
+}

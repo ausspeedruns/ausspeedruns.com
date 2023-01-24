@@ -30,7 +30,8 @@ jobs:
         name: Set up Node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
+          cache: 'npm'
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -42,15 +43,15 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
       -
-        name: 'Install Dependencies'
-        working-directory: ./main
-        run: npm install
-      -
         name: Derive appropriate SHAs for base and head for `nx affected` commands
         uses: nrwl/nx-set-shas@v3
         with:
           working-directory: ./main
-      - 
+      -
+        name: 'Install Dependencies'
+        working-directory: ./main
+        run: npm ci
+      -
         name: 'Build images'
         working-directory: ./main
         env:

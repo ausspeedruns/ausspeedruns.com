@@ -1,11 +1,8 @@
-.git/
 .keystone/
-.next/
 .env
-.vscode/
-.github/
 Dockerfile
 .dockerignore
 node_modules
+!node_modules/.prisma
 npm-debug.log
 README.md

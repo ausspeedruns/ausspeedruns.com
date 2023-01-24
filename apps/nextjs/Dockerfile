@@ -19,8 +19,8 @@ COPY dist/apps/nextjs/public ./public
 COPY dist/apps/nextjs/.next ./.next
 COPY dist/apps/nextjs/next.config.js ./next.config.js
 COPY dist/apps/nextjs/with-nx.js ./with-nx.js
-RUN chown -R node:node .
-USER node
+# RUN chown -R node:node .
+# USER node
 EXPOSE 3000
 # COPY --chown=node:node ./tools/scripts/entrypoints/api.sh /usr/local/bin/docker-entrypoint.sh
 # ENTRYPOINT [ "docker-entrypoint.sh" ]

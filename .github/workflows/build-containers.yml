@@ -29,10 +29,10 @@ jobs:
       -
         name: Set up Node
         uses: actions/setup-node@v3
-        working-directory: ./main
         with:
           node-version: 18
           cache: 'npm'
+          cache-dependency-path: main/package-lock.json
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2

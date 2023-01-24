@@ -70,6 +70,12 @@ const nextConfig = {
 				destination: "/:slug/schedule",
 				permanent: true,
 			},
+			{
+				source: "/ASGX2023/schedule",
+				destination: "https://horaro.org/asgx2023/schedule",
+				permanent: false,
+				basePath: false,
+			},
 		];
 	},
 };

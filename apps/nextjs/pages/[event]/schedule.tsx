@@ -250,7 +250,7 @@ export default function EventSchedule({ event }: QUERY_EVENT_RESULTS) {
 				</title>
 				<DiscordEmbed
 					title={`${event.shortname} Schedule`}
-					imageSrc={event.ogImage?.url}
+					// imageSrc={event.ogImage?.url}
 				/>
 			</Head>
 			<main className={styles.content}>

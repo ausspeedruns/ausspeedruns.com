@@ -2,7 +2,7 @@ import { BuildExecutorSchema } from "./schema";
 import { ExecutorContext, createPackageJson, writeJsonFile } from '@nrwl/devkit';
 import { execSync } from 'child_process';
 import path = require('path');
-import { copy } from 'fs-extra';
+import { copy, readFileSync, writeFileSync } from 'fs-extra';
 import { PackageJson } from 'nx/src/utils/package-json';
 
 const KEYSTONE_BUILT_ARTIFACTS = ['./.keystone/', './schema.graphql', './schema.prisma', './node_modules'];
@@ -33,6 +33,15 @@ export default async function runExecutor(options: BuildExecutorSchema, context:
 	);
 	updatePackageJson(builtPackageJson, context);
 	writeJsonFile(`${options.outputPath}/package.json`, builtPackageJson);
+
+	// Docker container doesn't have the required binary for prisma so we must manually edit the
+	// schema.prisma file without keystone knowing and add "linux-musl" as a binary target
+	const prismaFile = path.join(destFolder, '/schema.prisma')
+	const prismaSchema = readFileSync(prismaFile).toString().split("\n");
+	prismaSchema.splice(12, 0, '  binaryTargets = ["native", "linux-musl"]');
+	const modifiedPrismaSchema = prismaSchema.join("\n");
+	writeFileSync(prismaFile, modifiedPrismaSchema);
+	execSync('npx prisma generate', { cwd: destFolder, stdio: 'inherit' });
 
 	console.log("Executor ran for Keystone Build", options);
 	return {

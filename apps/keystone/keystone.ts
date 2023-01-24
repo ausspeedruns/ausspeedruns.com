@@ -105,6 +105,6 @@ export default withAuth(
     },
     server: {
       port: 8000,
-    }
+    },
   })
 );

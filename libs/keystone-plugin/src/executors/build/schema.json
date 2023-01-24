@@ -1,0 +1,22 @@
+{
+	"$schema": "http://json-schema.org/schema",
+	"version": 2,
+	"cli": "nx",
+	"title": "Build executor",
+	"description": "",
+	"type": "object",
+	"properties": {
+		"root": {
+			"description": "The source root",
+			"type": "string",
+			"x-priority": "important"
+		},
+		"outputPath": {
+			"type": "string",
+			"description": "The output path of the generated files.",
+			"x-completion-type": "directory",
+			"x-priority": "important"
+		}
+	},
+	"required": []
+}

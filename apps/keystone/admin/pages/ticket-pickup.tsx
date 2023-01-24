@@ -8,7 +8,7 @@ import { Tooltip } from '@keystone-ui/tooltip';
 import { TextArea, FieldContainer, FieldLabel, Checkbox } from '@keystone-ui/fields';
 import { InputAdornment, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useLazyQuery, gql, useQuery, useMutation } from '@keystone-6/core/admin-ui/apollo';
+import {  gql, useQuery, useMutation } from '@keystone-6/core/admin-ui/apollo';
 
 const BigSearch = styled(TextField)(({ theme }) => ({
 	'& .MuiOutlinedInput-input': {

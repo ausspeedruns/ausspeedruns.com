@@ -15,6 +15,9 @@
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
+			"@ausspeedruns.com/keystone-plugin": [
+				"libs/keystone-plugin/src/index.ts"
+			],
 			"@ausspeedruns/component-blocks": [
 				"libs/component-blocks/component-blocks/src/index.ts"
 			]

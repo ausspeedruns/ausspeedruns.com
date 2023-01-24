@@ -1,6 +1,9 @@
 // import '../styles/globals.css'
 import '../styles/global.scss';
 import '../styles/App.scss';
+import '@fontsource/finger-paint';
+import '@fontsource/roboto-mono';
+import '@fontsource/noto-sans';
 import { withUrqlClient } from 'next-urql';
 
 import { AuthProvider } from '../components/auth';

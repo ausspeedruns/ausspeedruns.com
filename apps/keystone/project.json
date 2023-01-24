@@ -5,7 +5,11 @@
 	"projectType": "application",
 	"targets": {
 		"build": {
-			"command": "npx keystone build"
+			"executor": "@ausspeedruns.com/keystone-plugin:build",
+			"options": {
+				"root": "apps/keystone",
+				"outputPath": "dist/apps/keystone"
+			}
 		},
 		"serve": {
 			"executor": "nx:run-commands",
@@ -30,7 +34,8 @@
 				"tags": [
 					"ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest"
 				]
-			}
+			},
+			"dependsOn": ["build"]
 		},
 		"container-push": {
 			"executor": "@nx-tools/nx-container:build",
@@ -40,7 +45,8 @@
 				"tags": [
 					"ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest"
 				]
-			}
+			},
+			"dependsOn": ["build"]
 		},
 		"seed": {
 			"command": "npx keystone --seed-data"

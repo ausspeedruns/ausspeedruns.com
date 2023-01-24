@@ -1,0 +1,61 @@
+{
+	"name": "keystone-plugin",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/keystone-plugin/src",
+	"projectType": "library",
+	"targets": {
+		"build": {
+			"executor": "@nrwl/js:tsc",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"outputPath": "dist/libs/keystone-plugin",
+				"main": "libs/keystone-plugin/src/index.ts",
+				"tsConfig": "libs/keystone-plugin/tsconfig.lib.json",
+				"assets": [
+					"libs/keystone-plugin/*.md",
+					{
+						"input": "./libs/keystone-plugin/src",
+						"glob": "**/!(*.ts)",
+						"output": "./src"
+					},
+					{
+						"input": "./libs/keystone-plugin/src",
+						"glob": "**/*.d.ts",
+						"output": "./src"
+					},
+					{
+						"input": "./libs/keystone-plugin",
+						"glob": "generators.json",
+						"output": "."
+					},
+					{
+						"input": "./libs/keystone-plugin",
+						"glob": "executors.json",
+						"output": "."
+					}
+				]
+			}
+		},
+		"lint": {
+			"executor": "@nrwl/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": [
+					"libs/keystone-plugin/**/*.ts",
+					"libs/keystone-plugin/generators.json",
+					"libs/keystone-plugin/executors.json",
+					"libs/keystone-plugin/package.json"
+				]
+			}
+		},
+		"test": {
+			"executor": "@nrwl/jest:jest",
+			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+			"options": {
+				"jestConfig": "libs/keystone-plugin/jest.config.ts",
+				"passWithNoTests": true
+			}
+		}
+	},
+	"tags": []
+}

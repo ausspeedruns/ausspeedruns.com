@@ -53,20 +53,4 @@ jobs:
       - 
         name: 'Build images'
         working-directory: ./main
-        # run: INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} INPUT_BUILD_ARGS=SESSION_SECRET=${{ secrets.SESSION_SECRET }},DATABASE_URL=${{ secrets.DATABASE_URL }} npx nx run-many --target=container
-        run: INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} INPUT_BUILD_ARGS=SESSION_SECRET=${{ secrets.SESSION_SECRET }},DATABASE_URL=${{ secrets.DATABASE_URL }} npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container-push
-      # -
-      #   name: Build affected docker files
-      #   uses: docker/build-push-action@v3
-      #   with:
-      #     context: ./main/
-      #     push: true
-      #     tags: ausrunswebsitecontainersregistry.azurecr.io/ausruns/next:latest
-      #     cache-from: type=registry,ref=ausrunswebsitecontainersregistry.azurecr.io/ausruns/next:latest
-      #     cache-to: type=inline
-      #     build-args: |
-      #       "DATABASE_URL=${{ secrets.DATABASE_URL }}"
-      #       "SESSION_SECRET=${{ secrets.SESSION_SECRET }}"
-      #       "API_KEY=${{ secrets.API_KEY }}"
-      #       "NEXT_PUBLIC_STRIPE_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_STRIPE_PUBLIC_KEY }}"
-
+        run: INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container-push

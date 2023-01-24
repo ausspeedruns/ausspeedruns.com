@@ -12,6 +12,7 @@ export default async function runExecutor(options: BuildExecutorSchema, context:
 	const destFolder = path.join(context.cwd, options.outputPath);
 
 	// Run keystone build
+	execSync('npx keystone postinstall --fix', { cwd: srcFolder, stdio: 'inherit' });
 	execSync('npx keystone build', { cwd: srcFolder, stdio: 'inherit' });
 
 	// Move folder to dist

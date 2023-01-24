@@ -4,7 +4,6 @@ FROM node:18.12.1-alpine as deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY dist/apps/keystone/package.json ./
-COPY dist/apps/keystone/node_modules ./node_modules
 RUN npm install --omit=dev
 
 # Production image, copy all the files and run next
@@ -16,6 +15,7 @@ ENV PORT 8000
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/package.json ./package.json
+COPY dist/apps/keystone/node_modules ./node_modules
 COPY dist/apps/keystone/schema.graphql ./schema.graphql
 COPY dist/apps/keystone/schema.prisma ./schema.prisma
 COPY dist/apps/keystone/.keystone ./.keystone

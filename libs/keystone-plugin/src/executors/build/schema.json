@@ -16,6 +16,14 @@
 			"description": "The output path of the generated files.",
 			"x-completion-type": "directory",
 			"x-priority": "important"
+		},
+		"dontBuild": {
+			"type": "boolean",
+			"description": "Will move the required files into the outputPath but not run keystone build. This is in case you use another pipeline to build the final product without."
+		},
+		"filesToInclude": {
+			"type":"array",
+			"description": "Extra files/folders to include in the final build"
 		}
 	},
 	"required": []

@@ -3,21 +3,21 @@ import { config, graphql } from '@keystone-6/core';
 import { statelessSessions } from '@keystone-6/core/session';
 import { createAuth } from '@keystone-6/auth';
 
-import { Role, User } from './schema/user';
-import { Submission } from './schema/submission';
-import { Event } from './schema/event';
-import { Post } from './schema/post';
-import { permissions, rules } from './schema/access';
-import { Run } from './schema/runs';
-import { Verification } from './schema/verification';
-import { Ticket } from './schema/tickets';
+import { Role, User } from './src/schema/user';
+import { Submission } from './src/schema/submission';
+import { Event } from './src/schema/event';
+import { Post } from './src/schema/post';
+import { permissions, rules } from './src/schema/access';
+import { Run } from './src/schema/runs';
+import { Verification } from './src/schema/verification';
+import { Ticket } from './src/schema/tickets';
 
-import { sendResetPassword } from './email/emails';
+import { sendResetPassword } from './src/email/emails';
 import { Context } from '.keystone/types';
-import { Volunteer } from './schema/volunteers';
-import { ShirtOrder } from './schema/orders';
-import { Incentive } from './schema/incentives';
-import { insertSeedData } from './seed/seed';
+import { Volunteer } from './src/schema/volunteers';
+import { ShirtOrder } from './src/schema/orders';
+import { Incentive } from './src/schema/incentives';
+import { insertSeedData } from './src/seed/seed';
 
 const session = statelessSessions({
   secret: process.env.SESSION_SECRET,

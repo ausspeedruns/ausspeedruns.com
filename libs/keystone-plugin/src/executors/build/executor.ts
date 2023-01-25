@@ -6,20 +6,28 @@ import { copy, readFileSync, writeFileSync } from 'fs-extra';
 import { PackageJson } from 'nx/src/utils/package-json';
 
 const KEYSTONE_BUILT_ARTIFACTS = ['./.keystone/', './schema.graphql', './schema.prisma', './node_modules'];
+const KEYSTONE_MOVE_SOURCE_FILES = ['keystone.ts', './admin', './migrations', './tsconfig.json'];
 
 export default async function runExecutor(options: BuildExecutorSchema, context: ExecutorContext) {
 	const srcFolder = path.join(context.cwd, options.root);
 	const destFolder = path.join(context.cwd, options.outputPath);
 
-	// Run keystone build
-	execSync('npx keystone postinstall --fix', { cwd: srcFolder, stdio: 'inherit' });
-	execSync('npx keystone build', { cwd: srcFolder, stdio: 'inherit' });
+	if (!options.dontBuild) {
+		// Run keystone build
+		execSync('npx keystone postinstall --fix', { cwd: srcFolder, stdio: 'inherit' });
+		execSync('npx keystone build', { cwd: srcFolder, stdio: 'inherit' });
+	}
 
 	// Move folder to dist
 	await Promise.all(
-		KEYSTONE_BUILT_ARTIFACTS.map(artifact => {
-			return copy(path.join(srcFolder, artifact), path.join(destFolder, artifact))
-		})
+		[
+			...(options.dontBuild ? KEYSTONE_MOVE_SOURCE_FILES : KEYSTONE_BUILT_ARTIFACTS).map(artifact => {
+				return copy(path.join(srcFolder, artifact), path.join(destFolder, artifact))
+			}),
+			...options?.filesToInclude.map(file => {
+				return copy(path.join(srcFolder, file), path.join(destFolder, file))
+			})
+		]
 	);
 
 	// Generate package.json
@@ -36,19 +44,21 @@ export default async function runExecutor(options: BuildExecutorSchema, context:
 
 	// Docker container doesn't have the required binary for prisma so we must manually edit the
 	// schema.prisma file without keystone knowing and add "linux-musl" as a binary target
-	const prismaFile = path.join(destFolder, '/schema.prisma')
-	const prismaSchema = readFileSync(prismaFile).toString().split("\n");
-	prismaSchema.splice(12, 0, '  binaryTargets = ["native", "linux-musl"]');
-	const modifiedPrismaSchema = prismaSchema.join("\n");
-	writeFileSync(prismaFile, modifiedPrismaSchema);
-	execSync('npx prisma generate', { cwd: destFolder, stdio: 'inherit' });
 
-	console.log("Executor ran for Keystone Build", options);
+	// const prismaFile = path.join(destFolder, '/schema.prisma')
+	// const prismaSchema = readFileSync(prismaFile).toString().split("\n");
+	// prismaSchema.splice(12, 0, '  binaryTargets = ["native", "linux-musl"]');
+	// const modifiedPrismaSchema = prismaSchema.join("\n");
+	// writeFileSync(prismaFile, modifiedPrismaSchema);
+	// execSync('npx prisma generate', { cwd: destFolder, stdio: 'inherit' });
+
+	console.log("Executor ran for Keystone Build");
 	return {
 		success: true,
 	};
 }
 
+// Taken from @nrwl/next, relevant as Keystone uses NextJS
 function updatePackageJson(
 	packageJson: PackageJson,
 	context: ExecutorContext
@@ -63,13 +73,4 @@ function updatePackageJson(
 		packageJson.dependencies = packageJson.dependencies || {};
 		packageJson.dependencies['typescript'] = typescriptNode.data.version;
 	}
-}
-
-function calculateCwd(
-	cwd: string | undefined,
-	context: ExecutorContext
-): string {
-	if (!cwd) return context.root;
-	if (path.isAbsolute(cwd)) return cwd;
-	return path.join(context.root, cwd);
 }

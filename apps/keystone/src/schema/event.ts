@@ -6,8 +6,8 @@ import { Lists } from '.keystone/types';
 
 import { file, image } from './util';
 
-import { componentBlocks as liveEventComponentBlocks } from '../admin/components/component-blocks/event-page';
-import { componentBlocks as postEventComponentBlocks } from '../admin/components/component-blocks/post-event';
+import { componentBlocks as liveEventComponentBlocks } from '../../admin/components/component-blocks/event-page';
+import { componentBlocks as postEventComponentBlocks } from '../../admin/components/component-blocks/post-event';
 
 export const Event: Lists.Event = list({
 	access: {

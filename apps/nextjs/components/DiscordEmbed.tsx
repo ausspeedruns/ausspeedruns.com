@@ -24,7 +24,7 @@ const DiscordEmbed = (props: DiscordEmbedProps) => {
 				content={props.imageSrc ?? AusSpeedrunsLogo.src}
 				property="og:image"
 			/>
-			{props.imageSrc ?? (
+			{props.imageSrc && (
 				<meta name="twitter:card" content="summary_large_image" />
 			)}
 			{props.pageUrl && (

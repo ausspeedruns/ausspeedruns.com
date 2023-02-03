@@ -1,11 +1,7 @@
 import Head from "next/head";
 
 // Components
-import Navbar from "../components/Navbar/Navbar";
 import Heroblock from "../components/Heroblock/Heroblock";
-import EventDetails from "../components/EventDetails/EventDetails";
-import TileGroup from "../components/Tiles/TileGroup";
-import Footer from "../components/Footer/Footer";
 import { globals } from "../globals";
 import DiscordEmbed from "../components/DiscordEmbed";
 
@@ -15,6 +11,21 @@ import Button from "../components/Button/Button";
 import LastEventBlock from "../components/LastEventBlock/LastEventBlock";
 
 import OGImage from "../styles/img/IndexOG.png";
+import { AusSpeedrunsEvent } from "../types/types";
+
+// TODO: Move this stuff to keystone
+const ASM2023: AusSpeedrunsEvent = {
+	fullName: "Australian Speedrun Marathon 2023",
+	preferredName: "ASM2023",
+	shortName: "ASM2023",
+	startDate: "12 July 2023 09:00:00 GMT+0930",
+	dates: "July 12 - 16, 2023",
+	charity: {
+		name: "Game On Cancer",
+	},
+	logo: "ASM2023-Logo.png",
+	heroImage: "ASM2023Hero.png",
+};
 
 export default function Home() {
 	const {
@@ -34,7 +45,8 @@ export default function Home() {
 			<main>
 				{/* {!eventLive && <Heroblock event={current} />}
 				{eventLive && <EventLive event={current.preferredName} />} */}
-				<Heroblock event={next} />
+				<Heroblock event={next} darkText schedule />
+				<Heroblock event={ASM2023} tagline="The Australian Speedrun Marathon returns! Tickets and submissions will be announced shortly." />
 				<LastEventBlock event={current} backgroundPos="center" />
 				<LastEventBlock event={previous} />
 				<section className={styles.archive}>

@@ -1,21 +1,28 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Heroblock.module.scss";
 import Image from "next/image";
-import { faCalendar, faChevronRight, faTicket } from "@fortawesome/free-solid-svg-icons";
+import {
+	faCalendar,
+	faChevronRight,
+	faTicket,
+} from "@fortawesome/free-solid-svg-icons";
 import Button from "../Button/Button";
 import { AusSpeedrunsEvent } from "../../types/types";
 
 type HeroblockProps = {
 	event: AusSpeedrunsEvent;
+	tagline?: string;
+	darkText?: boolean;
+	schedule?: boolean;
 };
 
 function zeroPad(num: number): string {
 	return num.toString().padStart(2, "0");
 }
 
-const eventDate = Date.UTC(2023, 2, 11, 0, 0, 0, 0);
+// const eventDate = Date.UTC(2023, 2, 11, 0, 0, 0, 0);
 
-function countdownRender(currentTime: number) {
+function countdownRender(currentTime: number, eventDate: number) {
 	// Calculate the difference in seconds between the target date and current date
 	let diffInSeconds = (eventDate - currentTime) / 1000;
 
@@ -66,12 +73,12 @@ function countdownRender(currentTime: number) {
 	);
 }
 
-const Heroblock = ({ event }: HeroblockProps) => {
+const Heroblock = ({ event, tagline, darkText, schedule }: HeroblockProps) => {
 	const [countdownElement, setCountdownElement] = useState(<></>);
 
 	function updateCountdown() {
-		if (Date.now() < eventDate) {
-			setCountdownElement(countdownRender(Date.now()));
+		if (Date.now() < new Date(event.startDate).getTime()) {
+			setCountdownElement(countdownRender(Date.now(), new Date(event.startDate).getTime()));
 		}
 	}
 
@@ -88,6 +95,7 @@ const Heroblock = ({ event }: HeroblockProps) => {
 				backgroundImage: `url("${
 					require(`../../styles/img/${event.heroImage}`).default.src
 				}")`,
+				color: darkText ? "#000" : "#fff",
 			}}>
 			<div className={`${styles.content} content`}>
 				<div className={styles.ctaBlock}>
@@ -102,26 +110,31 @@ const Heroblock = ({ event }: HeroblockProps) => {
 					</h3>
 					<br />
 					<p>
-						We will be at The Game Expo! The schedule has been released!
+						{tagline ??
+							"We will be at The Game Expo! The schedule has been released!"}
 					</p>
 					<Button
 						actionText={event.preferredName}
-						link={"/ASGX2023"}
+						link={`/${event.shortName}`}
 						iconRight={faChevronRight}
 						colorScheme={"secondary"}
 					/>
-					<Button
-						actionText="Schedule"
-						link={"/ASGX2023/schedule"}
-						iconRight={faCalendar}
-						colorScheme={"secondary"}
-					/>
-					<Button
-						actionText="Purchase Tickets"
-						link={event.website}
-						iconRight={faTicket}
-						colorScheme={"secondary"}
-					/>
+					{schedule && (
+						<Button
+							actionText="Schedule"
+							link={`/${event.shortName}/schedule`}
+							iconRight={faCalendar}
+							colorScheme={"secondary"}
+						/>
+					)}
+					{event.website && (
+						<Button
+							actionText="Purchase Tickets"
+							link={event.website}
+							iconRight={faTicket}
+							colorScheme={"secondary"}
+						/>
+					)}
 				</div>
 				<div className={styles.logoBlock}>
 					<Image

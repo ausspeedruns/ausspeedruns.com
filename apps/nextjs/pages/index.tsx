@@ -1,28 +1,35 @@
-import Head from 'next/head';
+import Head from "next/head";
 
 // Components
-import Navbar from '../components/Navbar/Navbar';
-import Heroblock from '../components/Heroblock/Heroblock';
-import EventDetails from '../components/EventDetails/EventDetails';
-import TileGroup from '../components/Tiles/TileGroup';
-import Footer from '../components/Footer/Footer';
-import { globals } from '../globals';
-import DiscordEmbed from '../components/DiscordEmbed';
+import Navbar from "../components/Navbar/Navbar";
+import Heroblock from "../components/Heroblock/Heroblock";
+import EventDetails from "../components/EventDetails/EventDetails";
+import TileGroup from "../components/Tiles/TileGroup";
+import Footer from "../components/Footer/Footer";
+import { globals } from "../globals";
+import DiscordEmbed from "../components/DiscordEmbed";
 
-import styles from '../styles/index.module.scss';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import Button from '../components/Button/Button';
-import LastEventBlock from '../components/LastEventBlock/LastEventBlock';
+import styles from "../styles/index.module.scss";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import Button from "../components/Button/Button";
+import LastEventBlock from "../components/LastEventBlock/LastEventBlock";
+
+import OGImage from "../styles/img/IndexOG.png";
 
 export default function Home() {
 	const {
 		events: { previous, current, next },
 	} = globals;
 	return (
-        <div>
+		<div>
 			<Head>
 				<title>AusSpeedruns</title>
-				<DiscordEmbed title="AusSpeedruns" description="Home of the AusSpeedruns events" pageUrl="/" />
+				<DiscordEmbed
+					title="AusSpeedruns"
+					description="Home of the AusSpeedruns events"
+					pageUrl="/"
+					imageSrc={OGImage.src}
+				/>
 			</Head>
 			<main>
 				{/* {!eventLive && <Heroblock event={current} />}
@@ -35,18 +42,20 @@ export default function Home() {
 						<div className={styles.filler}></div>
 						<div className={styles.text}>
 							<h2>Missed a run?</h2>
-							<p>Check our YouTube for runs from previous events.</p>
+							<p>
+								Check our YouTube for runs from previous events.
+							</p>
 							<Button
 								actionText="Watch again"
 								link={globals.socialLinks.youtube}
 								iconRight={faChevronRight}
-								colorScheme={'secondary'}
-								target={'_blank'}
+								colorScheme={"secondary"}
+								target={"_blank"}
 							/>
 						</div>
 					</div>
 				</section>
 			</main>
 		</div>
-    );
+	);
 }

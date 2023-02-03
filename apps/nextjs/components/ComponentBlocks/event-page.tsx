@@ -31,7 +31,7 @@ export const EventComponentRenderers: EventPageRenderers = {
 				<div className={styles.logo}>
 					<Image
 						src={
-							props.event.data.logo?.src ?? props.eventLogoBackup
+							props.event.data.logo?.url
 						}
 						alt={`${props.event.data.shortname} Logo`}
 						style={{ objectFit: "contain" }}

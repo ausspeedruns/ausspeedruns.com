@@ -123,9 +123,9 @@ const SETTINGS = {
 	liveRunId: "",
 };
 
-const TEST_CURRENTTIME = new Date(2025, 6, 9, 16, 25);
+// const TEST_CURRENTTIME = new Date(2025, 6, 9, 16, 25);
 export default function EventSchedule({ event }: QUERY_EVENT_RESULTS) {
-	console.log(TEST_CURRENTTIME);
+	// console.log(TEST_CURRENTTIME);
 	const [settings, setSettings] = useState(SETTINGS);
 	const [currentTime, setCurrentTime] = useState(new Date());
 	// const [currentTime] = useState(TEST_CURRENTTIME);
@@ -567,7 +567,7 @@ const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 	if (run.race)
 		categoryExtras = <span className={styles.categoryExtras}>RACE </span>;
 	if (run.coop)
-		categoryExtras = <span className={styles.categoryExtras}>COOP </span>;
+		categoryExtras = <span className={styles.categoryExtras}>CO-OP </span>;
 
 	return (
 		<div

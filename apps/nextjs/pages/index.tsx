@@ -1,7 +1,7 @@
 import Head from "next/head";
 
 // Components
-import Heroblock from "../components/Heroblock/Heroblock";
+import HeroBlock from "../components/Heroblock/Heroblock";
 import { globals } from "../globals";
 import DiscordEmbed from "../components/DiscordEmbed";
 
@@ -45,8 +45,8 @@ export default function Home() {
 			<main>
 				{/* {!eventLive && <Heroblock event={current} />}
 				{eventLive && <EventLive event={current.preferredName} />} */}
-				<Heroblock event={next} darkText schedule />
-				<Heroblock event={ASM2023} tagline="The Australian Speedrun Marathon returns! Tickets and submissions will be announced shortly." />
+				<HeroBlock event={next} darkText schedule />
+				<HeroBlock event={ASM2023} submitRuns tagLine="The Australian Speedrun Marathon returns! Submissions are open until March 31. Tickets will go on sale March 3." />
 				<LastEventBlock event={current} backgroundPos="center" />
 				<LastEventBlock event={previous} />
 				<section className={styles.archive}>

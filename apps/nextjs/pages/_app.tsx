@@ -4,6 +4,7 @@ import '../styles/App.scss';
 import '@fontsource/finger-paint';
 import '@fontsource/roboto-mono';
 import '@fontsource/noto-sans';
+import '@fontsource/russo-one';
 import { withUrqlClient } from 'next-urql';
 
 import { AuthProvider } from '../components/auth';

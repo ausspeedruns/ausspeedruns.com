@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { config, graphql } from '@keystone-6/core';
 import { statelessSessions } from '@keystone-6/core/session';
 import { createAuth } from '@keystone-6/auth';
+import { v4 as uuid } from 'uuid';
 
 import { Role, User } from './src/schema/user';
 import { Submission } from './src/schema/submission';
@@ -96,6 +97,62 @@ export default withAuth(
               }
             }
           })
+        },
+        mutation: {
+          confirmStripe: graphql.field({
+            type: base.object('Ticket'),
+            args: {
+              stripeID: graphql.arg({ type: graphql.nonNull(graphql.String) }),
+              numberOfTickets: graphql.arg({ type: graphql.nonNull(graphql.Int) }),
+              apiKey: graphql.arg({ type: graphql.nonNull(graphql.String) }),
+            },
+            resolve(source, { apiKey, numberOfTickets, stripeID }, context: Context) {
+              if (apiKey !== process.env.API_KEY) throw new Error("Incorrect API Key");
+              // if (apiKey !== process.env.API_KEY) {
+              //   // Debug only
+              //   console.log(`Tried to confirm stripe but had an API key error. Got ${apiKey}, expected ${process.env.API_KEY}`);
+              //   return;
+              // }
+
+              return context.sudo().db.Ticket.updateOne({
+                where: { stripeID },
+                data: { paid: true, numberOfTickets }
+              });
+            }
+          }),
+          generateTicket: graphql.field({
+            type: base.object('Ticket'),
+            args: {
+              userID: graphql.arg({ type: graphql.nonNull(graphql.ID) }),
+              numberOfTickets: graphql.arg({ type: graphql.nonNull(graphql.Int) }),
+              method: graphql.arg({ type: graphql.nonNull(base.enum('TicketMethodType')) }),
+              event: graphql.arg({ type: graphql.nonNull(graphql.String) }),
+              stripeID: graphql.arg({ type: graphql.String }),
+              apiKey: graphql.arg({ type: graphql.nonNull(graphql.String) }),
+            },
+            async resolve(source, { apiKey, event, method, numberOfTickets, stripeID, userID }, context: Context) {
+              if (apiKey !== process.env.API_KEY) throw new Error("Incorrect API Key");
+
+              // Check user is verified
+              const userVerified = await context.sudo().query.User.findOne({ where: { id: userID }, query: 'verified' });
+
+              if (!userVerified.verified) {
+                // console.log(`Unverified user ${userID} tried to generate ticket.`)
+                throw new Error('Unverified user.');
+              }
+
+              return context.sudo().db.Ticket.createOne({
+                data: {
+                  user: { connect: { id: userID } },
+                  numberOfTickets,
+                  // @ts-ignore: I do not know how to correctly type the graphql arg
+                  method,
+                  event: { connect: { shortname: event } },
+                  stripeID: stripeID ?? uuid(),
+                }
+              });
+            }
+          }),
         }
       }
     }),

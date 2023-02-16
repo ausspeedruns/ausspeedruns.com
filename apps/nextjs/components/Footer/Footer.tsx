@@ -4,6 +4,7 @@ import {
 	faYoutube,
 	faDiscord,
 	faInstagram,
+	faTiktok,
 	// faFacebook,
 } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -68,6 +69,12 @@ const Footer = (props: FooterProps) => {
 							<a href={globals.socialLinks.instagram} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faInstagram} />
 								<span className={styles.text}>Follow us on Instagram</span>
+							</a>
+						</li>
+						<li className="social">
+							<a href={globals.socialLinks.tiktok} target="_blank" rel="noreferrer">
+								<FontAwesomeIcon icon={faTiktok} />
+								<span className={styles.text}>Follow us on Tiktok</span>
 							</a>
 						</li>
 					</ul>

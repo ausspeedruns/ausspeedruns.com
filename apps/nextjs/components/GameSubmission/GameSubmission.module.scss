@@ -1,0 +1,119 @@
+@import "../../styles/responsive.scss";
+
+.gameForm {
+	width: 100%;
+
+	@include breakpoint($md) {
+		padding: 0 10%;
+	}
+
+	.stepper {
+		margin: 2rem 0;
+	}
+
+	.formAndData {
+		display: flex;
+		gap: 1rem;
+	}
+
+	.paper {
+		padding: 2rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		flex-grow: 1;
+	}
+
+	.pageControls {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 1rem;
+	}
+
+	.optionalTextInputs {
+		display: flex;
+		// align-items: center;
+		gap: 8px;
+
+		.input {
+			flex-grow: 1;
+		}
+
+		.button {
+			min-height: 100%;
+		}
+	}
+	
+	.toggleButtons {
+		margin: 0.5rem auto !important;
+	}
+
+	p:not(:only-child) {
+		margin-bottom: 0;
+	}
+
+	.error {
+		color: rgb(255, 60, 60);
+	}
+
+	.finalGamePage {
+		.header {
+			font-weight: bold;
+			margin-right: 1rem;
+		}
+
+		table {
+			table-layout: fixed;
+			margin: auto;
+			width: 100%;
+		}
+
+		td {
+			font-size: 1.2rem;
+			padding: 8px;
+			text-align: left;
+			width: 100%;
+			overflow-wrap: break-word; 
+			hyphens: manual;
+			vertical-align: text-top;
+		}
+
+		td:first-child {
+			font-weight: bold;
+			text-align: right;
+		}
+
+		.techPlatform {
+			font-size: 1rem;
+			font-style: italic;
+		}
+
+		.game {
+			font-weight: bold;
+			font-size: 1.5rem;
+			text-align: center;
+		}
+	}
+
+	
+	@include breakpoint($sm-zero-only) {
+		.formAndData {
+			flex-direction: column;
+		}
+	}
+}
+
+.submissionPage {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	flex-grow: 1;
+
+	h3 {
+		text-align: center;
+	}
+
+	& > * {
+		margin: 0.5rem 0 !important;
+	}
+}

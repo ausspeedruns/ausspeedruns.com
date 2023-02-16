@@ -64,9 +64,13 @@ model Submission {
   game                        String                   @default("")
   category                    String                   @default("")
   platform                    String                   @default("")
+  techPlatform                String                   @default("")
   estimate                    String                   @default("")
+  possibleEstimate            String                   @default("")
+  possibleEstimateReason      String                   @default("")
   ageRating                   SubmissionAgeRatingType? @default(m_or_lower)
   donationIncentive           String                   @default("")
+  newDonationIncentives       Json?
   specialReqs                 String                   @default("")
   availability                Json?                    @map("availability_json")
   race                        SubmissionRaceType?      @default(no)

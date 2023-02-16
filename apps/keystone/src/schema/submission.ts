@@ -35,7 +35,8 @@ export const Submission: Lists.Submission = list({
 		created: timestamp({ defaultValue: { kind: 'now' } }),
 		game: text({ validation: { isRequired: true, length: { min: 1, max: 100 } } }),
 		category: text({ validation: { isRequired: true, length: { min: 1, max: 100 } } }),
-		platform: text({ validation: { isRequired: true, length: { min: 1, max: 100 } } }), // Potentially an enum with "other"?
+		platform: text({ validation: { isRequired: true, length: { min: 1, max: 100 } } }),
+		techPlatform: text({ validation: { isRequired: true, length: { min: 1, max: 100 } } }),
 		estimate: text({
 			validation: { isRequired: true, match: { regex: /^\d{1,2}:\d{2}:\d{2}$/, explanation: 'Estimate invalid. Make sure its like 01:30:00.' } }, hooks: {
 				resolveInput: ({ resolvedData }) => {
@@ -48,6 +49,8 @@ export const Submission: Lists.Submission = list({
 				}
 			}
 		}),
+		possibleEstimate: text(),
+		possibleEstimateReason: text(),
 		ageRating: select({
 			type: 'enum',
 			options: [
@@ -58,6 +61,7 @@ export const Submission: Lists.Submission = list({
 			defaultValue: "m_or_lower"
 		}),
 		donationIncentive: text({ validation: { length: { max: 300 } } }),
+		newDonationIncentives: json(),
 		specialReqs: text({ validation: { length: { max: 300 } } }),
 		availability: json({ db: { map: 'availability_json' } }),
 		race: select({

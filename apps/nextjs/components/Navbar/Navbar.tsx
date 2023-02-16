@@ -7,24 +7,17 @@ import {
 	faDiscord,
 	faYoutube,
 	faInstagram,
+	faTiktok,
 	// faFacebook,
 } from '@fortawesome/free-brands-svg-icons';
 import {
 	faBars,
-	faCalendarAlt,
 	faTimes,
-	faUsers,
-	faChevronRight,
-	faCoins,
-	faBook,
-	faCalendar,
 } from '@fortawesome/free-solid-svg-icons';
 import { globals } from '../../globals';
 import Button from '../Button/Button';
 import { useAuth } from '../auth';
 import Link from 'next/link';
-
-import ASRLogo from '../../styles/img/AS-Icon-Orange.svg';
 
 const asrAusSpeedrunsLogo = {
 	prefix: 'asr',
@@ -152,6 +145,12 @@ const Navbar = ({ events = [] }: NavbarProps) => {
 							<a href={globals.socialLinks.instagram} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon width={20} icon={faInstagram} />
 								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Instagram</span>
+							</a>
+						</li>
+						<li>
+							<a href={globals.socialLinks.tiktok} target="_blank" rel="noreferrer">
+								<FontAwesomeIcon width={20} icon={faTiktok} />
+								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Tiktok</span>
 							</a>
 						</li>
 						<li className={styles.auth}>

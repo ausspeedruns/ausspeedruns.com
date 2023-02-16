@@ -55,6 +55,7 @@ export default function SignUpPage() {
 				<title>Sign Up - AusSpeedruns</title>
 				<DiscordEmbed title="Sign Up - AusSpeedruns" description="Sign Up to AusSpeedruns" pageUrl="/signup" />
 			</Head>
+			<div className={styles.background} />
 			<div className={`${styles.content} ${styles.form}`}>
 				<h1>Join</h1>
 				<form
@@ -121,9 +122,7 @@ export default function SignUpPage() {
 					</Button>
 				</form>
 				<hr className="my-4" />
-				<div>
-					<Link href="/signin">Already have an account? Sign in</Link>
-				</div>
+				<Link className={styles.links} href="/signin">Already have an account? Sign in</Link>
 			</div>
 		</ThemeProvider>
 	);

@@ -1,4 +1,4 @@
-import { gql } from 'urql';
+import { gql } from "urql";
 import {
 	Button,
 	Checkbox,
@@ -11,26 +11,92 @@ import {
 	FormHelperText,
 	FormLabel,
 	InputLabel,
-	MenuItem,
 	Radio,
 	RadioGroup,
-	Select,
 	TextField,
-} from '@mui/material';
-import { addDays, differenceInDays } from 'date-fns';
-import React, { useState } from 'react';
-import { useMutation } from 'urql';
+	ToggleButton,
+	ToggleButtonGroup,
+} from "@mui/material";
+import { useState } from "react";
+import { useMutation } from "urql";
 
-import { UserPagePrivateData } from '../../pages/user/[username]';
+import { UserPagePrivateData } from "../../pages/user/[username]";
 
-import styles from './SubmissionEditDialog.module.scss';
+import styles from "./SubmissionEditDialog.module.scss";
+import Availability from "../GameSubmission/Availability";
+import { DonationIncentive } from "../GameSubmission/submissionTypes";
+import DonationIncentiveInput from "../GameSubmission/DonationIncentive";
+import EstimateInput from "../GameSubmission/EstimateInput";
 
-type AgeRatingLiterals = 'm_or_lower' | 'ma15' | 'ra18';
-type RaceLiterals = 'no' | 'solo' | 'only';
+type AgeRatingLiterals = "m_or_lower" | "ma15" | "ra18";
+type RaceLiterals = "no" | "solo" | "only";
+
+const MUTATION_SUBMISSION = gql`
+	mutation (
+		$submissionID: ID!
+		$game: String!
+		$category: String!
+		$platform: String!
+		$techPlatform: String!
+		$estimate: String!
+		$possibleEstimate: String
+		$possibleEstimateReason: String
+		$ageRating: SubmissionAgeRatingType
+		$newDonationIncentives: JSON
+		$race: SubmissionRaceType
+		$racer: String
+		$coop: Boolean
+		$video: String!
+		$specialReqs: String
+		$willingBackup: Boolean
+	) {
+		updateSubmission(
+			where: { id: $submissionID }
+			data: {
+				game: $game
+				category: $category
+				platform: $platform
+				techPlatform: $techPlatform
+				estimate: $estimate
+				possibleEstimate: $possibleEstimate
+				possibleEstimateReason: $possibleEstimate
+				ageRating: $ageRating
+				newDonationIncentives: $newDonationIncentives
+				race: $race
+				racer: $racer
+				coop: $coop
+				video: $video
+				specialReqs: $specialReqs
+				willingBackup: $willingBackup
+			}
+		) {
+			__typename
+		}
+	}
+`;
+
+const MUTATION_BACKUP = gql`
+	mutation ($submissionID: ID, $willingBackup: Boolean!) {
+		updateSubmission(
+			where: { id: $submissionID }
+			data: { willingBackup: $willingBackup }
+		) {
+			__typename
+		}
+	}
+`;
+
+const MUTATION_DELETE = gql`
+	mutation ($submissionID: ID) {
+		deleteSubmission(where: { id: $submissionID }) {
+			__typename
+		}
+	}
+`;
 
 type SubmissionEditProps = {
 	open: boolean;
-	submission: UserPagePrivateData['user']['submissions'][0];
+	submission: UserPagePrivateData["user"]["submissions"][0];
 	event: {
 		acceptingSubmissions: boolean;
 		acceptingBackups: boolean;
@@ -41,83 +107,90 @@ type SubmissionEditProps = {
 	handleClose: () => void;
 };
 
-const SubmissionEditDialog = ({ open, submission, handleClose, event }: SubmissionEditProps) => {
+const SubmissionEditDialog = ({
+	open,
+	submission,
+	handleClose,
+	event,
+}: SubmissionEditProps) => {
 	const [deleteDialog, setDeleteDialog] = useState(false);
 
 	const [backup, setBackup] = useState(submission.willingBackup);
 	const [game, setGame] = useState(submission.game);
 	const [category, setCategory] = useState(submission.category);
 	const [estimate, setEstimate] = useState(submission.estimate);
+	const [possibleEstimate, setPossibleEstimate] = useState(
+		submission.possibleEstimate,
+	);
+	const [possibleEstimateReason, setPossibleEstimateReason] = useState(
+		submission.possibleEstimateReason,
+	);
 	const [platform, setPlatform] = useState(submission.platform);
+	const [techPlatform, setTechPlatform] = useState(submission.techPlatform);
 	const [race, setRace] = useState(submission.race);
 	const [coop, setCoop] = useState(submission.coop);
 	const [racer, setRacer] = useState(submission.racer);
 	const [video, setVideo] = useState(submission.video);
 	const [ageRating, setAgeRating] = useState(submission.ageRating);
-	const [donationIncentive, setDonationIncentive] = useState(submission.donationIncentive);
-	const [specialRequirements, setSpecialRequirements] = useState(submission.specialReqs);
-	const [availableDates, setAvailableDates] = useState<boolean[]>(submission.availability);
+	const [donationIncentives, setDonationIncentives] = useState(
+		submission.newDonationIncentives,
+	);
+	const [specialRequirements, setSpecialRequirements] = useState(
+		submission.specialReqs,
+	);
+	const [availableDates, setAvailableDates] = useState<boolean[]>(
+		submission.availability,
+	);
+	const [showPossibleEstimate, setShowPossibleEstimate] = useState(
+		Boolean(submission.possibleEstimate) &&
+		submission.possibleEstimate !== "00:00:00",
+	);
 
 	const closeDeleteDialog = () => {
 		setDeleteDialog(false);
 	};
 
 	// Mutation for game submission
-	const [submissionResult, editSubmission] = useMutation(gql`
-		mutation (
-			$submissionID: ID
-			$game: String
-			$category: String
-			$platform: String
-			$estimate: String
-			$ageRating: SubmissionAgeRatingType!
-			$donationIncentive: String!
-			$race: SubmissionRaceType!
-			$racer: String!
-			$coop: Boolean!
-			$video: String
-			$specialReqs: String!
-			$willingBackup: Boolean!
-		) {
-			updateSubmission(
-				where: { id: $submissionID }
-				data: {
-					game: $game
-					category: $category
-					platform: $platform
-					estimate: $estimate
-					ageRating: $ageRating
-					donationIncentive: $donationIncentive
-					race: $race
-					racer: $racer
-					coop: $coop
-					video: $video
-					specialReqs: $specialReqs
-					willingBackup: $willingBackup
-				}
-			) {
-				__typename
-			}
-		}
-	`);
+	const [submissionResult, editSubmission] = useMutation(MUTATION_SUBMISSION);
 
 	// Mutation for backup
-	const [backupResult, editBackup] = useMutation(gql`
-		mutation ($submissionID: ID, $willingBackup: Boolean!) {
-			updateSubmission(where: { id: $submissionID }, data: { willingBackup: $willingBackup }) {
-				__typename
-			}
-		}
-	`);
+	const [backupResult, editBackup] = useMutation(MUTATION_BACKUP);
 
 	// Mutation for deleting game submission
-	const [deleteResult, deleteSubmission] = useMutation(gql`
-		mutation ($submissionID: ID) {
-			deleteSubmission(where: { id: $submissionID }) {
-				__typename
-			}
+	const [deleteResult, deleteSubmission] = useMutation(MUTATION_DELETE);
+
+	function handleNewDonationIncentive() {
+		if (typeof donationIncentives === "undefined") {
+			setDonationIncentives([{ title: "" }]);
+		} else {
+			setDonationIncentives((prev) => [...prev, { title: "" }]);
 		}
-	`);
+	}
+
+	function handleDonationIncentiveCancel(index: number) {
+		if (donationIncentives.length === 1) {
+			setDonationIncentives(undefined);
+		} else {
+			setDonationIncentives(
+				donationIncentives.filter((_, i) => i !== index),
+			);
+		}
+	}
+
+	function handleDonationIncentiveChange(
+		updatedIncentive: DonationIncentive,
+		updateIndex: number,
+	) {
+		setDonationIncentives(
+			donationIncentives.map((incentive, i) => {
+				if (i === updateIndex) {
+					return updatedIncentive;
+				} else {
+					return incentive;
+				}
+			}),
+		);
+	}
 
 	const UpdateSubmission = () => {
 		if (!event.acceptingSubmissions) return;
@@ -126,9 +199,13 @@ const SubmissionEditDialog = ({ open, submission, handleClose, event }: Submissi
 			game,
 			category,
 			platform,
+			techPlatform,
 			estimate,
+			possibleEstimate:
+				possibleEstimate === "00:00:00" ? "" : possibleEstimate,
+			possibleEstimateReason,
 			ageRating,
-			donationIncentive,
+			newDonationIncentives: donationIncentives,
 			race,
 			racer,
 			coop,
@@ -145,7 +222,7 @@ const SubmissionEditDialog = ({ open, submission, handleClose, event }: Submissi
 	};
 
 	const BackupSubmission = () => {
-		if (!event.acceptingBackups && submission.status !== 'accepted') return;
+		if (!event.acceptingBackups && submission.status !== "accepted") return;
 		editBackup({
 			submissionID: submission.id,
 			willingBackup: backup,
@@ -162,97 +239,61 @@ const SubmissionEditDialog = ({ open, submission, handleClose, event }: Submissi
 		deleteSubmission({ submissionID: submission.id });
 	};
 
-	const eventLength = differenceInDays(new Date(event.endDate), new Date(event.startDate)) + 1;
-
-	let dateCheckboxes = [];
-	for (let i = 0; i < eventLength; i++) {
-		const date = addDays(new Date(event.startDate), i);
-		dateCheckboxes.push(
-			<FormControlLabel
-				key={i}
-				control={
-					<Checkbox
-						onChange={(e) => {
-							const newDates = availableDates;
-							newDates[i] = e.target.checked;
-							setAvailableDates(newDates);
-						}}
-						checked={availableDates[i]}
-					/>
-				}
-				label={date.toLocaleDateString('en-AU', {
-					weekday: 'long',
-					day: '2-digit',
-					month: '2-digit',
-					year: 'numeric',
-					timeZone: event.eventTimezone || 'Australia/Melbourne',
-				})}
-			/>
-		);
-	}
-
 	return (
 		<Dialog onClose={handleClose} open={open}>
 			<DialogTitle>
-				Edit {submission.game} - {submission.category}
+				Edit {submission.game} – {submission.category}
 			</DialogTitle>
 			<DialogContent className={styles.content} style={{ paddingTop: 8 }}>
-				<h3>Basic Run Info</h3>
-
-				<TextField
-					disabled={!event.acceptingSubmissions}
-					label="Game"
-					value={game}
-					onChange={(e) => setGame(e.target.value)}
-				/>
+				<h3>Speedrun Info</h3>
 				<TextField
 					disabled={!event.acceptingSubmissions}
 					label="Category"
 					value={category}
 					onChange={(e) => setCategory(e.target.value)}
 				/>
-				<TextField
-					disabled={!event.acceptingSubmissions}
-					label="Estimate"
-					helperText="e.g. 01:20:00 for 1 hour and 20 mins"
-					required
+				<EstimateInput
 					value={estimate}
-					onChange={(e) => setEstimate(e.target.value)}
-				/>
-				<TextField
 					disabled={!event.acceptingSubmissions}
-					label="Platform/Console"
-					value={platform}
-					onChange={(e) => setPlatform(e.target.value)}
+					required
+					onTimeChange={(time) => setEstimate(time)}
 				/>
-				<FormControl fullWidth disabled={!event.acceptingSubmissions}>
-					<InputLabel id="age-rating-label">Age Rating</InputLabel>
-					<Select
-						labelId="age-rating-label"
-						value={ageRating}
-						label="Age Rating"
-						onChange={(e) => setAgeRating(e.target.value as AgeRatingLiterals)}
-						required
-					>
-						<MenuItem value={'m_or_lower'}>G, PG or M</MenuItem>
-						<MenuItem value={'ma15'}>MA15+</MenuItem>
-						<MenuItem value={'ra18'}>RA18+</MenuItem>
-					</Select>
-					<FormHelperText>
-						If unsure please search for the game title here:{' '}
-						<a href="https://www.classification.gov.au/" target="_blank" rel="noreferrer">
-							https://www.classification.gov.au/
-						</a>
-					</FormHelperText>
-				</FormControl>
-				<h3>Run misc</h3>
-				<TextField
-					disabled={!event.acceptingSubmissions}
-					label="Donation Incentive"
-					value={donationIncentive}
-					onChange={(e) => setDonationIncentive(e.target.value)}
-					inputProps={{ maxLength: 300 }}
+
+				<FormControlLabel
+					control={
+						<Checkbox
+							onChange={(e) =>
+								setShowPossibleEstimate(e.target.checked)
+							}
+							checked={showPossibleEstimate}
+						/>
+					}
+					label="Could this run finish 15 minutes or more under estimate?"
 				/>
+				{showPossibleEstimate && (
+					<>
+						<TextField
+							value={possibleEstimateReason}
+							onChange={(e) =>
+								setPossibleEstimateReason(e.target.value)
+							}
+							label="Provide details as to why"
+							autoComplete="off"
+							inputProps={{ maxLength: 200 }}
+							required
+							multiline
+							rows={2}
+						/>
+						<EstimateInput
+							value={possibleEstimate}
+							disabled={!event.acceptingSubmissions}
+							required
+							label="Possible Estimate"
+							onTimeChange={(time) => setPossibleEstimate(time)}
+						/>
+					</>
+				)}
+
 				<TextField
 					disabled={!event.acceptingSubmissions}
 					label="Special Requirements"
@@ -261,31 +302,157 @@ const SubmissionEditDialog = ({ open, submission, handleClose, event }: Submissi
 					inputProps={{ maxLength: 300 }}
 					helperText="This involves any: mods, downpatches, software, controllers (if a PC game) and any other requirements."
 				/>
+				{typeof donationIncentives !== "undefined" && (
+					<InputLabel>Donation Challenges</InputLabel>
+				)}
+				{donationIncentives?.map((donationIncentive, i) => {
+					return (
+						<div className={styles.optionalTextInputs} key={i}>
+							<DonationIncentiveInput
+								value={donationIncentive}
+								onDonationChange={handleDonationIncentiveChange}
+								index={i}
+							/>
+							<Button
+								variant="outlined"
+								onClick={() => handleDonationIncentiveCancel(i)}
+								color="error">
+								Delete
+							</Button>
+						</div>
+					);
+				})}
+
+				<Button
+					variant="contained"
+					onClick={handleNewDonationIncentive}
+					disabled={
+						typeof donationIncentives !== "undefined" &&
+						!donationIncentives?.at(-1).title
+					}>
+					Add{" "}
+					{typeof donationIncentives !== "undefined"
+						? "another"
+						: "a"}{" "}
+					donation challenge
+				</Button>
+				<TextField
+					disabled={!event.acceptingSubmissions}
+					label="Video"
+					value={video}
+					onChange={(e) => setVideo(e.target.value)}
+				/>
+				{event.acceptingBackups && (
+					<FormControlLabel
+						control={
+							<Checkbox
+								onChange={(e) => setBackup(e.target.checked)}
+								checked={backup}
+							/>
+						}
+						label="Willing to be backup?"
+					/>
+				)}
+
+				<h3>Game Info</h3>
+				<TextField
+					disabled={!event.acceptingSubmissions}
+					label="Game"
+					value={game}
+					onChange={(e) => setGame(e.target.value)}
+				/>
+				<TextField
+					disabled={!event.acceptingSubmissions}
+					label="Platform/Console"
+					value={platform}
+					onChange={(e) => setPlatform(e.target.value)}
+				/>
+				<TextField
+					disabled={!event.acceptingSubmissions}
+					label="Tech Platform/Console"
+					value={techPlatform}
+					onChange={(e) => setTechPlatform(e.target.value)}
+				/>
+				<InputLabel required>Age Rating</InputLabel>
+				<ToggleButtonGroup
+					disabled={!event.acceptingSubmissions}
+					fullWidth
+					value={ageRating}
+					onChange={(_, newVal) => {
+						setAgeRating(newVal as AgeRatingLiterals);
+					}}
+					color="primary"
+					exclusive>
+					<ToggleButton value="m_or_lower">G, PG or M</ToggleButton>
+					<ToggleButton value="ma15">MA15+</ToggleButton>
+					<ToggleButton value="ra18">RA18+</ToggleButton>
+				</ToggleButtonGroup>
+				<FormHelperText>
+					If unsure please search for the game title here:{" "}
+					<a
+						href="https://www.classification.gov.au/"
+						target="_blank"
+						rel="noreferrer">
+						https://www.classification.gov.au/
+					</a>
+				</FormHelperText>
 
 				<h3>Race/Co-op Info</h3>
 				<FormControlLabel
 					disabled={!event.acceptingSubmissions}
-					control={<Checkbox onChange={(e) => setRace(e.target.checked ? 'solo' : 'no')} checked={race !== 'no'} />}
-					label="Race/co-op?"
+					control={
+						<Checkbox
+							onChange={(e) =>
+								setRace(e.target.checked ? "solo" : "no")
+							}
+							checked={race !== "no"}
+						/>
+					}
+					label="Race/Co-op?"
 				/>
 
-				{race !== 'no' && (
+				{race !== "no" && (
 					<>
-						<FormControlLabel
-							disabled={!event.acceptingSubmissions}
-							control={<Checkbox onChange={(e) => setCoop(e.target.checked)} checked={coop} />}
-							label="Co-op"
-						/>
+						<FormControl disabled={!event.acceptingSubmissions}>
+							<RadioGroup
+								aria-labelledby="race-type-label"
+								value={coop}
+								onChange={(_, value) =>
+									setCoop(value === "true")
+								}>
+								<FormControlLabel
+									value={false}
+									control={<Radio />}
+									label="Race"
+								/>
+								<FormControlLabel
+									value={true}
+									control={<Radio />}
+									label="Co-op"
+								/>
+							</RadioGroup>
+						</FormControl>
 						<FormControl disabled={!event.acceptingSubmissions}>
 							{/* Don't think "type" is a good descriptor */}
-							<FormLabel id="race-type-label">Race/Co-op Type</FormLabel>
+							<FormLabel id="race-type-label">
+								Race/Co-op Type
+							</FormLabel>
 							<RadioGroup
 								aria-labelledby="race-type-label"
 								value={race}
-								onChange={(e) => setRace(e.target.value as RaceLiterals)}
-							>
-								<FormControlLabel value="solo" control={<Radio />} label="Possible to do solo" />
-								<FormControlLabel value="only" control={<Radio />} label="Only race/co-op" />
+								onChange={(e) =>
+									setRace(e.target.value as RaceLiterals)
+								}>
+								<FormControlLabel
+									value="solo"
+									control={<Radio />}
+									label="Possible to do solo"
+								/>
+								<FormControlLabel
+									value="only"
+									control={<Radio />}
+									label="Only race/co-op"
+								/>
 							</RadioGroup>
 						</FormControl>
 						<TextField
@@ -297,36 +464,32 @@ const SubmissionEditDialog = ({ open, submission, handleClose, event }: Submissi
 					</>
 				)}
 				<h3>Availability</h3>
-				{dateCheckboxes}
-				<h3>Final run info</h3>
-				<TextField
-					disabled={!event.acceptingSubmissions}
-					label="Video"
-					value={video}
-					onChange={(e) => setVideo(e.target.value)}
+				<Availability
+					onAvailabilityUpdate={(newDates) =>
+						setAvailableDates(newDates)
+					}
+					event={event}
 				/>
-				{event.acceptingBackups && (
-					<FormControlLabel
-						control={<Checkbox onChange={(e) => setBackup(e.target.checked)} checked={backup} />}
-						label="Willing to be backup?"
-					/>
-				)}
 			</DialogContent>
-			<DialogActions style={{ justifyContent: 'space-between' }}>
+			<DialogActions style={{ justifyContent: "space-between" }}>
 				<Button
 					disabled={!event.acceptingSubmissions}
 					color="error"
 					variant="outlined"
-					onClick={() => setDeleteDialog(true)}
-				>
+					onClick={() => setDeleteDialog(true)}>
 					Delete
 				</Button>
 				<Button
-					disabled={!event.acceptingSubmissions && !event.acceptingBackups}
+					disabled={
+						!event.acceptingSubmissions && !event.acceptingBackups
+					}
 					color="primary"
 					variant="contained"
-					onClick={event.acceptingBackups && !event.acceptingSubmissions ? BackupSubmission : UpdateSubmission}
-				>
+					onClick={
+						event.acceptingBackups && !event.acceptingSubmissions
+							? BackupSubmission
+							: UpdateSubmission
+					}>
 					Update
 				</Button>
 			</DialogActions>
@@ -337,11 +500,17 @@ const SubmissionEditDialog = ({ open, submission, handleClose, event }: Submissi
 					<br />
 					<b>This cannot be undone.</b>
 				</DialogContent>
-				<DialogActions style={{ justifyContent: 'space-between' }}>
-					<Button color="error" variant="contained" onClick={DeleteSubmission}>
+				<DialogActions style={{ justifyContent: "space-between" }}>
+					<Button
+						color="error"
+						variant="contained"
+						onClick={DeleteSubmission}>
 						Delete
 					</Button>
-					<Button color="success" variant="contained" onClick={closeDeleteDialog}>
+					<Button
+						color="success"
+						variant="contained"
+						onClick={closeDeleteDialog}>
 						Cancel
 					</Button>
 				</DialogActions>

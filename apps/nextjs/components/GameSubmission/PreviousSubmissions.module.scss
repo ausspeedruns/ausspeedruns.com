@@ -1,0 +1,24 @@
+.previousSubmissions {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1rem;
+
+	.card {
+		// padding: 1rem;
+
+		// .gameName {
+		// 	display: inline-block;
+		// 	max-height: 2rem;
+		// 	overflow: hidden;
+		// }
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		height: 100%;
+
+		.platform {
+			margin-top: 0.5rem;
+			color: rgba(0, 0, 0, 0.6);
+		}
+	}
+}

@@ -4,16 +4,18 @@ import Image from "next/image";
 import {
 	faCalendar,
 	faChevronRight,
+	faPersonRunning,
 	faTicket,
 } from "@fortawesome/free-solid-svg-icons";
 import Button from "../Button/Button";
 import { AusSpeedrunsEvent } from "../../types/types";
 
-type HeroblockProps = {
+type HeroBlockProps = {
 	event: AusSpeedrunsEvent;
-	tagline?: string;
+	tagLine?: string;
 	darkText?: boolean;
 	schedule?: boolean;
+	submitRuns?: boolean;
 };
 
 function zeroPad(num: number): string {
@@ -73,7 +75,7 @@ function countdownRender(currentTime: number, eventDate: number) {
 	);
 }
 
-const Heroblock = ({ event, tagline, darkText, schedule }: HeroblockProps) => {
+const HeroBlock = ({ event, tagLine, darkText, schedule, submitRuns }: HeroBlockProps) => {
 	const [countdownElement, setCountdownElement] = useState(<></>);
 
 	function updateCountdown() {
@@ -110,7 +112,7 @@ const Heroblock = ({ event, tagline, darkText, schedule }: HeroblockProps) => {
 					</h3>
 					<br />
 					<p>
-						{tagline ??
+						{tagLine ??
 							"We will be at The Game Expo! The schedule has been released!"}
 					</p>
 					<Button
@@ -135,6 +137,14 @@ const Heroblock = ({ event, tagline, darkText, schedule }: HeroblockProps) => {
 							colorScheme={"secondary"}
 						/>
 					)}
+					{submitRuns && (
+						<Button
+							actionText="Submit a run!"
+							link="/submit-game"
+							iconRight={faPersonRunning}
+							colorScheme={"secondary"}
+						/>
+					)}
 				</div>
 				<div className={styles.logoBlock}>
 					<Image
@@ -151,4 +161,4 @@ const Heroblock = ({ event, tagline, darkText, schedule }: HeroblockProps) => {
 	);
 };
 
-export default Heroblock;
+export default HeroBlock;

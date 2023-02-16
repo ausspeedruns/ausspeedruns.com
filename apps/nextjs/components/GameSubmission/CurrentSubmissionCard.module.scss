@@ -1,0 +1,36 @@
+@import "../../styles/responsive.scss";
+
+.data {
+	width: 15rem;
+	min-width: 15rem;
+	max-width: 15rem;
+	padding: 1rem;
+	height: fit-content;
+
+	.header {
+		width: 100%;
+		text-align: center;
+		font-weight: bold;
+	}
+
+	h2 {
+		font-size: 1.3rem;
+	}
+
+	h3 {
+		margin-top: 0.5rem;
+		font-size: 1rem;
+	}
+
+	p {
+		overflow-wrap: break-word;
+		hyphens: manual;
+	}
+	
+	
+	@include breakpoint($sm-zero-only) {
+		width: 100%;
+		max-width: 100%;
+		text-align: center;
+	}
+}

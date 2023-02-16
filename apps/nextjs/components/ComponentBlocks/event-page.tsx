@@ -75,7 +75,7 @@ export const EventComponentRenderers: EventPageRenderers = {
 					{props.event?.data?.scheduleReleased && (
 						<Button
 							actionText="Schedule"
-							link={`/schedule`}
+							link={`/${props.event.data?.shortname}/schedule`}
 							iconRight={faCalendar}
 						/>
 					)}

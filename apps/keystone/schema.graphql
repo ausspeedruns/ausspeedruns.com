@@ -475,9 +475,13 @@ type Submission {
   game: String
   category: String
   platform: String
+  techPlatform: String
   estimate: String
+  possibleEstimate: String
+  possibleEstimateReason: String
   ageRating: SubmissionAgeRatingType
   donationIncentive: String
+  newDonationIncentives: JSON
   specialReqs: String
   availability: JSON
   race: SubmissionRaceType
@@ -522,7 +526,10 @@ input SubmissionWhereInput {
   game: StringFilter
   category: StringFilter
   platform: StringFilter
+  techPlatform: StringFilter
   estimate: StringFilter
+  possibleEstimate: StringFilter
+  possibleEstimateReason: StringFilter
   ageRating: SubmissionAgeRatingTypeNullableFilter
   donationIncentive: StringFilter
   specialReqs: StringFilter
@@ -562,7 +569,10 @@ input SubmissionOrderByInput {
   game: OrderDirection
   category: OrderDirection
   platform: OrderDirection
+  techPlatform: OrderDirection
   estimate: OrderDirection
+  possibleEstimate: OrderDirection
+  possibleEstimateReason: OrderDirection
   ageRating: OrderDirection
   donationIncentive: OrderDirection
   specialReqs: OrderDirection
@@ -580,9 +590,13 @@ input SubmissionUpdateInput {
   game: String
   category: String
   platform: String
+  techPlatform: String
   estimate: String
+  possibleEstimate: String
+  possibleEstimateReason: String
   ageRating: SubmissionAgeRatingType
   donationIncentive: String
+  newDonationIncentives: JSON
   specialReqs: String
   availability: JSON
   race: SubmissionRaceType
@@ -611,9 +625,13 @@ input SubmissionCreateInput {
   game: String
   category: String
   platform: String
+  techPlatform: String
   estimate: String
+  possibleEstimate: String
+  possibleEstimateReason: String
   ageRating: SubmissionAgeRatingType
   donationIncentive: String
+  newDonationIncentives: JSON
   specialReqs: String
   availability: JSON
   race: SubmissionRaceType
@@ -1599,6 +1617,8 @@ type Mutation {
   createInitialUser(data: CreateInitialUserInput!): UserAuthenticationWithPasswordSuccess!
   sendUserPasswordResetLink(email: String!): Boolean!
   redeemUserPasswordResetToken(email: String!, token: String!, password: String!): RedeemUserPasswordResetTokenResult
+  confirmStripe(stripeID: String!, numberOfTickets: Int!, apiKey: String!): Ticket
+  generateTicket(userID: ID!, numberOfTickets: Int!, method: TicketMethodType!, event: String!, stripeID: String, apiKey: String!): Ticket
 }
 
 union UserAuthenticationWithPasswordResult = UserAuthenticationWithPasswordSuccess | UserAuthenticationWithPasswordFailure

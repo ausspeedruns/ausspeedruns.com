@@ -12,7 +12,7 @@ import Navbar from '../../components/Navbar/Navbar';
 import { useAuth } from '../../components/auth';
 import { theme } from '../../components/mui-theme';
 import { RoleBadge } from '../../components/RoleBadge/RoleBadge';
-import SubmissionAccordian from '../../components/SubmissionAccordian/SubmissionAccordian';
+import SubmissionAccordion from '../../components/SubmissionAccordian/SubmissionAccordion';
 import RunUpcoming from '../../components/RunUpcoming/RunUpcoming';
 import RunCompleted from '../../components/RunCompleted/RunCompleted';
 import DiscordEmbed from '../../components/DiscordEmbed';
@@ -72,9 +72,11 @@ const USER_PRIVATE_QUERY = gql`
 				game
 				category
 				platform
+				techPlatform
 				estimate
+				possibleEstimate
 				ageRating
-				donationIncentive
+				newDonationIncentives
 				status
 				race
 				racer
@@ -178,9 +180,16 @@ export type UserPagePrivateData = {
 			game: string;
 			category: string;
 			platform: string;
+			techPlatform: string;
 			estimate: string;
+			possibleEstimate: string;
+			possibleEstimateReason: string;
 			status: 'submitted' | 'accepted' | 'backup' | 'rejected';
-			donationIncentive?: string;
+			newDonationIncentives?: {
+				title: string;
+				time?: string;
+				description?: string;
+			}[];
 			race?: string;
 			racer?: string;
 			coop?: boolean;
@@ -362,7 +371,7 @@ export default function ProfilePage(ssrData) {
 						</Box>
 						{privateDataResults.user.submissions.map((submission) => {
 							if (submission.event?.shortname !== allSubmissionEvents[submissionTab]) return;
-							return <SubmissionAccordian key={submission.id} submission={submission} event={submission.event} />;
+							return <SubmissionAccordion key={submission.id} submission={submission} event={submission.event} />;
 						})}
 					</div>
 				)}

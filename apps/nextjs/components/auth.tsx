@@ -31,6 +31,8 @@ export function useAuth() {
 	return useContext(AuthContext);
 }
 
+export type AuthReturnData = ReturnType<typeof useAuth>;
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const wasReady = useRef(false);
 	const mutationContext = useMemo(() => ({ additionalTypenames: ['User', 'Poll', 'PollAnswer'] }), []);

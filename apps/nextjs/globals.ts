@@ -75,5 +75,6 @@ export const globals: Globals = {
     twitch: '//twitch.tv/ausspeedruns',
     facebook: '//www.facebook.com/ausspeedruns',
     instagram: '//instagram.com/ausspeedruns',
+    tiktok: '//tiktok.com/@ausspeedruns',
   }
 }

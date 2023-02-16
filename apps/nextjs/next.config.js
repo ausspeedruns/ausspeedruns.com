@@ -23,6 +23,10 @@ const socialMedias = [
 		name: "youtube",
 		link: "https://www.youtube.com/ausspeedruns",
 	},
+	{
+		name: "tiktok",
+		link: "https://tiktok.com/@ausspeedruns",
+	},
 ];
 
 const nextConfig = {

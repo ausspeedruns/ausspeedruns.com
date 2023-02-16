@@ -1,5 +1,5 @@
-@import '../../styles/colors.scss';
-@import '../../styles/responsive.scss';
+@import "../../styles/colors.scss";
+@import "../../styles/responsive.scss";
 
 .submission {
 	&.MuiAccordion-root {
@@ -17,7 +17,7 @@
 		.submissionStatus {
 			text-transform: capitalize;
 			font-weight: bold;
-			margin-right: 8px;    
+			margin-right: 8px;
 			padding: 4px;
 			border-radius: 8px;
 			min-width: 90px;
@@ -26,21 +26,26 @@
 	}
 
 	.submissionDetails {
-		display: grid;
-		grid-template-columns: auto auto auto auto;
-
-
-		@include breakpoint($sm-zero-only) {
-			grid-template-columns: auto auto;
-			gap: 8px;
+		table {
+			width: 65%;
+			table-layout: fixed;
+			margin: auto;
 		}
 
-		span:nth-child(odd) {
+		td {
+			padding: 2px 8px;
+			width: 100%;
+			vertical-align: text-top;
+		}
+
+		td:nth-child(odd) {
 			font-weight: bold;
+			text-align: right;
 		}
 
 		h3 {
 			margin-top: 1rem;
+			text-align: center;
 		}
 	}
 }

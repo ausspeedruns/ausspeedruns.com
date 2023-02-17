@@ -38,10 +38,11 @@ const nextConfig = {
 		return [
 			{
 				source: "/api/graphql",
-				destination:
-					process.env.NODE_ENV === "production"
-						? "https://keystone.ausspeedruns.com/api/graphql"
-						: "http://localhost:8000/api/graphql",
+				destination: "https://keystone.ausspeedruns.com/api/graphql",
+				// destination:
+				// 	process.env.NODE_ENV === "production"
+				// 		? "https://keystone.ausspeedruns.com/api/graphql"
+				// 		: "http://localhost:8000/api/graphql",
 			},
 		];
 	},

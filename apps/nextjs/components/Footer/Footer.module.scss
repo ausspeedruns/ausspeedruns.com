@@ -9,7 +9,12 @@
 
   .content {
     flex-direction: column;
+    max-width: 100%;
     gap: 8px;
+
+    ul {
+      justify-content: center;
+    }
 
     .miscLinks {
       display: flex;

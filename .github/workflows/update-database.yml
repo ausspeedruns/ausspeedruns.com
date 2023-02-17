@@ -26,6 +26,7 @@ jobs:
         run: npm ci
       -
         name: Update prisma
+        working-directory: ./apps/keystone/
         run: npx keystone prisma migrate deploy
         env:
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}

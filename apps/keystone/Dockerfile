@@ -9,7 +9,8 @@ RUN npm install --omit=dev
 # Production image, copy all the files and run next
 FROM ubuntu:22.04 as runner
 LABEL maintainer="Ewan Lyon <ewan.lyon@ausspeedruns.com>"
-# RUN apt-get install dumb-init
+RUN apt-get update -y
+RUN apt-get install dumb-init
 ENV NODE_ENV production
 ENV PORT 8000
 WORKDIR /app

@@ -113,7 +113,7 @@ function BasePage({ children }: { children: React.ReactNode }) {
 			<Head>
 				<title>Game Submission - AusSpeedruns</title>
 				<DiscordEmbed
-					title="Game Submission - AusSpeedruns"
+					title="Speedrun Submissions - AusSpeedruns"
 					description="Submit your speedrun to an AusSpeedrun Event!"
 					pageUrl="/submit-game"
 					imageSrc={SubmitGameOG.src}

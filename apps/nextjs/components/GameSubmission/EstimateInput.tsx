@@ -43,14 +43,9 @@ function EstimateInput(props: EstimateInputProps) {
 	);
 
 	useEffect(() => {
-		console.log("RENDER", props.value, hours, mins);
 		const newTime = parseEstimateString(props.value);
 		setHours(newTime.hours);
 		setMins(newTime.mins);
-	}, []);
-
-	useEffect(() => {
-		console.log("Props.value change to", props.value);
 	}, [props.value]);
 
 	function formatTime(): string {

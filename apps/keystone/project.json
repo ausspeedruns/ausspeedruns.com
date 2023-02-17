@@ -9,7 +9,6 @@
 			"options": {
 				"root": "apps/keystone",
 				"outputPath": "dist/apps/keystone",
-				"dontBuild": true,
 				"filesToInclude": ["src"]
 			}
 		},

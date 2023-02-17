@@ -7,7 +7,7 @@ const urqlClient = createClient({
 	url: process.env.KEYSTONE_URL,
 });
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2020-08-27' });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2022-11-15' });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method === 'POST') {

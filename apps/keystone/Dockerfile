@@ -10,6 +10,9 @@ RUN npm install --omit=dev
 FROM ubuntu:22.04 as runner
 LABEL maintainer="Ewan Lyon <ewan.lyon@ausspeedruns.com>"
 RUN apt-get update -y
+RUN apt-get -y install curl gnupg
+RUN curl -sL https://deb.nodesource.com/setup_18.x  | bash -
+RUN apt-get -y install nodejs
 RUN apt-get install dumb-init
 ENV NODE_ENV production
 ENV PORT 8000

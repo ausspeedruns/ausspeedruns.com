@@ -209,7 +209,7 @@ export default function SubmitGamePage() {
 						: "Game"}{" "}
 					Submission
 				</h1>
-				<a href="" target="_blank" rel="noopener noreferrer">
+				<a href="https://ausspeedruns.sharepoint.com/:w:/s/Main/Efo5GBDHzvRElYyMBpyucFgBYBfJAGLsP6qf1pE9ebU6-w?e=TKimUn" target="_blank" rel="noopener noreferrer">
 					AusSpeedruns Submission Guidelines
 				</a>
 				{!initialQueryResult.data?.user?.discord ||

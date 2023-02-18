@@ -223,6 +223,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 				estimate: estimate,
 				possibleEstimate:
 					possibleEstimate === "00:00:00" ? "" : possibleEstimate,
+				possibleEstimateReason: possibleEstimateReason.value,
 				ageRating: ageRating.value,
 				newDonationIncentives: donationIncentives,
 				specialReqs: specialReqs.value,

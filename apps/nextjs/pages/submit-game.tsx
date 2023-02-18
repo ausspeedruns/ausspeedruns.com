@@ -61,6 +61,7 @@ const MUTATION_SUBMIT = gql`
 		$techPlatform: String!
 		$estimate: String!
 		$possibleEstimate: String
+		$possibleEstimateReason: String
 		$ageRating: SubmissionAgeRatingType
 		$newDonationIncentives: JSON
 		$specialReqs: String
@@ -81,6 +82,7 @@ const MUTATION_SUBMIT = gql`
 				techPlatform: $techPlatform
 				estimate: $estimate
 				possibleEstimate: $possibleEstimate
+				possibleEstimateReason: $possibleEstimateReason
 				ageRating: $ageRating
 				newDonationIncentives: $newDonationIncentives
 				specialReqs: $specialReqs

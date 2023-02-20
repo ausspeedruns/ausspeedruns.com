@@ -444,7 +444,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 									checked={showPossibleEstimate}
 								/>
 							}
-							label="Possible to go 15 minutes under?"
+							label="Possible to go 15 minutes or more under?"
 						/>
 						{showPossibleEstimate && (
 							<>

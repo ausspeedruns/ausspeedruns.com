@@ -26,14 +26,24 @@ export const Incentive: Lists.Incentive = list({
 	}
 });
 
-export interface Goal {
-	goal: number;
-	current: number;
+
+interface BaseIncentive extends Partial<Omit<Lists.Incentive.Item, "runId" | "eventId">> {
+	run?: any;
+	event?: any;
 }
 
-export interface War {
-	options: {
-		name: string;
-		total: number;
-	}[]
+export interface Goal extends BaseIncentive {
+	data: {
+		goal: number;
+		current: number;
+	}
+}
+
+export interface War extends BaseIncentive {
+	data: {
+		options: {
+			name: string;
+			total: number;
+		}[]
+	}
 }

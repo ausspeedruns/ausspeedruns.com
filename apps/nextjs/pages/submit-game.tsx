@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Head from "next/head";
 import { Alert, Snackbar, ThemeProvider } from "@mui/material";
 import { useQuery, gql, useMutation } from "urql";
 
-import styles from "../styles/SubmitGame2.module.scss";
+import styles from "../styles/SubmitGame.module.scss";
 import { theme } from "../components/mui-theme";
 import { useAuth } from "../components/auth";
 import LinkButton from "../components/Button/Button";

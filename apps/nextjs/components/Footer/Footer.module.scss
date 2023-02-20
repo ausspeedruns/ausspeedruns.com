@@ -1,5 +1,6 @@
 @import "../../styles/colors.scss";
 @import "../../styles/nav-lists.scss";
+@import "../../styles/responsive.scss";
 
 .footer {
   background-color: $nav-background;
@@ -14,6 +15,12 @@
 
     ul {
       justify-content: center;
+
+      @include breakpoint($sm-zero-only) {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
     }
 
     .miscLinks {

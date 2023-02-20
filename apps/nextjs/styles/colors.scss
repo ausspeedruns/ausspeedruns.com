@@ -28,3 +28,11 @@ $goc-main-dark: #16223a;
 $goc-accent: #cdde00;
 
 $pax-main: #f2c62f;
+
+$tgx-main: #191919;
+$tgx-red: #f80023;
+$tgx-yellow: #ffc300;
+$tgx-blue: #007eff;
+$tgx-green: #00c091;
+$tgx-rainbow: linear-gradient($tgx-red 0%, $tgx-red 25%, $tgx-yellow 25%, $tgx-yellow 50%, $tgx-blue 50%, $tgx-blue 75%, $tgx-green 75%, $tgx-green 100%);
+$tgx-rainbow-rotated: linear-gradient(90deg, $tgx-red 0%, $tgx-red 25%, $tgx-yellow 25%, $tgx-yellow 50%, $tgx-blue 50%, $tgx-blue 75%, $tgx-green 75%, $tgx-green 100%);

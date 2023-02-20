@@ -18,6 +18,7 @@ import { globals } from '../../globals';
 import Button from '../Button/Button';
 import { useAuth } from '../auth';
 import Link from 'next/link';
+import { useMediaQuery } from '@mui/material';
 
 const asrAusSpeedrunsLogo = {
 	prefix: 'asr',
@@ -47,16 +48,7 @@ interface Size {
 const Navbar = ({ events = [] }: NavbarProps) => {
 	const auth = useAuth();
 	const [isOpen, setIsOpen] = useState<Boolean>(false);
-	const [isMobile, setIsMobile] = useState<Boolean>(true);
-	const windowSize: Size = useWindowSize();
-
-	useEffect(() => {
-		if (windowSize.width) setIsMobile(windowSize.width < 768);
-	}, [windowSize]);
-
-	const pastEvents = events
-		.filter((event) => (event.endDate ? new Date(event.endDate) < new Date() : undefined))
-		.sort((a, b) => new Date(b.endDate).getTime() - new Date(a.endDate).getTime());
+	const mobileWidth = useMediaQuery('(max-width: 992px)');
 
 	const upcomingOrLiveEvents = events
 		.filter((event) => (event.endDate ? new Date(event.endDate) > new Date() : true))
@@ -88,7 +80,7 @@ const Navbar = ({ events = [] }: NavbarProps) => {
 					{!isOpen ? <FontAwesomeIcon icon={faBars} /> : <FontAwesomeIcon icon={faTimes} />}
 					<span>Menu</span>
 				</button>
-				{isMobile ? <div className={styles.break}></div> : ''}
+				{mobileWidth ? <div className={styles.break}></div> : ''}
 
 				<nav className={`${styles.mainmenu} ${isOpen ? styles.menuopen : styles.menuclosed}`} aria-label="Main menu">
 					<ul>
@@ -96,7 +88,7 @@ const Navbar = ({ events = [] }: NavbarProps) => {
 							return (
 								<li key={event.shortname}>
 									{/* @ts-ignore */}
-									{isMobile ? <FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo} /> : ''}
+									{mobileWidth ? <FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo} /> : ''}
 									<Link href={`/${event.shortname}`} passHref className={styles.text}>
 										{event.shortname}
 									</Link>
@@ -105,14 +97,14 @@ const Navbar = ({ events = [] }: NavbarProps) => {
 						})}
 						<li>
 							{/* @ts-ignore */}
-							{isMobile ? <FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo} /> : ''}
+							{mobileWidth ? <FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo} /> : ''}
 							<Link href={`/about`} passHref className={styles.text}>
 								About Us
 							</Link>
 						</li>
 						<li>
 							{/* @ts-ignore */}
-							{isMobile ? <FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo} /> : ''}
+							{mobileWidth ? <FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo} /> : ''}
 							<Link href={`/events`} passHref className={styles.text}>
 								Past Events
 							</Link>
@@ -120,37 +112,37 @@ const Navbar = ({ events = [] }: NavbarProps) => {
 						<li>
 							<a href={globals.socialLinks.twitch} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon width={20} icon={faTwitch} />
-								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Twitch</span>
+								<span className={`${styles.text} ${mobileWidth ? '' : 'sr-only'}`}>Twitch</span>
 							</a>
 						</li>
 						<li>
 							<a href={globals.socialLinks.twitter} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon width={20} icon={faTwitter} />
-								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Twitter</span>
+								<span className={`${styles.text} ${mobileWidth ? '' : 'sr-only'}`}>Twitter</span>
 							</a>
 						</li>
 						<li>
 							<a href={globals.socialLinks.youtube} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon width={20} icon={faYoutube} />
-								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>YouTube</span>
+								<span className={`${styles.text} ${mobileWidth ? '' : 'sr-only'}`}>YouTube</span>
 							</a>
 						</li>
 						<li>
 							<a href={globals.socialLinks.discord} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon width={20} icon={faDiscord} />
-								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Discord</span>
+								<span className={`${styles.text} ${mobileWidth ? '' : 'sr-only'}`}>Discord</span>
 							</a>
 						</li>
 						<li>
 							<a href={globals.socialLinks.instagram} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon width={20} icon={faInstagram} />
-								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Instagram</span>
+								<span className={`${styles.text} ${mobileWidth ? '' : 'sr-only'}`}>Instagram</span>
 							</a>
 						</li>
 						<li>
 							<a href={globals.socialLinks.tiktok} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon width={20} icon={faTiktok} />
-								<span className={`${styles.text} ${isMobile ? '' : 'sr-only'}`}>Tiktok</span>
+								<span className={`${styles.text} ${mobileWidth ? '' : 'sr-only'}`}>Tiktok</span>
 							</a>
 						</li>
 						<li className={styles.auth}>

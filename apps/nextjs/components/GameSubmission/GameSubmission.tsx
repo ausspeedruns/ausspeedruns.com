@@ -26,6 +26,7 @@ import {
 	CircularProgress,
 	ToggleButton,
 	ToggleButtonGroup,
+	useMediaQuery,
 } from "@mui/material";
 import { GameSubmitPage } from "./GameSubmitPage";
 import type { UseMutationResponse } from "urql";
@@ -72,6 +73,8 @@ interface GameSubmissionsProps {
 function GameSubmissions(props: GameSubmissionsProps) {
 	const eventsList = props.userQueryResult?.events;
 	const [submissionResult, createSubmission] = props.submissionMutation;
+
+	const mobileWidth = useMediaQuery('(max-width: 600px)');
 
 	const game = useFormInput("");
 	const category = useFormInput("");
@@ -318,7 +321,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 						label="You understand that this is a submission for backup games"
 					/>
 				)}
-			<Stepper className={styles.stepper}>
+			<Stepper className={styles.stepper} orientation={mobileWidth ? "vertical" : "horizontal"}>
 				{SubmissionSteps.map((label, index) => (
 					<Step
 						key={label}

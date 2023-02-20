@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import styles from '../../styles/Event.incentives.ASAP2022.module.scss';
+import styles from '../../styles/Event.incentives.module.scss';
 import { BaseIncentiveData } from './IncentiveType';
 
 export interface GoalProps extends BaseIncentiveData {

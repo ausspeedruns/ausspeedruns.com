@@ -1,19 +1,34 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
+import { Heading, useTheme } from "@keystone-ui/core";
+import React, { useEffect, useState } from "react";
+import { Link } from "@keystone-6/core/admin-ui/router";
+import {
+	useMutation,
+	useQuery,
+	gql,
+	useLazyQuery,
+} from "@keystone-6/core/admin-ui/apollo";
+import { Button } from "@keystone-ui/button";
+import { Select, FieldContainer, FieldLabel } from "@keystone-ui/fields";
+import {
+	Accordion,
+	AccordionDetails,
+	AccordionSummary,
+	ListItem,
+	ListItemButton,
+	ListItemText,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { VariableSizeList, ListChildComponentProps } from "react-window";
+import { useToasts } from "@keystone-ui/toast";
+import { War } from "../components/Incentives/War";
+import { Goal } from "../components/Incentives/Goal";
+import type {
+	Goal as GoalData,
+	War as WarData,
+} from "../../src/schema/incentives";
+import { NewIncentiveInput } from "../components/Incentives/NewIncentiveInput";
 
-import { jsx, Inline, Stack, Heading, useTheme } from '@keystone-ui/core';
-import React, { useEffect } from 'react';
-import { Link } from '@keystone-6/core/admin-ui/router';
-import { useMutation, useQuery, gql, useLazyQuery } from '@keystone-6/core/admin-ui/apollo';
-import { Button } from '@keystone-ui/button';
-import { Select, FieldContainer, FieldLabel, TextInput, Checkbox } from '@keystone-ui/fields';
-import { Accordion, AccordionDetails, AccordionSummary, ListItem, ListItemButton, ListItemText } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { VariableSizeList, ListChildComponentProps } from 'react-window';
-import { useToasts } from '@keystone-ui/toast';
-import { Goal, War } from '../../schema/incentives';
-
-const EVENTS_LIST_QUERY = gql`
+const QUERY_EVENTS = gql`
 	query {
 		events {
 			shortname
@@ -21,7 +36,13 @@ const EVENTS_LIST_QUERY = gql`
 	}
 `;
 
-const INCENTIVES_QUERY = gql`
+interface QUERY_EVENTS_RESULTS {
+	events: {
+		shortname: string;
+	}[];
+}
+
+const QUERY_INCENTIVES = gql`
 	query ($event: String) {
 		event(where: { shortname: $event }) {
 			runs {
@@ -51,18 +72,39 @@ const INCENTIVES_QUERY = gql`
 	}
 `;
 
-const NEW_INCENTIVE_MUTATION = gql`
-	mutation ($run: ID, $runEvent: String, $title: String, $notes: String, $type: String, $data: JSON) {
-		createIncentive(
-			data: {
-				run: { connect: { id: $run } }
-				event: { connect: { shortname: $runEvent } }
-				title: $title
-				notes: $notes
-				type: $type
-				data: $data
-				active: true
-			}
+interface QUERY_INCENTIVES_RESULTS {
+	event?: {
+		runs: {
+			id: string;
+			game: string;
+			category: string;
+			event: {
+				shortname: string;
+			};
+		}[];
+		donationIncentivesCount: number;
+		donationIncentives: {
+			id: string;
+			title: string;
+			notes: string;
+			type: string;
+			run: {
+				id: string;
+				game: string;
+				category: string;
+				scheduledTime: string;
+			};
+			data: any; // use `any` if data type is unknown
+			active: boolean;
+		}[];
+	};
+}
+
+const MUTATION_UPDATE_INCENTIVE = gql`
+	mutation ($incentive: ID, $active: Boolean, $data: JSON) {
+		updateIncentive(
+			where: { id: $incentive }
+			data: { data: $data, active: $active }
 		) {
 			id
 			title
@@ -70,86 +112,50 @@ const NEW_INCENTIVE_MUTATION = gql`
 	}
 `;
 
-const UPDATE_INCENTIVE_MUTATION = gql`
-	mutation ($incentive: ID, $active: Boolean, $data: JSON) {
-		updateIncentive(where: { id: $incentive }, data: { data: $data, active: $active }) {
-			id
-			title
-		}
-	}
-`;
+export interface MUTATION_UPDATE_INCENTIVE_RESULTS {
+	updateIncentive: {
+		id: string;
+		title: string;
+	};
+}
 
 const incentiveTypes = [
-	{ label: 'Goal', value: 'goal' },
-	{ label: 'War', value: 'war' },
+	{ label: "Goal", value: "goal" },
+	{ label: "War", value: "war" },
 ];
 
 export default function RunsManager() {
-	const { palette, spacing } = useTheme();
-	const [selectedEvent, setSelectedEvent] = React.useState({ label: '', value: 'ASAP2022' });
-	const [selectedIncentiveIndex, setSelectedIncentiveIndex] = React.useState(0);
-
-	const [incentiveActive, setIncentiveActive] = React.useState(false);
-	const [incentiveRawData, setIncentiveRawData] = React.useState<Goal | War | undefined>(undefined);
-
-	const [newIncentiveTitle, setNewIncentiveTitle] = React.useState('');
-	const [newIncentiveRun, setNewIncentiveRun] = React.useState({ label: '', value: '' });
-	const [newIncentiveNotes, setNewIncentiveNotes] = React.useState('');
-	const [newIncentiveType, setNewIncentiveType] = React.useState(incentiveTypes[0]);
-	const [newIncentiveData, setNewIncentiveData] = React.useState<Goal | War | undefined>(undefined);
+	const [selectedEvent, setSelectedEvent] = useState({
+		label: "ASGX2023",
+		value: "ASGX2023",
+	});
+	const [selectedIncentiveIndex, setSelectedIncentiveIndex] = useState(0);
 
 	const { addToast } = useToasts();
 
-	const eventsList = useQuery(EVENTS_LIST_QUERY);
-	const eventData = useQuery(INCENTIVES_QUERY, { variables: { event: selectedEvent.value } });
+	const eventsList = useQuery<QUERY_EVENTS_RESULTS>(QUERY_EVENTS);
+	const eventData = useQuery<QUERY_INCENTIVES_RESULTS>(QUERY_INCENTIVES, {
+		variables: { event: selectedEvent.value },
+	});
 
-	const [updateIncentiveMutation, updateIncentiveMutationData] = useMutation(UPDATE_INCENTIVE_MUTATION);
-	const [addIncentiveMutation, addIncentiveMutationData] = useMutation(NEW_INCENTIVE_MUTATION);
+	const [updateIncentiveMutation, updateIncentiveMutationData] =
+		useMutation<MUTATION_UPDATE_INCENTIVE_RESULTS>(
+			MUTATION_UPDATE_INCENTIVE,
+		);
 
-	const eventsOptions = eventsList.data?.events.map((event) => ({ value: event.shortname, label: event.shortname }));
-	const runOptions = eventData.data?.event?.runs?.map((run) => ({
-		value: run.id,
-		label: `${run.game} - ${run.category}`,
+	const eventsOptions = eventsList.data?.events.map((event) => ({
+		value: event.shortname,
+		label: event.shortname,
 	}));
 
-	const sortedIncentives = eventData.data?.event.donationIncentives.map((a) => ({ ...a })) ?? [];
+	const sortedIncentives =
+		eventData.data?.event?.donationIncentives.map((a) => ({ ...a })) ?? [];
 	sortedIncentives.sort(
-		(a, b) => new Date(a.run?.scheduledTime ?? 0).getTime() - new Date(b.run?.scheduledTime ?? 0).getTime()
+		(a, b) =>
+			new Date(a.run?.scheduledTime ?? 0).getTime() -
+			new Date(b.run?.scheduledTime ?? 0).getTime(),
 	);
 	const incentiveData = sortedIncentives[selectedIncentiveIndex];
-
-	useEffect(() => {
-		if (!eventData.data || !incentiveData) return;
-
-		setIncentiveActive(incentiveData.active);
-		setIncentiveRawData(incentiveData.data);
-	}, [selectedIncentiveIndex]);
-
-	// Add Incentive Feedback
-	useEffect(() => {
-		// console.log(updateRunMutationData);
-		if (addIncentiveMutationData.error) {
-			console.error(addIncentiveMutationData.error);
-			addToast({
-				title: 'Error updating incentive',
-				tone: 'negative',
-				message: addIncentiveMutationData.error.message,
-			});
-		} else if (addIncentiveMutationData.data?.createIncentive) {
-			setNewIncentiveData({ goal: 0, current: 0 });
-			setNewIncentiveRun({ value: '', label: '' });
-			setNewIncentiveTitle('');
-			setNewIncentiveNotes('');
-			setNewIncentiveType(incentiveTypes[0]);
-
-			addToast({
-				title: `Added ${addIncentiveMutationData.data.createIncentive.title}`,
-				id: addIncentiveMutationData.data.createIncentive.id,
-				tone: 'positive',
-				preserve: false,
-			});
-		}
-	}, [addIncentiveMutationData.data, addIncentiveMutationData.error]);
 
 	// Update Incentive Feedback
 	useEffect(() => {
@@ -157,337 +163,138 @@ export default function RunsManager() {
 		if (updateIncentiveMutationData.error) {
 			console.error(updateIncentiveMutationData.error);
 			addToast({
-				title: 'Error updating incentive',
-				tone: 'negative',
+				title: "Error updating incentive",
+				tone: "negative",
 				message: updateIncentiveMutationData.error.message,
 			});
 		} else if (updateIncentiveMutationData.data?.updateIncentive) {
 			addToast({
 				title: `Updated ${updateIncentiveMutationData.data.updateIncentive.title}`,
 				id: updateIncentiveMutationData.data.updateIncentive.id,
-				tone: 'positive',
+				tone: "positive",
 				preserve: false,
 			});
 		}
 	}, [updateIncentiveMutationData.data, updateIncentiveMutationData.error]);
 
-	function UpdateIncentive() {
-		if (!incentiveData.id) return;
-		// console.log(incentiveRawData);
-		// console.log(!Object.hasOwn(incentiveRawData, 'goal'), !Object.hasOwn(incentiveRawData, 'current'))
-		// console.log(isNaN((incentiveRawData as Goal).current))
-		switch (incentiveData.type) {
-			case 'goal':
-				if (!Object.hasOwn(incentiveRawData, 'goal') || !Object.hasOwn(incentiveRawData, 'current')) return;
-				if (isNaN((incentiveRawData as Goal).current)) return;
-				break;
-			case 'war':
-				if (!Object.hasOwn(incentiveRawData, 'options')) return;
-				break;
+	function renderIncentive(
+		incentive: QUERY_INCENTIVES_RESULTS["event"]["donationIncentives"][0],
+	) {
+		switch (incentive.type) {
+			case "war":
+				return (
+					<War
+						incentive={incentive}
+						incentiveUpdate={updateIncentiveMutation}
+					/>
+				);
+			case "goal":
+				return (
+					<Goal
+						incentive={incentive}
+						incentiveUpdate={updateIncentiveMutation}
+					/>
+				);
 			default:
-				return;
-		}
-
-		updateIncentiveMutation({
-			variables: {
-				incentive: incentiveData.id,
-				data: incentiveRawData,
-				active: incentiveActive,
-			},
-		});
-
-		eventData.refetch();
-	}
-
-	function AddIncentive() {
-		if (!newIncentiveTitle || !newIncentiveRun || !newIncentiveType.value) return;
-
-		switch (newIncentiveType.value) {
-			case 'goal':
-				if (!Object.hasOwn(newIncentiveData, 'goal')) return;
-				setNewIncentiveData({ ...newIncentiveData, current: 0 });
+				console.error("Unknown incentive type", incentive);
 				break;
-			case 'war':
-				if (!Object.hasOwn(newIncentiveData, 'options')) return;
-				break;
-			default:
-				return;
 		}
-
-		const runEvent = eventData.data?.event?.runs.find((run) => run.id === newIncentiveRun.value)?.event.shortname;
-		if (!runEvent) return;
-
-		addIncentiveMutation({
-			variables: {
-				run: newIncentiveRun.value,
-				runEvent,
-				title: newIncentiveTitle,
-				notes: newIncentiveNotes,
-				type: newIncentiveType.value,
-				data: newIncentiveData,
-			},
-		});
-
-		eventData.refetch();
 	}
-
-	// console.log();
-	// console.log(sortedIncentives, eventData.data?.event.donationIncentives);
 
 	return (
-		<div css={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+		<div
+			style={{
+				display: "flex",
+				flexDirection: "column",
+				alignItems: "center",
+			}}>
 			<Heading type="h3">Incentives</Heading>
-			<div css={{ marginTop: 24 }} />
+			<div style={{ marginTop: 24 }} />
 			<FieldContainer>
 				<FieldLabel>Event</FieldLabel>
-				<Select onChange={(e) => setSelectedEvent(e)} value={selectedEvent} options={eventsOptions} />
+				<Select
+					onChange={(e) => setSelectedEvent(e)}
+					value={selectedEvent}
+					options={eventsOptions}
+				/>
 			</FieldContainer>
 			<Accordion>
-				<AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+				<AccordionSummary
+					expandIcon={<ExpandMoreIcon />}
+					aria-controls="panel1a-content"
+					id="panel1a-header">
 					<b>Add incentive</b>
 				</AccordionSummary>
 				<AccordionDetails>
-					<Stack gap="medium">
-						<Inline gap="small">
-							<FieldContainer>
-								<FieldLabel>Incentive Name</FieldLabel>
-								<TextInput
-									onChange={(e) => setNewIncentiveTitle(e.target.value)}
-									value={newIncentiveTitle}
-									disabled={!selectedEvent.value}
-								/>
-							</FieldContainer>
-							<FieldContainer>
-								<FieldLabel>Run</FieldLabel>
-								<Select
-									onChange={(e) => setNewIncentiveRun(e)}
-									value={newIncentiveRun}
-									options={runOptions}
-									isDisabled={!selectedEvent.value}
-									width="large"
-								/>
-							</FieldContainer>
-						</Inline>
-						<FieldContainer>
-							<FieldLabel>Notes/Instructions</FieldLabel>
-							<TextInput
-								onChange={(e) => setNewIncentiveNotes(e.target.value)}
-								value={newIncentiveNotes}
-								disabled={!selectedEvent.value}
-							/>
-						</FieldContainer>
-						<FieldContainer>
-							<FieldLabel>Type</FieldLabel>
-							<Select
-								onChange={(e) => {
-									switch (e.value) {
-										case 'goal':
-											setNewIncentiveData({ goal: 0, current: 0 });
-											break;
-										case 'war':
-											setNewIncentiveData({ options: [] });
-											break;
-									}
-									setNewIncentiveType(e);
-								}}
-								value={newIncentiveType}
-								options={incentiveTypes}
-								isDisabled={!selectedEvent.value}
-							/>
-						</FieldContainer>
-						{newIncentiveType.value === 'goal' && (
-							<>
-								<FieldContainer>
-									<FieldLabel>Goal ${(newIncentiveData as Goal)?.goal?.toLocaleString() ?? 0}</FieldLabel>
-									<TextInput
-										onChange={(e) => setNewIncentiveData({ ...newIncentiveData, goal: parseInt(e.target.value) })}
-										type="number"
-										value={(newIncentiveData as Goal)?.goal ?? 0}
-										disabled={!selectedEvent.value}
-									/>
-								</FieldContainer>
-							</>
-						)}
-						{newIncentiveType.value === 'war' && (
-							<>
-								<FieldContainer>
-									<FieldLabel>Options</FieldLabel>
-									{(newIncentiveData as War)?.options.map((item, i) => {
-										return (
-											<TextInput
-												placeholder="Name"
-												onChange={(e) => {
-													const mutableOptions = [...(newIncentiveData as War).options];
-													mutableOptions[i].name = e.target.value;
-													setNewIncentiveData({ ...newIncentiveData, options: mutableOptions });
-												}}
-												value={item.name}
-											/>
-										);
-									})}
-								</FieldContainer>
-								<Button
-									tone="positive"
-									weight="bold"
-									onClick={() => {
-										const mutableOptions = [...(newIncentiveData as War).options];
-										mutableOptions.push({ name: '', total: 0 });
-										setNewIncentiveData({
-											...newIncentiveData,
-											options: mutableOptions,
-										});
-									}}
-								>
-									+ Add
-								</Button>
-							</>
-						)}
-						<p>By default this incentive will start active</p>
-						<Button
-							onClick={AddIncentive}
-							tone="active"
-							weight="bold"
-							isDisabled={!selectedEvent.value || !newIncentiveTitle}
-						>
-							Add new incentive
-						</Button>
-					</Stack>
+					<NewIncentiveInput />
 				</AccordionDetails>
 			</Accordion>
 
 			{eventData?.data?.event && (
 				<>
-					<div css={{ border: '1px solid #e1e5e9', borderRadius: 6, display: 'flex', marginTop: 16 }}>
+					<div
+						style={{
+							border: "1px solid #e1e5e9",
+							borderRadius: 6,
+							display: "flex",
+							marginTop: 16,
+						}}>
 						<VariableSizeList
 							height={650}
 							width={400}
 							estimatedItemSize={65}
 							itemSize={(index) => {
-								return 65 + ((sortedIncentives[index].title.length + sortedIncentives[index].run.game.length) > 50 ? 65 : 0);
+								return (
+									65 +
+									(sortedIncentives[index].title.length +
+										sortedIncentives[index].run.game
+											.length >
+									50
+										? 65
+										: 0)
+								);
 							}}
-							itemCount={eventData.data.event.donationIncentivesCount}
+							itemCount={
+								eventData.data.event.donationIncentivesCount
+							}
 							overscanCount={5}
 							itemData={sortedIncentives.map((incentive) => ({
 								...incentive,
 								setSelectedIncentiveIndex,
 							}))}
-							css={{ borderRight: '1px solid #e1e5e9', background: '#fafbfc' }}
-						>
+							style={{
+								borderRight: "1px solid #e1e5e9",
+								background: "#fafbfc",
+							}}>
 							{renderRunRow}
 						</VariableSizeList>
 						{incentiveData && (
-							<div css={{ flexGrow: 1, padding: '0 16px', minWidth: 800 }}>
+							<div
+								style={{
+									flexGrow: 1,
+									padding: "0 16px",
+									minWidth: 800,
+								}}>
 								<h1>{incentiveData.title}</h1>
-								<Button size="small" weight="link" tone="active" as={Link} href={`/runs/${incentiveData.run.id}`}>
+								<Button
+									size="small"
+									weight="link"
+									tone="active"
+									as={Link}
+									href={`/runs/${incentiveData.run.id}`}>
 									View Run details
 								</Button>
 								<p>
 									Game <b>{incentiveData.run.game}</b>
 									<br />
-									Type <b css={{ textTransform: 'capitalize' }}>{incentiveData.type}</b>
+									Type{" "}
+									<b style={{ textTransform: "capitalize" }}>
+										{incentiveData.type}
+									</b>
 									<br />
 									Notes <b>{incentiveData.notes}</b>
 								</p>
-								<Stack gap="medium">
-									{incentiveData.type === 'goal' && (
-										<>
-											<FieldContainer>
-												<FieldLabel>Goal ${incentiveData.data.goal}</FieldLabel>
-											</FieldContainer>
-											<FieldContainer>
-												<p>
-													Needs ${incentiveData.data.goal - incentiveData.data.current} more dollars.{' '}
-													{Math.round((incentiveData.data.current / incentiveData.data.goal) * 100)}% of the way there.
-												</p>
-											</FieldContainer>
-											<FieldContainer>
-												<FieldLabel>Current</FieldLabel>
-												<TextInput
-													onChange={(e) =>
-														setIncentiveRawData({ ...incentiveRawData, current: parseInt(e.target.value) })
-													}
-													type="number"
-													value={(incentiveRawData as Goal)?.current ?? 0}
-												/>
-											</FieldContainer>
-										</>
-									)}
-									{incentiveData.type === 'war' && (incentiveRawData as War)?.options && (
-										<>
-											<FieldContainer>
-												{(incentiveRawData as War).options.length > 0 ? (
-													<p>
-														Currently{' '}
-														<b>{[...(incentiveRawData as War).options].sort((a, b) => b.total - a.total)[0].name}</b>
-													</p>
-												) : (
-													<p>No options submitted</p>
-												)}
-											</FieldContainer>
-											<FieldContainer>
-												<FieldLabel>Options</FieldLabel>
-
-												{(incentiveRawData as War).options.map((item, i) => {
-													return (
-														<Inline>
-															<TextInput
-																placeholder="Name"
-																onChange={(e) => {
-																	const mutableOptions = (incentiveRawData as War).options.map((a) => ({ ...a }));
-																	mutableOptions[i].name = e.target.value;
-																	setIncentiveRawData({ ...incentiveRawData, options: mutableOptions });
-																}}
-																value={item.name}
-															/>
-															<TextInput
-																placeholder="Amount"
-																type="number"
-																onChange={(e) => {
-																	const mutableOptions = (incentiveRawData as War).options.map((a) => ({ ...a }));
-																	mutableOptions[i].total = parseFloat(e.target.value);
-																	setIncentiveRawData({ ...incentiveRawData, options: mutableOptions });
-																}}
-																value={item.total}
-															/>
-															<span>${item.total.toLocaleString()}</span>
-														</Inline>
-													);
-												})}
-											</FieldContainer>
-											<Button
-												css={{ marginTop: 8 }}
-												tone="positive"
-												weight="bold"
-												onClick={() => {
-													const mutableOptions = [...(incentiveRawData as War).options];
-													mutableOptions.push({ name: '', total: 0 });
-													setIncentiveRawData({
-														...incentiveRawData,
-														options: mutableOptions,
-													});
-												}}
-											>
-												+ Add
-											</Button>
-										</>
-									)}
-									<FieldContainer>
-										<Checkbox
-											size="large"
-											checked={incentiveActive}
-											css={{ marginRight: spacing.medium }}
-											onChange={(e) => {
-												setIncentiveActive(e.target.checked);
-											}}
-										>
-											Active
-										</Checkbox>
-									</FieldContainer>
-								</Stack>
-								<br />
-								<Button tone="active" weight="bold" onClick={UpdateIncentive} isDisabled={!incentiveData.id}>
-									Update
-								</Button>
+								{renderIncentive(incentiveData)}
 							</div>
 						)}
 					</div>
@@ -504,9 +311,20 @@ function renderRunRow(props: ListChildComponentProps) {
 	// console.log(data);
 
 	return (
-		<ListItem style={{...style, background: data.active ? undefined : '#e46060' }} key={data.id} component="div" disablePadding>
-			<ListItemButton onClick={() => data.setSelectedIncentiveIndex(index)}>
-				<ListItemText primary={`${data.title} - ${data.run.game}`} secondary={data.active ? 'Active' : 'Closed'} />
+		<ListItem
+			style={{
+				...style,
+				background: data.active ? undefined : "#e46060",
+			}}
+			key={data.id}
+			component="div"
+			disablePadding>
+			<ListItemButton
+				onClick={() => data.setSelectedIncentiveIndex(index)}>
+				<ListItemText
+					primary={`${data.title} - ${data.run.game}`}
+					secondary={data.active ? "Active" : "Closed"}
+				/>
 			</ListItemButton>
 		</ListItem>
 	);

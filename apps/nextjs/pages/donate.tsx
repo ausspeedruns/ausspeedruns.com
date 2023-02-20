@@ -13,7 +13,7 @@ import { Incentive } from '../components/Incentives/Incentive';
 
 const INCENTIVES_QUERY = gql`
 	query {
-		event(where: { shortname: "ASAP2022" }) {
+		event(where: { shortname: "ASGX2023" }) {
 			donationIncentives(take: 3, where: { active: { equals: true } }) {
 				title
 				type
@@ -69,7 +69,7 @@ const DonatePage = () => {
 					<div className={styles.link}>
 						<Button
 							actionText="Check out more challenges!"
-							link="/ASAP2022/challenges"
+							link="/ASGX2023/challenges"
 							colorScheme="secondary inverted"
 						/>
 					</div>

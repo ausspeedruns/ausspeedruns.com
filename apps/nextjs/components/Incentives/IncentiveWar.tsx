@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import styles from '../../styles/Event.incentives.ASAP2022.module.scss';
+import styles from '../../styles/Event.incentives.module.scss';
 import { BaseIncentiveData } from './IncentiveType';
 
 export interface WarProps extends BaseIncentiveData {
@@ -9,6 +9,27 @@ export interface WarProps extends BaseIncentiveData {
 		total: number;
 	}[];
 }
+
+function tgxColour(index = -1, redStart = false) {
+	let modulo = index % 4;
+	if (!redStart) modulo++;
+
+	switch (modulo) {
+		case 0:
+			return '#f80023';
+		case 1:
+			return '#ffc300';
+		case 2:
+			return '#007eff';
+		case 3:
+			return '#00c091';
+		case 4:
+			return '#f80023';
+		default:
+			return undefined;
+	}
+}
+
 export const War: React.FC<WarProps> = (props) => {
 	const time = new Date(props.run.scheduledTime);
 	const sortedOptions = props.options.sort((a, b) => b.total - a.total);
@@ -26,7 +47,7 @@ export const War: React.FC<WarProps> = (props) => {
 			<span className={styles.category}>{props.notes}</span>
 			{sortedOptions.length > 0 ? (
 				<div className={styles.options}>
-					{sortedOptions.map((option) => {
+					{sortedOptions.map((option, i) => {
 						const progress = (option.total / sortedOptions[0].total) * 100;
 						return (
 							<div key={option.name} className={styles.option}>
@@ -35,7 +56,7 @@ export const War: React.FC<WarProps> = (props) => {
 									<span className={styles.total}>${option?.total?.toLocaleString() ?? 'Error'}</span>
 								</div>
 								<div className={styles.progress}>
-									<div className={styles.bar} style={{ height: `${progress}%`, width: `${progress}%` }} />
+									<div className={styles.bar} style={{ height: `${progress}%`, width: `${progress}%`, backgroundColor: tgxColour(i, true) }} />
 								</div>
 							</div>
 						);

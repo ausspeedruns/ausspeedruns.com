@@ -19,7 +19,7 @@
     flex-flow: wrap;
     max-width: 2000px;
 
-    @include breakpoint($sm) {
+    @include breakpoint($md) {
       flex-direction: column;
       justify-content: space-between;
     }
@@ -42,7 +42,7 @@
     font-weight: 500;
     flex-grow: 1;
 
-    @include breakpoint($sm) {
+    @include breakpoint($md) {
       font-size: 1.5rem;
     }
 
@@ -81,7 +81,7 @@
       margin-right: 5px;
       background-size: contain;
 
-      @include breakpoint($sm) {
+      @include breakpoint($md) {
         height: 50px;
         width: 50px;
       }
@@ -139,7 +139,7 @@
       display: none;
     }
 
-    @include breakpoint($sm) {
+    @include breakpoint($md) {
       display: block !important;
     }
 
@@ -160,7 +160,7 @@
     border: none;
     color: $light-text;
 
-    @include breakpoint($sm) {
+    @include breakpoint($md) {
       display: none;
     }
 

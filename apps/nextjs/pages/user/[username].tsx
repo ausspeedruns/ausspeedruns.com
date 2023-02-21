@@ -75,6 +75,7 @@ const USER_PRIVATE_QUERY = gql`
 				techPlatform
 				estimate
 				possibleEstimate
+				possibleEstimateReason
 				ageRating
 				newDonationIncentives
 				status

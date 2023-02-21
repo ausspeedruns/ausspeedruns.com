@@ -56,7 +56,6 @@ function EstimateInput(props: EstimateInputProps) {
 	}
 
 	useEffect(() => {
-		console.log("Hours and Mins changed", hours, mins);
 		const formattedTime = formatTime();
 		if (formattedTime !== props.value) props.onTimeChange(formatTime());
 	}, [hours, mins]);
@@ -86,7 +85,8 @@ function EstimateInput(props: EstimateInputProps) {
 							return (
 								<MenuItem
 									className={styles.menuItem}
-									value={number}>
+									value={number}
+									key={number}>
 									{number}
 								</MenuItem>
 							);
@@ -109,7 +109,8 @@ function EstimateInput(props: EstimateInputProps) {
 								return (
 									<MenuItem
 										className={styles.menuItem}
-										value={number}>
+										value={number}
+										key={number}>
 										{number.toString().padStart(2, "0")}
 									</MenuItem>
 								);

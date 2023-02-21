@@ -10,11 +10,13 @@ type AvailabilityProps = {
 		endDate: string;
 		eventTimezone: string;
 	};
+	value?: boolean[];
 	onAvailabilityUpdate: (dates: boolean[]) => void;
 };
 
 export default function Availability(props: AvailabilityProps) {
-	const [dates, setDates] = useState<boolean[]>([]);
+	console.log(props.value);
+	const [dates, setDates] = useState<boolean[]>(props.value ?? []);
 	const eventLength = useMemo(
 		() =>
 			differenceInDays(
@@ -41,6 +43,8 @@ export default function Availability(props: AvailabilityProps) {
 							newDates[i] = e.target.checked;
 							setDates(newDates);
 						}}
+						checked={dates[i] ?? false}
+						value={dates[i] ?? false}
 					/>
 				}
 				label={date.toLocaleDateString("en-AU", {

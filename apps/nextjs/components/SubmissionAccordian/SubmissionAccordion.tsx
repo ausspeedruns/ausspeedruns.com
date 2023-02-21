@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import {
 	Accordion,
 	AccordionActions,
 	AccordionDetails,
 	AccordionSummary,
+	Alert,
 	Button,
+	IconButton,
+	Snackbar,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { UserPagePrivateData } from "../../pages/user/[username]";
 
@@ -43,9 +47,22 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 
 const SubmissionAccordion = ({ submission, event }: SubmissionProps) => {
 	const [editDialog, setEditDialog] = useState(false);
+	const [showSnackbar, setSnackbar] = useState({ error: false, reason: "" });
 
-	const closeDialog = () => {
+	const closeDialog = (error?: string) => {
 		setEditDialog(false);
+		if (error) {
+			setSnackbar({ error: true, reason: error });
+		} else {
+			setSnackbar({
+				error: false,
+				reason: `Successfully edited ${submission.game}!`,
+			});
+		}
+	};
+
+	const closeSnackbar = () => {
+		setSnackbar({ error: false, reason: "" });
 	};
 
 	const isRace = submission.race !== "no";
@@ -175,6 +192,31 @@ const SubmissionAccordion = ({ submission, event }: SubmissionProps) => {
 				handleClose={closeDialog}
 				open={editDialog}
 			/>
+			<Snackbar
+				anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+				open={Boolean(showSnackbar.reason)}
+				autoHideDuration={showSnackbar.error ? null : 6000}
+				onClose={closeSnackbar}
+				action={
+					showSnackbar.error ? (
+						<IconButton
+							size="small"
+							aria-label="close"
+							color="inherit"
+							onClick={closeSnackbar}>
+							<CloseIcon fontSize="small" />
+						</IconButton>
+					) : (
+						<></>
+					)
+				}>
+				<Alert
+					variant="filled"
+					severity={showSnackbar.error ? "error" : "success"}
+					sx={{ width: "100%" }}>
+					{showSnackbar.reason}
+				</Alert>
+			</Snackbar>
 		</StyledAccordion>
 	);
 };

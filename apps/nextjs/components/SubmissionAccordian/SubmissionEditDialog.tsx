@@ -49,6 +49,7 @@ const MUTATION_SUBMISSION = gql`
 		$video: String!
 		$specialReqs: String
 		$willingBackup: Boolean
+		$availableDates: JSON!
 	) {
 		updateSubmission(
 			where: { id: $submissionID }
@@ -59,7 +60,7 @@ const MUTATION_SUBMISSION = gql`
 				techPlatform: $techPlatform
 				estimate: $estimate
 				possibleEstimate: $possibleEstimate
-				possibleEstimateReason: $possibleEstimate
+				possibleEstimateReason: $possibleEstimateReason
 				ageRating: $ageRating
 				newDonationIncentives: $newDonationIncentives
 				race: $race
@@ -68,6 +69,7 @@ const MUTATION_SUBMISSION = gql`
 				video: $video
 				specialReqs: $specialReqs
 				willingBackup: $willingBackup
+				availability: $availableDates
 			}
 		) {
 			__typename
@@ -104,7 +106,7 @@ type SubmissionEditProps = {
 		endDate: string;
 		eventTimezone: string;
 	};
-	handleClose: () => void;
+	handleClose: (error?: string) => void;
 };
 
 const SubmissionEditDialog = ({
@@ -212,10 +214,12 @@ const SubmissionEditDialog = ({
 			video,
 			specialReqs: specialRequirements,
 			willingBackup: backup,
+			availableDates,
 		}).then((result) => {
 			if (!result.error) {
 				handleClose();
 			} else {
+				handleClose(result.error.message);
 				console.error(result.error);
 			}
 		});
@@ -230,6 +234,7 @@ const SubmissionEditDialog = ({
 			if (!result.error) {
 				handleClose();
 			} else {
+				handleClose(result.error.message);
 				console.error(result.error);
 			}
 		});
@@ -468,6 +473,7 @@ const SubmissionEditDialog = ({
 					onAvailabilityUpdate={(newDates) =>
 						setAvailableDates(newDates)
 					}
+					value={availableDates}
 					event={event}
 				/>
 			</DialogContent>

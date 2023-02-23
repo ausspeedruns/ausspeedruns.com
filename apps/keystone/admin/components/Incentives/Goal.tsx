@@ -29,6 +29,7 @@ export function Goal({ incentive, incentiveUpdate }: GoalProps) {
 	);
 
 	const [active, setActive] = useState(incentive.active);
+	const [add, setAdd] = useState(0);
 
 	function UpdateIncentive() {
 		if (!incentive.id) return;
@@ -43,6 +44,15 @@ export function Goal({ incentive, incentiveUpdate }: GoalProps) {
 				active: active,
 			},
 		});
+	}
+
+	function handleAdd() {
+		setIncentiveRawData({
+			...incentiveRawData,
+			current: incentiveRawData.current + add,
+		});
+
+		setAdd(0);
 	}
 
 	const invalidData =
@@ -66,18 +76,32 @@ export function Goal({ incentive, incentiveUpdate }: GoalProps) {
 				</p>
 			</FieldContainer>
 			<FieldContainer>
-				<FieldLabel>Current</FieldLabel>
-				<TextInput
-					onChange={(e) => 
-						setIncentiveRawData({
-							...incentiveRawData,
-							current: e.target.valueAsNumber,
-						})
-					}
-					type="number"
-					value={incentiveRawData.current ?? 0}
-				/>
+				<FieldLabel>Currently</FieldLabel>
+				<span style={{ fontSize: "2rem", fontWeight: "bold" }}>
+					${incentiveRawData.current.toLocaleString() ?? 0}
+				</span>
 			</FieldContainer>
+			<div
+				style={{
+					display: "grid",
+					gridTemplateColumns: "2fr 1fr",
+					width: "50%",
+					gap: "1rem",
+				}}>
+				<TextInput
+					onChange={(e) => setAdd(e.target.valueAsNumber)}
+					type="number"
+					value={add}
+				/>
+				<Button
+					isDisabled={add === 0}
+					tone="positive"
+					weight={add === 0 ? "light" : "bold"}
+					onClick={handleAdd}>
+					Add
+				</Button>
+			</div>
+
 			<FieldContainer>
 				<Checkbox
 					size="large"

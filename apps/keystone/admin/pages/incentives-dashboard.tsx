@@ -1,32 +1,26 @@
-import { Heading, useTheme } from "@keystone-ui/core";
+import { Heading } from "@keystone-ui/core";
 import React, { useEffect, useState } from "react";
 import { Link } from "@keystone-6/core/admin-ui/router";
-import {
-	useMutation,
-	useQuery,
-	gql,
-	useLazyQuery,
-} from "@keystone-6/core/admin-ui/apollo";
+import { useMutation, useQuery, gql } from "@keystone-6/core/admin-ui/apollo";
 import { Button } from "@keystone-ui/button";
 import { Select, FieldContainer, FieldLabel } from "@keystone-ui/fields";
 import {
 	Accordion,
 	AccordionDetails,
 	AccordionSummary,
+	List,
 	ListItem,
 	ListItemButton,
+	ListItemIcon,
 	ListItemText,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { VariableSizeList, ListChildComponentProps } from "react-window";
 import { useToasts } from "@keystone-ui/toast";
 import { War } from "../components/Incentives/War";
 import { Goal } from "../components/Incentives/Goal";
-import type {
-	Goal as GoalData,
-	War as WarData,
-} from "../../src/schema/incentives";
 import { NewIncentiveInput } from "../components/Incentives/NewIncentiveInput";
+import { Flag, PieChart } from "@mui/icons-material";
+import Head from "next/head";
 
 const QUERY_EVENTS = gql`
 	query {
@@ -180,7 +174,7 @@ export default function RunsManager() {
 	function renderIncentive(
 		incentive: QUERY_INCENTIVES_RESULTS["event"]["donationIncentives"][0],
 	) {
-		switch (incentive.type) {
+		switch (incentive?.type) {
 			case "war":
 				return (
 					<War
@@ -195,6 +189,8 @@ export default function RunsManager() {
 						incentiveUpdate={updateIncentiveMutation}
 					/>
 				);
+			case undefined:
+				return <></>;
 			default:
 				console.error("Unknown incentive type", incentive);
 				break;
@@ -208,6 +204,9 @@ export default function RunsManager() {
 				flexDirection: "column",
 				alignItems: "center",
 			}}>
+			<Head>
+				<title>Incentives</title>
+			</Head>
 			<Heading type="h3">Incentives</Heading>
 			<div style={{ marginTop: 24 }} />
 			<FieldContainer>
@@ -238,94 +237,75 @@ export default function RunsManager() {
 							borderRadius: 6,
 							display: "flex",
 							marginTop: 16,
+							minHeight: 600,
 						}}>
-						<VariableSizeList
-							height={650}
-							width={400}
-							estimatedItemSize={65}
-							itemSize={(index) => {
-								return (
-									65 +
-									(sortedIncentives[index].title.length +
-										sortedIncentives[index].run.game
-											.length >
-									50
-										? 65
-										: 0)
-								);
-							}}
-							itemCount={
-								eventData.data.event.donationIncentivesCount
-							}
-							overscanCount={5}
-							itemData={sortedIncentives.map((incentive) => ({
-								...incentive,
-								setSelectedIncentiveIndex,
-							}))}
+						<List
 							style={{
 								borderRight: "1px solid #e1e5e9",
 								background: "#fafbfc",
+								minWidth: 250,
+								maxWidth: 400,
+								maxHeight: 800,
+								overflowY: 'scroll',
 							}}>
-							{renderRunRow}
-						</VariableSizeList>
-						{incentiveData && (
-							<div
-								style={{
-									flexGrow: 1,
-									padding: "0 16px",
-									minWidth: 800,
-								}}>
-								<h1>{incentiveData.title}</h1>
-								<Button
-									size="small"
-									weight="link"
-									tone="active"
-									as={Link}
-									href={`/runs/${incentiveData.run.id}`}>
-									View Run details
-								</Button>
-								<p>
-									Game <b>{incentiveData.run.game}</b>
-									<br />
-									Type{" "}
-									<b style={{ textTransform: "capitalize" }}>
-										{incentiveData.type}
-									</b>
-									<br />
-									Notes <b>{incentiveData.notes}</b>
-								</p>
-								{renderIncentive(incentiveData)}
-							</div>
-						)}
+							{sortedIncentives.map((incentive, i) => (
+								<ListItem key={incentive.id} disablePadding>
+									<ListItemButton
+										selected={selectedIncentiveIndex === i}
+										onClick={() => {
+											setSelectedIncentiveIndex(i);
+										}}>
+										<ListItemIcon>
+											{incentive.type === "goal" ? (
+												<Flag />
+											) : (
+												<PieChart />
+											)}
+										</ListItemIcon>
+										<ListItemText
+											primary={`${incentive.run.game} – ${incentive.title}`}
+											secondary={
+												incentive.active
+													? "Active"
+													: "Inactive"
+											}
+										/>
+									</ListItemButton>
+								</ListItem>
+							))}
+						</List>
+						<div
+							style={{
+								flexGrow: 1,
+								padding: "0 16px 16px 16px",
+								minWidth: 800,
+								maxWidth: 800,
+							}}>
+							<h1>{incentiveData?.title}</h1>
+							<Button
+								size="small"
+								weight="link"
+								tone="active"
+								as={Link}
+								isDisabled={!incentiveData?.run}
+								href={`/runs/${incentiveData?.run.id}`}>
+								View Run details
+							</Button>
+							<p>
+								Game <b>{incentiveData?.run.game}</b>
+								<br />
+								Type{" "}
+								<b style={{ textTransform: "capitalize" }}>
+									{incentiveData?.type}
+								</b>
+								<br />
+								Notes <b>{incentiveData?.notes}</b>
+							</p>
+							{renderIncentive(incentiveData)}
+						</div>
 					</div>
 				</>
 			)}
 		</div>
-	);
-}
-
-function renderRunRow(props: ListChildComponentProps) {
-	const { index, style } = props;
-	const data = props.data[index];
-
-	// console.log(data);
-
-	return (
-		<ListItem
-			style={{
-				...style,
-				background: data.active ? undefined : "#e46060",
-			}}
-			key={data.id}
-			component="div"
-			disablePadding>
-			<ListItemButton
-				onClick={() => data.setSelectedIncentiveIndex(index)}>
-				<ListItemText
-					primary={`${data.title} - ${data.run.game}`}
-					secondary={data.active ? "Active" : "Closed"}
-				/>
-			</ListItemButton>
-		</ListItem>
 	);
 }

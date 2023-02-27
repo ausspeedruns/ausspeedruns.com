@@ -96,7 +96,7 @@ export default withAuth(
                 throw new Error(error);
               }
             }
-          })
+          }),
         },
         mutation: {
           confirmStripe: graphql.field({

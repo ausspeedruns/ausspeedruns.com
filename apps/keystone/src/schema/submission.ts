@@ -1,9 +1,9 @@
-import { list } from '@keystone-6/core';
-import { checkbox, json, relationship, select, text, timestamp } from '@keystone-6/core/fields';
-import { ItemContext, operations, permissions, SessionContext } from './access';
+import { graphql, list } from '@keystone-6/core';
+import { checkbox, json, relationship, select, text, timestamp, virtual } from '@keystone-6/core/fields';
+import { SessionContext } from './access';
 import { Lists } from '.keystone/types';
-import { FieldAccessControl } from '@keystone-6/core/types';
 import { allowAll } from '@keystone-6/core/access';
+import type { Context } from '.keystone/types';
 
 function roundUpToNearest5(num: number) {
 	return Math.ceil(num / 5) * 5;
@@ -62,7 +62,7 @@ export const Submission: Lists.Submission = list({
 		}),
 		donationIncentive: text({ validation: { length: { max: 300 } } }),
 		newDonationIncentives: json(),
-		specialReqs: text({ validation: { length: { max: 300 } } }),
+		specialReqs: text({ validation: { length: { max: 300 } }, ui: { displayMode: "textarea" } }),
 		availability: json({ db: { map: 'availability_json' } }),
 		race: select({
 			type: 'enum',
@@ -88,8 +88,21 @@ export const Submission: Lists.Submission = list({
 		}),
 		event: relationship({ ref: 'Event.submissions', ui: { hideCreate: true, labelField: 'shortname' } }),
 		willingBackup: checkbox({ defaultValue: false }),
+		label: virtual({
+			field: graphql.field({
+				type: graphql.String,
+				async resolve(item, _args, context: Context) {
+					const data = await context.query.Submission.findOne({
+						where: {id: item.id.toString() },
+						query: 'game category runner { username } event { shortname }'
+					});
+
+					return `${data.game} - ${data.category} | ${data.runner.username} - ${data.event.shortname}`;
+				}
+			})
+		})
 	},
 	ui: {
-		labelField: 'game'
+		labelField: 'label'
 	}
 });

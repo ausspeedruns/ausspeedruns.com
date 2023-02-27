@@ -179,6 +179,8 @@ model Run {
   eventId                 String?     @map("event")
   donationIncentiveObject Incentive[] @relation("Incentive_run")
   scheduledTime           DateTime?
+  techPlatform            String      @default("")
+  specialRequirements     String      @default("")
 
   @@index([originalSubmissionId])
   @@index([eventId])

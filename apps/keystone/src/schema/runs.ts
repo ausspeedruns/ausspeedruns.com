@@ -1,7 +1,8 @@
 import { graphql, list } from '@keystone-6/core';
-import { checkbox, json, relationship, select, text, timestamp, virtual } from '@keystone-6/core/fields';
+import { checkbox, relationship, text, timestamp, virtual } from '@keystone-6/core/fields';
 import { operations } from './access';
 import { Lists } from '.keystone/types';
+import type { Context } from '.keystone/types';
 
 export const Run: Lists.Run = list({
 	access: {
@@ -41,8 +42,24 @@ export const Run: Lists.Run = list({
 		// 	})
 		// })
 		scheduledTime: timestamp(),
+		techPlatform: text(),
+		specialRequirements: text({ ui: { displayMode: "textarea" } }),
+		label: virtual({
+			field: graphql.field({
+				type: graphql.String,
+				async resolve(item, _args, context: Context) {
+					const data = await context.query.Run.findOne({
+						where: {id: item.id.toString() },
+						query: 'game category runners { username } event { shortname }'
+					});
+
+					console.log(JSON.stringify(data))
+					return `${data.game} - ${data.category} | ${data.runners.username.join(', ')} - ${data.event.shortname}`;
+				}
+			})
+		})
 	},
 	ui: {
-		labelField: 'game'
+		labelField: 'label'
 	}
 });

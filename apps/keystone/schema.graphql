@@ -491,6 +491,7 @@ type Submission {
   status: SubmissionStatusType
   event: Event
   willingBackup: Boolean
+  label: String
 }
 
 enum SubmissionAgeRatingType {
@@ -1007,6 +1008,9 @@ type Run {
   donationIncentiveObject(where: IncentiveWhereInput! = {}, orderBy: [IncentiveOrderByInput!]! = [], take: Int, skip: Int! = 0): [Incentive!]
   donationIncentiveObjectCount(where: IncentiveWhereInput! = {}): Int
   scheduledTime: DateTime
+  techPlatform: String
+  specialRequirements: String
+  label: String
 }
 
 input RunWhereUniqueInput {
@@ -1034,6 +1038,8 @@ input RunWhereInput {
   event: EventWhereInput
   donationIncentiveObject: IncentiveManyRelationFilter
   scheduledTime: DateTimeNullableFilter
+  techPlatform: StringFilter
+  specialRequirements: StringFilter
 }
 
 input RunOrderByInput {
@@ -1050,6 +1056,8 @@ input RunOrderByInput {
   twitchVOD: OrderDirection
   youtubeVOD: OrderDirection
   scheduledTime: OrderDirection
+  techPlatform: OrderDirection
+  specialRequirements: OrderDirection
 }
 
 input RunUpdateInput {
@@ -1069,6 +1077,8 @@ input RunUpdateInput {
   event: EventRelateToOneForUpdateInput
   donationIncentiveObject: IncentiveRelateToManyForUpdateInput
   scheduledTime: DateTime
+  techPlatform: String
+  specialRequirements: String
 }
 
 input SubmissionRelateToOneForUpdateInput {
@@ -1099,6 +1109,8 @@ input RunCreateInput {
   event: EventRelateToOneForCreateInput
   donationIncentiveObject: IncentiveRelateToManyForCreateInput
   scheduledTime: DateTime
+  techPlatform: String
+  specialRequirements: String
 }
 
 input SubmissionRelateToOneForCreateInput {

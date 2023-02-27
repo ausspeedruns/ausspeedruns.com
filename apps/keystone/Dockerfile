@@ -7,13 +7,9 @@ COPY dist/apps/keystone/package.json ./
 RUN npm install --omit=dev
 
 # Production image, copy all the files and run next
-FROM ubuntu:22.04 as runner
+FROM node:18.12.1-alpine as runner
 LABEL maintainer="Ewan Lyon <ewan.lyon@ausspeedruns.com>"
-RUN apt-get update -y
-RUN apt-get -y install curl gnupg
-RUN curl -sL https://deb.nodesource.com/setup_18.x  | bash -
-RUN apt-get -y install nodejs
-RUN apt-get install dumb-init
+RUN apk add --no-cache dumb-init
 ENV NODE_ENV production
 ENV PORT 8000
 WORKDIR /app
@@ -23,8 +19,6 @@ COPY dist/apps/keystone/node_modules ./node_modules
 COPY dist/apps/keystone/schema.graphql ./schema.graphql
 COPY dist/apps/keystone/schema.prisma ./schema.prisma
 COPY dist/apps/keystone/.keystone ./.keystone
-# RUN chown -R node:node .
-# USER node
 EXPOSE 8000
 ENV NEXT_TELEMETRY_DISABLED 1
 CMD ["dumb-init", "node_modules/.bin/keystone", "start"]

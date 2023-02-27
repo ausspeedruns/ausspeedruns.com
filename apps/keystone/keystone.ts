@@ -65,9 +65,10 @@ export default withAuth(
           await insertSeedData(context.sudo());
         }
       },
-    },
-    experimental: {
-      generateNextGraphqlAPI: true,
+      extendPrismaSchema: schema => {
+        // as an example, we will change the Prisma binary to be linux-musl
+        return schema.replace(/(generator [^}]+)}/g, '$1binaryTargets = ["native", "linux-musl"]\n}');
+      },
     },
     lists: { Post, User, Submission, Event, Role, Run, Verification, Ticket, Volunteer, ShirtOrder, Incentive },
     extendGraphqlSchema: graphql.extend(base => {

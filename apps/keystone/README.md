@@ -7,7 +7,7 @@
 First, run the development server:
 
 ```bash
-yarn run dev
+npm run dev
 ```
 
 Open [http://localhost:8000](http://localhost:8000) to access the KeystoneJS admin UI.
@@ -65,7 +65,7 @@ API_KEY="<Api key>"
 
 ## Seed data
 
-**RUN THE STARTUP ONCE BEFORE RUNNING THE SEEDING SCRIPT**. This is to generate an admin user which is yourself. Then run `yarn run seed`.
+**RUN THE STARTUP ONCE BEFORE RUNNING THE SEEDING SCRIPT**. This is to generate an admin user which is yourself. Then run `npm run seed`.
 
 There is a seeding script that has:
 

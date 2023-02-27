@@ -5,7 +5,7 @@ type Post {
   id: ID!
   title: String
   slug: String
-  author(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
+  author(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0): [User!]
   authorCount(where: UserWhereInput! = {}): Int
   published: Boolean
   publishedDate: DateTime
@@ -202,11 +202,11 @@ type User {
   accountCreated: DateTime
   dateOfBirth: DateTime
   pronouns: String
-  submissions(where: SubmissionWhereInput! = {}, orderBy: [SubmissionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SubmissionWhereUniqueInput): [Submission!]
+  submissions(where: SubmissionWhereInput! = {}, orderBy: [SubmissionOrderByInput!]! = [], take: Int, skip: Int! = 0): [Submission!]
   submissionsCount(where: SubmissionWhereInput! = {}): Int
-  roles(where: RoleWhereInput! = {}, orderBy: [RoleOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: RoleWhereUniqueInput): [Role!]
+  roles(where: RoleWhereInput! = {}, orderBy: [RoleOrderByInput!]! = [], take: Int, skip: Int! = 0): [Role!]
   rolesCount(where: RoleWhereInput! = {}): Int
-  runs(where: RunWhereInput! = {}, orderBy: [RunOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: RunWhereUniqueInput): [Run!]
+  runs(where: RunWhereInput! = {}, orderBy: [RunOrderByInput!]! = [], take: Int, skip: Int! = 0): [Run!]
   runsCount(where: RunWhereInput! = {}): Int
   verified: Boolean
   state: UserStateType
@@ -214,11 +214,11 @@ type User {
   discord: String
   twitter: String
   twitch: String
-  tickets(where: TicketWhereInput! = {}, orderBy: [TicketOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TicketWhereUniqueInput): [Ticket!]
+  tickets(where: TicketWhereInput! = {}, orderBy: [TicketOrderByInput!]! = [], take: Int, skip: Int! = 0): [Ticket!]
   ticketsCount(where: TicketWhereInput! = {}): Int
-  volunteer(where: VolunteerWhereInput! = {}, orderBy: [VolunteerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VolunteerWhereUniqueInput): [Volunteer!]
+  volunteer(where: VolunteerWhereInput! = {}, orderBy: [VolunteerOrderByInput!]! = [], take: Int, skip: Int! = 0): [Volunteer!]
   volunteerCount(where: VolunteerWhereInput! = {}): Int
-  shirts(where: ShirtOrderWhereInput! = {}, orderBy: [ShirtOrderOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ShirtOrderWhereUniqueInput): [ShirtOrder!]
+  shirts(where: ShirtOrderWhereInput! = {}, orderBy: [ShirtOrderOrderByInput!]! = [], take: Int, skip: Int! = 0): [ShirtOrder!]
   shirtsCount(where: ShirtOrderWhereInput! = {}): Int
   passwordResetToken: PasswordState
   passwordResetIssuedAt: DateTime
@@ -665,15 +665,15 @@ type Event {
   endDate: DateTime
   raised: Float
   postEventPage: Event_postEventPage_Document
-  submissions(where: SubmissionWhereInput! = {}, orderBy: [SubmissionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SubmissionWhereUniqueInput): [Submission!]
+  submissions(where: SubmissionWhereInput! = {}, orderBy: [SubmissionOrderByInput!]! = [], take: Int, skip: Int! = 0): [Submission!]
   submissionsCount(where: SubmissionWhereInput! = {}): Int
-  runs(where: RunWhereInput! = {}, orderBy: [RunOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: RunWhereUniqueInput): [Run!]
+  runs(where: RunWhereInput! = {}, orderBy: [RunOrderByInput!]! = [], take: Int, skip: Int! = 0): [Run!]
   runsCount(where: RunWhereInput! = {}): Int
-  tickets(where: TicketWhereInput! = {}, orderBy: [TicketOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TicketWhereUniqueInput): [Ticket!]
+  tickets(where: TicketWhereInput! = {}, orderBy: [TicketOrderByInput!]! = [], take: Int, skip: Int! = 0): [Ticket!]
   ticketsCount(where: TicketWhereInput! = {}): Int
-  volunteer(where: VolunteerWhereInput! = {}, orderBy: [VolunteerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VolunteerWhereUniqueInput): [Volunteer!]
+  volunteer(where: VolunteerWhereInput! = {}, orderBy: [VolunteerOrderByInput!]! = [], take: Int, skip: Int! = 0): [Volunteer!]
   volunteerCount(where: VolunteerWhereInput! = {}): Int
-  donationIncentives(where: IncentiveWhereInput! = {}, orderBy: [IncentiveOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: IncentiveWhereUniqueInput): [Incentive!]
+  donationIncentives(where: IncentiveWhereInput! = {}, orderBy: [IncentiveOrderByInput!]! = [], take: Int, skip: Int! = 0): [Incentive!]
   donationIncentivesCount(where: IncentiveWhereInput! = {}): Int
   logo: AzureStorageImageFieldOutput
   darkModeLogo: AzureStorageImageFieldOutput
@@ -900,7 +900,7 @@ type Role {
   canManageUsers: Boolean
   runner: Boolean
   volunteer: Boolean
-  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
+  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0): [User!]
   usersCount(where: UserWhereInput! = {}): Int
   event: Event
   show: Boolean
@@ -990,7 +990,7 @@ input RoleCreateInput {
 
 type Run {
   id: ID!
-  runners(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
+  runners(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0): [User!]
   runnersCount(where: UserWhereInput! = {}): Int
   originalSubmission: Submission
   game: String
@@ -1005,7 +1005,7 @@ type Run {
   twitchVOD: String
   youtubeVOD: String
   event: Event
-  donationIncentiveObject(where: IncentiveWhereInput! = {}, orderBy: [IncentiveOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: IncentiveWhereUniqueInput): [Incentive!]
+  donationIncentiveObject(where: IncentiveWhereInput! = {}, orderBy: [IncentiveOrderByInput!]! = [], take: Int, skip: Int! = 0): [Incentive!]
   donationIncentiveObjectCount(where: IncentiveWhereInput! = {}): Int
   scheduledTime: DateTime
   techPlatform: String
@@ -1664,34 +1664,34 @@ enum PasswordResetRedemptionErrorCode {
 }
 
 type Query {
-  posts(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PostWhereUniqueInput): [Post!]
+  posts(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0): [Post!]
   post(where: PostWhereUniqueInput!): Post
   postsCount(where: PostWhereInput! = {}): Int
-  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
+  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0): [User!]
   user(where: UserWhereUniqueInput!): User
   usersCount(where: UserWhereInput! = {}): Int
-  submissions(where: SubmissionWhereInput! = {}, orderBy: [SubmissionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SubmissionWhereUniqueInput): [Submission!]
+  submissions(where: SubmissionWhereInput! = {}, orderBy: [SubmissionOrderByInput!]! = [], take: Int, skip: Int! = 0): [Submission!]
   submission(where: SubmissionWhereUniqueInput!): Submission
   submissionsCount(where: SubmissionWhereInput! = {}): Int
-  events(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: EventWhereUniqueInput): [Event!]
+  events(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0): [Event!]
   event(where: EventWhereUniqueInput!): Event
   eventsCount(where: EventWhereInput! = {}): Int
-  roles(where: RoleWhereInput! = {}, orderBy: [RoleOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: RoleWhereUniqueInput): [Role!]
+  roles(where: RoleWhereInput! = {}, orderBy: [RoleOrderByInput!]! = [], take: Int, skip: Int! = 0): [Role!]
   role(where: RoleWhereUniqueInput!): Role
   rolesCount(where: RoleWhereInput! = {}): Int
-  runs(where: RunWhereInput! = {}, orderBy: [RunOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: RunWhereUniqueInput): [Run!]
+  runs(where: RunWhereInput! = {}, orderBy: [RunOrderByInput!]! = [], take: Int, skip: Int! = 0): [Run!]
   run(where: RunWhereUniqueInput!): Run
   runsCount(where: RunWhereInput! = {}): Int
-  tickets(where: TicketWhereInput! = {}, orderBy: [TicketOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TicketWhereUniqueInput): [Ticket!]
+  tickets(where: TicketWhereInput! = {}, orderBy: [TicketOrderByInput!]! = [], take: Int, skip: Int! = 0): [Ticket!]
   ticket(where: TicketWhereUniqueInput!): Ticket
   ticketsCount(where: TicketWhereInput! = {}): Int
-  volunteers(where: VolunteerWhereInput! = {}, orderBy: [VolunteerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VolunteerWhereUniqueInput): [Volunteer!]
+  volunteers(where: VolunteerWhereInput! = {}, orderBy: [VolunteerOrderByInput!]! = [], take: Int, skip: Int! = 0): [Volunteer!]
   volunteer(where: VolunteerWhereUniqueInput!): Volunteer
   volunteersCount(where: VolunteerWhereInput! = {}): Int
-  shirtOrders(where: ShirtOrderWhereInput! = {}, orderBy: [ShirtOrderOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ShirtOrderWhereUniqueInput): [ShirtOrder!]
+  shirtOrders(where: ShirtOrderWhereInput! = {}, orderBy: [ShirtOrderOrderByInput!]! = [], take: Int, skip: Int! = 0): [ShirtOrder!]
   shirtOrder(where: ShirtOrderWhereUniqueInput!): ShirtOrder
   shirtOrdersCount(where: ShirtOrderWhereInput! = {}): Int
-  incentives(where: IncentiveWhereInput! = {}, orderBy: [IncentiveOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: IncentiveWhereUniqueInput): [Incentive!]
+  incentives(where: IncentiveWhereInput! = {}, orderBy: [IncentiveOrderByInput!]! = [], take: Int, skip: Int! = 0): [Incentive!]
   incentive(where: IncentiveWhereUniqueInput!): Incentive
   incentivesCount(where: IncentiveWhereInput! = {}): Int
   keystone: KeystoneMeta!
@@ -1743,7 +1743,6 @@ type KeystoneAdminUIFieldMeta {
   description: String
   isOrderable: Boolean!
   isFilterable: Boolean!
-  isNonNull: [KeystoneAdminUIFieldMetaIsNonNull!]
   fieldMeta: JSON
   viewsIndex: Int!
   customViewsIndex: Int
@@ -1751,12 +1750,6 @@ type KeystoneAdminUIFieldMeta {
   listView: KeystoneAdminUIFieldMetaListView!
   itemView(id: ID): KeystoneAdminUIFieldMetaItemView
   search: QueryMode
-}
-
-enum KeystoneAdminUIFieldMetaIsNonNull {
-  read
-  create
-  update
 }
 
 type KeystoneAdminUIFieldMetaCreateView {

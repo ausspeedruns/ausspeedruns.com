@@ -213,6 +213,6 @@ export async function insertSeedData(context: Context) {
 	}
 
 	console.log(`✅ Seed data inserted`);
-	console.log(`👋 Please start the process with \`yarn run dev\``);
+	console.log(`👋 Please start the process with \`npm run dev\``);
 	process.exit();
 }

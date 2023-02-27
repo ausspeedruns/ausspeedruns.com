@@ -9,8 +9,8 @@
 
 - [Table of Contents](#table-of-contents)
 - [Apps](#apps)
-  - [NextJS](#nextjs)
-  - [Keystone](#keystone)
+	- [NextJS](#nextjs)
+	- [Keystone](#keystone)
 - [Monorepo](#monorepo)
 - [Setup](#setup)
 - [Contributions](#contributions)
@@ -24,13 +24,13 @@
 
 ![The about page of the AusSpeedruns.com website](assets/NextJS.jpg)
 
-To run the dev server type the command `yarn run nextjs` or call the nx command `nx run nextjs:serve`
+To run the dev server type the command `npm run nextjs` or call the nx command `nx run nextjs:serve`
 
 ### Keystone
 
 ![The runs page of the Keystone back-end with the Keystone 6 logo overlayed on top](assets/Keystone.png)
 
-To run the dev server type the command `yarn run keystone` or call the nx command `nx run keystone:serve`
+To run the dev server type the command `npm run keystone` or call the nx command `nx run keystone:serve`
 
 ## Monorepo
 
@@ -40,14 +40,14 @@ Keystone is built using a custom builder found in `libs/keystone-plugin/src/exec
 
 ## Setup
 
-To setup the development materials you just need to clone the repo and then run `yarn`.
+To setup the development materials you just need to clone the repo and then run `npm install`.
 
 Full steps:
 
 ```console
 git clone https://github.com/AusSpeedruns/ausspeedruns.com.git
 cd ausspeedruns.com
-yarn
+npm install
 ```
 
 There are a few assets related to sponsors, these require access to a private repo with those assets. The NextJS app will fail without these images, for the time being create a new folder in `apps/nextjs/styles/img/` called `sponsors` and just put a random image in multiple times with the required names the errors are giving you.

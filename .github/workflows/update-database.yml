@@ -23,7 +23,7 @@ jobs:
           node-version: 16
       -
         name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
       -
         name: Update prisma
         working-directory: ./apps/keystone/

@@ -71,10 +71,10 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
           // This is mega dumb btw
           if (data.data[0].description === "ASM2022 Shirt") {
             // SHIRT
-            fulfillShirtOrder(checkout.id);
+            fulfilShirtOrder(checkout.id);
           } else {
             // TICKET
-            fulfillOrder(checkout.id, data.data[0].quantity);
+            fulfilOrder(checkout.id, data.data[0].quantity);
           }
         });
         break;
@@ -92,7 +92,7 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
   }
 };
 
-const fulfillOrder = async (sessionID: any, quantity: number) => {
+const fulfilOrder = async (sessionID: any, quantity: number) => {
   // Update ticket information
   const mutRes = await urqlClient.mutation(gql`
     mutation ($sessionID: String!, $quantity: Int!, $apiKey: String!) {
@@ -105,7 +105,7 @@ const fulfillOrder = async (sessionID: any, quantity: number) => {
 
 export default cors(webhookHandler);
 
-async function fulfillShirtOrder(sessionID: any) {
+async function fulfilShirtOrder(sessionID: any) {
   // Update shirt information
   const mutRes = await urqlClient.mutation(gql`
     mutation ($sessionID: String!, $apiKey: String!) {

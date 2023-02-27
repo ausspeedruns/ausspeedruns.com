@@ -4,7 +4,7 @@ FROM node:18.12.1-alpine as deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY dist/apps/nextjs/package.json ./
-RUN npm install --omit=dev && npm install sharp@^0.31.2
+RUN yarn install --production && yarn add sharp@^0.31.2
 
 # Production image, copy all the files and run next
 FROM node:18.12.1-alpine as runner

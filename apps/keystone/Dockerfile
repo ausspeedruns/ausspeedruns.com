@@ -4,7 +4,7 @@ FROM node:18.12.1-alpine as deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY dist/apps/keystone/package.json ./
-RUN npm install --omit=dev
+RUN yarn install --production
 
 # Production image, copy all the files and run next
 FROM node:18.12.1-alpine as runner

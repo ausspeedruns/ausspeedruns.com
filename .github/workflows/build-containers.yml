@@ -51,7 +51,7 @@ jobs:
       -
         name: 'Install Dependencies'
         working-directory: ./main
-        run: npm ci
+        run: npm ci --force
       -
         name: 'Build images'
         working-directory: ./main

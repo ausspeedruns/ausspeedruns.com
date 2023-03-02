@@ -12,11 +12,21 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2022-11-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method === 'POST') {
 		try {
-			if (!req.query.account) {
+			if (!req.query.account || Array.isArray(req.query.account)) {
 				throw new Error('No account ID');
 			}
 
-			if (!req.query.username) {
+			// Check valid shirt size
+			if (!req.query.size || Array.isArray(req.query.size) || !['xs', 's', 'm', 'l', 'xl', 'xl2', 'xl3'].includes(req.query.size)) {
+				throw new Error('Invalid Size');
+			}
+
+			// Check valid colour
+			if (!req.query.colour || Array.isArray(req.query.colour) || !['blue', 'purple'].includes(req.query.colour)) {
+				throw new Error('Invalid colour');
+			}
+
+			if (!req.query.username || Array.isArray(req.query.username)) {
 				throw new Error('No username');
 			}
 
@@ -25,34 +35,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				line_items: [
 					{
 						// Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-						price: 'ASM2023TICKET',
-						adjustable_quantity: {
-							enabled: true,
-							minimum: 1,
-						},
+						price: 'ASM2022SHIRT',
 						quantity: 1,
 					},
 				],
 				mode: 'payment',
 				success_url: `${req.headers.origin}/user/${req.query.username}#tickets`,
-				cancel_url: `${req.headers.origin}/ASM2023/tickets?cancelled=true&session_id={CHECKOUT_SESSION_ID}`,
+				cancel_url: `${req.headers.origin}/store`,
 			});
 
-			// Generate ticket code
+			// Generate shirt code
 			const returnData = await urqlClient.mutation(gql`
-				mutation ($userID: ID!, $stripeID: String, $apiKey: String!) {
-					generateTicket(
+				mutation ($userID: ID!, $stripeID: String, $size: ShirtOrderSizeType!, $colour: ShirtOrderColourType!, $apiKey: String!) {
+					generateShirt(
 						userID: $userID
-						event: "ASM2023"
-						numberOfTickets: 1
 						method: stripe
+						size: $size
+						colour: $colour
 						stripeID: $stripeID
 						apiKey: $apiKey
 					) {
 						__typename
 					}
 				}
-			`, { userID: req.query.account, stripeID: session.id, apiKey: process.env.API_KEY }).toPromise();
+			`, { userID: req.query.account, size: req.query.size, colour: req.query.colour, stripeID: session.id, event: req.query.event, apiKey: process.env.API_KEY }).toPromise();
 
 			if (returnData.error) {
 				throw new Error(JSON.stringify(returnData.error));

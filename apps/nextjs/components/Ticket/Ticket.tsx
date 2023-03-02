@@ -22,6 +22,7 @@ interface Props {
 			};
 		};
 	};
+	extraCost?: number;
 }
 
 const LOGO_HEIGHT = 50;
@@ -77,7 +78,7 @@ const Ticket: React.FC<Props> = (props: Props) => {
 						<span>Account #</span>
 						<span>30-192-8208</span>
 						<span>Amount</span>
-						<span>${totalCost} AUD</span>
+						<span>${totalCost + (props.extraCost ?? 0)} AUD</span>
 					</>
 				)}
 				<span>Ticket ID</span>

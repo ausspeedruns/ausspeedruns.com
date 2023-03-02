@@ -1,24 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { cacheExchange, dedupExchange, fetchExchange, gql, ssrExchange, useQuery } from 'urql';
-import { initUrqlClient, withUrqlClient } from 'next-urql';
-import Head from 'next/head';
-import { Box, IconButton, Tab, Tabs, ThemeProvider } from '@mui/material';
-import { useRouter } from 'next/router';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useEffect, useState } from "react";
+import {
+	cacheExchange,
+	dedupExchange,
+	fetchExchange,
+	gql,
+	ssrExchange,
+	useQuery,
+} from "urql";
+import { initUrqlClient, withUrqlClient } from "next-urql";
+import Head from "next/head";
+import { Box, IconButton, Tab, Tabs, ThemeProvider } from "@mui/material";
+import { useRouter } from "next/router";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import styles from '../../styles/User.username.module.scss';
-import Navbar from '../../components/Navbar/Navbar';
-import { useAuth } from '../../components/auth';
-import { theme } from '../../components/mui-theme';
-import { RoleBadge } from '../../components/RoleBadge/RoleBadge';
-import SubmissionAccordion from '../../components/SubmissionAccordian/SubmissionAccordion';
-import RunUpcoming from '../../components/RunUpcoming/RunUpcoming';
-import RunCompleted from '../../components/RunCompleted/RunCompleted';
-import DiscordEmbed from '../../components/DiscordEmbed';
-import Ticket from '../../components/Ticket/Ticket';
-import ASMShirt from '../../components/ShirtOrder/ShirtOrder';
-import Footer from '../../components/Footer/Footer';
+import styles from "../../styles/User.username.module.scss";
+import Navbar from "../../components/Navbar/Navbar";
+import { useAuth } from "../../components/auth";
+import { theme } from "../../components/mui-theme";
+import { RoleBadge } from "../../components/RoleBadge/RoleBadge";
+import SubmissionAccordion from "../../components/SubmissionAccordian/SubmissionAccordion";
+import RunUpcoming from "../../components/RunUpcoming/RunUpcoming";
+import RunCompleted from "../../components/RunCompleted/RunCompleted";
+import DiscordEmbed from "../../components/DiscordEmbed";
+import Ticket from "../../components/Ticket/Ticket";
+import ASMShirt from "../../components/ShirtOrder/ShirtOrder";
+import Footer from "../../components/Footer/Footer";
 
 const USER_QUERY = gql`
 	query Profile($username: String) {
@@ -100,7 +107,12 @@ const USER_PRIVATE_QUERY = gql`
 			tickets(
 				where: {
 					AND: [
-						{ OR: [{ method: { equals: bank } }, { paid: { equals: true } }] }
+						{
+							OR: [
+								{ method: { equals: bank } }
+								{ paid: { equals: true } }
+							]
+						}
 						{ event: { endDate: { gt: $currentTime } } }
 					]
 				}
@@ -122,13 +134,22 @@ const USER_PRIVATE_QUERY = gql`
 			}
 			shirts(
 				where: {
-					AND: [{ OR: [{ method: { equals: bank } }, { paid: { equals: true } }] }, { taken: { equals: true } }]
+					AND: [
+						{
+							OR: [
+								{ method: { equals: bank } }
+								{ paid: { equals: true } }
+							]
+						}
+						{ created: { gt: $currentTime } }
+					]
 				}
 			) {
 				shirtID
 				paid
 				size
 				colour
+				notes
 			}
 		}
 	}
@@ -185,7 +206,7 @@ export type UserPagePrivateData = {
 			estimate: string;
 			possibleEstimate: string;
 			possibleEstimateReason: string;
-			status: 'submitted' | 'accepted' | 'backup' | 'rejected';
+			status: "submitted" | "accepted" | "backup" | "rejected";
 			newDonationIncentives?: {
 				title: string;
 				time?: string;
@@ -226,38 +247,39 @@ export type UserPagePrivateData = {
 				};
 			};
 			numberOfTickets: number;
-			method: 'bank' | 'stripe';
+			method: "bank" | "stripe";
 			taken: boolean;
 		}[];
 		shirts: {
 			paid: boolean;
 			size: string;
-			colour: 'blue' | 'purple';
+			colour: "blue" | "purple";
 			shirtID: string;
+			notes: string;
 		}[];
 	};
 };
 
 function StateCodeToString(stateCode: string) {
 	switch (stateCode) {
-		case 'vic':
-			return 'Victoria';
-		case 'nt':
-			return 'Northern Territory';
-		case 'qld':
-			return 'Queensland';
-		case 'nsw':
-			return 'New South Wales';
-		case 'sa':
-			return 'South Australia';
-		case 'act':
-			return 'ACT';
-		case 'wa':
-			return 'Western Australia';
-		case 'tas':
-			return 'Tasmania';
-		case 'outer':
-			return 'Outside of Australia';
+		case "vic":
+			return "Victoria";
+		case "nt":
+			return "Northern Territory";
+		case "qld":
+			return "Queensland";
+		case "nsw":
+			return "New South Wales";
+		case "sa":
+			return "South Australia";
+		case "act":
+			return "ACT";
+		case "wa":
+			return "Western Australia";
+		case "tas":
+			return "Tasmania";
+		case "outer":
+			return "Outside of Australia";
 		default:
 			return `Unknown (${stateCode})`;
 	}
@@ -287,7 +309,11 @@ export default function ProfilePage(ssrData) {
 			username: ssrData.username,
 			currentTime: currentTime,
 		},
-		pause: !auth.ready && (auth.ready ? !(auth.sessionData.username == ssrData.username) : true),
+		pause:
+			!auth.ready &&
+			(auth.ready
+				? !(auth.sessionData.username == ssrData.username)
+				: true),
 	});
 
 	if (!publicDataResults) {
@@ -303,35 +329,60 @@ export default function ProfilePage(ssrData) {
 		);
 	}
 
-	const upcomingRunsList = publicDataResults.runs.filter((run) => !run.finalTime);
+	const upcomingRunsList = publicDataResults.runs.filter(
+		(run) => !run.finalTime,
+	);
 
 	// Get all event names for tabs
 	// Would just do [...new Set(****)] buuuuuuuut... https://stackoverflow.com/questions/33464504/using-spread-syntax-and-new-set-with-typescript
 	const allSubmissionEvents = [
-		...Array.from(new Set(privateDataResults?.user.submissions.map((submission) => submission.event?.shortname))),
+		...Array.from(
+			new Set(
+				privateDataResults?.user.submissions.map(
+					(submission) => submission.event?.shortname,
+				),
+			),
+		),
 	];
 	const allRunEvents = [
 		...Array.from(
-			new Set(publicDataResults.runs.map((run) => (run.finalTime ? run.event?.shortname : undefined)))
-		).filter((el) => typeof el !== 'undefined'),
+			new Set(
+				publicDataResults.runs.map((run) =>
+					run.finalTime ? run.event?.shortname : undefined,
+				),
+			),
+		).filter((el) => typeof el !== "undefined"),
 	];
+
+	console.log(privateDataResults?.user, {
+		username: ssrData.username,
+		currentTime: currentTime,
+	});
 
 	return (
 		<ThemeProvider theme={theme}>
 			<Head>
 				<title>{`${ssrData.username} - AusSpeedruns`}</title>
-				<DiscordEmbed title={`${ssrData.username}'s Profile - AusSpeedruns`} pageUrl={`/user/${ssrData.username}`} />
+				<DiscordEmbed
+					title={`${ssrData.username}'s Profile - AusSpeedruns`}
+					pageUrl={`/user/${ssrData.username}`}
+				/>
 			</Head>
 			<div className={styles.content}>
 				<div className={styles.profileHeader}>
 					<h1>{ssrData.username}</h1>
-					{auth.ready && auth.sessionData?.id === publicDataResults.id && (
-						<div>
-							<IconButton style={{ float: 'right' }} onClick={() => router.push('/user/edit-user')}>
-								<FontAwesomeIcon icon={faEdit} />
-							</IconButton>
-						</div>
-					)}
+					{auth.ready &&
+						auth.sessionData?.id === publicDataResults.id && (
+							<div>
+								<IconButton
+									style={{ float: "right" }}
+									onClick={() =>
+										router.push("/user/edit-user")
+									}>
+									<FontAwesomeIcon icon={faEdit} />
+								</IconButton>
+							</div>
+						)}
 				</div>
 				<hr />
 				{/* Role List */}
@@ -342,10 +393,12 @@ export default function ProfilePage(ssrData) {
 				</div>
 				{/* Profile Information */}
 				<div className={styles.userInfo}>
-					{publicDataResults?.state !== 'none' && (
+					{publicDataResults?.state !== "none" && (
 						<>
 							<span>State</span>
-							<span>{StateCodeToString(publicDataResults.state)}</span>
+							<span>
+								{StateCodeToString(publicDataResults.state)}
+							</span>
 						</>
 					)}
 					{publicDataResults.pronouns && (
@@ -362,18 +415,31 @@ export default function ProfilePage(ssrData) {
 						<Box>
 							<Tabs
 								value={submissionTab}
-								onChange={(_e, newVal) => setSubmissionTab(newVal)}
-								aria-label="basic tabs example"
-							>
+								onChange={(_e, newVal) =>
+									setSubmissionTab(newVal)
+								}
+								aria-label="basic tabs example">
 								{allSubmissionEvents.map((event) => (
 									<Tab label={event} key={event} />
 								))}
 							</Tabs>
 						</Box>
-						{privateDataResults.user.submissions.map((submission) => {
-							if (submission.event?.shortname !== allSubmissionEvents[submissionTab]) return;
-							return <SubmissionAccordion key={submission.id} submission={submission} event={submission.event} />;
-						})}
+						{privateDataResults.user.submissions.map(
+							(submission) => {
+								if (
+									submission.event?.shortname !==
+									allSubmissionEvents[submissionTab]
+								)
+									return;
+								return (
+									<SubmissionAccordion
+										key={submission.id}
+										submission={submission}
+										event={submission.event}
+									/>
+								);
+							},
+						)}
 					</div>
 				)}
 
@@ -382,7 +448,12 @@ export default function ProfilePage(ssrData) {
 					<div className={styles.submissions}>
 						<h3 id="tickets">Tickets (Private)</h3>
 						{privateDataResults.user.tickets.map((ticket) => {
-							return <Ticket key={ticket.ticketID} ticketData={ticket} />;
+							return (
+								<Ticket
+									key={ticket.ticketID}
+									ticketData={ticket}
+								/>
+							);
 						})}
 					</div>
 				)}
@@ -392,7 +463,13 @@ export default function ProfilePage(ssrData) {
 					<div className={styles.submissions}>
 						<h3 id="shirts">Shirt Orders (Private)</h3>
 						{privateDataResults.user.shirts.map((shirt) => {
-							return <ASMShirt key={shirt.shirtID} shirtData={shirt} />;
+							console.log(shirt);
+							return (
+								<ASMShirt
+									key={shirt.shirtID}
+									shirtData={shirt}
+								/>
+							);
 						})}
 					</div>
 				)}
@@ -412,7 +489,9 @@ export default function ProfilePage(ssrData) {
 				{/* Runs */}
 				<div className={styles.runs}>
 					<Box>
-						<Tabs value={eventTab} onChange={(_e, newVal) => setEventTab(newVal)}>
+						<Tabs
+							value={eventTab}
+							onChange={(_e, newVal) => setEventTab(newVal)}>
 							{allRunEvents.reverse().map((event) => (
 								<Tab label={event} key={event} />
 							))}
@@ -421,7 +500,12 @@ export default function ProfilePage(ssrData) {
 					{publicDataResults.runs.map((run) => {
 						if (!run.finalTime) return;
 						return (
-							<div key={run.id} hidden={run.event?.shortname !== allRunEvents[eventTab]}>
+							<div
+								key={run.id}
+								hidden={
+									run.event?.shortname !==
+									allRunEvents[eventTab]
+								}>
 								<RunCompleted run={run} />
 							</div>
 						);
@@ -437,12 +521,12 @@ export async function getServerSideProps({ params }) {
 	const client = initUrqlClient(
 		{
 			url:
-				process.env.NODE_ENV === 'production'
-					? 'https://keystone.ausspeedruns.com/api/graphql'
-					: 'http://localhost:8000/api/graphql',
+				process.env.NODE_ENV === "production"
+					? "https://keystone.ausspeedruns.com/api/graphql"
+					: "http://localhost:8000/api/graphql",
 			exchanges: [dedupExchange, cacheExchange, ssrCache, fetchExchange],
 		},
-		false
+		false,
 	);
 
 	await client.query(USER_QUERY, params).toPromise();

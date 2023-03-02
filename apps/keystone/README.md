@@ -51,11 +51,6 @@ DATABASE_URL="postgres://postgres:postgres@localhost:5432/keystone"
 EMAIL_USER="<Email User>"
 EMAIL_PASS="<Email Pass>"
 
-# Stripe
-STRIPE_SECRET_KEY="<Stripe secret key>"
-NEXT_PUBLIC_STRIPE_PUBLIC_KEY="<Public Stripe public key>"
-STRIPE_WEBHOOK_SECRET="<Stripe webhook secret>"
-
 # Custom
 NODE_ENV="development"
 KEYSTONE_URL="http://localhost:8000/api/graphql"

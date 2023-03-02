@@ -1,0 +1,139 @@
+@import "../../styles/colors.scss";
+@import "../../styles/responsive.scss";
+
+.product {
+	display: grid;
+	grid-template-columns: 50% 50%;
+	margin: 1rem 0;
+
+	.productImage {
+		width: 90%;
+		height: auto;
+		object-fit: contain;
+		margin: auto;
+		margin-top: 0;
+	}
+
+	.loginError {
+		font-weight: bold;
+		font-style: italic;
+		font-size: 1.5rem;
+	}
+
+	.paymentMethod {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		margin: 1rem 0;
+
+		@include breakpoint($sm-zero-only) {
+			width: 100%;
+			text-align: center;
+		}
+
+		.bankTransferButton {
+			display: flex;
+			gap: 8px;
+		}
+	}
+}
+
+.shirtWarning {
+	font-size: 1.2rem;
+	font-weight: bolder;
+	margin: 0 !important;
+}
+
+.generatedTickets {
+	border: 5px solid $primary;
+	border-radius: 10px;
+	width: 60%;
+	margin: 1rem auto;
+	padding: 1rem;
+
+	background-image: url("../../styles/img/TicketWatermark.png");
+	background-size: 60px;
+
+	.ticketID {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		.label {
+			font-size: 2rem;
+			font-weight: bold;
+		}
+	}
+
+	.informationGrid {
+		display: grid;
+		grid-template-columns: 50% 50%;
+		gap: 2px 5px;
+
+		span:nth-child(odd) {
+			text-align: right;
+		}
+
+		span:nth-child(even) {
+			font-weight: bold;
+		}
+	}
+
+	p {
+		text-align: center;
+		margin-top: 1rem;
+	}
+}
+
+@keyframes ticketGeneration {
+	0% {
+		max-height: 0;
+		opacity: 0;
+	}
+
+	10% {
+		// max-height: 0;
+		opacity: 0;
+	}
+
+	100% {
+		max-height: 445px;
+		opacity: 1;
+	}
+}
+
+.generatedTicketsSkeleton {
+	border: 5px solid $primary;
+	border-radius: 10px;
+	width: 60%;
+	margin: 1rem auto;
+	padding: 1rem;
+	overflow: hidden;
+
+	background-image: url("../../styles/img/TicketWatermark.png");
+	background-size: 60px;
+
+	&.animation {
+		animation-name: ticketGeneration;
+		animation-duration: 3s;
+		animation-timing-function: ease-out;
+	}
+
+	.ticketID {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin-bottom: 8px;
+	}
+
+	.informationGrid {
+		display: grid;
+		grid-template-columns: 100%;
+		gap: 2px 5px;
+	}
+
+	p {
+		text-align: center;
+		margin-top: 1rem;
+	}
+}

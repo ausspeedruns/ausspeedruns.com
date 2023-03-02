@@ -41,7 +41,7 @@ export const Ticket: Lists.Ticket = list({
 	fields: {
 		user: relationship({ ref: 'User.tickets', ui: { hideCreate: true, labelField: 'username' } }),
 		event: relationship({ ref: 'Event.tickets' }),
-		taken: checkbox({ defaultValue: false }),
+		taken: checkbox({ defaultValue: false, ui: { itemView: { fieldPosition: 'sidebar' } } }),
 		method: select({
 			type: 'enum',
 			options: [
@@ -53,8 +53,8 @@ export const Ticket: Lists.Ticket = list({
 			}
 		}),
 		ticketID: text({ isIndexed: 'unique' }),
-		paid: checkbox({ defaultValue: false }),
-		notes: text({ access: { update: permissions.canManageUsers, read: permissions.canManageUsers } }),
+		paid: checkbox({ defaultValue: false, ui: { itemView: { fieldPosition: 'sidebar' } } }),
+		notes: text({ access: { update: permissions.canManageUsers, read: permissions.canManageUsers }, ui: { displayMode: 'textarea' } }),
 		numberOfTickets: integer(),
 		totalCost: virtual({
 			field: graphql.field({
@@ -65,10 +65,10 @@ export const Ticket: Lists.Ticket = list({
 						query: 'numberOfTickets'
 					});
 					if (result) {
-						return 35 * result.numberOfTickets;
+						return 25 * result.numberOfTickets;
 					}
 
-					return 35 * item.numberOfTickets;
+					return 25 * item.numberOfTickets;
 				}
 			})
 		}),
@@ -94,16 +94,3 @@ export const Ticket: Lists.Ticket = list({
 		}
 	}
 });
-
-// Extended schema for NextJS API
-
-// Tickets must be private to all except user and runner managers
-// Tickets cannot be edited by anyone except runner managers
-// Tickets cannot be deleted by anyone except admins
-
-// API Requests
-// mutation ($userID: ID, $stripeID: String) {
-// 	createTicket(data: { user: { connect: { id: $userID } }, event: { connect: { shortname:"ASM2022" } }, numberOfTickets: 1, method: stripe, stripeID: $stripeID }) {
-// 		ticketID
-// 	}
-// }

@@ -4,6 +4,7 @@ import styles from './ShirtOrder.module.scss';
 
 import ShirtBlue from '../../styles/img/ShirtBlue.png';
 import ShirtPurple from '../../styles/img/ShirtPurple.png';
+import ASM2023Shirt from '../../styles/img/asm2023-tickets-bundle-card.png';
 
 interface ASMShirtProps {
 	shirtData: {
@@ -11,16 +12,20 @@ interface ASMShirtProps {
 		size: string;
 		colour: 'blue' | 'purple';
 		paid: boolean;
+		notes?: string;
 	};
 }
 
 const ASMShirt: React.FC<ASMShirtProps> = (props: ASMShirtProps) => {
-	const { shirtID, size, colour, paid } = props.shirtData;
+	const { shirtID, size, colour, paid, notes } = props.shirtData;
+
+	const noOfShirts = parseInt(notes?.match(/#(\d+)/)[1]) ?? 1;
+
 	return (
         <Box className={styles.generatedShirts} sx={{ boxShadow: 8 }}>
 			<div className={styles.image}>
 				<Image
-                    src={colour === 'blue' ? ShirtBlue : ShirtPurple}
+                    src={ASM2023Shirt}
                     alt="Shirt"
                     sizes="100vw"
                     style={{
@@ -32,10 +37,10 @@ const ASMShirt: React.FC<ASMShirtProps> = (props: ASMShirtProps) => {
 			<div className={styles.basicInfo}>
 				<span className={styles.label}>{shirtID}</span>
 				<div className={styles.informationGrid}>
-					<span>Size</span>
+					{/* <span>Size</span>
 					<span>{sizeToName(size)}</span>
 					<span>Colour</span>
-					<span>{colour.charAt(0).toUpperCase() + colour.slice(1)}</span>
+					<span>{colour.charAt(0).toUpperCase() + colour.slice(1)}</span> */}
 					<span>Status</span>
 					<span>{paid ? 'Paid' : 'Unpaid'}</span>
 				</div>
@@ -52,7 +57,7 @@ const ASMShirt: React.FC<ASMShirtProps> = (props: ASMShirtProps) => {
 						<span>Account #</span>
 						<span>30-192-8208</span>
 						<span>Amount</span>
-						<span>$30 AUD</span>
+						<span>${noOfShirts * 25} AUD</span>
 					</div>
 				</div>
 			)}

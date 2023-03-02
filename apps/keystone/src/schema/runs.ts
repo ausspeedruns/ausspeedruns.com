@@ -53,7 +53,6 @@ export const Run: Lists.Run = list({
 						query: 'game category runners { username } event { shortname }'
 					});
 
-					console.log(JSON.stringify(data))
 					return `${data.game} - ${data.category} | ${data.runners.username.join(', ')} - ${data.event.shortname}`;
 				}
 			})

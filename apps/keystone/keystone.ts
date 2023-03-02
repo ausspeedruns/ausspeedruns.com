@@ -156,6 +156,55 @@ export default withAuth(
               });
             }
           }),
+          confirmShirtStripe: graphql.field({
+            type: base.object('ShirtOrder'),
+            args: {
+              stripeID: graphql.arg({ type: graphql.nonNull(graphql.String) }),
+              numberOfShirts: graphql.arg({ type: graphql.nonNull(graphql.Int) }),
+              apiKey: graphql.arg({ type: graphql.nonNull(graphql.String) }),
+            },
+            async resolve(source, { apiKey, stripeID, numberOfShirts }, context: Context) {
+              if (apiKey !== process.env.API_KEY) throw new Error("Incorrect API Key");
+
+              return context.sudo().db.ShirtOrder.updateOne({
+                where: { stripeID },
+                data: { paid: true, notes: `#${numberOfShirts}` }
+              });
+            },
+          }),
+          generateShirt: graphql.field({
+            type: base.object('ShirtOrder'),
+            args: {
+              userID: graphql.arg({ type: graphql.nonNull(graphql.ID) }),
+              method: graphql.arg({ type: graphql.nonNull(base.enum('ShirtOrderMethodType')) }),
+              stripeID: graphql.arg({ type: graphql.String }),
+              apiKey: graphql.arg({ type: graphql.nonNull(graphql.String) }),
+              notes: graphql.arg({ type: graphql.String }),
+            },
+            async resolve(source, { apiKey, notes, method, stripeID, userID }, context: Context) {
+              if (apiKey !== process.env.API_KEY) throw new Error("Incorrect API Key");
+
+              // Check user is verified
+              const userVerified = await context.sudo().query.User.findOne({ where: { id: userID }, query: 'verified' });
+
+              if (!userVerified.verified) {
+                // console.log(`Unverified user ${userID} tried to generate ticket.`)
+                throw new Error('Unverified user.');
+              }
+
+              return context.sudo().db.ShirtOrder.createOne({
+                data: {
+                  user: { connect: { id: userID } },
+                  size: 'm',
+                  colour: 'blue',
+                  // @ts-ignore: I do not know how to correctly type the graphql arg
+                  method,
+                  stripeID: stripeID ?? uuid(),
+                  notes,
+                }
+              });
+            }
+          }),
         }
       }
     }),

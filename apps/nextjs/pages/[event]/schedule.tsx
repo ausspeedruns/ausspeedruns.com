@@ -273,7 +273,7 @@ export default function EventSchedule({ event }: QUERY_EVENT_RESULTS) {
 
 				<p className={styles.eventLabel}>{event.shortname} Schedule</p>
 				<p className={styles.eventTimeFrame}>
-					{format(new Date(event.startDate), "dd MMMM")} -{" "}
+					{format(new Date(event.startDate), "dd MMMM")} –{" "}
 					{format(new Date(event.endDate), "dd MMMM")}
 				</p>
 				<div className={styles.columns}>
@@ -490,50 +490,57 @@ interface RunItemProps {
 function runnerParsing(
 	runnersArray: QUERY_EVENT_RESULTS["event"]["runs"][0]["runners"],
 ) {
-	return runnersArray.map((runner, i) => {
-		const { username } = runner;
-		// If only one name or second last in the list to not include a comma
-		if (runnersArray.length === 1 || i === runnersArray.length - 2) {
-			return (
-				<a
-					key={username}
-					href={`/user/${username}`}
-					target="_blank"
-					rel="noreferrer">
-					{username}
-				</a>
-			);
-		}
+	return (
+		<div>
+			{runnersArray.map((runner, i) => {
+				const { username } = runner;
+				// If only one name or second last in the list to not include a comma
+				if (
+					runnersArray.length === 1 ||
+					i === runnersArray.length - 2
+				) {
+					return (
+						<a
+							key={username}
+							href={`/user/${username}`}
+							target="_blank"
+							rel="noreferrer">
+							{username}
+						</a>
+					);
+				}
 
-		// End of names
-		if (i === runnersArray.length - 1) {
-			return (
-				<>
-					<span> and </span>
-					<a
-						key={username}
-						href={`/user/${username}`}
-						target="_blank"
-						rel="noreferrer">
-						{username}
-					</a>
-				</>
-			);
-		}
+				// End of names
+				if (i === runnersArray.length - 1) {
+					return (
+						<>
+							<span key={`${username}-end`}> and </span>
+							<a
+								key={username}
+								href={`/user/${username}`}
+								target="_blank"
+								rel="noreferrer">
+								{username}
+							</a>
+						</>
+					);
+				}
 
-		return (
-			<>
-				<a
-					key={username}
-					href={`/user/${username}`}
-					target="_blank"
-					rel="noreferrer">
-					{username}
-				</a>
-				<span>, </span>
-			</>
-		);
-	});
+				return (
+					<>
+						<a
+							key={username}
+							href={`/user/${username}`}
+							target="_blank"
+							rel="noreferrer">
+							{username}
+						</a>
+						<span key={`${username}-mid`}>, </span>
+					</>
+				);
+			})}
+		</div>
+	);
 }
 
 const runItemOptions: Intl.DateTimeFormatOptions = {
@@ -557,7 +564,7 @@ const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 
 	if (run.game === "Setup Buffer") {
 		return (
-			<div className={styles.setupBuffer}>
+			<div className={styles.setupBuffer} key={run.id}>
 				{run.estimate.split(":")[1]} min Setup Buffer
 			</div>
 		);
@@ -575,7 +582,8 @@ const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 				props.isLive
 					? [styles.run, styles.liveRun].join(" ")
 					: styles.run
-			}>
+			}
+			key={run.id}>
 			<span className={styles.time}>{convertedTimezone}</span>
 			<span className={styles.game}>{run.game}</span>
 			<span className={styles.category}>

@@ -38,48 +38,30 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
         webhookSecret
       );
     } catch (err) {
-      // On error, log and return the error message.
       console.log(`❌ Error message: ${err.message}`);
       res.status(400).send(`Webhook Error: ${err.message}`);
       return;
     }
 
-    // Successfully constructed event.
-    // console.log('✅ Success:', event.id);
-
     switch (event.type) {
-      // case 'payment_intent.succeeded': {
-      //   const paymentIntent = event.data.object as Record<string, any>;
-      //   console.log(`PaymentIntent status: ${paymentIntent.status}`);
-      //   break;
-      // }
-      // case 'payment_intent.payment_failed': {
-      //   const paymentIntent = event.data.object as Record<string, any>;
-      //   console.log(
-      //     `❌ Payment failed: ${paymentIntent.last_payment_error?.message}`
-      //   );
-      //   break;
-      // }
-      // case 'charge.succeeded': {
-      //   const charge = event.data.object as Record<string, any>;
-      //   console.log(`Charge id: ${charge.id}`);
-      //   break;
-      // }
       case 'checkout.session.completed':
         const checkout = event.data.object as Record<string, any>;
         stripe.checkout.sessions.listLineItems(checkout.id, {}).then(data => {
+          console.log(JSON.stringify(data))
           // This is mega dumb btw
-          if (data.data[0].description === "ASM2022 Shirt") {
+          if (data.data[0].description === "ASM2023 Shirt") {
             // SHIRT
-            fulfillShirtOrder(checkout.id);
+            fulfilShirtOrder(checkout.id);
+          } else if (data.data[0].description === "ASM2023 Bundle") {
+            // BUNDLE
+            fulfilBundleOrder(checkout.id, data.data[0].quantity);
           } else {
             // TICKET
-            fulfillOrder(checkout.id, data.data[0].quantity);
+            fulfilOrder(checkout.id, data.data[0].quantity);
           }
         });
         break;
       default: {
-        // console.warn(`Unhandled event type: ${event.type}`);
         break;
       }
     }
@@ -92,7 +74,7 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
   }
 };
 
-const fulfillOrder = async (sessionID: any, quantity: number) => {
+const fulfilOrder = async (sessionID: any, quantity: number) => {
   // Update ticket information
   const mutRes = await urqlClient.mutation(gql`
     mutation ($sessionID: String!, $quantity: Int!, $apiKey: String!) {
@@ -105,7 +87,7 @@ const fulfillOrder = async (sessionID: any, quantity: number) => {
 
 export default cors(webhookHandler);
 
-async function fulfillShirtOrder(sessionID: any) {
+async function fulfilShirtOrder(sessionID: any) {
   // Update shirt information
   const mutRes = await urqlClient.mutation(gql`
     mutation ($sessionID: String!, $apiKey: String!) {
@@ -114,4 +96,18 @@ async function fulfillShirtOrder(sessionID: any) {
       }
     }
   `, { sessionID, apiKey: process.env.API_KEY }).toPromise();
+}
+
+async function fulfilBundleOrder(sessionID: any, quantity: number) {
+  // Update shirt information
+  const mutRes = await urqlClient.mutation(gql`
+    mutation ($sessionID: String!, $apiKey: String!, $quantity: Int!) {
+      confirmShirtStripe(stripeID: $sessionID, apiKey: $apiKey, numberOfShirts: $quantity) {
+        __typename
+      }
+      confirmStripe(stripeID: $sessionID, numberOfTickets: $quantity, apiKey: $apiKey) {
+        __typename
+      }
+    }
+  `, { sessionID, apiKey: process.env.API_KEY, quantity }).toPromise();
 }

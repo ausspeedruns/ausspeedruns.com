@@ -6,28 +6,19 @@ import { copy } from 'fs-extra';
 import { PackageJson } from 'nx/src/utils/package-json';
 
 const KEYSTONE_BUILT_ARTIFACTS = ['./.keystone/', './schema.graphql', './schema.prisma', './node_modules'];
-const KEYSTONE_MOVE_SOURCE_FILES = ['keystone.ts', './admin', './migrations', './tsconfig.json'];
 
 export default async function runExecutor(options: BuildExecutorSchema, context: ExecutorContext) {
 	const srcFolder = path.join(context.cwd, options.root);
 	const destFolder = path.join(context.cwd, options.outputPath);
 
-	if (!options.dontBuild) {
-		// Run keystone build
-		execSync('npx keystone postinstall --fix', { cwd: srcFolder, stdio: 'inherit' });
-		execSync('npx keystone build', { cwd: srcFolder, stdio: 'inherit' });
-	}
+	// Run keystone build
+	execSync('npx keystone postinstall --fix', { cwd: srcFolder, stdio: 'inherit' });
+	execSync('npx keystone build', { cwd: srcFolder, stdio: 'inherit' });
 
 	// Move folder to dist
-	await Promise.all(
-		[
-			...(options.dontBuild ? KEYSTONE_MOVE_SOURCE_FILES : KEYSTONE_BUILT_ARTIFACTS).map(artifact => {
-				return copy(path.join(srcFolder, artifact), path.join(destFolder, artifact))
-			}),
-			...options?.filesToInclude.map(file => {
-				return copy(path.join(srcFolder, file), path.join(destFolder, file))
-			})
-		]
+	await Promise.all(KEYSTONE_BUILT_ARTIFACTS.map(artifact => {
+		return copy(path.join(srcFolder, artifact), path.join(destFolder, artifact))
+	})
 	);
 
 	// Generate package.json

@@ -1129,6 +1129,21 @@ input VerificationWhereUniqueInput {
   code: String
 }
 
+input VerificationWhereInput {
+  AND: [VerificationWhereInput!]
+  OR: [VerificationWhereInput!]
+  NOT: [VerificationWhereInput!]
+  id: IDFilter
+  code: StringFilter
+  account: StringFilter
+}
+
+input VerificationOrderByInput {
+  id: OrderDirection
+  code: OrderDirection
+  account: OrderDirection
+}
+
 input VerificationUpdateInput {
   code: String
   account: String
@@ -1631,6 +1646,8 @@ type Mutation {
   redeemUserPasswordResetToken(email: String!, token: String!, password: String!): RedeemUserPasswordResetTokenResult
   confirmStripe(stripeID: String!, numberOfTickets: Int!, apiKey: String!): Ticket
   generateTicket(userID: ID!, numberOfTickets: Int!, method: TicketMethodType!, event: String!, stripeID: String, apiKey: String!): Ticket
+  confirmShirtStripe(stripeID: String!, numberOfShirts: Int!, apiKey: String!): ShirtOrder
+  generateShirt(userID: ID!, method: ShirtOrderMethodType!, stripeID: String, apiKey: String!, notes: String): ShirtOrder
 }
 
 union UserAuthenticationWithPasswordResult = UserAuthenticationWithPasswordSuccess | UserAuthenticationWithPasswordFailure
@@ -1682,6 +1699,9 @@ type Query {
   runs(where: RunWhereInput! = {}, orderBy: [RunOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: RunWhereUniqueInput): [Run!]
   run(where: RunWhereUniqueInput!): Run
   runsCount(where: RunWhereInput! = {}): Int
+  verifications(where: VerificationWhereInput! = {}, orderBy: [VerificationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VerificationWhereUniqueInput): [Verification!]
+  verification(where: VerificationWhereUniqueInput!): Verification
+  verificationsCount(where: VerificationWhereInput! = {}): Int
   tickets(where: TicketWhereInput! = {}, orderBy: [TicketOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TicketWhereUniqueInput): [Ticket!]
   ticket(where: TicketWhereUniqueInput!): Ticket
   ticketsCount(where: TicketWhereInput! = {}): Int

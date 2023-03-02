@@ -13,6 +13,7 @@
 
 	@include breakpoint($xs) {
 		grid-template-columns: 1fr;
+		font-size: 0.75rem;
 	}
 }
 

@@ -8,8 +8,7 @@
 			"executor": "@ausspeedruns.com/keystone-plugin:build",
 			"options": {
 				"root": "apps/keystone",
-				"outputPath": "dist/apps/keystone",
-				"filesToInclude": ["src"]
+				"outputPath": "dist/apps/keystone"
 			}
 		},
 		"serve": {

@@ -6,13 +6,13 @@ import { copy } from 'fs-extra';
 import { PackageJson } from 'nx/src/utils/package-json';
 
 const KEYSTONE_BUILT_ARTIFACTS = ['./.keystone/', './schema.graphql', './schema.prisma', './node_modules'];
+const PRISMA_ARTIFACTS = '../../node_modules/.prisma';
 
 export default async function runExecutor(options: BuildExecutorSchema, context: ExecutorContext) {
 	const srcFolder = path.join(context.cwd, options.root);
 	const destFolder = path.join(context.cwd, options.outputPath);
 
 	// Run keystone build
-	execSync('npx keystone postinstall --fix', { cwd: srcFolder, stdio: 'inherit' });
 	execSync('npx keystone build', { cwd: srcFolder, stdio: 'inherit' });
 
 	// Move folder to dist
@@ -20,6 +20,9 @@ export default async function runExecutor(options: BuildExecutorSchema, context:
 		return copy(path.join(srcFolder, artifact), path.join(destFolder, artifact))
 	})
 	);
+
+	// Move prisma to dist
+	await copy(path.join(srcFolder, PRISMA_ARTIFACTS), path.join(destFolder, '/node_modules/.prisma'));
 
 	// Generate package.json
 	const builtPackageJson = createPackageJson(

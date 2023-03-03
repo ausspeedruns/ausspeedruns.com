@@ -29,18 +29,6 @@ export const Run: Lists.Run = list({
 		youtubeVOD: text(),
 		event: relationship({ ref: 'Event.runs', ui: { hideCreate: true, labelField: 'shortname' } }),
 		donationIncentiveObject: relationship({ ref: 'Incentive.run', many: true }),
-		// runLabel: virtual({
-		// 	field: graphql.field({
-		// 		type: graphql.String,
-		// 		resolve: (item, _args, context) => {
-		// 			const { runners } = context.query.User.findMany({
-		// 				where: { id: item.id.toString() },
-		// 				query: 'runners { username }',
-		// 			});
-		// 			return `${item.game}: ${item.category} by ${item.join(',')}`
-		// 		}
-		// 	})
-		// })
 		scheduledTime: timestamp(),
 		techPlatform: text(),
 		specialRequirements: text({ ui: { displayMode: "textarea" } }),

@@ -5,10 +5,6 @@ import { Lists } from '.keystone/types';
 import { allowAll } from '@keystone-6/core/access';
 import type { Context } from '.keystone/types';
 
-function roundUpToNearest5(num: number) {
-	return Math.ceil(num / 5) * 5;
-}
-
 export const Submission: Lists.Submission = list({
 	access: {
 		filter: {

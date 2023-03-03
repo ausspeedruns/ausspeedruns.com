@@ -68,7 +68,7 @@ export default withAuth(
       extendPrismaSchema: (schema: any) => {
         return schema.replace(
           /(generator [^}]+)}/g,
-          ['$1binaryTargets = ["native", "linux-musl"]', '}'].join('\n')
+          ['$1binaryTargets = ["native", "debian-openssl-1.1.x", "linux-musl-openssl-3.0.x", "linux-musl"]', '}'].join('\n')
         );
       },
     },

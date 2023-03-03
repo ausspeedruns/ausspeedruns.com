@@ -16,6 +16,15 @@ interface BankTicketResponse {
 	};
 }
 
+interface QUERY_PROFILE_RESULTS {
+	user?: {
+		verified: boolean;
+	};
+	event: {
+		acceptingTickets: boolean;
+	}
+}
+
 const TICKET_PRICE = 25;
 
 export function TicketProduct() {
@@ -27,11 +36,14 @@ export function TicketProduct() {
 	const [bankTicketsData, setBankTicketsData] =
 		useState<UseMutationResponse<BankTicketResponse, object>[0]>(null);
 
-	const [profileQueryRes] = useQuery({
+	const [profileQueryRes] = useQuery<QUERY_PROFILE_RESULTS>({
 		query: gql`
 			query Profile($userId: ID) {
 				user(where: { id: $userId }) {
 					verified
+				}
+				event(where: {shortname: "ASM2023"}) {
+				  acceptingTickets
 				}
 			}
 		`,
@@ -46,7 +58,8 @@ export function TicketProduct() {
 	const disableBuying =
 		!auth.ready ||
 		(auth.ready && !auth.sessionData) ||
-		!profileQueryRes.data?.user?.verified;
+		!profileQueryRes.data?.user?.verified ||
+		!profileQueryRes.data.event.acceptingTickets;
 	const disableBank =
 		disableBuying ||
 		isNaN(noOfTickets) ||

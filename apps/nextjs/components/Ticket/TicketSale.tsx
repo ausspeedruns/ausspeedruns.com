@@ -48,9 +48,9 @@ export function TicketProduct() {
 			}
 		`,
 		variables: {
-			userId: auth.ready ? auth.sessionData.id : "",
+			userId: auth.ready ? auth.sessionData?.id : "",
 		},
-		pause: !auth.ready || !auth?.sessionData.id,
+		pause: !auth.ready || !auth?.sessionData?.id,
 	});
 
 	const successfulTicket =
@@ -143,8 +143,8 @@ export function TicketProduct() {
 		}
 	}
 
-	const accId = auth.ready ? auth.sessionData.id : "";
-	const accUsername = auth.ready ? auth.sessionData.username : "";
+	const accId = auth.ready ? auth.sessionData?.id : "";
+	const accUsername = auth.ready ? auth.sessionData?.username : "";
 
 	if (bankTicketsData?.error) console.error(bankTicketsData.error);
 

@@ -46,7 +46,7 @@ export default function Home() {
 				{/* {!eventLive && <Heroblock event={current} />}
 				{eventLive && <EventLive event={current.preferredName} />} */}
 				<HeroBlock event={next} darkText schedule />
-				<HeroBlock event={ASM2023} submitRuns tagLine="The Australian Speedrun Marathon returns! Submissions are open until March 31. Tickets will go on sale March 3." />
+				<HeroBlock event={ASM2023} ticketLink="/ASM2023/tickets" submitRuns tagLine="The Australian Speedrun Marathon returns! Submissions are open until March 31. Tickets will go on sale March 3." />
 				<LastEventBlock event={current} backgroundPos="center" />
 				<LastEventBlock event={previous} />
 				<section className={styles.archive}>

@@ -1,21 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { loadStripe } from "@stripe/stripe-js";
 import {
-	Box,
 	Button,
 	Card,
 	CardActionArea,
 	CardContent,
-	CardMedia,
-	Skeleton,
-	TextField,
 	ThemeProvider,
-	Typography,
 } from "@mui/material";
-import { useMutation, UseMutationResponse, useQuery, gql } from "urql";
+import { useMutation, useQuery, gql } from "urql";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
@@ -30,6 +25,8 @@ import ASM2023Bundle from "../../styles/img/asm2023-tickets-bundle-card.png";
 
 import { TicketProduct } from "../../components/Ticket/TicketSale";
 import { BundleProduct } from "../../components/Ticket/BundleSale";
+
+import TicketOGImage from '../../styles/img/ogImages/TicketImage.png';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
@@ -82,7 +79,12 @@ const Tickets = () => {
 	const [purchasedTicketsRes] = useQuery({
 		query: gql`
 			query ($userID: ID) {
-				tickets(where: { user: { id: { equals: $userID } } }) {
+				tickets(where: {
+					AND: [
+					  { user: { id: { equals: $userID } } }
+					  { event: { endDate: { gt: $currentTime } } }
+					]
+				  }) {
 					ticketID
 				}
 			}
@@ -102,6 +104,7 @@ const Tickets = () => {
 						title="ASM2023 Tickets - AusSpeedruns"
 						description="Purchase tickets for the Australian Speedrun Marathon 2023!"
 						pageUrl="/ASM2023/tickets"
+						imageSrc={TicketOGImage.src}
 					/>
 				</Head>
 				<main className={styles.content}>

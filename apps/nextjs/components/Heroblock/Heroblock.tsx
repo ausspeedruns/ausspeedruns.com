@@ -16,6 +16,7 @@ type HeroBlockProps = {
 	darkText?: boolean;
 	schedule?: boolean;
 	submitRuns?: boolean;
+	ticketLink?: string;
 };
 
 function zeroPad(num: number): string {
@@ -75,7 +76,7 @@ function countdownRender(currentTime: number, eventDate: number) {
 	);
 }
 
-const HeroBlock = ({ event, tagLine, darkText, schedule, submitRuns }: HeroBlockProps) => {
+const HeroBlock = ({ event, tagLine, darkText, schedule, submitRuns, ticketLink }: HeroBlockProps) => {
 	const [countdownElement, setCountdownElement] = useState(<></>);
 
 	function updateCountdown() {
@@ -129,10 +130,10 @@ const HeroBlock = ({ event, tagLine, darkText, schedule, submitRuns }: HeroBlock
 							colorScheme={"secondary"}
 						/>
 					)}
-					{event.website && (
+					{(event.website || ticketLink) && (
 						<Button
 							actionText="Purchase Tickets"
-							link={event.website}
+							link={event.website ?? ticketLink}
 							iconRight={faTicket}
 							colorScheme={"secondary"}
 						/>

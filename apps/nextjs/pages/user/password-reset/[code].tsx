@@ -7,7 +7,6 @@ import { gql, useMutation } from 'urql';
 import { useAuth } from '../../../components/auth';
 import styles from '../../../styles/User.PasswordReset.code.module.scss';
 import { theme } from '../../../components/mui-theme';
-import Navbar from '../../../components/Navbar/Navbar';
 
 export default function PasswordResetPage() {
 	const auth = useAuth();
@@ -56,7 +55,9 @@ export default function PasswordResetPage() {
 								if (auth.ready) {
 									auth.signIn({ email: router.query.email as string, password }).then(signInResult => {
 										// console.log('Sign in result', signInResult)
-										signInResult.success ? top.location.href = '/' : router.push('/signin');
+										if (top) {
+											signInResult.success ? top.location.href = '/' : router.push('/signin');
+										}
 									});
 								} else {
 									router.push('/signin')

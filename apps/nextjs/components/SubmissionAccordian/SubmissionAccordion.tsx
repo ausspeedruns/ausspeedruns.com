@@ -14,13 +14,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { UserPagePrivateData } from "../../pages/user/[username]";
+import { QUERY_PRIVATE_RESULTS } from "../../pages/user/[username]";
 
 import styles from "./SubmissionAccordion.module.scss";
 import SubmissionEditDialog from "./SubmissionEditDialog";
 
 type SubmissionProps = {
-	submission: UserPagePrivateData["user"]["submissions"][0];
+	submission: QUERY_PRIVATE_RESULTS["user"]["submissions"][0];
 	event: {
 		acceptingSubmissions: boolean;
 		acceptingBackups: boolean;
@@ -49,7 +49,7 @@ const SubmissionAccordion = ({ submission, event }: SubmissionProps) => {
 	const [editDialog, setEditDialog] = useState(false);
 	const [showSnackbar, setSnackbar] = useState({ error: false, reason: "" });
 
-	const closeDialog = (error?: string) => {
+	const closeDialog = ({ error }: { error?: string }) => {
 		setEditDialog(false);
 		if (error) {
 			setSnackbar({ error: true, reason: error });
@@ -139,20 +139,25 @@ const SubmissionAccordion = ({ submission, event }: SubmissionProps) => {
 						<tr>
 							<td>Willing to be backup</td>
 							<td>{submission.willingBackup ? "Yes" : "No"}</td>
-							{submission.newDonationIncentives?.length > 0 && (
-								<>
-									<td>
-										Donation Challenge
-										{submission.newDonationIncentives
-											?.length > 1 && "s"}
-									</td>
-									<td>
-										{submission.newDonationIncentives
-											.map((incentive) => incentive.title)
-											.join(", ")}
-									</td>
-								</>
-							)}
+							{submission.newDonationIncentives &&
+								submission.newDonationIncentives?.length >
+									0 && (
+									<>
+										<td>
+											Donation Challenge
+											{submission.newDonationIncentives
+												?.length > 1 && "s"}
+										</td>
+										<td>
+											{submission.newDonationIncentives
+												.map(
+													(incentive) =>
+														incentive.title,
+												)
+												.join(", ")}
+										</td>
+									</>
+								)}
 						</tr>
 					</tbody>
 				</table>
@@ -163,7 +168,9 @@ const SubmissionAccordion = ({ submission, event }: SubmissionProps) => {
 							<tbody>
 								<tr>
 									<td>{raceOrCoop} Type</td>
-									<td>{RaceTypeLabels(submission.race)}</td>
+									<td>
+										{RaceTypeLabels(submission.race ?? "")}
+									</td>
 								</tr>
 								<tr>
 									<td>Player(s)</td>

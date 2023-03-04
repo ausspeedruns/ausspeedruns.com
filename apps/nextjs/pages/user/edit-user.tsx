@@ -35,7 +35,7 @@ export default function EditUser() {
 	const [discord, setDiscord] = useState('');
 	const [twitter, setTwitter] = useState('');
 	const [twitch, setTwitch] = useState('');
-	const [dateOfBirth, setDateOfBirth] = useState<Date>(undefined);
+	const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(undefined);
 	const [verified, setVerified] = useState(false);
 
 	const [sendVerificationSnack, setSendVerificationSnack] = useState(false);
@@ -141,9 +141,9 @@ export default function EditUser() {
 		(discord !== '' && !DiscordRegex.test(discord));
 
 	function UpdateProfileButton() {
-		if (auth.ready) {
+		if (auth.ready && dateOfBirth) {
 			updateProfile({
-				userId: auth.sessionData.id,
+				userId: auth.sessionData?.id,
 				name,
 				email,
 				pronouns,
@@ -166,7 +166,7 @@ export default function EditUser() {
 		if (auth.ready) {
 			const curTime = new Date().toISOString();
 			updateVerificationTime({
-				userId: auth.sessionData.id,
+				userId: auth.sessionData?.id,
 				time: curTime,
 			});
 		}
@@ -231,7 +231,7 @@ export default function EditUser() {
 							<DatePicker
 								value={dateOfBirth}
 								onChange={(newValue) => {
-									setDateOfBirth(newValue);
+									if (newValue) setDateOfBirth(newValue);
 								}}
 								openTo={'year'}
 								maxDate={maxDate}

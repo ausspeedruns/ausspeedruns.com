@@ -13,7 +13,7 @@ export default function Verification() {
 	const router = useRouter();
 	const auth = useAuth();
 
-	const [verificationResults, requery] = useQuery({
+	const [verificationResults] = useQuery({
 		query: gql`
 			query Verify($code: String) {
 				accountVerification(where: { code: $code }) {
@@ -27,7 +27,7 @@ export default function Verification() {
 		pause: !router.query.code
 	});
 
-	const [deleteVerifResults, deleteVerification] = useMutation(gql`
+	const [, deleteVerification] = useMutation(gql`
 		mutation ($code: String) {
 			deleteVerification(where: { code: $code }) {
 				__typename

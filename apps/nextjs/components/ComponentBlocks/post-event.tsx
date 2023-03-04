@@ -1,9 +1,4 @@
-import React, { Suspense, useState } from "react";
-import {
-	component,
-	fields,
-	InferRenderersForComponentBlocks,
-} from "@keystone-6/fields-document/component-blocks";
+import { useState } from "react";
 
 import Image from "next/image";
 import styles from "./post-event.module.scss";
@@ -78,9 +73,9 @@ export const PostEventComponentRenderers: PostEventRenderers = {
 		return (
 			<div className={styles.eventLogo}>
 				<Image
-					src={props.eventLogo.data.logo.url}
+					src={props?.eventLogo?.data.logo.url}
 					fill
-					alt={`${props.eventLogo.data.name} Logo`}
+					alt={`${props?.eventLogo?.data.name} Logo`}
 				/>
 			</div>
 		);

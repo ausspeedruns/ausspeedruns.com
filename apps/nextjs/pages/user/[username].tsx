@@ -15,7 +15,6 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import styles from "../../styles/User.username.module.scss";
-import Navbar from "../../components/Navbar/Navbar";
 import { useAuth } from "../../components/auth";
 import { theme } from "../../components/mui-theme";
 import { RoleBadge } from "../../components/RoleBadge/RoleBadge";
@@ -25,9 +24,9 @@ import RunCompleted from "../../components/RunCompleted/RunCompleted";
 import DiscordEmbed from "../../components/DiscordEmbed";
 import Ticket from "../../components/Ticket/Ticket";
 import ASMShirt from "../../components/ShirtOrder/ShirtOrder";
-import Footer from "../../components/Footer/Footer";
+import { GetServerSideProps } from 'next/types';
 
-const USER_QUERY = gql`
+const QUERY_USER = gql`
 	query Profile($username: String) {
 		user(where: { username: $username }) {
 			id
@@ -68,7 +67,10 @@ const USER_QUERY = gql`
 	}
 `;
 
-const USER_PRIVATE_QUERY = gql`
+// Dont show the shirts from ASM2022
+const START_OF_THIS_YEAR_HACK = new Date('01/01/2023');
+
+const QUERY_PRIVATE = gql`
 	query Profile($username: String, $currentTime: DateTime) {
 		user(where: { username: $username }) {
 			submissions(where: { event: { endDate: { gt: $currentTime } } }) {
@@ -141,7 +143,7 @@ const USER_PRIVATE_QUERY = gql`
 								{ paid: { equals: true } }
 							]
 						}
-						{ created: { gt: $currentTime } }
+						{ created: { gt: "2023-01-01T00:00:00.000Z" } }
 					]
 				}
 			) {
@@ -155,12 +157,12 @@ const USER_PRIVATE_QUERY = gql`
 	}
 `;
 
-type UserPageData = {
+type QUERY_USER_RESULTS = {
 	user: {
 		id: string;
 		username: string;
 		pronouns?: string;
-		state?: string;
+		state: string;
 		discord?: string;
 		twitter?: string;
 		twitch?: string;
@@ -195,7 +197,7 @@ type UserPageData = {
 	};
 };
 
-export type UserPagePrivateData = {
+export type QUERY_PRIVATE_RESULTS = {
 	user: {
 		submissions: {
 			id: string;
@@ -285,7 +287,8 @@ function StateCodeToString(stateCode: string) {
 	}
 }
 
-export default function ProfilePage(ssrData) {
+export default function ProfilePage(ssrData: ServerSideProps) {
+	console.log(ssrData)
 	const router = useRouter();
 	const auth = useAuth();
 
@@ -293,43 +296,21 @@ export default function ProfilePage(ssrData) {
 	const [eventTab, setEventTab] = useState(0);
 	const [currentTime] = useState(new Date().toISOString());
 
-	// User inputs
-	const [
-		{
-			data: { user: publicDataResults },
-		},
-	] = useQuery<UserPageData>({
-		query: USER_QUERY,
-		variables: { username: ssrData.username },
-	});
-
-	const [{ data: privateDataResults }] = useQuery<UserPagePrivateData>({
-		query: USER_PRIVATE_QUERY,
+	console.log(ssrData)
+	const [{ data: privateDataResults }] = useQuery<QUERY_PRIVATE_RESULTS>({
+		query: QUERY_PRIVATE,
 		variables: {
-			username: ssrData.username,
+			username: ssrData.user.username,
 			currentTime: currentTime,
 		},
 		pause:
-			!auth.ready &&
+			!auth.ready ||
 			(auth.ready
-				? !(auth.sessionData.username == ssrData.username)
+				? !(auth.sessionData?.username === ssrData.user.username)
 				: true),
 	});
 
-	if (!publicDataResults) {
-		return (
-			<ThemeProvider theme={theme}>
-				<Head>
-					<title>{router.query.username} - AusSpeedruns</title>
-				</Head>
-				<div className={styles.content}>
-					<h2>Could not find {router.query.username}</h2>
-				</div>
-			</ThemeProvider>
-		);
-	}
-
-	const upcomingRunsList = publicDataResults.runs.filter(
+	const upcomingRunsList = ssrData.user.runs.filter(
 		(run) => !run.finalTime,
 	);
 
@@ -347,32 +328,27 @@ export default function ProfilePage(ssrData) {
 	const allRunEvents = [
 		...Array.from(
 			new Set(
-				publicDataResults.runs.map((run) =>
+				ssrData.user.runs.map((run) =>
 					run.finalTime ? run.event?.shortname : undefined,
 				),
 			),
 		).filter((el) => typeof el !== "undefined"),
 	];
 
-	console.log(privateDataResults?.user, {
-		username: ssrData.username,
-		currentTime: currentTime,
-	});
-
 	return (
 		<ThemeProvider theme={theme}>
 			<Head>
-				<title>{`${ssrData.username} - AusSpeedruns`}</title>
+				<title>{`${ssrData.user.username} - AusSpeedruns`}</title>
 				<DiscordEmbed
-					title={`${ssrData.username}'s Profile - AusSpeedruns`}
-					pageUrl={`/user/${ssrData.username}`}
+					title={`${ssrData.user.username}'s Profile - AusSpeedruns`}
+					pageUrl={`/user/${ssrData.user.username}`}
 				/>
 			</Head>
 			<div className={styles.content}>
 				<div className={styles.profileHeader}>
-					<h1>{ssrData.username}</h1>
+					<h1>{ssrData.user.username}</h1>
 					{auth.ready &&
-						auth.sessionData?.id === publicDataResults.id && (
+						auth.sessionData?.id === ssrData.user.id && (
 							<div>
 								<IconButton
 									style={{ float: "right" }}
@@ -387,29 +363,29 @@ export default function ProfilePage(ssrData) {
 				<hr />
 				{/* Role List */}
 				<div className={styles.roleList}>
-					{publicDataResults.roles.map((role) => {
+					{ssrData.user.roles.map((role) => {
 						return <RoleBadge key={role.id} role={role} />;
 					})}
 				</div>
 				{/* Profile Information */}
 				<div className={styles.userInfo}>
-					{publicDataResults?.state !== "none" && (
+					{ssrData.user?.state !== "none" && (
 						<>
 							<span>State</span>
 							<span>
-								{StateCodeToString(publicDataResults.state)}
+								{StateCodeToString(ssrData.user.state)}
 							</span>
 						</>
 					)}
-					{publicDataResults.pronouns && (
+					{ssrData.user.pronouns && (
 						<>
 							<span>Pronouns</span>
-							<span>{publicDataResults.pronouns}</span>
+							<span>{ssrData.user.pronouns}</span>
 						</>
 					)}
 				</div>
 				{/* Submissions */}
-				{privateDataResults?.user.submissions.length > 0 && (
+				{privateDataResults?.user && privateDataResults.user.submissions.length > 0 && (
 					<div className={styles.submissions}>
 						<h3>Submissions (Private)</h3>
 						<Box>
@@ -444,7 +420,7 @@ export default function ProfilePage(ssrData) {
 				)}
 
 				{/* Tickets */}
-				{privateDataResults?.user.tickets.length > 0 && (
+				{privateDataResults?.user && privateDataResults.user.tickets.length > 0 && (
 					<div className={styles.submissions}>
 						<h3 id="tickets">Tickets (Private)</h3>
 						{privateDataResults.user.tickets.map((ticket) => {
@@ -459,7 +435,7 @@ export default function ProfilePage(ssrData) {
 				)}
 
 				{/* Shirt Orders */}
-				{privateDataResults?.user.shirts.length > 0 && (
+				{privateDataResults?.user && privateDataResults.user.shirts.length > 0 && (
 					<div className={styles.submissions}>
 						<h3 id="shirts">Shirt Orders (Private)</h3>
 						{privateDataResults.user.shirts.map((shirt) => {
@@ -484,7 +460,7 @@ export default function ProfilePage(ssrData) {
 					</div>
 				)}
 
-				{publicDataResults.runs.length > 0 && <hr />}
+				{ssrData.user.runs.length > 0 && <hr />}
 
 				{/* Runs */}
 				<div className={styles.runs}>
@@ -497,7 +473,7 @@ export default function ProfilePage(ssrData) {
 							))}
 						</Tabs>
 					</Box>
-					{publicDataResults.runs.map((run) => {
+					{ssrData.user.runs.map((run) => {
 						if (!run.finalTime) return;
 						return (
 							<div
@@ -516,7 +492,11 @@ export default function ProfilePage(ssrData) {
 	);
 }
 
-export async function getServerSideProps({ params }) {
+interface ServerSideProps {
+	user: QUERY_USER_RESULTS['user'];
+}
+
+export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (ctx) => {
 	const ssrCache = ssrExchange({ isClient: false });
 	const client = initUrqlClient(
 		{
@@ -529,12 +509,29 @@ export async function getServerSideProps({ params }) {
 		false,
 	);
 
-	await client.query(USER_QUERY, params).toPromise();
+	if (!client) return {
+		notFound: true
+	};
+
+	const variables = {
+		username: ctx.params?.username,
+		currentTime: new Date().toISOString()
+	}
+
+	const data = await client
+		.query<QUERY_USER_RESULTS>(QUERY_USER, variables)
+		.toPromise();
+
+	if (!data?.data || !data.data.user || data?.error) {
+		return {
+			notFound: true,
+		};
+	}
+
 
 	return {
 		props: {
-			urqlState: ssrCache.extractData(),
-			username: params.username,
+			user: data.data.user,
 		},
 	};
 }

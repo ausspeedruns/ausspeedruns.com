@@ -40,7 +40,7 @@ export function FilterRuns<Type extends Run>(runs: Array<Type>, filters: Filters
 	return runs.filter((run) => {
 		if (filters.race && !run.race) return false;
 		if (filters.coop && !run.coop) return false;
-		if (filters.donationIncentive && run.donationIncentiveObject.length === 0) return false;
+		if (filters.donationIncentive && (run.donationIncentiveObject && run.donationIncentiveObject.length === 0)) return false;
 		if (filters.search && !isStringInRunData(run, filters.search)) return false;
 		if (filters.console.length > 0 && !filters.console.includes(run.platform.toLowerCase())) return false;
 		return true;

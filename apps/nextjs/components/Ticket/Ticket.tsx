@@ -29,7 +29,7 @@ const LOGO_HEIGHT = 50;
 
 const Ticket: React.FC<Props> = (props: Props) => {
 	const { numberOfTickets, paid, ticketID, totalCost, method, taken, event } = props.ticketData;
-	const barcodeRef = useRef<SVGSVGElement>();
+	const barcodeRef = useRef<SVGSVGElement>(null);
 
 	let status = 'Unpaid';
 	if (taken) {

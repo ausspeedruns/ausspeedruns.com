@@ -4,9 +4,6 @@ import { useAuth } from '../components/auth';
 import { TextField, ThemeProvider, CircularProgress, Button } from '@mui/material';
 import styles from '../styles/SignIn.module.scss';
 
-// import Button from '../components/Button/Button';
-import Footer from '../components/Footer/Footer';
-import Navbar from '../components/Navbar/Navbar';
 import Head from 'next/head';
 import { theme } from '../components/mui-theme';
 import DiscordEmbed from '../components/DiscordEmbed';
@@ -45,7 +42,7 @@ export const SignInPage: React.FC = () => {
 			// FIXME: there's a cache issue with Urql where it's not reloading the
 			// current user properly if we do a client-side redirect here.
 			// router.push('/');
-			top.location.href = '/';
+			if (top) top.location.href = '/';
 		} else if (result.success === false) {
 			// This is silly ofc but TypeScript wasn't detecting that it was false
 			// setEmail('');

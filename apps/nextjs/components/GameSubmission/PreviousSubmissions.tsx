@@ -1,5 +1,6 @@
 import { Card, CardActionArea, CardContent } from "@mui/material";
 import styles from "./PreviousSubmissions.module.scss";
+import { AgeRatingLiterals } from './submissionTypes';
 
 interface ObjectWithProperties {
 	[key: string]: any;
@@ -24,16 +25,16 @@ interface Submission {
 	game: string;
 	platform: string;
 	// techPlatform: string;
-	ageRating: string;
+	ageRating: AgeRatingLiterals;
 }
 
 interface PreviousSubmissionsProps {
-	submissions: Submission[];
+	submissions?: Submission[];
 	onGameClick: (submission: Submission) => void;
 }
 
 function PreviousSubmissions(props: PreviousSubmissionsProps) {
-	if (props.submissions.length === 0) return <></>;
+	if (!props.submissions || props.submissions.length === 0) return <></>;
 
 	const collapseGames = removeDuplicates(props.submissions, ['game', 'platform']).slice(0, 3);
 

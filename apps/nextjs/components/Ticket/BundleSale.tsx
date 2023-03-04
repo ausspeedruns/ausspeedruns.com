@@ -22,7 +22,7 @@ interface QUERY_PROFILE_RESULTS {
 	};
 	event: {
 		acceptingTickets: boolean;
-	}
+	};
 }
 
 const TICKET_PRICE = 50;
@@ -33,8 +33,9 @@ export function BundleProduct() {
 	const [deletedTicket, setDeletedTicket] = useState(false);
 	const [genTicketLoading, setGenTicketLoading] = useState(false);
 	const [waitForTicket, setWaitForTicket] = useState(false);
-	const [bankTicketsData, setBankTicketsData] =
-		useState<UseMutationResponse<BankTicketResponse, object>[0]>(null);
+	const [bankTicketsData, setBankTicketsData] = useState<
+		UseMutationResponse<BankTicketResponse, object>[0] | undefined
+	>(undefined);
 
 	const [profileQueryRes] = useQuery<QUERY_PROFILE_RESULTS>({
 		query: gql`
@@ -42,8 +43,8 @@ export function BundleProduct() {
 				user(where: { id: $userId }) {
 					verified
 				}
-				event(where: {shortname: "ASM2023"}) {
-				  acceptingTickets
+				event(where: { shortname: "ASM2023" }) {
+					acceptingTickets
 				}
 			}
 		`,
@@ -54,7 +55,7 @@ export function BundleProduct() {
 	});
 
 	const successfulTicket =
-		Boolean(bankTicketsData) && !Boolean(bankTicketsData.error);
+		Boolean(bankTicketsData) && !Boolean(bankTicketsData?.error);
 	const disableBuying =
 		!auth.ready ||
 		(auth.ready && !auth.sessionData) ||
@@ -132,7 +133,7 @@ export function BundleProduct() {
 		setGenTicketLoading(true);
 		const res = await fetch(
 			`/api/create_bank_bundle?account=${
-				auth.ready ? auth?.sessionData.id : ""
+				auth.ready ? auth?.sessionData?.id : ""
 			}&bundles=${noOfTickets}`,
 		);
 
@@ -227,7 +228,7 @@ export function BundleProduct() {
 							size="small"
 							color="secondary"
 							label="Number of bundles"
-							disabled={disableBank}
+							disabled={genTicketLoading || successfulTicket}
 						/>
 						<Button
 							variant="contained"
@@ -248,12 +249,14 @@ export function BundleProduct() {
 							or let Clubwho know on Discord!
 						</p>
 					)}
-					{successfulTicket && !genTicketLoading && (
-						<ASMTicket
-							ticketData={bankTicketsData.data.generateTicket}
-							extraCost={noOfTickets * 25}
-						/>
-					)}
+					{successfulTicket &&
+						!genTicketLoading &&
+						bankTicketsData?.data && (
+							<ASMTicket
+								ticketData={bankTicketsData.data.generateTicket}
+								extraCost={noOfTickets * 25}
+							/>
+						)}
 					{genTicketLoading && !bankTicketsData?.error && (
 						<ASMTicketSkeleton />
 					)}

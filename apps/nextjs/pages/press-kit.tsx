@@ -1,25 +1,29 @@
-import React from 'react';
 import Head from 'next/head';
 
 import styles from '../styles/PressKit.module.scss';
-import Navbar from '../components/Navbar/Navbar';
-import Footer from '../components/Footer/Footer';
 import { useQuery, gql } from 'urql';
 import DiscordEmbed from '../components/DiscordEmbed';
 
+const QUERY_PRESSKITS = gql`query {
+	events {
+		name
+		pressKit {
+			url
+		}
+	}
+}`;
+
+interface QUERY_PRESSKITS_RESULTS {
+	events: {
+		name: string;
+		pressKit: {
+			url: string;
+		}
+	}[];
+}
+
 const PressKit = () => {
-	const [pressKitResult, pressKitQuery] = useQuery({
-		query: gql`
-			query {
-				events {
-					name
-					pressKit {
-						url
-					}
-				}
-			}
-		`,
-	});
+	const [pressKitResult] = useQuery<QUERY_PRESSKITS_RESULTS>({ query: QUERY_PRESSKITS });
 
 	return (
 		<div className={styles.app}>

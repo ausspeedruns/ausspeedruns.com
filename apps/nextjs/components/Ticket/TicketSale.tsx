@@ -22,7 +22,7 @@ interface QUERY_PROFILE_RESULTS {
 	};
 	event: {
 		acceptingTickets: boolean;
-	}
+	};
 }
 
 const TICKET_PRICE = 25;
@@ -34,7 +34,7 @@ export function TicketProduct() {
 	const [genTicketLoading, setGenTicketLoading] = useState(false);
 	const [waitForTicket, setWaitForTicket] = useState(false);
 	const [bankTicketsData, setBankTicketsData] =
-		useState<UseMutationResponse<BankTicketResponse, object>[0]>(null);
+		useState<UseMutationResponse<BankTicketResponse, object>[0] | undefined>(undefined);
 
 	const [profileQueryRes] = useQuery<QUERY_PROFILE_RESULTS>({
 		query: gql`
@@ -42,8 +42,8 @@ export function TicketProduct() {
 				user(where: { id: $userId }) {
 					verified
 				}
-				event(where: {shortname: "ASM2023"}) {
-				  acceptingTickets
+				event(where: { shortname: "ASM2023" }) {
+					acceptingTickets
 				}
 			}
 		`,
@@ -54,7 +54,7 @@ export function TicketProduct() {
 	});
 
 	const successfulTicket =
-		Boolean(bankTicketsData) && !Boolean(bankTicketsData.error);
+		Boolean(bankTicketsData) && !Boolean(bankTicketsData?.error);
 	const disableBuying =
 		!auth.ready ||
 		(auth.ready && !auth.sessionData) ||
@@ -132,7 +132,7 @@ export function TicketProduct() {
 		setGenTicketLoading(true);
 		const res = await fetch(
 			`/api/create_bank_ticket?account=${
-				auth.ready ? auth?.sessionData.id : ""
+				auth.ready ? auth?.sessionData?.id : ""
 			}&tickets=${noOfTickets}&event=ASM2023`,
 		);
 
@@ -221,7 +221,9 @@ export function TicketProduct() {
 							}
 							size="small"
 							color="secondary"
-							label="Number of tickets"></TextField>
+							label="Number of tickets"
+							disabled={genTicketLoading || successfulTicket}
+						/>
 						<Button
 							variant="contained"
 							color="primary"
@@ -241,7 +243,7 @@ export function TicketProduct() {
 							or let Clubwho know on Discord!
 						</p>
 					)}
-					{successfulTicket && !genTicketLoading && (
+					{successfulTicket && !genTicketLoading && bankTicketsData?.data && (
 						<ASMTicket
 							ticketData={bankTicketsData.data.generateTicket}
 						/>

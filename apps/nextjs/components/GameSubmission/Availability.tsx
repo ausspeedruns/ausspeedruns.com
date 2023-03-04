@@ -2,7 +2,6 @@ import styles from './Availability.module.scss';
 import { useEffect, useMemo, useState } from "react";
 import { FormControlLabel, Checkbox } from "@mui/material";
 import { addDays, differenceInDays } from "date-fns";
-import Calendar from 'react-calendar';
 
 type AvailabilityProps = {
 	event: {

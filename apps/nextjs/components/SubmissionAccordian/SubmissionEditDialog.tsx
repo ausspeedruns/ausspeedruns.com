@@ -20,7 +20,7 @@ import {
 import { useState } from "react";
 import { useMutation } from "urql";
 
-import { UserPagePrivateData } from "../../pages/user/[username]";
+import { QUERY_PRIVATE_RESULTS } from "../../pages/user/[username]";
 
 import styles from "./SubmissionEditDialog.module.scss";
 import Availability from "../GameSubmission/Availability";
@@ -98,7 +98,7 @@ const MUTATION_DELETE = gql`
 
 type SubmissionEditProps = {
 	open: boolean;
-	submission: UserPagePrivateData["user"]["submissions"][0];
+	submission: QUERY_PRIVATE_RESULTS["user"]["submissions"][0];
 	event: {
 		acceptingSubmissions: boolean;
 		acceptingBackups: boolean;
@@ -106,7 +106,7 @@ type SubmissionEditProps = {
 		endDate: string;
 		eventTimezone: string;
 	};
-	handleClose: (error?: string) => void;
+	handleClose: (event: object, reason: "backdropClick" | "escapeKeyDown") => void;
 };
 
 const SubmissionEditDialog = ({
@@ -165,16 +165,16 @@ const SubmissionEditDialog = ({
 		if (typeof donationIncentives === "undefined") {
 			setDonationIncentives([{ title: "" }]);
 		} else {
-			setDonationIncentives((prev) => [...prev, { title: "" }]);
+			setDonationIncentives((prev) => [...(prev as { title: string; time?: string | undefined; description?: string | undefined; }[]), { title: "" }]);
 		}
 	}
 
 	function handleDonationIncentiveCancel(index: number) {
-		if (donationIncentives.length === 1) {
+		if (donationIncentives?.length === 1) {
 			setDonationIncentives(undefined);
 		} else {
 			setDonationIncentives(
-				donationIncentives.filter((_, i) => i !== index),
+				donationIncentives?.filter((_, i) => i !== index),
 			);
 		}
 	}
@@ -184,7 +184,7 @@ const SubmissionEditDialog = ({
 		updateIndex: number,
 	) {
 		setDonationIncentives(
-			donationIncentives.map((incentive, i) => {
+			donationIncentives?.map((incentive, i) => {
 				if (i === updateIndex) {
 					return updatedIncentive;
 				} else {
@@ -217,9 +217,9 @@ const SubmissionEditDialog = ({
 			availableDates,
 		}).then((result) => {
 			if (!result.error) {
-				handleClose();
+				handleClose({}, "escapeKeyDown");
 			} else {
-				handleClose(result.error.message);
+				handleClose({error: result.error.message}, "escapeKeyDown");
 				console.error(result.error);
 			}
 		});
@@ -232,9 +232,9 @@ const SubmissionEditDialog = ({
 			willingBackup: backup,
 		}).then((result) => {
 			if (!result.error) {
-				handleClose();
+				handleClose({}, "escapeKeyDown");
 			} else {
-				handleClose(result.error.message);
+				handleClose({error: result.error.message}, "escapeKeyDown");
 				console.error(result.error);
 			}
 		});
@@ -333,7 +333,7 @@ const SubmissionEditDialog = ({
 					onClick={handleNewDonationIncentive}
 					disabled={
 						typeof donationIncentives !== "undefined" &&
-						!donationIncentives?.at(-1).title
+						!donationIncentives?.at(-1)?.title
 					}>
 					Add{" "}
 					{typeof donationIncentives !== "undefined"
@@ -397,7 +397,7 @@ const SubmissionEditDialog = ({
 					<a
 						href="https://www.classification.gov.au/"
 						target="_blank"
-						rel="noreferrer">
+						rel="noreferrer noopener">
 						https://www.classification.gov.au/
 					</a>
 				</FormHelperText>

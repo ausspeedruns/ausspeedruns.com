@@ -4,10 +4,10 @@ import { createClient, gql } from 'urql';
 
 const urqlClient = createClient({
 	// url: 'http://localhost:8000/api/graphql',
-	url: process.env.KEYSTONE_URL,
+	url: process.env.KEYSTONE_URL!,
 });
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2022-11-15' });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2022-11-15' });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method === 'POST') {
@@ -58,8 +58,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				throw new Error(JSON.stringify(returnData.error));
 			}
 
-			res.redirect(303, session.url);
-		} catch (err) {
+			res.redirect(303, session.url!);
+		} catch (err: any) {
 			res.status(err.statusCode || 500).json(err.message);
 		}
 	} else {

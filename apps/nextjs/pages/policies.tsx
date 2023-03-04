@@ -18,7 +18,7 @@ const PoliciesPage = () => {
 				<p>
 					<a
 						target="_blank"
-						rel="noreferrer"
+						rel="noreferrer noopener"
 						href="http://policies.ausspeedruns.com/"
 					>
 						External link to Sharepoint containing all policies.
@@ -148,7 +148,7 @@ const PoliciesPage = () => {
 						Cookies can be &quot;Persistent&quot; or &quot;Session&quot; Cookies. Persistent Cookies remain on Your
 						personal computer or mobile device when You go offline, while Session Cookies are deleted as soon as You
 						close Your web browser. You can learn more about cookies here:{' '}
-						<a href="https://www.termsfeed.com/privacy-policy-generator/#faq-8" target="_blank" rel="noreferrer">
+						<a href="https://www.termsfeed.com/privacy-policy-generator/#faq-8" target="_blank" rel="noreferrer noopener">
 							Cookies by TermsFeed Generator
 						</a>
 						.

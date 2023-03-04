@@ -6,12 +6,12 @@ import { createClient, gql } from 'urql';
 
 const urqlClient = createClient({
   // url: 'http://localhost:8000/api/graphql',
-  url: process.env.KEYSTONE_URL,
+  url: process.env.KEYSTONE_URL!,
 });
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2022-11-15' });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2022-11-15' });
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 // Stripe requires the raw body to construct the event.
 export const config = {
@@ -28,7 +28,7 @@ const cors = Cors({
 const webhookHandler = async (req: IncomingMessage, res: any) => {
   if (req.method === 'POST') {
     const buf = await buffer(req);
-    const signature = req.headers['stripe-signature'];
+    const signature = req.headers['stripe-signature'] as string;
 
     let event: Stripe.Event;
     try {
@@ -37,7 +37,7 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
         signature,
         webhookSecret
       );
-    } catch (err) {
+    } catch (err: any) {
       console.log(`❌ Error message: ${err.message}`);
       res.status(400).send(`Webhook Error: ${err.message}`);
       return;
@@ -54,10 +54,10 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
             fulfilShirtOrder(checkout.id);
           } else if (data.data[0].description === "ASM2023 Bundle") {
             // BUNDLE
-            fulfilBundleOrder(checkout.id, data.data[0].quantity);
+            fulfilBundleOrder(checkout.id, data.data[0].quantity!);
           } else {
             // TICKET
-            fulfilOrder(checkout.id, data.data[0].quantity);
+            fulfilOrder(checkout.id, data.data[0].quantity!);
           }
         });
         break;

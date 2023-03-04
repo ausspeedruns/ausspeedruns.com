@@ -12,6 +12,7 @@ import CookieConsent from 'react-cookie-consent';
 import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
 import { gql, useQuery } from 'urql';
+import type { AppProps } from 'next/app';
 
 const QUERY_EVENTS = gql`
 	query {
@@ -23,7 +24,7 @@ const QUERY_EVENTS = gql`
 	}
 `;
 
-function AusSpeedrunsWebsite({ Component, pageProps }) {
+function AusSpeedrunsWebsite({ Component, pageProps }: AppProps) {
 	const [events] = useQuery({ query: QUERY_EVENTS });
 
 	return (

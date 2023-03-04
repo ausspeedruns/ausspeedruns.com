@@ -1,9 +1,6 @@
-import React from 'react';
 import Head from 'next/head';
 
 import styles from '../styles/Prizes.module.scss';
-import Navbar from '../components/Navbar/Navbar';
-import Footer from '../components/Footer/Footer';
 import DiscordEmbed from '../components/DiscordEmbed';
 import Button from '../components/Button/Button';
 

@@ -31,8 +31,7 @@ const LOGO_HEIGHT = 70;
 const RunCompleted = ({ run }: Run) => {
 	if (!run.event) return <></>;
 
-	let aspectRatio;
-	if (run.event.logo) aspectRatio = run.event.logo.width / run.event.logo.height;
+	const aspectRatio = run.event.logo ? run.event.logo.width / run.event.logo.height : 0;
 
 	return (
         <div className={styles.run}>

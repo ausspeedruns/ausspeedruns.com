@@ -161,14 +161,14 @@ export default function EventSchedule({ event }: QUERY_EVENT_RESULTS) {
 		setSettings({ ...settings, filter: mutableFilter });
 	}
 
-	function handleSearchChange(event) {
+	function handleSearchChange(event: { target: { value: any; }; }) {
 		setSettings({
 			...settings,
 			filter: { ...settings.filter, search: event.target.value },
 		});
 	}
 
-	function handleConsoleChange(console) {
+	function handleConsoleChange(console: string) {
 		const index = settings.filter.console.findIndex(
 			(consoleEl) => consoleEl === console,
 		);
@@ -353,7 +353,7 @@ export default function EventSchedule({ event }: QUERY_EVENT_RESULTS) {
 							<ToggleButtonGroup
 								color="primary"
 								value={Object.keys(settings.filter).filter(
-									(key) => settings.filter[key],
+									(key) => settings.filter[key as keyof typeof settings.filter],
 								)}
 								onChange={handleFilterChange}
 								aria-label="Run type filter">
@@ -621,6 +621,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 		},
 		false,
 	);
+
+	if (!client) return { notFound: true };
 
 	const data = await client
 		.query<QUERY_EVENT_RESULTS>(QUERY_EVENT, ctx.params)

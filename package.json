@@ -2,9 +2,8 @@
 	"name": "ausspeedruns.com",
 	"private": true,
 	"scripts": {
-		"keystone": "npx nx run keystone:serve",
-		"nextjs": "npx nx run nextjs:serve",
-		"dev": "npx nx run-many --target=serve"
+		"keystone": "npx nx serve keystone",
+		"nextjs": "npx nx serve nextjs"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.10.5",
@@ -17,7 +16,7 @@
 		"@fortawesome/free-brands-svg-icons": "^6.2.1",
 		"@fortawesome/free-solid-svg-icons": "^6.2.1",
 		"@fortawesome/react-fontawesome": "^0.2.0",
-		"@k6-contrib/fields-azure": "^4.0.0",
+		"@k6-contrib/fields-azure": "^5.0.0",
 		"@keystone-6/auth": "^7.0.0",
 		"@keystone-6/core": "^5.1.0",
 		"@keystone-6/document-renderer": "^1.1.2",
@@ -79,6 +78,7 @@
 		"@testing-library/react": "^13.4.0",
 		"@types/animejs": "^3.1.6",
 		"@types/jest": "^29.2.5",
+		"@types/micro-cors": "^0.1.3",
 		"@types/mjml": "^4.7.0",
 		"@types/node": "^18.11.18",
 		"@types/nodemailer": "^6.4.7",

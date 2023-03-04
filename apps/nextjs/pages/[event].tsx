@@ -165,6 +165,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 		false
 	);
 
+	if (!client) {
+		return {
+			notFound: true,
+		}
+	}
+
 	const data = await client.query<QUERY_EVENT_RESULTS>(QUERY_EVENT, ctx.params).toPromise();
 
 	if (!data?.data || data?.error || !data.data.event) {
@@ -176,7 +182,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	let pageData: LivePageData | PastPageData;
 
 	// If still live
-	if (new Date(data.data.event?.endDate) > new Date()) {
+	if (data.data.event.endDate && new Date(data.data.event?.endDate) > new Date()) {
 		const liveData = await client.query<QUERY_LIVE_EVENT_RESULTS>(QUERY_LIVE_EVENT, ctx.params).toPromise();
 
 		if (!liveData?.data || liveData?.error || !liveData.data.event) {

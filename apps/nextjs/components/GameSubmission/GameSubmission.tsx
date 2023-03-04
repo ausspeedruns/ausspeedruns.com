@@ -74,7 +74,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 	const eventsList = props.userQueryResult?.events;
 	const [submissionResult, createSubmission] = props.submissionMutation;
 
-	const mobileWidth = useMediaQuery('(max-width: 600px)');
+	const mobileWidth = useMediaQuery("(max-width: 600px)");
 
 	const game = useFormInput("");
 	const category = useFormInput("");
@@ -139,7 +139,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 							possibleEstimateReason.value)) &&
 					video.value &&
 					(typeof donationIncentives === "undefined" ||
-						donationIncentives.at(-1).title)
+						donationIncentives.at(-1)?.title)
 				);
 			case 2:
 				// console.log(availableDates);
@@ -173,16 +173,19 @@ function GameSubmissions(props: GameSubmissionsProps) {
 		if (typeof donationIncentives === "undefined") {
 			setDonationIncentives([{ title: "" }]);
 		} else {
-			setDonationIncentives((prev) => [...prev, { title: "" }]);
+			setDonationIncentives((prev) => [
+				...(prev as DonationIncentive[]),
+				{ title: "" },
+			]);
 		}
 	}
 
 	function handleDonationIncentiveCancel(index: number) {
-		if (donationIncentives.length === 1) {
+		if (donationIncentives?.length === 1) {
 			setDonationIncentives(undefined);
 		} else {
 			setDonationIncentives(
-				donationIncentives.filter((_, i) => i !== index),
+				donationIncentives?.filter((_, i) => i !== index),
 			);
 		}
 	}
@@ -216,7 +219,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 	}
 
 	function submitSubmission() {
-		if (props.auth.ready) {
+		if (props.auth.ready && props.auth.sessionData) {
 			createSubmission({
 				userId: props.auth.sessionData.id,
 				game: game.value,
@@ -269,7 +272,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 		updateIndex: number,
 	) {
 		setDonationIncentives(
-			donationIncentives.map((incentive, i) => {
+			donationIncentives?.map((incentive, i) => {
 				if (i === updateIndex) {
 					return updatedIncentive;
 				} else {
@@ -321,7 +324,9 @@ function GameSubmissions(props: GameSubmissionsProps) {
 						label="You understand that this is a submission for backup games"
 					/>
 				)}
-			<Stepper className={styles.stepper} orientation={mobileWidth ? "vertical" : "horizontal"}>
+			<Stepper
+				className={styles.stepper}
+				orientation={mobileWidth ? "vertical" : "horizontal"}>
 				{SubmissionSteps.map((label, index) => (
 					<Step
 						key={label}
@@ -411,7 +416,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 							<a
 								href="https://www.classification.gov.au/"
 								target="_blank"
-								rel="noreferrer">
+								rel="noreferrer noopener">
 								https://www.classification.gov.au/
 							</a>
 						</FormHelperText>
@@ -545,7 +550,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 							onClick={handleNewDonationIncentive}
 							disabled={
 								typeof donationIncentives !== "undefined" &&
-								!donationIncentives.at(-1).title
+								!donationIncentives.at(-1)?.title
 							}>
 							Add{" "}
 							{typeof donationIncentives !== "undefined"
@@ -558,7 +563,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 						title="Availability"
 						show={currentStep === 2}>
 						<Availability
-							event={currentEvent}
+							event={currentEvent!}
 							onAvailabilityUpdate={handleAvailabilityUpdate}
 						/>
 					</GameSubmitPage>
@@ -776,26 +781,29 @@ function GameSubmissions(props: GameSubmissionsProps) {
 											</tr>
 										)}
 										{submissionResult.data?.createSubmission
-											.newDonationIncentives?.length >
-											0 && (
-											<tr>
-												<td>
-													Donation Challenge
-													{submissionResult.data
-														?.createSubmission
-														.newDonationIncentives
-														?.length > 1 && "s"}
-												</td>
-												<td>
-													{submissionResult.data?.createSubmission.newDonationIncentives
-														.map(
-															(incentive) =>
-																incentive.title,
-														)
-														.join(", ")}
-												</td>
-											</tr>
-										)}
+											.newDonationIncentives &&
+											submissionResult.data
+												.createSubmission
+												.newDonationIncentives?.length >
+												0 && (
+												<tr>
+													<td>
+														Donation Challenge
+														{submissionResult.data
+															?.createSubmission
+															.newDonationIncentives
+															?.length > 1 && "s"}
+													</td>
+													<td>
+														{submissionResult.data?.createSubmission.newDonationIncentives
+															.map(
+																(incentive) =>
+																	incentive.title,
+															)
+															.join(", ")}
+													</td>
+												</tr>
+											)}
 									</tbody>
 								</table>
 							</div>
@@ -829,8 +837,8 @@ function GameSubmissions(props: GameSubmissionsProps) {
 						currentStep={currentStep}
 						submissionData={{
 							game: game.value,
-							platform: platform.inputValue,
-							techPlatform: techPlatform.inputValue,
+							platform: platform.inputValue!,
+							techPlatform: techPlatform.inputValue!,
 							category: category.value,
 							estimate: estimate,
 							lowerEstimate: possibleEstimate,

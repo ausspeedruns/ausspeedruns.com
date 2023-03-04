@@ -40,11 +40,11 @@ export type QUERY_USER_RESULTS = {
 		verified: boolean;
 		dateOfBirth: string;
 		discord: string;
-		submissions?: {
+		submissions: {
 			game: string;
 			platform: string;
 			techPlatform?: string;
-			ageRating: RaceLiterals;
+			ageRating: AgeRatingLiterals;
 		}[];
 	};
 	events: Event[];

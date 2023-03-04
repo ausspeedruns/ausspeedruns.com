@@ -1,15 +1,23 @@
-import { useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 
 const useAutocompleteFormInput = (initialValue: string) => {
-	const [value, setValue] = useState<string | null>(initialValue);
-	const [inputValue, setInputValue] = useState<string>(initialValue);
+	const [value, setValue] = useState<string | undefined>(initialValue);
+	const [inputValue, setInputValue] = useState<string | undefined>(initialValue);
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>, newValue: string) => {
-		setValue(newValue);
+	const handleChange = (_e: SyntheticEvent<Element, Event>, newValue: string | null) => {
+		if (newValue === null) {
+			setValue(undefined)
+		} else {
+			setValue(newValue);
+		}
 	};
 
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, newInputValue: string) => {
-		setInputValue(newInputValue);
+	const handleInputChange = (_e: SyntheticEvent<Element, Event>, newInputValue: string | null) => {
+		if (newInputValue === null) {
+			setInputValue(undefined)
+		} else {
+			setInputValue(newInputValue);
+		}
 	};
 
 	const reset = () => {

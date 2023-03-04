@@ -57,7 +57,7 @@ const HERO_IMAGES = [
 function useOnScreen(ref: RefObject<HTMLElement>) {
 	const [isIntersecting, setIntersecting] = useState(false);
 
-	let observer = null;
+	let observer: IntersectionObserver | null = null;
 
 	// const observer = useMemo(
 	// 	() =>
@@ -68,11 +68,13 @@ function useOnScreen(ref: RefObject<HTMLElement>) {
 	// );
 
 	useEffect(() => {
-		observer = new IntersectionObserver(([entry]) =>
-			setIntersecting(entry.isIntersecting),
-		);
-		observer.observe(ref.current);
-		return () => observer.disconnect();
+		if (ref.current) {
+			observer = new IntersectionObserver(([entry]) =>
+				setIntersecting(entry.isIntersecting),
+			);
+			observer.observe(ref.current);
+		}
+		return () => observer?.disconnect();
 	}, []);
 
 	return isIntersecting;
@@ -106,7 +108,7 @@ export default function Home() {
 				delay: 100,
 				duration: 3000,
 				update: function (a) {
-					if (a.animations.length > 0) {
+					if (a.animations.length > 0 && amountRef.current) {
 						const value = a.animations[0].currentValue;
 						const formattedNumber = padZerosLocaleString(
 							parseInt(value),

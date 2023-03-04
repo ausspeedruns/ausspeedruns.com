@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { gql, useMutation } from 'urql';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -66,7 +66,7 @@ export default function SignUpPage() {
 								// FIXME: there's a cache issue with Urql where it's not reloading the
 								// current user properly if we do a client-side redirect here.
 								// router.push('/');
-								top.location.href = '/user/edit-user';
+								if (top) top.location.href = '/user/edit-user';
 							}
 						});
 					}}
@@ -108,7 +108,7 @@ export default function SignUpPage() {
 						<DatePicker
 							value={dob}
 							onChange={(newValue) => {
-								setDob(newValue);
+								if (newValue) setDob(newValue);
 							}}
 							openTo={'year'}
 							maxDate={maxDate}

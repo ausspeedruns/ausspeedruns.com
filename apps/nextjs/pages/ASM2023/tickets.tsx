@@ -28,7 +28,7 @@ import { BundleProduct } from "../../components/Ticket/BundleSale";
 
 import TicketOGImage from '../../styles/img/ogImages/TicketImage.png';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
 interface BankTicketResponse {
 	generateTicket: {
@@ -120,7 +120,7 @@ const Tickets = () => {
 								<span>
 									View your tickets on{" "}
 									<Link
-										href={`/user/${auth.sessionData.username}#tickets`}>
+										href={`/user/${auth?.sessionData?.username}#tickets`}>
 										your profile!
 									</Link>
 								</span>

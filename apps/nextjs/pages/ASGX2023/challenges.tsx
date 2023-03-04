@@ -63,8 +63,8 @@ const Challenges = () => {
 	);
 
 	let incentiveElements = {
-		active: [],
-		inactive: [],
+		active: [] as JSX.Element[],
+		inactive: [] as JSX.Element[],
 	};
 
 	sortedIncentives.forEach((incentive) => {
@@ -118,7 +118,7 @@ const Challenges = () => {
 	);
 };
 
-function getIncentiveElement(incentive): JSX.Element {
+function getIncentiveElement(incentive: any): JSX.Element {
 	const runMetadata = {
 		title: incentive.title,
 		run: incentive.run,

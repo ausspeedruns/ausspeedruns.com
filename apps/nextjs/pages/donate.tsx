@@ -11,7 +11,7 @@ import DiscordEmbed from '../components/DiscordEmbed';
 import Button from '../components/Button/Button';
 import { Incentive } from '../components/Incentives/Incentive';
 
-const INCENTIVES_QUERY = gql`
+const QUERY_INCENTIVES = gql`
 	query {
 		event(where: { shortname: "ASGX2023" }) {
 			donationIncentives(take: 3, where: { active: { equals: true } }) {
@@ -24,13 +24,31 @@ const INCENTIVES_QUERY = gql`
 					scheduledTime
 				}
 				data
+				notes
 			}
 		}
 	}
 `;
 
+interface QUERY_INCENTIVES_RESULTS {
+	event: {
+		donationIncentives: {
+			title: string;
+			type: string;
+			run: {
+				id: string;
+				game: string;
+				category: string;
+				scheduleTime: string;
+			};
+			data: object;
+			notes: string;
+		}[]
+	}
+}
+
 const DonatePage = () => {
-	const [incentivesQuery] = useQuery({ query: INCENTIVES_QUERY });
+	const [incentivesQuery] = useQuery<QUERY_INCENTIVES_RESULTS>({ query: QUERY_INCENTIVES });
 
 	const incentivesParsed = incentivesQuery.data?.event.donationIncentives.map((incentive) => ({
 		title: incentive.title,
@@ -39,7 +57,7 @@ const DonatePage = () => {
 		notes: incentive.notes,
 		type: incentive.type,
 		...incentive.data,
-	}));
+	})) ?? [];
 
 	return (
 		<div className={styles.app}>
@@ -60,7 +78,7 @@ const DonatePage = () => {
 								{incentivesParsed.map((incentive) => (
 									<>
 										<div className={styles.divider} />
-										<Incentive incentive={incentive} />
+										<Incentive incentive={incentive as any} />
 									</>
 								))}
 							</div>

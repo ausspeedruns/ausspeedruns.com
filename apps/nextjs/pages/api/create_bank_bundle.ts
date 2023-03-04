@@ -3,7 +3,7 @@ import { createClient, gql } from 'urql';
 
 const urqlClient = createClient({
 	// url: 'http://localhost:8000/api/graphql',
-	url: process.env.KEYSTONE_URL,
+	url: process.env.KEYSTONE_URL!,
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -50,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json(data);
 				return resolve();
-			} catch (err) {
+			} catch (err: any) {
 				res.status(err.statusCode || 500).json(err.message);
 				return resolve();
 			}

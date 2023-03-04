@@ -58,7 +58,7 @@ export default function BlogPage() {
 				<div className={styles.blogPosts}>
 					<ul>
 						{/* Render each post with a link to the content page */}
-						{blogResults.data?.posts.map((post) => (
+						{blogResults.data?.posts.map((post: any) => (
 							<BlogLink key={post.slug} post={post} />
 						))}
 					</ul>

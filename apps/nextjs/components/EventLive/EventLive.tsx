@@ -18,7 +18,7 @@ import Link from 'next/link';
 const aspectRatio = ASM2022Logo.height / ASM2022Logo.width;
 const gocAspectRatio = GameOnCancer.height / GameOnCancer.width;
 
-const EVENT_QUERY = gql`
+const QUERY_EVENT = gql`
 	query ($event: String!) {
 		event(where: { shortname: $event }) {
 			runs(orderBy: { scheduledTime: asc }) {
@@ -39,10 +39,36 @@ const EVENT_QUERY = gql`
 					scheduledTime
 				}
 				data
+				notes
 			}
 		}
 	}
 `;
+
+interface QUERY_EVENT_RESULTS {
+	event: {
+		runs: {
+			game: string;
+			runners: {
+				username: string;
+			}[];
+			category: string;
+			scheduledTime: string;
+		}[];
+		donationIncentives: {
+			title: string;
+			type: string;
+			run: {
+				id: string;
+				game: string;
+				category: string;
+				scheduledTime: string;
+			};
+			data: object;
+			notes: string;
+		}[];
+	}
+} 
 
 interface EventProps {
 	event: string;
@@ -50,8 +76,8 @@ interface EventProps {
 
 export const EventLive = (props: EventProps) => {
 	const [currentTime, setCurrentTime] = useState(new Date());
-	const [eventQuery, eventRequery] = useQuery({
-		query: EVENT_QUERY,
+	const [eventQuery] = useQuery<QUERY_EVENT_RESULTS>({
+		query: QUERY_EVENT,
 		variables: { event: props.event },
 	});
 
@@ -69,9 +95,9 @@ export const EventLive = (props: EventProps) => {
 	};
 
 	let nextRunIndex = -1;
-	for (let index = 0; index < eventQuery.data?.event.runs.length; index++) {
-		const run = eventQuery.data.event.runs[index];
-		if (new Date(run.scheduledTime).getTime() > currentTime.getTime()) {
+	for (let index = 0; index < eventQuery.data?.event.runs.length! ?? -1; index++) {
+		const run = eventQuery.data?.event.runs[index];
+		if (run && new Date(run.scheduledTime).getTime() > currentTime.getTime()) {
 			// Next run
 			nextRunIndex = index;
 			break;
@@ -143,13 +169,13 @@ export const EventLive = (props: EventProps) => {
 				</div>
 			</div>
 
-			{eventQuery.data?.event.donationIncentives.length > 0 && (
+			{eventQuery.data?.event.donationIncentives.length! > 0 && (
 				<section className={styles.incentive}>
 					<div className={styles.liveContent}>
 						<h2>Donation Challenge</h2>
 						<h3>Make a donation and write that you want to put the money towards this or another challenge</h3>
 						<div className={styles.divider} />
-						{incentiveData.title !== '' ? <Incentive incentive={incentiveData} /> : <h4>Loading</h4>}
+						{incentiveData.title !== '' ? <Incentive incentive={incentiveData as any} /> : <h4>Loading</h4>}
 						<div className={styles.link}>
 							<Button
 								actionText="Check out more challenges!"
@@ -177,7 +203,7 @@ export const EventLive = (props: EventProps) => {
 							<span className={styles.subtitle}>Category</span>
 							<span>{eventQuery.data?.event.runs?.[nextRunIndex]?.category ?? 'Loading'}</span>
 							<span className={styles.subtitle}>
-								{eventQuery.data?.event.runs?.[nextRunIndex]?.runners.length > nextRunIndex ? 'Runners' : 'Runner'}
+								{eventQuery.data?.event.runs?.[nextRunIndex]?.runners.length! > nextRunIndex ? 'Runners' : 'Runner'}
 							</span>
 							<span>
 								{eventQuery.data?.event.runs?.[nextRunIndex]?.runners.map((runner) => runner.username).join(', ') ??

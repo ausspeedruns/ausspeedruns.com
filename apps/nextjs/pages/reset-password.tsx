@@ -1,11 +1,7 @@
-import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { TextField, ThemeProvider, CircularProgress, Button } from '@mui/material';
 import styles from '../styles/SignIn.module.scss';
 
-// import Button from '../components/Button/Button';
-// import Footer from '../components/Footer/Footer';
-import Navbar from '../components/Navbar/Navbar';
 import Head from 'next/head';
 import { theme } from '../components/mui-theme';
 import DiscordEmbed from '../components/DiscordEmbed';

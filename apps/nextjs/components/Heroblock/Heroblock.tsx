@@ -80,6 +80,7 @@ const HeroBlock = ({ event, tagLine, darkText, schedule, submitRuns, ticketLink 
 	const [countdownElement, setCountdownElement] = useState(<></>);
 
 	function updateCountdown() {
+		if (!event.startDate) return;
 		if (Date.now() < new Date(event.startDate).getTime()) {
 			setCountdownElement(countdownRender(Date.now(), new Date(event.startDate).getTime()));
 		}

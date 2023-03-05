@@ -37,11 +37,11 @@ export const Run: Lists.Run = list({
 				type: graphql.String,
 				async resolve(item, _args, context: Context) {
 					const data = await context.query.Run.findOne({
-						where: {id: item.id.toString() },
+						where: { id: item.id.toString() },
 						query: 'game category runners { username } event { shortname }'
 					});
 
-					return `${data.game} - ${data.category} | ${data.runners.username.join(', ')} - ${data.event.shortname}`;
+					return `${data.game} - ${data.category} | ${data.runners.map((runner: { username: string }) => runner.username).join(', ')} - ${data.event.shortname}`;
 				}
 			})
 		})

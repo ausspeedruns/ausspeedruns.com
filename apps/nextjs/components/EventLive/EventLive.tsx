@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 import TwitchChatEmbed from '../TwitchChatEmbed/TwitchChatEmbed';
 import TwitchVideoEmbed from '../TwitchVideoEmbed/TwitchVideoEmbed';
 
-import ASM2022Logo from '../../styles/img/PAX2022 Logo White.png';
+import EventLogo from '../../styles/img/events/asgx/asgx-logo-white.png';
 import { useEffect, useState } from 'react';
 import { Incentive } from '../Incentives/Incentive';
 import Button from '../Button/Button';
@@ -15,7 +15,7 @@ import Button from '../Button/Button';
 import GameOnCancer from '../../styles/img/sponsors/GameOnCancer/GoCCCWhite.svg';
 import Link from 'next/link';
 
-const aspectRatio = ASM2022Logo.height / ASM2022Logo.width;
+const aspectRatio = EventLogo.height / EventLogo.width;
 const gocAspectRatio = GameOnCancer.height / GameOnCancer.width;
 
 const QUERY_EVENT = gql`
@@ -111,12 +111,12 @@ export const EventLive = (props: EventProps) => {
 	return (
         <div className={styles.eventLive}>
 			<div className={styles.logo}>
-				<Link href="/ASM2022" passHref legacyBehavior>
+				<Link href="/ASGX2023" passHref legacyBehavior>
 					<Image
-                        src={ASM2022Logo}
+                        src={EventLogo}
                         width={600}
                         height={aspectRatio * 600}
-                        alt="ASM2022 Logo"
+                        alt="ASGX2023 Logo"
                         style={{
                             maxWidth: "100%",
                             height: "auto"
@@ -124,7 +124,7 @@ export const EventLive = (props: EventProps) => {
 				</Link>
 			</div>
 			<div className={styles.eventInfo}>
-				<h2>October 7 - 9 | Melbourne</h2>
+				<h2>March 11 – 12 | Melbourne</h2>
 				<div className={styles.link}>
 					<Button actionText="Donate!" link="/donate" colorScheme="primary" />
 				</div>

@@ -4,10 +4,9 @@
 
 .eventLive {
 	color: $light-text;
-	background: $goc-main;
-	background-image: url('../../styles/img/ASAPBackground.png');
-	background-size: cover;
-	background-position: center;
+	background: $tgx-main;
+	background-image: url("../../styles/img/events/asgx/live-background.png");
+	background-size: contain;
 	padding: 2rem;
 
 	@include breakpoint($sm-zero-only) {
@@ -73,7 +72,7 @@
 			flex-direction: column;
 
 			h4 {
-				color: $pax-main;
+				color: #ffffff;
 				font-weight: bold;
 				font-size: 1.5rem;
 				margin-bottom: -0.8rem;
@@ -130,8 +129,12 @@
 
 		.twitchVideo,
 		.twitchChat {
-			border: 8px solid $pax-main;
+			border: 8px solid $tgx-red;
 			box-sizing: border-box;
+		}
+
+		.twitchChat {
+			border-color: $tgx-yellow;
 		}
 
 		.twitchVideo {
@@ -167,8 +170,8 @@
 
 	.incentive {
 		.liveContent {
-			background-color: #000;
-			border: 2px solid $pax-main;
+			background-color: $tgx-main;
+			border: 2px solid $tgx-blue;
 			// width: 50%;
 
 			@include breakpoint($sm-zero-only) {
@@ -181,7 +184,7 @@
 			margin-top: 10px;
 			width: 80%;
 			height: 10px;
-			background-color: $pax-main;
+			background: $tgx-rainbow-rotated;
 		}
 	}
 
@@ -191,8 +194,8 @@
 		}
 
 		.liveContent {
-			background-color: #000;
-			border: 2px solid $pax-main;
+			background-color: $tgx-main;
+			border: 2px solid $tgx-green;
 			font-size: 1.2rem;
 			width: fit-content;
 			word-break: break-all;

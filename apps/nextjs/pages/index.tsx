@@ -12,6 +12,7 @@ import LastEventBlock from "../components/LastEventBlock/LastEventBlock";
 
 import OGImage from "../styles/img/IndexOG.png";
 import { AusSpeedrunsEvent } from "../types/types";
+import { EventLive } from '../components/EventLive/EventLive';
 
 // TODO: Move this stuff to keystone
 const ASM2023: AusSpeedrunsEvent = {
@@ -43,8 +44,8 @@ export default function Home() {
 				/>
 			</Head>
 			<main>
-				{/* {!eventLive && <Heroblock event={current} />}
-				{eventLive && <EventLive event={current.preferredName} />} */}
+				{/* {!eventLive && <Heroblock event={current} />} */}
+				{/* <EventLive event={next.preferredName} /> */}
 				<HeroBlock event={next} darkText schedule />
 				<HeroBlock event={ASM2023} ticketLink="/ASM2023/tickets" submitRuns tagLine="The Australian Speedrun Marathon returns! Submissions are open until March 31. Tickets will go on sale March 3." />
 				<LastEventBlock event={current} backgroundPos="center" />

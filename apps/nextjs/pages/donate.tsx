@@ -1,20 +1,20 @@
-import React from 'react';
-import Head from 'next/head';
-import { gql, useQuery } from 'urql';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import React from "react";
+import Head from "next/head";
+import { gql, useQuery } from "urql";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
-import styles from '../styles/Donate.module.scss';
+import styles from "../styles/Donate.module.scss";
 
-import Navbar from '../components/Navbar/Navbar';
-import Footer from '../components/Footer/Footer';
-import DiscordEmbed from '../components/DiscordEmbed';
-import Button from '../components/Button/Button';
-import { Incentive } from '../components/Incentives/Incentive';
+import Navbar from "../components/Navbar/Navbar";
+import Footer from "../components/Footer/Footer";
+import DiscordEmbed from "../components/DiscordEmbed";
+import Button from "../components/Button/Button";
+import { Incentive } from "../components/Incentives/Incentive";
 
 const QUERY_INCENTIVES = gql`
 	query {
 		event(where: { shortname: "ASGX2023" }) {
-			donationIncentives(take: 3, where: { active: { equals: true } }) {
+			donationIncentives(take: 2, where: { active: { equals: true } }) {
 				title
 				type
 				run {
@@ -43,82 +43,74 @@ interface QUERY_INCENTIVES_RESULTS {
 			};
 			data: object;
 			notes: string;
-		}[]
-	}
+		}[];
+	};
 }
 
 const DonatePage = () => {
-	const [incentivesQuery] = useQuery<QUERY_INCENTIVES_RESULTS>({ query: QUERY_INCENTIVES });
+	const [incentivesQuery] = useQuery<QUERY_INCENTIVES_RESULTS>({
+		query: QUERY_INCENTIVES,
+	});
 
-	const incentivesParsed = incentivesQuery.data?.event.donationIncentives.map((incentive) => ({
-		title: incentive.title,
-		run: incentive.run,
-		active: true,
-		notes: incentive.notes,
-		type: incentive.type,
-		...incentive.data,
-	})) ?? [];
+	const incentivesParsed =
+		incentivesQuery.data?.event.donationIncentives.map((incentive) => ({
+			title: incentive.title,
+			run: incentive.run,
+			active: true,
+			notes: incentive.notes,
+			type: incentive.type,
+			...incentive.data,
+		})) ?? [];
 
 	return (
 		<div className={styles.app}>
 			<Head>
 				<title>Donate - AusSpeedruns</title>
-				<DiscordEmbed title="Donate - AusSpeedruns" description="Donate to ASM2022!" pageUrl="/donate" />
+				<DiscordEmbed
+					title="Donate - AusSpeedruns"
+					description="Donate to ASM2022!"
+					pageUrl="/donate"
+				/>
 			</Head>
 			<main className={styles.content}>
 				<h2 className={styles.title}>Donate</h2>
 				<section className={styles.incentives}>
 					<h2>
-						Be sure to mention which donation challenge you want your money to go towards in the donation message!
+						Be sure to mention which donation challenge you want
+						your money to go towards in the donation message!
 					</h2>
 					{incentivesQuery.data && (
 						<>
-							<h2>Here are {incentivesQuery.data.event.donationIncentives.length} active challenges</h2>{' '}
+							<h2>
+								{incentivesQuery.data.event.donationIncentives
+									.length > 1
+									? `Here are ${incentivesQuery.data.event.donationIncentives.length} active challenges`
+									: "Here is the last active challenge"}
+							</h2>
 							<div className={styles.data}>
+								<div className={styles.divider} />
 								{incentivesParsed.map((incentive) => (
-									<>
-										<div className={styles.divider} />
-										<Incentive incentive={incentive as any} />
-									</>
+									<Incentive incentive={incentive as any} />
 								))}
+								<div className={styles.divider} />
 							</div>
+							{incentivesQuery.data.event.donationIncentives
+								.length > 1 && (
+								<div className={styles.link}>
+									<Button
+										actionText="Check out more challenges!"
+										link="/ASGX2023/challenges"
+										colorScheme="secondary inverted"
+									/>
+								</div>
+							)}
 						</>
 					)}
-					<div className={styles.link}>
-						<Button
-							actionText="Check out more challenges!"
-							link="/ASGX2023/challenges"
-							colorScheme="secondary inverted"
-						/>
-					</div>
-				</section>
-				<section className={styles.prizes}>
-					<h2>Prizes</h2>
-					<div className={styles.prizeList}>
-						{/* <div className={styles.prize}>
-							<span>2 to giveaway!</span>
-							<h2>HyperX Cloud II Headset</h2>
-							<h3>Minimum $40 Donation</h3>
-							<span>AUS Only</span>
-						</div> */}
-						<div className={styles.prize}>
-							<span>5 to giveaway!</span>
-							<h2>HyperX Cloud Mix Earbuds</h2>
-							<h3>Minimum $25 Donation</h3>
-							<span>AUS Only</span>
-						</div>
-						{/* <div className={styles.prize}>
-							<span>8 to giveaway!</span>
-							<h2>Landfall Games Bundle</h2>
-							<h3>Minimum $10 Donation</h3>
-							<span>Totally Accurate Battle Simulator, Clustertruck and Knightfall</span>
-						</div> */}
-					</div>
 				</section>
 				<div className={styles.donate}>
 					<Button
 						actionText="Donate"
-						link="https://tiltify.com/@ausspeedruns/asap2022/donate"
+						link="https://donate.tiltify.com/@ausspeedruns/asgx2023"
 						openInNewTab
 						iconRight={faChevronRight}
 					/>

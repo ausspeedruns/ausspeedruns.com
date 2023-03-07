@@ -17,6 +17,14 @@
       {
         "aria-valid-attr-value": "off"
       }
+    ],
+    "compat-api/css": [
+      "default",
+      {
+        "ignore": [
+          "width: fit-content"
+        ]
+      }
     ]
   }
 }

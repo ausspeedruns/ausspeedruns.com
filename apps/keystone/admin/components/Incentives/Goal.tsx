@@ -21,9 +21,10 @@ type GoalProps = {
 		MUTATION_UPDATE_INCENTIVE_RESULTS,
 		OperationVariables
 	>[0];
+	refetchData: () => void;
 };
 
-export function Goal({ incentive, incentiveUpdate }: GoalProps) {
+export function Goal({ incentive, incentiveUpdate, refetchData }: GoalProps) {
 	const [incentiveRawData, setIncentiveRawData] = useState<GoalData["data"]>(
 		incentive.data,
 	);
@@ -44,6 +45,7 @@ export function Goal({ incentive, incentiveUpdate }: GoalProps) {
 				active: active,
 			},
 		});
+		refetchData();
 	}
 
 	function handleAdd() {

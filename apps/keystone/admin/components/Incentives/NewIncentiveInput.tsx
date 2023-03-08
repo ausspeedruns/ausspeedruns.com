@@ -79,6 +79,7 @@ interface MUTATION_NEW_INCENTIVE_RESULTS {
 
 type NewIncentiveInputProps = {
 	eventId?: string;
+	newSubmissionAdded: () => void;
 };
 
 export function NewIncentiveInput(props: NewIncentiveInputProps) {
@@ -94,7 +95,7 @@ export function NewIncentiveInput(props: NewIncentiveInputProps) {
 	const [run, setRun] = useState({ value: "", label: "" });
 	const [notes, setNotes] = useState("");
 	const [type, setType] = useState(INCENTIVE_OPTIONS[0]);
-	const [data, setData] = useState<GoalData['data'] | WarData['data']>(undefined);
+	const [data, setData] = useState<GoalData['data'] | WarData['data'] | {}>({});
 
 	const { addToast } = useToasts();
 
@@ -155,6 +156,7 @@ export function NewIncentiveInput(props: NewIncentiveInputProps) {
 				data: data,
 			},
 		});
+		props.newSubmissionAdded();
 	}
 
 	return (
@@ -171,7 +173,7 @@ export function NewIncentiveInput(props: NewIncentiveInputProps) {
 				<FieldContainer>
 					<FieldLabel>Run</FieldLabel>
 					<Select
-						onChange={(e) => setRun(e)}
+						onChange={(e) => {if (e) setRun(e)}}
 						value={run}
 						options={runOptions}
 						isDisabled={!props.eventId}
@@ -191,6 +193,7 @@ export function NewIncentiveInput(props: NewIncentiveInputProps) {
 				<FieldLabel>Type</FieldLabel>
 				<Select
 					onChange={(e) => {
+						if (!e) return;
 						switch (e.value) {
 							case "goal":
 								setData({
@@ -230,7 +233,7 @@ export function NewIncentiveInput(props: NewIncentiveInputProps) {
 				<>
 					<FieldContainer>
 						<FieldLabel>Options</FieldLabel>
-						{(data as WarData['data'])?.options.map((item, i) => {
+						{(data as WarData['data'])?.options && (data as WarData['data']).options.map((item, i) => {
 							return (
 								<TextInput
 									placeholder="Name"

@@ -1,7 +1,7 @@
 import { Heading } from "@keystone-ui/core";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@keystone-6/core/admin-ui/router";
-import { useMutation, useQuery, gql } from "@keystone-6/core/admin-ui/apollo";
+import { useMutation, useQuery, gql, MutationTuple, OperationVariables } from "@keystone-6/core/admin-ui/apollo";
 import { Button } from "@keystone-ui/button";
 import { Select, FieldContainer, FieldLabel } from "@keystone-ui/fields";
 import {
@@ -118,6 +118,40 @@ const incentiveTypes = [
 	{ label: "War", value: "war" },
 ];
 
+function renderIncentive(
+	// @ts-ignore
+	incentive: QUERY_INCENTIVES_RESULTS["event"]["donationIncentives"][0],
+	updateIncentiveMutation: MutationTuple<
+		MUTATION_UPDATE_INCENTIVE_RESULTS,
+		OperationVariables
+	>[0],
+	refetchData: () => void
+) {
+	switch (incentive?.type) {
+		case "war":
+			return (
+				<War
+					incentive={incentive}
+					incentiveUpdate={updateIncentiveMutation}
+					refetchData={refetchData}
+				/>
+			);
+		case "goal":
+			return (
+				<Goal
+					incentive={incentive}
+					incentiveUpdate={updateIncentiveMutation}
+					refetchData={refetchData}
+				/>
+			);
+		case undefined:
+			return <></>;
+		default:
+			console.error("Unknown incentive type", incentive);
+			break;
+	}
+}
+
 export default function RunsManager() {
 	const [selectedEvent, setSelectedEvent] = useState({
 		label: "ASGX2023",
@@ -171,32 +205,6 @@ export default function RunsManager() {
 		}
 	}, [updateIncentiveMutationData.data, updateIncentiveMutationData.error]);
 
-	function renderIncentive(
-		incentive: QUERY_INCENTIVES_RESULTS["event"]["donationIncentives"][0],
-	) {
-		switch (incentive?.type) {
-			case "war":
-				return (
-					<War
-						incentive={incentive}
-						incentiveUpdate={updateIncentiveMutation}
-					/>
-				);
-			case "goal":
-				return (
-					<Goal
-						incentive={incentive}
-						incentiveUpdate={updateIncentiveMutation}
-					/>
-				);
-			case undefined:
-				return <></>;
-			default:
-				console.error("Unknown incentive type", incentive);
-				break;
-		}
-	}
-
 	return (
 		<div
 			style={{
@@ -212,7 +220,9 @@ export default function RunsManager() {
 			<FieldContainer>
 				<FieldLabel>Event</FieldLabel>
 				<Select
-					onChange={(e) => setSelectedEvent(e)}
+					onChange={(e) => {
+						if (e) setSelectedEvent(e);
+					}}
 					value={selectedEvent}
 					options={eventsOptions}
 				/>
@@ -225,7 +235,10 @@ export default function RunsManager() {
 					<b>Add incentive</b>
 				</AccordionSummary>
 				<AccordionDetails>
-					<NewIncentiveInput />
+					<NewIncentiveInput
+						eventId={selectedEvent.value}
+						newSubmissionAdded={eventData.refetch}
+					/>
 				</AccordionDetails>
 			</Accordion>
 
@@ -246,7 +259,7 @@ export default function RunsManager() {
 								minWidth: 250,
 								maxWidth: 400,
 								maxHeight: 800,
-								overflowY: 'scroll',
+								overflowY: "scroll",
 							}}>
 							{sortedIncentives.map((incentive, i) => (
 								<ListItem key={incentive.id} disablePadding>
@@ -301,7 +314,7 @@ export default function RunsManager() {
 								<br />
 								Notes <b>{incentiveData?.notes}</b>
 							</p>
-							{renderIncentive(incentiveData)}
+							{renderIncentive(incentiveData, updateIncentiveMutation, eventData.refetch)}
 						</div>
 					</div>
 				</>

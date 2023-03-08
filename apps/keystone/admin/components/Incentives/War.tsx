@@ -22,9 +22,10 @@ type WarProps = {
 		MUTATION_UPDATE_INCENTIVE_RESULTS,
 		OperationVariables
 	>[0];
+	refetchData: () => void;
 };
 
-export function War({ incentive, incentiveUpdate }: WarProps) {
+export function War({ incentive, incentiveUpdate, refetchData }: WarProps) {
 	const [incentiveRawData, setIncentiveRawData] = useState<WarData["data"]>(
 		incentive.data,
 	);
@@ -50,6 +51,7 @@ export function War({ incentive, incentiveUpdate }: WarProps) {
 				active: active,
 			},
 		});
+		refetchData();
 	}
 
 	const invalidData =

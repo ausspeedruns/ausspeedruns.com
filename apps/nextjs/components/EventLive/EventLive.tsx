@@ -179,7 +179,7 @@ export const EventLive = (props: EventProps) => {
 						<div className={styles.link}>
 							<Button
 								actionText="Check out more challenges!"
-								link="/ASAP2022/challenges"
+								link="/ASGX2023/challenges"
 								colorScheme="secondary inverted"
 							/>
 						</div>

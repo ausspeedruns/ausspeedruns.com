@@ -45,11 +45,11 @@ export default function Home() {
 			</Head>
 			<main>
 				{/* {!eventLive && <Heroblock event={current} />} */}
-				{/* <EventLive event={next.preferredName} /> */}
-				<HeroBlock event={next} darkText schedule />
+				<EventLive event={next.preferredName} />
+				{/* <HeroBlock event={next} darkText schedule /> */}
 				<HeroBlock event={ASM2023} ticketLink="/ASM2023/tickets" submitRuns tagLine="The Australian Speedrun Marathon returns! Submissions are open until March 31. Tickets will go on sale March 3." />
-				<LastEventBlock event={current} backgroundPos="center" />
-				<LastEventBlock event={previous} />
+				{/* <LastEventBlock event={current} backgroundPos="center" />
+				<LastEventBlock event={previous} /> */}
 				<section className={styles.archive}>
 					<div className={styles.content}>
 						<div className={styles.filler}></div>

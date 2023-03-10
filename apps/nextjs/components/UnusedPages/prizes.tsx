@@ -1,8 +1,8 @@
 import Head from 'next/head';
 
 import styles from '../styles/Prizes.module.scss';
-import DiscordEmbed from '../components/DiscordEmbed';
-import Button from '../components/Button/Button';
+import DiscordEmbed from '../DiscordEmbed';
+import Button from '../Button/Button';
 
 const PoliciesPage = () => {
 	return (

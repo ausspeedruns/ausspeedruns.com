@@ -236,8 +236,11 @@ export default function EventSchedule({ event }: QUERY_EVENT_RESULTS) {
 				const run = sortedRuns[i];
 				if (new Date(run.scheduledTime) >= currentTime) break;
 			}
-			setCurrentRunIndex(i);
-			setSettings({ ...settings, liveRunId: sortedRuns[i].id });
+
+			if (sortedRuns[i - 1]) {
+				setCurrentRunIndex(i - 1);
+				setSettings({ ...settings, liveRunId: sortedRuns[i - 1].id });
+			}
 		}
 	}, [currentTime, event.endDate, event.startDate, settings, sortedRuns]);
 

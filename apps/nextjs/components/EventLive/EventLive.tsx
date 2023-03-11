@@ -179,7 +179,7 @@ export const EventLive = (props: EventProps) => {
 						<div className={styles.link}>
 							<Button
 								actionText="Check out more challenges!"
-								link="/ASAP2022/challenges"
+								link="/ASGX2023/challenges"
 								colorScheme="secondary inverted"
 							/>
 						</div>
@@ -211,7 +211,7 @@ export const EventLive = (props: EventProps) => {
 							</span>
 						</div>
 						<div className={styles.link}>
-							<Button actionText="Check out the schedule!" link="/schedule" colorScheme="secondary inverted" />
+							<Button actionText="Check out the schedule!" link={`/${props.event}/schedule`} colorScheme="secondary inverted" />
 						</div>
 					</div>
 				</section>

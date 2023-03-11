@@ -211,7 +211,7 @@ export const EventLive = (props: EventProps) => {
 							</span>
 						</div>
 						<div className={styles.link}>
-							<Button actionText="Check out the schedule!" link="/schedule" colorScheme="secondary inverted" />
+							<Button actionText="Check out the schedule!" link={`/${props.event}/schedule`} colorScheme="secondary inverted" />
 						</div>
 					</div>
 				</section>

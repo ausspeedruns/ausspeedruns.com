@@ -37,6 +37,7 @@ export const globals: Globals = {
       logo: 'ASGX2023 Logo.png',
       website: 'https://www.thegameexpo.com/',
       startDate: "11 March 2023 09:00:00 GMT+0900",
+      total: "2,204",
     },
     oldEvents: {
       'ASM2021': {

@@ -17,9 +17,9 @@ const Heroblock = ({ event, backgroundPos }: LastEventBlockProps) => {
 		<section
 			className={styles.lasteventblock}
 			style={{
-				backgroundImage: `url(${
+				backgroundImage: `url("${
 					require(`../../styles/img/${event.heroImage}`).default.src
-				})`,
+				}")`,
 				backgroundPosition: backgroundPos,
 			}}>
 			<div className={`${styles.content} content`}>
@@ -29,10 +29,10 @@ const Heroblock = ({ event, backgroundPos }: LastEventBlockProps) => {
 						{event.preferredName} raised a total of ${event.total}
 					</h2>
 					<br />
-					<p>
+					{/* <p>
 						Australian Speedrunners came together to raise money for
 						Cure Cancer Australia at {event.preferredName}!
-					</p>
+					</p> */}
 					<p>Replays of the event are live on our YouTube!</p>
 					<Button
 						actionText={event.preferredName}

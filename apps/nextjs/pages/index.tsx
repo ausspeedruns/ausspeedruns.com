@@ -46,7 +46,7 @@ export default function Home() {
 			<main>
 				{/* <EventLive event={next.preferredName} /> */}
 				<HeroBlock event={ASM2023} ticketLink="/ASM2023/tickets" submitRuns tagLine="The Australian Speedrun Marathon returns! Submissions are open until March 31. Tickets are live!" />
-				<LastEventBlock event={next} />
+				<LastEventBlock event={next} backgroundPos="center" />
 				<LastEventBlock event={current} backgroundPos="center" />
 				<LastEventBlock event={previous} />
 				<section className={styles.archive}>

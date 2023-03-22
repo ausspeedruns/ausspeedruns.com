@@ -57,6 +57,16 @@
 				margin: auto;
 			}
 		}
+
+		@include breakpoint($sm-zero-only) {
+			flex-direction: column;
+
+			.card {
+				img {
+					max-width: 300px;
+				}
+			}
+		}
 	}
 
 	.back {

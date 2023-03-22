@@ -36,6 +36,15 @@
 			gap: 8px;
 		}
 	}
+
+	@include breakpoint($sm-zero-only) {
+		grid-template-columns: 100%;
+		text-align: center;
+
+		.productImage {
+			margin-bottom: 1rem;
+		}
+	}
 }
 
 .shirtWarning {
@@ -82,6 +91,10 @@
 	p {
 		text-align: center;
 		margin-top: 1rem;
+	}
+
+	@include breakpoint($sm-zero-only) {
+		width: 90%;
 	}
 }
 

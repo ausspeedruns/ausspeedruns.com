@@ -10,9 +10,10 @@ import Button from "../Button/Button";
 type LastEventBlockProps = {
 	event: AusSpeedrunsEvent;
 	backgroundPos?: string;
+	tagLine: string;
 };
 
-const Heroblock = ({ event, backgroundPos }: LastEventBlockProps) => {
+const Heroblock = ({ event, backgroundPos, tagLine }: LastEventBlockProps) => {
 	return (
 		<section
 			className={styles.lasteventblock}
@@ -33,10 +34,10 @@ const Heroblock = ({ event, backgroundPos }: LastEventBlockProps) => {
 						Australian Speedrunners came together to raise money for
 						Cure Cancer Australia at {event.preferredName}!
 					</p> */}
-					<p>Replays of the event are live on our YouTube!</p>
+					<p>{tagLine}</p>
 					<Button
 						actionText={event.preferredName}
-						link="//youtube.com/ausspeedruns"
+						link={`/${event.shortName}`}
 						iconRight={faChevronRight}
 						colorScheme={"secondary"}
 						target={"_blank"}

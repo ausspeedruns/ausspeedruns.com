@@ -3,8 +3,19 @@ import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Button } from '@keystone-ui/button';
 import { Select, FieldContainer, FieldLabel, TextInput } from '@keystone-ui/fields';
 import { Paper, Stepper, Step, StepButton, MobileStepper } from '@mui/material';
-import { Goal, War } from '../../schema/incentives';
+import { Goal, War } from '../../src/schema/incentives';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
+
+export interface DonationIncentiveCreatorRef {
+	getDonationIncentives: () => {
+		title: string;
+		notes: string;
+		type: string;
+		data: object;
+		submissionId: string;
+	}[];
+	isDone: () => boolean;
+}
 
 interface DonationIncentiveCreatorProps {
 	donationIncentiveStrings: {
@@ -21,7 +32,7 @@ const incentiveTypes = [
 	{ label: 'War', value: 'war', defaultValue: { options: [] } },
 ];
 
-export const DonationIncentiveCreator = forwardRef((props: DonationIncentiveCreatorProps, ref) => {
+export const DonationIncentiveCreator = forwardRef<DonationIncentiveCreatorRef, DonationIncentiveCreatorProps>((props, ref) => {
 	const [donationIncentiveStep, setDonationIncentiveStep] = useState(0);
 	const [allNewIncentives, setAllNewIncentives] = useState<{
 		[k: number]: Record<string, any>;
@@ -29,10 +40,10 @@ export const DonationIncentiveCreator = forwardRef((props: DonationIncentiveCrea
 
 	const [newIncentiveTitle, setNewIncentiveTitle] = useState('');
 	const [newIncentiveNotes, setNewIncentiveNotes] = useState('');
-	const [newIncentiveType, setNewIncentiveType] = useState<Omit<typeof incentiveTypes[0], 'defaultValue'>>(
-		incentiveTypes[0]
+	const [newIncentiveType, setNewIncentiveType] = useState<Omit<typeof incentiveTypes[number], 'defaultValue'>>(
+		{label: 'Goal', value: 'goal'}
 	);
-	const [newIncentiveData, setNewIncentiveData] = useState<Goal | War>(incentiveTypes[0].defaultValue);
+	const [newIncentiveData, setNewIncentiveData] = useState<Record<string, any>>(incentiveTypes[0].defaultValue);
 
 	const enabled = props.donationIncentiveStrings.length > 0;
 
@@ -102,12 +113,12 @@ export const DonationIncentiveCreator = forwardRef((props: DonationIncentiveCrea
 	function isIncentiveComplete(index?: number) {
 		let incentiveTitle: string;
 		let incentiveType: string;
-		let incentiveData: object;
+		let incentiveData: Record<string, any>;
 
 		if (index) {
 			if (IncentiveIndexExists(index)) {
 				incentiveTitle = allNewIncentives[index].title;
-				incentiveType = incentiveTypes.find((incentive) => incentive.value === allNewIncentives[index].type).value;
+				incentiveType = incentiveTypes.find((incentive) => incentive.value === allNewIncentives[index].type)?.value ?? "";
 				incentiveData = allNewIncentives[index].data;
 			} else {
 				return false;
@@ -122,7 +133,7 @@ export const DonationIncentiveCreator = forwardRef((props: DonationIncentiveCrea
 
 		switch (incentiveType) {
 			case 'goal':
-				dataGood = Object.hasOwn(incentiveData, 'goal') && (incentiveData as Goal).goal > 0;
+				dataGood = Object.hasOwn(incentiveData, 'goal') && incentiveData.goal > 0;
 				break;
 			case 'war':
 				dataGood = Object.hasOwn(incentiveData, 'options');
@@ -139,7 +150,7 @@ export const DonationIncentiveCreator = forwardRef((props: DonationIncentiveCrea
 			setNewIncentiveTitle(allNewIncentives[donationIncentiveStep].title);
 			setNewIncentiveNotes(allNewIncentives[donationIncentiveStep].notes);
 			setNewIncentiveType(
-				incentiveTypes.find((incentive) => incentive.value === allNewIncentives[donationIncentiveStep].type)
+				incentiveTypes.find((incentive) => incentive.value === allNewIncentives[donationIncentiveStep].type) ?? {label: 'Goal', value: 'goal'}
 			);
 			setNewIncentiveData(allNewIncentives[donationIncentiveStep].data);
 		} else if (props.donationIncentiveStrings[donationIncentiveStep]) {
@@ -152,7 +163,13 @@ export const DonationIncentiveCreator = forwardRef((props: DonationIncentiveCrea
 
 	useImperativeHandle(ref, () => ({
 		getDonationIncentives: () => {
-			return Object.values(allNewIncentives);
+			return Object.values(allNewIncentives) as {
+				title: string;
+				notes: string;
+				type: string;
+				data: object;
+				submissionId: string;
+			}[];
 		},
 		isDone: () => {
 			return allStepsCompleted();
@@ -214,7 +231,7 @@ export const DonationIncentiveCreator = forwardRef((props: DonationIncentiveCrea
 					<Select
 						isDisabled={!enabled}
 						onChange={(e) => {
-							switch (e.value) {
+							switch (e?.value) {
 								case 'goal':
 									setNewIncentiveData({ goal: 0, current: 0 });
 									break;
@@ -222,7 +239,6 @@ export const DonationIncentiveCreator = forwardRef((props: DonationIncentiveCrea
 									setNewIncentiveData({ options: [] });
 									break;
 							}
-							setNewIncentiveType(e);
 						}}
 						value={newIncentiveType}
 						options={incentiveTypes}
@@ -231,12 +247,12 @@ export const DonationIncentiveCreator = forwardRef((props: DonationIncentiveCrea
 				{newIncentiveType.value === 'goal' && (
 					<>
 						<FieldContainer>
-							<FieldLabel>Goal ${(newIncentiveData as Goal)?.goal?.toLocaleString() ?? 0}</FieldLabel>
+							<FieldLabel>Goal ${(newIncentiveData as Goal['data'])?.goal?.toLocaleString() ?? 0}</FieldLabel>
 							<TextInput
 								disabled={!enabled}
 								onChange={(e) => setNewIncentiveData({ ...newIncentiveData, goal: parseInt(e.target.value) })}
 								type="number"
-								value={(newIncentiveData as Goal)?.goal ?? 0}
+								value={(newIncentiveData as Goal['data'])?.goal ?? 0}
 							/>
 						</FieldContainer>
 					</>
@@ -245,13 +261,13 @@ export const DonationIncentiveCreator = forwardRef((props: DonationIncentiveCrea
 					<>
 						<FieldContainer>
 							<FieldLabel>Options</FieldLabel>
-							{(newIncentiveData as War)?.options.map((item, i) => {
+							{(newIncentiveData as War['data'])?.options.map((item, i) => {
 								return (
 									<TextInput
 										key={i}
 										placeholder="Name"
 										onChange={(e) => {
-											const mutableOptions = [...(newIncentiveData as War).options];
+											const mutableOptions = [...(newIncentiveData as War['data']).options];
 											mutableOptions[i].name = e.target.value;
 											setNewIncentiveData({ ...newIncentiveData, options: mutableOptions });
 										}}
@@ -265,7 +281,7 @@ export const DonationIncentiveCreator = forwardRef((props: DonationIncentiveCrea
 							tone="positive"
 							weight="bold"
 							onClick={() => {
-								const mutableOptions = [...(newIncentiveData as War).options];
+								const mutableOptions = [...(newIncentiveData as War['data']).options];
 								mutableOptions.push({ name: '', total: 0 });
 								setNewIncentiveData({
 									...newIncentiveData,

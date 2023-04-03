@@ -21,6 +21,14 @@ interface AllRunnerNames {
 	}[];
 }
 
+export interface RaceRunnerMatcherRef {
+	getRaceRunners: () => {
+		gameId: string;
+		runners: string[];
+	}[];
+	isDone: () => boolean;
+}
+
 interface RaceRunnerMatcherProps {
 	races: {
 		internalRacers: string;
@@ -33,7 +41,7 @@ interface RaceRunnerMatcherProps {
 	}[];
 }
 
-export const RaceRunnerMatcher = forwardRef((props: RaceRunnerMatcherProps, ref) => {
+export const RaceRunnerMatcher = forwardRef<RaceRunnerMatcherRef, RaceRunnerMatcherProps>((props, ref) => {
 	const [raceStep, setRaceStep] = useState(0);
 	const [allRaces, setAllRaces] = useState<{
 		[k: number]: { gameId: string; runners: { label: string; value: string }[] };
@@ -132,6 +140,9 @@ export const RaceRunnerMatcher = forwardRef((props: RaceRunnerMatcherProps, ref)
 
 	async function getAllRunnerNames() {
 		const { data } = await queryAllRunnerNames();
+
+		if (!data) return;
+
 		setAllRunnerNames(
 			data.users.map((runner) => {
 				return { label: runner.username, value: runner.id };

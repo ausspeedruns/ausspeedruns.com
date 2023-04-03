@@ -4,7 +4,7 @@ import { CustomNavigation } from './components/CustomNavigation';
 import ausSpeedrunsLogo from './assets/AusSpeedruns-Logo-Orange-FullWordmark.svg';
 
 function CustomLogo () {
-    return <img style={{width: 200}} src={ausSpeedrunsLogo.src} />
+    return <img alt="AusSpeedruns Logo" style={{width: 200}} src={ausSpeedrunsLogo.src} />
 }
 
 export const components: AdminConfig['components']= {

@@ -14,7 +14,6 @@ type AvailabilityProps = {
 };
 
 export default function Availability(props: AvailabilityProps) {
-	console.log(props.value);
 	const [dates, setDates] = useState<boolean[]>(props.value ?? []);
 	const eventLength = useMemo(
 		() =>

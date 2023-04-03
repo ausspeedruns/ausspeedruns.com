@@ -165,7 +165,7 @@ function runnersToHoraro(runners: QueryRuns['event']['runs'][0]['runners'], race
 }
 
 function runnersToTwitter(runners: QueryRuns['event']['runs'][0]['runners'], race: boolean, coop: boolean) {
-	const formattedRunners = [];
+	const formattedRunners: string[] = [];
 	let numberOfTwitters = 0;
 
 	runners.forEach(runner => {
@@ -230,7 +230,7 @@ export async function exportHoraro(eventShortname: string) {
 			],
 			items: runData.event.runs.map(run => {
 				const lengths = estimateToHoraroLengths(run.estimate);
-				const scheduleDate = new Date(run.scheduledTime);
+				// const scheduleDate = new Date(run.scheduledTime);
 				return {
 					length: lengths.length,
 					length_t: lengths.lengthSeconds,

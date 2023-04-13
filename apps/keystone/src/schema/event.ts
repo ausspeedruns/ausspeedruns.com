@@ -8,6 +8,7 @@ import { file, image } from './util';
 
 import { componentBlocks as liveEventComponentBlocks } from '../../admin/components/component-blocks/event-page';
 import { componentBlocks as postEventComponentBlocks } from '../../admin/components/component-blocks/post-event';
+import { scheduleBlocks } from '../../admin/fields/schedule-block';
 
 export const Event: Lists.Event = list({
 	access: {
@@ -125,5 +126,6 @@ export const Event: Lists.Event = list({
 			},
 			componentBlocks: liveEventComponentBlocks,
 		}),
+		scheduleBlocks: scheduleBlocks(),
 	}
 });

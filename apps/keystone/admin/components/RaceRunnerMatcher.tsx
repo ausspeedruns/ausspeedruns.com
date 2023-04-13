@@ -185,16 +185,6 @@ export const RaceRunnerMatcher = forwardRef<RaceRunnerMatcherRef, RaceRunnerMatc
 			<h3 style={{ textAlign: 'center', margin: '0' }}>
 				{completedSteps()}/{totalSteps()} {allStepsCompleted() && totalSteps() > 0 && <span>Done!</span>}
 			</h3>
-			{/* <Button onClick={getAllRunnerNames}>Query all runner names</Button> */}
-			{/* <Stepper nonLinear activeStep={raceStep}>
-				{props.races.map((run, index) => (
-					<Step key={run.id}>
-						<StepButton color="inherit" onClick={handleStep(index)}>
-							{run.game}
-						</StepButton>
-					</Step>
-				))}
-			</Stepper> */}
 			<MobileStepper
 				variant="dots"
 				steps={totalSteps()}
@@ -238,14 +228,14 @@ export const RaceRunnerMatcher = forwardRef<RaceRunnerMatcherRef, RaceRunnerMatc
 							<FieldLabel>Runner Name</FieldLabel>
 							<div style={{ display: 'flex' }}>
 								<TextInput
-									disabled={!enabled || allRunnerNames.length === 0}
 									{...params.inputProps}
+									disabled={!enabled || allRunnerNames.length === 0}
 									inputMode="text"
 									size="medium"
 									width="full"
 									type="text"
 								/>
-								<Button style={{ marginLeft: 8 }} onClick={addRunnerToList} tone="positive" weight="bold">
+								<Button isDisabled={!enabled || !selectedRunner} style={{ marginLeft: 8 }} onClick={addRunnerToList} tone="positive" weight="bold">
 									+
 								</Button>
 							</div>

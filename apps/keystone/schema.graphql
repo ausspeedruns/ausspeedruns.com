@@ -683,6 +683,7 @@ type Event {
   pressKit: AzureStorageFileFieldOutput
   submissionInstructions: Event_submissionInstructions_Document
   eventPage: Event_eventPage_Document
+  scheduleBlocks: JSON
 }
 
 type Event_postEventPage_Document {
@@ -830,6 +831,7 @@ input EventUpdateInput {
   pressKit: AzureStorageFileFieldInput
   submissionInstructions: JSON
   eventPage: JSON
+  scheduleBlocks: JSON
 }
 
 input IncentiveRelateToManyForUpdateInput {
@@ -885,6 +887,7 @@ input EventCreateInput {
   pressKit: AzureStorageFileFieldInput
   submissionInstructions: JSON
   eventPage: JSON
+  scheduleBlocks: JSON
 }
 
 input IncentiveRelateToManyForCreateInput {

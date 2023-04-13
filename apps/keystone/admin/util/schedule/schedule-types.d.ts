@@ -12,7 +12,7 @@ export type Run = {
 	category: string;
 	platform: string;
 	estimate: string;
-	internalDonationIncentive: string;
+	internalDonationIncentives: DonationIncentive[];
 	race: string;
 	internalRacer: string;
 	internalRunner: string;
@@ -20,3 +20,8 @@ export type Run = {
 	uuid: string;
 }
 
+type DonationIncentive = {
+	title: string;
+	time?: string;
+	description?: string;
+};

@@ -46,7 +46,7 @@ interface UploadedSchedule {
 	runner: string;
 	platform: string;
 	ageRating: "m_or_lower" | "ma15" | "ra18" | "";
-	donationIncentive: string;
+	donationIncentives: string;
 	specialRequirements: string;
 	video: string;
 	availability: string;
@@ -71,7 +71,7 @@ interface UploadedSchedule {
 		category
 		platform
 		estimate
-		donationIncentive
+		donationIncentives
 		race
 		racer
 		coop
@@ -143,7 +143,7 @@ async function csvToRuns(
 			category: submission.category,
 			platform: submission.platform,
 			estimate: submission.estimate,
-			internalDonationIncentive: submission.donationIncentive,
+			internalDonationIncentives: submission.donationIncentives ? JSON.parse(submission.donationIncentives) : [],
 			race:
 				submission.race !== "no" && submission.race !== ""
 					? submission.coop.toLocaleLowerCase() === "true"

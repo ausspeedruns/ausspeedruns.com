@@ -160,6 +160,9 @@ export async function createSchedule(
 						},
 					},
 				};
+			} else {
+				const allOriginalSubmissions = allRuns.data.createRuns.map(run => run.originalSubmission.id);
+				console.log("Couldn't find " + incentive.submissionId + " in", allOriginalSubmissions)
 			}
 
 			return {
@@ -178,7 +181,7 @@ export async function createSchedule(
 			variables: { incentives: donationIncentives },
 		});
 
-		console.log(allRuns);
+		console.log(allIncentives);
 
 		/**************************/
 		/* UPDATE END EVENT TIME */

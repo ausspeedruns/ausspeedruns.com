@@ -1,7 +1,7 @@
 import { Heading } from "@keystone-ui/core";
 import { useEffect, useRef, useState } from "react";
 import { PageContainer } from "@keystone-6/core/admin-ui/components";
-import { useQuery, gql, useLazyQuery, ApolloClient, InMemoryCache } from "@keystone-6/core/admin-ui/apollo";
+import { useQuery, gql, useLazyQuery } from "@keystone-6/core/admin-ui/apollo";
 import { Button } from "@keystone-ui/button";
 import { useToasts } from "@keystone-ui/toast";
 import { Select, FieldContainer, FieldLabel } from "@keystone-ui/fields";
@@ -19,7 +19,6 @@ import {
 	Stack as MUIStack,
 } from "@mui/material";
 import styled from "@emotion/styled";
-import { css } from "@emotion/react";
 import { formatInTimeZone } from "date-fns-tz";
 import { Lists } from ".keystone/types";
 import { DonationIncentiveCreator, DonationIncentiveCreatorRef } from "../components/DonationIncentiveCreator";
@@ -32,6 +31,7 @@ import { createSchedule } from "../util/schedule/create-schedule";
 import { updateSubmissionResults } from "../util/schedule/update-submissions";
 import type { Run } from "../util/schedule/schedule-types";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { Block } from "../fields/schedule-block/block-schema";
 
 const EventTitle = styled.h1`
 	text-align: center;
@@ -201,9 +201,7 @@ export default function ScheduleImport() {
 						race: run.race ? (run.coop ? "COOP" : "RACE") : "",
 						runner: run.runners.length > 0 ? run.runners : [{ id: undefined, username: run.racer }],
 						platform: run.platform,
-						internalDonationIncentive: run.donationIncentiveObject
-							.map((incentive) => incentive.title)
-							.join(" | "),
+						internalDonationIncentives: run.donationIncentiveObject,
 						internalRacer:
 							run.runners?.length > 1
 								? run.runners
@@ -385,7 +383,9 @@ export default function ScheduleImport() {
 					<TableCell>{row.estimate}</TableCell>
 					<TableCell>{row.platform}</TableCell>
 					<TableCell>{row.race}</TableCell>
-					<TableCell>{row.internalDonationIncentive}</TableCell>
+					<TableCell>
+						{row.internalDonationIncentives.map((incentive) => incentive.title).join(" | ")}
+					</TableCell>
 				</TableRow>
 			</>
 		);
@@ -586,15 +586,18 @@ export default function ScheduleImport() {
 				<DonationIncentiveCreator
 					ref={donationIncentivesRef}
 					donationIncentiveStrings={scheduleRuns
-						.filter((run) => run.internalDonationIncentive)
-						.map((run) => {
-							return {
-								incentive: run.internalDonationIncentive,
-								game: run.game,
-								id: run.uuid,
-								category: run.category,
-								runner: run.runner[0].id ? run.runner[0].username : run.internalRunner,
-							};
+						.filter((run) => run.internalDonationIncentives.length > 0)
+						.flatMap((run) => {
+							return run.internalDonationIncentives.map((incentive) => {
+								return {
+									incentiveTitle: incentive.title,
+									incentiveDescription: incentive.description ?? "",
+									game: run.game,
+									id: run.submissionId ?? run.uuid,
+									category: run.category,
+									runner: run.runner[0].id ? run.runner[0].username : run.internalRunner,
+								};
+							});
 						})}
 				/>
 				<RaceRunnerMatcher

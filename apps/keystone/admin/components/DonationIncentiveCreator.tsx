@@ -2,9 +2,8 @@ import { Stack } from '@keystone-ui/core';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Button } from '@keystone-ui/button';
 import { Select, FieldContainer, FieldLabel, TextInput } from '@keystone-ui/fields';
-import { Paper, Stepper, Step, StepButton, MobileStepper } from '@mui/material';
+import { Paper, MobileStepper } from '@mui/material';
 import { Goal, War } from '../../src/schema/incentives';
-import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 
 export interface DonationIncentiveCreatorRef {
 	getDonationIncentives: () => {
@@ -20,7 +19,8 @@ export interface DonationIncentiveCreatorRef {
 interface DonationIncentiveCreatorProps {
 	donationIncentiveStrings: {
 		id: string;
-		incentive: string;
+		incentiveTitle: string;
+		incentiveDescription: string;
 		game: string;
 		category: string;
 		runner: string;
@@ -40,7 +40,7 @@ export const DonationIncentiveCreator = forwardRef<DonationIncentiveCreatorRef, 
 
 	const [newIncentiveTitle, setNewIncentiveTitle] = useState('');
 	const [newIncentiveNotes, setNewIncentiveNotes] = useState('');
-	const [newIncentiveType, setNewIncentiveType] = useState<Omit<typeof incentiveTypes[number], 'defaultValue'>>(
+	const [newIncentiveType, setNewIncentiveType] = useState<Omit<typeof incentiveTypes[number], 'defaultValue'> | null>(
 		{label: 'Goal', value: 'goal'}
 	);
 	const [newIncentiveData, setNewIncentiveData] = useState<Record<string, any>>(incentiveTypes[0].defaultValue);
@@ -91,7 +91,7 @@ export const DonationIncentiveCreator = forwardRef<DonationIncentiveCreatorRef, 
 	}
 
 	function AddIncentive() {
-		if (!isIncentiveComplete() || donationIncentiveStep >= totalSteps()) return;
+		if (!isIncentiveComplete() || donationIncentiveStep >= totalSteps() || !newIncentiveType) return;
 
 		if (newIncentiveType.value === 'goal' && !Object.hasOwn(newIncentiveData, 'current')) {
 			setNewIncentiveData({ ...newIncentiveData, current: 0 });
@@ -111,6 +111,8 @@ export const DonationIncentiveCreator = forwardRef<DonationIncentiveCreatorRef, 
 	}
 
 	function isIncentiveComplete(index?: number) {
+		if (!newIncentiveType) return false;
+
 		let incentiveTitle: string;
 		let incentiveType: string;
 		let incentiveData: Record<string, any>;
@@ -154,8 +156,8 @@ export const DonationIncentiveCreator = forwardRef<DonationIncentiveCreatorRef, 
 			);
 			setNewIncentiveData(allNewIncentives[donationIncentiveStep].data);
 		} else if (props.donationIncentiveStrings[donationIncentiveStep]) {
-			setNewIncentiveTitle(props.donationIncentiveStrings[donationIncentiveStep].incentive);
-			setNewIncentiveNotes('');
+			setNewIncentiveTitle(props.donationIncentiveStrings[donationIncentiveStep].incentiveTitle);
+			setNewIncentiveNotes(props.donationIncentiveStrings[donationIncentiveStep].incentiveDescription);
 			setNewIncentiveType(incentiveTypes[0]);
 			setNewIncentiveData(incentiveTypes[0].defaultValue);
 		}
@@ -239,12 +241,14 @@ export const DonationIncentiveCreator = forwardRef<DonationIncentiveCreatorRef, 
 									setNewIncentiveData({ options: [] });
 									break;
 							}
+							
+							setNewIncentiveType(e);
 						}}
 						value={newIncentiveType}
 						options={incentiveTypes}
 					/>
 				</FieldContainer>
-				{newIncentiveType.value === 'goal' && (
+				{newIncentiveType?.value === 'goal' && (
 					<>
 						<FieldContainer>
 							<FieldLabel>Goal ${(newIncentiveData as Goal['data'])?.goal?.toLocaleString() ?? 0}</FieldLabel>
@@ -257,7 +261,7 @@ export const DonationIncentiveCreator = forwardRef<DonationIncentiveCreatorRef, 
 						</FieldContainer>
 					</>
 				)}
-				{newIncentiveType.value === 'war' && (
+				{newIncentiveType?.value === 'war' && (
 					<>
 						<FieldContainer>
 							<FieldLabel>Options</FieldLabel>

@@ -2,8 +2,16 @@
 @import './responsive.scss';
 @import './colors.scss';
 
+$normalWidth: 800px;
+
 .content {
+	align-items: center;
 	flex-flow: column;
+	max-width: none;
+}
+
+.headerContent {
+	max-width: 1200px;
 }
 
 .columns {
@@ -34,6 +42,8 @@
 }
 
 .info {
+	max-width: 345px;
+
 	.runType {
 		margin: 1rem 0;
 
@@ -75,7 +85,16 @@
 	font-size: 1.4rem;
 }
 
+.scheduleContainer {
+	display: flex;
+	flex-direction: column;
+	align-items: end;
+}
+
 .scheduleKey {
+	max-width: $normalWidth;
+    width: 100%;
+
 	& > span {
 		padding-bottom: 4px;
 	}
@@ -111,8 +130,13 @@
 
 .schedule {
 	// border: 1px solid $color-off-white;
+	display: flex;
+	flex-direction: column;
+	align-items: end;
 
 	.dateDivider {
+		max-width: $normalWidth;
+		width: 100%;
 		border-bottom: 5px solid $primary;
 		color: $secondary;
 		font-weight: bold;
@@ -131,13 +155,15 @@
 	}
 
 	.run {
+		max-width: $normalWidth;
+		width: $normalWidth;
 		padding: 4px;
 		display: grid;
 		grid-template-columns: min-content repeat(3, 1fr);
 		border-bottom: 2px solid $secondary;
 
 		&:nth-child(odd) {
-			background: $color-off-white;
+			background: #f9f9f900;
 		}
 
 		& > span {
@@ -165,6 +191,10 @@
 		.donationIncentive {
 			grid-column: 3 / 5;
 			font-style: italic;
+		}
+
+		@include breakpoint($sm-zero-only) {
+			width: 100%;
 		}
 	}
 

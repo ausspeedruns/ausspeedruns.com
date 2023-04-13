@@ -1,0 +1,42 @@
+@import './responsive.scss';
+
+.blockContainer {
+	display: flex;
+	position: relative;
+	border-radius: 6px;
+	border: 4px solid;
+
+	.block {
+		writing-mode: vertical-rl;
+		transform: scale(-1);
+		position: relative;
+		text-transform: uppercase;
+		text-align: center;
+		padding: 0 2px;
+	}
+
+	.runs {
+		display: flex;
+		flex-direction: column;
+		border-left: 0px;
+
+		& > div {
+			padding-left: 8px;
+			margin-left: -4px;
+		}
+
+		& > div:last-child {
+			border: 0;
+		}
+	}
+
+	@include breakpoint($sm-zero-only) {
+		flex-direction: column;
+		width: 100%;
+
+		.block {
+			writing-mode: unset;
+			transform: scale(1);
+		}
+	}
+}

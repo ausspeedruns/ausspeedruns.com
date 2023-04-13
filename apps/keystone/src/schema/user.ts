@@ -19,7 +19,7 @@ const fieldModes = {
 			: 'hidden',
 };
 
-const BANNEDUSERNAMES = ['edit-user', 'verification', 'password-reset'];
+const BANNED_USERNAMES = ['edit-user', 'verification', 'password-reset'];
 
 const fieldAccess = {
 	editSelfOrRead: <FieldAccessControl<Lists.User.TypeInfo>>{
@@ -87,7 +87,7 @@ export const User: Lists.User = list({
 					}
 				},
 				afterOperation: ({ context, item, operation }) => {
-					if (item.verified || operation !== 'update') return;
+					if (item?.verified || operation !== 'update') return;
 
 					SendVerification({ context, item });
 				}
@@ -134,7 +134,7 @@ export const User: Lists.User = list({
 	hooks: {
 		validateInput: ({ resolvedData, addValidationError }) => {
 			const { username } = resolvedData;
-			if (username && BANNEDUSERNAMES.includes(username?.toString() ?? "")) {
+			if (username && BANNED_USERNAMES.includes(username?.toString() ?? "")) {
 				addValidationError(`Username cannot be ${username}`);
 			}
 		},

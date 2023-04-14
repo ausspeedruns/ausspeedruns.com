@@ -45,7 +45,7 @@ export default function Home() {
 			</Head>
 			<main>
 				{/* <EventLive event={next.preferredName} /> */}
-				<HeroBlock event={ASM2023} ticketLink="/ASM2023/tickets" tagLine="The Australian Speedrun Marathon returns! The schedule will be released soon! Tickets are live!" />
+				<HeroBlock event={ASM2023} ticketLink="/ASM2023/tickets" schedule tagLine="The Australian Speedrun Marathon returns! The Schedule has been released! Buy tickets!" />
 				<LastEventBlock tagLine='We had an incredible time showcasing speedruns at the very first TGX!' event={next} backgroundPos="center" />
 				<LastEventBlock tagLine='We smashed our donation record and put on 3 jam packed days of speedrunning.' event={current} backgroundPos="center" />
 				<LastEventBlock tagLine='An absolute incredible event of week long non-stop speedrunning culminating in us breaking our all time donation record!' event={previous} />

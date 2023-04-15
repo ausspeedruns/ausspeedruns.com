@@ -16,7 +16,7 @@ import { format } from "date-fns";
 
 import styles from "../../styles/Schedule.event.module.scss";
 import { theme } from "../../components/mui-theme";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { GetServerSideProps } from "next";
 import { initUrqlClient } from "next-urql";
 import { FilterRuns } from "../../components/run-utils";
@@ -46,7 +46,7 @@ const QUERY_EVENT = gql`
 			ogImage {
 				url
 			}
-			runs {
+			runs(orderBy: [{scheduledTime: asc}]) {
 				id
 				runners {
 					username
@@ -112,9 +112,6 @@ interface QUERY_EVENT_RESULTS {
 	};
 }
 
-const LOGO_HEIGHT = 100;
-
-type FILTERS = "race" | "coop" | "donation incentive";
 const SETTINGS = {
 	showLocalTime: false,
 	filter: {
@@ -127,17 +124,24 @@ const SETTINGS = {
 	liveRunId: "",
 };
 
+type EventScheduleProps = {
+	event: QUERY_EVENT_RESULTS["event"];
+};
+
 // const TEST_CURRENT_TIME = new Date(2025, 6, 9, 16, 25);
-export default function EventSchedule({ event }: QUERY_EVENT_RESULTS) {
+export default function EventSchedule({ event }: EventScheduleProps) {
 	// console.log(TEST_CURRENT_TIME);
 	const [settings, setSettings] = useState(SETTINGS);
 	const [currentTime, setCurrentTime] = useState(new Date());
 	// const [currentTime] = useState(TEST_CURRENT_TIME);
 	const [currentRunIndex, setCurrentRunIndex] = useState(-1);
 
-	const scheduleBlocks = JSON.parse(event.scheduleBlocks) as Block[];
+	const scheduleBlocks = useMemo(() => generateSubmissionBlockMap((JSON.parse(event.scheduleBlocks) ?? []) as Block[], event.runs), [
+		event.runs,
+		event.scheduleBlocks,
+	]);
 
-	function handleFilterChange(event: React.MouseEvent<HTMLElement>, newFilter: string[]) {
+	function handleFilterChange(_event: React.MouseEvent<HTMLElement>, newFilter: string[]) {
 		const mutableFilter: (typeof SETTINGS)["filter"] = {
 			race: false,
 			coop: false,
@@ -192,11 +196,7 @@ export default function EventSchedule({ event }: QUERY_EVENT_RESULTS) {
 		}
 	}
 
-	const sortedRuns = event.runs.sort(
-		(a, b) => new Date(a.scheduledTime).getTime() - new Date(b.scheduledTime).getTime(),
-	);
-
-	const consoleFilterElements = [...new Set(sortedRuns.map((item) => item.platform))].sort().map((console) => {
+	const consoleFilterElements = [...new Set(event.runs.map((item) => item.platform))].sort().map((console) => {
 		if (console === "?") return <></>;
 		return (
 			<Chip
@@ -213,24 +213,24 @@ export default function EventSchedule({ event }: QUERY_EVENT_RESULTS) {
 	useEffect(() => {
 		const interval = setInterval(() => {
 			setCurrentTime(new Date());
-		}, 1000);
+		}, 10000);
 		return () => clearInterval(interval);
 	}, []);
 
 	useEffect(() => {
 		if (currentTime > new Date(event.startDate) && currentTime < new Date(event.endDate)) {
 			let i = 0;
-			for (; i < sortedRuns.length; i++) {
-				const run = sortedRuns[i];
+			for (; i < event.runs.length; i++) {
+				const run = event.runs[i];
 				if (new Date(run.scheduledTime) >= currentTime) break;
 			}
 
-			if (sortedRuns[i - 1]) {
+			if (event.runs[i - 1]) {
 				setCurrentRunIndex(i - 1);
-				setSettings({ ...settings, liveRunId: sortedRuns[i - 1].id });
+				setSettings({ ...settings, liveRunId: event.runs[i - 1].id });
 			}
 		}
-	}, [currentTime, event.endDate, event.startDate, settings, sortedRuns]);
+	}, [currentTime, event.endDate, event.startDate, settings, event.runs]);
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -280,14 +280,14 @@ export default function EventSchedule({ event }: QUERY_EVENT_RESULTS) {
 							<section className={styles.currentRun}>
 								<h3>Currently Running</h3>
 								<RunItem
-									run={sortedRuns[currentRunIndex]}
+									run={event.runs[currentRunIndex]}
 									eventTimezone={event.eventTimezone}
 									showLocalTime={settings.showLocalTime}
 								/>
 							</section>
 						)}
 						<div className={styles.schedule}>
-							{generateRunItems(sortedRuns, settings, event.eventTimezone, scheduleBlocks)}
+							{generateRunItems(event.runs, settings, event.eventTimezone, scheduleBlocks)}
 						</div>
 					</div>
 					<aside className={styles.info}>
@@ -334,7 +334,6 @@ export default function EventSchedule({ event }: QUERY_EVENT_RESULTS) {
 							onChange={handleSearchChange}
 							fullWidth
 						/>
-
 						<div className={styles.consoleFilters}>
 							<span>Platform</span>
 							<div className={styles.consoleList}>{consoleFilterElements}</div>
@@ -346,20 +345,51 @@ export default function EventSchedule({ event }: QUERY_EVENT_RESULTS) {
 	);
 }
 
-function isStringInRunData(run: QUERY_EVENT_RESULTS["event"]["runs"][0], searchString: string) {
-	const lowerCaseSearchString = searchString.toLowerCase();
-	return (
-		run.category.toLowerCase().includes(lowerCaseSearchString) ||
-		run.game.toLowerCase().includes(lowerCaseSearchString) ||
-		run.runners.find((runner) => runner.username.toLowerCase().includes(lowerCaseSearchString)) !== undefined
-	);
+function generateSubmissionBlockMap(blocks: Block[], allRuns: QUERY_EVENT_RESULTS["event"]["runs"]) {
+	// Runs can only be paired to one or no blocks so we can 1-to-1 pair them on a map
+	const blockRunMap = new Map<string, Block>();
+
+	blocks.forEach((block) => {
+		const firstRunIndex = allRuns.findIndex((run) => run.id === block.startRunId);
+
+		if (firstRunIndex === -1) {
+			console.log(`${block.name} doesn't have a start run!`);
+			return;
+		}
+
+		if (block.endRunId) {
+			// Find each run in the block
+			const endRunIndex = allRuns.findIndex((run) => run.id === block.endRunId);
+
+			if (endRunIndex === -1) {
+				console.log(`${block.name} has a run end but we couldn't find it in the runs??? What the fuck?`);
+				return;
+			}
+
+			for (let runIndex = firstRunIndex; runIndex <= endRunIndex; runIndex++) {
+				const run = allRuns[runIndex];
+				blockRunMap.set(run.id, block);
+			}
+		} else {
+			// One run for the block
+			blockRunMap.set(allRuns[firstRunIndex].id, block);
+		}
+	});
+
+	return blockRunMap;
+}
+
+enum BorderState {
+	KEEP_BORDER,
+	REMOVE_BORDER,
+	IN_BLOCK,
 }
 
 function generateRunItems(
 	sortedRuns: QUERY_EVENT_RESULTS["event"]["runs"],
 	settings: typeof SETTINGS,
 	eventTimezone: string,
-	blocks: Block[],
+	blocks: Map<string, Block>,
 ) {
 	let prevDate = 0;
 
@@ -367,8 +397,9 @@ function generateRunItems(
 	const runs: JSX.Element[] = [];
 
 	let blockRuns: JSX.Element[] = [];
-	let scheduleBlockData: Block | undefined = undefined;
-	let firstGame = true;
+	let scheduleBlockData: Block | undefined;
+	let removedBorder: BorderState = BorderState.KEEP_BORDER;
+	let previousBlockData: Block | undefined;
 
 	for (let index = 0; index < filteredRuns.length; index++) {
 		const run = filteredRuns[index];
@@ -385,18 +416,23 @@ function generateRunItems(
 					}),
 			  );
 
-		if (!scheduleBlockData) {
-			scheduleBlockData = blocks.find((block) => block.startRunId === run.id);
+		scheduleBlockData = blocks.get(run.id);
+
+		// Check if we are on a new block, if we are in one check if we were previously in one and post it
+		if (scheduleBlockData !== previousBlockData && previousBlockData) {
+			runs.push(<ScheduleBlock key={previousBlockData.startRunId + run.id} block={previousBlockData}>{blockRuns}</ScheduleBlock>);
+
+			// Reset for next block
+			blockRuns = [];
 		}
 
-		let scheduleBlockDone = false;
-		if (scheduleBlockData && (scheduleBlockData.endRunId === run.id || !scheduleBlockData.endRunId)) {
-			scheduleBlockDone = true;
-		}
+		if (scheduleBlockData) removedBorder = BorderState.KEEP_BORDER;
+		if (!scheduleBlockData && blocks.get(filteredRuns[index + 1]?.id)) removedBorder = BorderState.REMOVE_BORDER;
 
 		if (prevDate !== runDate) {
 			// End block if we're at a new day
-			if (scheduleBlockData && !firstGame) {
+			// And check that we have runs to post as well... Goodbye Reginald o7
+			if (scheduleBlockData && blockRuns.length > 0) {
 				runs.push(<ScheduleBlock block={scheduleBlockData}>{blockRuns}</ScheduleBlock>);
 				blockRuns = [];
 			}
@@ -419,23 +455,18 @@ function generateRunItems(
 				eventTimezone={eventTimezone}
 				isLive={settings.liveRunId === run.id}
 				style={{
-					border:
-						blocks.some((block) => block.startRunId === filteredRuns[index + 1]?.id) ?? false ? "none" : "",
+					border:	removedBorder === BorderState.REMOVE_BORDER ? "none" : "",
 					borderColor: scheduleBlockData ? scheduleBlockData.colour : "",
 				}}
 			/>,
 		);
 
-		if (scheduleBlockDone && scheduleBlockData) {
-			runs.push(<ScheduleBlock block={scheduleBlockData}>{blockRuns}</ScheduleBlock>);
-
-			// Reset for next block
-			blockRuns = [];
-			scheduleBlockData = undefined;
-		}
-
 		prevDate = runDate;
-		firstGame = false;
+		previousBlockData = scheduleBlockData;
+	}
+
+	if (blockRuns.length > 0 && previousBlockData) {
+		runs.push(<ScheduleBlock key={previousBlockData.startRunId} block={previousBlockData}>{blockRuns}</ScheduleBlock>);
 	}
 
 	return runs;

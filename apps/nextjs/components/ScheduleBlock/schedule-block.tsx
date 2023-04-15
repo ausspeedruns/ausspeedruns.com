@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
+import { RefObject, useEffect, useRef } from "react";
 import styles from "./schedule-block.module.scss";
 import type { Block } from "apps/nextjs/pages/[event]/schedule";
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 type ScheduleBlockProps = {
 	block: Block;
@@ -15,21 +15,8 @@ export function ScheduleBlock(props: ScheduleBlockProps) {
 	const smZero = useMediaQuery("(max-width: 991px)");
 
 	useEffect(() => {
-		if (!blockLabelRef.current || !runsRef.current || !containerRef.current) return;
-
-		// const labelWidth = blockLabelRef.current.clientWidth;
-		const runsHeight = Array.from(runsRef.current.children).reduce((prev, el) => el.clientHeight + prev, 0);
-
-		// blockLabelRef.current.style.marginRight = `-${labelWidth}px`;
-		// blockLabelRef.current.style.left = `-${labelWidth}px`;
-		if (smZero) {
-			blockLabelRef.current.style.height = "auto";
-			blockLabelRef.current.style.paddingBottom = "4px";
-		} else {
-			blockLabelRef.current.style.height = `${runsHeight + (runsRef.current.childElementCount * 5 + 5)}px`;
-		}
-		// containerRef.current.style.height = `${runsHeight - 2}px`;
-	}, [blockLabelRef, runsRef, containerRef, smZero]);
+		refreshBlockHeight(runsRef, smZero, blockLabelRef);
+	}, [blockLabelRef, runsRef, smZero, props.children]);
 
 	return (
 		<div
@@ -50,6 +37,22 @@ export function ScheduleBlock(props: ScheduleBlockProps) {
 			</div>
 		</div>
 	);
+}
+
+function refreshBlockHeight(
+	runsRef: RefObject<HTMLDivElement>,
+	smZero: boolean,
+	blockLabelRef: RefObject<HTMLDivElement>,
+) {
+	if (!blockLabelRef.current || !runsRef.current) return;
+	const runsHeight = Array.from(runsRef.current.children).reduce((prev, el) => el.clientHeight + prev, 0);
+
+	if (smZero) {
+		blockLabelRef.current.style.height = "auto";
+		blockLabelRef.current.style.paddingBottom = "4px";
+	} else {
+		blockLabelRef.current.style.height = `${runsHeight + (runsRef.current.childElementCount - 1) * 2}px`;
+	}
 }
 
 function transparentColour(hex: string) {

@@ -18,6 +18,7 @@
 	.runs {
 		display: flex;
 		flex-direction: column;
+		justify-content: center;
 		border-left: 0px;
 
 		& > div {

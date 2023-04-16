@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import styles from "./schedule-block.module.scss";
 import type { Block } from "apps/nextjs/pages/[event]/schedule";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -9,13 +9,15 @@ type ScheduleBlockProps = {
 };
 
 export function ScheduleBlock(props: ScheduleBlockProps) {
+	const [runFirst, setRunFirst] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const blockLabelRef = useRef<HTMLDivElement>(null);
 	const runsRef = useRef<HTMLDivElement>(null);
 	const smZero = useMediaQuery("(max-width: 991px)");
 
 	useEffect(() => {
-		refreshBlockHeight(runsRef, smZero, blockLabelRef);
+		refreshBlockHeight(runsRef, smZero, blockLabelRef, runFirst);
+		setRunFirst(true);
 	}, [blockLabelRef, runsRef, smZero, props.children]);
 
 	return (
@@ -43,6 +45,7 @@ function refreshBlockHeight(
 	runsRef: RefObject<HTMLDivElement>,
 	smZero: boolean,
 	blockLabelRef: RefObject<HTMLDivElement>,
+	checkOverflow: boolean,
 ) {
 	if (!blockLabelRef.current || !runsRef.current) return;
 	const runsHeight = Array.from(runsRef.current.children).reduce((prev, el) => el.clientHeight + prev, 0);
@@ -51,8 +54,10 @@ function refreshBlockHeight(
 		blockLabelRef.current.style.height = "auto";
 		blockLabelRef.current.style.paddingBottom = "4px";
 	} else {
-		blockLabelRef.current.style.height = `${runsHeight + (runsRef.current.childElementCount - 1) * 2}px`;
+		const correctedHeight = runsHeight + (runsRef.current.childElementCount - 1) * 2;
+		blockLabelRef.current.style.height = `${correctedHeight < blockLabelRef.current.scrollHeight && checkOverflow ? blockLabelRef.current.scrollHeight : correctedHeight}px`;
 	}
+
 }
 
 function transparentColour(hex: string) {

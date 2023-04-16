@@ -13,6 +13,7 @@ import Image from "next/image";
 import { gql, ssrExchange, cacheExchange, dedupExchange, fetchExchange, useQuery } from "urql";
 import DiscordEmbed from "../../components/DiscordEmbed";
 import { format } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 
 import styles from "../../styles/Schedule.event.module.scss";
 import { theme } from "../../components/mui-theme";
@@ -46,7 +47,7 @@ const QUERY_EVENT = gql`
 			ogImage {
 				url
 			}
-			runs(orderBy: [{scheduledTime: asc}]) {
+			runs(orderBy: [{ scheduledTime: asc }]) {
 				id
 				runners {
 					username
@@ -136,10 +137,10 @@ export default function EventSchedule({ event }: EventScheduleProps) {
 	// const [currentTime] = useState(TEST_CURRENT_TIME);
 	const [currentRunIndex, setCurrentRunIndex] = useState(-1);
 
-	const scheduleBlocks = useMemo(() => generateSubmissionBlockMap((JSON.parse(event.scheduleBlocks) ?? []) as Block[], event.runs), [
-		event.runs,
-		event.scheduleBlocks,
-	]);
+	const scheduleBlocks = useMemo(
+		() => generateSubmissionBlockMap((JSON.parse(event.scheduleBlocks) ?? []) as Block[], event.runs),
+		[event.runs, event.scheduleBlocks],
+	);
 
 	function handleFilterChange(_event: React.MouseEvent<HTMLElement>, newFilter: string[]) {
 		const mutableFilter: (typeof SETTINGS)["filter"] = {
@@ -379,6 +380,15 @@ function generateSubmissionBlockMap(blocks: Block[], allRuns: QUERY_EVENT_RESULT
 	return blockRunMap;
 }
 
+function getRunDate(scheduledTime: string, localTime?: string) {
+	return parseInt(
+		new Date(scheduledTime).toLocaleDateString(undefined, {
+			timeZone: localTime,
+			day: "numeric",
+		}),
+	);
+}
+
 enum BorderState {
 	KEEP_BORDER,
 	REMOVE_BORDER,
@@ -403,24 +413,18 @@ function generateRunItems(
 
 	for (let index = 0; index < filteredRuns.length; index++) {
 		const run = filteredRuns[index];
-		const runDate = settings.showLocalTime
-			? parseInt(
-					new Date(run.scheduledTime).toLocaleDateString(undefined, {
-						timeZone: eventTimezone,
-						day: "numeric",
-					}),
-			  )
-			: parseInt(
-					new Date(run.scheduledTime).toLocaleDateString(undefined, {
-						day: "numeric",
-					}),
-			  );
+		const runDate = getRunDate(run.scheduledTime, settings.showLocalTime ? eventTimezone : undefined);
+		const nextRunDate = filteredRuns[index + 1] ? getRunDate(filteredRuns[index + 1].scheduledTime, settings.showLocalTime ? eventTimezone : undefined) : runDate;
 
 		scheduleBlockData = blocks.get(run.id);
 
 		// Check if we are on a new block, if we are in one check if we were previously in one and post it
 		if (scheduleBlockData !== previousBlockData && previousBlockData) {
-			runs.push(<ScheduleBlock key={previousBlockData.startRunId + run.id} block={previousBlockData}>{blockRuns}</ScheduleBlock>);
+			runs.push(
+				<ScheduleBlock key={previousBlockData.startRunId + run.id} block={previousBlockData}>
+					{blockRuns}
+				</ScheduleBlock>,
+			);
 
 			// Reset for next block
 			blockRuns = [];
@@ -455,7 +459,7 @@ function generateRunItems(
 				eventTimezone={eventTimezone}
 				isLive={settings.liveRunId === run.id}
 				style={{
-					border:	removedBorder === BorderState.REMOVE_BORDER ? "none" : "",
+					border: removedBorder === BorderState.REMOVE_BORDER || runDate !== nextRunDate ? "none" : "",
 					borderColor: scheduleBlockData ? scheduleBlockData.colour : "",
 				}}
 			/>,
@@ -466,7 +470,11 @@ function generateRunItems(
 	}
 
 	if (blockRuns.length > 0 && previousBlockData) {
-		runs.push(<ScheduleBlock key={previousBlockData.startRunId} block={previousBlockData}>{blockRuns}</ScheduleBlock>);
+		runs.push(
+			<ScheduleBlock key={previousBlockData.startRunId} block={previousBlockData}>
+				{blockRuns}
+			</ScheduleBlock>,
+		);
 	}
 
 	return runs;
@@ -478,18 +486,10 @@ interface DateDividerProps {
 	eventTimezone: string;
 }
 
-const dateDividerOptions: Intl.DateTimeFormatOptions = {
-	month: "long",
-	day: "2-digit",
-};
-
 const DateDivider: React.FC<DateDividerProps> = (props: DateDividerProps) => {
 	const dateString = props.showLocalTime
-		? props.date.toLocaleDateString(undefined, {
-				...dateDividerOptions,
-				timeZone: props.eventTimezone,
-		  })
-		: props.date.toLocaleDateString(undefined, dateDividerOptions);
+		? formatInTimeZone(props.date, props.eventTimezone, "EEEE do, MMMM")
+		: format(props.date, "EEEE do, MMMM");
 	return <div className={styles.dateDivider}>{dateString}</div>;
 };
 
@@ -550,12 +550,14 @@ const runItemOptions: Intl.DateTimeFormatOptions = {
 const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 	const { run } = props;
 
-	const convertedTimezone = props.showLocalTime
+	let convertedTimezone = props.showLocalTime
 		? new Date(run.scheduledTime).toLocaleTimeString("en-AU", {
 				...runItemOptions,
 				timeZone: props.eventTimezone,
 		  })
 		: new Date(run.scheduledTime).toLocaleTimeString("en-AU", runItemOptions);
+	
+		if (convertedTimezone[0] === "0") convertedTimezone = " " + convertedTimezone.substring(1);
 
 	if (run.game === "Setup Buffer") {
 		return (
@@ -572,6 +574,8 @@ const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 	const runClassNames = [styles.run];
 	if (props.isLive) runClassNames.push(styles.liveRun);
 
+	const estimateSplit = run.estimate.split(":");
+
 	return (
 		<div className={runClassNames.join(" ")} key={run.id} style={props.style}>
 			<span className={styles.time}>{convertedTimezone}</span>
@@ -582,7 +586,7 @@ const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 			</span>
 			<span className={styles.runners}>{run.runners.length > 0 ? runnerParsing(run.runners) : run.racer}</span>
 			<span className={styles.estimate}>
-				{run.estimate.split(":")[0].padStart(2, "0")}:{run.estimate.split(":")[1]}
+				{estimateSplit[0] == "00" ? " 0" : estimateSplit[0].padStart(2, " ")}:{estimateSplit[1]}:00
 			</span>
 			<span className={styles.platform}>{run.platform}</span>
 			<span className={styles.donationIncentive}>

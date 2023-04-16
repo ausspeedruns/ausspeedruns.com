@@ -19,6 +19,7 @@ const EVENT_SUBMISSIONS_QUERY = gql`
 				game
 				category
 				platform
+				techPlatform
 				estimate
 				ageRating
 				specialReqs
@@ -52,6 +53,7 @@ interface EventSubmissions {
 			game: string;
 			category: string;
 			platform: string;
+			techPlatform: string;
 			estimate: string;
 			ageRating: 'm_or_lower' | 'ma15' | 'ra18';
 			specialReqs: string;
@@ -110,6 +112,7 @@ function parseSubmissionsToCSV(submissionData: EventSubmissions) {
 			possibleEstimateReason: submission.possibleEstimateReason,
 			runner: submission.runner.username,
 			platform: submission.platform,
+			techPlatform: submission.techPlatform,
 			ageRating: submission.ageRating,
 			donationIncentives: newDonationIncentives,
 			specialRequirements: submission.specialReqs,

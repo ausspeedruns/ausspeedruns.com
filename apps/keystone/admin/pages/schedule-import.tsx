@@ -1,5 +1,7 @@
-import { Heading } from "@keystone-ui/core";
 import { useEffect, useRef, useState } from "react";
+import { useLocalStorage } from "../hooks/useLocalStorage";
+import styled from "@emotion/styled";
+import { Heading } from "@keystone-ui/core";
 import { PageContainer } from "@keystone-6/core/admin-ui/components";
 import { useQuery, gql, useLazyQuery } from "@keystone-6/core/admin-ui/apollo";
 import { Button } from "@keystone-ui/button";
@@ -18,7 +20,6 @@ import {
 	OutlinedInput,
 	Stack as MUIStack,
 } from "@mui/material";
-import styled from "@emotion/styled";
 import { formatInTimeZone } from "date-fns-tz";
 import { Lists } from ".keystone/types";
 import { DonationIncentiveCreator, DonationIncentiveCreatorRef } from "../components/DonationIncentiveCreator";
@@ -29,9 +30,9 @@ import { downloadSubmissions } from "../util/schedule/export-submissions";
 import { parseScheduleToRuns } from "../util/schedule/import-schedule";
 import { createSchedule } from "../util/schedule/create-schedule";
 import { updateSubmissionResults } from "../util/schedule/update-submissions";
+import { updateTech } from "../util/schedule/update-tech";
+
 import type { Run } from "../util/schedule/schedule-types";
-import { useLocalStorage } from "../hooks/useLocalStorage";
-import { Block } from "../fields/schedule-block/block-schema";
 
 const EventTitle = styled.h1`
 	text-align: center;
@@ -88,6 +89,7 @@ const EVENT_QUERY = gql`
 				game
 				category
 				platform
+				techPlatform
 				estimate
 				finalTime
 				donationIncentive
@@ -104,6 +106,7 @@ const EVENT_QUERY = gql`
 					id
 					title
 				}
+				specialRequirements
 			}
 		}
 	}
@@ -125,6 +128,7 @@ interface EventQuery {
 			game: string;
 			category: string;
 			platform: string;
+			techPlatform: string;
 			estimate: string;
 			finalTime?: string;
 			donationIncentive?: string;
@@ -141,6 +145,7 @@ interface EventQuery {
 				id: string;
 				title: string;
 			}[];
+			specialRequirements: string;
 		}[];
 	};
 }
@@ -214,6 +219,8 @@ export default function ScheduleImport() {
 						scheduled: new Date(run.scheduledTime ?? 0),
 						submissionId: run.originalSubmission?.id,
 						uuid: run.id,
+						techPlatform: run.techPlatform,
+						specialReqs: run.specialRequirements,
 					};
 				}),
 			);
@@ -625,6 +632,9 @@ export default function ScheduleImport() {
 					</Button>
 				</MUIStack>
 				<MUIStack direction="row" justifyContent="flex-end" spacing={2}>
+					<Button tone="active" weight="bold" onClick={() => updateTech(selectedEvent?.value ?? "")}>
+						DEV BUTTON Update tech and special reqs
+					</Button>
 					<Button tone="active" weight="bold" onClick={updateSubmissions}>
 						Update Submission Results
 					</Button>

@@ -122,6 +122,8 @@ export async function createSchedule(
 				game: run.game,
 				category: run.category || "?",
 				platform: run.platform || "?",
+				techPlatform: run.techPlatform,
+				specialRequirements: run.specialReqs,
 				estimate: run.estimate,
 				scheduledTime: run.scheduled,
 				race: run.race === "RACE" || run.race === "COOP",

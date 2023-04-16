@@ -18,6 +18,8 @@ export type Run = {
 	internalRunner: string;
 	scheduled: Date;
 	uuid: string;
+	techPlatform: string;
+	specialReqs: string;
 }
 
 type DonationIncentive = {

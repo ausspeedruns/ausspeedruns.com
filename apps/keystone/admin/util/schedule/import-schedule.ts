@@ -45,6 +45,7 @@ interface UploadedSchedule {
 	estimate: string;
 	runner: string;
 	platform: string;
+	techPlatform: string;
 	ageRating: "m_or_lower" | "ma15" | "ra18" | "";
 	donationIncentives: string;
 	specialRequirements: string;
@@ -154,6 +155,8 @@ async function csvToRuns(
 			internalRunner: submission.runner,
 			scheduled: scheduledTime,
 			uuid: uuid(),
+			specialReqs: submission.specialRequirements,
+			techPlatform: submission.techPlatform,
 			...extraData,
 		};
 	});

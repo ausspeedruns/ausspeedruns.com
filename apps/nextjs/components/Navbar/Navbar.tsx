@@ -13,11 +13,13 @@ import {
 import {
 	faBars,
 	faTimes,
+	faCalendar,
 } from '@fortawesome/free-solid-svg-icons';
 import { globals } from '../../globals';
 import Button from '../Button/Button';
 import { useAuth } from '../auth';
 import Link from 'next/link';
+
 import { useMediaQuery } from '@mui/material';
 
 const asrAusSpeedrunsLogo = {
@@ -36,6 +38,7 @@ type NavbarProps = {
 		shortname: string;
 		endDate?: string;
 		published: boolean;
+		scheduleReleased: boolean;
 	}[];
 };
 
@@ -53,6 +56,8 @@ const Navbar = ({ events = [] }: NavbarProps) => {
 	const upcomingOrLiveEvents = events
 		.filter((event) => (event.endDate ? new Date(event.endDate) > new Date() : true))
 		.filter((event) => event.published);
+
+	const schedules = upcomingOrLiveEvents.filter(event => event.scheduleReleased);
 
 	return (
 		<header className={`App-header ${styles.navbar}`}>
@@ -84,6 +89,17 @@ const Navbar = ({ events = [] }: NavbarProps) => {
 
 				<nav className={`${styles.mainmenu} ${isOpen ? styles.menuopen : styles.menuclosed}`} aria-label="Main menu">
 					<ul>
+						{schedules.map((event) => {
+							return (
+								<li key={event.shortname}>
+									{/* @ts-ignore */}
+									{mobileWidth ? <FontAwesomeIcon width={20} className={styles.icon} icon={faCalendar} /> : ''}
+									<Link href={`/${event.shortname}/schedule`} passHref className={styles.text}>
+										{schedules.length > 1 && `${event.shortname} `}Schedule
+									</Link>
+								</li>
+							);
+						})}
 						{upcomingOrLiveEvents.map((event) => {
 							return (
 								<li key={event.shortname}>

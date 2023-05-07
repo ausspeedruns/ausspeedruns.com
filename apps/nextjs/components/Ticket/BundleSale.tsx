@@ -54,19 +54,13 @@ export function BundleProduct() {
 		pause: !auth.ready || !auth?.sessionData?.id,
 	});
 
-	const successfulTicket =
-		Boolean(bankTicketsData) && !Boolean(bankTicketsData?.error);
+	const successfulTicket = Boolean(bankTicketsData) && !Boolean(bankTicketsData?.error);
 	const disableBuying =
 		!auth.ready ||
 		(auth.ready && !auth.sessionData) ||
 		!profileQueryRes.data?.user?.verified ||
 		!profileQueryRes.data.event.acceptingTickets;
-	const disableBank =
-		disableBuying ||
-		isNaN(noOfTickets) ||
-		noOfTickets <= 0 ||
-		genTicketLoading ||
-		successfulTicket;
+	const disableBank = disableBuying || isNaN(noOfTickets) || noOfTickets <= 0 || genTicketLoading || successfulTicket;
 
 	const [, deleteStripeTicket] = useMutation(gql`
 		mutation ($sessionID: String) {
@@ -82,21 +76,15 @@ export function BundleProduct() {
 
 		// console.log(query.get('cancelled'), query.get('session_id'), deletedTicket, getTicketIDRes);
 
-		if (
-			query.get("cancelled") &&
-			query.get("session_id") &&
-			!deletedTicket
-		) {
-			deleteStripeTicket({ sessionID: query.get("session_id") }).then(
-				(res) => {
-					if (!res.error) {
-						setDeletedTicket(true);
-						// console.log('Successfully removed a dead ticket :D');
-					} else {
-						console.error(res.error);
-					}
-				},
-			);
+		if (query.get("cancelled") && query.get("session_id") && !deletedTicket) {
+			deleteStripeTicket({ sessionID: query.get("session_id") }).then((res) => {
+				if (!res.error) {
+					setDeletedTicket(true);
+					// console.log('Successfully removed a dead ticket :D');
+				} else {
+					console.error(res.error);
+				}
+			});
 		}
 	}, [deleteStripeTicket, deletedTicket]);
 
@@ -132,9 +120,7 @@ export function BundleProduct() {
 
 		setGenTicketLoading(true);
 		const res = await fetch(
-			`/api/create_bank_bundle?account=${
-				auth.ready ? auth?.sessionData?.id : ""
-			}&bundles=${noOfTickets}`,
+			`/api/create_bank_bundle?account=${auth.ready ? auth?.sessionData?.id : ""}&bundles=${noOfTickets}`,
 		);
 
 		if (res.status === 200) {
@@ -159,51 +145,32 @@ export function BundleProduct() {
 			<div className={styles.information}>
 				<section>
 					<h2>Ticket + Shirt Bundle Information</h2>
-					<p>
-						Ticket to ASM2023 taking place in Adelaide and ASM2023
-						shirt.
-					</p>
+					<p>Ticket to ASM2023 taking place in Adelaide and ASM2023 shirt.</p>
 					<p>Total price: ${TICKET_PRICE} AUD.</p>
 					<p>
-						All attendees, including runners and staff must purchase
-						tickets to attend the event. Volunteers will receive a
-						$15 rebate administered on site at ASM2023.
+						All attendees, including runners and staff must purchase tickets to attend the event. Volunteers
+						will receive a $15 rebate administered on site at ASM2023.
 					</p>
 					<p>
 						We will have personalised tickets if you purchase before
-						<i>
-							<b> TBA</b>
-						</i>
-						.
+						<b> June 2</b>.
 					</p>
 				</section>
 				<hr />
-				<p className={styles.shirtWarning}>
-					SHIRT SIZES WILL BE DETERMINED AT A LATER DATE
-				</p>
+				<p className={styles.shirtWarning}>SHIRT SIZES WILL BE DETERMINED AT A LATER DATE</p>
 				<hr />
 				{auth.ready && !auth?.sessionData && (
 					<section className={styles.loginError}>
-						You must be logged in and email verified to purchase
-						tickets.
+						You must be logged in and email verified to purchase tickets.
 					</section>
 				)}
-				{auth.ready &&
-					auth?.sessionData &&
-					!profileQueryRes.data?.user?.verified && (
-						<section className={styles.loginError}>
-							Your email must be verified to purchase tickets.
-						</section>
-					)}
+				{auth.ready && auth?.sessionData && !profileQueryRes.data?.user?.verified && (
+					<section className={styles.loginError}>Your email must be verified to purchase tickets.</section>
+				)}
 				<section className={styles.paymentMethod}>
 					<h2>Stripe</h2>
-					<p>
-						Clicking on checkout will redirect you to the stripe
-						checkout.{" "}
-					</p>
-					<form
-						action={`/api/checkout_bundle?account=${accId}&username=${accUsername}`}
-						method="POST">
+					<p>Clicking on checkout will redirect you to the stripe checkout. </p>
+					<form action={`/api/checkout_bundle?account=${accId}&username=${accUsername}`} method="POST">
 						<Button
 							type="submit"
 							role="link"
@@ -222,9 +189,7 @@ export function BundleProduct() {
 							type="number"
 							inputProps={{ min: 1 }}
 							value={noOfTickets}
-							onChange={(e) =>
-								setNoOfTickets(parseInt(e.target.value))
-							}
+							onChange={(e) => setNoOfTickets(parseInt(e.target.value))}
 							size="small"
 							color="secondary"
 							label="Number of bundles"
@@ -238,28 +203,16 @@ export function BundleProduct() {
 							onClick={generateTickets}>
 							Generate {noOfTickets > 1 && noOfTickets} Bundle
 							{noOfTickets > 1 && "s"} $
-							{isNaN(noOfTickets) || noOfTickets <= 0
-								? "∞"
-								: noOfTickets * TICKET_PRICE}
+							{isNaN(noOfTickets) || noOfTickets <= 0 ? "∞" : noOfTickets * TICKET_PRICE}
 						</Button>
 					</div>
 					{bankTicketsData?.error && (
-						<p>
-							It seems like there was an error. Please try again
-							or let Clubwho know on Discord!
-						</p>
+						<p>It seems like there was an error. Please try again or let Clubwho know on Discord!</p>
 					)}
-					{successfulTicket &&
-						!genTicketLoading &&
-						bankTicketsData?.data && (
-							<ASMTicket
-								ticketData={bankTicketsData.data.generateTicket}
-								extraCost={noOfTickets * 25}
-							/>
-						)}
-					{genTicketLoading && !bankTicketsData?.error && (
-						<ASMTicketSkeleton />
+					{successfulTicket && !genTicketLoading && bankTicketsData?.data && (
+						<ASMTicket ticketData={bankTicketsData.data.generateTicket} extraCost={noOfTickets * 25} />
 					)}
+					{genTicketLoading && !bankTicketsData?.error && <ASMTicketSkeleton />}
 				</section>
 			</div>
 		</div>
@@ -296,9 +249,8 @@ const ASMTicket = (props: ASMTicketProps) => {
 				<span>{numberOfTickets}</span>
 			</div>
 			<p>
-				You <b>MUST</b> send the Ticket ID as the &quot;reference&quot;.
-				Failure to do so will result in your ticket marked as not being
-				paid.
+				You <b>MUST</b> send the Ticket ID as the &quot;reference&quot;. Failure to do so will result in your
+				ticket marked as not being paid.
 			</p>
 			<p>The ticket will take up to 7 days to update.</p>
 		</Box>
@@ -307,11 +259,7 @@ const ASMTicket = (props: ASMTicketProps) => {
 
 const ASMTicketSkeleton: React.FC = () => {
 	return (
-		<Box
-			className={[styles.generatedTicketsSkeleton, styles.animation].join(
-				" ",
-			)}
-			sx={{ boxShadow: 8 }}>
+		<Box className={[styles.generatedTicketsSkeleton, styles.animation].join(" ")} sx={{ boxShadow: 8 }}>
 			<div className={styles.ticketID}>
 				<Skeleton variant="text" width={100} />
 				<Skeleton variant="rectangular" width={240} height={80} />

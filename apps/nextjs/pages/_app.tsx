@@ -20,6 +20,7 @@ const QUERY_EVENTS = gql`
 			shortname
 			endDate
 			published
+			scheduleReleased
 		}
 	}
 `;

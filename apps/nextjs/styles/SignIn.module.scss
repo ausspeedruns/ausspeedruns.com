@@ -34,6 +34,10 @@
 		padding: 32px 16px;
 	}
 
+	h1 {
+		text-align: center;
+	}
+
 	form {
 		margin-top: 1rem;
 		display: flex;
@@ -45,6 +49,15 @@
 		a {
 			margin-right: 0;
 		}
+	}
+}
+
+.table {
+	text-align: center;
+	table-layout: fixed;
+	
+	td {
+		width: 50%;
 	}
 }
 

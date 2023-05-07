@@ -33,8 +33,9 @@ export function TicketProduct() {
 	const [deletedTicket, setDeletedTicket] = useState(false);
 	const [genTicketLoading, setGenTicketLoading] = useState(false);
 	const [waitForTicket, setWaitForTicket] = useState(false);
-	const [bankTicketsData, setBankTicketsData] =
-		useState<UseMutationResponse<BankTicketResponse, object>[0] | undefined>(undefined);
+	const [bankTicketsData, setBankTicketsData] = useState<
+		UseMutationResponse<BankTicketResponse, object>[0] | undefined
+	>(undefined);
 
 	const [profileQueryRes] = useQuery<QUERY_PROFILE_RESULTS>({
 		query: gql`
@@ -53,19 +54,13 @@ export function TicketProduct() {
 		pause: !auth.ready || !auth?.sessionData?.id,
 	});
 
-	const successfulTicket =
-		Boolean(bankTicketsData) && !Boolean(bankTicketsData?.error);
+	const successfulTicket = Boolean(bankTicketsData) && !Boolean(bankTicketsData?.error);
 	const disableBuying =
 		!auth.ready ||
 		(auth.ready && !auth.sessionData) ||
 		!profileQueryRes.data?.user?.verified ||
 		!profileQueryRes.data.event.acceptingTickets;
-	const disableBank =
-		disableBuying ||
-		isNaN(noOfTickets) ||
-		noOfTickets <= 0 ||
-		genTicketLoading ||
-		successfulTicket;
+	const disableBank = disableBuying || isNaN(noOfTickets) || noOfTickets <= 0 || genTicketLoading || successfulTicket;
 
 	const [, deleteStripeTicket] = useMutation(gql`
 		mutation ($sessionID: String) {
@@ -81,21 +76,15 @@ export function TicketProduct() {
 
 		// console.log(query.get('cancelled'), query.get('session_id'), deletedTicket, getTicketIDRes);
 
-		if (
-			query.get("cancelled") &&
-			query.get("session_id") &&
-			!deletedTicket
-		) {
-			deleteStripeTicket({ sessionID: query.get("session_id") }).then(
-				(res) => {
-					if (!res.error) {
-						setDeletedTicket(true);
-						// console.log('Successfully removed a dead ticket :D');
-					} else {
-						console.error(res.error);
-					}
-				},
-			);
+		if (query.get("cancelled") && query.get("session_id") && !deletedTicket) {
+			deleteStripeTicket({ sessionID: query.get("session_id") }).then((res) => {
+				if (!res.error) {
+					setDeletedTicket(true);
+					// console.log('Successfully removed a dead ticket :D');
+				} else {
+					console.error(res.error);
+				}
+			});
 		}
 	}, [deleteStripeTicket, deletedTicket]);
 
@@ -158,43 +147,29 @@ export function TicketProduct() {
 			<div className={styles.information}>
 				<section>
 					<h2>Ticket Information</h2>
-					<p>
-						Ticket to ASM2023 taking place in Adelaide, July 12-16.
-					</p>
+					<p>Ticket to ASM2023 taking place in Adelaide, July 12-16.</p>
 					<p>Ticket price: ${TICKET_PRICE} AUD.</p>
 					<p>
-						All attendees, including runners and staff must purchase
-						tickets to attend the event. Volunteers will receive a
-						$15 rebate administered on site at ASM2023.
+						All attendees, including runners and staff must purchase tickets to attend the event. Volunteers
+						will receive a $15 rebate administered on site at ASM2023.
 					</p>
 					<p>
-						We will have personalised tickets if you purchase before{" "}
-						<i>
-							<b>TBA</b>
-						</i>
-						.
+						We will have personalised tickets if you purchase before
+						<b> June 2</b>.
 					</p>
 				</section>
 				<hr />
 				{auth.ready && !auth?.sessionData && (
 					<section className={styles.loginError}>
-						You must be logged in and email verified to purchase
-						tickets.
+						You must be logged in and email verified to purchase tickets.
 					</section>
 				)}
-				{auth.ready &&
-					auth?.sessionData &&
-					!profileQueryRes.data?.user?.verified && (
-						<section className={styles.loginError}>
-							Your email must be verified to purchase tickets.
-						</section>
-					)}
+				{auth.ready && auth?.sessionData && !profileQueryRes.data?.user?.verified && (
+					<section className={styles.loginError}>Your email must be verified to purchase tickets.</section>
+				)}
 				<section className={styles.paymentMethod}>
 					<h2>Stripe</h2>
-					<p>
-						Clicking on checkout will redirect you to the stripe
-						checkout.{" "}
-					</p>
+					<p>Clicking on checkout will redirect you to the stripe checkout. </p>
 					<form
 						action={`/api/checkout_ticket?account=${accId}&username=${accUsername}&event=ASM2023`}
 						method="POST">
@@ -216,9 +191,7 @@ export function TicketProduct() {
 							type="number"
 							inputProps={{ min: 1 }}
 							value={noOfTickets}
-							onChange={(e) =>
-								setNoOfTickets(parseInt(e.target.value))
-							}
+							onChange={(e) => setNoOfTickets(parseInt(e.target.value))}
 							size="small"
 							color="secondary"
 							label="Number of tickets"
@@ -232,25 +205,16 @@ export function TicketProduct() {
 							onClick={generateTickets}>
 							Generate {noOfTickets > 1 && noOfTickets} Ticket
 							{noOfTickets > 1 && "s"} $
-							{isNaN(noOfTickets) || noOfTickets <= 0
-								? "∞"
-								: noOfTickets * TICKET_PRICE}
+							{isNaN(noOfTickets) || noOfTickets <= 0 ? "∞" : noOfTickets * TICKET_PRICE}
 						</Button>
 					</div>
 					{bankTicketsData?.error && (
-						<p>
-							It seems like there was an error. Please try again
-							or let Clubwho know on Discord!
-						</p>
+						<p>It seems like there was an error. Please try again or let Clubwho know on Discord!</p>
 					)}
 					{successfulTicket && !genTicketLoading && bankTicketsData?.data && (
-						<ASMTicket
-							ticketData={bankTicketsData.data.generateTicket}
-						/>
+						<ASMTicket ticketData={bankTicketsData.data.generateTicket} />
 					)}
-					{genTicketLoading && !bankTicketsData?.error && (
-						<ASMTicketSkeleton />
-					)}
+					{genTicketLoading && !bankTicketsData?.error && <ASMTicketSkeleton />}
 				</section>
 			</div>
 		</div>
@@ -286,9 +250,8 @@ const ASMTicket = (props: ASMTicketProps) => {
 				<span>{numberOfTickets}</span>
 			</div>
 			<p>
-				You <b>MUST</b> send the Ticket ID as the &quot;reference&quot;.
-				Failure to do so will result in your ticket marked as not being
-				paid.
+				You <b>MUST</b> send the Ticket ID as the &quot;reference&quot;. Failure to do so will result in your
+				ticket marked as not being paid.
 			</p>
 			<p>The ticket will take up to 7 days to update.</p>
 		</Box>
@@ -297,11 +260,7 @@ const ASMTicket = (props: ASMTicketProps) => {
 
 const ASMTicketSkeleton: React.FC = () => {
 	return (
-		<Box
-			className={[styles.generatedTicketsSkeleton, styles.animation].join(
-				" ",
-			)}
-			sx={{ boxShadow: 8 }}>
+		<Box className={[styles.generatedTicketsSkeleton, styles.animation].join(" ")} sx={{ boxShadow: 8 }}>
 			<div className={styles.ticketID}>
 				<Skeleton variant="text" width={100} />
 				<Skeleton variant="rectangular" width={240} height={80} />

@@ -40,13 +40,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		// WHERE Username = '${userData.data.username}'`;
 		const userExists = await sql.query`
 		SELECT [ParticipantId] FROM [dbo].[Participants]
-		WHERE Username = 'Softy'`;
+		WHERE Username = ${userData.data.username}`;
 
 		if (userExists.recordset.length === 0) {
 			// Make user
 			const createUser = await sql.query`
 			INSERT INTO [dbo].[Participants]
-			VALUES ('${userData.data.username}','NULL')`;
+			VALUES (${userData.data.username}, NULL)`;
 
 			console.log(JSON.stringify(createUser))
 		}

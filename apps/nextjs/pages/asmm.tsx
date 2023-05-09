@@ -54,18 +54,13 @@ export default function ASMM() {
 	const auth = useAuth();
 	const [pledgeAmount, setPledgeAmount] = useState(-1);
 	const [signedUp, setSignedUp] = useState(false);
+	const [signedUpResponse, setSignedUpResponse] = useState("");
+	const [pledgeResponse, setPledgeResponse] = useState("");
 	const [eligibleData] = useQuery<QUERY_ELIGIBLE_RESULTS>({
 		query: QUERY_ELIGIBLE,
 		variables: { event: EVENT, username: auth.ready ? auth.sessionData?.username : "" },
 		pause: !auth.ready,
 	});
-	const {
-		register,
-		handleSubmit,
-		watch,
-		control,
-		formState: { errors },
-	} = useForm<PledgeFormValues>();
 
 	const eligible = eligibleData.data?.user?.tickets.some((ticket) => ticket.paid);
 
@@ -98,7 +93,7 @@ export default function ASMM() {
 				method: "POST",
 				body: JSON.stringify({ username: username, ticketID: eligibleData.data?.user?.tickets[0].ticketID }),
 			});
-			res.text().then(console.log);
+			setSignedUpResponse("Signed up!");
 		}
 	};
 
@@ -108,6 +103,10 @@ export default function ASMM() {
 				method: "POST",
 				body: JSON.stringify({ pledge: pledgeAmount, username: username }),
 			});
+
+			if (res.ok) {
+				setPledgeResponse("Pledge made!");
+			}
 		} catch (error) {
 			console.error("Failed submitting pledge!", error);
 		}
@@ -127,14 +126,15 @@ export default function ASMM() {
 			<div className={`${styles.content} ${styles.form}`} style={{ padding: "5rem" }}>
 				<h1 style={{ marginBottom: "3rem" }}>AusSpeedruns Marathon Marathon Sign Up</h1>
 				<p>
-					The AusSpeedruns Marathon Marathon is a walkathon we will be conducting during the Australian
-					Speedruns Marathon 2023. At the end of each day we will tally the steps taken by each participant.
-					Participants are asked to pledge an amount per km walked by the community.
+					The AusSpeedruns Marathon Marathon (ASMM) is a walkathon we will be conducting during the Australian
+					Speedrun Marathon 2023. At the end of each day we will tally the steps taken by each participant.
+					Participants are asked to pledge an amount per 10km walked by the community.
 				</p>
 				<p>Those not attending ASM2023 can also make a pledge.</p>
 				<p>
-					We will be conducting scheduled walks in Adelaide if you want to meet members of the community but
-					these are of course completely optional. Details will be posted in the #asmm channel on our{" "}
+					We will be conducting scheduled walks in Adelaide during ASM2023 if you want to meet members of the
+					community but these are of course completely optional. Details will be posted in the #asmm channel
+					on our{" "}
 					<a
 						className={styles.links}
 						href="http://http://discord.ausspeedruns.com/"
@@ -146,21 +146,22 @@ export default function ASMM() {
 				</p>
 
 				<p style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-					{eligible ? <CheckCircle /> : <Cancel />}Have a paid ticket to ASM2023
+					{eligible ? <CheckCircle /> : <Cancel />} Have a paid ticket to ASM2023
 				</p>
 				<Button fullWidth variant="contained" disabled={!eligible || signedUp} onClick={signUp}>
 					{signedUp ? "Signed Up" : "Sign Up for ASMM"}
 				</Button>
-				<p></p>
+				{signedUpResponse && <p style={{ textAlign: "center" }}>{signedUpResponse}</p>}
+				<div style={{ height: 1, background: "#437c90", width: "80%", margin: 16 }} />
 				<p style={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: 0 }}>
-					{eligible ? <CheckCircle /> : <Cancel />}Logged in
+					{username ? <CheckCircle /> : <Cancel />} Logged in
 				</p>
 				<div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-					<form>
+					<div style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 16 }}>
 						<OutlinedInput
 							defaultValue={1}
 							startAdornment={<InputAdornment position="start">$</InputAdornment>}
-							endAdornment={<InputAdornment position="end">per KM</InputAdornment>}
+							endAdornment={<InputAdornment position="end">per 10km</InputAdornment>}
 							type="number"
 							value={pledgeAmount}
 							onChange={(e) => setPledgeAmount(parseFloat(e.target.value))}
@@ -173,10 +174,9 @@ export default function ASMM() {
 							onClick={makePledge}>
 							Make a pledge
 						</Button>
-					</form>
+						{pledgeResponse && <p style={{ textAlign: "center" }}>{pledgeResponse}</p>}
+					</div>
 				</div>
-
-				<hr className="my-4" />
 			</div>
 		</ThemeProvider>
 	);

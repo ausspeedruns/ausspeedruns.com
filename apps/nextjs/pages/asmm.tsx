@@ -117,17 +117,17 @@ export default function ASMM() {
 			<Head>
 				<title>ASMM - AusSpeedruns</title>
 				<DiscordEmbed
-					title="AusSpeedruns Marathon Marathon - AusSpeedruns"
-					description="Sign up to participate in the AusSpeedruns Marathon Marathon!"
+					title="Australian Speedruns Marathon Marathon - AusSpeedruns"
+					description="Sign up to participate in the Australian Speedruns Marathon Marathon!"
 					pageUrl="/asmm"
 					imageSrc={OGImage.src}
 				/>
 			</Head>
 			<div className={styles.background} />
 			<div className={`${styles.content} ${styles.form}`} style={{ padding: "5rem" }}>
-				<h1 style={{ marginBottom: "3rem" }}>AusSpeedruns Marathon Marathon Sign Up</h1>
+				<h1 style={{ marginBottom: "3rem" }}>Australian Speedruns Marathon Marathon Sign Up</h1>
 				<p>
-					The AusSpeedruns Marathon Marathon (ASMM) is a walkathon we will be conducting during the Australian
+					The Australian Speedruns Marathon Marathon (ASMM) is a walkathon we will be conducting during the Australian
 					Speedrun Marathon 2023. At the end of each day we will tally the steps taken by each participant.
 					Participants are asked to pledge an amount per 10km walked by the community.
 				</p>

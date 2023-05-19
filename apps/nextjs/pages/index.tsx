@@ -12,7 +12,7 @@ import LastEventBlock from "../components/LastEventBlock/LastEventBlock";
 
 import OGImage from "../styles/img/IndexOG.png";
 import { AusSpeedrunsEvent } from "../types/types";
-import { EventLive } from '../components/EventLive/EventLive';
+import { EventLive } from "../components/EventLive/EventLive";
 
 // TODO: Move this stuff to keystone
 const ASM2023: AusSpeedrunsEvent = {
@@ -45,18 +45,46 @@ export default function Home() {
 			</Head>
 			<main>
 				{/* <EventLive event={next.preferredName} /> */}
-				<HeroBlock event={ASM2023} ticketLink="/ASM2023/tickets" schedule tagLine="The Australian Speedrun Marathon returns! The Schedule has been released! Buy tickets!" />
-				<LastEventBlock tagLine='We had an incredible time showcasing speedruns at the very first TGX!' event={next} backgroundPos="center" />
-				<LastEventBlock tagLine='We smashed our donation record and put on 3 jam packed days of speedrunning.' event={current} backgroundPos="center" />
-				<LastEventBlock tagLine='An absolute incredible event of week long non-stop speedrunning culminating in us breaking our all time donation record!' event={previous} />
+				<div
+					style={{
+						background: "#CC7722",
+						color: "white",
+						height: 100,
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+						gap: 16,
+					}}>
+					We've just announced the Australian Speedruns Marathon Marathon! A walkathon we will be conducting
+					during ASM2023
+					<Button colorScheme="secondary inverted" link="/asmm" actionText="Learn more" />
+				</div>
+				<HeroBlock
+					event={ASM2023}
+					ticketLink="/ASM2023/tickets"
+					schedule
+					tagLine="The Australian Speedrun Marathon returns! The Schedule has been released! Buy tickets!"
+				/>
+				<LastEventBlock
+					tagLine="We had an incredible time showcasing speedruns at the very first TGX!"
+					event={next}
+					backgroundPos="center"
+				/>
+				<LastEventBlock
+					tagLine="We smashed our donation record and put on 3 jam packed days of speedrunning."
+					event={current}
+					backgroundPos="center"
+				/>
+				<LastEventBlock
+					tagLine="An absolute incredible event of week long non-stop speedrunning culminating in us breaking our all time donation record!"
+					event={previous}
+				/>
 				<section className={styles.archive}>
 					<div className={styles.content}>
 						<div className={styles.filler}></div>
 						<div className={styles.text}>
 							<h2>Missed a run?</h2>
-							<p>
-								Check our YouTube for runs from previous events.
-							</p>
+							<p>Check our YouTube for runs from previous events.</p>
 							<Button
 								actionText="Watch again"
 								link={globals.socialLinks.youtube}

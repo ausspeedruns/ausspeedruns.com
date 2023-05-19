@@ -9,8 +9,8 @@ import {
 	InputLabel,
 	OutlinedInput,
 } from "@mui/material";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Cancel, CheckCircle } from "@mui/icons-material";
+import OGImage from "../styles/img/ogImages/ASMM.png";
 
 // import Footer from '../components/Footer/Footer';
 import styles from "../styles/SignIn.module.scss";
@@ -118,8 +118,9 @@ export default function ASMM() {
 				<title>ASMM - AusSpeedruns</title>
 				<DiscordEmbed
 					title="AusSpeedruns Marathon Marathon - AusSpeedruns"
-					description="Sign Up to participate in the AusSpeedruns Marathon Marathon!"
+					description="Sign up to participate in the AusSpeedruns Marathon Marathon!"
 					pageUrl="/asmm"
+					imageSrc={OGImage.src}
 				/>
 			</Head>
 			<div className={styles.background} />

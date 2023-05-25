@@ -77,11 +77,17 @@ export default function ASMM() {
 				res.text().then(console.log);
 			});
 
+			fetch(`/api/asmm/sign-up?username=${username}`, { method: "GET" }).then((res) => {
+				res.json().then((data) => {
+					console.log(data);
+					setSignedUp(data.Barcode != NULL);
+				});
+			});
+		
 			fetch(`/api/asmm/pledge?username=${username}`, { method: "GET" }).then((res) => {
 				res.json().then((data) => {
 					console.log(data);
 					setPledgeAmount(data.pledge);
-					setSignedUp(data.pledge > 0);
 				});
 			});
 		}

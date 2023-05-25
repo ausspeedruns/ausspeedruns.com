@@ -15,10 +15,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		INSERT INTO [dbo].[Participants]
 		VALUES (${body.username},${body.ticketID ?? "NULL"})`;
 
-		await sql.query`
-		INSERT INTO [dbo].[Pledges]
-		VALUES((SELECT [ParticipantId] FROM [dbo].[Participants] WHERE Username = ${body.username}),1,1)`;
-
 		return res.status(200).json({ success: true });
 	} catch (error) {
 		return res.status(500).json({ error: error });

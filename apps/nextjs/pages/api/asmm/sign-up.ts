@@ -1,12 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import sql from 'mssql';
 import { connect } from './db';
-import { z } from "zod";
-
-const bodyData = z.object ({
-	username: z.string(),
-	barcode: z.string(),
-});
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	

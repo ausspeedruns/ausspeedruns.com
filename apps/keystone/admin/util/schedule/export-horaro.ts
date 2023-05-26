@@ -168,7 +168,7 @@ function runnersToTwitter(runners: QueryRuns['event']['runs'][0]['runners'], rac
 	const formattedRunners: string[] = [];
 	let numberOfTwitters = 0;
 	
-	const formattedTwitter: string[] = [];
+	const formattedTwitter: string;
 	
 	runners.forEach(runner => {
 		if (runner.twitter) {

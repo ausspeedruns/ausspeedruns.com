@@ -26,11 +26,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 		if (req.method === "POST" {
 			
-			
-
+		    	const body = JSON.parse(req.body);
+		    
+			const userExists = await sql.query`
+			SELECT [ParticipantId] FROM [dbo].[Participants]
+			WHERE Username = ${body.username}`;
+		
+		if (userExists.recordset.length === 0) {
+		
 			const data = await sql.query`
 			INSERT INTO [dbo].[Participants]
 			VALUES (${body.username},${body.ticketID ?? "NULL"})`;
+			
+			console.log(JSON.stringify(data))
+		} else {
+			
+			const editData = await sql.query`
+			UPDATE [dbo].[Participants]
+			SET Barcode = ${body.ticketId ?? "NULL"}
+			WHERE Username = ${body.username}`;
+			
+			console.log(JSON.stringify(editData))
+		}
 
 			return res.status(200).json({ success: true });
 		}

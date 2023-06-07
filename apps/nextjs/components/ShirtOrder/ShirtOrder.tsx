@@ -1,10 +1,11 @@
 import { Box } from "@mui/material";
 import Image from "next/image";
-import styles from "./ShirtOrder.module.scss";
+import JSBarcode from "jsbarcode";
 
-import ShirtBlue from "../../styles/img/ShirtBlue.png";
-import ShirtPurple from "../../styles/img/ShirtPurple.png";
+import styles from "./ShirtOrder.module.scss";
+import ShirtImage from "../../styles/img/ASM2023ShirtMockup.png";
 import ASM2023Shirt from "../../styles/img/asm2023-tickets-bundle-card.png";
+import { useEffect, useRef } from "react";
 
 interface ASMShirtProps {
 	shirtData: {
@@ -17,15 +18,30 @@ interface ASMShirtProps {
 }
 
 const ASMShirt: React.FC<ASMShirtProps> = (props: ASMShirtProps) => {
-	const { shirtID, paid, notes } = props.shirtData;
+	const { shirtID, paid, notes, size } = props.shirtData;
+	const barcodeRef = useRef<SVGSVGElement>(null);
 
-	const noOfShirts = parseInt(notes?.match(/#(\d+)/)?.[1] ?? "") ?? 1;
+	let shirtPrice = 30;
+
+	useEffect(() => {
+		if (barcodeRef.current && paid) {
+			JSBarcode(barcodeRef.current, shirtID, { displayValue: false });
+		}
+	}, [shirtID, paid, barcodeRef]);
+
+	let noOfShirts = parseInt(notes?.match(/#(\d+)/)?.[1] ?? "") ?? 1;
+	const hasSelectedSize = notes?.[0] !== "#";
+	if (!hasSelectedSize) {
+		shirtPrice = 25;
+	} else {
+		noOfShirts = 1;
+	}
 
 	return (
 		<Box className={styles.generatedShirts} sx={{ boxShadow: 8 }}>
 			<div className={styles.image}>
 				<Image
-					src={ASM2023Shirt}
+					src={ShirtImage}
 					alt="Shirt"
 					sizes="100vw"
 					style={{
@@ -37,7 +53,14 @@ const ASMShirt: React.FC<ASMShirtProps> = (props: ASMShirtProps) => {
 			</div>
 			<div className={styles.basicInfo}>
 				<span className={styles.label}>{shirtID}</span>
+				{paid && <svg ref={barcodeRef} className={styles.barcode}></svg>}
 				<div className={styles.informationGrid}>
+					{notes?.[0] != "#" && (
+						<>
+							<span>Size</span>
+							<span>{sizeToName(size)}</span>
+						</>
+					)}
 					{/* <span>Size</span>
 					<span>{sizeToName(size)}</span>
 					<span>Colour</span>
@@ -49,24 +72,23 @@ const ASMShirt: React.FC<ASMShirtProps> = (props: ASMShirtProps) => {
 			{!paid && (
 				<div className={styles.unpaid}>
 					<p>
-						You <b>MUST</b> send the Shirt ID as the
-						&quot;reference&quot;. Failure to do so will result in
-						your shirt marked as not being paid and will not be
-						ordered. The shirt will take up to 7 days to update.
+						You <b>MUST</b> send the Shirt ID as the &quot;reference&quot;. Failure to do so will result in
+						your shirt marked as not being paid and will not be ordered. The shirt will take up to 7 days to
+						update.
 					</p>
 					<div className={styles.informationGrid}>
 						<span>BSB</span>
 						<span>085-005</span>
 						<span>Account #</span>
 						<span>30-192-8208</span>
-						{noOfShirts > 1 && (
+						{~~noOfShirts > 1 && (
 							<>
 								<span>Num of Shirts</span>
 								<span>{noOfShirts}</span>
 							</>
 						)}
 						<span>Amount</span>
-						<span>${noOfShirts * 25} AUD</span>
+						<span>${noOfShirts * shirtPrice} AUD</span>
 					</div>
 				</div>
 			)}
@@ -90,6 +112,8 @@ function sizeToName(size: string) {
 			return "2 Extra Large";
 		case "xl3":
 			return "3 Extra Large";
+		case "xl4":
+			return "4 Extra Large";
 		default:
 			return size;
 	}

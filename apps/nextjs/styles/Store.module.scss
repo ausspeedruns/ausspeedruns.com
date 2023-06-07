@@ -14,8 +14,14 @@
 	align-items: center;
 
 	.image {
-		width: 50%;
+		width: 60%;
 		height: auto;
+
+		img {
+			height: 100%;
+			width: 100%;
+			object-fit: contain;
+		}
 
 		@include breakpoint($sm-zero-only) {
 			width: 100%;
@@ -30,7 +36,7 @@
 		margin-top: 1rem;
 		width: 100%;
 		display: grid;
-		grid-template-columns: repeat(2, 50%);
+		grid-template-columns: 55% 45%;
 		justify-content: center;
 		gap: 1rem;
 
@@ -48,6 +54,8 @@
 			// max-height: 30rem;
 			padding: 1rem !important;
 			height: auto;
+			object-fit: contain;
+			width: 100%;
 		}
 
 		.preferences {

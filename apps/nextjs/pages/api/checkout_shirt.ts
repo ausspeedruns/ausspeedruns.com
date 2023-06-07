@@ -17,13 +17,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			}
 
 			// Check valid shirt size
-			if (!req.query.size || Array.isArray(req.query.size) || !['xs', 's', 'm', 'l', 'xl', 'xl2', 'xl3'].includes(req.query.size)) {
+			if (!req.query.size || Array.isArray(req.query.size) || !['m', 'l', 'xl', 'xl2', 'xl3', 'xl4'].includes(req.query.size)) {
 				throw new Error('Invalid Size');
-			}
-
-			// Check valid colour
-			if (!req.query.colour || Array.isArray(req.query.colour) || !['blue', 'purple'].includes(req.query.colour)) {
-				throw new Error('Invalid colour');
 			}
 
 			if (!req.query.username || Array.isArray(req.query.username)) {
@@ -35,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				line_items: [
 					{
 						// Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-						price: 'ASM2022SHIRT',
+						price: 'ASM2023SHIRT',
 						quantity: 1,
 					},
 				],
@@ -46,19 +41,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 			// Generate shirt code
 			const returnData = await urqlClient.mutation(gql`
-				mutation ($userID: ID!, $stripeID: String, $size: ShirtOrderSizeType!, $colour: ShirtOrderColourType!, $apiKey: String!) {
+				mutation ($userID: ID!, $stripeID: String, $size: ShirtOrderSizeType!, $apiKey: String!) {
 					generateShirt(
 						userID: $userID
 						method: stripe
 						size: $size
-						colour: $colour
 						stripeID: $stripeID
 						apiKey: $apiKey
 					) {
 						__typename
 					}
 				}
-			`, { userID: req.query.account, size: req.query.size, colour: req.query.colour, stripeID: session.id, event: req.query.event, apiKey: process.env.API_KEY }).toPromise();
+			`, { userID: req.query.account, size: req.query.size, stripeID: session.id, event: req.query.event, apiKey: process.env.API_KEY }).toPromise();
 
 			if (returnData.error) {
 				throw new Error(JSON.stringify(returnData.error));
@@ -66,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 			res.redirect(303, session.url!);
 		} catch (err: any) {
-			res.status(err.statusCode || 500).json(err.message);
+			res.status(err.statusCode ?? 500).json(err.message);
 		}
 	} else {
 		res.setHeader('Allow', 'POST');

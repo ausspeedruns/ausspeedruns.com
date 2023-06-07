@@ -166,9 +166,11 @@ export default withAuth(
             async resolve(source, { apiKey, stripeID, numberOfShirts }, context: Context) {
               if (apiKey !== process.env.API_KEY) throw new Error("Incorrect API Key");
 
+              const notes = numberOfShirts > 0 ? `#${numberOfShirts}` : '';
+
               return context.sudo().db.ShirtOrder.updateOne({
                 where: { stripeID },
-                data: { paid: true, notes: `#${numberOfShirts}` }
+                data: { paid: true, notes }
               });
             },
           }),
@@ -177,11 +179,12 @@ export default withAuth(
             args: {
               userID: graphql.arg({ type: graphql.nonNull(graphql.ID) }),
               method: graphql.arg({ type: graphql.nonNull(base.enum('ShirtOrderMethodType')) }),
+              size: graphql.arg({ type: graphql.nonNull(base.enum('ShirtOrderSizeType')) }),
               stripeID: graphql.arg({ type: graphql.String }),
               apiKey: graphql.arg({ type: graphql.nonNull(graphql.String) }),
               notes: graphql.arg({ type: graphql.String }),
             },
-            async resolve(source, { apiKey, notes, method, stripeID, userID }, context: Context) {
+            async resolve(source, { apiKey, notes, method, stripeID, size, userID }, context: Context) {
               if (apiKey !== process.env.API_KEY) throw new Error("Incorrect API Key");
 
               // Check user is verified
@@ -192,10 +195,15 @@ export default withAuth(
                 throw new Error('Unverified user.');
               }
 
+              if (typeof size !== 'string')
+              {
+                throw new Error('Unknown size.');
+              }
+
               return context.sudo().db.ShirtOrder.createOne({
                 data: {
                   user: { connect: { id: userID } },
-                  size: 'm',
+                  size: size as any,
                   colour: 'blue',
                   // @ts-ignore: I do not know how to correctly type the graphql arg
                   method,

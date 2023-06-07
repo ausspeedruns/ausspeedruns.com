@@ -18,36 +18,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				}
 
 				// Check valid shirt size
-				if (!req.query.size || Array.isArray(req.query.size) || !['xs', 's', 'm', 'l', 'xl', 'xl2', 'xl3'].includes(req.query.size)) {
+				if (!req.query.size || Array.isArray(req.query.size) || !['m', 'l', 'xl', 'xl2', 'xl3', 'xl4'].includes(req.query.size)) {
 					throw new Error('Invalid Size');
 				}
 
-				// Check valid colour
-				if (!req.query.colour || Array.isArray(req.query.colour) || !['blue', 'purple'].includes(req.query.colour)) {
-					throw new Error('Invalid colour');
-				}
-
 				const data = await urqlClient.mutation(gql`
-					mutation ($userID: ID!, $size: ShirtOrderSizeType!, $colour: ShirtOrderColourType!, $apiKey: String!) {
+					mutation ($userID: ID!, $size: ShirtOrderSizeType!, $apiKey: String!) {
 						generateShirt(
 							userID: $userID
 							method: bank
 							size: $size
-							colour: $colour
 							apiKey: $apiKey
 						) {
 							shirtID
 							size
-							colour
 						}
 					}
-				`, { userID: req.query.account, size: req.query.size, colour: req.query.colour, apiKey: process.env.API_KEY }).toPromise();
+				`, { userID: req.query.account, size: req.query.size, apiKey: process.env.API_KEY }).toPromise();
 
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json(data);
 				return resolve();
 			} catch (err: any) {
-				res.status(err.statusCode || 500).json(err.message);
+				res.status(err.statusCode ?? 500).json(err.message);
 				return resolve();
 			}
 		} else {

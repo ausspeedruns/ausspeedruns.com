@@ -64,6 +64,7 @@ export const ShirtOrder: Lists.ShirtOrder = list({
 				{ label: "Xtra Large", value: "xl" },
 				{ label: "2 Xtra Large", value: "xl2" },
 				{ label: "3 Xtra Large", value: "xl3" },
+				{ label: "4 Xtra Large", value: "xl4" },
 			],
 			validation: {
 				isRequired: true

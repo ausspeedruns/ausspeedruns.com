@@ -1403,6 +1403,7 @@ enum ShirtOrderSizeType {
   xl
   xl2
   xl3
+  xl4
 }
 
 enum ShirtOrderColourType {
@@ -1650,7 +1651,7 @@ type Mutation {
   confirmStripe(stripeID: String!, numberOfTickets: Int!, apiKey: String!): Ticket
   generateTicket(userID: ID!, numberOfTickets: Int!, method: TicketMethodType!, event: String!, stripeID: String, apiKey: String!): Ticket
   confirmShirtStripe(stripeID: String!, numberOfShirts: Int!, apiKey: String!): ShirtOrder
-  generateShirt(userID: ID!, method: ShirtOrderMethodType!, stripeID: String, apiKey: String!, notes: String): ShirtOrder
+  generateShirt(userID: ID!, method: ShirtOrderMethodType!, size: ShirtOrderSizeType!, stripeID: String, apiKey: String!, notes: String): ShirtOrder
 }
 
 union UserAuthenticationWithPasswordResult = UserAuthenticationWithPasswordSuccess | UserAuthenticationWithPasswordFailure

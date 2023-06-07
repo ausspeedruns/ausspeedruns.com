@@ -91,7 +91,7 @@ async function fulfilShirtOrder(sessionID: any) {
   // Update shirt information
   const mutRes = await urqlClient.mutation(gql`
     mutation ($sessionID: String!, $apiKey: String!) {
-      confirmShirtStripe(stripeID: $sessionID, apiKey: $apiKey) {
+      confirmShirtStripe(stripeID: $sessionID, apiKey: $apiKey, numberOfShirts: 0) {
         __typename
       }
     }

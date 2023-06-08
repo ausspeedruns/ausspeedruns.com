@@ -1651,6 +1651,7 @@ type Mutation {
   confirmStripe(stripeID: String!, numberOfTickets: Int!, apiKey: String!): Ticket
   generateTicket(userID: ID!, numberOfTickets: Int!, method: TicketMethodType!, event: String!, stripeID: String, apiKey: String!): Ticket
   confirmShirtStripe(stripeID: String!, numberOfShirts: Int!, apiKey: String!): ShirtOrder
+  updateShirtSize(shirtID: String!, size: ShirtOrderSizeType!, apiKey: String!): ShirtOrder
   generateShirt(userID: ID!, method: ShirtOrderMethodType!, size: ShirtOrderSizeType!, stripeID: String, apiKey: String!, notes: String): ShirtOrder
 }
 

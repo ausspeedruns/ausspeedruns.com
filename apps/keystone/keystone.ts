@@ -174,6 +174,22 @@ export default withAuth(
               });
             },
           }),
+          updateShirtSize: graphql.field({
+            type: base.object('ShirtOrder'),
+            args: {
+              shirtID: graphql.arg({ type: graphql.nonNull(graphql.String) }),
+              size: graphql.arg({ type: graphql.nonNull(base.enum('ShirtOrderSizeType')) }),
+              apiKey: graphql.arg({ type: graphql.nonNull(graphql.String) }),
+            },
+            async resolve(source, { apiKey, shirtID, size }, context: Context) {
+              if (apiKey !== process.env.API_KEY) throw new Error("Incorrect API Key");
+
+              return context.sudo().db.ShirtOrder.updateOne({
+                where: { shirtID },
+                data: { size: size as any, notes: '' }
+              });
+            },
+          }),
           generateShirt: graphql.field({
             type: base.object('ShirtOrder'),
             args: {

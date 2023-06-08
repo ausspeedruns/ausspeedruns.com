@@ -39,7 +39,7 @@ const Shirt = () => {
 		pause: !auth.ready || !auth?.sessionData?.id,
 	});
 
-	async function updateShirtSize(index) {
+	async function updateShirtSize(index: number) {
 		if (!auth.ready) {
 			console.error("Tried to generate tickets but auth was not ready");
 			return;
@@ -60,10 +60,10 @@ const Shirt = () => {
 	}
 
 	const shirtsNeedingSizes =
-		(profileQueryRes.data?.user.shirts.filter((shirt) => shirt.notes[0] == "#") as Record<string, any>[]) ?? [];
+		(profileQueryRes.data?.user.shirts.filter((shirt: Record<string, any>) => shirt.notes[0] == "#") as Record<string, any>[]) ?? [];
 	console.log(shirtsNeedingSizes);
 
-	function handleSizeChange(index, size) {
+	function handleSizeChange(index: number, size: string) {
 		let nextSizes = shirtSize;
 
 		if (nextSizes.length < shirtsNeedingSizes.reduce((acc, cur) => acc + parseInt(cur.notes[1], 10), 0)) {

@@ -53,7 +53,7 @@ export const ShirtOrder: Lists.ShirtOrder = list({
 		}),
 		shirtID: text({ isIndexed: 'unique' }),
 		paid: checkbox({ defaultValue: false }),
-		notes: text({ access: { update: permissions.canManageUsers, read: permissions.canManageUsers } }),
+		notes: text(),
 		size: select({
 			type: 'enum',
 			options: [

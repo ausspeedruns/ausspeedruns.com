@@ -45,7 +45,7 @@ const Shirt = () => {
 			return;
 		}
 
-		console.log(shirtSize, index, shirtSize[index])
+		console.log(shirtSize, index, shirtSize[index]);
 
 		const res = await fetch(
 			`/api/set_shirt_size?shirtID=${shirtsNeedingSizes[index].shirtID}&size=${shirtSize[index]}`,
@@ -53,14 +53,18 @@ const Shirt = () => {
 		// generateBankTickets({ userID: auth.sessionData.id, numberOfTickets: noOfTickets });
 		if (res.status === 200) {
 			const data = await res.json();
-			setShirtConfirm(`Set ${data.shirtID} size!`);
+			console.log(data);
+			setShirtConfirm(`Set ${data.data.updateShirtSize.shirtID} size!`);
 		} else {
 			console.error(res);
 		}
 	}
 
 	const shirtsNeedingSizes =
-		(profileQueryRes.data?.user.shirts.filter((shirt: Record<string, any>) => shirt.notes[0] == "#") as Record<string, any>[]) ?? [];
+		(profileQueryRes.data?.user.shirts.filter((shirt: Record<string, any>) => shirt.notes?.[0] == "#") as Record<
+			string,
+			any
+		>[]) ?? [];
 	console.log(shirtsNeedingSizes);
 
 	function handleSizeChange(index: number, size: string) {
@@ -178,47 +182,49 @@ const Shirt = () => {
 							/>
 						</div>
 						<table>
-							<tr>
-								<th>Size</th>
-								<th>
-									Width (cm)
-									<span>Chest width at underarm</span>
-								</th>
-								<th>
-									Length (cm)
-									<span>Shoulder point at neck to hem</span>
-								</th>
-							</tr>
-							<tr>
-								<td>M</td>
-								<td>51</td>
-								<td>74</td>
-							</tr>
-							<tr>
-								<td>L</td>
-								<td>56</td>
-								<td>76</td>
-							</tr>
-							<tr>
-								<td>XL</td>
-								<td>61</td>
-								<td>79</td>
-							</tr>
-							<tr>
-								<td>2XL</td>
-								<td>66</td>
-								<td>81</td>
-							</tr>
-							<tr>
-								<td>3XL</td>
-								<td>71</td>
-								<td>84</td>
-							</tr>
-							<tr>
-								<td>4XL</td>
-								<td>76</td>
-								<td>86</td>
-							</tr>
+							<tbody>
+								<tr>
+									<th>Size</th>
+									<th>
+										Width (cm)
+										<span>Chest width at underarm</span>
+									</th>
+									<th>
+										Length (cm)
+										<span>Shoulder point at neck to hem</span>
+									</th>
+								</tr>
+								<tr>
+									<td>M</td>
+									<td>51</td>
+									<td>74</td>
+								</tr>
+								<tr>
+									<td>L</td>
+									<td>56</td>
+									<td>76</td>
+								</tr>
+								<tr>
+									<td>XL</td>
+									<td>61</td>
+									<td>79</td>
+								</tr>
+								<tr>
+									<td>2XL</td>
+									<td>66</td>
+									<td>81</td>
+								</tr>
+								<tr>
+									<td>3XL</td>
+									<td>71</td>
+									<td>84</td>
+								</tr>
+								<tr>
+									<td>4XL</td>
+									<td>76</td>
+									<td>86</td>
+								</tr>
+							</tbody>
 						</table>
 					</div>
 				</main>

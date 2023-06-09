@@ -229,7 +229,9 @@ const Shirt = () => {
 					{bankShirtData?.error && (
 						<p>It seems like there was an error. Please try again or let Clubwho know on Discord!</p>
 					)}
-					{successfulShirt && !genShirtLoading && bankShirtData?.data && <ASMShirt shirtData={bankShirtData.data.generateShirt} />}
+					{successfulShirt && !genShirtLoading && bankShirtData?.data && (
+						<ASMShirt shirtData={bankShirtData.data.generateShirt} />
+					)}
 					{genShirtLoading && !bankShirtData?.error && <ASMShirtSkeleton />}
 					<hr />
 					<h2>Garment Sizing</h2>
@@ -241,47 +243,49 @@ const Shirt = () => {
 							/>
 						</div>
 						<table>
-							<tr>
-								<th>Size</th>
-								<th>
-									Width (cm)
-									<span>Chest width at underarm</span>
-								</th>
-								<th>
-									Length (cm)
-									<span>Shoulder point at neck to hem</span>
-								</th>
-							</tr>
-							<tr>
-								<td>M</td>
-								<td>51</td>
-								<td>74</td>
-							</tr>
-							<tr>
-								<td>L</td>
-								<td>56</td>
-								<td>76</td>
-							</tr>
-							<tr>
-								<td>XL</td>
-								<td>61</td>
-								<td>79</td>
-							</tr>
-							<tr>
-								<td>2XL</td>
-								<td>66</td>
-								<td>81</td>
-							</tr>
-							<tr>
-								<td>3XL</td>
-								<td>71</td>
-								<td>84</td>
-							</tr>
-							<tr>
-								<td>4XL</td>
-								<td>76</td>
-								<td>86</td>
-							</tr>
+							<tbody>
+								<tr>
+									<th>Size</th>
+									<th>
+										Width (cm)
+										<span>Chest width at underarm</span>
+									</th>
+									<th>
+										Length (cm)
+										<span>Shoulder point at neck to hem</span>
+									</th>
+								</tr>
+								<tr>
+									<td>M</td>
+									<td>51</td>
+									<td>74</td>
+								</tr>
+								<tr>
+									<td>L</td>
+									<td>56</td>
+									<td>76</td>
+								</tr>
+								<tr>
+									<td>XL</td>
+									<td>61</td>
+									<td>79</td>
+								</tr>
+								<tr>
+									<td>2XL</td>
+									<td>66</td>
+									<td>81</td>
+								</tr>
+								<tr>
+									<td>3XL</td>
+									<td>71</td>
+									<td>84</td>
+								</tr>
+								<tr>
+									<td>4XL</td>
+									<td>76</td>
+									<td>86</td>
+								</tr>
+							</tbody>
 						</table>
 					</div>
 					<hr />

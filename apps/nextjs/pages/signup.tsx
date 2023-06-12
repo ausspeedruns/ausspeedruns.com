@@ -61,7 +61,7 @@ export default function SignUpPage() {
 				<form
 					onSubmit={(event) => {
 						event.preventDefault();
-						signup({ username, email, password, dob }).then((result) => {
+						signup({ username, email: email.toLowerCase(), password, dob }).then((result) => {
 							if (result.data?.createUser) {
 								// FIXME: there's a cache issue with Urql where it's not reloading the
 								// current user properly if we do a client-side redirect here.

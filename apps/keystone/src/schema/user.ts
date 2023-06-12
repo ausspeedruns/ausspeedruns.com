@@ -98,7 +98,7 @@ export const User: Lists.User = list({
 			validation: {
 				isRequired: false,
 				match: {
-					regex: /(^.{3,32}#[0-9]{4}$)?/,
+					regex: /^(.{3,32}#[0-9]{4}|[a-z0-9._]{2,32})?$/,
 					explanation: `Discord user ID is invalid. Make sure its like "Clubwho#1337".`
 				}
 			}

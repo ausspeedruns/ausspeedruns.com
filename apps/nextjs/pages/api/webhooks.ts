@@ -54,10 +54,10 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
             fulfilShirtOrder(checkout.id);
           } else if (data.data[0].description === "ASM2023 Bundle") {
             // BUNDLE
-            fulfilBundleOrder(checkout.id, data.data[0].quantity!);
+            fulfilBundleOrder(checkout.id);
           } else {
             // TICKET
-            fulfilOrder(checkout.id, data.data[0].quantity!);
+            fulfilOrder(checkout.id);
           }
         });
         break;
@@ -74,15 +74,16 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
   }
 };
 
-const fulfilOrder = async (sessionID: any, quantity: number) => {
+const fulfilOrder = async (sessionID: any) => {
   // Update ticket information
+  console.log(`AAAAAAAAAAAAAAA ${sessionID}`);
   const mutRes = await urqlClient.mutation(gql`
-    mutation ($sessionID: String!, $quantity: Int!, $apiKey: String!) {
-      confirmStripe(stripeID: $sessionID, numberOfTickets: $quantity, apiKey: $apiKey) {
+    mutation ($sessionID: String!, $apiKey: String!) {
+      confirmStripe(stripeID: $sessionID, apiKey: $apiKey) {
         __typename
       }
     }
-  `, { sessionID, quantity, apiKey: process.env.API_KEY }).toPromise();
+  `, { sessionID, apiKey: process.env.API_KEY }).toPromise();
 }
 
 export default cors(webhookHandler);
@@ -91,23 +92,23 @@ async function fulfilShirtOrder(sessionID: any) {
   // Update shirt information
   const mutRes = await urqlClient.mutation(gql`
     mutation ($sessionID: String!, $apiKey: String!) {
-      confirmShirtStripe(stripeID: $sessionID, apiKey: $apiKey, numberOfShirts: 0) {
+      confirmShirtStripe(stripeID: $sessionID, apiKey: $apiKey) {
         __typename
       }
     }
   `, { sessionID, apiKey: process.env.API_KEY }).toPromise();
 }
 
-async function fulfilBundleOrder(sessionID: any, quantity: number) {
+async function fulfilBundleOrder(sessionID: any) {
   // Update shirt information
   const mutRes = await urqlClient.mutation(gql`
-    mutation ($sessionID: String!, $apiKey: String!, $quantity: Int!) {
-      confirmShirtStripe(stripeID: $sessionID, apiKey: $apiKey, numberOfShirts: $quantity) {
+    mutation ($sessionID: String!, $apiKey: String!) {
+      confirmShirtStripe(stripeID: $sessionID, apiKey: $apiKey) {
         __typename
       }
-      confirmStripe(stripeID: $sessionID, numberOfTickets: $quantity, apiKey: $apiKey) {
+      confirmStripe(stripeID: $sessionID, apiKey: $apiKey) {
         __typename
       }
     }
-  `, { sessionID, apiKey: process.env.API_KEY, quantity }).toPromise();
+  `, { sessionID, apiKey: process.env.API_KEY }).toPromise();
 }

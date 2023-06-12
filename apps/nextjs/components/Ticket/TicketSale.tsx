@@ -29,7 +29,6 @@ const TICKET_PRICE = 25;
 
 export function TicketProduct() {
 	const auth = useAuth();
-	const [noOfTickets, setNoOfTickets] = useState(1);
 	const [deletedTicket, setDeletedTicket] = useState(false);
 	const [genTicketLoading, setGenTicketLoading] = useState(false);
 	const [waitForTicket, setWaitForTicket] = useState(false);
@@ -60,7 +59,7 @@ export function TicketProduct() {
 		(auth.ready && !auth.sessionData) ||
 		!profileQueryRes.data?.user?.verified ||
 		!profileQueryRes.data.event.acceptingTickets;
-	const disableBank = disableBuying || isNaN(noOfTickets) || noOfTickets <= 0 || genTicketLoading || successfulTicket;
+	const disableBank = disableBuying || genTicketLoading || successfulTicket;
 
 	const [, deleteStripeTicket] = useMutation(gql`
 		mutation ($sessionID: String) {
@@ -122,7 +121,7 @@ export function TicketProduct() {
 		const res = await fetch(
 			`/api/create_bank_ticket?account=${
 				auth.ready ? auth?.sessionData?.id : ""
-			}&tickets=${noOfTickets}&event=ASM2023`,
+			}&tickets=1&event=ASM2023`,
 		);
 
 		if (res.status === 200) {
@@ -153,10 +152,6 @@ export function TicketProduct() {
 						All attendees, including runners and staff must purchase tickets to attend the event. Volunteers
 						will receive a $15 rebate administered on site at ASM2023.
 					</p>
-					<p>
-						We will have personalised tickets if you purchase before
-						<b> June 2</b>.
-					</p>
 				</section>
 				<hr />
 				{auth.ready && !auth?.sessionData && (
@@ -180,32 +175,21 @@ export function TicketProduct() {
 							color="primary"
 							fullWidth
 							disabled={disableBuying}>
-							Checkout ${TICKET_PRICE} each
+							Checkout ${TICKET_PRICE}
 						</Button>
 					</form>
 				</section>
 				<section className={styles.paymentMethod}>
 					<h2>Bank Transfer (Australia Only)</h2>
 					<div className={styles.bankTransferButton}>
-						<TextField
-							type="number"
-							inputProps={{ min: 1 }}
-							value={noOfTickets}
-							onChange={(e) => setNoOfTickets(parseInt(e.target.value))}
-							size="small"
-							color="secondary"
-							label="Number of tickets"
-							disabled={genTicketLoading || successfulTicket}
-						/>
 						<Button
 							variant="contained"
 							color="primary"
 							fullWidth
 							disabled={disableBank}
 							onClick={generateTickets}>
-							Generate {noOfTickets > 1 && noOfTickets} Ticket
-							{noOfTickets > 1 && "s"} $
-							{isNaN(noOfTickets) || noOfTickets <= 0 ? "∞" : noOfTickets * TICKET_PRICE}
+							Generate Ticket $
+							{TICKET_PRICE}
 						</Button>
 					</div>
 					{bankTicketsData?.error && (

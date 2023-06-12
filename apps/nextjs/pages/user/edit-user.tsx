@@ -15,7 +15,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import enLocale from 'date-fns/locale/en-AU';
 import sub from 'date-fns/sub';
 
-const DiscordRegex = /^.{3,32}#[0-9]{4}$/;
+const DiscordRegex = /^(.{3,32}#[0-9]{4}|[a-z0-9._]{2,32})?$/;
 const TwitterRegex = /^@(\w){1,15}$/;
 const TwitchRegex = /^[a-zA-Z0-9][\w]{2,24}$/;
 

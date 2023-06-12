@@ -106,20 +106,19 @@ export default withAuth(
             type: base.object('Ticket'),
             args: {
               stripeID: graphql.arg({ type: graphql.nonNull(graphql.String) }),
-              numberOfTickets: graphql.arg({ type: graphql.nonNull(graphql.Int) }),
               apiKey: graphql.arg({ type: graphql.nonNull(graphql.String) }),
             },
-            resolve(source, { apiKey, numberOfTickets, stripeID }, context: Context) {
+            resolve(source, { apiKey, stripeID }, context: Context) {
               if (apiKey !== process.env.API_KEY) throw new Error("Incorrect API Key");
               // if (apiKey !== process.env.API_KEY) {
               //   // Debug only
               //   console.log(`Tried to confirm stripe but had an API key error. Got ${apiKey}, expected ${process.env.API_KEY}`);
               //   return;
               // }
-
+              console.log('bruh');
               return context.sudo().db.Ticket.updateOne({
                 where: { stripeID },
-                data: { paid: true, numberOfTickets }
+                data: { paid: true }
               });
             }
           }),
@@ -160,17 +159,14 @@ export default withAuth(
             type: base.object('ShirtOrder'),
             args: {
               stripeID: graphql.arg({ type: graphql.nonNull(graphql.String) }),
-              numberOfShirts: graphql.arg({ type: graphql.nonNull(graphql.Int) }),
               apiKey: graphql.arg({ type: graphql.nonNull(graphql.String) }),
             },
-            async resolve(source, { apiKey, stripeID, numberOfShirts }, context: Context) {
+            async resolve(source, { apiKey, stripeID }, context: Context) {
               if (apiKey !== process.env.API_KEY) throw new Error("Incorrect API Key");
-
-              const notes = numberOfShirts > 0 ? `#${numberOfShirts}` : '';
 
               return context.sudo().db.ShirtOrder.updateOne({
                 where: { stripeID },
-                data: { paid: true, notes }
+                data: { paid: true }
               });
             },
           }),

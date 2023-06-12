@@ -26,10 +26,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					{
 						// Provide the exact Price ID (for example, pr_1234) of the product you want to sell
 						price: 'ASM2023TICKET',
-						adjustable_quantity: {
-							enabled: true,
-							minimum: 1,
-						},
 						quantity: 1,
 					},
 				],

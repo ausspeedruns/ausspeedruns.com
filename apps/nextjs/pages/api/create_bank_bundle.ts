@@ -15,19 +15,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					throw new Error('No account ID');
 				}
 
-				if (!req.query.bundles) {
-					throw new Error('Missing number of bundles');
-				}
-
-				if (isNaN(parseInt(req.query.bundles.toString()))) {
-					throw new Error('bundles is not a number');
+				// Check valid shirt size
+				if (!req.query.size || Array.isArray(req.query.size) || !['m', 'l', 'xl', 'xl2', 'xl3', 'xl4'].includes(req.query.size)) {
+					throw new Error('Invalid Size');
 				}
 
 				const data = await urqlClient.mutation(gql`
-					mutation ($userID: ID!, $numberOfBundles: Int!, $apiKey: String!) {
+					mutation ($userID: ID!, $size: ShirtOrderSizeType!, $apiKey: String!) {
 						generateTicket(
 							userID: $userID
-							numberOfTickets: $numberOfBundles
+							numberOfTickets: 1
 							method: bank
 							event: "ASM2023"
 							apiKey: $apiKey
@@ -40,12 +37,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 							userID: $userID
 							method: bank
 							apiKey: $apiKey
-							notes: "#${req.query.bundles.toString()}"
+							size: $size
 						) {
 							shirtID
 						}
 					}
-				`, { userID: req.query.account, apiKey: process.env.API_KEY, numberOfBundles: parseInt(req.query.bundles.toString()) }).toPromise();
+				`, { userID: req.query.account, size: req.query.size, apiKey: process.env.API_KEY }).toPromise();
 
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json(data);

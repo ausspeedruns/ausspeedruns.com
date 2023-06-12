@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import styles from "./TicketSale.module.scss";
 import Image from "next/image";
-import { Box, Button, Skeleton, TextField } from "@mui/material";
+import { Box, Button, Skeleton, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { UseMutationResponse, useQuery, gql, useMutation } from "urql";
 import { useAuth } from "../auth";
 
@@ -29,7 +29,7 @@ const TICKET_PRICE = 50;
 
 export function BundleProduct() {
 	const auth = useAuth();
-	const [noOfTickets, setNoOfTickets] = useState(1);
+	const [shirtSize, setShirtSize] = useState("m");
 	const [deletedTicket, setDeletedTicket] = useState(false);
 	const [genTicketLoading, setGenTicketLoading] = useState(false);
 	const [waitForTicket, setWaitForTicket] = useState(false);
@@ -60,7 +60,7 @@ export function BundleProduct() {
 		(auth.ready && !auth.sessionData) ||
 		!profileQueryRes.data?.user?.verified ||
 		!profileQueryRes.data.event.acceptingTickets;
-	const disableBank = disableBuying || isNaN(noOfTickets) || noOfTickets <= 0 || genTicketLoading || successfulTicket;
+	const disableBank = disableBuying || genTicketLoading || successfulTicket;
 
 	const [, deleteStripeTicket] = useMutation(gql`
 		mutation ($sessionID: String) {
@@ -119,9 +119,7 @@ export function BundleProduct() {
 		if (disableBuying) return;
 
 		setGenTicketLoading(true);
-		const res = await fetch(
-			`/api/create_bank_bundle?account=${auth.ready ? auth?.sessionData?.id : ""}&bundles=${noOfTickets}`,
-		);
+		const res = await fetch(`/api/create_bank_bundle?account=${auth.ready ? auth?.sessionData?.id : ""}&size=${shirtSize}`);
 
 		if (res.status === 200) {
 			setBankTicketsData(await res.json());
@@ -151,13 +149,26 @@ export function BundleProduct() {
 						All attendees, including runners and staff must purchase tickets to attend the event. Volunteers
 						will receive a $15 rebate administered on site at ASM2023.
 					</p>
-					<p>
-						We will have personalised tickets if you purchase before
-						<b> June 2</b>.
-					</p>
 				</section>
 				<hr />
-				<p className={styles.shirtWarning}>SHIRT SIZES WILL BE DETERMINED AT A LATER DATE</p>
+				<h2>Size</h2>
+				<div className={styles.preferences}>
+					<ToggleButtonGroup
+						fullWidth
+						size="small"
+						exclusive
+						value={shirtSize}
+						onChange={(e, value) => (value !== null ? setShirtSize(value) : undefined)}>
+						<ToggleButton value="m">M</ToggleButton>
+						<ToggleButton value="l">L</ToggleButton>
+						<ToggleButton value="xl">XL</ToggleButton>
+						<ToggleButton value="xl2">2XL</ToggleButton>
+						<ToggleButton value="xl3">3XL</ToggleButton>
+						<ToggleButton value="xl4">4XL</ToggleButton>
+					</ToggleButtonGroup>
+					<br />
+					<br />
+				</div>
 				<hr />
 				{auth.ready && !auth?.sessionData && (
 					<section className={styles.loginError}>
@@ -170,7 +181,7 @@ export function BundleProduct() {
 				<section className={styles.paymentMethod}>
 					<h2>Stripe</h2>
 					<p>Clicking on checkout will redirect you to the stripe checkout. </p>
-					<form action={`/api/checkout_bundle?account=${accId}&username=${accUsername}`} method="POST">
+					<form action={`/api/checkout_bundle?account=${accId}&username=${accUsername}&size=${shirtSize}`} method="POST">
 						<Button
 							type="submit"
 							role="link"
@@ -178,39 +189,27 @@ export function BundleProduct() {
 							color="primary"
 							fullWidth
 							disabled={disableBuying}>
-							Checkout ${TICKET_PRICE} each
+							Checkout ${TICKET_PRICE}
 						</Button>
 					</form>
 				</section>
 				<section className={styles.paymentMethod}>
 					<h2>Bank Transfer (Australia Only)</h2>
 					<div className={styles.bankTransferButton}>
-						<TextField
-							type="number"
-							inputProps={{ min: 1 }}
-							value={noOfTickets}
-							onChange={(e) => setNoOfTickets(parseInt(e.target.value))}
-							size="small"
-							color="secondary"
-							label="Number of bundles"
-							disabled={genTicketLoading || successfulTicket}
-						/>
 						<Button
 							variant="contained"
 							color="primary"
 							fullWidth
 							disabled={disableBank}
 							onClick={generateTickets}>
-							Generate {noOfTickets > 1 && noOfTickets} Bundle
-							{noOfTickets > 1 && "s"} $
-							{isNaN(noOfTickets) || noOfTickets <= 0 ? "∞" : noOfTickets * TICKET_PRICE}
+							Generate Bundle ${TICKET_PRICE}
 						</Button>
 					</div>
 					{bankTicketsData?.error && (
 						<p>It seems like there was an error. Please try again or let Clubwho know on Discord!</p>
 					)}
 					{successfulTicket && !genTicketLoading && bankTicketsData?.data && (
-						<ASMTicket ticketData={bankTicketsData.data.generateTicket} extraCost={noOfTickets * 25} />
+						<ASMTicket ticketData={bankTicketsData.data.generateTicket} extraCost={25} />
 					)}
 					{genTicketLoading && !bankTicketsData?.error && <ASMTicketSkeleton />}
 				</section>

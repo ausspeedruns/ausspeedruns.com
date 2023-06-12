@@ -16,6 +16,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				throw new Error('No account ID');
 			}
 
+			// Check valid shirt size
+			if (!req.query.size || Array.isArray(req.query.size) || !['m', 'l', 'xl', 'xl2', 'xl3', 'xl4'].includes(req.query.size)) {
+				throw new Error('Invalid Size');
+			}
+
 			if (!req.query.username || Array.isArray(req.query.username)) {
 				throw new Error('No username');
 			}
@@ -26,10 +31,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					{
 						// Provide the exact Price ID (for example, pr_1234) of the product you want to sell
 						price: 'ASM2023BUNDLE',
-						adjustable_quantity: {
-							enabled: true,
-							minimum: 1,
-						},
 						quantity: 1,
 					},
 				],
@@ -40,12 +41,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 			// Generate ticket and shirt code
 			const returnData = await urqlClient.mutation(gql`
-				mutation ($userID: ID!, $stripeID: String, $apiKey: String!) {
+				mutation ($userID: ID!, $size: ShirtOrderSizeType!, $stripeID: String, $apiKey: String!) {
 					generateShirt(
 						userID: $userID
 						method: stripe
 						stripeID: $stripeID
 						apiKey: $apiKey
+						size: $size
 					) {
 						__typename
 					}
@@ -60,7 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 						__typename
 					}
 				}
-			`, { userID: req.query.account, stripeID: session.id, event: req.query.event, apiKey: process.env.API_KEY }).toPromise();
+			`, { userID: req.query.account, size: req.query.size, stripeID: session.id, event: req.query.event, apiKey: process.env.API_KEY }).toPromise();
 
 			if (returnData.error) {
 				throw new Error(JSON.stringify(returnData.error));

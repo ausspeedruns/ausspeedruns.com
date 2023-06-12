@@ -16,7 +16,7 @@ export default function PasswordResetPage() {
 	const [passwordsMatch, setPasswordsMatch] = useState(true);
 
 	// Mutation for game submission
-	const [passwordResults, resetPassword] = useMutation(gql`
+	const [_, resetPassword] = useMutation(gql`
 		mutation ($email: String!, $token: String!, $password: String!) {
 			redeemUserPasswordResetToken(email: $email, token: $token, password: $password) {
 				code
@@ -64,6 +64,7 @@ export default function PasswordResetPage() {
 								}
 							} else {
 								console.error(result.error);
+								console.error(result.data);
 							}
 						});
 					}}

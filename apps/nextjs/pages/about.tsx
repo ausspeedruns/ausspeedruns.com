@@ -90,7 +90,7 @@ function padZerosLocaleString(num: number, zeros: number): string {
 	);
 }
 
-const AMOUNT_RAISED = 100000; // $100,000
+const AMOUNT_RAISED = 110000; // $110,000
 
 export default function Home() {
 	const amountRef = useRef<HTMLSpanElement>(null);
@@ -230,7 +230,7 @@ export default function Home() {
 						<span className={styles.amount}>
 							<span className={styles.dollarSymbol}>$</span>
 							<span ref={amountRef}>
-								{(100000).toLocaleString()}
+								{(AMOUNT_RAISED).toLocaleString()}
 							</span>
 						</span>
 						<span>for different charities in Australia.</span>

@@ -170,7 +170,7 @@ const Shirt = () => {
 								ACST.
 							</p>
 
-							<h2>Size</h2>
+							{/* <h2>Size</h2>
 							<div className={styles.preferences}>
 								<ToggleButtonGroup
 									fullWidth
@@ -223,7 +223,8 @@ const Shirt = () => {
 									onClick={generateShirt}>
 									(AUS ONLY) Bank transfer $30
 								</Button>
-							</div>
+							</div> */}
+							<h2>Sold Out</h2>
 						</div>
 					</section>
 					{bankShirtData?.error && (

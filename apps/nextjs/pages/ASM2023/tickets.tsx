@@ -104,7 +104,7 @@ const Tickets = () => {
 							</span>
 						</section>
 					)}
-					{selectedProduct !== "" && (
+					{/* {selectedProduct !== "" && (
 						<Button className={styles.back} onClick={() => setSelectedProduct("")}>
 							<FontAwesomeIcon icon={faChevronLeft} />
 							Back
@@ -131,9 +131,10 @@ const Tickets = () => {
 								</CardActionArea>
 							</Card>
 						</div>
-					)}
-					{selectedProduct === "ticket" && <TicketProduct />}
-					{selectedProduct === "bundle" && (
+					)} */}
+					{/* {selectedProduct === "ticket" && <TicketProduct />} */}
+					<TicketProduct />
+					{/* {selectedProduct === "bundle" && (
 						<>
 							<BundleProduct />
 							<hr />
@@ -192,7 +193,7 @@ const Tickets = () => {
 								</table>
 							</div>
 						</>
-					)}
+					)} */}
 					<hr />
 					<section className={styles.fullWidth}>
 						<h2>Refund Policy</h2>

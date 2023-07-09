@@ -13,6 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		SELECT CONVERT(DECIMAL(10,2),SUM([Steps]) * 0.71628 / 1000) As KmCount
 		FROM [dbo].[StepData]
 		WHERE EventId = 1`;
+		console.log(data);
 		return res.status(200).json(data.recordset[0]);
 	} catch (error) {
 		return res.status(500).json({ error: error });

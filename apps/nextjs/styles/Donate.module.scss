@@ -6,9 +6,9 @@
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
-	background: $tgx-main;
-	// background-image: url('./img/ASAPBackground.png');
-	// background-size: cover;
+	background: $asm23-main;
+	background-image: url("./img/events/asm23/asm23-background.png");
+	background-size: cover;
 	// background-position: center;
 	image-rendering: pixelated;
 }
@@ -39,10 +39,17 @@
 			}
 		}
 
+		.data {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+			margin-bottom: 20px;
+		}
+
 		.divider {
 			margin: 1rem auto;
 			width: 90%;
-			background: $tgx-rainbow-rotated;
+			background: $secondary;
 			height: 5px;
 		}
 	}

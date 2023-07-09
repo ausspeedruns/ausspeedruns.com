@@ -10,24 +10,30 @@ export interface WarProps extends BaseIncentiveData {
 	}[];
 }
 
-function tgxColour(index = -1, redStart = false) {
-	let modulo = index % 4;
-	if (!redStart) modulo++;
+// function tgxColour(index = -1, redStart = false) {
+// 	let modulo = index % 4;
+// 	if (!redStart) modulo++;
 
-	switch (modulo) {
-		case 0:
-			return '#f80023';
-		case 1:
-			return '#ffc300';
-		case 2:
-			return '#007eff';
-		case 3:
-			return '#00c091';
-		case 4:
-			return '#f80023';
-		default:
-			return undefined;
-	}
+// 	switch (modulo) {
+// 		case 0:
+// 			return '#f80023';
+// 		case 1:
+// 			return '#ffc300';
+// 		case 2:
+// 			return '#007eff';
+// 		case 3:
+// 			return '#00c091';
+// 		case 4:
+// 			return '#f80023';
+// 		default:
+// 			return undefined;
+// 	}
+// }
+
+function isColor(strColor: string) {
+	const s = new Option().style;
+	s.color = strColor;
+	return s.color !== '';
 }
 
 export const War: React.FC<WarProps> = (props) => {
@@ -56,7 +62,7 @@ export const War: React.FC<WarProps> = (props) => {
 									<span className={styles.total}>${option?.total?.toLocaleString() ?? 'Error'}</span>
 								</div>
 								<div className={styles.progress}>
-									<div className={styles.bar} style={{ height: `${progress}%`, width: `${progress}%`, backgroundColor: tgxColour(i, true) }} />
+									<div className={styles.bar} style={{ height: `${progress}%`, width: `${progress}%`, backgroundColor: isColor(option.name) ? option.name : '#cc7722' }} />
 								</div>
 							</div>
 						);

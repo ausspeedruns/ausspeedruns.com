@@ -272,7 +272,7 @@ export default function EventSchedule({ event }: EventScheduleProps) {
 								<span className={[styles.topRow, styles.notLast].join(" ")}>Game</span>
 								<span className={[styles.topRow, styles.notLast].join(" ")}>Category</span>
 								<span className={styles.topRow}>Runners</span>
-								<span className={styles.notLast}>Estimate (HH:MM)</span>
+								<span className={styles.notLast}>Estimate (HH:MM:SS)</span>
 								<span className={styles.notLast}>Platform</span>
 								<span className={styles.donationIncentive}>Donation Incentive</span>
 							</header>
@@ -324,8 +324,8 @@ export default function EventSchedule({ event }: EventScheduleProps) {
 								<ToggleButton value="coop" aria-label="Co-op">
 									Co-op
 								</ToggleButton>
-								<ToggleButton value="donationIncentive" aria-label="Donation Challenge">
-									Donation Challenge
+								<ToggleButton value="donationIncentive" aria-label="Donation Incentive">
+									Donation Incentives
 								</ToggleButton>
 							</ToggleButtonGroup>
 						</div>

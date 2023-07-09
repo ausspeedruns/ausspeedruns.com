@@ -138,7 +138,7 @@ export default function EditUser() {
 	const disableSave =
 		!Boolean(email) ||
 		(twitter !== '' && !TwitterRegex.test(twitter)) ||
-		(discord !== '' && !DiscordRegex.test(discord));
+		(discord !== '' && !DiscordRegex.test(discord.toLowerCase()));
 
 	function UpdateProfileButton() {
 		if (auth.ready && dateOfBirth) {
@@ -147,7 +147,7 @@ export default function EditUser() {
 				name,
 				email,
 				pronouns,
-				discord,
+				discord: discord.toLowerCase(),
 				twitter,
 				dateOfBirth: new Date(dateOfBirth).toISOString(),
 				twitch,
@@ -261,7 +261,7 @@ export default function EditUser() {
 						<div>Discord</div>
 						<TextField
 							error={discordWarning}
-							helperText="e.g. AusSpeedruns#1337"
+							helperText="e.g. ausspeedruns"
 							label={discordWarning ? 'Error' : undefined}
 							value={discord}
 							variant={'outlined'}

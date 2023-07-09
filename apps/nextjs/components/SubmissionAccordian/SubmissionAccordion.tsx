@@ -144,7 +144,7 @@ const SubmissionAccordion = ({ submission, event }: SubmissionProps) => {
 									0 && (
 									<>
 										<td>
-											Donation Challenge
+											Donation Incentive
 											{submission.newDonationIncentives
 												?.length > 1 && "s"}
 										</td>

@@ -225,7 +225,7 @@ export async function exportHoraro(eventShortname: string) {
 				"Category",
 				"Runner",
 				"Platform",
-				"Donation Challenge",
+				"Donation Incentives",
 				"Twitter"
 			],
 			items: runData.event.runs.map(run => {

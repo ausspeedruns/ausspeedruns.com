@@ -1,9 +1,9 @@
-@use 'base';
+@use "base";
 @import "./responsive.scss";
 @import "./colors.scss";
 
 .background {
-	background-image: url('./img/MuralSmall.jpg');
+	background-image: url("./img/MuralSmall.jpg");
 	background-size: 43%;
 	background-position: center;
 	flex-grow: 1;
@@ -16,7 +16,7 @@
 	height: 100%;
 	filter: blur(2px);
 	z-index: -1;
-	transform: scale(1.1); 
+	transform: scale(1.1);
 }
 
 .form {
@@ -55,7 +55,7 @@
 .table {
 	text-align: center;
 	table-layout: fixed;
-	
+
 	td {
 		width: 50%;
 	}
@@ -68,4 +68,10 @@
 
 .spinner {
 	margin: 0 auto;
+}
+
+.spacedList {
+	li:not(:last-child) {
+		margin-bottom: 12px;
+	}
 }

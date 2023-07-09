@@ -308,7 +308,7 @@ const SubmissionEditDialog = ({
 					helperText="This involves any: mods, downpatches, software, controllers (if a PC game) and any other requirements."
 				/>
 				{typeof donationIncentives !== "undefined" && (
-					<InputLabel>Donation Challenges</InputLabel>
+					<InputLabel>Donation Incentives</InputLabel>
 				)}
 				{donationIncentives?.map((donationIncentive, i) => {
 					return (
@@ -339,7 +339,7 @@ const SubmissionEditDialog = ({
 					{typeof donationIncentives !== "undefined"
 						? "another"
 						: "a"}{" "}
-					donation challenge
+					donation incentive
 				</Button>
 				<TextField
 					disabled={!event.acceptingSubmissions}

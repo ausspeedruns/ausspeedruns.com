@@ -1,12 +1,12 @@
-@use 'base';
-@import './colors.scss';
-@import './responsive.scss';
+@use "base";
+@import "./colors.scss";
+@import "./responsive.scss";
 
 .eventLive {
 	color: $light-text;
-	background: $tgx-main;
-	background-image: url("../../styles/img/events/asgx/live-background.png");
-	background-size: contain;
+	background: $asm23-main;
+	background-image: url("../../styles/img/events/asm23/asm23-background.png");
+	background-size: cover;
 	padding: 2rem;
 
 	@include breakpoint($sm-zero-only) {
@@ -92,23 +92,37 @@
 			}
 		}
 
-		.columnLeft h4 {
-			text-align: left;
+		.columnLeft {
+			h3 {
+				text-align: left;
+			}
 
-			@include breakpoint($sm-zero-only) {
+			h4 {
+				text-align: left;
+
+				@include breakpoint($sm-zero-only) {
+					text-align: center;
+				}
+			}
+		}
+
+		.columnMiddle {
+			h4 {
 				text-align: center;
 			}
 		}
 
-		.columnMiddle h4 {
-			text-align: center;
-		}
+		.columnRight {
+			h3 {
+				text-align: right;
+			}
 
-		.columnRight h4 {
-			text-align: right;
+			h4 {
+				text-align: right;
 
-			@include breakpoint($sm-zero-only) {
-				text-align: center;
+				@include breakpoint($sm-zero-only) {
+					text-align: center;
+				}
 			}
 		}
 	}
@@ -129,12 +143,12 @@
 
 		.twitchVideo,
 		.twitchChat {
-			border: 8px solid $tgx-red;
+			border: 8px solid $secondary;
 			box-sizing: border-box;
 		}
 
 		.twitchChat {
-			border-color: $tgx-yellow;
+			border-color: $secondary;
 		}
 
 		.twitchVideo {
@@ -170,8 +184,8 @@
 
 	.incentive {
 		.liveContent {
-			background-color: $tgx-main;
-			border: 2px solid $tgx-blue;
+			background-color: $primary;
+			border: 2px solid $secondary;
 			// width: 50%;
 
 			@include breakpoint($sm-zero-only) {
@@ -184,7 +198,7 @@
 			margin-top: 10px;
 			width: 80%;
 			height: 10px;
-			background: $tgx-rainbow-rotated;
+			background: $primary;
 		}
 	}
 
@@ -194,8 +208,8 @@
 		}
 
 		.liveContent {
-			background-color: $tgx-main;
-			border: 2px solid $tgx-green;
+			background-color: $asm23-main;
+			border: 2px solid $secondary;
 			font-size: 1.2rem;
 			width: fit-content;
 			word-break: break-all;
@@ -215,7 +229,7 @@
 			}
 
 			.subtitle {
-				color: $goc-accent;
+				color: $primary;
 				font-weight: bold;
 				margin-bottom: 0;
 			}
@@ -232,5 +246,11 @@
 				}
 			}
 		}
+	}
+
+	.crowdcontrol {
+		display: flex;
+		justify-content: center;
+		margin: 4rem 0;
 	}
 }

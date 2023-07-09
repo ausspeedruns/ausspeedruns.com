@@ -5,8 +5,10 @@ import styles from "../../styles/Event.incentives.module.scss";
 import DiscordEmbed from "../../components/DiscordEmbed";
 import { Goal } from "../../components/Incentives/IncentiveGoal";
 import { War } from "../../components/Incentives/IncentiveWar";
+import Button from 'apps/nextjs/components/Button/Button';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
-const EVENT = "ASGX2023";
+const EVENT = "ASM2023";
 
 const INCENTIVES_QUERY = gql`
 	query {
@@ -48,18 +50,14 @@ type QUERY_INCENTIVES_RESULTS = {
 	};
 };
 
-const Challenges = () => {
+const Incentives = () => {
 	const [incentivesQuery] = useQuery<QUERY_INCENTIVES_RESULTS>({
 		query: INCENTIVES_QUERY,
 	});
 
-	const sortedIncentives =
-		incentivesQuery.data?.event.donationIncentives.map((a) => ({ ...a })) ??
-		[];
+	const sortedIncentives = incentivesQuery.data?.event.donationIncentives.map((a) => ({ ...a })) ?? [];
 	sortedIncentives.sort(
-		(a, b) =>
-			new Date(a.run?.scheduledTime ?? 0).getTime() -
-			new Date(b.run?.scheduledTime ?? 0).getTime(),
+		(a, b) => new Date(a.run?.scheduledTime ?? 0).getTime() - new Date(b.run?.scheduledTime ?? 0).getTime(),
 	);
 
 	let incentiveElements = {
@@ -79,27 +77,28 @@ const Challenges = () => {
 		<div className={styles.app}>
 			<Head>
 				<title>{`${EVENT} Donation Incentives - AusSpeedruns`}</title>
-				<DiscordEmbed
-					title={`${EVENT} Donation Incentives - AusSpeedruns`}
-					pageUrl={`/${EVENT}/incentives`}
-				/>
+				<DiscordEmbed title={`${EVENT} Donation Incentives - AusSpeedruns`} pageUrl={`/${EVENT}/incentives`} />
 			</Head>
 			<main className={styles.content}>
 				<h2>Donation Incentives</h2>
 				<div className={styles.instructions}>
-					In your{" "}
-					<span className={styles.emphasis}>donation message</span>,
-					mention the challenge and how much you want to put in for
-					it!
+					In your <span className={styles.emphasis}>donation message</span>, mention the challenge and how
+					much you want to put in for it!
+				</div>
+				<div className={styles.donate}>
+					<Button
+						actionText="Donate"
+						link="https://donate.tiltify.com/@ausspeedruns/asm2023"
+						openInNewTab
+						iconRight={faChevronRight}
+					/>
 				</div>
 				{incentiveElements.active.length > 0 && (
 					<>
-						<h3>Closing Soon!</h3>
+						<h1>Closing Soon!</h1>
 						<div className={styles.divider} />
-						<div className={styles.soon}>
-							{incentiveElements.active[0]}
-						</div>
-						<h3>All Incentives</h3>
+						<div className={styles.soon}>{incentiveElements.active[0]}</div>
+						<h1>All Incentives</h1>
 						<div className={styles.divider} />
 						{incentiveElements.active}
 					</>
@@ -107,7 +106,7 @@ const Challenges = () => {
 
 				{incentiveElements.inactive.length > 0 && (
 					<>
-						<h3>Closed Incentives</h3>
+						<h1>Closed Incentives</h1>
 						<div className={styles.divider} />
 						{/* All closed incentives */}
 						{incentiveElements.inactive}
@@ -127,16 +126,12 @@ function getIncentiveElement(incentive: any): JSX.Element {
 	};
 	switch (incentive.type) {
 		case "goal":
-			return (
-				<Goal key={incentive.id} {...runMetadata} {...incentive.data} />
-			);
+			return <Goal key={incentive.id} {...runMetadata} {...incentive.data} />;
 		case "war":
-			return (
-				<War key={incentive.id} {...runMetadata} {...incentive.data} />
-			);
+			return <War key={incentive.id} {...runMetadata} {...incentive.data} />;
 		default:
 			return <></>;
 	}
 }
 
-export default Challenges;
+export default Incentives;

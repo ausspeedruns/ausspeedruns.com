@@ -222,7 +222,7 @@ export const EventPageComponentBlocks = {
 							</Button>
 						)}
 
-						{/* <Button actionText="Donation Challenges" link="/ASM2022/challenges" iconRight={faArrowRight} /> */}
+						{/* <Button actionText="Donation Incentives" link="/ASM2022/incentives" iconRight={faArrowRight} /> */}
 
 						<Button
 							href={props.fields.charityLink.value}

@@ -13,6 +13,7 @@ import LastEventBlock from "../components/LastEventBlock/LastEventBlock";
 import OGImage from "../styles/img/IndexOG.png";
 import { AusSpeedrunsEvent } from "../types/types";
 import { EventLive } from "../components/EventLive/EventLive";
+import ASMMLive from '../components/ASMM/asmm-live';
 
 // TODO: Move this stuff to keystone
 const ASM2023: AusSpeedrunsEvent = {
@@ -44,8 +45,9 @@ export default function Home() {
 				/>
 			</Head>
 			<main>
-				{/* <EventLive event={next.preferredName} /> */}
-				<div
+				<EventLive event={"ASM2023"} />
+				<ASMMLive />
+				{/* <div
 					style={{
 						background: "#CC7722",
 						color: "white",
@@ -58,13 +60,13 @@ export default function Home() {
 					We've just announced the Australian Speedruns Marathon Marathon! A walkathon we will be conducting
 					during ASM2023
 					<Button colorScheme="secondary inverted" link="/asmm" actionText="Learn more" />
-				</div>
-				<HeroBlock
+				</div> */}
+				{/* <HeroBlock
 					event={ASM2023}
 					ticketLink="/ASM2023/tickets"
 					schedule
 					tagLine="The Australian Speedrun Marathon returns! The Schedule has been released! Buy tickets!"
-				/>
+				/> */}
 				<LastEventBlock
 					tagLine="We had an incredible time showcasing speedruns at the very first TGX!"
 					event={next}

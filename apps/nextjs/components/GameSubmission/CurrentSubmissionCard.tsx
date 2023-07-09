@@ -78,7 +78,7 @@ export default function CurrentSubmissionCard(
 				props.currentStep > 1 && (
 					<>
 						<h3>
-							Donation Challenge
+							Donation Incentive
 							{props.submissionData.donationIncentives.length > 1
 								? "s"
 								: ""}

@@ -13,7 +13,7 @@ import { Incentive } from "../components/Incentives/Incentive";
 
 const QUERY_INCENTIVES = gql`
 	query {
-		event(where: { shortname: "ASGX2023" }) {
+		event(where: { shortname: "ASM2023" }) {
 			donationIncentives(take: 2, where: { active: { equals: true } }) {
 				title
 				type
@@ -52,6 +52,8 @@ const DonatePage = () => {
 		query: QUERY_INCENTIVES,
 	});
 
+	console.log(incentivesQuery);
+
 	const incentivesParsed =
 		incentivesQuery.data?.event.donationIncentives.map((incentive) => ({
 			title: incentive.title,
@@ -66,26 +68,21 @@ const DonatePage = () => {
 		<div className={styles.app}>
 			<Head>
 				<title>Donate - AusSpeedruns</title>
-				<DiscordEmbed
-					title="Donate - AusSpeedruns"
-					description="Donate to ASM2022!"
-					pageUrl="/donate"
-				/>
+				<DiscordEmbed title="Donate - AusSpeedruns" description="Donate to ASM2023!" pageUrl="/donate" />
 			</Head>
 			<main className={styles.content}>
 				<h2 className={styles.title}>Donate</h2>
 				<section className={styles.incentives}>
 					<h2>
-						Be sure to mention which donation challenge you want
-						your money to go towards in the donation message!
+						Be sure to mention which donation incentive you want your money to go towards in the donation
+						message!
 					</h2>
-					{incentivesQuery.data && (
+					{incentivesQuery.data && incentivesQuery.data.event.donationIncentives.length > 1 && (
 						<>
 							<h2>
-								{incentivesQuery.data.event.donationIncentives
-									.length > 1
-									? `Here are ${incentivesQuery.data.event.donationIncentives.length} active challenges`
-									: "Here is the last active challenge"}
+								{incentivesQuery.data.event.donationIncentives.length > 1
+									? `Here are ${incentivesQuery.data.event.donationIncentives.length} active incentives`
+									: "Here is the last active incentive"}
 							</h2>
 							<div className={styles.data}>
 								<div className={styles.divider} />
@@ -94,23 +91,20 @@ const DonatePage = () => {
 								))}
 								<div className={styles.divider} />
 							</div>
-							{incentivesQuery.data.event.donationIncentives
-								.length > 1 && (
-								<div className={styles.link}>
-									<Button
-										actionText="Check out more challenges!"
-										link="/ASGX2023/challenges"
-										colorScheme="secondary inverted"
-									/>
-								</div>
-							)}
+							<div className={styles.link}>
+								<Button
+									actionText="Check out more incentives!"
+									link="/ASM2023/incentives"
+									colorScheme="secondary inverted"
+								/>
+							</div>
 						</>
 					)}
 				</section>
 				<div className={styles.donate}>
 					<Button
 						actionText="Donate"
-						link="https://donate.tiltify.com/@ausspeedruns/asgx2023"
+						link="https://donate.tiltify.com/@ausspeedruns/australian-speedrun-marathon-2023"
 						openInNewTab
 						iconRight={faChevronRight}
 					/>

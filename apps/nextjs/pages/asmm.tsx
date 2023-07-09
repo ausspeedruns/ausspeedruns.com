@@ -68,10 +68,6 @@ export default function ASMM() {
 
 	useEffect(() => {
 		if (auth.ready) {
-			// fetch(`/api/asmm/pledge?username=${username}`).then(res => {
-			// 	console.log(res);
-			// })
-
 			fetch(`/api/asmm/total`).then((res) => {
 				console.log(res);
 				res.text().then(console.log);

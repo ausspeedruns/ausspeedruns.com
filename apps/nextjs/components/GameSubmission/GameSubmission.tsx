@@ -393,7 +393,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 								)}
 							/>
 							<FormHelperText>
-								Used for tech purposes.
+								What console you will run the game on.
 							</FormHelperText>
 						</FormControl>
 						<InputLabel required>Age Rating</InputLabel>
@@ -517,7 +517,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 						)}
 
 						{typeof donationIncentives !== "undefined" && (
-							<InputLabel>Donation Challenges</InputLabel>
+							<InputLabel>Donation Incentives</InputLabel>
 						)}
 						{donationIncentives?.map((donationIncentive, i) => {
 							return (
@@ -556,7 +556,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 							{typeof donationIncentives !== "undefined"
 								? "another"
 								: "a"}{" "}
-							donation challenge
+							donation incentive
 						</Button>
 					</GameSubmitPage>
 					<GameSubmitPage
@@ -788,7 +788,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 												0 && (
 												<tr>
 													<td>
-														Donation Challenge
+														Donation Incentive
 														{submissionResult.data
 															?.createSubmission
 															.newDonationIncentives

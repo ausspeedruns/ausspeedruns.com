@@ -51,8 +51,8 @@ const PoliciesPage = () => {
 							In order to be eligible to become a winner of the Competition, a person must make a donation to the
 							ASAP2022 fundraiser&apos;s Tiltify page (&apos;the Fundraiser&apos;) before the close of the Competition.
 							This page can be found at{' '}
-							<a target="_blank" rel="noopener noreferrer" href="https://tiltify.com/@ausspeedruns/asap2022/">
-								https://tiltify.com/@ausspeedruns/asap2022/
+							<a target="_blank" rel="noopener noreferrer" href="https://tiltify.com/@ausspeedruns/australian-speedrun-marathon-2023">
+								https://tiltify.com/@ausspeedruns/australian-speedrun-marathon-2023
 							</a>
 							.
 							<ol>

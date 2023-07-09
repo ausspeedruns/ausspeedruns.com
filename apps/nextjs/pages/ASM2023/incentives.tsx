@@ -126,9 +126,9 @@ function getIncentiveElement(incentive: any): JSX.Element {
 	};
 	switch (incentive.type) {
 		case "goal":
-			return <Goal key={incentive.id} {...runMetadata} {...incentive.data} />;
+			return <><Goal key={incentive.id} {...runMetadata} {...incentive.data} /><hr /></>;
 		case "war":
-			return <War key={incentive.id} {...runMetadata} {...incentive.data} />;
+			return <><War key={incentive.id} {...runMetadata} {...incentive.data} /><hr /></>;
 		default:
 			return <></>;
 	}

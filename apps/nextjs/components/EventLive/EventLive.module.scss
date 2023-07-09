@@ -7,10 +7,13 @@
 	background: $asm23-main;
 	background-image: url("../../styles/img/events/asm23/asm23-background.png");
 	background-size: cover;
+	background-position-x: center;
 	padding: 2rem;
 
 	@include breakpoint($sm-zero-only) {
-		padding: 0;
+		padding-left: 0;
+		padding-right: 0;
+		background-size: contain;
 	}
 
 	.logo {
@@ -95,6 +98,10 @@
 		.columnLeft {
 			h3 {
 				text-align: left;
+
+				@include breakpoint($sm-zero-only) {
+					text-align: center;
+				}
 			}
 
 			h4 {
@@ -107,6 +114,10 @@
 		}
 
 		.columnMiddle {
+			h3 {
+				text-align: center;
+			}
+
 			h4 {
 				text-align: center;
 			}
@@ -115,6 +126,10 @@
 		.columnRight {
 			h3 {
 				text-align: right;
+
+				@include breakpoint($sm-zero-only) {
+					text-align: center;
+				}
 			}
 
 			h4 {

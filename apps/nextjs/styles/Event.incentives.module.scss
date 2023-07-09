@@ -5,7 +5,8 @@
 .app {
 	background: $asm23-main;
 	background-image: url("./img/events/asm23/asm23-background.png");
-	background-size: cover;
+	background-size: contain;
+	background-position-x: center;
 }
 
 .content {
@@ -85,6 +86,11 @@
 		width: 50%;
 		height: 2px;
 	}
+
+	hr {
+		width: 80%;
+		margin: 48px auto;
+	}
 }
 
 .goal,
@@ -102,6 +108,7 @@
 
 	.gameinfo {
 		font-size: 1.2rem;
+		text-align: center;
 
 		.game {
 			font-weight: bold;

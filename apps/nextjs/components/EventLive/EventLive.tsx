@@ -104,13 +104,14 @@ export const EventLive = (props: EventProps) => {
 		}
 	}
 
-	if (nextRunIndex == -1) {
+	if (nextRunIndex <= 0) {
 		// Before the marathon
 		nextRunIndex = 1;
 	}
 
+	
 	let currentRunIndex = nextRunIndex - 1;
-
+	
 	return (
 		<div className={styles.eventLive}>
 			<div className={styles.logo}>
@@ -146,21 +147,21 @@ export const EventLive = (props: EventProps) => {
 
 			<div className={styles.onDeck}>
 				<div className={styles.columnLeft}>
-					<h4>{nextRunIndex == -1 ? "First Game" : "Game"}</h4>
+					<h4>{currentRunIndex == 0 ? "First Game" : "Game"}</h4>
 					<h3>
-						{eventQuery.data?.event.runs?.[nextRunIndex == -1 ? 0 : currentRunIndex]?.game ?? "Loading"}
+						{eventQuery.data?.event.runs?.[currentRunIndex]?.game ?? "Loading"}
 					</h3>
 				</div>
 				<div className={styles.columnMiddle}>
-					<h4>{nextRunIndex == -1 ? "First Category" : "Category"}</h4>
+					<h4>{currentRunIndex == 0 ? "First Category" : "Category"}</h4>
 					<h3>
-						{eventQuery.data?.event.runs?.[nextRunIndex == -1 ? 0 : currentRunIndex]?.category ?? "Loading"}
+						{eventQuery.data?.event.runs?.[currentRunIndex]?.category ?? "Loading"}
 					</h3>
 				</div>
 				<div className={styles.columnRight}>
-					<h4>{nextRunIndex == -1 ? "First Runners" : "Runners"}</h4>
+					<h4>{currentRunIndex == 0 ? "First Runners" : "Runners"}</h4>
 					<h3>
-						{eventQuery.data?.event.runs?.[nextRunIndex == -1 ? 0 : currentRunIndex]?.runners
+						{eventQuery.data?.event.runs?.[currentRunIndex]?.runners
 							.map((runner) => runner.username)
 							.join(", ") ?? "Loading"}
 					</h3>

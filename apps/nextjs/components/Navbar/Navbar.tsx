@@ -17,6 +17,7 @@ import { useAuth } from "../auth";
 import Link from "next/link";
 
 import { useMediaQuery } from "@mui/material";
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 const asrAusSpeedrunsLogo = {
 	prefix: "asr",
@@ -113,7 +114,7 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 										<FontAwesomeIcon
 											width={20}
 											className={styles.icon}
-											icon={asrAusSpeedrunsLogo}
+											icon={asrAusSpeedrunsLogo as any}
 										/>
 									) : (
 										""
@@ -127,7 +128,7 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 						<li>
 							{/* @ts-ignore */}
 							{mobileWidth ? (
-								<FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo} />
+								<FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo as any} />
 							) : (
 								""
 							)}
@@ -138,7 +139,7 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 						<li>
 							{/* @ts-ignore */}
 							{mobileWidth ? (
-								<FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo} />
+								<FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo as any} />
 							) : (
 								""
 							)}

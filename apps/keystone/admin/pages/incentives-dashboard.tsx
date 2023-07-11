@@ -154,8 +154,8 @@ function renderIncentive(
 
 export default function RunsManager() {
 	const [selectedEvent, setSelectedEvent] = useState({
-		label: "ASGX2023",
-		value: "ASGX2023",
+		label: "ASM2023",
+		value: "ASM2023",
 	});
 	const [selectedIncentiveIndex, setSelectedIncentiveIndex] = useState(0);
 

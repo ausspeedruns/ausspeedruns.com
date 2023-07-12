@@ -131,6 +131,7 @@ function renderIncentive(
 		case "war":
 			return (
 				<War
+					key={incentive.id}
 					incentive={incentive}
 					incentiveUpdate={updateIncentiveMutation}
 					refetchData={refetchData}
@@ -139,6 +140,7 @@ function renderIncentive(
 		case "goal":
 			return (
 				<Goal
+					key={incentive.id}
 					incentive={incentive}
 					incentiveUpdate={updateIncentiveMutation}
 					refetchData={refetchData}

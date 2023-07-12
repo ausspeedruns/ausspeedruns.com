@@ -63,7 +63,7 @@ const PoliciesPage = () => {
 						go in the running to win this game all you need to do is donate at least $5 during ASM2023.
 					</p>
 				</p>
-				<a href="http://" target="_blank" rel="noopener noreferrer">
+				<a href="https://ausspeedruns.sharepoint.com/:w:/s/Main/ESjl4LUolJFAuZwXyzuwtTAB7cGd6_IfYLi0sxn5iTvPSQ?e=zrRFGO" target="_blank" rel="noopener noreferrer">
 					Prizes Terms and Conditions
 				</a>
 			</main>

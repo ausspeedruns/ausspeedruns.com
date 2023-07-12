@@ -10,7 +10,7 @@ import {
 	faTiktok,
 	// faFacebook,
 } from "@fortawesome/free-brands-svg-icons";
-import { faBars, faTimes, faCalendar, faShirt } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faTimes, faCalendar, faShirt, faMoneyBillWave } from "@fortawesome/free-solid-svg-icons";
 import { globals } from "../../globals";
 import Button from "../Button/Button";
 import { useAuth } from "../auth";
@@ -149,20 +149,29 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 						</li>
 						<li>
 							{/* @ts-ignore */}
-							{mobileWidth ? (
-								<FontAwesomeIcon width={20} className={styles.icon} icon={faShirt} />
-							) : (
-								""
-							)}
-							<Link href={`/merch`} passHref className={styles.text}>
+							{mobileWidth ? <FontAwesomeIcon width={20} className={styles.icon} icon={faShirt} /> : ""}
+							<Link href={`https://ausspeedruns.com/merch`} passHref className={styles.text}>
 								Merch
 							</Link>
 						</li>
 
 						{live && (
-							<li>
-								<Button actionText="Donate" link="/donate" colorScheme={"orange"} />
-							</li>
+							<>
+								<li>
+									{/* @ts-ignore */}
+									{mobileWidth ? (
+										<FontAwesomeIcon width={20} className={styles.icon} icon={faMoneyBillWave} />
+									) : (
+										""
+									)}
+									<Link href={`https://ausspeedruns.com/ASM2023/incentives`} passHref className={styles.text}>
+										Incentives
+									</Link>
+								</li>
+								<li>
+									<Button actionText="Donate" link="/donate" colorScheme={"orange"} />
+								</li>
+							</>
 						)}
 
 						<li>

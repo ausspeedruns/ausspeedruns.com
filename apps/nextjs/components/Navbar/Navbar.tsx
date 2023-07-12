@@ -150,7 +150,7 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 						<li>
 							{/* @ts-ignore */}
 							{mobileWidth ? <FontAwesomeIcon width={20} className={styles.icon} icon={faShirt} /> : ""}
-							<Link href={`https://ausspeedruns.com/merch`} passHref className={styles.text}>
+							<Link href={`http://ausspeedruns.theprintbar.com/`} passHref className={styles.text}>
 								Merch
 							</Link>
 						</li>

@@ -11,9 +11,10 @@ type LastEventBlockProps = {
 	event: AusSpeedrunsEvent;
 	backgroundPos?: string;
 	tagLine: string;
+	overrideHeight?: string;
 };
 
-const Heroblock = ({ event, backgroundPos, tagLine }: LastEventBlockProps) => {
+const Heroblock = ({ event, backgroundPos, tagLine, overrideHeight }: LastEventBlockProps) => {
 	return (
 		<section
 			className={styles.lasteventblock}
@@ -22,6 +23,7 @@ const Heroblock = ({ event, backgroundPos, tagLine }: LastEventBlockProps) => {
 					require(`../../styles/img/${event.heroImage}`).default.src
 				}")`,
 				backgroundPosition: backgroundPos,
+				height: overrideHeight
 			}}>
 			<div className={`${styles.content} content`}>
 				<div className={styles.ctaBlock}>

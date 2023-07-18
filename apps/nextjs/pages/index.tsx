@@ -26,7 +26,21 @@ const ASM2023: AusSpeedrunsEvent = {
 		name: "Game On Cancer",
 	},
 	logo: "ASM2023-Logo.png",
-	heroImage: "ASM2023Hero.png",
+	heroImage: "events/asm23/asm23-hero.jpg",
+	total: "35,000",
+};
+
+const ASAP2023: AusSpeedrunsEvent = {
+	fullName: "AusSpeedruns At PAX 2023",
+	preferredName: "ASAP2023",
+	shortName: "ASAP2023",
+	startDate: "6 October 2023 09:00:00 GMT+0100",
+	dates: "October 6 - 8, 2023",
+	charity: {
+		name: "Game On Cancer",
+	},
+	logo: "events/asap23/asap23-logo.png",
+	heroImage: "events/asap23/asap23-hero.jpg",
 };
 
 export default function Home() {
@@ -45,8 +59,8 @@ export default function Home() {
 				/>
 			</Head>
 			<main>
-				<EventLive event={"ASM2023"} />
-				<ASMMLive />
+				{/* <EventLive event={"ASM2023"} />
+				<ASMMLive /> */}
 				{/* <div
 					style={{
 						background: "#CC7722",
@@ -61,12 +75,18 @@ export default function Home() {
 					during ASM2023
 					<Button colorScheme="secondary inverted" link="/asmm" actionText="Learn more" />
 				</div> */}
-				{/* <HeroBlock
+				<HeroBlock
+					event={ASAP2023}
+					ticketLink="https://aus.paxsite.com/"
+					submitRuns
+					tagLine="We're going to PAX! Game submissions are open but only for a very short time. Get them in quick!"
+				/>
+				<LastEventBlock
+					tagLine="The Australian Speedrunning community once again came together to put on the best ASM ever to help raise $35,000!!!"
 					event={ASM2023}
-					ticketLink="/ASM2023/tickets"
-					schedule
-					tagLine="The Australian Speedrun Marathon returns! The Schedule has been released! Buy tickets!"
-				/> */}
+					backgroundPos="center"
+					// overrideHeight='800px'
+				/>
 				<LastEventBlock
 					tagLine="We had an incredible time showcasing speedruns at the very first TGX!"
 					event={next}
@@ -76,10 +96,6 @@ export default function Home() {
 					tagLine="We smashed our donation record and put on 3 jam packed days of speedrunning."
 					event={current}
 					backgroundPos="center"
-				/>
-				<LastEventBlock
-					tagLine="An absolute incredible event of week long non-stop speedrunning culminating in us breaking our all time donation record!"
-					event={previous}
 				/>
 				<section className={styles.archive}>
 					<div className={styles.content}>

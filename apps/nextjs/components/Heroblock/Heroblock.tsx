@@ -92,6 +92,8 @@ const HeroBlock = ({ event, tagLine, darkText, schedule, submitRuns, ticketLink 
 		return () => clearInterval(interval);
 	}, []);
 
+	console.log(`../../styles/img/${event.logo}`)
+
 	return (
 		<section
 			className={styles.heroblock}

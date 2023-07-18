@@ -131,6 +131,7 @@ function renderIncentive(
 		case "war":
 			return (
 				<War
+					key={incentive.id}
 					incentive={incentive}
 					incentiveUpdate={updateIncentiveMutation}
 					refetchData={refetchData}
@@ -139,6 +140,7 @@ function renderIncentive(
 		case "goal":
 			return (
 				<Goal
+					key={incentive.id}
 					incentive={incentive}
 					incentiveUpdate={updateIncentiveMutation}
 					refetchData={refetchData}
@@ -154,8 +156,8 @@ function renderIncentive(
 
 export default function RunsManager() {
 	const [selectedEvent, setSelectedEvent] = useState({
-		label: "ASGX2023",
-		value: "ASGX2023",
+		label: "ASM2023",
+		value: "ASM2023",
 	});
 	const [selectedIncentiveIndex, setSelectedIncentiveIndex] = useState(0);
 

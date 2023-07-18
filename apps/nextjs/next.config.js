@@ -81,12 +81,16 @@ const nextConfig = {
 				destination: "/ASM2023/schedule",
 				permanent: false,
 			},
-			// {
-			// 	source: "/ASGX2023/schedule",
-			// 	destination: "https://horaro.org/asgx2023/schedule",
-			// 	permanent: false,
-			// 	basePath: false,
-			// },
+			{
+				source: "/clip-challenge",
+				destination: "https://forms.office.com/pages/responsepage.aspx?id=SSVHd61AgEyxiztkrL3zddpHgDqcDVdBoabbjZyhxhZUMTc4UkowSU5XSzRYVklFRUNKWVJRWk9PRSQlQCN0PWcu",
+				permanent: false,
+			},
+			{
+				source: "/merch",
+				destination: "http://ausspeedruns.theprintbar.com/",
+				permanent: true,
+			},
 		];
 	},
 };

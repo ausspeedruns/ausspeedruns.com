@@ -142,6 +142,10 @@ export default function ASMM() {
 					.
 				</p>
 
+				<p>
+					Your pledge will grant you entry into our prizes once paid.
+				</p>
+
 				<p style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
 					{eligible ? <CheckCircle /> : <Cancel />} Have a paid ticket to ASM2023
 				</p>

@@ -9,7 +9,7 @@ export interface GoalProps extends BaseIncentiveData {
 }
 export const Goal: React.FC<GoalProps> = (props) => {
 	const time = new Date(props.run.scheduledTime);
-	const progress = props.current / props.goal;
+	const progress = Math.min(props.current / props.goal, 1);
 
 	return (
 		<div className={styles.goal} style={{ color: props.active ? undefined : '#b7b7b7' }}>

@@ -169,8 +169,11 @@ function runnersToTwitter(runners: QueryRuns['event']['runs'][0]['runners'], rac
 	let numberOfTwitters = 0;
 
 	runners.forEach(runner => {
-		if (runner.twitter) numberOfTwitters++;
-		formattedRunners.push(runner.twitter ? `[@${runner.username}](https://www.twitter.com/${runner.twitter})` : "N/A")
+		if (runner.twitter) {
+			numberOfTwitters++;
+		}
+
+		formattedRunners.push(runner.twitter ? `[@${runner.username}](https://www.twitter.com/${runner.twitter.substring(1)})` : "N/A")
 	});
 
 	if (numberOfTwitters === 0) {

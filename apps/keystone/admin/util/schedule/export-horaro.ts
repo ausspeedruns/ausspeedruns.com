@@ -167,17 +167,13 @@ function runnersToHoraro(runners: QueryRuns['event']['runs'][0]['runners'], race
 function runnersToTwitter(runners: QueryRuns['event']['runs'][0]['runners'], race: boolean, coop: boolean) {
 	const formattedRunners: string[] = [];
 	let numberOfTwitters = 0;
-	
-	const formattedTwitter: string;
-	
+
 	runners.forEach(runner => {
 		if (runner.twitter) {
 			numberOfTwitters++;
-			formattedTwitter = runner.twitter.substring(1);
-			// formattedTwitter = formattedTwitter.substring(1);
 		}
-		
-		formattedRunners.push(runner.twitter ? `[@${runner.username}](https://www.twitter.com/${formattedTwitter})` : "N/A")
+
+		formattedRunners.push(runner.twitter ? `[@${runner.username}](https://www.twitter.com/${runner.twitter.substring(1)})` : "N/A")
 	});
 
 	if (numberOfTwitters === 0) {

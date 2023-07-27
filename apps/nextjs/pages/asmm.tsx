@@ -80,10 +80,10 @@ export default function ASMM() {
 			fetch(`/api/asmm/sign-up?username=${username}`, { method: "GET" }).then((res) => {
 				res.json().then((data) => {
 					console.log(data);
-					setSignedUp(data.Barcode != NULL);
+					setSignedUp(data.Barcode != "NULL");
 				});
 			});
-		
+
 			fetch(`/api/asmm/pledge?username=${username}`, { method: "GET" }).then((res) => {
 				res.json().then((data) => {
 					console.log(data);
@@ -133,9 +133,9 @@ export default function ASMM() {
 			<div className={`${styles.content} ${styles.form}`} style={{ padding: "5rem" }}>
 				<h1 style={{ marginBottom: "3rem" }}>Australian Speedruns Marathon Marathon Sign Up</h1>
 				<p>
-					The Australian Speedruns Marathon Marathon (ASMM) is a walkathon we will be conducting during the Australian
-					Speedrun Marathon 2023. At the end of each day we will tally the steps taken by each participant.
-					Participants are asked to pledge an amount per 10km walked by the community.
+					The Australian Speedruns Marathon Marathon (ASMM) is a walkathon we will be conducting during the
+					Australian Speedrun Marathon 2023. At the end of each day we will tally the steps taken by each
+					participant. Participants are asked to pledge an amount per 10km walked by the community.
 				</p>
 				<p>Those not attending ASM2023 can also make a pledge.</p>
 				<p>

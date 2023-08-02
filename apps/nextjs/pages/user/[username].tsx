@@ -44,7 +44,7 @@ const QUERY_USER = gql`
 				colour
 				textColour
 			}
-			runs {
+			runs(orderBy: { scheduledTime: desc }) {
 				id
 				game
 				category

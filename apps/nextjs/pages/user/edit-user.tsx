@@ -266,7 +266,7 @@ export default function EditUser() {
 							value={discord}
 							variant={'outlined'}
 							onChange={(e) => setDiscord(e.target.value)}
-							onBlur={(e) => setDiscordWarning(!DiscordRegex.test(e.target.value) && e.target.value !== '')}
+							onBlur={(e) => setDiscordWarning(!DiscordRegex.test(e.target.value.toLowerCase()) && e.target.value !== '')}
 							autoComplete="discord"
 						/>
 						<div>Twitter</div>

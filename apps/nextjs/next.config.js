@@ -39,11 +39,11 @@ const nextConfig = {
 			{
 				source: "/api/graphql",
 				// destination: "https://keystone.ausspeedruns.com/api/graphql",
-				destination: "http://localhost:8000/api/graphql",
-				// destination:
-				// 	process.env.NODE_ENV === "production"
-				// 		? "https://keystone.ausspeedruns.com/api/graphql"
-				// 		: "http://localhost:8000/api/graphql",
+				// destination: "http://localhost:8000/api/graphql",
+				destination:
+					process.env.NODE_ENV === "production"
+						? "https://keystone.ausspeedruns.com/api/graphql"
+						: "http://localhost:8000/api/graphql",
 			},
 		];
 	},
@@ -78,7 +78,7 @@ const nextConfig = {
 			},
 			{
 				source: "/schedule",
-				destination: "/ASM2023/schedule",
+				destination: "/ASAP2023/schedule",
 				permanent: false,
 			},
 			{

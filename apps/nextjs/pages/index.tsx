@@ -78,8 +78,8 @@ export default function Home() {
 				<HeroBlock
 					event={ASAP2023}
 					ticketLink="https://aus.paxsite.com/"
-					submitRuns
-					tagLine="We're going to PAX! Game submissions are open but only for a very short time. Get them in quick!"
+					schedule
+					tagLine="We're going to PAX! Schedule has been released!"
 				/>
 				<LastEventBlock
 					tagLine="The Australian Speedrunning community once again came together to put on the best ASM ever to help raise $35,000!!!"

@@ -28,13 +28,13 @@ export const Event: Lists.Event = list({
 		...group({
 			label: "Settings",
 			fields: {
-				published: checkbox(),
-				acceptingSubmissions: checkbox(),
-				acceptingTickets: checkbox(),
-				scheduleReleased: checkbox(),
-				acceptingVolunteers: checkbox(),
-				acceptingBackups: checkbox(),
-				acceptingShirts: checkbox(),
+				published: checkbox({ ui: { itemView: { fieldPosition: 'sidebar' } }}),
+				acceptingSubmissions: checkbox({ ui: { itemView: { fieldPosition: 'sidebar' } }}),
+				acceptingTickets: checkbox({ ui: { itemView: { fieldPosition: 'sidebar' } }}),
+				scheduleReleased: checkbox({ ui: { itemView: { fieldPosition: 'sidebar' } }}),
+				acceptingVolunteers: checkbox({ ui: { itemView: { fieldPosition: 'sidebar' } }}),
+				acceptingBackups: checkbox({ ui: { itemView: { fieldPosition: 'sidebar' } }}),
+				acceptingShirts: checkbox({ ui: { itemView: { fieldPosition: 'sidebar' } }}),
 			}
 		}),
 		...group({

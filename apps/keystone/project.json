@@ -1,6 +1,6 @@
 {
 	"name": "keystone",
-	"root": "apps/keystone",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
 	"sourceRoot": "apps/keystone",
 	"projectType": "application",
 	"targets": {
@@ -15,10 +15,7 @@
 			"executor": "nx:run-commands",
 			"options": {
 				"cwd": "apps/keystone",
-				"commands": [
-					"npx azurite-blob -l ./azurite --blobPort 9999",
-					"npx keystone dev"
-				],
+				"commands": ["npx azurite-blob -l ./azurite --blobPort 9999", "npx keystone dev"],
 				"parallel": true
 			},
 			"configurations": {
@@ -31,9 +28,7 @@
 			"executor": "@nx-tools/nx-container:build",
 			"options": {
 				"engine": "docker",
-				"tags": [
-					"ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest"
-				]
+				"tags": ["ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest"]
 			},
 			"dependsOn": ["build"]
 		},
@@ -42,9 +37,7 @@
 			"options": {
 				"engine": "docker",
 				"push": true,
-				"tags": [
-					"ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest"
-				]
+				"tags": ["ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest"]
 			},
 			"dependsOn": ["build"]
 		},

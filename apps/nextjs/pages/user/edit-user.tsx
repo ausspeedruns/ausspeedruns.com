@@ -227,7 +227,7 @@ export default function EditUser() {
 							inputProps={{ maxLength: 100 }}
 						/>
 						<div>Date of birth</div>
-						<LocalizationProvider dateAdapter={AdapterDateFns} locale={enLocale}>
+						<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enLocale}>
 							<DatePicker
 								value={dateOfBirth}
 								onChange={(newValue) => {
@@ -235,7 +235,6 @@ export default function EditUser() {
 								}}
 								openTo={'year'}
 								maxDate={maxDate}
-								renderInput={(params) => <TextField {...params} />}
 								views={['year', 'month', 'day']}
 							/>
 						</LocalizationProvider>

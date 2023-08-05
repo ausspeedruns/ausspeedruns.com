@@ -1,10 +1,4 @@
-import {
-	checkFilesExist,
-	ensureNxProject,
-	readJson,
-	runNxCommandAsync,
-	uniq,
-} from "@nrwl/nx-plugin/testing";
+import { checkFilesExist, ensureNxProject, readJson, runNxCommandAsync, uniq } from "@nx/plugin/testing";
 
 describe("keystone-plugin e2e", () => {
 	// Setting up individual workspaces per
@@ -14,10 +8,7 @@ describe("keystone-plugin e2e", () => {
 	// on a unique project in the workspace, such that they
 	// are not dependant on one another.
 	beforeAll(() => {
-		ensureNxProject(
-			"@ausspeedruns.com/keystone-plugin",
-			"dist/libs/keystone-plugin",
-		);
+		ensureNxProject("@ausspeedruns.com/keystone-plugin", "dist/libs/keystone-plugin");
 	});
 
 	afterAll(() => {
@@ -28,9 +19,7 @@ describe("keystone-plugin e2e", () => {
 
 	it("should create keystone-plugin", async () => {
 		const project = uniq("keystone-plugin");
-		await runNxCommandAsync(
-			`generate @ausspeedruns.com/keystone-plugin:keystone-plugin ${project}`,
-		);
+		await runNxCommandAsync(`generate @ausspeedruns.com/keystone-plugin:keystone-plugin ${project}`);
 		const result = await runNxCommandAsync(`build ${project}`);
 		expect(result.stdout).toContain("Executor ran");
 	}, 120000);
@@ -41,19 +30,14 @@ describe("keystone-plugin e2e", () => {
 			await runNxCommandAsync(
 				`generate @ausspeedruns.com/keystone-plugin:keystone-plugin ${project} --directory subdir`,
 			);
-			expect(() =>
-				checkFilesExist(`libs/subdir/${project}/src/index.ts`),
-			).not.toThrow();
+			expect(() => checkFilesExist(`libs/subdir/${project}/src/index.ts`)).not.toThrow();
 		}, 120000);
 	});
 
 	describe("--tags", () => {
 		it("should add tags to the project", async () => {
 			const projectName = uniq("keystone-plugin");
-			ensureNxProject(
-				"@ausspeedruns.com/keystone-plugin",
-				"dist/libs/keystone-plugin",
-			);
+			ensureNxProject("@ausspeedruns.com/keystone-plugin", "dist/libs/keystone-plugin");
 			await runNxCommandAsync(
 				`generate @ausspeedruns.com/keystone-plugin:keystone-plugin ${projectName} --tags e2etag,e2ePackage`,
 			);

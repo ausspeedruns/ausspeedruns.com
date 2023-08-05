@@ -2,11 +2,12 @@ import Stripe from 'stripe';
 import { buffer } from 'micro';
 import Cors from 'micro-cors';
 import type { IncomingMessage } from 'http';
-import { createClient, gql } from 'urql';
+import { createClient, gql, cacheExchange, fetchExchange } from 'urql';
 
 const urqlClient = createClient({
-  // url: 'http://localhost:8000/api/graphql',
-  url: process.env.KEYSTONE_URL!,
+	// url: 'http://localhost:8000/api/graphql',
+	url: process.env.KEYSTONE_URL!,
+	exchanges: [cacheExchange, fetchExchange],
 });
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2022-11-15' });

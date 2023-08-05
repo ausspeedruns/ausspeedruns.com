@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import {
 	cacheExchange,
-	dedupExchange,
 	fetchExchange,
 	gql,
 	ssrExchange,
 	useQuery,
 } from "urql";
-import { initUrqlClient, withUrqlClient } from "next-urql";
+import { initUrqlClient } from "next-urql";
 import Head from "next/head";
 import { Box, IconButton, Tab, Tabs, ThemeProvider } from "@mui/material";
 import { useRouter } from "next/router";
@@ -504,7 +503,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (ct
 				process.env.NODE_ENV === "production"
 					? "https://keystone.ausspeedruns.com/api/graphql"
 					: "http://localhost:8000/api/graphql",
-			exchanges: [dedupExchange, cacheExchange, ssrCache, fetchExchange],
+			exchanges: [cacheExchange, ssrCache, fetchExchange],
 		},
 		false,
 	);

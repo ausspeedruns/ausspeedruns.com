@@ -1,4 +1,4 @@
-const withNx = require("@nrwl/next/plugins/with-nx");
+const withNx = require("@nx/next/plugins/with-nx");
 const path = require("path");
 require("dotenv").config();
 
@@ -38,8 +38,8 @@ const nextConfig = {
 		return [
 			{
 				source: "/api/graphql",
-				destination: "https://keystone.ausspeedruns.com/api/graphql",
-				// destination: "http://localhost:8000/api/graphql",
+				// destination: "https://keystone.ausspeedruns.com/api/graphql",
+				destination: "http://localhost:8000/api/graphql",
 				// destination:
 				// 	process.env.NODE_ENV === "production"
 				// 		? "https://keystone.ausspeedruns.com/api/graphql"
@@ -83,7 +83,8 @@ const nextConfig = {
 			},
 			{
 				source: "/clip-challenge",
-				destination: "https://forms.office.com/pages/responsepage.aspx?id=SSVHd61AgEyxiztkrL3zddpHgDqcDVdBoabbjZyhxhZUMTc4UkowSU5XSzRYVklFRUNKWVJRWk9PRSQlQCN0PWcu",
+				destination:
+					"https://forms.office.com/pages/responsepage.aspx?id=SSVHd61AgEyxiztkrL3zddpHgDqcDVdBoabbjZyhxhZUMTc4UkowSU5XSzRYVklFRUNKWVJRWk9PRSQlQCN0PWcu",
 				permanent: false,
 			},
 			{

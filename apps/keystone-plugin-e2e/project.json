@@ -5,11 +5,12 @@
 	"sourceRoot": "apps/keystone-plugin-e2e/src",
 	"targets": {
 		"e2e": {
-			"executor": "@nrwl/nx-plugin:e2e",
+			"executor": "@nx/jest:jest",
 			"options": {
-				"target": "keystone-plugin:build",
-				"jestConfig": "apps/keystone-plugin-e2e/jest.config.ts"
-			}
+				"jestConfig": "apps/keystone-plugin-e2e/jest.config.ts",
+				"runInBand": true
+			},
+			"dependsOn": ["keystone-plugin:build"]
 		}
 	},
 	"tags": [],

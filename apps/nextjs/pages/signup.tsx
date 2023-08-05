@@ -104,7 +104,7 @@ export default function SignUpPage() {
 						helperText="Letters, numbers, underscores and hyphens allowed. 3-25 Characters."
 						inputProps={{ maxLength: 25 }}
 					/>
-					<LocalizationProvider dateAdapter={AdapterDateFns} locale={enLocale}>
+					<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enLocale}>
 						<DatePicker
 							value={dob}
 							onChange={(newValue) => {
@@ -112,7 +112,6 @@ export default function SignUpPage() {
 							}}
 							openTo={'year'}
 							maxDate={maxDate}
-							renderInput={(params) => <TextField {...params} />}
 							views={['year', 'month', 'day']}
 							label="Date of Birth"
 						/>

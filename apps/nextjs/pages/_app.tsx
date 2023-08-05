@@ -6,6 +6,7 @@ import '@fontsource/roboto-mono';
 import '@fontsource/noto-sans';
 import '@fontsource/russo-one';
 import { withUrqlClient } from 'next-urql';
+import { cacheExchange, fetchExchange } from '@urql/core';
 
 import { AuthProvider } from '../components/auth';
 import CookieConsent from 'react-cookie-consent';
@@ -45,4 +46,5 @@ function AusSpeedrunsWebsite({ Component, pageProps }: AppProps) {
 
 export default withUrqlClient((_ssrExchange) => ({
 	url: typeof window === undefined ? 'http://localhost:8000/api/graphql' : '/api/graphql',
+	exchanges: [cacheExchange, fetchExchange],
 }))(AusSpeedrunsWebsite);

@@ -5,11 +5,10 @@
 	"projectType": "application",
 	"targets": {
 		"build": {
-			"executor": "@nrwl/next:build",
+			"executor": "@nx/next:build",
 			"outputs": ["{options.outputPath}"],
 			"defaultConfiguration": "production",
 			"options": {
-				"root": "apps/nextjs",
 				"outputPath": "dist/apps/nextjs"
 			},
 			"configurations": {
@@ -20,7 +19,7 @@
 			}
 		},
 		"serve": {
-			"executor": "@nrwl/next:server",
+			"executor": "@nx/next:server",
 			"defaultConfiguration": "development",
 			"options": {
 				"buildTarget": "nextjs:build",
@@ -38,13 +37,13 @@
 			}
 		},
 		"export": {
-			"executor": "@nrwl/next:export",
+			"executor": "@nx/next:export",
 			"options": {
 				"buildTarget": "nextjs:build:production"
 			}
 		},
 		"test": {
-			"executor": "@nrwl/jest:jest",
+			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
 			"options": {
 				"jestConfig": "apps/nextjs/jest.config.ts",
@@ -52,7 +51,7 @@
 			}
 		},
 		"lint": {
-			"executor": "@nrwl/linter:eslint",
+			"executor": "@nx/linter:eslint",
 			"outputs": ["{options.outputFile}"],
 			"options": {
 				"lintFilePatterns": ["apps/nextjs/**/*.{ts,tsx,js,jsx}"]
@@ -61,9 +60,7 @@
 		"container": {
 			"executor": "@nx-tools/nx-container:build",
 			"options": {
-				"tags": [
-					"ausrunswebsitecontainersregistry.azurecr.io/ausruns/next:latest"
-				]
+				"tags": ["ausrunswebsitecontainersregistry.azurecr.io/ausruns/next:latest"]
 			},
 			"dependsOn": ["build"]
 		},
@@ -71,9 +68,7 @@
 			"executor": "@nx-tools/nx-container:build",
 			"options": {
 				"push": true,
-				"tags": [
-					"ausrunswebsitecontainersregistry.azurecr.io/ausruns/next:latest"
-				]
+				"tags": ["ausrunswebsitecontainersregistry.azurecr.io/ausruns/next:latest"]
 			},
 			"dependsOn": ["build"]
 		}

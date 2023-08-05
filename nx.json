@@ -3,15 +3,9 @@
 	"npmScope": "ausspeedruns.com",
 	"tasksRunnerOptions": {
 		"default": {
-			"runner": "@nrwl/nx-cloud",
+			"runner": "nx-cloud",
 			"options": {
-				"cacheableOperations": [
-					"build",
-					"lint",
-					"test",
-					"e2e",
-					"container"
-				],
+				"cacheableOperations": ["build", "lint", "test", "e2e", "container"],
 				"accessToken": "OGY0NGM1NTUtOWU0My00YTkyLWE4MTctNDk5YmY0ZjJiYTE3fHJlYWQtd3JpdGU="
 			}
 		}
@@ -22,11 +16,7 @@
 			"inputs": ["production", "^production"]
 		},
 		"test": {
-			"inputs": [
-				"default",
-				"^production",
-				"{workspaceRoot}/jest.preset.js"
-			]
+			"inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
 		},
 		"e2e": {
 			"inputs": ["default", "^production"]
@@ -42,23 +32,24 @@
 			"!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
 			"!{projectRoot}/tsconfig.spec.json",
 			"!{projectRoot}/jest.config.[jt]s",
-			"!{projectRoot}/.eslintrc.json"
+			"!{projectRoot}/.eslintrc.json",
+			"!{projectRoot}/src/test-setup.[jt]s"
 		],
 		"sharedGlobals": ["{workspaceRoot}/babel.config.json"]
 	},
 	"generators": {
-		"@nrwl/react": {
+		"@nx/next": {
+			"application": {
+				"style": "scss",
+				"linter": "eslint"
+			}
+		},
+		"@nx/react": {
 			"application": {
 				"babel": true
 			},
 			"library": {
 				"unitTestRunner": "vitest"
-			}
-		},
-		"@nrwl/next": {
-			"application": {
-				"style": "scss",
-				"linter": "eslint"
 			}
 		}
 	}

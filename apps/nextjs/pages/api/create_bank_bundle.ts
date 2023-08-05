@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { createClient, gql } from 'urql';
+import { createClient, gql, cacheExchange, fetchExchange } from 'urql';
 
 const urqlClient = createClient({
 	// url: 'http://localhost:8000/api/graphql',
 	url: process.env.KEYSTONE_URL!,
+	exchanges: [cacheExchange, fetchExchange],
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

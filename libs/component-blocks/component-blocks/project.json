@@ -6,17 +6,15 @@
 	"tags": [],
 	"targets": {
 		"lint": {
-			"executor": "@nrwl/linter:eslint",
+			"executor": "@nx/linter:eslint",
 			"outputs": ["{options.outputFile}"],
 			"options": {
-				"lintFilePatterns": [
-					"libs/component-blocks/component-blocks/**/*.{ts,tsx,js,jsx}"
-				]
+				"lintFilePatterns": ["libs/component-blocks/component-blocks/**/*.{ts,tsx,js,jsx}"]
 			}
 		},
 		"test": {
-			"executor": "@nrwl/vite:test",
-			"outputs": ["coverage/libs/component-blocks/component-blocks"],
+			"executor": "@nx/vite:test",
+			"outputs": ["{workspaceRoot}/coverage/libs/component-blocks/component-blocks"],
 			"options": {
 				"passWithNoTests": true,
 				"reportsDirectory": "../../../coverage/libs/component-blocks/component-blocks"

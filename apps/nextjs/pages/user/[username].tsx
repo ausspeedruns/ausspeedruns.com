@@ -43,7 +43,7 @@ const QUERY_USER = gql`
 				colour
 				textColour
 			}
-			runs(orderBy: { scheduledTime: desc }) {
+			runs(orderBy: { scheduledTime: asc }) {
 				id
 				game
 				category
@@ -361,11 +361,11 @@ export default function ProfilePage(ssrData: ServerSideProps) {
 				</div>
 				<hr />
 				{/* Role List */}
-				<div className={styles.roleList}>
+				{/* <div className={styles.roleList}>
 					{ssrData.user.roles.map((role) => {
 						return <RoleBadge key={role.id} role={role} />;
 					})}
-				</div>
+				</div> */}
 				{/* Profile Information */}
 				<div className={styles.userInfo}>
 					{ssrData.user?.state !== "none" && (
@@ -466,7 +466,8 @@ export default function ProfilePage(ssrData: ServerSideProps) {
 					<Box>
 						<Tabs
 							value={eventTab}
-							onChange={(_e, newVal) => setEventTab(newVal)}>
+							onChange={(_e, newVal) => setEventTab(newVal)}
+							variant="scrollable">
 							{allRunEvents.reverse().map((event) => (
 								<Tab label={event} key={event} />
 							))}

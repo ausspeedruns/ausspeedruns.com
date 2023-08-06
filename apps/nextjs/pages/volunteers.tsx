@@ -264,7 +264,7 @@ export default function SubmitGamePage() {
 				<DiscordEmbed
 					title={TITLE}
 					description="Volunteer for AusSpeedrun Marathons!"
-					pageUrl="/submit-game"
+					pageUrl="/volunteers"
 				/>
 			</Head>
 			<main className={styles.content}>

@@ -8,7 +8,7 @@
 
   @include breakpoint($lg) {
     padding-top: calc(
-      (56.25% / 3) * 2
+      (56.25% / 2) * 2
     ); /* Half the screen width so half the height */
   }
 

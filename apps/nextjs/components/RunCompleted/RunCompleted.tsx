@@ -1,9 +1,10 @@
-import React from 'react';
+import React from "react";
 import Image from "next/image";
-import YouTubeVideoEmbed from '../YouTubeVideoEmbed/YouTubeVideoEmbed';
-import styles from './RunCompleted.module.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTwitch } from '@fortawesome/free-brands-svg-icons';
+import YouTubeVideoEmbed from "../YouTubeVideoEmbed/YouTubeVideoEmbed";
+import styles from "./RunCompleted.module.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTwitch } from "@fortawesome/free-brands-svg-icons";
+import TwitchVideoEmbed from '../TwitchVideoEmbed/TwitchVideoEmbed';
 
 type Run = {
 	run: {
@@ -34,20 +35,21 @@ const RunCompleted = ({ run }: Run) => {
 	const aspectRatio = run.event.logo ? run.event.logo.width / run.event.logo.height : 0;
 
 	return (
-        <div className={styles.run}>
+		<div className={styles.run}>
 			<div key={run.id} className={styles.header}>
 				{run.event.logo && (
 					<div className={styles.logo}>
 						<Image
-                            src={run.event.logo.url}
-                            title={run.event.name}
-                            width={LOGO_HEIGHT * aspectRatio}
-                            height={LOGO_HEIGHT}
-                            alt={`${run.event.name} logo`}
-                            style={{
-                                maxWidth: "100%",
-                                height: "auto"
-                            }} />
+							src={run.event.logo.url}
+							title={run.event.name}
+							width={LOGO_HEIGHT * aspectRatio}
+							height={LOGO_HEIGHT}
+							alt={`${run.event.name} logo`}
+							style={{
+								maxWidth: "100%",
+								height: "auto",
+							}}
+						/>
 					</div>
 				)}
 				<div className={styles.runInfo}>
@@ -58,7 +60,7 @@ const RunCompleted = ({ run }: Run) => {
 						<span>{run.finalTime}</span>
 					</div>
 
-					{run.twitchVOD && (
+					{(run.twitchVOD && run.youtubeVOD) && (
 						<a className={styles.twitch} href={run.twitchVOD} target="_blank" rel="noreferrer">
 							<FontAwesomeIcon icon={faTwitch} />
 							Twitch VOD
@@ -67,12 +69,16 @@ const RunCompleted = ({ run }: Run) => {
 				</div>
 			</div>
 			{run.youtubeVOD ? (
-				<YouTubeVideoEmbed videoID={run.youtubeVOD.split('=')[1]} />
+				<YouTubeVideoEmbed videoID={run.youtubeVOD.split("=")[1]} />
 			) : (
-				<p>YouTube VOD to be uploaded soon!</p>
+				(run.twitchVOD && typeof window !== "undefined") ? (
+					<TwitchVideoEmbed video={run.twitchVOD.split("/")[4]} channel='' parent={window.location.hostname} />
+				) : (
+					<p style={{ textAlign: "center" }}>No VOD exists</p>
+				)
 			)}
 		</div>
-    );
+	);
 };
 
 export default RunCompleted;

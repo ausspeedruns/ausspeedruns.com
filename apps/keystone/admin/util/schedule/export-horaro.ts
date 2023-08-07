@@ -155,7 +155,7 @@ function endRunTime(scheduled: Date, estimate: string) {
 }
 
 function runnersToHoraro(runners: QueryRuns['event']['runs'][0]['runners'], race: boolean, coop: boolean) {
-	const formattedRunners = runners.map(runner => runner.twitch ? `[${runner.username}](https://www.twitter.com/${runner.twitch})` : runner.username);
+	const formattedRunners = runners.map(runner => runner.twitch ? `[${runner.username}](https://www.twitch.tv/${runner.twitch})` : runner.username);
 
 	if (race) {
 		return coop ? formattedRunners.join(', ') : formattedRunners.join(' vs. ');

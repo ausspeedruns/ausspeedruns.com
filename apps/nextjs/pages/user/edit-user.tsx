@@ -172,6 +172,8 @@ export default function EditUser() {
 		}
 	}
 
+	console.log(dateOfBirth);
+
 	const maxDate = sub(new Date(), { years: 13 });
 
 	return (
@@ -229,7 +231,7 @@ export default function EditUser() {
 						<div>Date of birth</div>
 						<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enLocale}>
 							<DatePicker
-								value={dateOfBirth}
+								value={new Date(dateOfBirth || Date.now())}
 								onChange={(newValue) => {
 									if (newValue) setDateOfBirth(newValue);
 								}}

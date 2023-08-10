@@ -44,10 +44,10 @@ export default function SignUpPage() {
 	const [username, setUsername] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [dob, setDob] = useState(maxDate);
+	const [dob, setDob] = useState<Date | undefined>();
 	
 
-	const cantSignUp = !Boolean(username) || !Boolean(email)|| !Boolean(dob) || password.length < 8 || maxDate < new Date(dob) || !UsernameRegex.test(username);
+	const cantSignUp = !Boolean(username) || !Boolean(email)|| !Boolean(dob) || password.length < 8 || maxDate < new Date(dob || Date.now()) || !UsernameRegex.test(username);
 
 	return (
 		<ThemeProvider theme={theme}>

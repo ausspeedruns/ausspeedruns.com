@@ -1,0 +1,45 @@
+@use "base";
+@import "./responsive.scss";
+@import "./colors.scss";
+
+.background {
+	background-image: url("./img/MuralSmall.jpg");
+	background-size: 43%;
+	background-position: center;
+	flex-grow: 1;
+	position: fixed;
+	left: 0;
+	right: 0;
+	z-index: 1;
+	display: block;
+	width: 100%;
+	height: 100%;
+	filter: blur(2px);
+	z-index: -1;
+	transform: scale(1.1);
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 700px;
+	min-height: 75vh;
+	padding: 1rem 150px;
+	background-color: #ffffff;
+	box-shadow: 0px 0px 24px 19px rgba(0, 0, 0, 0.3);
+
+	@include breakpoint($sm-zero-only) {
+		width: 100%;
+		padding: 32px 16px;
+	}
+
+	h1 {
+		text-align: center;
+	}
+
+	section {
+		width: 100%;
+		padding: 1rem 0;
+	}
+}

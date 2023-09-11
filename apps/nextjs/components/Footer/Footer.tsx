@@ -6,11 +6,11 @@ import {
 	faInstagram,
 	faTiktok,
 	// faFacebook,
-} from '@fortawesome/free-brands-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import styles from './Footer.module.scss';
-import { globals } from '../../globals';
-import Link from 'next/link';
+} from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import styles from "./Footer.module.scss";
+import { globals } from "../../globals";
+import Link from "next/link";
 
 interface FooterProps {
 	className?: string;
@@ -25,9 +25,10 @@ const Footer = (props: FooterProps) => {
 				<div className={styles.acknowledgement}>
 					<div className="content">
 						<p>
-							In the spirit of reconciliation, AusSpeedruns acknowledges the Traditional Custodians of country
-							throughout Australia and their connections to land, sea and community. We pay our respect to their elders
-							past and present and extend that respect to all Aboriginal and Torres Strait Islander peoples today.
+							In the spirit of reconciliation, AusSpeedruns acknowledges the Traditional Custodians of
+							country throughout Australia and their connections to land, sea and community. We pay our
+							respect to their elders past and present and extend that respect to all Aboriginal and
+							Torres Strait Islander peoples today.
 						</p>
 					</div>
 				</div>
@@ -82,6 +83,8 @@ const Footer = (props: FooterProps) => {
 						<Link href="/policies">Policies</Link>
 						{/* <Link href="/prize-terms">Prize Terms</Link> */}
 						<Link href="/press-kit">Press Kit</Link>
+						<Link href="/contact">Contact</Link>
+						<a className={styles.email} href="mailto:ausspeedruns@ausspeedruns.com">ausspeedruns@ausspeedruns.com</a>
 					</div>
 				</div>
 			</div>

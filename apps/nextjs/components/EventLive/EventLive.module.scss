@@ -3,9 +3,9 @@
 @import "./responsive.scss";
 
 .eventLive {
-	color: $light-text;
-	background: $asm23-main;
-	background-image: url("../../styles/img/events/asm23/asm23-background.png");
+	color: $pax23-sec;
+	background: $pax23-main;
+	background-image: url("../../styles/img/events/asap23/asap23-background.png");
 	background-size: cover;
 	background-position-x: center;
 	padding: 2rem;
@@ -32,6 +32,12 @@
 
 	.link {
 		text-align: center;
+	}
+
+	.schedule {
+		text-align: center;
+		margin: 16px 0;
+		font-size: 1.5rem;
 	}
 
 	.eventInfo {
@@ -75,7 +81,6 @@
 			flex-direction: column;
 
 			h4 {
-				color: #ffffff;
 				font-weight: bold;
 				font-size: 1.5rem;
 				margin-bottom: -0.8rem;
@@ -88,6 +93,7 @@
 
 			h3 {
 				font-size: 2rem;
+				font-weight: bold;
 
 				@include breakpoint($sm-zero-only) {
 					font-size: 1.5rem;
@@ -158,12 +164,12 @@
 
 		.twitchVideo,
 		.twitchChat {
-			border: 8px solid $secondary;
+			border: 8px solid $pax23-red;
 			box-sizing: border-box;
 		}
 
 		.twitchChat {
-			border-color: $secondary;
+			border-color: $pax23-yellow;
 		}
 
 		.twitchVideo {
@@ -183,10 +189,17 @@
 		}
 	}
 
+	.dashboard {
+		display: flex;
+		justify-content: center;
+		gap: 16px;
+		padding: 0 10%;
+		flex-wrap: wrap;
+	}
+
 	.incentive,
 	.upcoming {
 		position: relative;
-		margin: auto;
 		margin-top: 1rem;
 		box-sizing: border-box;
 		display: flex;
@@ -197,34 +210,14 @@
 		}
 	}
 
-	.incentive {
-		.liveContent {
-			background-color: $primary;
-			border: 2px solid $secondary;
-			// width: 50%;
-
-			@include breakpoint($sm-zero-only) {
-				width: 100%;
-			}
-		}
-
-		.divider {
-			margin: auto;
-			margin-top: 10px;
-			width: 80%;
-			height: 10px;
-			background: $primary;
-		}
-	}
-
 	.upcoming {
 		@include breakpoint($sm-zero-only) {
 			margin-top: 0;
 		}
 
 		.liveContent {
-			background-color: $asm23-main;
-			border: 2px solid $secondary;
+			background-color: $pax23-main;
+			border: 2px solid $pax23-blue;
 			font-size: 1.2rem;
 			width: fit-content;
 			word-break: break-all;
@@ -262,6 +255,27 @@
 			}
 		}
 	}
+
+	.incentive {
+		.liveContent {
+			background-color: $pax23-main;
+			border: 2px solid $pax23-purple;
+			// width: 50%;
+
+			@include breakpoint($sm-zero-only) {
+				width: 100%;
+			}
+		}
+
+		.divider {
+			margin: auto;
+			margin-top: 10px;
+			width: 80%;
+			height: 10px;
+			background: $pax23-rainbow-bar;
+		}
+	}
+
 
 	.crowdcontrol {
 		display: flex;

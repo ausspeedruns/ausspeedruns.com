@@ -106,6 +106,26 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 								</li>
 							);
 						})}
+
+						{live && (
+							<>
+								<li>
+									{/* @ts-ignore */}
+									{mobileWidth ? (
+										<FontAwesomeIcon width={20} className={styles.icon} icon={faMoneyBillWave} />
+									) : (
+										""
+									)}
+									<Link href={`https://ausspeedruns.com/ASM2023/incentives`} passHref className={styles.text}>
+										Incentives
+									</Link>
+								</li>
+								<li>
+									<Button actionText="Donate" link="/donate" colorScheme={"orange"} />
+								</li>
+							</>
+						)}
+						
 						{upcomingOrLiveEvents.map((event) => {
 							return (
 								<li key={event.shortname}>
@@ -154,25 +174,6 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 								Merch
 							</Link>
 						</li>
-
-						{live && (
-							<>
-								<li>
-									{/* @ts-ignore */}
-									{mobileWidth ? (
-										<FontAwesomeIcon width={20} className={styles.icon} icon={faMoneyBillWave} />
-									) : (
-										""
-									)}
-									<Link href={`https://ausspeedruns.com/ASM2023/incentives`} passHref className={styles.text}>
-										Incentives
-									</Link>
-								</li>
-								<li>
-									<Button actionText="Donate" link="/donate" colorScheme={"orange"} />
-								</li>
-							</>
-						)}
 
 						<li>
 							<a href={globals.socialLinks.twitch} target="_blank" rel="noreferrer">

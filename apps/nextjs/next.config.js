@@ -92,6 +92,11 @@ const nextConfig = {
 				destination: "http://ausspeedruns.theprintbar.com/",
 				permanent: true,
 			},
+			{
+				source: "/donate",
+				destination: "https://donate.tiltify.com/@ausspeedruns/asap2023",
+				permanent: false,
+			},
 		];
 	},
 };

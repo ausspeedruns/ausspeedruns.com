@@ -7,12 +7,12 @@ import { format } from "date-fns";
 import TwitchChatEmbed from "../TwitchChatEmbed/TwitchChatEmbed";
 import TwitchVideoEmbed from "../TwitchVideoEmbed/TwitchVideoEmbed";
 
-import EventLogo from "../../styles/img/ASM2023-Logo.png";
+import EventLogo from "../../styles/img/asap2023-logo.svg";
 import { useState } from "react";
 import { Incentive } from "../Incentives/Incentive";
 import Button from "../Button/Button";
 
-import GameOnCancer from "../../styles/img/sponsors/GameOnCancer/GoCCCWhite.svg";
+import GameOnCancer from "../../styles/img/sponsors/GameOnCancer/GoCCCPAX23.svg";
 import Link from "next/link";
 
 const aspectRatio = EventLogo.height / EventLogo.width;
@@ -74,7 +74,7 @@ interface EventProps {
 	event: string;
 }
 
-export const EventLive = (props: EventProps) => {
+export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 	const [currentTime, setCurrentTime] = useState(new Date());
 	const [eventQuery] = useQuery<QUERY_EVENT_RESULTS>({
 		query: QUERY_EVENT,
@@ -84,6 +84,8 @@ export const EventLive = (props: EventProps) => {
 	useInterval(() => {
 		setCurrentTime(new Date());
 	}, 10 * 1000);
+
+	console.log(eventQuery);
 
 	const incentiveData = {
 		title: eventQuery.data?.event.donationIncentives?.[0]?.title ?? "",
@@ -109,9 +111,8 @@ export const EventLive = (props: EventProps) => {
 		nextRunIndex = 1;
 	}
 
-	
 	let currentRunIndex = nextRunIndex - 1;
-	
+
 	return (
 		<div className={styles.eventLive}>
 			<div className={styles.logo}>
@@ -129,7 +130,7 @@ export const EventLive = (props: EventProps) => {
 				</Link>
 			</div>
 			<div className={styles.eventInfo}>
-				<h2>July 12 – 16 | Adelaide</h2>
+				<h2>October 6 – 8 | Melbourne</h2>
 				<div className={styles.link}>
 					<Button actionText="Donate!" link="/donate" colorScheme="primary" />
 				</div>
@@ -145,18 +146,18 @@ export const EventLive = (props: EventProps) => {
 				/>
 			</div>
 
+			<div className={styles.schedule}>
+				<Button actionText="Schedule" link="/schedule" colorScheme="secondary lightHover" />
+			</div>
+
 			<div className={styles.onDeck}>
 				<div className={styles.columnLeft}>
 					<h4>{currentRunIndex == 0 ? "First Game" : "Game"}</h4>
-					<h3>
-						{eventQuery.data?.event.runs?.[currentRunIndex]?.game ?? "Loading"}
-					</h3>
+					<h3>{eventQuery.data?.event.runs?.[currentRunIndex]?.game ?? "Loading"}</h3>
 				</div>
 				<div className={styles.columnMiddle}>
 					<h4>{currentRunIndex == 0 ? "First Category" : "Category"}</h4>
-					<h3>
-						{eventQuery.data?.event.runs?.[currentRunIndex]?.category ?? "Loading"}
-					</h3>
+					<h3>{eventQuery.data?.event.runs?.[currentRunIndex]?.category ?? "Loading"}</h3>
 				</div>
 				<div className={styles.columnRight}>
 					<h4>{currentRunIndex == 0 ? "First Runners" : "Runners"}</h4>
@@ -180,76 +181,83 @@ export const EventLive = (props: EventProps) => {
 				</div>
 			</div>
 
-			{(eventQuery.data?.event.runs?.length ?? 0) > nextRunIndex && (
-				<section className={styles.upcoming}>
-					<div className={styles.liveContent}>
-						<h2>Upcoming Run</h2>
-						<div className={styles.info}>
-							<span className={styles.subtitle}>Time</span>
-							<span>
-								{eventQuery.data?.event.runs?.[nextRunIndex]?.scheduledTime
-									? format(
-											new Date(eventQuery.data?.event.runs[nextRunIndex]?.scheduledTime),
-											"H:mm a",
-									  )
-									: "Loading"}
-							</span>
-							<span className={styles.subtitle}>Game</span>
-							<span>{eventQuery.data?.event.runs?.[nextRunIndex]?.game ?? "Loading"}</span>
-							<span className={styles.subtitle}>Category</span>
-							<span>{eventQuery.data?.event.runs?.[nextRunIndex]?.category ?? "Loading"}</span>
-							<span className={styles.subtitle}>
-								{eventQuery.data?.event.runs?.[nextRunIndex]?.runners.length! > nextRunIndex
-									? "Runners"
-									: "Runner"}
-							</span>
-							<span>
-								{eventQuery.data?.event.runs?.[nextRunIndex]?.runners
-									.map((runner) => runner.username)
-									.join(", ") ?? "Loading"}
-							</span>
+			<div className={styles.dashboard}>
+				{(eventQuery.data?.event.runs?.length ?? 0) > nextRunIndex && (
+					<section className={styles.upcoming}>
+						<div className={styles.liveContent}>
+							<h2>Upcoming Run</h2>
+							<div className={styles.info}>
+								<span className={styles.subtitle}>Time</span>
+								<span>
+									{eventQuery.data?.event.runs?.[nextRunIndex]?.scheduledTime
+										? format(
+												new Date(eventQuery.data?.event.runs[nextRunIndex]?.scheduledTime),
+												"H:mm a",
+										  )
+										: "Loading"}
+								</span>
+								<span className={styles.subtitle}>Game</span>
+								<span>{eventQuery.data?.event.runs?.[nextRunIndex]?.game ?? "Loading"}</span>
+								<span className={styles.subtitle}>Category</span>
+								<span>{eventQuery.data?.event.runs?.[nextRunIndex]?.category ?? "Loading"}</span>
+								<span className={styles.subtitle}>
+									{eventQuery.data?.event.runs?.[nextRunIndex]?.runners.length! > nextRunIndex
+										? "Runners"
+										: "Runner"}
+								</span>
+								<span>
+									{eventQuery.data?.event.runs?.[nextRunIndex]?.runners
+										.map((runner) => runner.username)
+										.join(", ") ?? "Loading"}
+								</span>
+							</div>
+							<div className={styles.link}>
+								<Button
+									actionText="Check out the schedule!"
+									link={`/${props.event}/schedule`}
+									colorScheme="secondary inverted"
+									openInNewTab
+								/>
+							</div>
 						</div>
-						<div className={styles.link}>
-							<Button
-								actionText="Check out the schedule!"
-								link={`/${props.event}/schedule`}
-								colorScheme="secondary inverted"
-								openInNewTab
-							/>
-						</div>
-					</div>
-				</section>
-			)}
+					</section>
+				)}
 
-			{eventQuery.data?.event.donationIncentives.length! > 0 && (
-				<section className={styles.incentive}>
-					<div className={styles.liveContent}>
-						<h2>Donation Incentives</h2>
-						<h3>
-							Make a donation and write that you want to put the money towards this or another incentive
-						</h3>
-						<div className={styles.divider} />
-						{incentiveData.title !== "" ? <Incentive incentive={incentiveData as any} /> : <h4>Loading</h4>}
-						<div className={styles.link}>
-							<Button
-								actionText="Check out more incentives!"
-								link={`/${props.event}/incentives`}
-								colorScheme="secondary inverted"
-								openInNewTab
-							/>
+				{eventQuery.data?.event.donationIncentives.length! > 0 && (
+					<section className={styles.incentive}>
+						<div className={styles.liveContent}>
+							<h2>Donation Incentives</h2>
+							<h3>
+								Make a donation and write that you want to put the money towards this or another
+								incentive
+							</h3>
+							<div className={styles.divider} />
+							{incentiveData.title !== "" ? (
+								<Incentive incentive={incentiveData as any} />
+							) : (
+								<h4>Loading</h4>
+							)}
+							<div className={styles.link}>
+								<Button
+									actionText="Check out more incentives!"
+									link={`/${props.event}/incentives`}
+									colorScheme="secondary inverted"
+									openInNewTab
+								/>
+							</div>
 						</div>
-					</div>
-				</section>
-			)}
+					</section>
+				)}
+			</div>
 
-			<div className={styles.crowdcontrol}>
+			{/* <div className={styles.crowdcontrol}>
 				<Button
 					actionText="Learn about our Crowd Control runs"
 					link={`/crowd-control`}
 					colorScheme="orange"
 					openInNewTab
 				/>
-			</div>
+			</div> */}
 		</div>
 	);
 };

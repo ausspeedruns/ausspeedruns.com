@@ -59,8 +59,8 @@ export default function Home() {
 				/>
 			</Head>
 			<main>
-				{/* <EventLive event={"ASM2023"} />
-				<ASMMLive /> */}
+				<EventLive event={"ASAP2023"} />
+				{/* <ASMMLive /> */}
 				{/* <div
 					style={{
 						background: "#CC7722",
@@ -75,12 +75,12 @@ export default function Home() {
 					during ASM2023
 					<Button colorScheme="secondary inverted" link="/asmm" actionText="Learn more" />
 				</div> */}
-				<HeroBlock
+				{/* <HeroBlock
 					event={ASAP2023}
 					ticketLink="https://aus.paxsite.com/"
 					schedule
 					tagLine="We're going to PAX! Schedule has been released!"
-				/>
+				/> */}
 				<LastEventBlock
 					tagLine="The Australian Speedrunning community once again came together to put on the best ASM ever to help raise $35,000!!!"
 					event={ASM2023}

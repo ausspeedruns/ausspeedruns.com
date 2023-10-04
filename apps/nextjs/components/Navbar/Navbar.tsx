@@ -116,7 +116,7 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 									) : (
 										""
 									)}
-									<Link href={`https://ausspeedruns.com/ASM2023/incentives`} passHref className={styles.text}>
+									<Link href={`https://ausspeedruns.com/ASAP2023/incentives`} passHref className={styles.text}>
 										Incentives
 									</Link>
 								</li>

@@ -36,6 +36,12 @@
       {
         text-decoration: underline !important;
       }
+      
+      @include breakpoint($sm-zero-only) {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
     }
   }
 }

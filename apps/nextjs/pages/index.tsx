@@ -41,6 +41,7 @@ const ASAP2023: AusSpeedrunsEvent = {
 	},
 	logo: "events/asap23/asap23-logo.png",
 	heroImage: "events/asap23/asap23-hero.jpg",
+	total: "18,007"
 };
 
 export default function Home() {
@@ -59,7 +60,7 @@ export default function Home() {
 				/>
 			</Head>
 			<main>
-				<EventLive event={"ASAP2023"} />
+				{/* <EventLive event={"ASAP2023"} /> */}
 				{/* <ASMMLive /> */}
 				{/* <div
 					style={{
@@ -81,6 +82,12 @@ export default function Home() {
 					schedule
 					tagLine="We're going to PAX! Schedule has been released!"
 				/> */}
+				<LastEventBlock
+					tagLine="AusSpeedruns At PAX 2023 SMASHED it out of the park over DOUBLING our previous record!"
+					event={ASAP2023}
+					backgroundPos="center"
+					// overrideHeight='800px'
+				/>
 				<LastEventBlock
 					tagLine="The Australian Speedrunning community once again came together to put on the best ASM ever to help raise $35,000!!!"
 					event={ASM2023}

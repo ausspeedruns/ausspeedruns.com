@@ -1,35 +1,15 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Navbar.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faTwitch,
-	faTwitter,
-	faDiscord,
-	faYoutube,
-	faInstagram,
-	faTiktok,
-	// faFacebook,
-} from "@fortawesome/free-brands-svg-icons";
-import { faBars, faTimes, faCalendar, faShirt, faMoneyBillWave } from "@fortawesome/free-solid-svg-icons";
+import { faTwitch, faTwitter, faDiscord, faYoutube, faInstagram, faTiktok } from "@fortawesome/free-brands-svg-icons";
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { globals } from "../../globals";
 import Button from "../Button/Button";
 import { useAuth } from "../auth";
 import Link from "next/link";
 
 import { useMediaQuery } from "@mui/material";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
-const asrAusSpeedrunsLogo = {
-	prefix: "asr",
-	iconName: "ausspeedruns-logo",
-	icon: [
-		163,
-		146,
-		[],
-		null,
-		"M114.007 116.716C101.155 106.968 83.7594 93.7742 29.8674 130.619C0.796637 109.645 -6.23907 73.455 5.48198 54.0406C14.2493 49.3395 21.4874 41.2418 28.7426 33.1248C42.5865 17.6368 56.4929 2.07883 81.2052 9.91435C67.0706 30.7493 113.525 52.6958 113.525 0.536621C122.376 16.7961 134.169 27.307 143.92 35.9986C153.64 44.6621 161.332 51.518 162.062 60.4578C164.256 87.3207 155.819 111.347 134.77 121.651C126.105 125.892 120.666 121.767 114.007 116.716ZM125.337 132.415C127.847 132.761 132.871 133.453 138.701 129.752C145.161 125.651 140.224 143.324 130.389 145.205C126.378 145.972 120.564 131.93 124.491 132.309C124.729 132.331 125.012 132.37 125.337 132.415L125.337 132.415ZM134.193 53.7647C134.193 60.026 129.118 65.1018 122.856 65.1018C116.595 65.1018 111.519 60.026 111.519 53.7647C111.519 47.5034 116.595 42.4276 122.856 42.4276C129.118 42.4276 134.193 47.5034 134.193 53.7647ZM114.942 73.0163C114.942 79.2776 109.866 84.3534 103.605 84.3534C97.3433 84.3534 92.2675 79.2776 92.2675 73.0163C92.2675 66.7551 97.3433 61.6793 103.605 61.6793C109.866 61.6793 114.942 66.7551 114.942 73.0163ZM122.856 103.605C129.118 103.605 134.193 98.5293 134.193 92.268C134.193 86.0067 129.118 80.9309 122.856 80.9309C116.595 80.9309 111.519 86.0067 111.519 92.268C111.519 98.5293 116.595 103.605 122.856 103.605ZM153.445 73.0163C153.445 79.2776 148.369 84.3534 142.108 84.3534C135.847 84.3534 130.771 79.2776 130.771 73.0163C130.771 66.7551 135.847 61.6793 142.108 61.6793C148.369 61.6793 153.445 66.7551 153.445 73.0163ZM36.2239 62.963H16.9722V82.6424H36.2239L36.2239 101.894H55.4756V82.6425L74.7272 82.6424V62.963L55.4756 62.9629V43.7113H36.2239L36.2239 62.963Z",
-	],
-};
 type NavbarProps = {
 	events: {
 		shortname: string;
@@ -77,29 +57,20 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 						</svg>{" "}
 						AusSpeedruns
 					</Link>
+					<button
+						className={styles.menuToggle}
+						onClick={() => setIsOpen(!isOpen)}
+						aria-expanded={isOpen.valueOf()}>
+						{!isOpen ? <FontAwesomeIcon size="xl" icon={faBars} /> : <FontAwesomeIcon size="xl" icon={faTimes} />}
+					</button>
 				</div>
-				<button
-					className={styles.menuToggle}
-					onClick={() => setIsOpen(!isOpen)}
-					aria-expanded={isOpen.valueOf()}>
-					{!isOpen ? <FontAwesomeIcon icon={faBars} /> : <FontAwesomeIcon icon={faTimes} />}
-					<span>Menu</span>
-				</button>
-				{mobileWidth ? <div className={styles.break}></div> : ""}
-
 				<nav
 					className={`${styles.mainmenu} ${isOpen ? styles.menuopen : styles.menuclosed}`}
 					aria-label="Main menu">
-					<ul>
+					<ul className={styles.links}>
 						{schedules.map((event) => {
 							return (
 								<li key={event.shortname}>
-									{/* @ts-ignore */}
-									{mobileWidth ? (
-										<FontAwesomeIcon width={20} className={styles.icon} icon={faCalendar} />
-									) : (
-										""
-									)}
 									<Link href={`/${event.shortname}/schedule`} passHref className={styles.text}>
 										{schedules.length > 1 && `${event.shortname} `}Schedule
 									</Link>
@@ -110,13 +81,10 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 						{live && (
 							<>
 								<li>
-									{/* @ts-ignore */}
-									{mobileWidth ? (
-										<FontAwesomeIcon width={20} className={styles.icon} icon={faMoneyBillWave} />
-									) : (
-										""
-									)}
-									<Link href={`https://ausspeedruns.com/ASAP2023/incentives`} passHref className={styles.text}>
+									<Link
+										href={`https://ausspeedruns.com/ASAP2023/incentives`}
+										passHref
+										className={styles.text}>
 										Incentives
 									</Link>
 								</li>
@@ -125,117 +93,95 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 								</li>
 							</>
 						)}
-						
+
 						{upcomingOrLiveEvents.map((event) => {
 							return (
 								<li key={event.shortname}>
-									{/* @ts-ignore */}
-									{mobileWidth ? (
-										<FontAwesomeIcon
-											width={20}
-											className={styles.icon}
-											icon={asrAusSpeedrunsLogo as any}
-										/>
-									) : (
-										""
-									)}
 									<Link href={`/${event.shortname}`} passHref className={styles.text}>
 										{event.shortname}
 									</Link>
 								</li>
 							);
 						})}
+
 						<li>
-							{/* @ts-ignore */}
-							{mobileWidth ? (
-								<FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo as any} />
-							) : (
-								""
-							)}
 							<Link href={`/about`} passHref className={styles.text}>
 								About Us
 							</Link>
 						</li>
 						<li>
-							{/* @ts-ignore */}
-							{mobileWidth ? (
-								<FontAwesomeIcon width={20} className={styles.icon} icon={asrAusSpeedrunsLogo as any} />
-							) : (
-								""
-							)}
 							<Link href={`/events`} passHref className={styles.text}>
-								Past Events
+								Events
 							</Link>
 						</li>
 						<li>
-							{/* @ts-ignore */}
-							{mobileWidth ? <FontAwesomeIcon width={20} className={styles.icon} icon={faShirt} /> : ""}
-							<Link href={`http://ausspeedruns.theprintbar.com/`} passHref className={styles.text}>
+							<Link href="http://ausspeedruns.theprintbar.com/" passHref className={styles.text}>
 								Merch
 							</Link>
 						</li>
-
-						<li>
-							<a href={globals.socialLinks.twitch} target="_blank" rel="noreferrer">
-								<FontAwesomeIcon width={20} icon={faTwitch} />
-								<span className={`${styles.text} ${mobileWidth ? "" : "sr-only"}`}>Twitch</span>
-							</a>
-						</li>
-						<li>
-							<a href={globals.socialLinks.twitter} target="_blank" rel="noreferrer">
-								<FontAwesomeIcon width={20} icon={faTwitter} />
-								<span className={`${styles.text} ${mobileWidth ? "" : "sr-only"}`}>Twitter</span>
-							</a>
-						</li>
-						<li>
-							<a href={globals.socialLinks.youtube} target="_blank" rel="noreferrer">
-								<FontAwesomeIcon width={20} icon={faYoutube} />
-								<span className={`${styles.text} ${mobileWidth ? "" : "sr-only"}`}>YouTube</span>
-							</a>
-						</li>
-						<li>
-							<a href={globals.socialLinks.discord} target="_blank" rel="noreferrer">
-								<FontAwesomeIcon width={20} icon={faDiscord} />
-								<span className={`${styles.text} ${mobileWidth ? "" : "sr-only"}`}>Discord</span>
-							</a>
-						</li>
-						<li>
-							<a href={globals.socialLinks.instagram} target="_blank" rel="noreferrer">
-								<FontAwesomeIcon width={20} icon={faInstagram} />
-								<span className={`${styles.text} ${mobileWidth ? "" : "sr-only"}`}>Instagram</span>
-							</a>
-						</li>
-						<li>
-							<a href={globals.socialLinks.tiktok} target="_blank" rel="noreferrer">
-								<FontAwesomeIcon width={20} icon={faTiktok} />
-								<span className={`${styles.text} ${mobileWidth ? "" : "sr-only"}`}>Tiktok</span>
-							</a>
-						</li>
-						<li className={styles.auth}>
-							{auth.ready && auth.sessionData ? (
-								<>
-									<Button
-										actionText={auth.sessionData.username}
-										link={`/user/${auth.sessionData.username}`}
-										colorScheme={"secondary inverted"}
-									/>
-									<a
-										className={styles.signout}
-										onClick={() => {
-											auth.signOut();
-											if (top) top.location.href = "/";
-										}}>
-										Sign out
-									</a>
-								</>
-							) : (
-								<span className={styles.join}>
-									<Link href="/signin">Sign In</Link> | <Link href="/signup">Join</Link>
-								</span>
-							)}
-						</li>
 					</ul>
 				</nav>
+				<ul className={`${styles.social} ${isOpen ? styles.menuopen : styles.menuclosed}`}>
+					<li>
+						<a href={globals.socialLinks.twitch} target="_blank" rel="noreferrer">
+							<FontAwesomeIcon size="lg" icon={faTwitch} />
+							<span className="sr-only">Twitch</span>
+						</a>
+					</li>
+					<li>
+						<a href={globals.socialLinks.twitter} target="_blank" rel="noreferrer">
+							<FontAwesomeIcon size="lg" icon={faTwitter} />
+							<span className="sr-only">Twitter</span>
+						</a>
+					</li>
+					<li>
+						<a href={globals.socialLinks.youtube} target="_blank" rel="noreferrer">
+							<FontAwesomeIcon size="lg" icon={faYoutube} />
+							<span className="sr-only">YouTube</span>
+						</a>
+					</li>
+					<li>
+						<a href={globals.socialLinks.discord} target="_blank" rel="noreferrer">
+							<FontAwesomeIcon size="lg" icon={faDiscord} />
+							<span className="sr-only">Discord</span>
+						</a>
+					</li>
+					<li>
+						<a href={globals.socialLinks.instagram} target="_blank" rel="noreferrer">
+							<FontAwesomeIcon size="lg" icon={faInstagram} />
+							<span className="sr-only">Instagram</span>
+						</a>
+					</li>
+					<li>
+						<a href={globals.socialLinks.tiktok} target="_blank" rel="noreferrer">
+							<FontAwesomeIcon size="lg" icon={faTiktok} />
+							<span className="sr-only">Tiktok</span>
+						</a>
+					</li>
+				</ul>
+				<div className={`${styles.auth} ${isOpen ? styles.menuopen : styles.menuclosed}`}>
+					{auth.ready && auth.sessionData ? (
+						<>
+							<Button
+								actionText={auth.sessionData.username}
+								link={`/user/${auth.sessionData.username}`}
+								colorScheme={"secondary inverted"}
+							/>
+							<a
+								className={styles.signout}
+								onClick={() => {
+									auth.signOut();
+									if (top) top.location.href = "/";
+								}}>
+								Sign out
+							</a>
+						</>
+					) : (
+						<span className={styles.join}>
+							<Link href="/signin">Sign In</Link> | <Link href="/signup">Join</Link>
+						</span>
+					)}
+				</div>
 			</div>
 		</header>
 	);

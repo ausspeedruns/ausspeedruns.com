@@ -90,7 +90,7 @@ function padZerosLocaleString(num: number, zeros: number): string {
 	);
 }
 
-const AMOUNT_RAISED = 145000; // $145,000
+const AMOUNT_RAISED = 160000; // $160,000
 
 export default function Home() {
 	const amountRef = useRef<HTMLSpanElement>(null);

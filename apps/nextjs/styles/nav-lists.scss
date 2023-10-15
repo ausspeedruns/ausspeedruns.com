@@ -8,9 +8,8 @@
     margin-block: 0;
     padding-inline: 0;
 
-    @include breakpoint($sm) {
+    @include breakpoint($md) {
         flex-flow: row nowrap;
-        justify-content: flex-end;
     }
 
     li {
@@ -27,7 +26,6 @@
 
   a {
     color: $light-text;
-    font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
 

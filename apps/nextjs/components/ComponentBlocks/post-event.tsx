@@ -151,6 +151,7 @@ export const PostEventComponentRenderers: PostEventRenderers = {
 									className={styles.run}
 									key={run.id}
 									disableGutters
+									TransitionProps={{ unmountOnExit: true }} 
 									// expanded={expanded}
 									// onChange={handleRunChange(run.id)}
 								>

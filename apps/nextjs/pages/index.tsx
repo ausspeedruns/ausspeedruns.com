@@ -13,7 +13,8 @@ import LastEventBlock from "../components/LastEventBlock/LastEventBlock";
 import OGImage from "../styles/img/IndexOG.png";
 import { AusSpeedrunsEvent } from "../types/types";
 import { EventLive } from "../components/EventLive/EventLive";
-import ASMMLive from '../components/ASMM/asmm-live';
+import ASMMLive from "../components/ASMM/asmm-live";
+import DualUpcomingEvent from "../components/DualUpcomingEvent/DualUpcomingEvent";
 
 // TODO: Move this stuff to keystone
 const ASM2023: AusSpeedrunsEvent = {
@@ -41,7 +42,33 @@ const ASAP2023: AusSpeedrunsEvent = {
 	},
 	logo: "events/asap23/asap23-logo.png",
 	heroImage: "events/asap23/asap23-hero.jpg",
-	total: "18,007"
+	total: "18,007",
+};
+
+const ASGX2024: AusSpeedrunsEvent = {
+	fullName: "AusSpeedruns × The Game Expo 2024",
+	preferredName: "ASGX2024",
+	shortName: "ASGX2024",
+	startDate: "23 March 2024 09:00:00 GMT+0930",
+	dates: "March 23 – 24, 2024",
+	charity: {
+		name: "Game On Cancer",
+	},
+	logo: "events/asgx24/asgx-logo-white.png",
+	heroImage: "events/asgx24/asgx24-hero.png",
+};
+
+const ASDH2024: AusSpeedrunsEvent = {
+	fullName: "DreamHack 2024",
+	preferredName: "ASDH2024",
+	shortName: "ASDH2024",
+	startDate: "26 April 2024 09:00:00 GMT+0100",
+	dates: "April 26 – 28, 2024",
+	charity: {
+		name: "Game On Cancer",
+	},
+	logo: "events/asdh24/DreamHack24Logo.png",
+	heroImage: "events/asdh24/Dreamhack24Hero.jpg",
 };
 
 export default function Home() {
@@ -82,6 +109,19 @@ export default function Home() {
 					schedule
 					tagLine="We're going to PAX! Schedule has been released!"
 				/> */}
+				<DualUpcomingEvent
+					eventA={{
+						event: ASGX2024,
+						tagLine: "AusSpeedruns returns to The Game Expo!",
+						ticketLink: "https://www.thegameexpo.com/",
+						submitRuns: true,
+					}}
+					eventB={{
+						event: ASDH2024,
+						tagLine: "AusSpeedruns will be at Dreamhack for a special event. More information soon",
+						dontShowEventPage: true,
+					}}
+				/>
 				<LastEventBlock
 					tagLine="AusSpeedruns At PAX 2023 SMASHED it out of the park over DOUBLING our previous record!"
 					event={ASAP2023}

@@ -3,204 +3,204 @@
 @import "../../styles/nav-lists.scss";
 
 .navbar {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  width: 100%;
-  background: $secondary;
-  height: auto;
-  z-index: 2;
-  position: relative;
-  padding: 8px 1rem;
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	width: 100%;
+	background: $secondary;
+	height: auto;
+	z-index: 2;
+	position: relative;
+	padding: 8px 1rem;
 
-  .content {
-    display: flex;
-    flex-flow: column;
-    max-width: 2000px;
+	.content {
+		display: flex;
+		flex-flow: column;
+		max-width: 2000px;
 
-    @include breakpoint($md) {
-      display: grid;
-      grid-template-columns: 1.5fr 1.5fr 1fr min-content;
-    }
+		@include breakpoint($md) {
+			display: grid;
+			grid-template-columns: 1.5fr 1.5fr 1fr min-content;
+		}
 
-    @include breakpoint($lg) {
-      padding: 0 8rem;
-    }
-  }
+		@include breakpoint($lg) {
+			padding: 0 8rem;
+		}
+	}
 
-  .title {
-    display: flex;
-    justify-content: space-between;
+	.title {
+		display: flex;
+		justify-content: space-between;
 
-    font-family: "Finger Paint";
-    font-size: 1.2rem;
-    font-weight: 500;
-    flex-grow: 1;
+		font-family: "Finger Paint";
+		font-size: 1.2rem;
+		font-weight: 500;
+		flex-grow: 1;
 
-    @include breakpoint($md) {
-      font-size: 1.5rem;
-    }
+		@include breakpoint($md) {
+			font-size: 1.5rem;
+		}
 
-    a {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      color: $light-text;
-      white-space: nowrap;
+		a {
+			display: flex;
+			align-items: center;
+			text-decoration: none;
+			color: $light-text;
+			white-space: nowrap;
 
-      &:-webkit-any-link {
-        color: $light-text;
-      }
+			&:-webkit-any-link {
+				color: $light-text;
+			}
 
-      &:hover,
-      &:focus,
-      &:visited:hover,
-      &:visited:focus {
-        color: $primary;
+			&:hover,
+			&:focus,
+			&:visited:hover,
+			&:visited:focus {
+				color: $primary;
 
-        svg {
-          fill: $primary;
-        }
-      }
+				svg {
+					fill: $primary;
+				}
+			}
 
-      &:visited {
-        color: $light-text;
-        text-decoration: none;
-      }
+			&:visited {
+				color: $light-text;
+				text-decoration: none;
+			}
+		}
 
-    }
+		.logo {
+			width: 40px;
+			height: 40px;
+			margin-right: 5px;
+			background-size: contain;
 
-    .logo {
-      width: 40px;
-      height: 40px;
-      margin-right: 5px;
-      background-size: contain;
+			@include breakpoint($md) {
+				height: 50px;
+				width: 50px;
+			}
+		}
+	}
 
-      @include breakpoint($md) {
-        height: 50px;
-        width: 50px;
-      }
-    }
-  }
+	@include nav-lists;
 
-  @include nav-lists;
+	nav {
+		display: flex;
+		flex-flow: column wrap;
+		font-size: 1.5rem;
 
-  nav {
-    display: flex;
-    flex-flow: column wrap;
-    font-size: 1.5rem;
+		@include breakpoint($md) {
+			flex-flow: row nowrap;
+			align-items: center;
+			justify-content: space-between;
+			font-size: 1rem;
+		}
 
-    @include breakpoint($md) {
-      flex-flow: row nowrap;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 1rem;
-    }
+		.icon {
+			color: $light-text;
+		}
+	}
 
-    .signout {
-      margin-left: 1rem;
-      font-weight: 500;
-      cursor: pointer;
-      white-space: nowrap;
-    }
+	.signout {
+		margin-left: 1rem;
+		font-weight: 500;
+		cursor: pointer;
+		white-space: nowrap;
+	}
 
-    .join {
-      color: $light-text;
+	.join {
+		color: $light-text;
+    white-space: nowrap;
 
-      a {
-        font-weight: 500;
-        white-space: nowrap;
-      }
-    }
+		a {
+			font-weight: 500;
+		}
+	}
 
-    .icon {
-      color: $light-text;
-    }
-  }
+	.social {
+		display: flex;
 
-  .social {
-    display: flex;
+		@include nav-lists;
 
-    @include nav-lists;
+		@include breakpoint($md) {
+			flex-flow: row nowrap;
+			align-items: center;
+			justify-content: flex-end;
+			padding-right: 8px;
+		}
 
-    @include breakpoint($md) {
-      flex-flow: row nowrap;
-      align-items: center;
-      justify-content: flex-end;
-      padding-right: 8px;
-    }
-    
-    &.menuopen {
-      display: flex !important;
-      flex-flow: row;
-      justify-content: center;
-    }
-  }
+		&.menuopen {
+			display: flex !important;
+			flex-flow: row;
+			justify-content: center;
+		}
+	}
 
-  .auth {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    &.menuopen {
-      display: flex !important;
-    }
-  }
+	.auth {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 
-  .break {
-    flex-basis: 100%;
-    height: 0;
-  }
+		&.menuopen {
+			display: flex !important;
+		}
+	}
 
+	.break {
+		flex-basis: 100%;
+		height: 0;
+	}
 
-  .mainmenu, .social, .auth {
-    width: 100%;
+	.mainmenu,
+	.social,
+	.auth {
+		width: 100%;
 
-    &.menuopen {
-      display: block;
-    }
+		&.menuopen {
+			display: block;
+		}
 
-    &.menuclosed {
-      display: none;
-    }
+		&.menuclosed {
+			display: none;
+		}
 
-    @include breakpoint($md) {
-      display: flex !important;
-      flex-direction: row;
-    }
+		@include breakpoint($md) {
+			display: flex !important;
+			flex-direction: row;
+		}
 
-    li {
-      fill-rule: evenodd;
-    }
-  }
+		li {
+			fill-rule: evenodd;
+		}
+	}
 
-  .menuToggle {
-    span {
-      margin-left: 8px;
-      font-size: 1rem;
-    }
-  }
+	.menuToggle {
+		span {
+			margin-left: 8px;
+			font-size: 1rem;
+		}
+	}
 
-  button {
-    background: none;
-    border: none;
-    color: $light-text;
+	button {
+		background: none;
+		border: none;
+		color: $light-text;
 
-    @include breakpoint($md) {
-      display: none;
-    }
+		@include breakpoint($md) {
+			display: none;
+		}
 
-    &:hover {
-      color: $primary;
-    }
+		&:hover {
+			color: $primary;
+		}
 
-    .user {
-      background-color: $primary;
-      border-radius: 100%;
-    }
-  }
+		.user {
+			background-color: $primary;
+			border-radius: 100%;
+		}
+	}
 
-  // .cta > .button {
-  //   padding: 6px 32px;
-  // }
+	// .cta > .button {
+	//   padding: 6px 32px;
+	// }
 }

@@ -82,7 +82,7 @@ const Shirt = () => {
 	}, [genShirtLoading, successfulShirt]);
 
 	useEffect(() => {
-		let interval: NodeJS.Timer;
+		let interval: NodeJS.Timeout;
 		if (waitForShirt) {
 			interval = setInterval(() => {
 				if (successfulShirt) {

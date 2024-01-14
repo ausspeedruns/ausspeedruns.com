@@ -99,7 +99,7 @@ export function BundleProduct() {
 	}, [genTicketLoading, successfulTicket]);
 
 	useEffect(() => {
-		let interval: NodeJS.Timer;
+		let interval: NodeJS.Timeout;
 		if (waitForTicket) {
 			interval = setInterval(() => {
 				if (successfulTicket) {

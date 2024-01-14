@@ -3,6 +3,7 @@
 # nx
 dist
 .nx-container
+/.nx
 
 # dependencies
 node_modules

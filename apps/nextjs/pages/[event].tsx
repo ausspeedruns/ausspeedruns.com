@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { gql, ssrExchange, cacheExchange, dedupExchange, fetchExchange, useQuery } from 'urql';
+import { gql, ssrExchange, cacheExchange, fetchExchange } from 'urql';
 import { DocumentRenderer } from '@keystone-6/document-renderer';
 
 import DiscordEmbed from '../components/DiscordEmbed';
@@ -160,7 +160,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 				process.env.NODE_ENV === 'production'
 					? 'https://keystone.ausspeedruns.com/api/graphql'
 					: 'http://localhost:8000/api/graphql',
-			exchanges: [dedupExchange, cacheExchange, ssrCache, fetchExchange],
+			exchanges: [cacheExchange, ssrCache, fetchExchange],
 		},
 		false
 	);

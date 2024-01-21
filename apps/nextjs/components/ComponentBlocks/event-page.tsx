@@ -3,13 +3,7 @@ import { EventPageRenderers } from "@ausspeedruns/component-blocks";
 
 import Image from "next/image";
 import Button from "../Button/Button";
-import {
-	faArrowRight,
-	faTicket,
-	faCalendar,
-	faPerson,
-	faShirt,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faTicket, faCalendar, faPerson } from "@fortawesome/free-solid-svg-icons";
 import { Theme } from "../../styles/colors";
 import styles from "./event-page.module.scss";
 
@@ -23,53 +17,34 @@ export const EventComponentRenderers: EventPageRenderers = {
 				style={{
 					backgroundImage: `url("${props.backgroundImage}")`,
 					backgroundPosition: props.backgroundSettings.position,
-					backgroundSize: props.backgroundSettings.cover
-						? "cover"
-						: "contain",
+					backgroundSize: props.backgroundSettings.cover ? "cover" : "contain",
 					backgroundRepeat: props.backgroundSettings.repeat,
 				}}>
 				<div className={styles.logo}>
 					<Image
-						src={
-							props.event.data.logo?.url
-						}
+						src={props.darkModeLogo ? props.event.data.darkModeLogo?.url : props.event.data.logo?.url}
 						alt={`${props.event.data.shortname} Logo`}
 						style={{ objectFit: "contain" }}
 						fill
 					/>
 				</div>
 				<div className={styles.buttons}>
-					{props.donateLink && (
-						<Button
-							actionText="Donate"
-							link={props.donateLink}
-							openInNewTab
-						/>
-					)}
+					{props.donateLink && <Button actionText="Donate" link={props.donateLink} openInNewTab />}
 
 					{props.event?.data?.acceptingSubmissions && (
+						<Button actionText="Submissions are open!" link="/submit-game" iconRight={faArrowRight} />
+					)}
+
+					{props.event?.data?.acceptingBackups && !props.event?.data?.acceptingSubmissions && (
 						<Button
-							actionText="Submissions are open!"
+							actionText="Backup submissions are open!"
 							link="/submit-game"
 							iconRight={faArrowRight}
 						/>
 					)}
 
-					{props.event?.data?.acceptingBackups &&
-						!props.event?.data?.acceptingSubmissions && (
-							<Button
-								actionText="Backup submissions are open!"
-								link="/submit-game"
-								iconRight={faArrowRight}
-							/>
-						)}
-
 					{props.ticketLink && (
-						<Button
-							actionText="Purchase tickets"
-							link={props.ticketLink}
-							iconRight={faTicket}
-						/>
+						<Button actionText="Purchase tickets" link={props.ticketLink} iconRight={faTicket} />
 					)}
 
 					{props.event?.data?.scheduleReleased && (
@@ -81,12 +56,16 @@ export const EventComponentRenderers: EventPageRenderers = {
 					)}
 
 					{props.event?.data?.acceptingVolunteers && (
-						<Button
-							actionText="Be a volunteer!"
-							link="/volunteers"
-							iconRight={faPerson}
-						/>
+						<Button actionText="Be a volunteer!" link="/volunteers" iconRight={faPerson} />
 					)}
+
+					{props.buttons.map((button) => (
+						<Button
+							actionText={button.text}
+							link={button.link}
+							openInNewTab={button.openInNewTab}
+						/>
+					))}
 				</div>
 			</div>
 		);
@@ -102,16 +81,9 @@ export const EventComponentRenderers: EventPageRenderers = {
 					flexDirection: props.swapSides ? "row-reverse" : "row",
 				}}>
 				<div className={styles.image}>
-					<Image
-						src={props.imageUrl}
-						alt={props.imageAlt}
-						fill
-						style={{ objectFit: "cover" }}
-					/>
+					<Image src={props.imageUrl} alt={props.imageAlt} fill style={{ objectFit: "cover" }} />
 				</div>
-				<div
-					className={styles.content}
-					style={{ background: `${props.colour}d9` }}>
+				<div className={styles.content} style={{ background: `${props.colour}d9` }}>
 					<p>{props.content}</p>
 				</div>
 			</div>
@@ -144,6 +116,18 @@ export const EventComponentRenderers: EventPageRenderers = {
 				style={{ height: props.height, objectFit: "cover" }}
 				fill
 				alt=""
+			/>
+		);
+	},
+	standardImage: (props) => {
+		return (
+			<Image
+				className={styles.standardImage}
+				src={props.url}
+				style={{ objectFit: "cover" }}
+				height={props.height ?? 700}
+				width={props.width ?? 500}
+				alt={props.alt}
 			/>
 		);
 	},

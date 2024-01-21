@@ -146,6 +146,12 @@ const AmountRaisedImage = styled.img`
 	object-fit: contain;
 `;
 
+const StandardImage = styled.img`
+	max-width: 60%;
+	margin: auto;
+	object-fit: cover;
+`;
+
 // naming the export componentBlocks is important because the Admin UI
 // expects to find the components like on the componentBlocks export
 export const EventPageComponentBlocks = {
@@ -155,80 +161,55 @@ export const EventPageComponentBlocks = {
 				target: "_blank",
 				rel: "noopener noreferrer",
 			};
+
+			const logoType = props.fields.darkModeLogo.value
+				? props.fields.event?.value?.data?.darkModeLogo
+				: props.fields.event?.value?.data?.logo;
+
 			return (
 				<HeaderContainer
 					contentEditable={false}
 					image={props.fields.backgroundImage.value}
-					position={
-						props.fields.backgroundSettings.fields.position.value
-					}
+					position={props.fields.backgroundSettings.fields.position.value}
 					cover={props.fields.backgroundSettings.fields.cover.value}
-					repeat={
-						props.fields.backgroundSettings.fields.repeat.value
-					}>
-					{/* <link
-						rel="stylesheet"
-						href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/solid.min.css"
-						integrity="sha512-6mc0R607di/biCutMUtU9K7NtNewiGQzrvWX4bWTeqmljZdJrwYvKJtnhgR+Ryvj+NRJ8+NnnCM/biGqMe/iRA=="
-						crossOrigin="anonymous"
-						referrerPolicy="no-referrer"
-					/> */}
+					repeat={props.fields.backgroundSettings.fields.repeat.value}>
 					<HeaderLogo>
-						{/* <Image src={props.fields.event?.value?.data?.logo ?? ''} alt="AusSpeedruns At PAX 2022 Logo" /> */}
+						<EventLogo src={props.fields.event?.value?.data?.logo ?? ""} alt="Logo" />
 					</HeaderLogo>
 					<ButtonContainer>
 						{props.fields.donateLink.value && (
-							<Button
-								href={props.fields.donateLink.value}
-								target="_blank"
-								rel="noopener noreferrer">
+							<Button href={props.fields.donateLink.value} target="_blank" rel="noopener noreferrer">
 								Donate
 							</Button>
 						)}
 
-						{props.fields.event.value?.data
-							?.acceptingSubmissions && (
-							<Button href="/submit-game">
-								Submissions are open!
-							</Button>
+						{props.fields.event.value?.data?.acceptingSubmissions && (
+							<Button href="/submit-game">Submissions are open!</Button>
 						)}
 
 						{props.fields.event.value?.data?.acceptingBackups &&
-							!props.fields.event.value?.data
-								?.acceptingSubmissions && (
-								<Button href="/submit-game">
-									Backup submissions are open!
-								</Button>
+							!props.fields.event.value?.data?.acceptingSubmissions && (
+								<Button href="/submit-game">Backup submissions are open!</Button>
 							)}
 
 						{props.fields.ticketLink.value && (
-							<Button href={props.fields.ticketLink.value}>
-								Purchase tickets
-							</Button>
+							<Button href={props.fields.ticketLink.value}>Purchase tickets</Button>
 						)}
 
-						{props.fields.event.value?.data?.scheduleReleased && (
-							<Button href="/schedule">Schedule</Button>
-						)}
+						{props.fields.event.value?.data?.scheduleReleased && <Button href="/schedule">Schedule</Button>}
 
-						{props.fields.event.value?.data
-							?.acceptingVolunteers && (
+						{props.fields.event.value?.data?.acceptingVolunteers && (
 							<Button href="/volunteers">Be a volunteer!</Button>
 						)}
 
 						{props.fields.event.value?.data?.acceptingShirts && (
-							<Button href="/store">
-								Buy the ASM2023 Shirt! (Limited Time)
-							</Button>
+							<Button href="/store">Buy the ASM2023 Shirt! (Limited Time)</Button>
 						)}
 
 						{/* <Button actionText="Donation Incentives" link="/ASM2022/incentives" iconRight={faArrowRight} /> */}
 
-						<Button
-							href={props.fields.charityLink.value}
-							target="_blank"
-							rel="noopener noreferrer">
-							Learn more about Game on Cancer
+						<Button href={props.fields.charityLink.value} target="_blank" rel="noopener noreferrer">
+							Learn more about Game on
 						</Button>
 
 						{props.fields.buttons.elements.map((button, i) => {
@@ -236,9 +217,7 @@ export const EventPageComponentBlocks = {
 								<Button
 									key={i}
 									href={button.fields.link.value}
-									{...(button.fields.openInNewTab.value
-										? openInNewTabProps
-										: undefined)}>
+									{...(button.fields.openInNewTab.value ? openInNewTabProps : undefined)}>
 									{button.fields.text.value}
 								</Button>
 							);
@@ -253,7 +232,7 @@ export const EventPageComponentBlocks = {
 				label: "Event",
 				listKey: "Event",
 				selection:
-					"id acceptingSubmissions acceptingTickets scheduleReleased acceptingVolunteers acceptingBackups acceptingShirts logo { height width url } shortname",
+					"id acceptingSubmissions acceptingTickets scheduleReleased acceptingVolunteers acceptingBackups acceptingShirts logo { height width url } darkModeLogo { height width url } shortname",
 			}),
 			backgroundImage: fields.url({ label: "Background Image URL " }),
 			backgroundSettings: fields.object({
@@ -284,6 +263,7 @@ export const EventPageComponentBlocks = {
 					}),
 				}),
 			),
+			darkModeLogo: fields.checkbox({ label: "Dark Mode Logo?" }),
 		},
 	}),
 	imageParagraph: component({
@@ -294,15 +274,10 @@ export const EventPageComponentBlocks = {
 					style={{
 						color: props.fields.textDark.value ? "#000" : "#fff",
 						background: props.fields.colour.value,
-						flexDirection: props.fields.swapSides.value
-							? "row-reverse"
-							: "row",
+						flexDirection: props.fields.swapSides.value ? "row-reverse" : "row",
 					}}>
 					<ImageContainer>
-						<img
-							src={props.fields.imageUrl.value}
-							alt={props.fields.imageAlt.value}
-						/>
+						<img src={props.fields.imageUrl.value} alt={props.fields.imageAlt.value} />
 					</ImageContainer>
 					<ParagraphContainer>
 						<p>{props.fields.content.value}</p>
@@ -352,17 +327,31 @@ export const EventPageComponentBlocks = {
 	}),
 	fullWidthImage: component({
 		preview(props) {
-			return (
-				<SoloImage
-					src={props.fields.url.value}
-					style={{ height: props.fields.height.value }}
-				/>
-			);
+			return <SoloImage src={props.fields.url.value} style={{ height: props.fields.height.value }} />;
 		},
 		label: "Full Width Image",
 		schema: {
 			url: fields.url({ label: "Image URL" }),
 			height: fields.text({ label: "Height", defaultValue: "30rem" }),
+		},
+	}),
+	standardImage: component({
+		preview(props) {
+			return (
+				<StandardImage
+					src={props.fields.url.value}
+					alt={props.fields.alt.value}
+					height={props.fields.height.value}
+					width={props.fields.width.value}
+				/>
+			);
+		},
+		label: "Image",
+		schema: {
+			url: fields.url({ label: "Image URL" }),
+			alt: fields.text({ label: "Alt" }),
+			height: fields.integer({ label: "Height", defaultValue: 700 }),
+			width: fields.integer({ label: "Width", defaultValue: 400 }),
 		},
 	}),
 };

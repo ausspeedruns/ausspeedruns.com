@@ -1,4 +1,11 @@
+@import "./colors.scss";
+@import "./responsive.scss";
+
 .paragraph {
 	max-width: 750px;
 	margin: 2rem auto;
+
+	@media (max-width: 790px) {
+		margin: 2rem;
+	}
 }

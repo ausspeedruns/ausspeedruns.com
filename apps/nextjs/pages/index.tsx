@@ -118,8 +118,7 @@ export default function Home() {
 					}}
 					eventB={{
 						event: ASDH2024,
-						tagLine: "AusSpeedruns will be at Dreamhack for a special event. More information soon",
-						dontShowEventPage: true,
+						tagLine: "We are excited to be at Dreamhack Australia!",
 					}}
 				/>
 				<LastEventBlock

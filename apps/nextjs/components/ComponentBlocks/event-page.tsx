@@ -28,6 +28,11 @@ export const EventComponentRenderers: EventPageRenderers = {
 						fill
 					/>
 				</div>
+				<div className={styles.taglines}>
+					{props.taglines?.map((tagline) => (
+						<h1>{tagline}</h1>
+					))}
+				</div>
 				<div className={styles.buttons}>
 					{props.donateLink && <Button actionText="Donate" link={props.donateLink} openInNewTab />}
 
@@ -60,11 +65,7 @@ export const EventComponentRenderers: EventPageRenderers = {
 					)}
 
 					{props.buttons.map((button) => (
-						<Button
-							actionText={button.text}
-							link={button.link}
-							openInNewTab={button.openInNewTab}
-						/>
+						<Button actionText={button.text} link={button.link} openInNewTab={button.openInNewTab} />
 					))}
 				</div>
 			</div>

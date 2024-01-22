@@ -176,6 +176,11 @@ export const EventPageComponentBlocks = {
 					<HeaderLogo>
 						<EventLogo src={props.fields.event?.value?.data?.logo ?? ""} alt="Logo" />
 					</HeaderLogo>
+					<div style={{ display: "flex", flexDirection: "column" }}>
+						{props.fields.taglines.elements.map((tagline) => (
+							<h2>{tagline.value}</h2>
+						))}
+					</div>
 					<ButtonContainer>
 						{props.fields.donateLink.value && (
 							<Button href={props.fields.donateLink.value} target="_blank" rel="noopener noreferrer">
@@ -262,8 +267,10 @@ export const EventPageComponentBlocks = {
 						label: "Open in new tab? ",
 					}),
 				}),
+				{ label: "Extra Buttons" },
 			),
 			darkModeLogo: fields.checkbox({ label: "Dark Mode Logo?" }),
+			taglines: fields.array(fields.text({ label: "Tagline" }), { label: "Taglines" }),
 		},
 	}),
 	imageParagraph: component({

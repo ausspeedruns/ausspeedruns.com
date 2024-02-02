@@ -78,13 +78,7 @@ const nextConfig = {
 			},
 			{
 				source: "/schedule",
-				destination: "/ASAP2023/schedule",
-				permanent: false,
-			},
-			{
-				source: "/clip-challenge",
-				destination:
-					"https://forms.office.com/pages/responsepage.aspx?id=SSVHd61AgEyxiztkrL3zddpHgDqcDVdBoabbjZyhxhZUMTc4UkowSU5XSzRYVklFRUNKWVJRWk9PRSQlQCN0PWcu",
+				destination: "/ASGX2024/schedule",
 				permanent: false,
 			},
 			{

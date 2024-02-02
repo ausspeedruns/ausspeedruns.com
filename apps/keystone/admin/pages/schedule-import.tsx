@@ -30,7 +30,6 @@ import { downloadSubmissions } from "../util/schedule/export-submissions";
 import { parseScheduleToRuns } from "../util/schedule/import-schedule";
 import { createSchedule } from "../util/schedule/create-schedule";
 import { updateSubmissionResults } from "../util/schedule/update-submissions";
-import { updateTech } from "../util/schedule/update-tech";
 
 import type { Run } from "../util/schedule/schedule-types";
 
@@ -161,12 +160,14 @@ function endRunTime(scheduled: Date, estimate: string) {
 	return scheduledTime;
 }
 
+type SelectOption = {
+	label: string;
+	value: string;
+} | null;
+
 export default function ScheduleImport() {
 	// States
-	const [selectedEvent, setSelectedEvent] = useState<{
-		label: string;
-		value: string;
-	} | null>(null);
+	const [selectedEvent, setSelectedEvent] = useState<SelectOption>(getEventInURLQuery());
 	const [scheduleProcessing, setScheduleProcessing] = useState(false);
 	const [scheduleRuns, setScheduleRuns] = useState<Run[]>([]);
 	const [eventAlreadyHasRuns, setEventAlreadyHasRuns] = useState(true);
@@ -185,6 +186,38 @@ export default function ScheduleImport() {
 
 	// Misc
 	const { addToast } = useToasts();
+
+	function handleEventSelection(option: { label: string; value: string } | null) {
+		const urlParams = new URLSearchParams(window.location.search);
+
+		if (option) {
+			urlParams.set("event", option.value);
+		} else {
+			urlParams.delete("event");
+		}
+
+		if (urlParams.size > 0) {
+			const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+			window.history.pushState({ path: newUrl }, "", newUrl);
+		} else {
+			window.history.pushState({}, "", window.location.pathname);
+		}
+
+		setSelectedEvent(option);
+	}
+
+	function getEventInURLQuery(): SelectOption {
+		const eventName = new URLSearchParams(window.location.search).get("event");
+
+		if (!eventName) {
+			return null;
+		}
+
+		return {
+			label: eventName,
+			value: eventName,
+		};
+	}
 
 	const eventsOptions = eventsList?.events
 		.map((event) => ({ value: event.shortname, label: event.shortname }))
@@ -320,7 +353,7 @@ export default function ScheduleImport() {
 
 	let prevDay = "";
 	const tableRows = scheduleRuns.map((row, index) => {
-		// console.log(row);
+		console.log(row);
 		if (!eventData?.event) return <></>;
 		let dayDivider = <></>;
 		if (formatInTimeZone(row.scheduled, eventData.event.eventTimezone, "d") !== prevDay) {
@@ -409,7 +442,7 @@ export default function ScheduleImport() {
 					justifyContent: "center",
 				}}>
 				<FieldLabel style={{ minWidth: "", marginRight: 8 }}>Event</FieldLabel>
-				<Select onChange={(e) => setSelectedEvent(e)} value={selectedEvent} options={eventsOptions} />
+				<Select onChange={(e) => handleEventSelection(e)} value={selectedEvent} options={eventsOptions} />
 			</FieldContainer>
 			<Button
 				isDisabled={
@@ -632,9 +665,9 @@ export default function ScheduleImport() {
 					</Button>
 				</MUIStack>
 				<MUIStack direction="row" justifyContent="flex-end" spacing={2}>
-					<Button tone="active" weight="bold" onClick={() => updateTech(selectedEvent?.value ?? "")}>
+					{/* <Button tone="active" weight="bold" onClick={() => updateTech(selectedEvent?.value ?? "")}>
 						DEV BUTTON Update tech and special reqs
-					</Button>
+					</Button> */}
 					<Button tone="active" weight="bold" onClick={updateSubmissions}>
 						Update Submission Results
 					</Button>

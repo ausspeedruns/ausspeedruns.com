@@ -112,9 +112,9 @@ export default function Home() {
 				<DualUpcomingEvent
 					eventA={{
 						event: ASGX2024,
-						tagLine: "AusSpeedruns returns to The Game Expo!",
+						tagLine: "The Schedule is released!",
 						ticketLink: "https://www.thegameexpo.com/",
-						submitRuns: true,
+						schedule: true,
 					}}
 					eventB={{
 						event: ASDH2024,

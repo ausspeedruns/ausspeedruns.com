@@ -120,7 +120,7 @@ const HeroBlock = ({
 					<h2>{event.dates}</h2>
 					<h3 className={[styles.countdown, styles.monospaced].join(" ")}>{countdownElement}</h3>
 					<br />
-					<p>{tagLine}</p>
+					<p style={{ height: 60 }}>{tagLine}</p>
 					{!dontShowEventPage && (
 						<Button
 							actionText={event.preferredName}

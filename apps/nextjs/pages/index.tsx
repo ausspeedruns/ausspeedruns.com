@@ -118,7 +118,9 @@ export default function Home() {
 					}}
 					eventB={{
 						event: ASDH2024,
-						tagLine: "We are excited to be at Dreamhack Australia!",
+						tagLine: "Game Submissions for Dreamhack are Open!",
+						submitRuns: true,
+						ticketLink: "https://dreamhack.com/australia/"
 					}}
 				/>
 				<LastEventBlock

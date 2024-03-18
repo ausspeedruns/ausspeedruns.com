@@ -118,8 +118,7 @@ export default function Home() {
 					}}
 					eventB={{
 						event: ASDH2024,
-						tagLine: "Game Submissions for Dreamhack are Open!",
-						submitRuns: true,
+						tagLine: "Schedule for Dreamhack out soon.",
 						ticketLink: "https://dreamhack.com/australia/"
 					}}
 				/>

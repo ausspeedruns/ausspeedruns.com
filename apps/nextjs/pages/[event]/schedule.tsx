@@ -414,7 +414,9 @@ function generateRunItems(
 	for (let index = 0; index < filteredRuns.length; index++) {
 		const run = filteredRuns[index];
 		const runDate = getRunDate(run.scheduledTime, settings.showLocalTime ? eventTimezone : undefined);
-		const nextRunDate = filteredRuns[index + 1] ? getRunDate(filteredRuns[index + 1].scheduledTime, settings.showLocalTime ? eventTimezone : undefined) : runDate;
+		const nextRunDate = filteredRuns[index + 1]
+			? getRunDate(filteredRuns[index + 1].scheduledTime, settings.showLocalTime ? eventTimezone : undefined)
+			: runDate;
 
 		scheduleBlockData = blocks.get(run.id);
 
@@ -504,7 +506,7 @@ interface RunItemProps {
 // Runner parsing
 function runnerParsing(runnersArray: QUERY_EVENT_RESULTS["event"]["runs"][0]["runners"]) {
 	return (
-		<div>
+		<div key={runnersArray[0].username}>
 			{runnersArray.map((runner, i) => {
 				const { username } = runner;
 				// If only one name or second last in the list to not include a comma
@@ -554,10 +556,10 @@ const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 		? new Date(run.scheduledTime).toLocaleTimeString("en-AU", {
 				...runItemOptions,
 				timeZone: props.eventTimezone,
-		  })
+			})
 		: new Date(run.scheduledTime).toLocaleTimeString("en-AU", runItemOptions);
-	
-		if (convertedTimezone[0] === "0") convertedTimezone = " " + convertedTimezone.substring(1);
+
+	if (convertedTimezone[0] === "0") convertedTimezone = " " + convertedTimezone.substring(1);
 
 	if (run.game === "Setup Buffer") {
 		return (
@@ -575,6 +577,11 @@ const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 	if (props.isLive) runClassNames.push(styles.liveRun);
 
 	const estimateSplit = run.estimate.split(":");
+	const hours = parseInt(estimateSplit[0]);
+	const minutes = parseInt(estimateSplit[1]);
+	const formattedHours = hours === 0 ? " 0" : hours < 10 ? ` ${hours}` : hours.toString().padStart(2, " ");
+	const formattedMinutes = minutes.toString().padStart(2, "0");
+	const estimateText = `${formattedHours}:${formattedMinutes}:00`;
 
 	return (
 		<div className={runClassNames.join(" ")} key={run.id} style={props.style}>
@@ -585,9 +592,7 @@ const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 				{run.category}
 			</span>
 			<span className={styles.runners}>{run.runners.length > 0 ? runnerParsing(run.runners) : run.racer}</span>
-			<span className={styles.estimate}>
-				{estimateSplit[0] == "00" ? " 0" : estimateSplit[0].padStart(2, " ")}:{estimateSplit[1]}:00
-			</span>
+			<span className={styles.estimate}>{estimateText}</span>
 			<span className={styles.platform}>{run.platform}</span>
 			<span className={styles.donationIncentive}>
 				{run.donationIncentiveObject?.map((incentive) => incentive.title).join(" | ")}

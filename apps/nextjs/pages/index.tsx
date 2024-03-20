@@ -18,6 +18,8 @@ import ASMMLive from "../components/ASMM/asmm-live";
 import DualUpcomingEvent from "../components/DualUpcomingEvent/DualUpcomingEvent";
 import { useMediaQuery } from "@mui/material";
 
+import DreamhackLogo from "../styles/img/events/asdh24/DreamHack24Logo.png";
+
 // TODO: Move this stuff to keystone
 const ASM2023: AusSpeedrunsEvent = {
 	fullName: "Australian Speedrun Marathon 2023",
@@ -95,7 +97,7 @@ export default function Home() {
 				<div className={styles.banner}>
 					{!mobileWidth && (
 						<Image
-							src="http://localhost:4200/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FDreamHack24Logo.cc9e92a5.png&w=1080&q=75"
+							src={DreamhackLogo}
 							height={30}
 							width={371}
 							alt="The Dreamhack Wordmark Logo"

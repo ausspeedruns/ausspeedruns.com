@@ -1,12 +1,12 @@
-@import './colors.scss';
-@import './responsive.scss';
+@import "./colors.scss";
+@import "./responsive.scss";
 
 .archive {
 	width: 100%;
 	height: 28rem;
 	background-color: $color-teal;
 	background-blend-mode: multiply;
-	background-image: url('../styles/img/archive.png');
+	background-image: url("../styles/img/archive.png");
 	background-position: center;
 	background-size: cover;
 	// color: $light-text;
@@ -115,5 +115,20 @@
 
 	.secondary {
 		font-size: 1.1rem;
+	}
+}
+
+.banner {
+	background: #000;
+	color: white;
+	min-height: 100px;
+	gap: 16px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	@include breakpoint($sm-zero-only) {
+		flex-direction: column;
+		padding: 32px 0;
 	}
 }

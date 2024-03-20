@@ -7,13 +7,14 @@ import { format } from "date-fns";
 import TwitchChatEmbed from "../TwitchChatEmbed/TwitchChatEmbed";
 import TwitchVideoEmbed from "../TwitchVideoEmbed/TwitchVideoEmbed";
 
-import EventLogo from "../../styles/img/asap2023-logo.svg";
+import EventLogo from "../../styles/img/ASGX2023 Logo.png";
 import { useState } from "react";
 import { Incentive } from "../Incentives/Incentive";
 import Button from "../Button/Button";
 
 import GameOnCancer from "../../styles/img/sponsors/GameOnCancer/GoCCCPAX23.svg";
 import Link from "next/link";
+import { faCalendar } from "@fortawesome/free-solid-svg-icons";
 
 const aspectRatio = EventLogo.height / EventLogo.width;
 const gocAspectRatio = GameOnCancer.height / GameOnCancer.width;
@@ -85,7 +86,7 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 		setCurrentTime(new Date());
 	}, 10 * 1000);
 
-	console.log(eventQuery);
+	// console.log(eventQuery);
 
 	const incentiveData = {
 		title: eventQuery.data?.event.donationIncentives?.[0]?.title ?? "",
@@ -187,19 +188,17 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 						<div className={styles.liveContent}>
 							<h2>Upcoming Run</h2>
 							<div className={styles.info}>
+								<span className={styles.game}>{eventQuery.data?.event.runs?.[nextRunIndex]?.game ?? "Loading"}</span>
+								<span className={styles.category}>{eventQuery.data?.event.runs?.[nextRunIndex]?.category ?? "Loading"}</span>
 								<span className={styles.subtitle}>Time</span>
 								<span>
 									{eventQuery.data?.event.runs?.[nextRunIndex]?.scheduledTime
 										? format(
 												new Date(eventQuery.data?.event.runs[nextRunIndex]?.scheduledTime),
 												"H:mm a",
-										  )
+											)
 										: "Loading"}
 								</span>
-								<span className={styles.subtitle}>Game</span>
-								<span>{eventQuery.data?.event.runs?.[nextRunIndex]?.game ?? "Loading"}</span>
-								<span className={styles.subtitle}>Category</span>
-								<span>{eventQuery.data?.event.runs?.[nextRunIndex]?.category ?? "Loading"}</span>
 								<span className={styles.subtitle}>
 									{eventQuery.data?.event.runs?.[nextRunIndex]?.runners.length! > nextRunIndex
 										? "Runners"
@@ -213,10 +212,11 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 							</div>
 							<div className={styles.link}>
 								<Button
-									actionText="Check out the schedule!"
+									actionText="Schedule"
 									link={`/${props.event}/schedule`}
 									colorScheme="secondary inverted"
 									openInNewTab
+									iconRight={faCalendar}
 								/>
 							</div>
 						</div>
@@ -227,10 +227,11 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 					<section className={styles.incentive}>
 						<div className={styles.liveContent}>
 							<h2>Donation Incentives</h2>
-							<h3>
-								Make a donation and write that you want to put the money towards this or another
-								incentive
-							</h3>
+							<span className={styles.instructions}>
+								Make a{" "}
+								<span style={{ textDecoration: "underline" }}>donation and write in the message</span>{" "}
+								that you want to put the money towards this or another incentive
+							</span>
 							<div className={styles.divider} />
 							{incentiveData.title !== "" ? (
 								<Incentive incentive={incentiveData as any} />
@@ -239,7 +240,7 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 							)}
 							<div className={styles.link}>
 								<Button
-									actionText="Check out more incentives!"
+									actionText="Incentives"
 									link={`/${props.event}/incentives`}
 									colorScheme="secondary inverted"
 									openInNewTab

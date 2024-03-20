@@ -38,12 +38,12 @@ const nextConfig = {
 		return [
 			{
 				source: "/api/graphql",
-				// destination: "https://keystone.ausspeedruns.com/api/graphql",
+				destination: "https://keystone.ausspeedruns.com/api/graphql",
 				// destination: "http://localhost:8000/api/graphql",
-				destination:
-					process.env.NODE_ENV === "production"
-						? "https://keystone.ausspeedruns.com/api/graphql"
-						: "http://localhost:8000/api/graphql",
+				// destination:
+				// 	process.env.NODE_ENV === "production"
+				// 		? "https://keystone.ausspeedruns.com/api/graphql"
+				// 		: "http://localhost:8000/api/graphql",
 			},
 		];
 	},
@@ -88,7 +88,7 @@ const nextConfig = {
 			},
 			{
 				source: "/donate",
-				destination: "https://donate.tiltify.com/@ausspeedruns/asap2023",
+				destination: "https://donate.tiltify.com/@ausspeedruns/asgx2024 ",
 				permanent: false,
 			},
 		];

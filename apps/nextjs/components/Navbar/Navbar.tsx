@@ -35,7 +35,7 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 		.filter((event) => (event.endDate ? new Date(event.endDate) > new Date() : true))
 		.filter((event) => event.published);
 
-	const schedules = upcomingOrLiveEvents.filter((event) => event.scheduleReleased);
+	// const schedules = upcomingOrLiveEvents.filter((event) => event.scheduleReleased);
 
 	return (
 		<header className={`App-header ${styles.navbar}`}>
@@ -68,7 +68,7 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 					className={`${styles.mainmenu} ${isOpen ? styles.menuopen : styles.menuclosed}`}
 					aria-label="Main menu">
 					<ul className={styles.links}>
-						{schedules.map((event) => {
+						{/* {schedules.map((event) => {
 							return (
 								<li key={event.shortname}>
 									<Link href={`/${event.shortname}/schedule`} passHref className={styles.text}>
@@ -76,13 +76,13 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 									</Link>
 								</li>
 							);
-						})}
+						})} */}
 
 						{live && (
 							<>
 								<li>
 									<Link
-										href={`https://ausspeedruns.com/ASAP2023/incentives`}
+										href={`/ASGX2024/incentives`}
 										passHref
 										className={styles.text}>
 										Incentives
@@ -121,7 +121,7 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 						</li>
 					</ul>
 				</nav>
-				<ul className={`${styles.social} ${isOpen ? styles.menuopen : styles.menuclosed}`}>
+				{/* <ul className={`${styles.social} ${isOpen ? styles.menuopen : styles.menuclosed}`}>
 					<li>
 						<a href={globals.socialLinks.twitch} target="_blank" rel="noreferrer">
 							<FontAwesomeIcon size="lg" icon={faTwitch} />
@@ -158,7 +158,7 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 							<span className="sr-only">Tiktok</span>
 						</a>
 					</li>
-				</ul>
+				</ul> */}
 				<div className={`${styles.auth} ${isOpen ? styles.menuopen : styles.menuclosed}`}>
 					{auth.ready && auth.sessionData ? (
 						<>

@@ -11,17 +11,13 @@ type TwitchProps = {
 const TwitchVideoEmbed = ({ channel, parent, muted = true, video }: TwitchProps) => {
 	let url = `https://player.twitch.tv/?channel=${channel}&parent=${parent}&muted=${muted}`;
 
-	if (video)
-	{
+	if (video) {
 		url = `https://player.twitch.tv/?video=${video}&parent=${parent}&muted=${muted}&autoplay=false`;
 	}
 
 	return (
 		<div className={styles.twitchEmbed}>
-			<iframe
-				title="Ausspeedruns twitch player"
-				src={url}
-				allowFullScreen></iframe>
+			<iframe title="Ausspeedruns twitch player" src={url} allowFullScreen />
 		</div>
 	);
 };

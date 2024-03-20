@@ -3,10 +3,10 @@
 @import "./responsive.scss";
 
 .eventLive {
-	color: $pax23-sec;
-	background: $pax23-main;
-	background-image: url("../../styles/img/events/asap23/asap23-background.png");
-	background-size: cover;
+	color: $light-text;
+	background: $tgx-main;
+	background-image: url("../../styles/img/events/asgx24/asgx24-hero.png");
+	// background-size: cover;
 	background-position-x: center;
 	padding: 2rem;
 
@@ -65,10 +65,10 @@
 	}
 
 	.onDeck {
-		display: flex;
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
 		width: 80%;
 		margin: auto;
-		justify-content: space-between;
 
 		@include breakpoint($sm-zero-only) {
 			flex-direction: column;
@@ -164,12 +164,12 @@
 
 		.twitchVideo,
 		.twitchChat {
-			border: 8px solid $pax23-red;
+			border: 8px solid $tgx-yellow;
 			box-sizing: border-box;
 		}
 
 		.twitchChat {
-			border-color: $pax23-yellow;
+			border-color: $tgx-red;
 		}
 
 		.twitchVideo {
@@ -195,6 +195,17 @@
 		gap: 16px;
 		padding: 0 10%;
 		flex-wrap: wrap;
+		margin-top: 32px;
+
+		@include breakpoint($sm-zero-only) {
+			section {
+				width: 100%;
+			}
+		}
+
+		a {
+			margin: 0;
+		}
 	}
 
 	.incentive,
@@ -216,11 +227,15 @@
 		}
 
 		.liveContent {
-			background-color: $pax23-main;
-			border: 2px solid $pax23-blue;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-around;
+			background-color: $tgx-main;
+			border: 2px solid $tgx-blue;
 			font-size: 1.2rem;
 			width: fit-content;
 			word-break: break-all;
+			min-width: 400px;
 
 			@include breakpoint($sm-zero-only) {
 				width: 100%;
@@ -230,6 +245,16 @@
 				display: flex;
 				flex-direction: column;
 				align-items: center;
+
+				.game {
+					font-size: 150%;
+					font-weight: bolder;
+					margin-bottom: 0;
+				}
+
+				.category {
+					font-size: 120%;
+				}
 			}
 
 			span {
@@ -237,7 +262,7 @@
 			}
 
 			.subtitle {
-				color: $primary;
+				color: $light-text;
 				font-weight: bold;
 				margin-bottom: 0;
 			}
@@ -258,12 +283,25 @@
 
 	.incentive {
 		.liveContent {
-			background-color: $pax23-main;
-			border: 2px solid $pax23-purple;
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			justify-content: space-around;
+			background-color: $tgx-main;
+			border: 2px solid $tgx-green;
 			// width: 50%;
 
 			@include breakpoint($sm-zero-only) {
 				width: 100%;
+			}
+
+			.instructions {
+				display: inline-block;
+				font-size: 120%;
+				text-wrap: balance;
+				max-width: 600px;
+				text-align: center;
+				margin: auto;
 			}
 		}
 
@@ -272,10 +310,9 @@
 			margin-top: 10px;
 			width: 80%;
 			height: 10px;
-			background: $pax23-rainbow-bar;
+			background: $tgx-rainbow-rotated;
 		}
 	}
-
 
 	.crowdcontrol {
 		display: flex;

@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Image from "next/image";
 
 // Components
 import HeroBlock from "../components/Heroblock/Heroblock";
@@ -6,7 +7,7 @@ import { globals } from "../globals";
 import DiscordEmbed from "../components/DiscordEmbed";
 
 import styles from "../styles/index.module.scss";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faCalendar, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/Button/Button";
 import LastEventBlock from "../components/LastEventBlock/LastEventBlock";
 
@@ -15,6 +16,7 @@ import { AusSpeedrunsEvent } from "../types/types";
 import { EventLive } from "../components/EventLive/EventLive";
 import ASMMLive from "../components/ASMM/asmm-live";
 import DualUpcomingEvent from "../components/DualUpcomingEvent/DualUpcomingEvent";
+import { useMediaQuery } from "@mui/material";
 
 // TODO: Move this stuff to keystone
 const ASM2023: AusSpeedrunsEvent = {
@@ -75,6 +77,9 @@ export default function Home() {
 	const {
 		events: { previous, current, next },
 	} = globals;
+
+	const mobileWidth = useMediaQuery("(max-width: 992px)");
+
 	return (
 		<div>
 			<Head>
@@ -87,29 +92,32 @@ export default function Home() {
 				/>
 			</Head>
 			<main>
-				{/* <EventLive event={"ASAP2023"} /> */}
+				<div className={styles.banner}>
+					{!mobileWidth && (
+						<Image
+							src="http://localhost:4200/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FDreamHack24Logo.cc9e92a5.png&w=1080&q=75"
+							height={30}
+							width={371}
+							alt="The Dreamhack Wordmark Logo"
+						/>
+					)}
+					Our Dreamhack schedule just got released!
+					<Button
+						colorScheme="secondary inverted"
+						link="/ASDH2024/schedule"
+						iconRight={faCalendar}
+						actionText="Dreamhack Schedule"
+					/>
+				</div>
+				<EventLive event={"ASGX2024"} />
 				{/* <ASMMLive /> */}
-				{/* <div
-					style={{
-						background: "#CC7722",
-						color: "white",
-						height: 100,
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						gap: 16,
-					}}>
-					We've just announced the Australian Speedruns Marathon Marathon! A walkathon we will be conducting
-					during ASM2023
-					<Button colorScheme="secondary inverted" link="/asmm" actionText="Learn more" />
-				</div> */}
-				{/* <HeroBlock
-					event={ASAP2023}
-					ticketLink="https://aus.paxsite.com/"
+				<HeroBlock
+					event={ASDH2024}
 					schedule
-					tagLine="We're going to PAX! Schedule has been released!"
-				/> */}
-				<DualUpcomingEvent
+					tagLine="The Dreamhack Schedule is Released!"
+					ticketLink="https://dreamhack.com/australia/"
+				/>
+				{/* <DualUpcomingEvent
 					eventA={{
 						event: ASGX2024,
 						tagLine: "The Schedule is released!",
@@ -119,9 +127,9 @@ export default function Home() {
 					eventB={{
 						event: ASDH2024,
 						tagLine: "Schedule for Dreamhack out soon.",
-						ticketLink: "https://dreamhack.com/australia/"
+						ticketLink: "https://dreamhack.com/australia/",
 					}}
-				/>
+				/> */}
 				<LastEventBlock
 					tagLine="AusSpeedruns At PAX 2023 SMASHED it out of the park over DOUBLING our previous record!"
 					event={ASAP2023}

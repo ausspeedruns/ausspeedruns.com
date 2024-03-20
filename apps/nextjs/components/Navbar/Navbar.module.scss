@@ -20,7 +20,7 @@
 
 		@include breakpoint($md) {
 			display: grid;
-			grid-template-columns: 1.5fr 1.5fr 1fr min-content;
+			grid-template-columns: 1fr 1fr 1fr;
 		}
 
 		@include breakpoint($lg) {

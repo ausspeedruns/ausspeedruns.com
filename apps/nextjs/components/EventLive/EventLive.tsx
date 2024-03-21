@@ -131,7 +131,7 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 				</Link>
 			</div>
 			<div className={styles.eventInfo}>
-				<h2>October 6 – 8 | Melbourne</h2>
+				<h2>March 23 – 24 | Melbourne</h2>
 				<div className={styles.link}>
 					<Button actionText="Donate!" link="/donate" colorScheme="primary" />
 				</div>

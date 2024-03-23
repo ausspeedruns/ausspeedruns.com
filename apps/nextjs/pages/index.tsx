@@ -60,6 +60,7 @@ const ASGX2024: AusSpeedrunsEvent = {
 	},
 	logo: "events/asgx24/asgx-logo-white.png",
 	heroImage: "events/asgx24/asgx24-hero.png",
+	total: "TBA",
 };
 
 const ASDH2024: AusSpeedrunsEvent = {
@@ -72,7 +73,20 @@ const ASDH2024: AusSpeedrunsEvent = {
 		name: "Game On Cancer",
 	},
 	logo: "events/asdh24/DreamHack24Logo.png",
-	heroImage: "events/asdh24/Dreamhack24Hero.jpg",
+	heroImage: "events/asdh24/Dreamhack24Hero.jpg"
+};
+
+const ASM2024: AusSpeedrunsEvent = {
+	fullName: "Australian Speedrun Marathon 2024",
+	preferredName: "ASM2024",
+	shortName: "ASM2024",
+	startDate: "16 July 2024 09:00:00 GMT+0930",
+	dates: "July 16 - 21, 2023",
+	charity: {
+		name: "Game On Cancer",
+	},
+	logo: "events/asm24/ASM24 SVG.svg",
+	heroImage: "events/asm24/asm24-hero-temp.png",
 };
 
 export default function Home() {
@@ -94,14 +108,9 @@ export default function Home() {
 				/>
 			</Head>
 			<main>
-				<div className={styles.banner}>
+				{/* <div className={styles.banner}>
 					{!mobileWidth && (
-						<Image
-							src={DreamhackLogo}
-							height={30}
-							width={371}
-							alt="The Dreamhack Wordmark Logo"
-						/>
+						<Image src={DreamhackLogo} height={30} width={371} alt="The Dreamhack Wordmark Logo" />
 					)}
 					Our Dreamhack schedule just got released!
 					<Button
@@ -110,14 +119,20 @@ export default function Home() {
 						iconRight={faCalendar}
 						actionText="Dreamhack Schedule"
 					/>
-				</div>
-				<EventLive event={"ASGX2024"} />
+				</div> */}
+				{/* <EventLive event={"ASGX2024"} /> */}
 				{/* <ASMMLive /> */}
 				<HeroBlock
 					event={ASDH2024}
 					schedule
-					tagLine="The Dreamhack Schedule is Released!"
+					tagLine="See you at Dreamhack!"
 					ticketLink="https://dreamhack.com/australia/"
+				/>
+				<HeroBlock
+					event={ASM2024}
+					submitRuns
+					tagLine="Tickets are selling and Submissions are open!"
+					ticketLink="/ASM2024/tickets"
 				/>
 				{/* <DualUpcomingEvent
 					eventA={{
@@ -133,25 +148,18 @@ export default function Home() {
 					}}
 				/> */}
 				<LastEventBlock
+					tagLine="The Game Expo 2024 was awesome and we obliterated last years total!"
+					event={ASGX2024}
+					backgroundPos="center"
+				/>
+				<LastEventBlock
 					tagLine="AusSpeedruns At PAX 2023 SMASHED it out of the park over DOUBLING our previous record!"
 					event={ASAP2023}
 					backgroundPos="center"
-					// overrideHeight='800px'
 				/>
 				<LastEventBlock
 					tagLine="The Australian Speedrunning community once again came together to put on the best ASM ever to help raise $35,000!!!"
 					event={ASM2023}
-					backgroundPos="center"
-					// overrideHeight='800px'
-				/>
-				<LastEventBlock
-					tagLine="We had an incredible time showcasing speedruns at the very first TGX!"
-					event={next}
-					backgroundPos="center"
-				/>
-				<LastEventBlock
-					tagLine="We smashed our donation record and put on 3 jam packed days of speedrunning."
-					event={current}
 					backgroundPos="center"
 				/>
 				<section className={styles.archive}>

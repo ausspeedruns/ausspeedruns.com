@@ -26,13 +26,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				line_items: [
 					{
 						// Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-						price: 'ASM2023TICKET',
+						price: 'price_1Ox7VbKT8G4cNWT5ERel76v2',
 						quantity: 1,
 					},
 				],
 				mode: 'payment',
 				success_url: `${req.headers.origin}/user/${req.query.username}#tickets`,
-				cancel_url: `${req.headers.origin}/ASM2023/tickets?cancelled=true&session_id={CHECKOUT_SESSION_ID}`,
+				cancel_url: `${req.headers.origin}/ASM2024/tickets?cancelled=true&session_id={CHECKOUT_SESSION_ID}`,
 			});
 
 			// Generate ticket code
@@ -40,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				mutation ($userID: ID!, $stripeID: String, $apiKey: String!) {
 					generateTicket(
 						userID: $userID
-						event: "ASM2023"
+						event: "ASM2024"
 						numberOfTickets: 1
 						method: stripe
 						stripeID: $stripeID
@@ -57,7 +57,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 			res.redirect(303, session.url!);
 		} catch (err: any) {
-			res.status(err.statusCode || 500).json(err.message);
+			res.status(err.statusCode ?? 500).json(err.message);
 		}
 	} else {
 		res.setHeader('Allow', 'POST');

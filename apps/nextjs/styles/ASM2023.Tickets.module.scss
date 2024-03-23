@@ -16,6 +16,7 @@
 	.image {
 		width: 50%;
 		height: auto;
+		margin: 32px 0;
 		object-fit: contain;
 
 		@include breakpoint($sm-zero-only) {

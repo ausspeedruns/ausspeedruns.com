@@ -5,7 +5,7 @@ import { Box, Button, Skeleton, TextField } from "@mui/material";
 import { UseMutationResponse, useQuery, gql, useMutation } from "urql";
 import { useAuth } from "../auth";
 
-import ASM2023Tickets from "../../styles/img/asm2023-tickets.png";
+import ASM2024Tickets from "../../styles/img/events/asm24/asm24-ticket.jpg";
 
 interface BankTicketResponse {
 	generateTicket: {
@@ -25,7 +25,7 @@ interface QUERY_PROFILE_RESULTS {
 	};
 }
 
-const TICKET_PRICE = 25;
+const TICKET_PRICE = 30;
 
 export function TicketProduct() {
 	const auth = useAuth();
@@ -121,7 +121,7 @@ export function TicketProduct() {
 		const res = await fetch(
 			`/api/create_bank_ticket?account=${
 				auth.ready ? auth?.sessionData?.id : ""
-			}&tickets=1&event=ASM2023`,
+			}&tickets=1&event=ASM2024`,
 		);
 
 		if (res.status === 200) {
@@ -139,18 +139,18 @@ export function TicketProduct() {
 	return (
 		<div className={styles.product}>
 			<Image
-				alt="3D Render showing two potential ASM2023 ticket designs"
-				src={ASM2023Tickets}
+				alt="A mosaic of images taken from ASM2023"
+				src={ASM2024Tickets}
 				className={styles.productImage}
 			/>
 			<div className={styles.information}>
 				<section>
 					<h2>Ticket Information</h2>
-					<p>Ticket to ASM2023 taking place in Adelaide, July 12-16.</p>
-					<p>Ticket price: ${TICKET_PRICE} AUD.</p>
+					<p>Ticket to ASM2024 taking place in Adelaide, July 16-21.</p>
+					<p>Ticket price: <b>${TICKET_PRICE} AUD</b>.</p>
 					<p>
 						All attendees, including runners and staff must purchase tickets to attend the event. Volunteers
-						will receive a $15 rebate administered on site at ASM2023.
+						will receive a $15 rebate administered on site at ASM2024.
 					</p>
 				</section>
 				<hr />
@@ -166,7 +166,7 @@ export function TicketProduct() {
 					<h2>Stripe</h2>
 					<p>Clicking on checkout will redirect you to the stripe checkout. </p>
 					<form
-						action={`/api/checkout_ticket?account=${accId}&username=${accUsername}&event=ASM2023`}
+						action={`/api/checkout_ticket?account=${accId}&username=${accUsername}&event=ASM2024`}
 						method="POST">
 						<Button
 							type="submit"

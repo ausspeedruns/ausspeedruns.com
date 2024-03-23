@@ -66,9 +66,6 @@ const QUERY_USER = gql`
 	}
 `;
 
-// Dont show the shirts from ASM2022
-const START_OF_THIS_YEAR_HACK = new Date('01/01/2023');
-
 const QUERY_PRIVATE = gql`
 	query Profile($username: String, $currentTime: DateTime) {
 		user(where: { username: $username }) {
@@ -142,7 +139,7 @@ const QUERY_PRIVATE = gql`
 								{ paid: { equals: true } }
 							]
 						}
-						{ created: { gt: "2023-01-01T00:00:00.000Z" } }
+						{ created: { gt: "2024-01-01T00:00:00.000Z" } }
 					]
 				}
 			) {
@@ -287,7 +284,7 @@ function StateCodeToString(stateCode: string) {
 }
 
 export default function ProfilePage(ssrData: ServerSideProps) {
-	console.log(ssrData)
+	// console.log(ssrData)
 	const router = useRouter();
 	const auth = useAuth();
 
@@ -295,7 +292,7 @@ export default function ProfilePage(ssrData: ServerSideProps) {
 	const [eventTab, setEventTab] = useState(0);
 	const [currentTime] = useState(new Date().toISOString());
 
-	console.log(ssrData)
+	// console.log(ssrData)
 	const [{ data: privateDataResults }] = useQuery<QUERY_PRIVATE_RESULTS>({
 		query: QUERY_PRIVATE,
 		variables: {
@@ -438,7 +435,7 @@ export default function ProfilePage(ssrData: ServerSideProps) {
 					<div className={styles.submissions}>
 						<h3 id="shirts">Shirt Orders (Private)</h3>
 						{privateDataResults.user.shirts.map((shirt) => {
-							console.log(shirt);
+							// console.log(shirt);
 							return (
 								<ASMShirt
 									key={shirt.shirtID}

@@ -60,7 +60,7 @@ const ASGX2024: AusSpeedrunsEvent = {
 	},
 	logo: "events/asgx24/asgx-logo-white.png",
 	heroImage: "events/asgx24/asgx24-hero.png",
-	total: "TBA",
+	total: "6,050",
 };
 
 const ASDH2024: AusSpeedrunsEvent = {
@@ -148,7 +148,7 @@ export default function Home() {
 					}}
 				/> */}
 				<LastEventBlock
-					tagLine="The Game Expo 2024 was awesome and we obliterated last years total!"
+					tagLine="The Game Expo 2024 was awesome and we have now raised over $100,000 for Game On Cancer!"
 					event={ASGX2024}
 					backgroundPos="center"
 				/>

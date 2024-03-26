@@ -61,8 +61,7 @@ export default function SubmitGamePage() {
 	const [favMeme, setFavMeme] = useState("");
 
 	// Runner Management
-	const [runnerManagementAvailability, setrunnerManagementAvailability] =
-		useState("");
+	const [runnerManagementAvailability, setrunnerManagementAvailability] = useState("");
 
 	// Tech
 	const [techAvailablity, setTechAvailablity] = useState("");
@@ -218,17 +217,11 @@ export default function SubmitGamePage() {
 			break;
 	}
 
-	const currentEvent = eventsResult.data?.events.find(
-		(eventResult) => eventResult.id === event,
-	);
+	const currentEvent = eventsResult.data?.events.find((eventResult) => eventResult.id === event);
 
 	let eventLength = 0;
 	if (currentEvent) {
-		eventLength =
-			differenceInDays(
-				new Date(currentEvent.endDate),
-				new Date(currentEvent.startDate),
-			) + 1;
+		eventLength = differenceInDays(new Date(currentEvent.endDate), new Date(currentEvent.startDate)) + 1;
 	}
 
 	let hostDates = [];
@@ -261,20 +254,12 @@ export default function SubmitGamePage() {
 		<ThemeProvider theme={theme}>
 			<Head>
 				<title>{TITLE}</title>
-				<DiscordEmbed
-					title={TITLE}
-					description="Volunteer for AusSpeedrun Marathons!"
-					pageUrl="/volunteers"
-				/>
+				<DiscordEmbed title={TITLE} description="Volunteer for AusSpeedrun Marathons!" pageUrl="/volunteers" />
 			</Head>
 			<main className={styles.content}>
 				<h1>
-					{
-						eventsResult.data?.events.find(
-							(eventResult) => eventResult.id === event,
-						)?.shortname
-					}{" "}
-					Volunteer Submission
+					{eventsResult.data?.events.find((eventResult) => eventResult.id === event)?.shortname} Volunteer
+					Submission
 				</h1>
 				<form
 					className={styles.volunteerForm}
@@ -307,13 +292,9 @@ export default function SubmitGamePage() {
 							});
 						}
 					}}>
-					{!queryResult?.data?.user?.discord ||
-					!queryResult.data.user.verified ? (
+					{!queryResult?.data?.user?.discord || !queryResult.data.user.verified ? (
 						<>
-							<p>
-								Please make sure you have these set on your
-								profile:
-							</p>
+							<p>Please make sure you have these set on your profile:</p>
 							<ul>
 								<li>Verified Email</li>
 								<li>Discord ID</li>
@@ -323,53 +304,35 @@ export default function SubmitGamePage() {
 						<>
 							{eventsResult.data?.events && eventsResult.data?.events.length > 1 && (
 								<FormControl fullWidth>
-									<InputLabel id="event-label">
-										Event
-									</InputLabel>
+									<InputLabel id="event-label">Event</InputLabel>
 									<Select
 										labelId="event-label"
 										value={event}
 										label="Event"
-										onChange={(e) =>
-											setEvent(e.target.value)
-										}
+										onChange={(e) => setEvent(e.target.value)}
 										required>
-										{eventsResult.data.events.map(
-											(event) => {
-												return (
-													<MenuItem
-														value={event.id}
-														key={event.id}>
-														{event.shortname}
-													</MenuItem>
-												);
-											},
-										)}
+										{eventsResult.data.events.map((event) => {
+											return (
+												<MenuItem value={event.id} key={event.id}>
+													{event.shortname}
+												</MenuItem>
+											);
+										})}
 									</Select>
 								</FormControl>
 							)}
 
 							<FormControl fullWidth>
-								<InputLabel id="job-type-label">
-									Job Type
-								</InputLabel>
+								<InputLabel id="job-type-label">Job Type</InputLabel>
 								<Select
 									labelId="job-type-label"
 									value={jobType}
 									label="Job Type"
-									onChange={(e) =>
-										setJobType(
-											e.target.value as JobTypeLiterals,
-										)
-									}
+									onChange={(e) => setJobType(e.target.value as JobTypeLiterals)}
 									required>
 									<MenuItem value={"host"}>Host</MenuItem>
-									<MenuItem value={"social"}>
-										Social Media
-									</MenuItem>
-									<MenuItem value={"runMgmt"}>
-										Runner Management
-									</MenuItem>
+									<MenuItem value={"social"}>Social Media</MenuItem>
+									<MenuItem value={"runMgmt"}>Runner Management</MenuItem>
 									<MenuItem value={"tech"}>Tech</MenuItem>
 								</Select>
 							</FormControl>
@@ -379,105 +342,74 @@ export default function SubmitGamePage() {
 							{jobType === "host" && (
 								<>
 									<p>
-										You are the voice of the event reading
-										off donations and letting the viewers
+										You are the voice of the event reading off donations and letting the viewers
 										know about the charity and any sponsors.
 										<br />
-										Any queries please contact{" "}
-										<i>werster</i> on Discord.
+										Any queries please contact <i>werster</i> on Discord.
 									</p>
 									<div className={styles.question}>
 										<span>
-											What is the maximum amount of hours
-											you are comfortable hosting for the
+											What is the maximum amount of hours you are comfortable hosting for the
 											entire event?*
 										</span>
 										<span className={styles.subtitle}>
-											This could be all at once, or in
-											multiple sessions.
+											This could be all at once, or in multiple sessions.
 										</span>
 										<TextField
 											type="number"
 											fullWidth
 											value={eventHostTime}
-											onChange={(e) =>
-												setEventHostTime(
-													parseInt(e.target.value),
-												)
-											}
+											onChange={(e) => setEventHostTime(parseInt(e.target.value))}
 											required
 										/>
 									</div>
 									<div className={styles.question}>
 										<span>
-											What is the maximum amount of hours
-											you are comfortable hosting for in
-											one sitting?*
+											What is the maximum amount of hours you are comfortable hosting for in one
+											sitting?*
 										</span>
 										<span className={styles.subtitle}>
-											E.g. 3 hours would mean you want all
-											your shifts to be no longer than 3
+											E.g. 3 hours would mean you want all your shifts to be no longer than 3
 											hours each.
 										</span>
 										<TextField
 											type="number"
 											fullWidth
 											value={maxDailyHostTime}
-											onChange={(e) =>
-												setMaxDailyHostTime(
-													parseInt(e.target.value),
-												)
-											}
+											onChange={(e) => setMaxDailyHostTime(parseInt(e.target.value))}
 											required
 										/>
 									</div>
 									<div className={styles.question}>
-										<span>
-											What times are you available to host
-											on each day?*
-										</span>
+										<span>What times are you available to host on each day?*</span>
 										{hostDates}
 									</div>
 									<div className={styles.question}>
 										<span>
-											If you have organised with a
-											specific runner that they would like
-											you to host their run:
+											If you have organised with a specific runner that they would like you to
+											host their run:
 										</span>
 										<TextField
 											fullWidth
 											value={specificGame}
-											onChange={(e) =>
-												setSpecificGame(e.target.value)
-											}
+											onChange={(e) => setSpecificGame(e.target.value)}
 											label="Game"
 										/>
 										<TextField
 											fullWidth
 											value={specificRunner}
-											onChange={(e) =>
-												setSpecificRunner(
-													e.target.value,
-												)
-											}
+											onChange={(e) => setSpecificRunner(e.target.value)}
 											label="Runner"
 										/>
 									</div>
 									<div className={styles.question}>
-										<span>
-											Any other specifications you would
-											like to let us know about?
-										</span>
+										<span>Any other specifications you would like to let us know about?</span>
 										<TextField
 											multiline
 											minRows={4}
 											fullWidth
 											value={additionalInfo}
-											onChange={(e) =>
-												setAdditionalInfo(
-													e.target.value,
-												)
-											}
+											onChange={(e) => setAdditionalInfo(e.target.value)}
 										/>
 									</div>
 								</>
@@ -486,59 +418,34 @@ export default function SubmitGamePage() {
 							{jobType === "social" && (
 								<>
 									<p>
-										In charge of creating and posting social
-										media content throughout the event (ie.
-										tweets of upcoming runs, Instagram
-										stories, photos).
+										In charge of creating and posting social media content throughout the event (ie.
+										tweets of upcoming runs, Instagram stories, photos).
 										<br />
-										Any queries please contact <i>
-											Nase
-										</i>{" "}
-										on Discord.
+										Any queries please contact <i>Kuiperbole</i> on Discord.
 									</p>
 									<FormControl fullWidth>
-										<InputLabel id="socialmedia-experience-label">
-											Experience level
-										</InputLabel>
+										<InputLabel id="socialmedia-experience-label">Experience level</InputLabel>
 										<Select
 											labelId="socialmedia-experience-label"
 											value={experience}
 											label="Experience level"
-											onChange={(e) =>
-												setExperience(
-													e.target
-														.value as ExperienceLiterals,
-												)
-											}
+											onChange={(e) => setExperience(e.target.value as ExperienceLiterals)}
 											required>
-											<MenuItem value={"None"}>
-												None
-											</MenuItem>
-											<MenuItem value={"Casual"}>
-												Casual
-											</MenuItem>
-											<MenuItem value={"Expert"}>
-												Expert
-											</MenuItem>
+											<MenuItem value={"None"}>None</MenuItem>
+											<MenuItem value={"Casual"}>Casual</MenuItem>
+											<MenuItem value={"Expert"}>Expert</MenuItem>
 										</Select>
 									</FormControl>
 									<div className={styles.question}>
-										<span>
-											What times are you available on each
-											day?*
-										</span>
+										<span>What times are you available on each day?*</span>
 										{hostDates}
 									</div>
 									<div className={styles.question}>
-										<span>
-											Post a link to your favourite meme
-										</span>
+										<span>Post a link to your favourite meme</span>
 										<TextField
 											fullWidth
 											value={favMeme}
-											onChange={(e) =>
-												setFavMeme(e.target.value)
-											}
+											onChange={(e) => setFavMeme(e.target.value)}
 										/>
 									</div>
 								</>
@@ -547,31 +454,21 @@ export default function SubmitGamePage() {
 							{jobType === "runMgmt" && (
 								<>
 									<p>
-										Assisting runners with any queries they
-										may have throughout the events, making
-										sure runners are present for their runs,
-										checking vaccination status of and
+										Assisting runners with any queries they may have throughout the events, making
+										sure runners are present for their runs, checking vaccination status of and
 										handing out passes to attendees.
 										<br />
-										Any queries please contact <i>
-											Sten
-										</i>{" "}
-										on Discord.
+										Any queries please contact <i>Lacey</i> on Discord.
 									</p>
 									<div className={styles.question}>
 										<span>
-											What is your availability? This
-											should include the setup day as well
-											as the actual marathon days.*
+											What is your availability? This should include the setup day as well as the
+											actual marathon days.*
 										</span>
 										<TextField
 											fullWidth
 											value={runnerManagementAvailability}
-											onChange={(e) =>
-												setrunnerManagementAvailability(
-													e.target.value,
-												)
-											}
+											onChange={(e) => setrunnerManagementAvailability(e.target.value)}
 											label=""
 											required
 											multiline
@@ -584,28 +481,20 @@ export default function SubmitGamePage() {
 							{jobType === "tech" && (
 								<>
 									<p>
-										Setting up next runs and managing the
-										stream. Some roles vary in difficulty
-										and experience required.
+										Setting up next runs and managing the stream. Some roles vary in difficulty and
+										experience required.
 										<br />
-										Any queries please contact <i>
-											nei
-										</i> or <i>Clubwho</i> on Discord.
+										Any queries please contact <i>nei</i> or <i>Clubwho</i> on Discord.
 									</p>
 									<div className={styles.question}>
 										<span>
-											What is your availability? This
-											should include the setup day as well
-											as the actual marathon days.*
+											What is your availability? This should include the setup day as well as the
+											actual marathon days.*
 										</span>
 										<TextField
 											fullWidth
 											value={techAvailablity}
-											onChange={(e) =>
-												setTechAvailablity(
-													e.target.value,
-												)
-											}
+											onChange={(e) => setTechAvailablity(e.target.value)}
 											required
 											multiline
 											minRows={4}
@@ -618,11 +507,7 @@ export default function SubmitGamePage() {
 											minRows={4}
 											fullWidth
 											value={techExperience}
-											onChange={(e) =>
-												setTechExperience(
-													e.target.value,
-												)
-											}
+											onChange={(e) => setTechExperience(e.target.value)}
 											label=""
 											required
 										/>
@@ -633,38 +518,21 @@ export default function SubmitGamePage() {
 							<FormControlLabel
 								control={
 									<Checkbox
-										onChange={(e) =>
-											setConfirmation(e.target.checked)
-										}
+										onChange={(e) => setConfirmation(e.target.checked)}
 										checked={confirmation}
 									/>
 								}
 								label="You agree that you are willing to be present at the venue for the duration of all of your shifts."
 							/>
-							<Button
-								variant="contained"
-								type="submit"
-								disabled={disableSend}>
+							<Button variant="contained" type="submit" disabled={disableSend}>
 								Submit
 							</Button>
-							{submissionResult.error && (
-								<h2>
-									{HumanErrorMsg(
-										submissionResult.error.message,
-									)}
-								</h2>
-							)}
+							{submissionResult.error && <h2>{HumanErrorMsg(submissionResult.error.message)}</h2>}
 						</>
 					)}
 				</form>
-				<Snackbar
-					open={successSubmit}
-					autoHideDuration={6000}
-					onClose={() => setSuccessSubmit(false)}>
-					<Alert
-						onClose={() => setSuccessSubmit(false)}
-						variant="filled"
-						severity="success">
+				<Snackbar open={successSubmit} autoHideDuration={6000} onClose={() => setSuccessSubmit(false)}>
+					<Alert onClose={() => setSuccessSubmit(false)} variant="filled" severity="success">
 						Successfully submitted volunteer
 					</Alert>
 				</Snackbar>
@@ -681,17 +549,9 @@ const NoAuth: React.FC = () => {
 			</Head>
 			<main className={`content ${styles.content} ${styles.noEvents}`}>
 				<h2>Please sign in to Volunteer.</h2>
-				<LinkButton
-					actionText="Sign In"
-					iconRight={faArrowRight}
-					link="/signin"
-				/>
+				<LinkButton actionText="Sign In" iconRight={faArrowRight} link="/signin" />
 				<br />
-				<LinkButton
-					actionText="Join"
-					iconRight={faArrowRight}
-					link="/signup"
-				/>
+				<LinkButton actionText="Join" iconRight={faArrowRight} link="/signup" />
 			</main>
 		</ThemeProvider>
 	);
@@ -704,19 +564,9 @@ const NoEvent: React.FC = () => {
 				<title>{TITLE}</title>
 			</Head>
 			<main className={`content ${styles.content} ${styles.noEvents}`}>
-				<h2>
-					Unfortunately we have no events currently accepting
-					volunteers.
-				</h2>
-				<p>
-					Follow us on Twitter and Join our Discord to stay up to
-					date!
-				</p>
-				<LinkButton
-					actionText="Home"
-					iconRight={faArrowRight}
-					link="/"
-				/>
+				<h2>Unfortunately we have no events currently accepting volunteers.</h2>
+				<p>Follow us on Twitter and Join our Discord to stay up to date!</p>
+				<LinkButton actionText="Home" iconRight={faArrowRight} link="/" />
 			</main>
 		</ThemeProvider>
 	);

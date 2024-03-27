@@ -42,7 +42,7 @@ export function TicketProduct() {
 				user(where: { id: $userId }) {
 					verified
 				}
-				event(where: { shortname: "ASM2023" }) {
+				event(where: { shortname: "ASM2024" }) {
 					acceptingTickets
 				}
 			}

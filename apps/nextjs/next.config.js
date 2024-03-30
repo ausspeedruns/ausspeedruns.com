@@ -78,7 +78,7 @@ const nextConfig = {
 			},
 			{
 				source: "/schedule",
-				destination: "/ASGX2024/schedule",
+				destination: "/ASDH2024/schedule",
 				permanent: false,
 			},
 			{

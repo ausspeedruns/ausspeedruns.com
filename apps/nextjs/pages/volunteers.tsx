@@ -25,7 +25,13 @@ import { addDays, differenceInDays } from "date-fns";
 
 const TITLE = "Volunteer Submission - AusSpeedruns";
 
-type JobTypeLiterals = "host" | "social" | "runMgmt" | "tech";
+const VolunteerTypes = {
+	host: "Host",
+	runMgmt: "Runner Manager",
+	tech: "Tech",
+	social: "Social Media",
+} as const;
+
 type ExperienceLiterals = "None" | "Casual" | "Enthusist" | "Expert";
 
 function HumanErrorMsg(error: string) {
@@ -43,32 +49,32 @@ export default function SubmitGamePage() {
 	const auth = useAuth();
 
 	const [event, setEvent] = useState("");
-	const [jobType, setJobType] = useState<JobTypeLiterals>("host");
+	const [jobType, setJobType] = useState<keyof typeof VolunteerTypes>("host");
 	const [confirmation, setConfirmation] = useState(false);
 	const [successSubmit, setSuccessSubmit] = useState(false);
+
+	const [availabilityDates, setAvailabilityDates] = useState<string[]>([]);
 
 	// Host
 	const [eventHostTime, setEventHostTime] = useState(0);
 	const [maxDailyHostTime, setMaxDailyHostTime] = useState(0);
-	const [dayTimes, setDayTimes] = useState<string[]>([]);
 	const [specificGame, setSpecificGame] = useState("");
 	const [specificRunner, setSpecificRunner] = useState("");
 	const [additionalInfo, setAdditionalInfo] = useState("");
 
 	// Social Media
 	const [experience, setExperience] = useState<ExperienceLiterals>("None");
-	const [socialMediaAvaialbility, setSocialMediaAvaialbility] = useState("");
 	const [favMeme, setFavMeme] = useState("");
 
 	// Runner Management
-	const [runnerManagementAvailability, setrunnerManagementAvailability] = useState("");
+	const [runnerManagementAvailability, setRunnerManagementAvailability] = useState("");
 
 	// Tech
 	const [techAvailablity, setTechAvailablity] = useState("");
 	const [techExperience, setTechExperience] = useState("");
 
 	// Query if able to submit game (has discord)
-	const [queryResult, profileQuery] = useQuery({
+	const [queryResult] = useQuery({
 		query: gql`
 			query Profile($userId: ID!) {
 				user(where: { id: $userId }) {
@@ -83,7 +89,7 @@ export default function SubmitGamePage() {
 		pause: !auth.ready,
 	});
 
-	const [eventsResult, eventsQuery] = useQuery<{
+	const [eventsResult] = useQuery<{
 		events: {
 			id: string;
 			shortname: string;
@@ -146,30 +152,54 @@ export default function SubmitGamePage() {
 		}
 	`);
 
+	const currentEvent = eventsResult.data?.events.find((eventResult) => eventResult.id === event);
+
+	let eventLength = 0;
+	if (currentEvent) {
+		eventLength = differenceInDays(new Date(currentEvent.endDate), new Date(currentEvent.startDate)) + 1;
+	}
+
 	useEffect(() => {
 		if (eventsResult.data?.events && eventsResult.data?.events.length > 0) {
 			setEvent(eventsResult.data.events[0].id);
 		}
 	}, [eventsResult]);
 
-	//	useEffect(() => {
-	//		setCanSubmit(game && category && platform && estimate && !estimateError && event && video && availableDates.some((day) => day));
-	//	}, [game, category, platform, estimate, estimateError, event, video, availableDates]);
+	useEffect(() => {
+		clearAvailabilityDates(eventLength);
+	}, [eventLength]);
+
+	function clearAvailabilityDates(numberOfDays: number) {
+		const cleanArray = [];
+
+		for (let i = 0; i < numberOfDays; i++) {
+			cleanArray.push("");
+		}
+
+		setAvailabilityDates(cleanArray);
+	}
 
 	function clearInputs() {
+		setSuccessSubmit(false);
+		setConfirmation(false);
+
+		clearAvailabilityDates(eventLength);
+
+		// Host
 		setEventHostTime(0);
 		setMaxDailyHostTime(0);
-		setDayTimes([]);
 		setSpecificGame("");
 		setSpecificRunner("");
 		setAdditionalInfo("");
 
+		// Social Media
 		setExperience("None");
-		setSocialMediaAvaialbility("");
 		setFavMeme("");
 
-		setrunnerManagementAvailability("");
+		// Runner Management
+		setRunnerManagementAvailability("");
 
+		// Tech
 		setTechAvailablity("");
 		setTechExperience("");
 	}
@@ -190,7 +220,7 @@ export default function SubmitGamePage() {
 				eventHostTime <= 0 ||
 				isNaN(maxDailyHostTime) ||
 				maxDailyHostTime <= 0 ||
-				!dayTimes
+				!availabilityDates
 			) {
 				disableSend = true;
 			}
@@ -201,7 +231,7 @@ export default function SubmitGamePage() {
 			}
 			break;
 		case "social":
-			if (!dayTimes) {
+			if (!availabilityDates) {
 				disableSend = true;
 			}
 			break;
@@ -217,18 +247,11 @@ export default function SubmitGamePage() {
 			break;
 	}
 
-	const currentEvent = eventsResult.data?.events.find((eventResult) => eventResult.id === event);
-
-	let eventLength = 0;
-	if (currentEvent) {
-		eventLength = differenceInDays(new Date(currentEvent.endDate), new Date(currentEvent.startDate)) + 1;
-	}
-
-	let hostDates = [];
+	const eventDatesAvailability = [];
 	if (currentEvent) {
 		for (let i = 0; i < eventLength; i++) {
 			const date = addDays(new Date(currentEvent.startDate), i);
-			hostDates.push(
+			eventDatesAvailability.push(
 				<TextField
 					fullWidth
 					key={i}
@@ -240,14 +263,18 @@ export default function SubmitGamePage() {
 						timeZone: currentEvent.eventTimezone || undefined,
 					})}
 					onChange={(e) => {
-						const newDates = dayTimes;
+						const newDates = [...availabilityDates];
 						newDates[i] = e.target.value;
-						setDayTimes(newDates);
+						setAvailabilityDates(newDates);
 					}}
-					value={dayTimes[i]}
+					value={availabilityDates[i] ?? ""}
 				/>,
 			);
 		}
+	}
+
+	if (successSubmit) {
+		return <ConfirmedSubmission role={VolunteerTypes[jobType]} reset={clearInputs} />
 	}
 
 	return (
@@ -271,7 +298,7 @@ export default function SubmitGamePage() {
 								jobType,
 								eventHostTime,
 								maxDailyHostTime,
-								dayTimes,
+								dayTimes: availabilityDates,
 								specificGame,
 								specificRunner,
 								additionalInfo,
@@ -292,7 +319,7 @@ export default function SubmitGamePage() {
 							});
 						}
 					}}>
-					{!queryResult?.data?.user?.discord || !queryResult.data.user.verified ? (
+					{(!queryResult?.data?.user?.discord || !queryResult.data.user.verified) && false ? (
 						<>
 							<p>Please make sure you have these set on your profile:</p>
 							<ul>
@@ -328,7 +355,7 @@ export default function SubmitGamePage() {
 									labelId="job-type-label"
 									value={jobType}
 									label="Job Type"
-									onChange={(e) => setJobType(e.target.value as JobTypeLiterals)}
+									onChange={(e) => setJobType(e.target.value as keyof typeof VolunteerTypes)}
 									required>
 									<MenuItem value={"host"}>Host</MenuItem>
 									<MenuItem value={"social"}>Social Media</MenuItem>
@@ -382,7 +409,7 @@ export default function SubmitGamePage() {
 									</div>
 									<div className={styles.question}>
 										<span>What times are you available to host on each day?*</span>
-										{hostDates}
+										{eventDatesAvailability}
 									</div>
 									<div className={styles.question}>
 										<span>
@@ -438,7 +465,7 @@ export default function SubmitGamePage() {
 									</FormControl>
 									<div className={styles.question}>
 										<span>What times are you available on each day?*</span>
-										{hostDates}
+										{eventDatesAvailability}
 									</div>
 									<div className={styles.question}>
 										<span>Post a link to your favourite meme</span>
@@ -455,10 +482,10 @@ export default function SubmitGamePage() {
 								<>
 									<p>
 										Assisting runners with any queries they may have throughout the events, making
-										sure runners are present for their runs, checking vaccination status of and
+										sure runners are present for their runs, updating the whiteboard and
 										handing out passes to attendees.
 										<br />
-										Any queries please contact <i>Lacey</i> on Discord.
+										Any queries please contact <i>LaceyStripes</i> on Discord.
 									</p>
 									<div className={styles.question}>
 										<span>
@@ -468,7 +495,7 @@ export default function SubmitGamePage() {
 										<TextField
 											fullWidth
 											value={runnerManagementAvailability}
-											onChange={(e) => setrunnerManagementAvailability(e.target.value)}
+											onChange={(e) => setRunnerManagementAvailability(e.target.value)}
 											label=""
 											required
 											multiline
@@ -531,17 +558,12 @@ export default function SubmitGamePage() {
 						</>
 					)}
 				</form>
-				<Snackbar open={successSubmit} autoHideDuration={6000} onClose={() => setSuccessSubmit(false)}>
-					<Alert onClose={() => setSuccessSubmit(false)} variant="filled" severity="success">
-						Successfully submitted volunteer
-					</Alert>
-				</Snackbar>
 			</main>
 		</ThemeProvider>
 	);
 }
 
-const NoAuth: React.FC = () => {
+const NoAuth = () => {
 	return (
 		<ThemeProvider theme={theme}>
 			<Head>
@@ -557,7 +579,7 @@ const NoAuth: React.FC = () => {
 	);
 };
 
-const NoEvent: React.FC = () => {
+const NoEvent = () => {
 	return (
 		<ThemeProvider theme={theme}>
 			<Head>
@@ -567,6 +589,21 @@ const NoEvent: React.FC = () => {
 				<h2>Unfortunately we have no events currently accepting volunteers.</h2>
 				<p>Follow us on Twitter and Join our Discord to stay up to date!</p>
 				<LinkButton actionText="Home" iconRight={faArrowRight} link="/" />
+			</main>
+		</ThemeProvider>
+	);
+};
+
+const ConfirmedSubmission = (props: { role: string; reset: () => void }) => {
+	return (
+		<ThemeProvider theme={theme}>
+			<Head>
+				<title>{TITLE}</title>
+			</Head>
+			<main className={`content ${styles.content} ${styles.noEvents}`}>
+				<h2>{props.role} volunteer submitted!</h2>
+				<p>Thank you so much for offering to volunteer! We'll get back to you soon about more information.</p>
+				<button className={styles.newSubmission} onClick={props.reset}>Volunteer for another role?</button>
 			</main>
 		</ThemeProvider>
 	);

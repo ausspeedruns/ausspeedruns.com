@@ -1,7 +1,14 @@
 import { Heading } from "@keystone-ui/core";
 import { useEffect, useState } from "react";
 import { Link } from "@keystone-6/core/admin-ui/router";
-import { useMutation, useQuery, gql, MutationTuple, OperationVariables } from "@keystone-6/core/admin-ui/apollo";
+import {
+	useMutation,
+	useQuery,
+	gql,
+	MutationTuple,
+	OperationVariables,
+	useLazyQuery,
+} from "@keystone-6/core/admin-ui/apollo";
 import { Button } from "@keystone-ui/button";
 import { Select, FieldContainer, FieldLabel } from "@keystone-ui/fields";
 import {
@@ -96,10 +103,7 @@ interface QUERY_INCENTIVES_RESULTS {
 
 const MUTATION_UPDATE_INCENTIVE = gql`
 	mutation ($incentive: ID, $active: Boolean, $data: JSON) {
-		updateIncentive(
-			where: { id: $incentive }
-			data: { data: $data, active: $active }
-		) {
+		updateIncentive(where: { id: $incentive }, data: { data: $data, active: $active }) {
 			id
 			title
 		}
@@ -121,11 +125,8 @@ const incentiveTypes = [
 function renderIncentive(
 	// @ts-ignore
 	incentive: QUERY_INCENTIVES_RESULTS["event"]["donationIncentives"][0],
-	updateIncentiveMutation: MutationTuple<
-		MUTATION_UPDATE_INCENTIVE_RESULTS,
-		OperationVariables
-	>[0],
-	refetchData: () => void
+	updateIncentiveMutation: MutationTuple<MUTATION_UPDATE_INCENTIVE_RESULTS, OperationVariables>[0],
+	refetchData: () => void,
 ) {
 	switch (incentive?.type) {
 		case "war":
@@ -154,38 +155,69 @@ function renderIncentive(
 	}
 }
 
+type SelectOption = {
+	label: string;
+	value: string;
+} | null;
+
 export default function RunsManager() {
-	const [selectedEvent, setSelectedEvent] = useState({
-		label: "ASM2023",
-		value: "ASM2023",
-	});
+	const [selectedEvent, setSelectedEvent] = useState<SelectOption>(getEventInURLQuery());
 	const [selectedIncentiveIndex, setSelectedIncentiveIndex] = useState(0);
 
 	const { addToast } = useToasts();
 
 	const eventsList = useQuery<QUERY_EVENTS_RESULTS>(QUERY_EVENTS);
-	const eventData = useQuery<QUERY_INCENTIVES_RESULTS>(QUERY_INCENTIVES, {
-		variables: { event: selectedEvent.value },
-	});
+	const [refetchEventData, { data: eventData }] = useLazyQuery<QUERY_INCENTIVES_RESULTS>(QUERY_INCENTIVES);
 
 	const [updateIncentiveMutation, updateIncentiveMutationData] =
-		useMutation<MUTATION_UPDATE_INCENTIVE_RESULTS>(
-			MUTATION_UPDATE_INCENTIVE,
-		);
+		useMutation<MUTATION_UPDATE_INCENTIVE_RESULTS>(MUTATION_UPDATE_INCENTIVE);
 
 	const eventsOptions = eventsList.data?.events.map((event) => ({
 		value: event.shortname,
 		label: event.shortname,
 	}));
 
-	const sortedIncentives =
-		eventData.data?.event?.donationIncentives.map((a) => ({ ...a })) ?? [];
+	const sortedIncentives = eventData?.event?.donationIncentives.map((a) => ({ ...a })) ?? [];
 	sortedIncentives.sort(
-		(a, b) =>
-			new Date(a.run?.scheduledTime ?? 0).getTime() -
-			new Date(b.run?.scheduledTime ?? 0).getTime(),
+		(a, b) => new Date(a.run?.scheduledTime ?? 0).getTime() - new Date(b.run?.scheduledTime ?? 0).getTime(),
 	);
 	const incentiveData = sortedIncentives[selectedIncentiveIndex];
+
+	function handleEventSelection(option: { label: string; value: string } | null) {
+		const urlParams = new URLSearchParams(window.location.search);
+
+		if (option) {
+			urlParams.set("event", option.value);
+		} else {
+			urlParams.delete("event");
+		}
+
+		if (urlParams.size > 0) {
+			const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+			window.history.pushState({ path: newUrl }, "", newUrl);
+		} else {
+			window.history.pushState({}, "", window.location.pathname);
+		}
+
+		setSelectedEvent(option);
+	}
+
+	function getEventInURLQuery(): SelectOption {
+		const eventName = new URLSearchParams(window.location.search).get("event");
+
+		if (!eventName) {
+			return null;
+		}
+
+		return {
+			label: eventName,
+			value: eventName,
+		};
+	}
+
+	useEffect(() => {
+		if (selectedEvent?.value) refetchEventData({ variables: { event: selectedEvent.value } });
+	}, [selectedEvent]);
 
 	// Update Incentive Feedback
 	useEffect(() => {
@@ -221,30 +253,18 @@ export default function RunsManager() {
 			<div style={{ marginTop: 24 }} />
 			<FieldContainer>
 				<FieldLabel>Event</FieldLabel>
-				<Select
-					onChange={(e) => {
-						if (e) setSelectedEvent(e);
-					}}
-					value={selectedEvent}
-					options={eventsOptions}
-				/>
+				<Select onChange={(e) => handleEventSelection(e)} value={selectedEvent} options={eventsOptions} />
 			</FieldContainer>
 			<Accordion>
-				<AccordionSummary
-					expandIcon={<ExpandMoreIcon />}
-					aria-controls="panel1a-content"
-					id="panel1a-header">
+				<AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
 					<b>Add incentive</b>
 				</AccordionSummary>
 				<AccordionDetails>
-					<NewIncentiveInput
-						eventId={selectedEvent.value}
-						newSubmissionAdded={eventData.refetch}
-					/>
+					<NewIncentiveInput eventId={selectedEvent?.value} newSubmissionAdded={refetchEventData} />
 				</AccordionDetails>
 			</Accordion>
 
-			{eventData?.data?.event && (
+			{eventData?.event && (
 				<>
 					<div
 						style={{
@@ -271,19 +291,11 @@ export default function RunsManager() {
 											setSelectedIncentiveIndex(i);
 										}}>
 										<ListItemIcon>
-											{incentive.type === "goal" ? (
-												<Flag />
-											) : (
-												<PieChart />
-											)}
+											{incentive.type === "goal" ? <Flag /> : <PieChart />}
 										</ListItemIcon>
 										<ListItemText
 											primary={`${incentive.run.game} – ${incentive.title}`}
-											secondary={
-												incentive.active
-													? "Active"
-													: "Inactive"
-											}
+											secondary={incentive.active ? "Active" : "Inactive"}
 										/>
 									</ListItemButton>
 								</ListItem>
@@ -309,14 +321,11 @@ export default function RunsManager() {
 							<p>
 								Game <b>{incentiveData?.run.game}</b>
 								<br />
-								Type{" "}
-								<b style={{ textTransform: "capitalize" }}>
-									{incentiveData?.type}
-								</b>
+								Type <b style={{ textTransform: "capitalize" }}>{incentiveData?.type}</b>
 								<br />
 								Notes <b>{incentiveData?.notes}</b>
 							</p>
-							{renderIncentive(incentiveData, updateIncentiveMutation, eventData.refetch)}
+							{renderIncentive(incentiveData, updateIncentiveMutation, refetchEventData)}
 						</div>
 					</div>
 				</>

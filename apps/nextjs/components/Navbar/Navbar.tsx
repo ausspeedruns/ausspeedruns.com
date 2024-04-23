@@ -17,7 +17,7 @@ type NavbarProps = {
 		published: boolean;
 		scheduleReleased: boolean;
 	}[];
-	live?: boolean;
+	live?: string;
 };
 
 // Define general type for useWindowSize hook, which includes width and height
@@ -26,7 +26,7 @@ interface Size {
 	height: number | undefined;
 }
 
-const Navbar = ({ events = [], live = false }: NavbarProps) => {
+const Navbar = ({ events = [], live }: NavbarProps) => {
 	const auth = useAuth();
 	const [isOpen, setIsOpen] = useState<Boolean>(false);
 	const mobileWidth = useMediaQuery("(max-width: 992px)");
@@ -82,14 +82,22 @@ const Navbar = ({ events = [], live = false }: NavbarProps) => {
 							<>
 								<li>
 									<Link
-										href={`/ASGX2024/incentives`}
+										href={`/${live}/incentives`}
 										passHref
 										className={styles.text}>
 										Incentives
 									</Link>
 								</li>
 								<li>
-									<Button actionText="Donate" link="/donate" colorScheme={"orange"} />
+									<Link
+										href={`/${live}/prizes`}
+										passHref
+										className={styles.text}>
+										Prizes
+									</Link>
+								</li>
+								<li>
+									<Button actionText="Donate" link="/donate" colorScheme="orange" />
 								</li>
 							</>
 						)}

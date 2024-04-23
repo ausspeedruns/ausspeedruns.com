@@ -49,3 +49,12 @@ $pax23-blue: #007eb7;
 $pax23-purple: #904b97;
 $pax23-rainbow-bar: linear-gradient(90deg, $pax23-red 0%, $pax23-red 25%, $pax23-yellow 25%, $pax23-yellow 50%, $pax23-blue 50%, $pax23-blue 75%, $pax23-purple 75%, $pax23-purple 100%);
 
+$dh-main: #000000;
+$dh-light-orange: #ff7e00;
+$dh-orange: #FF4B0A;
+$dh-yellow: #FFEB00;
+$dh-red: #FF0046;
+
+$dh-orange-to-orange: linear-gradient(90deg, $dh-light-orange, $dh-orange);
+$dh-yellow-to-orange: linear-gradient(90deg, $dh-yellow, $dh-light-orange);
+$dh-orange-to-red: linear-gradient(90deg, $dh-orange, $dh-red);

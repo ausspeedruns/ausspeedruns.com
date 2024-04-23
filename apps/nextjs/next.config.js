@@ -88,7 +88,7 @@ const nextConfig = {
 			},
 			{
 				source: "/donate",
-				destination: "https://donate.tiltify.com/@ausspeedruns/asgx2024 ",
+				destination: "https://donate.tiltify.com/c20c9685-cd1b-4d5f-8595-74378cb06859/details",
 				permanent: false,
 			},
 		];

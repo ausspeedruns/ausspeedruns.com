@@ -81,7 +81,7 @@ const ASM2024: AusSpeedrunsEvent = {
 	preferredName: "ASM2024",
 	shortName: "ASM2024",
 	startDate: "16 July 2024 09:00:00 GMT+0930",
-	dates: "July 16 - 21, 2023",
+	dates: "July 16 - 21, 2024",
 	charity: {
 		name: "Game On Cancer",
 	},
@@ -90,12 +90,6 @@ const ASM2024: AusSpeedrunsEvent = {
 };
 
 export default function Home() {
-	const {
-		events: { previous, current, next },
-	} = globals;
-
-	const mobileWidth = useMediaQuery("(max-width: 992px)");
-
 	return (
 		<div>
 			<Head>
@@ -120,14 +114,14 @@ export default function Home() {
 						actionText="Dreamhack Schedule"
 					/>
 				</div> */}
-				{/* <EventLive event={"ASGX2024"} /> */}
+				<EventLive event={"ASDH2024"} />
 				{/* <ASMMLive /> */}
-				<HeroBlock
+				{/* <HeroBlock
 					event={ASDH2024}
 					schedule
 					tagLine="See you at Dreamhack!"
 					ticketLink="https://dreamhack.com/australia/"
-				/>
+				/> */}
 				<HeroBlock
 					event={ASM2024}
 					submitRuns

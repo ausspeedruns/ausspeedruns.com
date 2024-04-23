@@ -3,10 +3,11 @@
 @import './responsive.scss';
 
 .app {
-	background: $asm23-main;
-	background-image: url("./img/events/asgx24/asgx24-hero.png");
-	// background-size: contain;
+	background: $dh-main;
+	background-image: url("./img/events/asdh24/DreamHack24Background.png");
+	background-size: 100% auto;
 	background-position-x: center;
+	background-repeat: no-repeat;
 }
 
 .content {
@@ -48,7 +49,7 @@
 	.soon {
 		border: 4px solid #fff;
 		color: $light-text;
-		background-color: $tgx-main;
+		background-color: $dh-main;
 		margin: 1rem 0 3rem;
 		padding: 2rem;
 
@@ -59,7 +60,7 @@
 		.goal {
 			.progress {
 				.bar {
-					border: 2px solid $pax23-main;
+					border: 2px solid $dh-main;
 				}
 			}
 		}
@@ -80,7 +81,7 @@
 	}
 
 	.divider {
-		background: $tgx-rainbow-rotated;
+		background: $dh-orange-to-red;
 		height: 5px;
 		width: 100%;
 		margin: 1rem 0;
@@ -219,3 +220,36 @@
 		}
 	}
 }
+
+.prizeToC {
+	padding: 2rem;
+	font-size: 1.1rem;
+	text-align: center;
+	
+	a {
+		color: white;
+	}
+}
+
+.prizes {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 48px;
+
+	.prize {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		
+		background: $dh-orange-to-red;
+		color: white;
+		padding: 32px;
+		border-radius: 32px;
+
+		p {
+			margin: 0;
+		}
+	}
+}
+

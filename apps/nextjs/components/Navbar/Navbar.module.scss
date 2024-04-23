@@ -96,6 +96,12 @@
 			font-size: 1rem;
 		}
 
+		@include breakpoint($sm-zero-only) {
+			ul {
+				align-items: flex-end;
+			}
+		}
+
 		.icon {
 			color: $light-text;
 		}
@@ -110,7 +116,7 @@
 
 	.join {
 		color: $light-text;
-    white-space: nowrap;
+		white-space: nowrap;
 
 		a {
 			font-weight: 500;

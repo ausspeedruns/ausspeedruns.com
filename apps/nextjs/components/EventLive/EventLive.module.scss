@@ -4,10 +4,11 @@
 
 .eventLive {
 	color: $light-text;
-	background: $tgx-main;
-	background-image: url("../../styles/img/events/asgx24/asgx24-hero.png");
-	// background-size: cover;
+	background: $dh-main;
+	background-image: url("../../styles/img/events/asdh24/DreamHack24Background.png");
+	background-size: 100% auto;
 	background-position-x: center;
+	background-repeat: no-repeat;
 	padding: 2rem;
 
 	@include breakpoint($sm-zero-only) {
@@ -164,12 +165,12 @@
 
 		.twitchVideo,
 		.twitchChat {
-			border: 8px solid $tgx-yellow;
+			border: 2px solid $dh-red;
 			box-sizing: border-box;
 		}
 
 		.twitchChat {
-			border-color: $tgx-red;
+			border-color: $dh-red;
 		}
 
 		.twitchVideo {
@@ -230,8 +231,8 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: space-around;
-			background-color: $tgx-main;
-			border: 2px solid $tgx-blue;
+			background-color: $dh-main;
+			border: 2px solid $dh-red;
 			font-size: 1.2rem;
 			width: fit-content;
 			word-break: break-all;
@@ -287,8 +288,8 @@
 			flex-direction: column;
 			height: 100%;
 			justify-content: space-around;
-			background-color: $tgx-main;
-			border: 2px solid $tgx-green;
+			background-color: $dh-main;
+			border: 2px solid $dh-red;
 			// width: 50%;
 
 			@include breakpoint($sm-zero-only) {
@@ -310,7 +311,7 @@
 			margin-top: 10px;
 			width: 80%;
 			height: 10px;
-			background: $tgx-rainbow-rotated;
+			background: $dh-orange-to-red;
 		}
 	}
 

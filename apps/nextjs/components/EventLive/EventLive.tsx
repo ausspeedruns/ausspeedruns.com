@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import TwitchChatEmbed from "../TwitchChatEmbed/TwitchChatEmbed";
 import TwitchVideoEmbed from "../TwitchVideoEmbed/TwitchVideoEmbed";
 
-import EventLogo from "../../styles/img/ASGX2023 Logo.png";
+import EventLogo from "../../styles/img/events/asdh24/DreamHack24Logo.png";
 import { useState } from "react";
 import { Incentive } from "../Incentives/Incentive";
 import Button from "../Button/Button";
@@ -114,6 +114,11 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 
 	let currentRunIndex = nextRunIndex - 1;
 
+	const numberOfRunners = eventQuery.data?.event.runs?.[currentRunIndex]?.runners.length ?? 1;
+	const runnersString =
+		eventQuery.data?.event.runs?.[currentRunIndex]?.runners.map((runner) => runner.username).join(", ") ??
+		"Loading";
+
 	return (
 		<div className={styles.eventLive}>
 			<div className={styles.logo}>
@@ -131,7 +136,7 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 				</Link>
 			</div>
 			<div className={styles.eventInfo}>
-				<h2>March 23 – 24 | Melbourne</h2>
+				<h2>April 26 – 28 | Melbourne</h2>
 				<div className={styles.link}>
 					<Button actionText="Donate!" link="/donate" colorScheme="primary" />
 				</div>
@@ -161,12 +166,12 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 					<h3>{eventQuery.data?.event.runs?.[currentRunIndex]?.category ?? "Loading"}</h3>
 				</div>
 				<div className={styles.columnRight}>
-					<h4>{currentRunIndex == 0 ? "First Runners" : "Runners"}</h4>
-					<h3>
-						{eventQuery.data?.event.runs?.[currentRunIndex]?.runners
-							.map((runner) => runner.username)
-							.join(", ") ?? "Loading"}
-					</h3>
+					<h4>
+						{currentRunIndex == 0
+							? `First Runner${numberOfRunners == 1 ? "" : "s"}`
+							: `Runner${numberOfRunners == 1 ? "" : "s"}`}
+					</h4>
+					<h3>{runnersString}</h3>
 				</div>
 			</div>
 			<div className={styles.twitch}>
@@ -188,8 +193,12 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 						<div className={styles.liveContent}>
 							<h2>Upcoming Run</h2>
 							<div className={styles.info}>
-								<span className={styles.game}>{eventQuery.data?.event.runs?.[nextRunIndex]?.game ?? "Loading"}</span>
-								<span className={styles.category}>{eventQuery.data?.event.runs?.[nextRunIndex]?.category ?? "Loading"}</span>
+								<span className={styles.game}>
+									{eventQuery.data?.event.runs?.[nextRunIndex]?.game ?? "Loading"}
+								</span>
+								<span className={styles.category}>
+									{eventQuery.data?.event.runs?.[nextRunIndex]?.category ?? "Loading"}
+								</span>
 								<span className={styles.subtitle}>Time</span>
 								<span>
 									{eventQuery.data?.event.runs?.[nextRunIndex]?.scheduledTime

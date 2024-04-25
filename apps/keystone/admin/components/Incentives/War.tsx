@@ -116,6 +116,8 @@ export function War({ incentive, incentiveUpdate }: WarProps) {
 		-1,
 	);
 
+	const sortedOptions = [...incentiveRawData.options].sort((a, b) => b.total - a.total);
+
 	return (
 		<Stack gap="medium">
 			<FieldContainer>
@@ -142,7 +144,7 @@ export function War({ incentive, incentiveUpdate }: WarProps) {
 					<span></span>
 					<span>Total</span>
 					<span></span>
-					{incentiveRawData.options.map((item, i) => {
+					{sortedOptions.map((item, i) => {
 						return (
 							<>
 								<TextInput
@@ -151,7 +153,7 @@ export function War({ incentive, incentiveUpdate }: WarProps) {
 										handleNameChange(e.target.value, item.name);
 									}}
 									value={item.name}
-									key={`input-${item.name}`}
+									key={`input-${i}`}
 								/>
 								<TextInput
 									placeholder="Increment"
@@ -160,14 +162,14 @@ export function War({ incentive, incentiveUpdate }: WarProps) {
 									onChange={(e) => {
 										handleIncrementChange(e.target.valueAsNumber, i);
 									}}
-									key={`input-amount-${item.name}`}
+									key={`input-amount-${i}`}
 								/>
 								<Button
 									onClick={() => handleIncrement(i)}
 									isDisabled={increments[i] === 0}
 									tone="positive"
 									weight={increments[i] === 0 ? "light" : "bold"}
-									key={`add-${item.name}`}>
+									key={`add-${i}`}>
 									Add
 								</Button>
 								<span
@@ -175,7 +177,7 @@ export function War({ incentive, incentiveUpdate }: WarProps) {
 										fontWeight: highestNumber === item.total ? "bold" : "normal",
 										fontSize: "1.5rem",
 									}}
-									key={`total-${item.name}`}>
+									key={`total-${i}`}>
 									${item.total.toLocaleString()}
 								</span>
 								{item.name === "" ? (
@@ -183,11 +185,11 @@ export function War({ incentive, incentiveUpdate }: WarProps) {
 										onClick={() => handleRemove(i)}
 										tone="negative"
 										weight="light"
-										key={`remove-${item.name}`}>
+										key={`remove-${i}`}>
 										Remove
 									</Button>
 								) : (
-									<span key={`spacer-${item.name}`}></span>
+									<span key={`spacer-${i}`}></span>
 								)}
 							</>
 						);

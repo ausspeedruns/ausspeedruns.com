@@ -1,16 +1,13 @@
 import { useState } from "react";
 import { Stack, Inline } from "@keystone-ui/core";
-import {
-	FieldContainer,
-	FieldLabel,
-	TextInput,
-	Checkbox,
-} from "@keystone-ui/fields";
+import { FieldContainer, FieldLabel, TextInput, Checkbox } from "@keystone-ui/fields";
 import { Button } from "@keystone-ui/button";
 
 import type { War as WarData } from "../../../src/schema/incentives";
 import {
-	MutationTuple,
+	ApolloCache,
+	DefaultContext,
+	MutationFunctionOptions,
 	OperationVariables,
 } from "@keystone-6/core/admin-ui/apollo";
 import { MUTATION_UPDATE_INCENTIVE_RESULTS } from "../../pages/incentives-dashboard";
@@ -18,31 +15,25 @@ import { MUTATION_UPDATE_INCENTIVE_RESULTS } from "../../pages/incentives-dashbo
 
 type WarProps = {
 	incentive: WarData;
-	incentiveUpdate: MutationTuple<
-		MUTATION_UPDATE_INCENTIVE_RESULTS,
-		OperationVariables
-	>[0];
-	refetchData: () => void;
+	incentiveUpdate: (
+		mutationData: MutationFunctionOptions<
+			MUTATION_UPDATE_INCENTIVE_RESULTS,
+			OperationVariables,
+			DefaultContext,
+			ApolloCache<any>
+		>,
+	) => void;
 };
 
-export function War({ incentive, incentiveUpdate, refetchData }: WarProps) {
-	const [incentiveRawData, setIncentiveRawData] = useState<WarData["data"]>(
-		incentive.data,
-	);
+export function War({ incentive, incentiveUpdate }: WarProps) {
+	const [incentiveRawData, setIncentiveRawData] = useState<WarData["data"]>(incentive.data);
 	const [active, setActive] = useState(incentive.active);
-	const [increments, setIncrements] = useState<number[]>(
-		new Array(incentive.data.options.length).fill(0),
-	);
+	const [increments, setIncrements] = useState<number[]>(new Array(incentive.data.options.length).fill(0));
 
 	function UpdateIncentive() {
 		if (!incentive.id) return;
 
-		if (
-			incentiveRawData.options.some(
-				(option) => !option.name || isNaN(option.total),
-			)
-		)
-			return;
+		if (incentiveRawData.options.some((option) => !option.name || isNaN(option.total))) return;
 
 		incentiveUpdate({
 			variables: {
@@ -51,20 +42,14 @@ export function War({ incentive, incentiveUpdate, refetchData }: WarProps) {
 				active: active,
 			},
 		});
-		refetchData();
 	}
 
-	const invalidData =
-		incentiveRawData.options.some(
-			(option) => !option.name || isNaN(option.total),
-		) || !incentive.id;
+	const invalidData = incentiveRawData.options.some((option) => !option.name || isNaN(option.total)) || !incentive.id;
 
 	function handleNameChange(newName: string, oldName: string) {
 		const mutableOptions = [...incentiveRawData.options];
 
-		const optionIndex = mutableOptions.findIndex(
-			(option) => option.name === oldName,
-		);
+		const optionIndex = mutableOptions.findIndex((option) => option.name === oldName);
 
 		let mutableOption = { ...mutableOptions[optionIndex] };
 		if (optionIndex > -1) {
@@ -118,9 +103,7 @@ export function War({ incentive, incentiveUpdate, refetchData }: WarProps) {
 	}
 
 	function handleRemove(index: number) {
-		const mutableOptions = incentiveRawData.options.filter(
-			(_, i) => i !== index,
-		);
+		const mutableOptions = incentiveRawData.options.filter((_, i) => i !== index);
 
 		setIncentiveRawData({
 			...incentiveRawData,
@@ -138,14 +121,7 @@ export function War({ incentive, incentiveUpdate, refetchData }: WarProps) {
 			<FieldContainer>
 				{incentive.data.options.length > 0 ? (
 					<p>
-						Currently{" "}
-						<b>
-							{
-								[...incentive.data.options].sort(
-									(a, b) => b.total - a.total,
-								)[0].name
-							}
-						</b>
+						Currently <b>{[...incentive.data.options].sort((a, b) => b.total - a.total)[0].name}</b>
 					</p>
 				) : (
 					<p>No options submitted</p>
@@ -172,52 +148,46 @@ export function War({ incentive, incentiveUpdate, refetchData }: WarProps) {
 								<TextInput
 									placeholder="Name"
 									onChange={(e) => {
-										handleNameChange(
-											e.target.value,
-											item.name,
-										);
+										handleNameChange(e.target.value, item.name);
 									}}
 									value={item.name}
+									key={`input-${item.name}`}
 								/>
 								<TextInput
 									placeholder="Increment"
 									type="number"
 									value={increments[i]}
 									onChange={(e) => {
-										handleIncrementChange(
-											e.target.valueAsNumber,
-											i,
-										);
+										handleIncrementChange(e.target.valueAsNumber, i);
 									}}
+									key={`input-amount-${item.name}`}
 								/>
 								<Button
 									onClick={() => handleIncrement(i)}
 									isDisabled={increments[i] === 0}
 									tone="positive"
-									weight={
-										increments[i] === 0 ? "light" : "bold"
-									}>
+									weight={increments[i] === 0 ? "light" : "bold"}
+									key={`add-${item.name}`}>
 									Add
 								</Button>
 								<span
 									style={{
-										fontWeight:
-											highestNumber === item.total
-												? "bold"
-												: "normal",
+										fontWeight: highestNumber === item.total ? "bold" : "normal",
 										fontSize: "1.5rem",
-									}}>
+									}}
+									key={`total-${item.name}`}>
 									${item.total.toLocaleString()}
 								</span>
 								{item.name === "" ? (
 									<Button
 										onClick={() => handleRemove(i)}
 										tone="negative"
-										weight="light">
+										weight="light"
+										key={`remove-${item.name}`}>
 										Remove
 									</Button>
 								) : (
-									<span></span>
+									<span key={`spacer-${item.name}`}></span>
 								)}
 							</>
 						);
@@ -254,11 +224,7 @@ export function War({ incentive, incentiveUpdate, refetchData }: WarProps) {
 				</Checkbox>
 			</FieldContainer>
 			<br />
-			<Button
-				tone="active"
-				weight="bold"
-				onClick={UpdateIncentive}
-				isDisabled={invalidData}>
+			<Button tone="active" weight="bold" onClick={UpdateIncentive} isDisabled={invalidData}>
 				Update
 			</Button>
 		</Stack>

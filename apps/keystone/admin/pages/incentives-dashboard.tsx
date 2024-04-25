@@ -5,9 +5,11 @@ import {
 	useMutation,
 	useQuery,
 	gql,
-	MutationTuple,
 	OperationVariables,
 	useLazyQuery,
+	ApolloCache,
+	DefaultContext,
+	MutationFunctionOptions,
 } from "@keystone-6/core/admin-ui/apollo";
 import { Button } from "@keystone-ui/button";
 import { Select, FieldContainer, FieldLabel } from "@keystone-ui/fields";
@@ -101,6 +103,21 @@ interface QUERY_INCENTIVES_RESULTS {
 	};
 }
 
+interface IncentiveData {
+	id: string;
+	title: string;
+	notes: string;
+	type: string;
+	run: {
+		id: string;
+		game: string;
+		category: string;
+		scheduledTime: string;
+	};
+	data: any; // use `any` if data type is unknown
+	active: boolean;
+}
+
 const MUTATION_UPDATE_INCENTIVE = gql`
 	mutation ($incentive: ID, $active: Boolean, $data: JSON) {
 		updateIncentive(where: { id: $incentive }, data: { data: $data, active: $active }) {
@@ -125,28 +142,20 @@ const incentiveTypes = [
 function renderIncentive(
 	// @ts-ignore
 	incentive: QUERY_INCENTIVES_RESULTS["event"]["donationIncentives"][0],
-	updateIncentiveMutation: MutationTuple<MUTATION_UPDATE_INCENTIVE_RESULTS, OperationVariables>[0],
-	refetchData: () => void,
+	updateIncentiveMutation: (
+		mutationData: MutationFunctionOptions<
+			MUTATION_UPDATE_INCENTIVE_RESULTS,
+			OperationVariables,
+			DefaultContext,
+			ApolloCache<any>
+		>,
+	) => void,
 ) {
 	switch (incentive?.type) {
 		case "war":
-			return (
-				<War
-					key={incentive.id}
-					incentive={incentive}
-					incentiveUpdate={updateIncentiveMutation}
-					refetchData={refetchData}
-				/>
-			);
+			return <War key={incentive.id} incentive={incentive} incentiveUpdate={updateIncentiveMutation} />;
 		case "goal":
-			return (
-				<Goal
-					key={incentive.id}
-					incentive={incentive}
-					incentiveUpdate={updateIncentiveMutation}
-					refetchData={refetchData}
-				/>
-			);
+			return <Goal key={incentive.id} incentive={incentive} incentiveUpdate={updateIncentiveMutation} />;
 		case undefined:
 			return <></>;
 		default:
@@ -163,11 +172,16 @@ type SelectOption = {
 export default function RunsManager() {
 	const [selectedEvent, setSelectedEvent] = useState<SelectOption>(getEventInURLQuery());
 	const [selectedIncentiveIndex, setSelectedIncentiveIndex] = useState(0);
+	const [sortedIncentives, setSortedIncentiveData] = useState<IncentiveData[]>([]);
+	const [incentiveData, setIncentiveData] = useState<IncentiveData | undefined>(undefined);
+	const [actualEventData, setActualEventData] = useState<QUERY_INCENTIVES_RESULTS | undefined>(undefined);
 
 	const { addToast } = useToasts();
 
 	const eventsList = useQuery<QUERY_EVENTS_RESULTS>(QUERY_EVENTS);
-	const [refetchEventData, { data: eventData }] = useLazyQuery<QUERY_INCENTIVES_RESULTS>(QUERY_INCENTIVES);
+	const [refetchEventData, { data: eventData }] = useLazyQuery<QUERY_INCENTIVES_RESULTS>(QUERY_INCENTIVES, {
+		fetchPolicy: "no-cache",
+	});
 
 	const [updateIncentiveMutation, updateIncentiveMutationData] =
 		useMutation<MUTATION_UPDATE_INCENTIVE_RESULTS>(MUTATION_UPDATE_INCENTIVE);
@@ -177,11 +191,22 @@ export default function RunsManager() {
 		label: event.shortname,
 	}));
 
-	const sortedIncentives = eventData?.event?.donationIncentives.map((a) => ({ ...a })) ?? [];
-	sortedIncentives.sort(
-		(a, b) => new Date(a.run?.scheduledTime ?? 0).getTime() - new Date(b.run?.scheduledTime ?? 0).getTime(),
-	);
-	const incentiveData = sortedIncentives[selectedIncentiveIndex];
+	useEffect(() => {
+		setActualEventData(eventData);
+	}, [eventData]);
+
+	useEffect(() => {
+		const mutableSortedIncentives = actualEventData?.event?.donationIncentives.map((a) => ({ ...a })) ?? [];
+		mutableSortedIncentives.sort(
+			(a, b) => new Date(a.run?.scheduledTime ?? 0).getTime() - new Date(b.run?.scheduledTime ?? 0).getTime(),
+		);
+
+		setSortedIncentiveData(mutableSortedIncentives);
+	}, [actualEventData]);
+
+	useEffect(() => {
+		setIncentiveData(sortedIncentives[selectedIncentiveIndex]);
+	}, [sortedIncentives, selectedIncentiveIndex]);
 
 	function handleEventSelection(option: { label: string; value: string } | null) {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -216,7 +241,7 @@ export default function RunsManager() {
 	}
 
 	useEffect(() => {
-		if (selectedEvent?.value) refetchEventData({ variables: { event: selectedEvent.value } });
+		refetchCurrentEvent();
 	}, [selectedEvent]);
 
 	// Update Incentive Feedback
@@ -239,6 +264,28 @@ export default function RunsManager() {
 		}
 	}, [updateIncentiveMutationData.data, updateIncentiveMutationData.error]);
 
+	function refetchCurrentEvent() {
+		if (selectedEvent?.value) {
+			refetchEventData({ variables: { event: selectedEvent.value } }).then((data) => {
+				setActualEventData(data.data);
+				console.log("New data", data.data);
+			});
+		}
+	}
+
+	function mutateDataAndThenRefetch(
+		mutationData: MutationFunctionOptions<
+			MUTATION_UPDATE_INCENTIVE_RESULTS,
+			OperationVariables,
+			DefaultContext,
+			ApolloCache<any>
+		>,
+	) {
+		updateIncentiveMutation(mutationData).then(() => {
+			refetchCurrentEvent();
+		});
+	}
+
 	return (
 		<div
 			style={{
@@ -260,11 +307,11 @@ export default function RunsManager() {
 					<b>Add incentive</b>
 				</AccordionSummary>
 				<AccordionDetails>
-					<NewIncentiveInput eventId={selectedEvent?.value} newSubmissionAdded={refetchEventData} />
+					<NewIncentiveInput eventId={selectedEvent?.value} newSubmissionAdded={refetchCurrentEvent} />
 				</AccordionDetails>
 			</Accordion>
 
-			{eventData?.event && (
+			{actualEventData?.event && (
 				<>
 					<div
 						style={{
@@ -325,7 +372,7 @@ export default function RunsManager() {
 								<br />
 								Notes <b>{incentiveData?.notes}</b>
 							</p>
-							{renderIncentive(incentiveData, updateIncentiveMutation, refetchEventData)}
+							{renderIncentive(incentiveData, mutateDataAndThenRefetch)}
 						</div>
 					</div>
 				</>

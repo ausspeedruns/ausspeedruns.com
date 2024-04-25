@@ -1,33 +1,31 @@
 import { useState } from "react";
 import { Stack } from "@keystone-ui/core";
-import {
-	FieldContainer,
-	FieldLabel,
-	TextInput,
-	Checkbox,
-} from "@keystone-ui/fields";
+import { FieldContainer, FieldLabel, TextInput, Checkbox } from "@keystone-ui/fields";
 import { Button } from "@keystone-ui/button";
 
 import type { Goal as GoalData } from "../../../src/schema/incentives";
 import {
-	MutationTuple,
+	ApolloCache,
+	DefaultContext,
+	MutationFunctionOptions,
 	OperationVariables,
 } from "@keystone-6/core/admin-ui/apollo";
 import { MUTATION_UPDATE_INCENTIVE_RESULTS } from "../../pages/incentives-dashboard";
 
 type GoalProps = {
 	incentive: GoalData;
-	incentiveUpdate: MutationTuple<
-		MUTATION_UPDATE_INCENTIVE_RESULTS,
-		OperationVariables
-	>[0];
-	refetchData: () => void;
+	incentiveUpdate: (
+		mutationData: MutationFunctionOptions<
+			MUTATION_UPDATE_INCENTIVE_RESULTS,
+			OperationVariables,
+			DefaultContext,
+			ApolloCache<any>
+		>,
+	) => void;
 };
 
-export function Goal({ incentive, incentiveUpdate, refetchData }: GoalProps) {
-	const [incentiveRawData, setIncentiveRawData] = useState<GoalData["data"]>(
-		incentive.data,
-	);
+export function Goal({ incentive, incentiveUpdate }: GoalProps) {
+	const [incentiveRawData, setIncentiveRawData] = useState<GoalData["data"]>(incentive.data);
 
 	const [active, setActive] = useState(incentive.active);
 	const [add, setAdd] = useState(0);
@@ -35,8 +33,7 @@ export function Goal({ incentive, incentiveUpdate, refetchData }: GoalProps) {
 	function UpdateIncentive() {
 		if (!incentive.id) return;
 
-		if (isNaN(incentiveRawData.current) || isNaN(incentiveRawData.goal))
-			return;
+		if (isNaN(incentiveRawData.current) || isNaN(incentiveRawData.goal)) return;
 
 		incentiveUpdate({
 			variables: {
@@ -45,7 +42,6 @@ export function Goal({ incentive, incentiveUpdate, refetchData }: GoalProps) {
 				active: active,
 			},
 		});
-		refetchData();
 	}
 
 	function handleAdd() {
@@ -57,10 +53,7 @@ export function Goal({ incentive, incentiveUpdate, refetchData }: GoalProps) {
 		setAdd(0);
 	}
 
-	const invalidData =
-		isNaN(incentiveRawData.current) ||
-		isNaN(incentiveRawData.goal) ||
-		!incentive.id;
+	const invalidData = isNaN(incentiveRawData.current) || isNaN(incentiveRawData.goal) || !incentive.id;
 
 	return (
 		<Stack gap="medium">
@@ -69,12 +62,8 @@ export function Goal({ incentive, incentiveUpdate, refetchData }: GoalProps) {
 			</FieldContainer>
 			<FieldContainer>
 				<p>
-					Needs ${incentive.data.goal - incentive.data.current} more
-					dollars.{" "}
-					{Math.round(
-						(incentive.data.current / incentive.data.goal) * 100,
-					)}
-					% of the way there.
+					Needs ${incentive.data.goal - incentive.data.current} more dollars.{" "}
+					{Math.round((incentive.data.current / incentive.data.goal) * 100)}% of the way there.
 				</p>
 			</FieldContainer>
 			<FieldContainer>
@@ -90,11 +79,7 @@ export function Goal({ incentive, incentiveUpdate, refetchData }: GoalProps) {
 					width: "50%",
 					gap: "1rem",
 				}}>
-				<TextInput
-					onChange={(e) => setAdd(e.target.valueAsNumber)}
-					type="number"
-					value={add}
-				/>
+				<TextInput onChange={(e) => setAdd(e.target.valueAsNumber)} type="number" value={add} />
 				<Button
 					isDisabled={add === 0}
 					tone="positive"
@@ -116,11 +101,7 @@ export function Goal({ incentive, incentiveUpdate, refetchData }: GoalProps) {
 				</Checkbox>
 			</FieldContainer>
 			<br />
-			<Button
-				tone="active"
-				weight="bold"
-				onClick={UpdateIncentive}
-				isDisabled={invalidData}>
+			<Button tone="active" weight="bold" onClick={UpdateIncentive} isDisabled={invalidData}>
 				Update
 			</Button>
 		</Stack>

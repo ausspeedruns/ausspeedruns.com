@@ -36,7 +36,7 @@ const Incentives = () => {
 					<Prize name="The Library of Babel Game Code" requirement="$10 Minimum Donation" />
 					<Prize name="2x Turtle Beach Recon 200 gen 2" requirement="DreamHack Sonic 3 Winners" />
 					<Prize name="Quokka $50 Gift Card" requirement="DreamHack Crash Team Racing Winner" />
-					<Prize name="Game On Cancer Swag Bag" requirement="DreamHack Super Monkey Ball Winners" />
+					<Prize name="3x Game On Cancer Swag Bag" requirement="DreamHack Super Monkey Ball Winners" />
 				</section>
 			</main>
 		</div>

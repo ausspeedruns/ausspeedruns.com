@@ -88,7 +88,7 @@ const Incentives = () => {
 				<div className={styles.donate}>
 					<Button
 						actionText="Donate"
-						link="https://donate.tiltify.com/@ausspeedruns/asgx2024"
+						link="/donate"
 						openInNewTab
 						iconRight={faChevronRight}
 					/>

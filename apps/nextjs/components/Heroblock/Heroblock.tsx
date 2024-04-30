@@ -23,8 +23,6 @@ function zeroPad(num: number): string {
 	return num.toString().padStart(2, "0");
 }
 
-// const eventDate = Date.UTC(2023, 2, 11, 0, 0, 0, 0);
-
 function countdownRender(currentTime: number, eventDate: number) {
 	// Calculate the difference in seconds between the target date and current date
 	let diffInSeconds = (eventDate - currentTime) / 1000;

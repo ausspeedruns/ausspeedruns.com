@@ -73,7 +73,8 @@ const ASDH2024: AusSpeedrunsEvent = {
 		name: "Game On Cancer",
 	},
 	logo: "events/asdh24/DreamHack24Logo.png",
-	heroImage: "events/asdh24/Dreamhack24Hero.jpg"
+	heroImage: "events/asdh24/DreamHack24Hero.png",
+	total: "10,000",
 };
 
 const ASM2024: AusSpeedrunsEvent = {
@@ -102,30 +103,10 @@ export default function Home() {
 				/>
 			</Head>
 			<main>
-				{/* <div className={styles.banner}>
-					{!mobileWidth && (
-						<Image src={DreamhackLogo} height={30} width={371} alt="The Dreamhack Wordmark Logo" />
-					)}
-					Our Dreamhack schedule just got released!
-					<Button
-						colorScheme="secondary inverted"
-						link="/ASDH2024/schedule"
-						iconRight={faCalendar}
-						actionText="Dreamhack Schedule"
-					/>
-				</div> */}
-				<EventLive event={"ASDH2024"} />
-				{/* <ASMMLive /> */}
-				{/* <HeroBlock
-					event={ASDH2024}
-					schedule
-					tagLine="See you at Dreamhack!"
-					ticketLink="https://dreamhack.com/australia/"
-				/> */}
+				{/* <EventLive event={"ASDH2024"} /> */}
 				<HeroBlock
 					event={ASM2024}
-					submitRuns
-					tagLine="Tickets are selling and Submissions are open!"
+					tagLine="Tickets are selling!"
 					ticketLink="/ASM2024/tickets"
 				/>
 				{/* <DualUpcomingEvent
@@ -141,6 +122,11 @@ export default function Home() {
 						ticketLink: "https://dreamhack.com/australia/",
 					}}
 				/> */}
+				<LastEventBlock
+					tagLine="The turn out for DreamHack Melbourne was incredible and we loved showcasing Australia's fastest gamers there!"
+					event={ASDH2024}
+					backgroundPos="center"
+				/>
 				<LastEventBlock
 					tagLine="The Game Expo 2024 was awesome and we have now raised over $100,000 for Game On Cancer!"
 					event={ASGX2024}

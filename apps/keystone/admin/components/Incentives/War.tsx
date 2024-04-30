@@ -116,8 +116,6 @@ export function War({ incentive, incentiveUpdate }: WarProps) {
 		-1,
 	);
 
-	const sortedOptions = [...incentiveRawData.options].sort((a, b) => b.total - a.total);
-
 	return (
 		<Stack gap="medium">
 			<FieldContainer>
@@ -144,7 +142,7 @@ export function War({ incentive, incentiveUpdate }: WarProps) {
 					<span></span>
 					<span>Total</span>
 					<span></span>
-					{sortedOptions.map((item, i) => {
+					{incentiveRawData.options.map((item, i) => {
 						return (
 							<>
 								<TextInput

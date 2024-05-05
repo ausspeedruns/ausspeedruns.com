@@ -717,8 +717,28 @@ const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 	}
 
 	let categoryExtras = <></>;
-	if (run.race) categoryExtras = <span className={styles.categoryExtras}>RACE</span>;
-	if (run.coop) categoryExtras = <span className={styles.categoryExtras}>CO-OP</span>;
+	if (run.race)
+		categoryExtras = (
+			<span
+				className={styles.categoryExtras}
+				style={{
+					background: props.block && props.block.colour,
+					border: props.block && "3px solid #fff",
+				}}>
+				RACE
+			</span>
+		);
+	if (run.coop)
+		categoryExtras = (
+			<span
+				className={styles.categoryExtras}
+				style={{
+					background: props.block && props.block.colour,
+					border: props.block && "3px solid #fff",
+				}}>
+				CO-OP
+			</span>
+		);
 
 	const runClassNames = [styles.run];
 	if (props.isLive) runClassNames.push(styles.liveRun);
@@ -831,7 +851,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			url:
 				process.env.NODE_ENV === "production"
 					? "https://keystone.ausspeedruns.com/api/graphql"
-					: "http://localhost:8000/api/graphql",
+					: "https://keystone.ausspeedruns.com/api/graphql",
 			exchanges: [cacheExchange, ssrCache, fetchExchange],
 		},
 		false,

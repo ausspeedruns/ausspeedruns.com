@@ -191,7 +191,7 @@ $normalWidth: 800px;
 	}
 
 	.run {
-		padding: 8px;
+		padding: 16px;
 		margin-top: 4px;
 		display: flex;
 		flex-direction: column;
@@ -203,6 +203,7 @@ $normalWidth: 800px;
 
 		@include breakpoint($sm-zero-only) {
 			border-radius: 16px;
+			padding: 8px;
 		}
 
 
@@ -230,7 +231,7 @@ $normalWidth: 800px;
 			font-family: Russo One;
 			font-size: 170%;
 			margin-bottom: -0.25rem;
-			max-width: 70%;
+			max-width: 65%;
 
 			@include breakpoint($sm-zero-only) {
 				max-width: 100%;
@@ -324,7 +325,7 @@ $normalWidth: 800px;
 		}
 
 		.donationIncentives {
-			margin-top: 0.5rem;
+			margin-top: 1rem;
 			display: flex;
 			flex-direction: column;
 			align-items: center;

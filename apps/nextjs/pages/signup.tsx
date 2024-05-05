@@ -91,7 +91,7 @@ export default function SignUpPage() {
 						label="Password"
 						type="password"
 						helperText="Minimum 8 characters"
-						autoComplete="password"
+						autoComplete="new-password"
 					/>
 					<TextField
 						value={username}

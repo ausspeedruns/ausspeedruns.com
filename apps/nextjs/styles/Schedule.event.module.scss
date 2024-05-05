@@ -169,7 +169,7 @@ $normalWidth: 800px;
 		padding: 1rem;
 		margin-top: 1rem;
 		text-align: center;
-		
+
 		position: sticky;
 		top: 0;
 		background: rgba(255, 255, 255, 0.808);
@@ -186,9 +186,9 @@ $normalWidth: 800px;
 		border-bottom: 2px solid $secondary;
 	}
 
-	.runs {
-		padding: 0 1rem;
-	}
+	// .runs {
+	// 	padding: 0 1rem;
+	// }
 
 	.run {
 		padding: 16px;
@@ -205,7 +205,6 @@ $normalWidth: 800px;
 			border-radius: 16px;
 			padding: 8px;
 		}
-
 
 		&[run-odd="true"] {
 			background: $primary-50;
@@ -232,6 +231,8 @@ $normalWidth: 800px;
 			font-size: 170%;
 			margin-bottom: -0.25rem;
 			max-width: 65%;
+			padding-top: 0;
+			line-height: 100%;
 
 			@include breakpoint($sm-zero-only) {
 				max-width: 100%;
@@ -242,6 +243,7 @@ $normalWidth: 800px;
 			font-weight: bold;
 			font-size: 120%;
 			margin-bottom: 0.5rem;
+			margin-top: 0.1rem;
 			color: var(--colour-accent);
 		}
 
@@ -294,24 +296,34 @@ $normalWidth: 800px;
 			}
 		}
 
-		.time {
+		.time,
+		.blockName {
+			position: absolute;
+			top: 0;
 			padding: 8px;
-			font-weight: bold;
+
 			font-size: 120%;
+			font-weight: bold;
+			line-height: 40px;
+
+			@include breakpoint($sm-zero-only) {
+				position: relative;
+				width: 100%;
+			}
+		}
+
+		.time {
+			font-weight: bold;
 			white-space: nowrap;
 			text-transform: uppercase;
 			min-width: 115px;
 
-			position: absolute;
-			top: 0;
 			background: var(--colour-accent);
 			left: 0;
 			border-radius: 16px 0;
 			color: $light-text;
 
 			@include breakpoint($sm-zero-only) {
-				position: relative;
-				width: 100%;
 				border-radius: 8px 8px 0px 0px;
 			}
 		}
@@ -322,6 +334,7 @@ $normalWidth: 800px;
 			color: $light-text;
 			margin-right: 12px;
 			padding: 0 6px;
+			border-radius: 8px;
 		}
 
 		.donationIncentives {
@@ -346,20 +359,13 @@ $normalWidth: 800px;
 		}
 
 		.blockName {
-			position: absolute;
-			top: 0;
 			right: 0;
-			padding: 8px;
-			font-weight: bold;
-			font-size: 120%;
 			border: 3px solid white;
 			border-top: 0;
 			border-right: 0;
 			border-bottom-left-radius: 16px;
 
 			@include breakpoint($sm-zero-only) {
-				position: relative;
-				width: 100%;
 				border-radius: 0;
 				border-left: 3px solid white;
 				border-right: 3px solid white;

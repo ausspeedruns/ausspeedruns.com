@@ -383,7 +383,8 @@ export default function EventSchedule({ event }: EventScheduleProps) {
 											if (dayElement != null) {
 												dayElement.scrollIntoView({ behavior: "smooth", block: "start" });
 											}
-										}}>
+										}}
+										key={day}>
 										{format(date, "EEEE")}
 										<br />
 										{format(date, "LLL d")}
@@ -459,7 +460,7 @@ function getAllDays(runs: Run[], eventTimezone: string, showLocalTime: boolean) 
 		}
 	}
 
-	const sortedDays = days.sort((a, b) => {
+	days.sort((a, b) => {
 		const dateA = new Date(a);
 		const dateB = new Date(b);
 		return dateA.getTime() - dateB.getTime();
@@ -527,9 +528,10 @@ function generateRunItems(
 		<div className={styles.day}>
 			{runDays.map(({ day, runs }, i) => {
 				let yesterdayRunTime = 0;
+				let yesterdaysFinalRun;
 
 				if (i != 0) {
-					const yesterdaysFinalRun = runDays[i - 1].runs.at(-1);
+					yesterdaysFinalRun = runDays[i - 1].runs.at(-1);
 
 					if (yesterdaysFinalRun) {
 						const endOfYesterdayRun = addSeconds(
@@ -565,20 +567,26 @@ function generateRunItems(
 						<DateDivider date={runDay} />
 						<div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
 							<div className={styles.visualiser}>
-								{yesterdayRunTime > 0 && (
+								{/* {yesterdayRunTime > 0 && yesterdaysFinalRun && (
 									<RunVisualiser
 										run={runDays[i - 1].runs.at(-1)!}
 										proportion={(yesterdayRunTime / totalSeconds) * 100}
+										block={blocks.get(yesterdaysFinalRun.id)}
+										key={`spillover-${yesterdaysFinalRun.id}`}
 									/>
-								)}
+								)} */}
 								{runs.map((run, i) => {
 									let width =
 										(Math.max(runEstimateToSeconds(run.estimate), 300) / totalSeconds) * 100;
 
 									if (i == runs.length - 1) {
 										// If the run goes to the next day, subtract the overlap
+										const runScheduledTime = new Date(
+											new Date(run.scheduledTime).toLocaleString("en", {
+												timeZone: settings.showLocalTime ? eventTimezone : undefined,
+											}),
+										);
 
-										const runScheduledTime = new Date(run.scheduledTime);
 										const finalRunEndTime = addSeconds(
 											runScheduledTime,
 											runEstimateToSeconds(run.estimate),
@@ -589,11 +597,10 @@ function generateRunItems(
 											runScheduledTime.getMonth(),
 											runScheduledTime.getDate(),
 										);
-
 										nextDay.setDate(nextDay.getDate() + 1);
 
 										if (nextDay.getDate() === finalRunEndTime.getDate()) {
-											const overlapTime = nextDay.getTime() - finalRunEndTime.getTime();
+											const overlapTime = finalRunEndTime.getTime() - nextDay.getTime();
 											const overlapSeconds = overlapTime / 1000;
 											width =
 												((runEstimateToSeconds(run.estimate) - overlapSeconds) / totalSeconds) *
@@ -601,7 +608,14 @@ function generateRunItems(
 										}
 									}
 
-									return <RunVisualiser run={run} proportion={width} block={blocks.get(run.id)} />;
+									return (
+										<RunVisualiser
+											run={run}
+											proportion={width}
+											block={blocks.get(run.id)}
+											key={`vis-${run.id}`}
+										/>
+									);
 								})}
 							</div>
 							<div className={styles.runs}>
@@ -647,45 +661,31 @@ interface RunItemProps {
 }
 
 // Runner parsing
-function runnerParsing(runnersArray: Run["runners"]) {
-	if (runnersArray.length == 0) {
-		return <>???</>;
+function runnerParsing(runnersArray: Run["runners"], key?: string) {
+	if (runnersArray.length === 0) {
+		return <span key={key}>???</span>;
 	}
 
+	const runners = runnersArray.map((runner, i) => {
+		const { username } = runner;
+		return (
+			<a key={`${username}-${key}-${i}`} href={`/user/${username}`} target="_blank" rel="noreferrer">
+				{username}
+			</a>
+		);
+	});
+
+	const lastRunner = runners.pop();
+
 	return (
-		<div key={runnersArray[0].username}>
-			{runnersArray.map((runner, i) => {
-				const { username } = runner;
-				// If only one name or second last in the list to not include a comma
-				if (runnersArray.length === 1 || i === runnersArray.length - 2) {
-					return (
-						<a key={username} href={`/user/${username}`} target="_blank" rel="noreferrer">
-							{username}
-						</a>
-					);
-				}
-
-				// End of names
-				if (i === runnersArray.length - 1) {
-					return (
-						<>
-							<span key={`${username}-end`}> and </span>
-							<a key={username} href={`/user/${username}`} target="_blank" rel="noreferrer">
-								{username}
-							</a>
-						</>
-					);
-				}
-
-				return (
+		<div key={key}>
+			{runners.length > 0 &&
+				runners.reduce((prev, curr) => (
 					<>
-						<a key={username} href={`/user/${username}`} target="_blank" rel="noreferrer">
-							{username}
-						</a>
-						<span key={`${username}-mid`}>, </span>
+						{prev}, {curr}
 					</>
-				);
-			})}
+				))}{" "}
+			{runners.length > 0 && "and"} {lastRunner}
 		</div>
 	);
 }
@@ -779,7 +779,7 @@ const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 			<div className={styles.metaData} style={{ color: props.block?.textColour }}>
 				<span className={styles.runners}>
 					<img src={RunnerIcon.src} style={{ filter: overwriteFilter }} />
-					{run.runners.length > 0 ? runnerParsing(run.runners) : run.racer}
+					{run.runners.length > 0 ? runnerParsing(run.runners, run.id) : run.racer}
 				</span>
 				<span className={styles.estimate}>
 					<img src={EstimateIcon.src} style={{ filter: overwriteFilter }} />
@@ -798,7 +798,10 @@ const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 						<PaidIcon /> Incentives
 					</span>
 					{run.donationIncentiveObject?.map((incentive) => (
-						<span className={styles.donationIncentive} style={{ color: props.block?.textColour }}>
+						<span
+							className={styles.donationIncentive}
+							style={{ color: props.block?.textColour }}
+							key={incentive.id}>
 							{incentive.title}
 						</span>
 					))}
@@ -820,7 +823,7 @@ const RunVisualiser = ({ run, proportion, block }: { run: Run; proportion: numbe
 					<h2>{run.category}</h2>
 					<h3>
 						<img src={RunnerIcon.src} />
-						{run.runners.length > 0 ? runnerParsing(run.runners) : run.racer}
+						{run.runners.length > 0 ? runnerParsing(run.runners, `vis-run-${run.id}`) : run.racer}
 					</h3>
 				</div>
 			}

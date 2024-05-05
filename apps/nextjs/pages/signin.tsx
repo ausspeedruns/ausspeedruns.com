@@ -76,6 +76,7 @@ export const SignInPage: React.FC = () => {
 					<TextField
 						label="Email"
 						variant="outlined"
+						autoComplete="email"
 						value={email}
 						onChange={(event) => {
 							setEmail(event.target.value);
@@ -85,7 +86,8 @@ export const SignInPage: React.FC = () => {
 
 					<TextField
 						label="Password"
-						type={'password'}
+						type="password"
+						autoComplete="current-password"
 						variant="outlined"
 						value={password}
 						onChange={(event) => {

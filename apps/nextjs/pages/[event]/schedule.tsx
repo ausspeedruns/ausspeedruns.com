@@ -567,14 +567,14 @@ function generateRunItems(
 						<DateDivider date={runDay} />
 						<div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
 							<div className={styles.visualiser}>
-								{/* {yesterdayRunTime > 0 && yesterdaysFinalRun && (
+								{yesterdayRunTime > 0 && yesterdaysFinalRun && (
 									<RunVisualiser
 										run={runDays[i - 1].runs.at(-1)!}
 										proportion={(yesterdayRunTime / totalSeconds) * 100}
 										block={blocks.get(yesterdaysFinalRun.id)}
 										key={`spillover-${yesterdaysFinalRun.id}`}
 									/>
-								)} */}
+								)}
 								{runs.map((run, i) => {
 									let width =
 										(Math.max(runEstimateToSeconds(run.estimate), 300) / totalSeconds) * 100;

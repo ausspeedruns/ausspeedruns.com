@@ -112,8 +112,7 @@ const HeroBlock = ({ event, tagLine, darkText, schedule, submitRuns, ticketLink 
 					</h3>
 					<br />
 					<p>
-						{tagLine ??
-							"We will be at The Game Expo! The schedule has been released!"}
+						{tagLine}
 					</p>
 					<Button
 						actionText={event.preferredName}

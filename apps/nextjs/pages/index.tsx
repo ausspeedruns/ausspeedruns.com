@@ -106,22 +106,10 @@ export default function Home() {
 				{/* <EventLive event={"ASDH2024"} /> */}
 				<HeroBlock
 					event={ASM2024}
-					tagLine="Tickets are selling!"
+					tagLine="The schedule has been released! Get your tickets!"
 					ticketLink="/ASM2024/tickets"
+					schedule
 				/>
-				{/* <DualUpcomingEvent
-					eventA={{
-						event: ASGX2024,
-						tagLine: "The Schedule is released!",
-						ticketLink: "https://www.thegameexpo.com/",
-						schedule: true,
-					}}
-					eventB={{
-						event: ASDH2024,
-						tagLine: "Schedule for Dreamhack out soon.",
-						ticketLink: "https://dreamhack.com/australia/",
-					}}
-				/> */}
 				<LastEventBlock
 					tagLine="The turn out for DreamHack Melbourne was incredible and we loved showcasing Australia's fastest gamers there!"
 					event={ASDH2024}

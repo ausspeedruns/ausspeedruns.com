@@ -684,6 +684,8 @@ type Event {
   submissionInstructions: Event_submissionInstructions_Document
   eventPage: Event_eventPage_Document
   scheduleBlocks: JSON
+  horaro: String
+  oengus: String
 }
 
 type Event_postEventPage_Document {
@@ -767,6 +769,8 @@ input EventWhereInput {
   tickets: TicketManyRelationFilter
   volunteer: VolunteerManyRelationFilter
   donationIncentives: IncentiveManyRelationFilter
+  horaro: StringFilter
+  oengus: StringFilter
 }
 
 input FloatNullableFilter {
@@ -801,6 +805,8 @@ input EventOrderByInput {
   startDate: OrderDirection
   endDate: OrderDirection
   raised: OrderDirection
+  horaro: OrderDirection
+  oengus: OrderDirection
 }
 
 input EventUpdateInput {
@@ -832,6 +838,8 @@ input EventUpdateInput {
   submissionInstructions: JSON
   eventPage: JSON
   scheduleBlocks: JSON
+  horaro: String
+  oengus: String
 }
 
 input IncentiveRelateToManyForUpdateInput {
@@ -888,6 +896,8 @@ input EventCreateInput {
   submissionInstructions: JSON
   eventPage: JSON
   scheduleBlocks: JSON
+  horaro: String
+  oengus: String
 }
 
 input IncentiveRelateToManyForCreateInput {

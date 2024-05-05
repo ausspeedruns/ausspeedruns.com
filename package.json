@@ -26,6 +26,7 @@
 		"@mui/icons-material": "^5.15.4",
 		"@mui/material": "^5.15.4",
 		"@mui/x-date-pickers": "^6.19.0",
+		"@nx/plugin": "16.6.0",
 		"@stripe/stripe-js": "^2.3.0",
 		"@swc/helpers": "0.5.3",
 		"animejs": "^3.2.2",
@@ -60,8 +61,7 @@
 		"underscore": "^1.13.6",
 		"urql": "^4.0.6",
 		"uuid": "^9.0.1",
-		"zod": "^3.22.4",
-		"@nx/plugin": "16.6.0"
+		"zod": "^3.22.4"
 	},
 	"devDependencies": {
 		"@babel/preset-react": "^7.23.3",
@@ -70,6 +70,7 @@
 		"@nx-tools/nx-container": "^5.1.0",
 		"@nx/devkit": "16.6.0",
 		"@nx/eslint-plugin": "16.6.0",
+		"@nx/jest": "16.6.0",
 		"@nx/js": "16.6.0",
 		"@nx/linter": "16.6.0",
 		"@nx/next": "16.6.0",
@@ -129,7 +130,6 @@
 		"vite": "4.4.8",
 		"vite-plugin-eslint": "^1.8.1",
 		"vite-tsconfig-paths": "4.2.3",
-		"vitest": "0.34.1",
-		"@nx/jest": "16.6.0"
+		"vitest": "0.34.1"
 	}
 }

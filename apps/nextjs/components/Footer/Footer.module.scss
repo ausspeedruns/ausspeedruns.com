@@ -15,6 +15,7 @@
 
     ul {
       justify-content: center;
+      flex-wrap: wrap;
 
       @include breakpoint($sm-zero-only) {
         flex-direction: column;

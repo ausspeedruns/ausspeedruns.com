@@ -138,6 +138,8 @@ model Event {
   submissionInstructions        Json         @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   eventPage                     Json         @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   scheduleBlocks                Json?
+  horaro                        String       @default("")
+  oengus                        String       @default("")
   from_Post_event               Post[]       @relation("Post_event")
   from_Role_event               Role[]       @relation("Role_event")
 }

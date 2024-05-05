@@ -126,6 +126,13 @@ export const Event: Lists.Event = list({
 			},
 			componentBlocks: liveEventComponentBlocks,
 		}),
-		scheduleBlocks: scheduleBlocks(),
+		...group({
+			label: "Schedule Metadata",
+			fields: {
+				scheduleBlocks: scheduleBlocks(),
+				horaro: text(),
+				oengus: text(),
+			}
+		}),
 	}
 });

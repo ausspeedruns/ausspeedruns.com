@@ -1,4 +1,8 @@
 import {
+	Accordion,
+	AccordionDetails,
+	AccordionSummary,
+	Button,
 	Chip,
 	FormControlLabel,
 	FormGroup,
@@ -7,13 +11,19 @@ import {
 	ThemeProvider,
 	ToggleButton,
 	ToggleButtonGroup,
+	Tooltip,
+	TooltipProps,
+	styled,
+	tooltipClasses,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import PaidIcon from "@mui/icons-material/Paid";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Head from "next/head";
 import Image from "next/image";
-import { gql, ssrExchange, cacheExchange, dedupExchange, fetchExchange, useQuery } from "urql";
+import { gql, ssrExchange, cacheExchange, fetchExchange } from "urql";
 import DiscordEmbed from "../../components/DiscordEmbed";
-import { format } from "date-fns";
-import { formatInTimeZone } from "date-fns-tz";
+import { format, addSeconds } from "date-fns";
 
 import styles from "../../styles/Schedule.event.module.scss";
 import { theme } from "../../components/mui-theme";
@@ -21,7 +31,10 @@ import { useEffect, useMemo, useState } from "react";
 import { GetServerSideProps } from "next";
 import { initUrqlClient } from "next-urql";
 import { FilterRuns } from "../../components/run-utils";
-import { ScheduleBlock } from "apps/nextjs/components/ScheduleBlock/schedule-block";
+
+import ConsoleIcon from "../../styles/img/icons/console.svg";
+import RunnerIcon from "../../styles/img/icons/runner.svg";
+import EstimateIcon from "../../styles/img/icons/stopwatch.svg";
 
 export type Block = {
 	name: string;
@@ -69,6 +82,8 @@ const QUERY_EVENT = gql`
 				scheduledTime
 			}
 			scheduleBlocks
+			oengus
+			horaro
 		}
 	}
 `;
@@ -110,6 +125,8 @@ interface QUERY_EVENT_RESULTS {
 			scheduledTime: string;
 		}[];
 		scheduleBlocks: string;
+		oengus: string;
+		horaro: string;
 	};
 }
 
@@ -124,6 +141,8 @@ const SETTINGS = {
 	},
 	liveRunId: "",
 };
+
+type Run = QUERY_EVENT_RESULTS["event"]["runs"][number] & { order: number };
 
 type EventScheduleProps = {
 	event: QUERY_EVENT_RESULTS["event"];
@@ -233,6 +252,10 @@ export default function EventSchedule({ event }: EventScheduleProps) {
 		}
 	}, [currentTime, event.endDate, event.startDate, settings, event.runs]);
 
+	const runsWithOrder = event.runs.map((run, i) => {
+		return { ...run, order: i };
+	});
+
 	return (
 		<ThemeProvider theme={theme}>
 			<Head>
@@ -263,52 +286,53 @@ export default function EventSchedule({ event }: EventScheduleProps) {
 						{format(new Date(event.startDate), "dd MMMM")} – {format(new Date(event.endDate), "dd MMMM")}
 					</p>
 				</header>
-				<div className={styles.columns}>
-					<div className={styles.scheduleContainer}>
-						<section className={styles.scheduleKey}>
-							<h4>Schedule Key</h4>
-							<header className={styles.scheduleHeader}>
-								<span className={[styles.topRow, styles.notLast].join(" ")}>Time</span>
-								<span className={[styles.topRow, styles.notLast].join(" ")}>Game</span>
-								<span className={[styles.topRow, styles.notLast].join(" ")}>Category</span>
-								<span className={styles.topRow}>Runners</span>
-								<span className={styles.notLast}>Estimate (HH:MM:SS)</span>
-								<span className={styles.notLast}>Platform</span>
-								<span className={styles.donationIncentive}>Donation Incentive</span>
-							</header>
-						</section>
-						{currentRunIndex > -1 && (
-							<section className={styles.currentRun}>
-								<h3>Currently Running</h3>
-								<RunItem
-									run={event.runs[currentRunIndex]}
-									eventTimezone={event.eventTimezone}
-									showLocalTime={settings.showLocalTime}
-								/>
-							</section>
-						)}
-						<div className={styles.schedule}>
-							{generateRunItems(event.runs, settings, event.eventTimezone, scheduleBlocks)}
-						</div>
-					</div>
-					<aside className={styles.info}>
-						<h3>Filters</h3>
-						<FormGroup>
-							<FormControlLabel
-								className={styles.localTimeToggle}
-								control={
-									<Switch
-										onChange={(e) =>
-											setSettings({
-												...settings,
-												showLocalTime: e.target.checked,
-											})
-										}
-									/>
+				<FormGroup>
+					<FormControlLabel
+						className={styles.localTimeToggle}
+						control={
+							<Switch
+								onChange={(e) =>
+									setSettings({
+										...settings,
+										showLocalTime: e.target.checked,
+									})
 								}
-								label={`Show in Event Time? (${event.eventTimezone})`}
 							/>
-						</FormGroup>
+						}
+						label={`Show in Event Time? (${event.eventTimezone})`}
+					/>
+				</FormGroup>
+				<div className={styles.externalSchedules}>
+					{event.horaro && (
+						<Button
+							variant="outlined"
+							endIcon={<OpenInNewIcon />}
+							href={event.horaro}
+							target="_blank"
+							rel="noopener noreferrer">
+							Horaro
+						</Button>
+					)}
+					{event.oengus && (
+						<Button
+							variant="outlined"
+							endIcon={<OpenInNewIcon />}
+							href={event.oengus}
+							target="_blank"
+							rel="noopener noreferrer">
+							Oengus
+						</Button>
+					)}
+				</div>
+				<Accordion className={styles.info}>
+					<AccordionSummary expandIcon={<ExpandMoreIcon />}>Filters</AccordionSummary>
+					<TextField
+						label="Search Game, Runner, Category"
+						value={settings.filter.search}
+						onChange={handleSearchChange}
+						fullWidth
+					/>
+					<AccordionDetails>
 						<div className={styles.runType}>
 							<span>Run Type</span>
 							<ToggleButtonGroup
@@ -325,21 +349,50 @@ export default function EventSchedule({ event }: EventScheduleProps) {
 									Co-op
 								</ToggleButton>
 								<ToggleButton value="donationIncentive" aria-label="Donation Incentive">
-									Donation Incentives
+									Has Donation Incentives
 								</ToggleButton>
 							</ToggleButtonGroup>
 						</div>
-						<TextField
-							label="Search"
-							value={settings.filter.search}
-							onChange={handleSearchChange}
-							fullWidth
-						/>
 						<div className={styles.consoleFilters}>
-							<span>Platform</span>
+							<span>Console</span>
 							<div className={styles.consoleList}>{consoleFilterElements}</div>
 						</div>
-					</aside>
+					</AccordionDetails>
+				</Accordion>
+				<div className={styles.scheduleContainer}>
+					{currentRunIndex > -1 && (
+						<section className={styles.currentRun}>
+							<h3>Currently Running</h3>
+							<RunItem
+								run={runsWithOrder[currentRunIndex]}
+								eventTimezone={event.eventTimezone}
+								showLocalTime={settings.showLocalTime}
+							/>
+						</section>
+					)}
+					<div className={styles.schedule}>
+						<div className={styles.dayButtons}>
+							{getAllDays(runsWithOrder, event.eventTimezone, settings.showLocalTime).map((day) => {
+								const date = new Date(day);
+								return (
+									<Button
+										variant="outlined"
+										fullWidth
+										onClick={() => {
+											const dayElement = document.querySelector(`#day-${date.getTime() / 1000}`);
+											if (dayElement != null) {
+												dayElement.scrollIntoView({ behavior: "smooth", block: "start" });
+											}
+										}}>
+										{format(date, "EEEE")}
+										<br />
+										{format(date, "LLL d")}
+									</Button>
+								);
+							})}
+						</div>
+						{generateRunItems(runsWithOrder, settings, event.eventTimezone, scheduleBlocks)}
+					</div>
 				</div>
 			</main>
 		</ThemeProvider>
@@ -380,13 +433,8 @@ function generateSubmissionBlockMap(blocks: Block[], allRuns: QUERY_EVENT_RESULT
 	return blockRunMap;
 }
 
-function getRunDate(scheduledTime: string, localTime?: string) {
-	return parseInt(
-		new Date(scheduledTime).toLocaleDateString(undefined, {
-			timeZone: localTime,
-			day: "numeric",
-		}),
-	);
+function runEstimateToSeconds(estimate: string) {
+	return estimate.split(":").reduce((acc, time) => 60 * acc + parseInt(time), 0);
 }
 
 enum BorderState {
@@ -395,116 +443,215 @@ enum BorderState {
 	IN_BLOCK,
 }
 
+function getAllDays(runs: Run[], eventTimezone: string, showLocalTime: boolean) {
+	let days: string[] = [];
+
+	for (let i = 0; i < runs.length; i++) {
+		const runDate = new Date(runs[i].scheduledTime).toLocaleString("en-US", {
+			timeZone: showLocalTime ? eventTimezone : undefined,
+			day: "numeric",
+			month: "numeric",
+			year: "numeric",
+		});
+
+		if (!days.includes(runDate)) {
+			days.push(runDate);
+		}
+	}
+
+	const sortedDays = days.sort((a, b) => {
+		const dateA = new Date(a);
+		const dateB = new Date(b);
+		return dateA.getTime() - dateB.getTime();
+	});
+
+	return days;
+}
+
+function runsToDays(runs: Run[], eventTimezone: string, showLocalTime: boolean) {
+	let days: Record<string, Run[]> = {};
+
+	for (let i = 0; i < runs.length; i++) {
+		const run = runs[i];
+		const runDate = new Date(run.scheduledTime).toLocaleString("en-US", {
+			timeZone: showLocalTime ? eventTimezone : undefined,
+			day: "numeric",
+			month: "numeric",
+			year: "numeric",
+		});
+
+		if (runDate in days) {
+			days[runDate].push(run);
+		} else {
+			days[runDate] = [run];
+		}
+	}
+
+	const sortedDays = Object.entries(days).sort((a, b) => {
+		const dateA = new Date(a[0]);
+		const dateB = new Date(b[0]);
+		return dateA.getTime() - dateB.getTime();
+	});
+
+	return sortedDays.map(([day, runs]) => ({
+		day,
+		runs,
+	}));
+}
+
+const RunHover = styled(({ className, odd, block, ...props }: TooltipProps & { odd: boolean; block?: Block }) => (
+	<Tooltip {...props} classes={{ popper: className }} />
+))(({ odd, block }) => ({
+	[`& .${tooltipClasses.tooltip}`]: {
+		backgroundColor: block?.colour ? `${block.colour}a6` : odd ? "#cc7722a6" : "#437c90a6",
+		color: block?.textColour ? block.textColour : "#fff",
+		border: `1px solid ${block?.colour ? block.colour : odd ? "#cc7722" : "#437c90"}`,
+		backdropFilter: "blur(10px)",
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+		maxWidth: 500,
+	},
+}));
+
 function generateRunItems(
-	sortedRuns: QUERY_EVENT_RESULTS["event"]["runs"],
+	sortedRuns: Run[],
 	settings: typeof SETTINGS,
 	eventTimezone: string,
 	blocks: Map<string, Block>,
 ) {
-	let prevDate = 0;
-
 	const filteredRuns = FilterRuns(sortedRuns, settings.filter);
-	const runs: JSX.Element[] = [];
+	const runDays = runsToDays(filteredRuns, eventTimezone, settings.showLocalTime);
 
-	let blockRuns: JSX.Element[] = [];
-	let scheduleBlockData: Block | undefined;
-	let removedBorder: BorderState = BorderState.KEEP_BORDER;
-	let previousBlockData: Block | undefined;
+	return (
+		<div className={styles.day}>
+			{runDays.map(({ day, runs }, i) => {
+				let yesterdayRunTime = 0;
 
-	for (let index = 0; index < filteredRuns.length; index++) {
-		const run = filteredRuns[index];
-		const runDate = getRunDate(run.scheduledTime, settings.showLocalTime ? eventTimezone : undefined);
-		const nextRunDate = filteredRuns[index + 1]
-			? getRunDate(filteredRuns[index + 1].scheduledTime, settings.showLocalTime ? eventTimezone : undefined)
-			: runDate;
+				if (i != 0) {
+					const yesterdaysFinalRun = runDays[i - 1].runs.at(-1);
 
-		scheduleBlockData = blocks.get(run.id);
+					if (yesterdaysFinalRun) {
+						const endOfYesterdayRun = addSeconds(
+							new Date(yesterdaysFinalRun.scheduledTime),
+							runEstimateToSeconds(yesterdaysFinalRun.estimate),
+						);
 
-		// Check if we are on a new block, if we are in one check if we were previously in one and post it
-		if (scheduleBlockData !== previousBlockData && previousBlockData) {
-			runs.push(
-				<ScheduleBlock key={previousBlockData.startRunId + run.id} block={previousBlockData}>
-					{blockRuns}
-				</ScheduleBlock>,
-			);
+						const startOfFirstRun = new Date(runs[0].scheduledTime);
 
-			// Reset for next block
-			blockRuns = [];
-		}
+						const timeBetweenRuns = new Date(startOfFirstRun.getTime() - endOfYesterdayRun.getTime());
+						const timeBetweenRunsSeconds = timeBetweenRuns.getTime() / (1000 * 60);
 
-		if (scheduleBlockData) removedBorder = BorderState.KEEP_BORDER;
-		if (!scheduleBlockData && blocks.get(filteredRuns[index + 1]?.id)) removedBorder = BorderState.REMOVE_BORDER;
+						if (timeBetweenRunsSeconds <= 30) {
+							// Within 30 minutes, calculate the time difference to add to the start of the day
+							const startOfToday = new Date(
+								startOfFirstRun.getFullYear(),
+								startOfFirstRun.getMonth(),
+								startOfFirstRun.getDate(),
+							);
+							const yesterdayRunExtraTime = endOfYesterdayRun.getTime() - startOfToday.getTime();
+							yesterdayRunTime = yesterdayRunExtraTime / 1000;
+						}
+					}
+				}
 
-		if (prevDate !== runDate) {
-			// End block if we're at a new day
-			// And check that we have runs to post as well... Goodbye Reginald o7
-			if (scheduleBlockData && blockRuns.length > 0) {
-				runs.push(<ScheduleBlock block={scheduleBlockData}>{blockRuns}</ScheduleBlock>);
-				blockRuns = [];
-			}
+				const totalSeconds =
+					runs.reduce((acc, run) => acc + Math.max(runEstimateToSeconds(run.estimate), 300), 0) +
+					yesterdayRunTime;
+				const runDay = new Date(day);
 
-			runs.push(
-				<DateDivider
-					date={new Date(run.scheduledTime)}
-					showLocalTime={settings.showLocalTime}
-					eventTimezone={eventTimezone}
-					key={runDate}
-				/>,
-			);
-		}
+				return (
+					<div key={runDay.getTime()} id={`day-${runDay.getTime() / 1000}`} style={{ height: "fit-content" }}>
+						<DateDivider date={runDay} />
+						<div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+							<div className={styles.visualiser}>
+								{yesterdayRunTime > 0 && (
+									<RunVisualiser
+										run={runDays[i - 1].runs.at(-1)!}
+										proportion={(yesterdayRunTime / totalSeconds) * 100}
+									/>
+								)}
+								{runs.map((run, i) => {
+									let width =
+										(Math.max(runEstimateToSeconds(run.estimate), 300) / totalSeconds) * 100;
 
-		(scheduleBlockData ? blockRuns : runs).push(
-			<RunItem
-				key={run.id}
-				run={run}
-				showLocalTime={settings.showLocalTime}
-				eventTimezone={eventTimezone}
-				isLive={settings.liveRunId === run.id}
-				style={{
-					border: removedBorder === BorderState.REMOVE_BORDER || runDate !== nextRunDate ? "none" : "",
-					borderColor: scheduleBlockData ? scheduleBlockData.colour : "",
-				}}
-			/>,
-		);
+									if (i == runs.length - 1) {
+										// If the run goes to the next day, subtract the overlap
 
-		prevDate = runDate;
-		previousBlockData = scheduleBlockData;
-	}
+										const runScheduledTime = new Date(run.scheduledTime);
+										const finalRunEndTime = addSeconds(
+											runScheduledTime,
+											runEstimateToSeconds(run.estimate),
+										);
 
-	if (blockRuns.length > 0 && previousBlockData) {
-		runs.push(
-			<ScheduleBlock key={previousBlockData.startRunId} block={previousBlockData}>
-				{blockRuns}
-			</ScheduleBlock>,
-		);
-	}
+										const nextDay = new Date(
+											runScheduledTime.getFullYear(),
+											runScheduledTime.getMonth(),
+											runScheduledTime.getDate(),
+										);
 
-	return runs;
+										nextDay.setDate(nextDay.getDate() + 1);
+
+										if (nextDay.getDate() === finalRunEndTime.getDate()) {
+											const overlapTime = nextDay.getTime() - finalRunEndTime.getTime();
+											const overlapSeconds = overlapTime / 1000;
+											width =
+												((runEstimateToSeconds(run.estimate) - overlapSeconds) / totalSeconds) *
+												100;
+										}
+									}
+
+									return <RunVisualiser run={run} proportion={width} block={blocks.get(run.id)} />;
+								})}
+							</div>
+							<div className={styles.runs}>
+								{runs.map((run) => (
+									<RunItem
+										key={run.id}
+										run={run}
+										showLocalTime={settings.showLocalTime}
+										eventTimezone={eventTimezone}
+										isLive={settings.liveRunId === run.id}
+										block={blocks.get(run.id)}
+									/>
+								))}
+							</div>
+						</div>
+					</div>
+				);
+			})}
+		</div>
+	);
 }
 
 interface DateDividerProps {
 	date: Date;
-	showLocalTime: boolean;
-	eventTimezone: string;
 }
 
 const DateDivider: React.FC<DateDividerProps> = (props: DateDividerProps) => {
-	const dateString = props.showLocalTime
-		? formatInTimeZone(props.date, props.eventTimezone, "EEEE do, MMMM")
-		: format(props.date, "EEEE do, MMMM");
-	return <div className={styles.dateDivider}>{dateString}</div>;
+	const dateString = format(props.date, "EEEE do, MMMM");
+	return (
+		<div className={styles.dateDivider} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+			{dateString}
+		</div>
+	);
 };
 
 interface RunItemProps {
-	run: QUERY_EVENT_RESULTS["event"]["runs"][0];
+	run: Run;
 	showLocalTime: boolean;
 	eventTimezone: string;
 	isLive?: boolean;
+	block?: Block;
 	style?: React.CSSProperties;
 }
 
 // Runner parsing
-function runnerParsing(runnersArray: QUERY_EVENT_RESULTS["event"]["runs"][0]["runners"]) {
+function runnerParsing(runnersArray: Run["runners"]) {
+	if (runnersArray.length == 0) {
+		return <>???</>;
+	}
+
 	return (
 		<div key={runnersArray[0].username}>
 			{runnersArray.map((runner, i) => {
@@ -559,7 +706,7 @@ const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 			})
 		: new Date(run.scheduledTime).toLocaleTimeString("en-AU", runItemOptions);
 
-	if (convertedTimezone[0] === "0") convertedTimezone = " " + convertedTimezone.substring(1);
+	if (convertedTimezone[0] === "0") convertedTimezone = convertedTimezone.substring(1);
 
 	if (run.game === "Setup Buffer") {
 		return (
@@ -570,8 +717,8 @@ const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 	}
 
 	let categoryExtras = <></>;
-	if (run.race) categoryExtras = <span className={styles.categoryExtras}>RACE </span>;
-	if (run.coop) categoryExtras = <span className={styles.categoryExtras}>CO-OP </span>;
+	if (run.race) categoryExtras = <span className={styles.categoryExtras}>RACE</span>;
+	if (run.coop) categoryExtras = <span className={styles.categoryExtras}>CO-OP</span>;
 
 	const runClassNames = [styles.run];
 	if (props.isLive) runClassNames.push(styles.liveRun);
@@ -579,25 +726,101 @@ const RunItem: React.FC<RunItemProps> = (props: RunItemProps) => {
 	const estimateSplit = run.estimate.split(":");
 	const hours = parseInt(estimateSplit[0]);
 	const minutes = parseInt(estimateSplit[1]);
-	const formattedHours = hours === 0 ? " 0" : hours < 10 ? ` ${hours}` : hours.toString().padStart(2, " ");
+	const formattedHours = hours.toString();
 	const formattedMinutes = minutes.toString().padStart(2, "0");
 	const estimateText = `${formattedHours}:${formattedMinutes}:00`;
 
+	// Bad hardcoding bad!
+	let overwriteFilter;
+	if (props.block) {
+		if (props.block.textColour === "#ffffff") {
+			overwriteFilter = "invert(100%)";
+		} else {
+			overwriteFilter = "unset";
+		}
+	}
+
 	return (
-		<div className={runClassNames.join(" ")} key={run.id} style={props.style}>
-			<span className={styles.time}>{convertedTimezone}</span>
+		<div
+			className={runClassNames.join(" ")}
+			key={run.id}
+			style={{ background: props.block?.colour, color: props.block?.textColour, ...props.style }}
+			id={run.id}
+			run-odd={`${run.order % 2 != 0}`}>
+			<span className={styles.time} style={props.block && { background: "white", color: "black" }}>
+				{convertedTimezone}
+			</span>
+			{props.block?.name && <span className={styles.blockName}>{props.block?.name}</span>}
 			<span className={styles.game}>{run.game}</span>
-			<span className={styles.category}>
+			<span className={styles.category} style={{ color: props.block?.textColour }}>
 				{categoryExtras}
 				{run.category}
 			</span>
-			<span className={styles.runners}>{run.runners.length > 0 ? runnerParsing(run.runners) : run.racer}</span>
-			<span className={styles.estimate}>{estimateText}</span>
-			<span className={styles.platform}>{run.platform}</span>
-			<span className={styles.donationIncentive}>
-				{run.donationIncentiveObject?.map((incentive) => incentive.title).join(" | ")}
-			</span>
+			<div className={styles.metaData} style={{ color: props.block?.textColour }}>
+				<span className={styles.runners}>
+					<img src={RunnerIcon.src} style={{ filter: overwriteFilter }} />
+					{run.runners.length > 0 ? runnerParsing(run.runners) : run.racer}
+				</span>
+				<span className={styles.estimate}>
+					<img src={EstimateIcon.src} style={{ filter: overwriteFilter }} />
+					{estimateText}
+				</span>
+				<span className={styles.platform}>
+					<img src={ConsoleIcon.src} style={{ filter: overwriteFilter }} />
+					{run.platform}
+				</span>
+			</div>
+			{run.donationIncentiveObject && run.donationIncentiveObject.length > 0 && (
+				<div
+					className={styles.donationIncentives}
+					style={{ color: props.block?.textColour, borderColor: props.block && "white" }}>
+					<span className={styles.title}>
+						<PaidIcon /> Incentives
+					</span>
+					{run.donationIncentiveObject?.map((incentive) => (
+						<span className={styles.donationIncentive} style={{ color: props.block?.textColour }}>
+							{incentive.title}
+						</span>
+					))}
+				</div>
+			)}
 		</div>
+	);
+};
+
+const RunVisualiser = ({ run, proportion, block }: { run: Run; proportion: number; block?: Block }) => {
+	const oddRun = run.order % 2 != 0;
+
+	return (
+		<RunHover
+			title={
+				<div className={styles.visualiserTooltip}>
+					{block && <h3>{block.name}</h3>}
+					<h1>{run.game}</h1>
+					<h2>{run.category}</h2>
+					<h3>
+						<img src={RunnerIcon.src} />
+						{run.runners.length > 0 ? runnerParsing(run.runners) : run.racer}
+					</h3>
+				</div>
+			}
+			run-odd={oddRun.toString()}
+			odd={oddRun}
+			block={block}>
+			<div
+				className={styles.visualiserRun}
+				style={{
+					width: `calc(${proportion}% - 1px)`,
+					background: block && block.colour,
+				}}
+				onClick={() => {
+					const runElement = document.querySelector(`#${run.id}`);
+					if (runElement != null) {
+						runElement.scrollIntoView({ behavior: "smooth", block: "center" });
+					}
+				}}
+			/>
+		</RunHover>
 	);
 };
 
@@ -609,7 +832,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 				process.env.NODE_ENV === "production"
 					? "https://keystone.ausspeedruns.com/api/graphql"
 					: "http://localhost:8000/api/graphql",
-			exchanges: [dedupExchange, cacheExchange, ssrCache, fetchExchange],
+			exchanges: [cacheExchange, ssrCache, fetchExchange],
 		},
 		false,
 	);

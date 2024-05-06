@@ -6,7 +6,6 @@ import Link from "next/link";
 import {
 	gql,
 	ssrExchange,
-	dedupExchange,
 	cacheExchange,
 	fetchExchange,
 } from "urql";
@@ -180,7 +179,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 				process.env.NODE_ENV === "production"
 					? "https://keystone.ausspeedruns.com/api/graphql"
 					: "http://localhost:8000/api/graphql",
-			exchanges: [dedupExchange, cacheExchange, ssrCache, fetchExchange],
+			exchanges: [cacheExchange, ssrCache, fetchExchange],
 		},
 		false,
 	);

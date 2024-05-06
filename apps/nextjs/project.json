@@ -46,16 +46,12 @@
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
 			"options": {
-				"jestConfig": "apps/nextjs/jest.config.ts",
-				"passWithNoTests": true
+				"jestConfig": "apps/nextjs/jest.config.ts"
 			}
 		},
 		"lint": {
-			"executor": "@nx/linter:eslint",
-			"outputs": ["{options.outputFile}"],
-			"options": {
-				"lintFilePatterns": ["apps/nextjs/**/*.{ts,tsx,js,jsx}"]
-			}
+			"executor": "@nx/eslint:lint",
+			"outputs": ["{options.outputFile}"]
 		},
 		"container": {
 			"executor": "@nx-tools/nx-container:build",

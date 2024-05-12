@@ -854,7 +854,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			url:
 				process.env.NODE_ENV === "production"
 					? "https://keystone.ausspeedruns.com/api/graphql"
-					: "https://keystone.ausspeedruns.com/api/graphql",
+					: "http://localhost:8000/api/graphql",
 			exchanges: [cacheExchange, ssrCache, fetchExchange],
 		},
 		false,

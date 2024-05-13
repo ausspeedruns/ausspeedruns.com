@@ -9,9 +9,9 @@ import styles from '../styles/SignIn.module.scss';
 import { theme } from '../components/mui-theme';
 import DiscordEmbed from '../components/DiscordEmbed';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import sub from 'date-fns/sub';
-import enLocale from 'date-fns/locale/en-AU';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { sub } from 'date-fns';
+import { enAU } from 'date-fns/locale';
 
 function HumanErrorMsg(error: string) {
 	switch (error) {
@@ -104,7 +104,7 @@ export default function SignUpPage() {
 						helperText="Letters, numbers, underscores and hyphens allowed. 3-25 Characters."
 						inputProps={{ maxLength: 25 }}
 					/>
-					<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enLocale}>
+					<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enAU}>
 						<DatePicker
 							value={dob}
 							onChange={(newValue) => {

@@ -11,9 +11,9 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import enLocale from 'date-fns/locale/en-AU';
-import sub from 'date-fns/sub';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { enAU } from 'date-fns/locale';
+import { sub } from 'date-fns';
 
 const DiscordRegex = /^(.{3,32}#[0-9]{4}|[a-z0-9._]{2,32})?$/;
 const TwitterRegex = /^@(\w){1,15}$/;
@@ -229,7 +229,7 @@ export default function EditUser() {
 							inputProps={{ maxLength: 100 }}
 						/>
 						<div>Date of birth</div>
-						<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enLocale}>
+						<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enAU}>
 							<DatePicker
 								value={new Date(dateOfBirth || Date.now())}
 								onChange={(newValue) => {

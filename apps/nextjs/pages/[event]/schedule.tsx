@@ -142,6 +142,11 @@ const SETTINGS = {
 	liveRunId: "",
 };
 
+const WrappableChip = styled(Chip)(({theme}) => ({
+    padding: theme.spacing(1), height: '100%', display: 'flex', flexDirection: 'row',
+    '& .MuiChip-label': { overflowWrap: 'break-word', whiteSpace: 'normal', textOverflow: 'clip' }
+}))
+
 type Run = QUERY_EVENT_RESULTS["event"]["runs"][number] & { order: number };
 
 type EventScheduleProps = {
@@ -219,7 +224,7 @@ export default function EventSchedule({ event }: EventScheduleProps) {
 	const consoleFilterElements = [...new Set(event.runs.map((item) => item.platform))].sort().map((console) => {
 		if (console === "?") return <></>;
 		return (
-			<Chip
+			<WrappableChip
 				key={console}
 				color={settings.filter.console.includes(console.toLowerCase()) ? "primary" : "default"}
 				label={console}
@@ -854,7 +859,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			url:
 				process.env.NODE_ENV === "production"
 					? "https://keystone.ausspeedruns.com/api/graphql"
-					: "http://localhost:8000/api/graphql",
+					: "https://keystone.ausspeedruns.com/api/graphql",
+					// : "http://localhost:8000/api/graphql",
 			exchanges: [cacheExchange, ssrCache, fetchExchange],
 		},
 		false,

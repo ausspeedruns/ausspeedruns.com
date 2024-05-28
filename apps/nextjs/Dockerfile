@@ -7,7 +7,7 @@ COPY dist/apps/nextjs/package.json ./
 RUN npm install --omit=dev && npm install sharp@^0.31.2
 
 # Production image, copy all the files and run next
-FROM node:18.12.1-alpine as runner
+FROM node:20.13.1-alpine as runner
 LABEL maintainer="Ewan Lyon <ewan.lyon@ausspeedruns.com>"
 RUN apk add --no-cache dumb-init
 ENV NODE_ENV production

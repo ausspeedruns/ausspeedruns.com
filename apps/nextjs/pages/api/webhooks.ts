@@ -50,7 +50,7 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
         stripe.checkout.sessions.listLineItems(checkout.id, {}).then(data => {
           console.log(JSON.stringify(data))
           // This is mega dumb btw
-          if (data.data[0].description === "ASM2023 Shirt") {
+          if (data.data[0].description === "ASM2024 Shirt") {
             // SHIRT
             fulfilShirtOrder(checkout.id);
           } else if (data.data[0].description === "ASM2023 Bundle") {
@@ -77,8 +77,7 @@ const webhookHandler = async (req: IncomingMessage, res: any) => {
 
 const fulfilOrder = async (sessionID: any) => {
   // Update ticket information
-  console.log(`AAAAAAAAAAAAAAA ${sessionID}`);
-  const mutRes = await urqlClient.mutation(gql`
+  await urqlClient.mutation(gql`
     mutation ($sessionID: String!, $apiKey: String!) {
       confirmStripe(stripeID: $sessionID, apiKey: $apiKey) {
         __typename
@@ -91,7 +90,7 @@ export default cors(webhookHandler);
 
 async function fulfilShirtOrder(sessionID: any) {
   // Update shirt information
-  const mutRes = await urqlClient.mutation(gql`
+  await urqlClient.mutation(gql`
     mutation ($sessionID: String!, $apiKey: String!) {
       confirmShirtStripe(stripeID: $sessionID, apiKey: $apiKey) {
         __typename
@@ -102,7 +101,7 @@ async function fulfilShirtOrder(sessionID: any) {
 
 async function fulfilBundleOrder(sessionID: any) {
   // Update shirt information
-  const mutRes = await urqlClient.mutation(gql`
+  await urqlClient.mutation(gql`
     mutation ($sessionID: String!, $apiKey: String!) {
       confirmShirtStripe(stripeID: $sessionID, apiKey: $apiKey) {
         __typename

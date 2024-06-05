@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			}
 
 			// Check valid shirt size
-			if (!req.query.size || Array.isArray(req.query.size) || !['m', 'l', 'xl', 'xl2', 'xl3', 'xl4'].includes(req.query.size)) {
+			if (!req.query.size || Array.isArray(req.query.size) || !['s', 'm', 'l', 'xl', 'xl2', 'xl3', 'xl4'].includes(req.query.size)) {
 				throw new Error('Invalid Size');
 			}
 
@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				line_items: [
 					{
 						// Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-						price: 'ASM2023SHIRT',
+						price: 'price_1PNuceKT8G4cNWT5B4zcKH8f',
 						quantity: 1,
 					},
 				],

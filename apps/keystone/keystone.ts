@@ -110,12 +110,6 @@ export default withAuth(
             },
             resolve(source, { apiKey, stripeID }, context: Context) {
               if (apiKey !== process.env.API_KEY) throw new Error("Incorrect API Key");
-              // if (apiKey !== process.env.API_KEY) {
-              //   // Debug only
-              //   console.log(`Tried to confirm stripe but had an API key error. Got ${apiKey}, expected ${process.env.API_KEY}`);
-              //   return;
-              // }
-              console.log('bruh');
               return context.sudo().db.Ticket.updateOne({
                 where: { stripeID },
                 data: { paid: true }

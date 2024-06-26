@@ -17,11 +17,11 @@ import {
 import styles from "../styles/about.module.scss";
 import ASRLogo from "../styles/img/AusSpeedruns-Logo-Full-White.svg";
 import ASMLogo from "../styles/img/about/ASMLogo.svg";
-import TGXLogo from "../styles/img/about/TGXLogo.png";
+import DHLogo from "../styles/img/about/DreamHack_Logo_RGB_WHITE.svg";
 import PAXLogo from "../styles/img/about/PAXLogo.png";
-import PAXBackground from "../styles/img/about/IMG_5264.jpg";
-import ASMBackground from "../styles/img/about/IMG_4740.jpg";
-import TGXBackground from "../styles/img/about/37702952_1429746967125476_8025977769395486720_n.jpg";
+import PAXBackground from "../styles/img/about/IMG_0059.jpg";
+import ASMBackground from "../styles/img/about/IMG_9222.jpg";
+import DHBackground from "../styles/img/about/DSC_0894.jpg";
 import AllCharities from "../styles/img/about/AllCharities.png";
 
 import HeroImage1 from "../styles/img/about/IMG_5192.jpg";
@@ -58,14 +58,6 @@ function useOnScreen(ref: RefObject<HTMLElement>) {
 	const [isIntersecting, setIntersecting] = useState(false);
 
 	let observer: IntersectionObserver | null = null;
-
-	// const observer = useMemo(
-	// 	() =>
-	// 		new IntersectionObserver(([entry]) =>
-	// 			setIntersecting(entry.isIntersecting),
-	// 		),
-	// 	[ref],
-	// );
 
 	useEffect(() => {
 		if (ref.current) {
@@ -203,9 +195,9 @@ export default function Home() {
 					<div
 						className={styles.event}
 						style={{
-							backgroundImage: `url(${TGXBackground.src})`,
+							backgroundImage: `url(${DHBackground.src})`,
 						}}>
-						<Image src={TGXLogo} alt="TGX Logo" height={125} />
+						<Image src={DHLogo} alt="TGX Logo" height={125} width={500} />
 					</div>
 					<div
 						className={styles.event}

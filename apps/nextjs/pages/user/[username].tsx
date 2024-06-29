@@ -387,7 +387,7 @@ export default function ProfilePage(ssrData: ServerSideProps) {
 						<Box>
 							<Tabs
 								value={submissionTab}
-								onChange={(_e, newVal) =>
+								onChange={(_e: any, newVal: number) =>
 									setSubmissionTab(newVal)
 								}
 								aria-label="basic tabs example">
@@ -463,7 +463,7 @@ export default function ProfilePage(ssrData: ServerSideProps) {
 					<Box>
 						<Tabs
 							value={eventTab}
-							onChange={(_e, newVal) => setEventTab(newVal)}
+							onChange={(_e: any, newVal: number) => setEventTab(newVal)}
 							variant="scrollable">
 							{allRunEvents.reverse().map((event) => (
 								<Tab label={event} key={event} />

@@ -120,9 +120,7 @@ export function TicketProduct() {
 
 		setGenTicketLoading(true);
 		const res = await fetch(
-			`/api/create_bank_ticket?account=${
-				auth.ready ? auth?.sessionData?.id : ""
-			}&tickets=1&event=ASM2024`,
+			`/api/create_bank_ticket?account=${auth.ready ? auth?.sessionData?.id : ""}&tickets=1&event=ASM2024`,
 		);
 
 		if (res.status === 200) {
@@ -139,16 +137,14 @@ export function TicketProduct() {
 
 	return (
 		<div className={styles.product}>
-			<Image
-				alt="A mosaic of images taken from ASM2023"
-				src={ASM2024Tickets}
-				className={styles.productImage}
-			/>
+			<Image alt="A mosaic of images taken from ASM2023" src={ASM2024Tickets} className={styles.productImage} />
 			<div className={styles.information}>
 				<section>
 					<h2>Ticket Information</h2>
 					<p>Ticket to ASM2024 taking place in Adelaide, July 16-21.</p>
-					<p>Ticket price: <b>${TICKET_PRICE} AUD</b>.</p>
+					<p>
+						Ticket price: <b>${TICKET_PRICE} AUD</b>.
+					</p>
 					<p>
 						All attendees, including runners and staff must purchase tickets to attend the event. Volunteers
 						will receive a $15 rebate administered on site at ASM2024.
@@ -189,8 +185,7 @@ export function TicketProduct() {
 							fullWidth
 							disabled={disableBank}
 							onClick={generateTickets}>
-							Generate Ticket $
-							{TICKET_PRICE}
+							Generate Ticket ${TICKET_PRICE}
 						</Button>
 					</div>
 					{bankTicketsData?.error && (

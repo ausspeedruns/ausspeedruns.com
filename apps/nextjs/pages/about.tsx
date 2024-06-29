@@ -20,7 +20,7 @@ import ASMLogo from "../styles/img/about/ASMLogo.svg";
 import DHLogo from "../styles/img/about/DreamHack_Logo_RGB_WHITE.svg";
 import PAXLogo from "../styles/img/about/PAXLogo.png";
 import PAXBackground from "../styles/img/about/IMG_0059.jpg";
-import ASMBackground from "../styles/img/about/IMG_9222.jpg";
+import ASMBackground from "../styles/img/about/IMG_9222-edited.jpg";
 import DHBackground from "../styles/img/about/DSC_0894.jpg";
 import AllCharities from "../styles/img/about/AllCharities.png";
 

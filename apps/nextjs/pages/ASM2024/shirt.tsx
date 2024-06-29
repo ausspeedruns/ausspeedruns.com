@@ -138,7 +138,7 @@ const Shirt = () => {
 								Selling out June 16th 23:59 ACST.
 							</p>
 							<p>The official shirt for the Australian Speedrun Marathon 2024.</p>
-							<p>
+							<p>6
 								Please note that all ASM2024 Shirt purchases{" "}
 								<b>must be collected at the ASM2024 event</b>. No shipping will be offered.
 							</p>

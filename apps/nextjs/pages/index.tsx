@@ -19,6 +19,7 @@ import DualUpcomingEvent from "../components/DualUpcomingEvent/DualUpcomingEvent
 import { useMediaQuery } from "@mui/material";
 
 import DreamhackLogo from "../styles/img/events/asdh24/DreamHack24Logo.png";
+import ASM24HeroBlock from "../components/Heroblock/ASM24Hero";
 
 // TODO: Move this stuff to keystone
 const ASM2023: AusSpeedrunsEvent = {
@@ -90,6 +91,19 @@ const ASM2024: AusSpeedrunsEvent = {
 	heroImage: "events/asm24/asm24-hero-temp.png",
 };
 
+const ASAP2024: AusSpeedrunsEvent = {
+	fullName: "AusSpeedruns At PAX 2024",
+	preferredName: "ASAP2024",
+	shortName: "ASAP2024",
+	startDate: "11 October 2024 09:00:00 GMT+0100",
+	dates: "October 11 - 13, 2024",
+	charity: {
+		name: "Game On Cancer",
+	},
+	logo: "events/asap24/asap24-logo.png",
+	heroImage: "events/asap24/asap24-hero.jpg",
+};
+
 export default function Home() {
 	return (
 		<div>
@@ -104,11 +118,17 @@ export default function Home() {
 			</Head>
 			<main>
 				{/* <EventLive event={"ASDH2024"} /> */}
-				<HeroBlock
+				<ASM24HeroBlock
 					event={ASM2024}
 					tagLine="The schedule has been released! Get your tickets!"
 					ticketLink="/ASM2024/tickets"
 					schedule
+				/>
+				<HeroBlock
+					event={ASAP2024}
+					tagLine="PAX Aus 2024 is coming up! Get your runs in now!"
+					ticketLink="https://aus.paxsite.com/"
+					submitRuns
 				/>
 				<LastEventBlock
 					tagLine="The turn out for DreamHack Melbourne was incredible and we loved showcasing Australia's fastest gamers there!"

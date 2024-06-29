@@ -153,7 +153,6 @@ export function TicketProduct() {
 						All attendees, including runners and staff must purchase tickets to attend the event. Volunteers
 						will receive a $15 rebate administered on site at ASM2024.
 					</p>
-					<p><Link href={'/ASM2024/shirt'}>ASM2024 Shirt now on sale!</Link></p>
 				</section>
 				<hr />
 				{auth.ready && !auth?.sessionData && (

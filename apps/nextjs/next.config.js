@@ -50,46 +50,46 @@ const nextConfig = {
 	images: {
 		remotePatterns: [
 			{
-			  protocol: 'http',
-			  hostname: 'localhost',
-			  port: '',
-			  pathname: '/**',
+				protocol: "http",
+				hostname: "localhost",
+				port: "",
+				pathname: "/**",
 			},
 			{
-			  protocol: 'http',
-			  hostname: '127.0.0.1',
-			  port: '9999',
-			  pathname: '/devstoreaccount1/keystone-uploads/**',
+				protocol: "http",
+				hostname: "127.0.0.1",
+				port: "9999",
+				pathname: "/devstoreaccount1/keystone-uploads/**",
 			},
 			{
-			  protocol: 'https',
-			  hostname: 'ausspeedruns.com',
-			  port: '',
-			  pathname: '/**',
+				protocol: "https",
+				hostname: "ausspeedruns.com",
+				port: "",
+				pathname: "/**",
 			},
 			{
-			  protocol: 'https',
-			  hostname: 'beta.ausspeedruns.com',
-			  port: '',
-			  pathname: '/**',
+				protocol: "https",
+				hostname: "beta.ausspeedruns.com",
+				port: "",
+				pathname: "/**",
 			},
 			{
-			  protocol: 'https',
-			  hostname: 'ausrunsstoragebeta.blob.core.windows.net',
-			  port: '',
-			  pathname: '/**',
+				protocol: "https",
+				hostname: "ausrunsstoragebeta.blob.core.windows.net",
+				port: "",
+				pathname: "/**",
 			},
 			{
-			  protocol: 'https',
-			  hostname: 'ausrunsstorage.blob.core.windows.net',
-			  port: '',
-			  pathname: '/**',
+				protocol: "https",
+				hostname: "ausrunsstorage.blob.core.windows.net",
+				port: "",
+				pathname: "/**",
 			},
 			{
-			  protocol: 'https',
-			  hostname: 'ausspeedruns.sharepoint.com',
-			  port: '',
-			  pathname: '/**',
+				protocol: "https",
+				hostname: "ausspeedruns.sharepoint.com",
+				port: "",
+				pathname: "/**",
 			},
 		],
 	},
@@ -127,6 +127,16 @@ const nextConfig = {
 				permanent: false,
 			},
 		];
+	},
+	webpack(config, options) {
+		config.module.rules.push({
+			test: /\.(glb|gltf)$/,
+			use: {
+				loader: "file-loader",
+			},
+		});
+
+		return config;
 	},
 };
 

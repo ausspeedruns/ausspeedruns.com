@@ -4,11 +4,12 @@
 
 .eventLive {
 	color: $light-text;
-	background: $dh-main;
-	background-image: url("../../styles/img/events/asdh24/DreamHack24Background.png");
-	background-size: 100% auto;
+	background: $asm24-main-bg;
+	background-image: url("../../styles/img/events/asm24/Bayer256Sky.png");
+	background-size: auto 100%;
+	image-rendering: pixelated;
 	background-position-x: center;
-	background-repeat: no-repeat;
+	background-repeat: repeat-x;
 	padding: 2rem;
 
 	@include breakpoint($sm-zero-only) {
@@ -26,9 +27,32 @@
 		}
 	}
 
+	.logo3D {
+		margin: auto;
+		width: 700px;
+		margin-bottom: 0.5rem;
+		@include breakpoint($sm-zero-only) {
+			padding: 1rem;
+		}
+	}
+
 	h2,
 	h3 {
 		text-align: center;
+	}
+
+	.sponsors {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		h2 {
+			margin: 0;
+		}
+		.images {
+			justify-content: center;
+			display: flex;
+			// height: 400px;
+		}
 	}
 
 	.link {
@@ -165,12 +189,12 @@
 
 		.twitchVideo,
 		.twitchChat {
-			border: 2px solid $dh-red;
+			border: 2px solid $primary;
 			box-sizing: border-box;
 		}
 
 		.twitchChat {
-			border-color: $dh-red;
+			border-color: $primary;
 		}
 
 		.twitchVideo {
@@ -191,11 +215,11 @@
 	}
 
 	.dashboard {
-		display: flex;
+		display: grid;
+		grid-template-columns: 1fr 2fr;
 		justify-content: center;
 		gap: 16px;
 		padding: 0 10%;
-		flex-wrap: wrap;
 		margin-top: 32px;
 
 		@include breakpoint($sm-zero-only) {
@@ -206,6 +230,12 @@
 
 		a {
 			margin: 0;
+		}
+
+		* {
+			text-wrap: balance;
+			text-align: center;
+			word-break: break-word;
 		}
 	}
 
@@ -219,6 +249,9 @@
 
 		.liveContent {
 			padding: 1rem;
+			border-radius: 5px;
+			backdrop-filter: blur(5px);
+			background-color: #030c38ae;
 		}
 	}
 
@@ -231,8 +264,7 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: space-around;
-			background-color: $dh-main;
-			border: 2px solid $dh-red;
+			border: 2px solid $primary;
 			font-size: 1.2rem;
 			width: fit-content;
 			word-break: break-all;
@@ -288,8 +320,7 @@
 			flex-direction: column;
 			height: 100%;
 			justify-content: space-around;
-			background-color: $dh-main;
-			border: 2px solid $dh-red;
+			border: 2px solid $primary;
 			// width: 50%;
 
 			@include breakpoint($sm-zero-only) {
@@ -303,6 +334,7 @@
 				max-width: 600px;
 				text-align: center;
 				margin: auto;
+				font-style: italic;
 			}
 		}
 
@@ -310,8 +342,8 @@
 			margin: auto;
 			margin-top: 10px;
 			width: 80%;
-			height: 10px;
-			background: $dh-orange-to-red;
+			height: 1px;
+			background: white;
 		}
 	}
 

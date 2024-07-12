@@ -29,7 +29,7 @@ export type Globals = {
 	events: EventsLineUp,
 	donateLink: string,
 	scheduleLink: string,
-	incentivesLink: string,
+	incentivesLink?: string,
 	socialLinks: {
 		[key: string]: string
 	}

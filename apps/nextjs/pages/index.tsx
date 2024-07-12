@@ -117,13 +117,13 @@ export default function Home() {
 				/>
 			</Head>
 			<main>
-				{/* <EventLive event={"ASDH2024"} /> */}
-				<ASM24HeroBlock
+				<EventLive event={"ASM2024"} />
+				{/* <ASM24HeroBlock
 					event={ASM2024}
 					tagLine="The schedule has been released! Get your tickets!"
 					ticketLink="/ASM2024/tickets"
 					schedule
-				/>
+				/> */}
 				<HeroBlock
 					event={ASAP2024}
 					tagLine="PAX Aus 2024 is coming up! Get your runs in now!"

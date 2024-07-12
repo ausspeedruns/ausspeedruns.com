@@ -123,7 +123,7 @@ const nextConfig = {
 			},
 			{
 				source: "/donate",
-				destination: "https://donate.tiltify.com/c20c9685-cd1b-4d5f-8595-74378cb06859/details",
+				destination: "https://donate.tiltify.com/ae8a6495-1d37-4933-8031-2062b855dca4/details",
 				permanent: false,
 			},
 		];

@@ -66,9 +66,8 @@ export const globals: Globals = {
       }
     }
   },
-  donateLink: 'http://donate.ausspeedruns.com/',
-  scheduleLink: 'http://schedule.ausspeedruns.com/',
-  incentivesLink: 'http://incentives.ausspeedruns.com/',
+  donateLink: 'http://ausspeedruns.com/donate',
+  scheduleLink: 'http://ausspeedruns.com/schedule',
   socialLinks: {
     discord: 'http://discord.ausspeedruns.com/',
     twitter: '//twitter.com/ausspeedruns',

@@ -68,7 +68,7 @@ const DonatePage = () => {
 		<div className={styles.app}>
 			<Head>
 				<title>Donate - AusSpeedruns</title>
-				<DiscordEmbed title="Donate - AusSpeedruns" description="Donate to ASM2023!" pageUrl="/donate" />
+				<DiscordEmbed title="Donate - AusSpeedruns" description="Donate to ASM2024!" pageUrl="/donate" />
 			</Head>
 			<main className={styles.content}>
 				<h2 className={styles.title}>Donate</h2>

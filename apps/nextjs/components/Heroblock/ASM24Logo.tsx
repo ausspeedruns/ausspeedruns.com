@@ -7,9 +7,7 @@ import * as THREE from "three";
 // import ASM2024Model from "./ASM2024Textured.glb";
 const ASM2024Model = "/ASM2024Textured.glb";
 
-function addEulers(a: THREE.Euler, b: THREE.Euler) {}
-
-export function ASM2024Logo(props: { targetRotation: THREE.Euler } & ThreeElements["group"]) {
+export function ASM2024Logo(props: { targetRotation?: THREE.Euler } & ThreeElements["group"]) {
 	const meshRef = useRef<THREE.Mesh>(null);
 	const { viewport } = useThree();
 	const { nodes, materials } = useGLTF(ASM2024Model);
@@ -24,11 +22,13 @@ export function ASM2024Logo(props: { targetRotation: THREE.Euler } & ThreeElemen
 
 		bobRotation.x = Math.sin(state.clock.elapsedTime * 0.5 + 2.5) * 0.1;
 
-		bobRotation.set(
-			bobRotation.x + props.targetRotation.x,
-			props.targetRotation.y,
-			bobRotation.z + props.targetRotation.z,
-		);
+		if (props.targetRotation) {
+			bobRotation.set(
+				bobRotation.x + props.targetRotation.x,
+				props.targetRotation.y,
+				bobRotation.z + props.targetRotation.z,
+			);
+		}
 
 		rotation.premultiply((new THREE.Quaternion()).setFromEuler(bobRotation))
 

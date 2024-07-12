@@ -8,16 +8,21 @@ import TwitchChatEmbed from "../TwitchChatEmbed/TwitchChatEmbed";
 import TwitchVideoEmbed from "../TwitchVideoEmbed/TwitchVideoEmbed";
 
 import EventLogo from "../../styles/img/events/asdh24/DreamHack24Logo.png";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Incentive } from "../Incentives/Incentive";
 import Button from "../Button/Button";
 
 import GameOnCancer from "../../styles/img/sponsors/GameOnCancer/GoCCCPAX23.svg";
 import Link from "next/link";
 import { faCalendar } from "@fortawesome/free-solid-svg-icons";
+import { Canvas } from "@react-three/fiber";
+import { ASM2024Logo } from "../Heroblock/ASM24Logo";
+
+import msiLogo from "../../styles/img/sponsors/msi.png";
 
 const aspectRatio = EventLogo.height / EventLogo.width;
 const gocAspectRatio = GameOnCancer.height / GameOnCancer.width;
+const msiAspectRatio = msiLogo.height / msiLogo.width;
 
 const QUERY_EVENT = gql`
 	query ($event: String!) {
@@ -121,22 +126,19 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 
 	return (
 		<div className={styles.eventLive}>
-			<div className={styles.logo}>
+			<div className={styles.logo3D}>
 				<Link href="/ASM2023" passHref legacyBehavior>
-					<Image
-						src={EventLogo}
-						width={600}
-						height={aspectRatio * 600}
-						alt="ASM2023 Logo"
-						style={{
-							maxWidth: "100%",
-							height: "auto",
-						}}
-					/>
+					<div style={{ width: "100%", padding: "0", maxWidth: 2000 }}>
+						<Canvas flat style={{ imageRendering: "pixelated" }} camera={{ fov: 30 }}>
+							<Suspense fallback={null}>
+								<ASM2024Logo />
+							</Suspense>
+						</Canvas>
+					</div>
 				</Link>
 			</div>
 			<div className={styles.eventInfo}>
-				<h2>April 26 – 28 | Melbourne</h2>
+				<h2>July 16 – 21 | Adelaide</h2>
 				<div className={styles.link}>
 					<Button actionText="Donate!" link="/donate" colorScheme="primary" />
 				</div>
@@ -154,6 +156,13 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 
 			<div className={styles.schedule}>
 				<Button actionText="Schedule" link="/schedule" colorScheme="secondary lightHover" />
+			</div>
+
+			<div className={styles.sponsors}>
+				<h2>Sponsor</h2>
+				<div className={styles.images}>
+					<Image src={msiLogo} width={300} height={msiAspectRatio * 300} alt="MSI Logo" />
+				</div>
 			</div>
 
 			<div className={styles.onDeck}>

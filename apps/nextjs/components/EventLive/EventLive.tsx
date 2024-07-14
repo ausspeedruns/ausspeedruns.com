@@ -127,7 +127,7 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 	return (
 		<div className={styles.eventLive}>
 			<div className={styles.logo3D}>
-				<Link href="/ASM2023" passHref legacyBehavior>
+				<Link href="/ASM2024" passHref legacyBehavior>
 					<div style={{ width: "100%", padding: "0", maxWidth: 2000 }}>
 						<Canvas flat style={{ imageRendering: "pixelated" }} camera={{ fov: 30 }}>
 							<Suspense fallback={null}>

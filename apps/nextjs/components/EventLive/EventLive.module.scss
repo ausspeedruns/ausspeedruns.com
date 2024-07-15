@@ -29,7 +29,7 @@
 
 	.logo3D {
 		margin: auto;
-		width: 700px;
+		max-width: 700px;
 		margin-bottom: 0.5rem;
 		@include breakpoint($sm-zero-only) {
 			padding: 1rem;
@@ -216,8 +216,8 @@
 	}
 
 	.dashboard {
-		display: grid;
-		grid-template-columns: 1fr 2fr;
+		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		gap: 16px;
 		padding: 0 10%;

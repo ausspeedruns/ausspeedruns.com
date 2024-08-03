@@ -113,7 +113,7 @@ const nextConfig = {
 			},
 			{
 				source: "/schedule",
-				destination: "/ASM2024/schedule",
+				destination: "/ASAP2024/schedule",
 				permanent: false,
 			},
 			{

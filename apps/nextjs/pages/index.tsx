@@ -89,6 +89,7 @@ const ASM2024: AusSpeedrunsEvent = {
 	},
 	logo: "events/asm24/ASM24 SVG.svg",
 	heroImage: "events/asm24/asm24-hero-temp.png",
+	total: "30,500",
 };
 
 const ASAP2024: AusSpeedrunsEvent = {
@@ -117,18 +118,17 @@ export default function Home() {
 				/>
 			</Head>
 			<main>
-				<EventLive event={"ASM2024"} />
-				{/* <ASM24HeroBlock
-					event={ASM2024}
-					tagLine="The schedule has been released! Get your tickets!"
-					ticketLink="/ASM2024/tickets"
-					schedule
-				/> */}
+				{/* <EventLive event={"ASDH2024"} /> */}
 				<HeroBlock
 					event={ASAP2024}
-					tagLine="PAX Aus 2024 is coming up! Get your runs in now!"
+					tagLine="PAX Aus 2024 is coming up!"
 					ticketLink="https://aus.paxsite.com/"
-					submitRuns
+					schedule
+				/>
+				<LastEventBlock
+					tagLine="A stunning 6 days of non-stop speedrunning led us to raise over $30,000 for Game On Cancer!"
+					event={ASM2024}
+					backgroundPos="center"
 				/>
 				<LastEventBlock
 					tagLine="The turn out for DreamHack Melbourne was incredible and we loved showcasing Australia's fastest gamers there!"
@@ -143,11 +143,6 @@ export default function Home() {
 				<LastEventBlock
 					tagLine="AusSpeedruns At PAX 2023 SMASHED it out of the park over DOUBLING our previous record!"
 					event={ASAP2023}
-					backgroundPos="center"
-				/>
-				<LastEventBlock
-					tagLine="The Australian Speedrunning community once again came together to put on the best ASM ever to help raise $35,000!!!"
-					event={ASM2023}
 					backgroundPos="center"
 				/>
 				<section className={styles.archive}>

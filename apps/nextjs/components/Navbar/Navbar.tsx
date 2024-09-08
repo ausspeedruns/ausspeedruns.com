@@ -61,7 +61,11 @@ const Navbar = ({ events = [], live }: NavbarProps) => {
 						className={styles.menuToggle}
 						onClick={() => setIsOpen(!isOpen)}
 						aria-expanded={isOpen.valueOf()}>
-						{!isOpen ? <FontAwesomeIcon size="xl" icon={faBars} /> : <FontAwesomeIcon size="xl" icon={faTimes} />}
+						{!isOpen ? (
+							<FontAwesomeIcon size="xl" icon={faBars} />
+						) : (
+							<FontAwesomeIcon size="xl" icon={faTimes} />
+						)}
 					</button>
 				</div>
 				<nav
@@ -81,18 +85,12 @@ const Navbar = ({ events = [], live }: NavbarProps) => {
 						{live && (
 							<>
 								<li>
-									<Link
-										href={`/${live}/incentives`}
-										passHref
-										className={styles.text}>
+									<Link href={`/${live}/incentives`} passHref className={styles.text}>
 										Incentives
 									</Link>
 								</li>
 								<li>
-									<Link
-										href={`/${live}/prizes`}
-										passHref
-										className={styles.text}>
+									<Link href={`/${live}/prizes`} passHref className={styles.text}>
 										Prizes
 									</Link>
 								</li>

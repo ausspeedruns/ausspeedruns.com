@@ -39,43 +39,37 @@ const Footer = (props: FooterProps) => {
 						<li className="social">
 							<a href={globals.socialLinks.twitch} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faTwitch} />
-								<span className={styles.text}>Follow us on Twitch</span>
+								<span className={styles.text}>Twitch</span>
 							</a>
 						</li>
-						{/* <li className="social">
-              <a href={globals.socialLinks.facebook}>
-                <FontAwesomeIcon icon={faFacebook} />
-                <span className={styles.text}>Like us on Facebook</span>
-              </a>
-            </li> */}
 						<li className="social">
 							<a href={globals.socialLinks.twitter} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faTwitter} />
-								<span className={styles.text}>Follow us on Twitter</span>
+								<span className={styles.text}>Twitter</span>
 							</a>
 						</li>
 						<li className="social">
 							<a href={globals.socialLinks.youtube} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faYoutube} />
-								<span className={styles.text}>Subscribe on Youtube</span>
+								<span className={styles.text}>Youtube</span>
 							</a>
 						</li>
 						<li className="social">
 							<a href={globals.socialLinks.discord} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faDiscord} />
-								<span className={styles.text}>Join us on Discord</span>
+								<span className={styles.text}>Discord</span>
 							</a>
 						</li>
 						<li className="social">
 							<a href={globals.socialLinks.instagram} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faInstagram} />
-								<span className={styles.text}>Follow us on Instagram</span>
+								<span className={styles.text}>Instagram</span>
 							</a>
 						</li>
 						<li className="social">
 							<a href={globals.socialLinks.tiktok} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faTiktok} />
-								<span className={styles.text}>Follow us on Tiktok</span>
+								<span className={styles.text}>Tiktok</span>
 							</a>
 						</li>
 					</ul>
@@ -83,8 +77,13 @@ const Footer = (props: FooterProps) => {
 						<Link href="/policies">Policies</Link>
 						{/* <Link href="/prize-terms">Prize Terms</Link> */}
 						<Link href="/press-kit">Press Kit</Link>
+						<Link href="https://photos.ausspeedruns.com/" passHref className={styles.text} target="_blank">
+							Photos
+						</Link>
 						<Link href="/contact">Contact</Link>
-						<a className={styles.email} href="mailto:ausspeedruns@ausspeedruns.com">ausspeedruns@ausspeedruns.com</a>
+						<a className={styles.email} href="mailto:ausspeedruns@ausspeedruns.com">
+							ausspeedruns@ausspeedruns.com
+						</a>
 					</div>
 				</div>
 			</div>

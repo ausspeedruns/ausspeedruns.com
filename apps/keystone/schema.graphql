@@ -1663,6 +1663,7 @@ type Mutation {
   confirmShirtStripe(stripeID: String!, apiKey: String!): ShirtOrder
   updateShirtSize(shirtID: String!, size: ShirtOrderSizeType!, apiKey: String!): ShirtOrder
   generateShirt(userID: ID!, method: ShirtOrderMethodType!, size: ShirtOrderSizeType!, stripeID: String, apiKey: String!, notes: String): ShirtOrder
+  updateIncentiveNodeCG(incentiveId: String!, active: Boolean!, data: JSON!, apiKey: String!): Incentive
 }
 
 union UserAuthenticationWithPasswordResult = UserAuthenticationWithPasswordSuccess | UserAuthenticationWithPasswordFailure

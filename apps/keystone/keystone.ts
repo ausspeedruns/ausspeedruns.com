@@ -58,7 +58,7 @@ export default withAuth(
   config({
     db: {
       provider: 'postgresql',
-      url: process.env.DATABASE_URL,
+      url: process.env.DATABASE_URL ?? "",
       useMigrations: true,
       async onConnect(context: Context) {
         if (process.argv.includes('--seed-data')) {
@@ -96,7 +96,7 @@ export default withAuth(
 
                 throw new Error("Couldn't find code or found too many.");
               } catch (error) {
-                throw new Error(error);
+                throw new Error(String(error));
               }
             }
           }),
@@ -216,6 +216,23 @@ export default withAuth(
                   stripeID: stripeID ?? uuid(),
                   notes,
                 }
+              });
+            }
+          }),
+          updateIncentiveNodeCG: graphql.field({
+            type: base.object('Incentive'),
+            args: {
+              incentiveId: graphql.arg({ type: graphql.nonNull(graphql.String) }),
+              active: graphql.arg({ type: graphql.nonNull(graphql.Boolean) }),
+              data: graphql.arg({ type: graphql.nonNull(graphql.JSON) }),
+              apiKey: graphql.arg({ type: graphql.nonNull(graphql.String) }),
+            },
+            resolve(source, { apiKey, active, data, incentiveId }, context: Context) {
+              if (apiKey !== process.env.API_KEY) throw new Error("Incorrect API Key");
+              
+              return context.sudo().db.Incentive.updateOne({
+                where: { id: incentiveId },
+                data: { active, data }
               });
             }
           }),

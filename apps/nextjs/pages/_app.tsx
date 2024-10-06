@@ -1,4 +1,3 @@
-// import '../styles/globals.css'
 import "../styles/global.scss";
 import "../styles/App.scss";
 import "@fontsource/finger-paint";
@@ -31,7 +30,7 @@ function AusSpeedrunsWebsite({ Component, pageProps }: AppProps) {
 
 	return (
 		<AuthProvider>
-			<Navbar events={events.data?.events} />
+			<Navbar events={events.data?.events} live="ASAP2024" noPrizes />
 			<Component {...pageProps} />
 			<Footer />
 			<CookieConsent

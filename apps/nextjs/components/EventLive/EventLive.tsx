@@ -7,22 +7,20 @@ import { format } from "date-fns";
 import TwitchChatEmbed from "../TwitchChatEmbed/TwitchChatEmbed";
 import TwitchVideoEmbed from "../TwitchVideoEmbed/TwitchVideoEmbed";
 
-import EventLogo from "../../styles/img/events/asdh24/DreamHack24Logo.png";
-import { Suspense, useState } from "react";
+import EventLogo from "../../styles/img/events/asap24/asap24-logo.png";
+import { useState } from "react";
 import { Incentive } from "../Incentives/Incentive";
 import Button from "../Button/Button";
 
 import GameOnCancer from "../../styles/img/sponsors/GameOnCancer/GoCCCPAX23.svg";
 import Link from "next/link";
 import { faCalendar } from "@fortawesome/free-solid-svg-icons";
-import { Canvas } from "@react-three/fiber";
-import { ASM2024Logo } from "../Heroblock/ASM24Logo";
 
-import msiLogo from "../../styles/img/sponsors/msi.png";
+import playsideLogo from "../../styles/img/sponsors/PlaySide.png";
 
 const aspectRatio = EventLogo.height / EventLogo.width;
 const gocAspectRatio = GameOnCancer.height / GameOnCancer.width;
-const msiAspectRatio = msiLogo.height / msiLogo.width;
+const playsideAspectRatio = playsideLogo.height / playsideLogo.width;
 
 const QUERY_EVENT = gql`
 	query ($event: String!) {
@@ -127,14 +125,17 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 	return (
 		<div className={styles.eventLive}>
 			<div className={styles.logo3D}>
-				<Link href="/ASM2024" passHref legacyBehavior>
-					<div style={{ width: "100%", padding: "0", maxWidth: 2000 }}>
-						<Canvas flat style={{ imageRendering: "pixelated" }} camera={{ fov: 30 }}>
-							<Suspense fallback={null}>
-								<ASM2024Logo />
-							</Suspense>
-						</Canvas>
-					</div>
+				<Link href={`/${props.event}`} passHref legacyBehavior>
+					<Image
+						src={EventLogo}
+						width={600}
+						height={aspectRatio * 600}
+						alt="ASM2023 Logo"
+						style={{
+							maxWidth: "100%",
+							height: "auto",
+						}}
+					/>
 				</Link>
 			</div>
 			<div className={styles.eventInfo}>
@@ -161,7 +162,7 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 			<div className={styles.sponsors}>
 				<h2>Sponsor</h2>
 				<div className={styles.images}>
-					<Image src={msiLogo} width={300} height={msiAspectRatio * 300} alt="MSI Logo" />
+					<Image src={playsideLogo} width={300} height={playsideAspectRatio * 300} alt="MSI Logo" />
 				</div>
 			</div>
 

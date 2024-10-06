@@ -18,6 +18,7 @@ type NavbarProps = {
 		scheduleReleased: boolean;
 	}[];
 	live?: string;
+	noPrizes?: boolean;
 };
 
 // Define general type for useWindowSize hook, which includes width and height
@@ -26,7 +27,7 @@ interface Size {
 	height: number | undefined;
 }
 
-const Navbar = ({ events = [], live }: NavbarProps) => {
+const Navbar = ({ events = [], live, noPrizes }: NavbarProps) => {
 	const auth = useAuth();
 	const [isOpen, setIsOpen] = useState<Boolean>(false);
 	const mobileWidth = useMediaQuery("(max-width: 992px)");
@@ -89,11 +90,13 @@ const Navbar = ({ events = [], live }: NavbarProps) => {
 										Incentives
 									</Link>
 								</li>
-								<li>
-									<Link href={`/${live}/prizes`} passHref className={styles.text}>
-										Prizes
-									</Link>
-								</li>
+								{!noPrizes && (
+									<li>
+										<Link href={`/${live}/prizes`} passHref className={styles.text}>
+											Prizes
+										</Link>
+									</li>
+								)}
 								<li>
 									<Button actionText="Donate" link="/donate" colorScheme="orange" />
 								</li>

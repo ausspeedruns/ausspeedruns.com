@@ -4,13 +4,12 @@
 
 .app, .appIncentives {
 	background: $asm24-main-bg;
-	background-image: url("./img/events/asm24/Bayer256Sky.png");
+	background-image: url("./img/events/asap24/Background.png");
+	background-size: 100% auto;
 	// background-size: cover;
-	image-rendering: pixelated;
 	// background-image: url("./img/events/asdh24/DreamHack24Background.png");
-	background-size: auto 100%;
 	// background-position-x: center;
-	background-repeat: repeat-x;
+	background-repeat: repeat-y;
 }
 
 .appIncentives {
@@ -56,7 +55,6 @@
 	.soon {
 		border: 4px solid #fff;
 		color: $light-text;
-		background-color: $asm24-main-bg;
 		margin: 1rem 0 3rem;
 		padding: 2rem;
 
@@ -80,7 +78,7 @@
 					color: $dark-text;
 
 					.progress {
-						// border: 1px solid $pax23-sec;
+						border: 1px solid #222721;
 					}
 				}
 			}
@@ -206,7 +204,7 @@
 				.bar {
 					position: absolute;
 					bottom: 0;
-					background-color: black;
+					background-color: $color-ochre;
 					@include breakpoint($md) {
 						width: 100% !important;
 					}

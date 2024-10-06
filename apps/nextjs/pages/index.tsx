@@ -118,13 +118,13 @@ export default function Home() {
 				/>
 			</Head>
 			<main>
-				{/* <EventLive event={"ASDH2024"} /> */}
-				<HeroBlock
+				<EventLive event={"ASAP2024"} />
+				{/* <HeroBlock
 					event={ASAP2024}
 					tagLine="PAX Aus 2024 is coming up!"
 					ticketLink="https://aus.paxsite.com/"
 					schedule
-				/>
+				/> */}
 				<LastEventBlock
 					tagLine="A stunning 6 days of non-stop speedrunning led us to raise over $30,000 for Game On Cancer!"
 					event={ASM2024}

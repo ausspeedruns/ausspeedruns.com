@@ -10,26 +10,6 @@ export interface WarProps extends BaseIncentiveData {
 	}[];
 }
 
-function tgxColour(index = -1, redStart = false) {
-	let modulo = index % 4;
-	if (!redStart) modulo++;
-
-	switch (modulo) {
-		case 0:
-			return "#f80023";
-		case 1:
-			return "#ffc300";
-		case 2:
-			return "#007eff";
-		case 3:
-			return "#00c091";
-		case 4:
-			return "#f80023";
-		default:
-			return undefined;
-	}
-}
-
 function isColor(strColor: string) {
 	const s = new Option().style;
 	s.color = strColor;
@@ -47,7 +27,7 @@ export const War: React.FC<WarProps> = (props) => {
 				{" - "}
 				<span className={styles.category}>{props.run.category}</span>
 				{" - "}
-				<span className={styles.category}>{format(time, "E d h:mm a")}</span>
+				<span className={styles.category}>{format(time, "EEEE h:mm a")}</span>
 			</div>
 			<span className={styles.title}>{props.title}</span>
 			<span className={styles.category}>{props.notes}</span>
@@ -67,7 +47,7 @@ export const War: React.FC<WarProps> = (props) => {
 										style={{
 											height: `${progress}%`,
 											width: `${progress}%`,
-											backgroundColor: isColor(option.name) ? option.name : tgxColour(i),
+											backgroundColor: isColor(option.name) ? option.name : undefined,
 										}}
 									/>
 								</div>

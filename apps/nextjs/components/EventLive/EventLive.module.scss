@@ -5,11 +5,10 @@
 .eventLive {
 	color: $light-text;
 	background: $asm24-main-bg;
-	background-image: url("../../styles/img/events/asm24/Bayer256Sky.png");
-	background-size: auto 100%;
-	image-rendering: pixelated;
+	background-image: url("../../styles/img/events/asap24/Background.png");
+	background-size: 100%;
 	background-position-x: center;
-	background-repeat: repeat-x;
+	background-repeat: repeat-y;
 	padding: 2rem;
 
 	@include breakpoint($sm-zero-only) {
@@ -45,6 +44,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		margin: 3rem 0;
 		h2 {
 			margin: 0;
 		}
@@ -252,7 +252,7 @@
 			padding: 1rem;
 			border-radius: 5px;
 			backdrop-filter: blur(5px);
-			background-color: #030c38ae;
+			background-color: #222721;
 		}
 	}
 

@@ -130,7 +130,7 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 						src={EventLogo}
 						width={600}
 						height={aspectRatio * 600}
-						alt="ASM2023 Logo"
+						alt="ASAP2024 Logo"
 						style={{
 							maxWidth: "100%",
 							height: "auto",
@@ -139,7 +139,7 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 				</Link>
 			</div>
 			<div className={styles.eventInfo}>
-				<h2>July 16 – 21 | Adelaide</h2>
+				<h2>October 11 - 13 | Melbourne</h2>
 				<div className={styles.link}>
 					<Button actionText="Donate!" link="/donate" colorScheme="primary" />
 				</div>
@@ -162,7 +162,7 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 			<div className={styles.sponsors}>
 				<h2>Sponsor</h2>
 				<div className={styles.images}>
-					<Image src={playsideLogo} width={300} height={playsideAspectRatio * 300} alt="MSI Logo" />
+					<Image src={playsideLogo} width={300} height={playsideAspectRatio * 300} alt="PlaySide Logo" />
 				</div>
 			</div>
 

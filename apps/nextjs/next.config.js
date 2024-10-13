@@ -2,6 +2,11 @@ const withNx = require("@nx/next/plugins/with-nx");
 const path = require("path");
 require("dotenv").config();
 
+const currentEventData = {
+	id: "ASAP2024",
+	donateLink: "https://donate.tiltify.com/74b40ff7-f234-4bce-8c35-c1ae5862f5c9/details",
+}
+
 const socialMedias = [
 	{
 		name: "twitch",
@@ -113,7 +118,7 @@ const nextConfig = {
 			},
 			{
 				source: "/schedule",
-				destination: "/ASAP2024/schedule",
+				destination: `/${currentEventData}/schedule`,
 				permanent: false,
 			},
 			{
@@ -123,7 +128,12 @@ const nextConfig = {
 			},
 			{
 				source: "/donate",
-				destination: "https://donate.tiltify.com/74b40ff7-f234-4bce-8c35-c1ae5862f5c9/details",
+				destination: currentEventData.donateLink,
+				permanent: false,
+			},
+			{
+				source: "/incentives",
+				destination: `/${currentEventData.id}/incentives`,
 				permanent: false,
 			},
 		];

@@ -118,7 +118,7 @@ const nextConfig = {
 			},
 			{
 				source: "/schedule",
-				destination: `/${currentEventData}/schedule`,
+				destination: `/${currentEventData.id}/schedule`,
 				permanent: false,
 			},
 			{

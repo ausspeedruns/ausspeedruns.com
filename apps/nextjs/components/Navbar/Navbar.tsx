@@ -1,14 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./Navbar.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTwitch, faTwitter, faDiscord, faYoutube, faInstagram, faTiktok } from "@fortawesome/free-brands-svg-icons";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { globals } from "../../globals";
 import Button from "../Button/Button";
 import { useAuth } from "../auth";
 import Link from "next/link";
-
-import { useMediaQuery } from "@mui/material";
 
 type NavbarProps = {
 	events: {
@@ -21,22 +17,13 @@ type NavbarProps = {
 	noPrizes?: boolean;
 };
 
-// Define general type for useWindowSize hook, which includes width and height
-interface Size {
-	width: number | undefined;
-	height: number | undefined;
-}
-
 const Navbar = ({ events = [], live, noPrizes }: NavbarProps) => {
 	const auth = useAuth();
 	const [isOpen, setIsOpen] = useState<Boolean>(false);
-	const mobileWidth = useMediaQuery("(max-width: 992px)");
 
 	const upcomingOrLiveEvents = events
 		.filter((event) => (event.endDate ? new Date(event.endDate) > new Date() : true))
 		.filter((event) => event.published);
-
-	// const schedules = upcomingOrLiveEvents.filter((event) => event.scheduleReleased);
 
 	return (
 		<header className={`App-header ${styles.navbar}`}>
@@ -86,13 +73,13 @@ const Navbar = ({ events = [], live, noPrizes }: NavbarProps) => {
 						{live && (
 							<>
 								<li>
-									<Link href={`/${live}/incentives`} passHref className={styles.text}>
+									<Link href={`/${live}/incentives`} className={styles.text}>
 										Incentives
 									</Link>
 								</li>
 								{!noPrizes && (
 									<li>
-										<Link href={`/${live}/prizes`} passHref className={styles.text}>
+										<Link href={`/${live}/prizes`} className={styles.text}>
 											Prizes
 										</Link>
 									</li>
@@ -106,7 +93,7 @@ const Navbar = ({ events = [], live, noPrizes }: NavbarProps) => {
 						{upcomingOrLiveEvents.map((event) => {
 							return (
 								<li key={event.shortname}>
-									<Link href={`/${event.shortname}`} passHref className={styles.text}>
+									<Link href={`/${event.shortname}`} className={styles.text}>
 										{event.shortname}
 									</Link>
 								</li>
@@ -114,60 +101,22 @@ const Navbar = ({ events = [], live, noPrizes }: NavbarProps) => {
 						})}
 
 						<li>
-							<Link href={`/about`} passHref className={styles.text}>
+							<Link href="/about" className={styles.text}>
 								About Us
 							</Link>
 						</li>
 						<li>
-							<Link href={`/events`} passHref className={styles.text}>
+							<Link href="/events" className={styles.text}>
 								Events
 							</Link>
 						</li>
 						<li>
-							<Link href="http://ausspeedruns.theprintbar.com/" passHref className={styles.text}>
+							<Link href="http://ausspeedruns.theprintbar.com/" className={styles.text}>
 								Merch
 							</Link>
 						</li>
 					</ul>
 				</nav>
-				{/* <ul className={`${styles.social} ${isOpen ? styles.menuopen : styles.menuclosed}`}>
-					<li>
-						<a href={globals.socialLinks.twitch} target="_blank" rel="noreferrer">
-							<FontAwesomeIcon size="lg" icon={faTwitch} />
-							<span className="sr-only">Twitch</span>
-						</a>
-					</li>
-					<li>
-						<a href={globals.socialLinks.twitter} target="_blank" rel="noreferrer">
-							<FontAwesomeIcon size="lg" icon={faTwitter} />
-							<span className="sr-only">Twitter</span>
-						</a>
-					</li>
-					<li>
-						<a href={globals.socialLinks.youtube} target="_blank" rel="noreferrer">
-							<FontAwesomeIcon size="lg" icon={faYoutube} />
-							<span className="sr-only">YouTube</span>
-						</a>
-					</li>
-					<li>
-						<a href={globals.socialLinks.discord} target="_blank" rel="noreferrer">
-							<FontAwesomeIcon size="lg" icon={faDiscord} />
-							<span className="sr-only">Discord</span>
-						</a>
-					</li>
-					<li>
-						<a href={globals.socialLinks.instagram} target="_blank" rel="noreferrer">
-							<FontAwesomeIcon size="lg" icon={faInstagram} />
-							<span className="sr-only">Instagram</span>
-						</a>
-					</li>
-					<li>
-						<a href={globals.socialLinks.tiktok} target="_blank" rel="noreferrer">
-							<FontAwesomeIcon size="lg" icon={faTiktok} />
-							<span className="sr-only">Tiktok</span>
-						</a>
-					</li>
-				</ul> */}
 				<div className={`${styles.auth} ${isOpen ? styles.menuopen : styles.menuclosed}`}>
 					{auth.ready && auth.sessionData ? (
 						<>

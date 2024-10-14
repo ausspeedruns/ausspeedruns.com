@@ -101,7 +101,7 @@ export const EventLive: React.FC<EventProps> = (props: EventProps) => {
 	};
 
 	let nextRunIndex = -1;
-	for (let index = 0; index < eventQuery.data?.event.runs.length! ?? -1; index++) {
+	for (let index = 0; index < (eventQuery.data?.event.runs?.length ?? -1); index++) {
 		const run = eventQuery.data?.event.runs[index];
 		if (run && new Date(run.scheduledTime).getTime() > currentTime.getTime()) {
 			// Next run

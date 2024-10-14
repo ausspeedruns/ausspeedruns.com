@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Image from "next/image";
 
 // Components
 import HeroBlock from "../components/Heroblock/Heroblock";
@@ -7,19 +6,13 @@ import { globals } from "../globals";
 import DiscordEmbed from "../components/DiscordEmbed";
 
 import styles from "../styles/index.module.scss";
-import { faCalendar, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/Button/Button";
 import LastEventBlock from "../components/LastEventBlock/LastEventBlock";
 
 import OGImage from "../styles/img/IndexOG.png";
 import { AusSpeedrunsEvent } from "../types/types";
 import { EventLive } from "../components/EventLive/EventLive";
-import ASMMLive from "../components/ASMM/asmm-live";
-import DualUpcomingEvent from "../components/DualUpcomingEvent/DualUpcomingEvent";
-import { useMediaQuery } from "@mui/material";
-
-import DreamhackLogo from "../styles/img/events/asdh24/DreamHack24Logo.png";
-import ASM24HeroBlock from "../components/Heroblock/ASM24Hero";
 
 // TODO: Move this stuff to keystone
 const ASM2023: AusSpeedrunsEvent = {

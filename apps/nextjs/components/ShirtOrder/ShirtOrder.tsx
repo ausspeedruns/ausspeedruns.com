@@ -1,10 +1,10 @@
+import { useEffect, useRef } from "react";
 import { Box } from "@mui/material";
 import Image from "next/image";
 import JSBarcode from "jsbarcode";
 
 import styles from "./ShirtOrder.module.scss";
 import ShirtImage from "../../styles/img/events/asm24/asm24-shirt.png";
-import { useEffect, useRef } from "react";
 
 interface ASMShirtProps {
 	shirtData: {

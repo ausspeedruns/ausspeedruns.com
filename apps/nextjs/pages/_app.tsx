@@ -30,7 +30,7 @@ function AusSpeedrunsWebsite({ Component, pageProps }: AppProps) {
 
 	return (
 		<AuthProvider>
-			<Navbar events={events.data?.events} live="ASAP2024" noPrizes />
+			<Navbar events={events.data?.events} />
 			<Component {...pageProps} />
 			<Footer />
 			<CookieConsent

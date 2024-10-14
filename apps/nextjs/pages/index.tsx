@@ -103,6 +103,7 @@ const ASAP2024: AusSpeedrunsEvent = {
 	},
 	logo: "events/asap24/asap24-logo.png",
 	heroImage: "events/asap24/asap24-hero.jpg",
+	total: "15,000",
 };
 
 export default function Home() {
@@ -118,13 +119,18 @@ export default function Home() {
 				/>
 			</Head>
 			<main>
-				<EventLive event={"ASAP2024"} />
+				{/* <EventLive event={"ASAP2024"} /> */}
 				{/* <HeroBlock
 					event={ASAP2024}
 					tagLine="PAX Aus 2024 is coming up!"
 					ticketLink="https://aus.paxsite.com/"
 					schedule
 				/> */}
+				<LastEventBlock
+					tagLine="AusSpeedruns At PAX 2024 was fantastic, raising over $15,000 for Game On Cancer!"
+					event={ASAP2024}
+					backgroundPos="center"
+				/>
 				<LastEventBlock
 					tagLine="A stunning 6 days of non-stop speedrunning led us to raise over $30,000 for Game On Cancer!"
 					event={ASM2024}
@@ -138,11 +144,6 @@ export default function Home() {
 				<LastEventBlock
 					tagLine="The Game Expo 2024 was awesome and we have now raised over $100,000 for Game On Cancer!"
 					event={ASGX2024}
-					backgroundPos="center"
-				/>
-				<LastEventBlock
-					tagLine="AusSpeedruns At PAX 2023 SMASHED it out of the park over DOUBLING our previous record!"
-					event={ASAP2023}
 					backgroundPos="center"
 				/>
 				<section className={styles.archive}>

@@ -1697,38 +1697,38 @@ enum PasswordResetRedemptionErrorCode {
 }
 
 type Query {
-  posts(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PostWhereUniqueInput): [Post!]
   post(where: PostWhereUniqueInput!): Post
+  posts(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PostWhereUniqueInput): [Post!]
   postsCount(where: PostWhereInput! = {}): Int
-  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
   user(where: UserWhereUniqueInput!): User
+  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
   usersCount(where: UserWhereInput! = {}): Int
-  submissions(where: SubmissionWhereInput! = {}, orderBy: [SubmissionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SubmissionWhereUniqueInput): [Submission!]
   submission(where: SubmissionWhereUniqueInput!): Submission
+  submissions(where: SubmissionWhereInput! = {}, orderBy: [SubmissionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SubmissionWhereUniqueInput): [Submission!]
   submissionsCount(where: SubmissionWhereInput! = {}): Int
-  events(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: EventWhereUniqueInput): [Event!]
   event(where: EventWhereUniqueInput!): Event
+  events(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: EventWhereUniqueInput): [Event!]
   eventsCount(where: EventWhereInput! = {}): Int
-  roles(where: RoleWhereInput! = {}, orderBy: [RoleOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: RoleWhereUniqueInput): [Role!]
   role(where: RoleWhereUniqueInput!): Role
+  roles(where: RoleWhereInput! = {}, orderBy: [RoleOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: RoleWhereUniqueInput): [Role!]
   rolesCount(where: RoleWhereInput! = {}): Int
-  runs(where: RunWhereInput! = {}, orderBy: [RunOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: RunWhereUniqueInput): [Run!]
   run(where: RunWhereUniqueInput!): Run
+  runs(where: RunWhereInput! = {}, orderBy: [RunOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: RunWhereUniqueInput): [Run!]
   runsCount(where: RunWhereInput! = {}): Int
-  verifications(where: VerificationWhereInput! = {}, orderBy: [VerificationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VerificationWhereUniqueInput): [Verification!]
   verification(where: VerificationWhereUniqueInput!): Verification
+  verifications(where: VerificationWhereInput! = {}, orderBy: [VerificationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VerificationWhereUniqueInput): [Verification!]
   verificationsCount(where: VerificationWhereInput! = {}): Int
-  tickets(where: TicketWhereInput! = {}, orderBy: [TicketOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TicketWhereUniqueInput): [Ticket!]
   ticket(where: TicketWhereUniqueInput!): Ticket
+  tickets(where: TicketWhereInput! = {}, orderBy: [TicketOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TicketWhereUniqueInput): [Ticket!]
   ticketsCount(where: TicketWhereInput! = {}): Int
-  volunteers(where: VolunteerWhereInput! = {}, orderBy: [VolunteerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VolunteerWhereUniqueInput): [Volunteer!]
   volunteer(where: VolunteerWhereUniqueInput!): Volunteer
+  volunteers(where: VolunteerWhereInput! = {}, orderBy: [VolunteerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VolunteerWhereUniqueInput): [Volunteer!]
   volunteersCount(where: VolunteerWhereInput! = {}): Int
-  shirtOrders(where: ShirtOrderWhereInput! = {}, orderBy: [ShirtOrderOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ShirtOrderWhereUniqueInput): [ShirtOrder!]
   shirtOrder(where: ShirtOrderWhereUniqueInput!): ShirtOrder
+  shirtOrders(where: ShirtOrderWhereInput! = {}, orderBy: [ShirtOrderOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: ShirtOrderWhereUniqueInput): [ShirtOrder!]
   shirtOrdersCount(where: ShirtOrderWhereInput! = {}): Int
-  incentives(where: IncentiveWhereInput! = {}, orderBy: [IncentiveOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: IncentiveWhereUniqueInput): [Incentive!]
   incentive(where: IncentiveWhereUniqueInput!): Incentive
+  incentives(where: IncentiveWhereInput! = {}, orderBy: [IncentiveOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: IncentiveWhereUniqueInput): [Incentive!]
   incentivesCount(where: IncentiveWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
@@ -1768,6 +1768,7 @@ type KeystoneAdminUIListMeta {
   labelField: String!
   fields: [KeystoneAdminUIFieldMeta!]!
   groups: [KeystoneAdminUIFieldGroupMeta!]!
+  graphql: KeystoneAdminUIGraphQL!
   initialSort: KeystoneAdminUISort
   isHidden: Boolean!
   isSingleton: Boolean!
@@ -1833,6 +1834,33 @@ type KeystoneAdminUIFieldGroupMeta {
   label: String!
   description: String
   fields: [KeystoneAdminUIFieldMeta!]!
+}
+
+type KeystoneAdminUIGraphQL {
+  names: KeystoneAdminUIGraphQLNames!
+}
+
+type KeystoneAdminUIGraphQLNames {
+  outputTypeName: String!
+  whereInputName: String!
+  whereUniqueInputName: String!
+  createInputName: String!
+  createMutationName: String!
+  createManyMutationName: String!
+  relateToOneForCreateInputName: String!
+  relateToManyForCreateInputName: String!
+  itemQueryName: String!
+  listOrderName: String!
+  listQueryCountName: String!
+  listQueryName: String!
+  updateInputName: String!
+  updateMutationName: String!
+  updateManyInputName: String!
+  updateManyMutationName: String!
+  relateToOneForUpdateInputName: String!
+  relateToManyForUpdateInputName: String!
+  deleteMutationName: String!
+  deleteManyMutationName: String!
 }
 
 type KeystoneAdminUISort {

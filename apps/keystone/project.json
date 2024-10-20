@@ -28,7 +28,8 @@
 			"executor": "@nx-tools/nx-container:build",
 			"options": {
 				"engine": "docker",
-				"tags": ["ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest"]
+				"tags": ["ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest"],
+				"file": "./apps/keystone/Dockerfile"
 			},
 			"dependsOn": ["build"]
 		},
@@ -37,7 +38,8 @@
 			"options": {
 				"engine": "docker",
 				"push": true,
-				"tags": ["ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest"]
+				"tags": ["ausrunswebsitecontainersregistry.azurecr.io/ausruns/keystone:latest"],
+				"file": "./apps/keystone/Dockerfile"
 			},
 			"dependsOn": ["build"]
 		},

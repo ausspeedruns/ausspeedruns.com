@@ -8,6 +8,7 @@
 		"build:nextjs": "npx nx build nextjs"
 	},
 	"dependencies": {
+		"@date-fns/tz": "^1.1.2",
 		"@emotion/react": "11.13.3",
 		"@emotion/styled": "11.13.0",
 		"@fontsource/finger-paint": "^5.1.0",
@@ -31,8 +32,7 @@
 		"@swc/helpers": "0.5.13",
 		"animejs": "^3.2.2",
 		"core-js": "^3.38.1",
-		"date-fns": "^3.6.0",
-		"date-fns-tz": "^3.2.0",
+		"date-fns": "^4.1.0",
 		"dotenv": "^16.4.5",
 		"fp-ts": "^2.16.9",
 		"jsbarcode": "^3.11.6",

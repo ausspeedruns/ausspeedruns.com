@@ -20,11 +20,11 @@ import {
 	OutlinedInput,
 	Stack as MUIStack,
 } from "@mui/material";
-import { formatInTimeZone } from "date-fns-tz";
+import { TZDate } from "@date-fns/tz";
 import { Lists } from ".keystone/types";
 import { DonationIncentiveCreator, DonationIncentiveCreatorRef } from "../components/DonationIncentiveCreator";
 import { RaceRunnerMatcher, RaceRunnerMatcherRef } from "../components/RaceRunnerMatcher";
-import { formatDistanceStrict } from "date-fns";
+import { formatDistanceStrict, format } from "date-fns";
 import { exportHoraro } from "../util/schedule/export-horaro";
 import { downloadSubmissions } from "../util/schedule/export-submissions";
 import { parseScheduleToRuns } from "../util/schedule/import-schedule";
@@ -55,6 +55,11 @@ const CustomInput = styled.label`
 
 const HiddenInput = styled.input`
 	display: none;
+`;
+
+const EventMetaData = styled.div`
+	display: flex;
+	flex-direction: column;
 `;
 
 const EVENTS_LIST_QUERY = gql`
@@ -150,11 +155,11 @@ interface EventQuery {
 }
 
 // Given the estimate and start time, get when the run ends as a date
-function endRunTime(scheduled: Date, estimate: string) {
+function endRunTime(scheduled: Date, estimate: string, timezone: string) {
 	const estimateParts = estimate.split(/:/);
 	const estimateMillis = parseInt(estimateParts[0], 10) * 60 * 60 * 1000 + parseInt(estimateParts[1], 10) * 60 * 1000;
 
-	const scheduledTime = new Date(scheduled);
+	const scheduledTime = new TZDate(scheduled, timezone);
 	// scheduledTime.setTime(scheduledTime.getTime());
 	scheduledTime.setTime(scheduledTime.getTime() + estimateMillis);
 	return scheduledTime;
@@ -345,10 +350,13 @@ export default function ScheduleImport() {
 		downloadAnchorNode.remove();
 	}
 
-	const eventStartDate = eventData?.event?.startDate ? new Date(eventData?.event?.startDate) : undefined;
+	const eventStartDate = eventData?.event?.startDate
+		? new TZDate(eventData?.event?.startDate, eventData.event.eventTimezone)
+		: undefined;
 	const eventEndDate = endRunTime(
 		scheduleRuns[scheduleRuns.length - 1]?.scheduled ?? new Date(),
 		scheduleRuns[scheduleRuns.length - 1]?.estimate ?? "00:00:00",
+		eventData?.event?.eventTimezone ?? "Australia/Melbourne",
 	);
 
 	let prevDay = "";
@@ -356,12 +364,13 @@ export default function ScheduleImport() {
 		console.log(row);
 		if (!eventData?.event) return <></>;
 		let dayDivider = <></>;
-		if (formatInTimeZone(row.scheduled, eventData.event.eventTimezone, "d") !== prevDay) {
-			prevDay = formatInTimeZone(row.scheduled, eventData.event.eventTimezone, "d");
+		let scheduledDate = new TZDate(row.scheduled, eventData.event.eventTimezone);
+		if (format(scheduledDate, "d") !== prevDay) {
+			prevDay = format(scheduledDate, "d");
 			dayDivider = (
 				<TableRow key={`${row.uuid ?? index}-day-divider`}>
 					<TableCell sx={{ fontWeight: "bold", fontSize: "0.9rem" }}>
-						{formatInTimeZone(row.scheduled, eventData.event.eventTimezone, "do EEEE")}
+						{format(scheduledDate, "do EEEE")}
 					</TableCell>
 					<TableCell></TableCell>
 					<TableCell></TableCell>
@@ -480,12 +489,22 @@ export default function ScheduleImport() {
 					{eventData?.event && (
 						<>
 							<FieldContainer>
-								<FieldLabel>Event Start Time</FieldLabel>
+								<FieldLabel>Event Timezone</FieldLabel>
 								<div
 									style={{
 										display: "flex",
 										flexDirection: "column",
 									}}>
+									{eventStartDate ? (
+										<span>{eventStartDate.timeZone}</span>
+									) : (
+										<span>Missing Event Time Zone</span>
+									)}
+								</div>
+							</FieldContainer>
+							<FieldContainer>
+								<FieldLabel>Event Start Time</FieldLabel>
+								<EventMetaData>
 									{eventStartDate ? (
 										<>
 											<span>
@@ -493,64 +512,32 @@ export default function ScheduleImport() {
 													timeZone: eventData.event.eventTimezone,
 												})}
 											</span>
-											<span>
-												{formatInTimeZone(
-													eventStartDate,
-													eventData.event.eventTimezone,
-													"h:mm a",
-												)}
-											</span>
-											<span>
-												{formatInTimeZone(
-													eventStartDate,
-													eventData.event.eventTimezone,
-													"EEEE, MMMM",
-												)}
-											</span>
+											<span>{format(eventStartDate, "h:mm a")}</span>
+											<span>{format(eventStartDate, "EEEE, MMMM")}</span>
 										</>
 									) : (
 										<span>Missing Event Start Date</span>
 									)}
-								</div>
+								</EventMetaData>
 							</FieldContainer>
 							{scheduleRuns.length > 0 && (
 								<>
 									<FieldContainer>
 										<FieldLabel>Event End Time</FieldLabel>
-										<div
-											style={{
-												display: "flex",
-												flexDirection: "column",
-											}}>
+										<EventMetaData>
 											<span>
 												{eventEndDate.toLocaleDateString("en-AU", {
 													timeZone: eventData.event.eventTimezone,
 												})}
 											</span>
-											<span>
-												{formatInTimeZone(
-													eventEndDate,
-													eventData.event.eventTimezone,
-													"h:mm a",
-												)}
-											</span>
-											<span>
-												{formatInTimeZone(
-													eventEndDate,
-													eventData.event.eventTimezone,
-													"EEEE, MMMM",
-												)}
-											</span>
-										</div>
+											<span>{format(eventEndDate, "h:mm a")}</span>
+											<span>{format(eventEndDate, "EEEE, MMMM")}</span>
+										</EventMetaData>
 									</FieldContainer>
 									{eventStartDate && (
 										<FieldContainer>
 											<FieldLabel>Duration</FieldLabel>
-											<div
-												style={{
-													display: "flex",
-													flexDirection: "column",
-												}}>
+											<EventMetaData>
 												<span>{formatDistanceStrict(eventEndDate, eventStartDate)} or</span>
 												<span>
 													{(
@@ -559,16 +546,12 @@ export default function ScheduleImport() {
 													).toFixed(1)}{" "}
 													hours
 												</span>
-											</div>
+											</EventMetaData>
 										</FieldContainer>
 									)}
 									<FieldContainer>
 										<FieldLabel># of Runs</FieldLabel>
-										<div
-											style={{
-												display: "flex",
-												flexDirection: "column",
-											}}>
+										<EventMetaData>
 											<span>
 												{
 													scheduleRuns.filter(
@@ -577,7 +560,7 @@ export default function ScheduleImport() {
 												}{" "}
 												runs
 											</span>
-										</div>
+										</EventMetaData>
 									</FieldContainer>
 								</>
 							)}

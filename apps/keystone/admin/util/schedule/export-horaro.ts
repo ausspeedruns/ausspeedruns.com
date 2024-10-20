@@ -1,5 +1,6 @@
 import { gql, ApolloClient, InMemoryCache } from '@keystone-6/core/admin-ui/apollo';
-import { format, formatInTimeZone } from 'date-fns-tz';
+import { TZDate } from '@date-fns/tz';
+import { format } from 'date-fns';
 
 const QUERY_RUNS = gql`
 	query GetEventRuns($eventShortname: String) {
@@ -141,7 +142,8 @@ function secondsToHoraroLength(seconds: number) {
 }
 
 function dateToISOTimezone(date: Date, timezone: string) {
-	return formatInTimeZone(date, timezone, "yyyy-MM-dd'T'HH:mm:ssxxx");
+	const tzDate = new TZDate(date, timezone);
+	return format(tzDate, "yyyy-MM-dd'T'HH:mm:ssxxx");
 }
 
 function endRunTime(scheduled: Date, estimate: string) {

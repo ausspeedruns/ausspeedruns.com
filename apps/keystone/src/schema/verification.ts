@@ -2,8 +2,6 @@
 import { list } from '@keystone-6/core';
 import { Lists } from '.keystone/types';
 import { text } from '@keystone-6/core/fields';
-import { ListFilterAccessControl } from '@keystone-6/core/types';
-import { SessionContext } from './access';
 
 // const filterVerification: ListFilterAccessControl<"query", Lists.Verification.TypeInfo> = ({ session }: SessionContext) => {
 // 	// if (!session?.data) return false;
@@ -33,11 +31,12 @@ export const Verification: Lists.Verification = list({
 			if (operation === 'delete') {
 				const sudoContext = context.sudo();
 				sudoContext.db.User.updateOne({ where: { id: (originalItem.account as string) }, data: { verified: true } });
-				sudoContext.exitSudo();
 			}
 		}
 	},
 	graphql: {
-		omit: ['query']
+		omit: {
+			query: true
+		}
 	}
 });

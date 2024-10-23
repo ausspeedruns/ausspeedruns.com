@@ -209,6 +209,4 @@ async function SendVerification(data: { item: Lists.User.TypeInfo['item'], conte
 	// console.log(await sudoContext.db.Verification.findMany());
 
 	sendEmailVerification(item.email, newVerification.code);
-
-	sudoContext.exitSudo();
 }

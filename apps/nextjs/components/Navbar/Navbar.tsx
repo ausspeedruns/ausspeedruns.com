@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import styles from "./Navbar.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,10 +22,6 @@ type NavbarProps = {
 const Navbar = ({ events = [], live, noPrizes }: NavbarProps) => {
 	const auth = useAuth();
 	const [isOpen, setIsOpen] = useState<Boolean>(false);
-
-	const upcomingOrLiveEvents = events
-		.filter((event) => (event.endDate ? new Date(event.endDate) > new Date() : true))
-		.filter((event) => event.published);
 
 	return (
 		<header className={`App-header ${styles.navbar}`}>
@@ -60,15 +58,15 @@ const Navbar = ({ events = [], live, noPrizes }: NavbarProps) => {
 					className={`${styles.mainmenu} ${isOpen ? styles.menuopen : styles.menuclosed}`}
 					aria-label="Main menu">
 					<ul className={styles.links}>
-						{/* {schedules.map((event) => {
+						{events.map((event) => {
 							return (
 								<li key={event.shortname}>
 									<Link href={`/${event.shortname}/schedule`} passHref className={styles.text}>
-										{schedules.length > 1 && `${event.shortname} `}Schedule
+										{events.length > 1 && `${event.shortname} `}Schedule
 									</Link>
 								</li>
 							);
-						})} */}
+						})}
 
 						{live && (
 							<>
@@ -90,7 +88,7 @@ const Navbar = ({ events = [], live, noPrizes }: NavbarProps) => {
 							</>
 						)}
 
-						{upcomingOrLiveEvents.map((event) => {
+						{events.map((event) => {
 							return (
 								<li key={event.shortname}>
 									<Link href={`/${event.shortname}`} className={styles.text}>

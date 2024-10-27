@@ -1142,21 +1142,6 @@ input VerificationWhereUniqueInput {
   code: String
 }
 
-input VerificationWhereInput {
-  AND: [VerificationWhereInput!]
-  OR: [VerificationWhereInput!]
-  NOT: [VerificationWhereInput!]
-  id: IDFilter
-  code: StringFilter
-  account: StringFilter
-}
-
-input VerificationOrderByInput {
-  id: OrderDirection
-  code: OrderDirection
-  account: OrderDirection
-}
-
 input VerificationUpdateInput {
   code: String
   account: String
@@ -1715,9 +1700,6 @@ type Query {
   run(where: RunWhereUniqueInput!): Run
   runs(where: RunWhereInput! = {}, orderBy: [RunOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: RunWhereUniqueInput): [Run!]
   runsCount(where: RunWhereInput! = {}): Int
-  verification(where: VerificationWhereUniqueInput!): Verification
-  verifications(where: VerificationWhereInput! = {}, orderBy: [VerificationOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VerificationWhereUniqueInput): [Verification!]
-  verificationsCount(where: VerificationWhereInput! = {}): Int
   ticket(where: TicketWhereUniqueInput!): Ticket
   tickets(where: TicketWhereInput! = {}, orderBy: [TicketOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TicketWhereUniqueInput): [Ticket!]
   ticketsCount(where: TicketWhereInput! = {}): Int

@@ -1,6 +1,8 @@
 // From KeystoneJS Prisma 2021 Workshop example
 // https://github.com/keystonejs/prisma-day-2021-workshop/blob/main/components/auth.tsx
 
+"use client";
+
 import { createContext, useRef, useMemo, useEffect, useContext, ReactNode } from 'react';
 
 import { gql, useQuery, useMutation } from 'urql';

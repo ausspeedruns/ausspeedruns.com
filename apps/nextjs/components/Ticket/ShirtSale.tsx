@@ -7,7 +7,7 @@ import { UseMutationResponse, useQuery, gql } from "urql";
 
 import styles from "../styles/Store.module.scss";
 import DiscordEmbed from "../DiscordEmbed";
-import { theme } from "../mui-theme";
+import { theme } from "../../mui-theme";
 import { useAuth } from "../auth";
 import ASMShirt from "../ShirtOrder/ShirtOrder";
 

@@ -1,3 +1,5 @@
+"use client";
+
 export const Colours = {
 	ochre: '#cc7722',
 	teal: '#437c90',

@@ -14,13 +14,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { QUERY_PRIVATE_RESULTS } from "../../pages/user/[username]";
-
 import styles from "./SubmissionAccordion.module.scss";
 import SubmissionEditDialog from "./SubmissionEditDialog";
+import { Submission } from "./submission";
 
 type SubmissionProps = {
-	submission: QUERY_PRIVATE_RESULTS["user"]["submissions"][0];
+	submission: Submission;
 	event: {
 		acceptingSubmissions: boolean;
 		acceptingBackups: boolean;

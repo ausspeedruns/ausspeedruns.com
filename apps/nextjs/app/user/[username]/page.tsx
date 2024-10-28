@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import styles from "../../styles/User.username.module.scss";
+import styles from "../../../styles/User.username.module.scss";
 import { useAuth } from "../../../components/auth";
 import theme from "../../../mui-theme";
 import SubmissionAccordion from "../../../components/SubmissionAccordian/SubmissionAccordion";

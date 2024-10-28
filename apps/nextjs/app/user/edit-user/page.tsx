@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { gql, useMutation, useQuery } from "urql";
+import { gql, useMutation, useQuery } from "@urql/next";
 import Head from "next/head";
 import { Button, CircularProgress, TextField, Select, MenuItem, Alert, Snackbar } from "@mui/material";
 
-import styles from "../../styles/User.EditUser.module.scss";
+import styles from "../../../styles/User.EditUser.module.scss";
 import { useAuth } from "../../../components/auth";
 // import DiscordEmbed from "../../components/DiscordEmbed";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";

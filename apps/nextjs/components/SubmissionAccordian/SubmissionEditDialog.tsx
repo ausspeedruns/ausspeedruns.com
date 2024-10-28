@@ -20,13 +20,12 @@ import {
 import { useState } from "react";
 import { useMutation } from "urql";
 
-import { QUERY_PRIVATE_RESULTS } from "../../pages/user/[username]";
-
 import styles from "./SubmissionEditDialog.module.scss";
 import Availability from "../GameSubmission/Availability";
 import { DonationIncentive } from "../GameSubmission/submissionTypes";
 import DonationIncentiveInput from "../GameSubmission/DonationIncentive";
 import EstimateInput from "../GameSubmission/EstimateInput";
+import { Submission } from "./submission";
 
 type AgeRatingLiterals = "m_or_lower" | "ma15" | "ra18";
 type RaceLiterals = "no" | "solo" | "only";
@@ -98,7 +97,7 @@ const MUTATION_DELETE = gql`
 
 type SubmissionEditProps = {
 	open: boolean;
-	submission: QUERY_PRIVATE_RESULTS["user"]["submissions"][0];
+	submission: Submission;
 	event: {
 		acceptingSubmissions: boolean;
 		acceptingBackups: boolean;

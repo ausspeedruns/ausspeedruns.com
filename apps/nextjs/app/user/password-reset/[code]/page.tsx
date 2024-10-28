@@ -7,7 +7,7 @@ import { Button, TextField, ThemeProvider } from '@mui/material';
 import { gql, useMutation } from 'urql';
 
 import { useAuth } from '../../../../components/auth';
-import styles from '../../../styles/User.PasswordReset.code.module.scss';
+import styles from '../../../../styles/User.PasswordReset.code.module.scss';
 import theme from '../../../../mui-theme';
 
 export default function PasswordResetPage() {

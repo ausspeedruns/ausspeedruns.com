@@ -5,7 +5,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMutation, useQuery, gql } from 'urql';
 
-import styles from '../../../styles/User.Verification.code.module.scss';
+import styles from '../../../../styles/User.Verification.code.module.scss';
 import { useAuth } from '../../../../components/auth';
 
 export default function Verification() {

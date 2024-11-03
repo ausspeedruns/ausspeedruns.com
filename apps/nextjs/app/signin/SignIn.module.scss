@@ -1,0 +1,77 @@
+@use "base";
+@import "./responsive.scss";
+@import "./colors.scss";
+
+.background {
+	background-image: url("./MuralSmall.jpg");
+	background-size: 43%;
+	background-position: center;
+	flex-grow: 1;
+	position: fixed;
+	left: 0;
+	right: 0;
+	z-index: 1;
+	display: block;
+	width: 100%;
+	height: 100%;
+	filter: blur(2px);
+	z-index: -1;
+	transform: scale(1.1);
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 700px;
+	padding: 0 150px;
+	background-color: #ffffff;
+	box-shadow: 0px 0px 24px 19px rgba(0, 0, 0, 0.3);
+
+	@include breakpoint($sm-zero-only) {
+		width: 100%;
+		padding: 32px 16px;
+	}
+
+	h1 {
+		text-align: center;
+	}
+
+	form {
+		margin-top: 1rem;
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+
+		gap: 1rem;
+
+		a {
+			margin-right: 0;
+		}
+	}
+}
+
+.table {
+	text-align: center;
+	table-layout: fixed;
+
+	td {
+		width: 50%;
+	}
+}
+
+.links {
+	color: $primary;
+	margin-top: 1rem;
+}
+
+.spinner {
+	margin: 0 auto;
+}
+
+.spacedList {
+	li:not(:last-child) {
+		margin-bottom: 12px;
+	}
+}

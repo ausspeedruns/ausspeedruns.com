@@ -1,89 +1,45 @@
-"use client";
+import Link from "next/link";
+import { TextField, Button } from "@mui/material";
+import styles from "./SignIn.module.scss";
 
-import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
-import { useAuth } from '../../components/auth';
-import { TextField, ThemeProvider, CircularProgress, Button } from '@mui/material';
-import styles from '../../styles/SignIn.module.scss';
+import { signIn } from "../../auth";
+import { AuthError } from "next-auth";
+import { redirect } from "next/navigation";
+import SignInError from "./signin-error";
+import { Metadata } from "next";
 
-import Head from 'next/head';
-import theme from '../../mui-theme';
-import DiscordEmbed from '../../components/DiscordEmbed';
-
-function HumanErrorMsg(error: string) {
-	switch (error) {
-		case 'Authentication failed.':
-			return 'Incorrect Email or Password.';
-
-		default:
-			return '';
-	}
+export const metadata: Metadata = {
+	title: "Sign In",
+	description: "Sign In to AusSpeedruns",
 }
 
 export default function SignInPage() {
-	const auth = useAuth();
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [error, setError] = useState('');
-	const [spinner, setSpinner] = useState(false);
-
-	const signIn = async () => {
-		if (!auth.ready) {
-			setError('Auth is not ready, try again in a moment.');
-			return;
-		}
-		if (!email.length || !password.length) {
-			setError('Please enter an email and password.');
-			return;
-		}
-		setError('');
-		const result = await auth.signIn({ email: email.toLowerCase(), password });
-
-		console.log(result)
-		if (result.success) {
-			// FIXME: there's a cache issue with Urql where it's not reloading the
-			// current user properly if we do a client-side redirect here.
-			// router.push('/');
-			if (top) top.location.href = '/';
-		} else if (result.success === false) {
-			// This is silly ofc but TypeScript wasn't detecting that it was false
-			// setEmail('');
-			// setPassword('');
-			setError(result.message);
-		}
-	};
-
-	useEffect(() => {
-		if (error) {
-			setSpinner(false);
-		}
-	}, [error]);
-
 	return (
-		<ThemeProvider theme={theme}>
-			<Head>
-				<title>Sign In - AusSpeedruns</title>
-				<DiscordEmbed title="Sign In - AusSpeedruns" description="Sign In to AusSpeedruns" pageUrl="/signin" />
-			</Head>
+		<div>
 			<div className={styles.background} />
 			<div className={`${styles.content} ${styles.form}`}>
 				<h1>Sign In</h1>
 				<form
-					onSubmit={(event) => {
-						event.preventDefault();
-						signIn();
-						setSpinner(true);
-					}}
-				>
+					action={async (formData) => {
+						"use server";
+						try {
+							console.log("c");
+							// await signIn("credentials", { email: formData.email, password: formData.password });
+							await signIn("credentials", formData);
+						} catch (error) {
+							if (error instanceof AuthError) {
+								return redirect(`/signin?error=${error.type}`);
+							}
+							throw error;
+						}
+					}}>
 					<TextField
 						label="Email"
+						type="email"
 						variant="outlined"
 						autoComplete="email"
-						value={email}
-						onChange={(event) => {
-							setEmail(event.target.value);
-						}}
 						fullWidth
+						name="email"
 					/>
 
 					<TextField
@@ -91,24 +47,22 @@ export default function SignInPage() {
 						type="password"
 						autoComplete="current-password"
 						variant="outlined"
-						value={password}
-						onChange={(event) => {
-							setPassword(event.target.value);
-						}}
 						fullWidth
+						name="password"
 					/>
-					<h3>{error}</h3>
-					{error && <h4>{HumanErrorMsg(error)}</h4>}
-					<Button type="submit" variant="contained">
+					<Button variant="contained" type="submit">
 						Sign In
 					</Button>
-					{/* <Button type="submit" actionText='Sign In' /> */}
-					{spinner && <CircularProgress className={styles.spinner} />}
 				</form>
+				<SignInError />
 				<hr />
-				<Link className={styles.links} href="/signup">Want to join instead?</Link>
-				<Link className={styles.links} href="/reset-password">Forgot password?</Link>
+				<Link className={styles.links} href="/signup">
+					Want to join instead?
+				</Link>
+				<Link className={styles.links} href="/reset-password">
+					Forgot password?
+				</Link>
 			</div>
-		</ThemeProvider>
+		</div>
 	);
-};
+}

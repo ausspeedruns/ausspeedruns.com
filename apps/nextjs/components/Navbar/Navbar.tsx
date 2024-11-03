@@ -1,12 +1,12 @@
-"use client";
-
 import React, { useState } from "react";
 import styles from "./Navbar.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 import Button from "../Button/Button";
-import { useAuth } from "../auth";
+// import { useAuth } from "../auth";
 import Link from "next/link";
+import { auth, signOut } from "../../auth";
+import { cookies } from "next/headers";
 
 type NavbarProps = {
 	events: {
@@ -19,9 +19,11 @@ type NavbarProps = {
 	noPrizes?: boolean;
 };
 
-const Navbar = ({ events = [], live, noPrizes }: NavbarProps) => {
-	const auth = useAuth();
-	const [isOpen, setIsOpen] = useState<Boolean>(false);
+async function Navbar({ events = [], live, noPrizes }: NavbarProps) {
+	// const auth = useAuth();
+	const session = await auth();
+	// const [isOpen, setIsOpen] = useState<Boolean>(false);
+	const isOpen = false;
 
 	return (
 		<header className={`App-header ${styles.navbar}`}>
@@ -43,7 +45,7 @@ const Navbar = ({ events = [], live, noPrizes }: NavbarProps) => {
 						</svg>{" "}
 						AusSpeedruns
 					</Link>
-					<button
+					{/* <button
 						className={styles.menuToggle}
 						onClick={() => setIsOpen(!isOpen)}
 						aria-expanded={isOpen.valueOf()}>
@@ -52,7 +54,7 @@ const Navbar = ({ events = [], live, noPrizes }: NavbarProps) => {
 						) : (
 							<FontAwesomeIcon size="xl" icon={faTimes} />
 						)}
-					</button>
+					</button> */}
 				</div>
 				<nav
 					className={`${styles.mainmenu} ${isOpen ? styles.menuopen : styles.menuclosed}`}
@@ -116,21 +118,16 @@ const Navbar = ({ events = [], live, noPrizes }: NavbarProps) => {
 					</ul>
 				</nav>
 				<div className={`${styles.auth} ${isOpen ? styles.menuopen : styles.menuclosed}`}>
-					{auth.ready && auth.sessionData ? (
+					{session?.user ? (
 						<>
 							<Button
-								actionText={auth.sessionData.username}
-								link={`/user/${auth.sessionData.username}`}
+								actionText={session.user?.username}
+								link={`/user/${session.user?.username}`}
 								colorScheme={"secondary inverted"}
 							/>
-							<a
-								className={styles.signout}
-								onClick={() => {
-									auth.signOut();
-									if (top) top.location.href = "/";
-								}}>
-								Sign out
-							</a>
+							<form action={signUserOut}>
+								<button style={{display: "block"}} type="submit">Sign Out</button>
+							</form>
 						</>
 					) : (
 						<span className={styles.join}>
@@ -141,6 +138,15 @@ const Navbar = ({ events = [], live, noPrizes }: NavbarProps) => {
 			</div>
 		</header>
 	);
-};
+}
+
+async function signUserOut() {
+	"use server";
+
+	const cookie = cookies();
+	cookie.delete("keystonejs-session");
+
+	await signOut();
+}
 
 export default Navbar;

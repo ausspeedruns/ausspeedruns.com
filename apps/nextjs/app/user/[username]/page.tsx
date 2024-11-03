@@ -1,10 +1,10 @@
-"use client";
+// "use client";
 
-import { useState } from "react";
+// import { useState } from "react";
 import { initUrqlClient } from "next-urql";
-import Head from "next/head";
-import { Box, IconButton, Tab, Tabs, ThemeProvider } from "@mui/material";
-import { useRouter } from "next/router";
+// import Head from "next/head";
+import { Box, colors, IconButton, Tab, Tabs, ThemeProvider } from "@mui/material";
+// import { useRouter } from "next/router";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -19,8 +19,13 @@ import Ticket from "../../../components/Ticket/Ticket";
 import ASMShirt from "../../../components/ShirtOrder/ShirtOrder";
 
 import { cacheExchange, createClient, fetchExchange, gql } from "@urql/core";
+import { authExchange } from "@urql/exchange-auth";
 import { registerUrql } from "@urql/next/rsc";
 import { notFound } from "next/navigation";
+import { auth } from "../../../auth";
+import EditUserButton from "./edit-user-button";
+import PreviousRuns from "./previous-runs";
+import { cookies } from "next/headers";
 
 const QUERY_USER = gql`
 	query Profile($username: String) {
@@ -64,9 +69,9 @@ const QUERY_USER = gql`
 `;
 
 const QUERY_PRIVATE = gql`
-	query Profile($username: String, $currentTime: DateTime) {
+	query Profile($username: String) {
 		user(where: { username: $username }) {
-			submissions(where: { event: { endDate: { gt: $currentTime } } }) {
+			submissions {
 				id
 				runner {
 					username
@@ -99,19 +104,7 @@ const QUERY_PRIVATE = gql`
 				specialReqs
 				availability
 			}
-			tickets(
-				where: {
-					AND: [
-						{
-							OR: [
-								{ method: { equals: bank } }
-								{ paid: { equals: true } }
-							]
-						}
-						{ event: { endDate: { gt: $currentTime } } }
-					]
-				}
-			) {
+			tickets {
 				ticketID
 				totalCost
 				paid
@@ -130,12 +123,7 @@ const QUERY_PRIVATE = gql`
 			shirts(
 				where: {
 					AND: [
-						{
-							OR: [
-								{ method: { equals: bank } }
-								{ paid: { equals: true } }
-							]
-						}
+						{ OR: [{ method: { equals: bank } }, { paid: { equals: true } }] }
 						{ created: { gt: "2024-01-01T00:00:00.000Z" } }
 					]
 				}
@@ -283,7 +271,24 @@ function StateCodeToString(stateCode: string) {
 const makeClient = () => {
 	return createClient({
 		url: "http://localhost:8000/api/graphql",
-		exchanges: [cacheExchange, fetchExchange],
+		// url: "https://keystone.ausspeedruns.com/api/graphql",
+		exchanges: [
+			cacheExchange,
+			fetchExchange,
+		],
+		fetchOptions: () => {
+			const cookie = cookies();
+			if (cookie.has("keystonejs-session")) {
+				const keystoneCookie = cookie.get("keystonejs-session");
+				return {
+					headers: {
+						cookie: `keystonejs-session=${keystoneCookie?.value}`,
+					},
+				};
+			}
+
+			return {};
+		}
 	});
 };
 
@@ -291,18 +296,30 @@ const { getClient } = registerUrql(makeClient);
 
 export default async function ProfilePage({ params }: { params: { username: string } }) {
 	const { data: ssrData } = await getClient().query<QUERY_USER_RESULTS>(QUERY_USER, { username: params.username });
-	// console.log(ssrData)
+
 	if (!ssrData?.user) {
 		return notFound();
 	}
 
-	const router = useRouter();
-	const auth = useAuth();
+	const session = await auth();
 
-	const [submissionTab, setSubmissionTab] = useState(0);
-	const [eventTab, setEventTab] = useState(0);
-	const [currentTime] = useState(new Date().toISOString());
+	let privateDataResults = null;
+	const { data } = await getClient().query<QUERY_PRIVATE_RESULTS>(QUERY_PRIVATE, {
+		username: ssrData.user.username,
+		// currentTime: new Date().toISOString(),
+	});
+	if (session?.user.username === ssrData.user.username) {
 
+		console.log(data);
+
+		if (data?.user) {
+			privateDataResults = data.user;
+		}
+	}
+
+	// const [submissionTab, setSubmissionTab] = useState(0);
+	// const [eventTab, setEventTab] = useState(0);
+	// const [currentTime] = useState(new Date().toISOString());
 
 	// console.log(ssrData)
 	// const [{ data: privateDataResults }] = useQuery<QUERY_PRIVATE_RESULTS>({
@@ -318,9 +335,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
 	// 			: true),
 	// });
 
-	const upcomingRunsList = ssrData.user.runs.filter(
-		(run) => !run.finalTime,
-	);
+	const upcomingRunsList = ssrData.user.runs.filter((run) => !run.finalTime);
 
 	// Get all event names for tabs
 	// Would just do [...new Set(****)] buuuuuuuut... https://stackoverflow.com/questions/33464504/using-spread-syntax-and-new-set-with-typescript
@@ -333,56 +348,28 @@ export default async function ProfilePage({ params }: { params: { username: stri
 	// 		),
 	// 	),
 	// ];
-	const allRunEvents = [
-		...Array.from(
-			new Set(
-				ssrData.user.runs.map((run) =>
-					run.finalTime ? run.event?.shortname : undefined,
-				),
-			),
-		).filter((el) => typeof el !== "undefined"),
-	];
 
 	return (
 		<ThemeProvider theme={theme}>
-			<Head>
+			{/* <Head>
 				<title>{`${ssrData.user.username} - AusSpeedruns`}</title>
 				<DiscordEmbed
 					title={`${ssrData.user.username}'s Profile - AusSpeedruns`}
 					pageUrl={`/user/${ssrData.user.username}`}
 				/>
-			</Head>
+			</Head> */}
 			<div className={styles.content}>
 				<div className={styles.profileHeader}>
 					<h1>{ssrData.user.username}</h1>
-					{auth.ready &&
-						auth.sessionData?.id === ssrData.user.id && (
-							<div>
-								<IconButton
-									style={{ float: "right" }}
-									onClick={() =>
-										router.push("/user/edit-user")
-									}>
-									<FontAwesomeIcon icon={faEdit} />
-								</IconButton>
-							</div>
-						)}
+					{session?.user?.username === ssrData.user.username && <EditUserButton />}
 				</div>
 				<hr />
-				{/* Role List */}
-				{/* <div className={styles.roleList}>
-					{ssrData.user.roles.map((role) => {
-						return <RoleBadge key={role.id} role={role} />;
-					})}
-				</div> */}
 				{/* Profile Information */}
 				<div className={styles.userInfo}>
 					{ssrData.user?.state !== "none" && (
 						<>
 							<span>State</span>
-							<span>
-								{StateCodeToString(ssrData.user.state)}
-							</span>
+							<span>{StateCodeToString(ssrData.user.state)}</span>
 						</>
 					)}
 					{ssrData.user.pronouns && (
@@ -428,10 +415,10 @@ export default async function ProfilePage({ params }: { params: { username: stri
 				)} */}
 
 				{/* Tickets */}
-				{/* {privateDataResults?.user && privateDataResults.user.tickets.length > 0 && (
+				{privateDataResults && privateDataResults.tickets.length > 0 && (
 					<div className={styles.submissions}>
 						<h3 id="tickets">Tickets (Private)</h3>
-						{privateDataResults.user.tickets.map((ticket) => {
+						{privateDataResults.tickets.map((ticket) => {
 							return (
 								<Ticket
 									key={ticket.ticketID}
@@ -440,7 +427,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
 							);
 						})}
 					</div>
-				)} */}
+				)}
 
 				{/* Shirt Orders */}
 				{/* {privateDataResults?.user && privateDataResults.user.shirts.length > 0 && (
@@ -471,31 +458,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
 				{ssrData.user.runs.length > 0 && <hr />}
 
 				{/* Runs */}
-				<div className={styles.runs}>
-					<Box>
-						<Tabs
-							value={eventTab}
-							onChange={(_e: any, newVal: number) => setEventTab(newVal)}
-							variant="scrollable">
-							{allRunEvents.reverse().map((event) => (
-								<Tab label={event} key={event} />
-							))}
-						</Tabs>
-					</Box>
-					{ssrData.user.runs.map((run) => {
-						if (!run.finalTime) return;
-						return (
-							<div
-								key={run.id}
-								hidden={
-									run.event?.shortname !==
-									allRunEvents[eventTab]
-								}>
-								<RunCompleted run={run} />
-							</div>
-						);
-					})}
-				</div>
+				<PreviousRuns runs={ssrData.user.runs} />
 			</div>
 		</ThemeProvider>
 	);

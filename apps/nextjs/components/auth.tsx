@@ -30,7 +30,7 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function useAuth() {
-	return useContext(AuthContext);
+	// return useContext(AuthContext);
 }
 
 export type AuthReturnData = ReturnType<typeof useAuth>;

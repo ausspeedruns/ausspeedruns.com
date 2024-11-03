@@ -28,7 +28,7 @@
 			"configurations": {
 				"development": {
 					"buildTarget": "nextjs:build:development",
-					"dev": true
+					"dev": true,
 				},
 				"production": {
 					"buildTarget": "nextjs:build:production",

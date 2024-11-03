@@ -1,3 +1,5 @@
+"use client";
+
 import { Box } from '@mui/material';
 import React, { useEffect, useRef } from 'react';
 import JSBarcode from 'jsbarcode';

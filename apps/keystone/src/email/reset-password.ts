@@ -21,7 +21,7 @@ export function generateResetPassword(email: string, code: string) {
 				<mj-section padding="16px" background-color="#FFFFFF" css-class="shadow">
 					<mj-column>
 						<mj-text font-weight="bold" font-size="20px">AusSpeedruns reset password</mj-text>
-						<mj-text><a style="color: inherit;" href="https://ausspeedruns.com/user/password-reset/${code}?email=${encodeURI(email)}">Reset password</a></mj-text>
+						<mj-text><a style="color: inherit;" href="https://ausspeedruns.com/user/password-reset?code=${code}&email=${encodeURI(email)}">Reset password</a></mj-text>
 						<mj-text>If you did not request this then you can ignore it.</mj-text>
 						<mj-text>
 							<a style="color: inherit;" href="https://ausspeedruns.com/">ausspeedruns.com</a>

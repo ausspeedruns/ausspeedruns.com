@@ -48,7 +48,7 @@ export async function sendResetPassword(email: string, resetCode: string) {
 		subject: 'AusSpeedruns reset password',
 		text: `AusSpeedruns reset password
 
-Link to reset password: https://ausspeedruns.com/user/password-reset/${resetCode}?email=${encodeURI(email)}
+Link to reset password: https://ausspeedruns.com/user/password-reset?code=${resetCode}&email=${encodeURI(email)}
 
 If you did not sign up for AusSpeedruns then you can ignore this email.
 ----------

@@ -19,13 +19,15 @@ import Ticket from "../../../components/Ticket/Ticket";
 import ASMShirt from "../../../components/ShirtOrder/ShirtOrder";
 
 import { cacheExchange, createClient, fetchExchange, gql } from "@urql/core";
-import { authExchange } from "@urql/exchange-auth";
 import { registerUrql } from "@urql/next/rsc";
 import { notFound } from "next/navigation";
 import { auth } from "../../../auth";
-import EditUserButton from "./edit-user-button";
 import PreviousRuns from "./previous-runs";
 import { cookies } from "next/headers";
+import { Metadata } from "next";
+import { Submission } from "./submission";
+import Submissions from "./submissions";
+import Link from "next/link";
 
 const QUERY_USER = gql`
 	query Profile($username: String) {
@@ -69,9 +71,9 @@ const QUERY_USER = gql`
 `;
 
 const QUERY_PRIVATE = gql`
-	query Profile($username: String) {
+	query Profile($username: String, $currentTime: DateTime) {
 		user(where: { username: $username }) {
-			submissions {
+			submissions(where: { event: { endDate: { gt: $currentTime } } }) {
 				id
 				runner {
 					username
@@ -104,7 +106,14 @@ const QUERY_PRIVATE = gql`
 				specialReqs
 				availability
 			}
-			tickets {
+			tickets(
+				where: {
+					AND: [
+						{ OR: [{ method: { equals: bank } }, { paid: { equals: true } }] }
+						{ event: { endDate: { gt: $currentTime } } }
+					]
+				}
+			) {
 				ticketID
 				totalCost
 				paid
@@ -180,43 +189,7 @@ type QUERY_USER_RESULTS = {
 
 export type QUERY_PRIVATE_RESULTS = {
 	user: {
-		submissions: {
-			id: string;
-			game: string;
-			category: string;
-			platform: string;
-			techPlatform: string;
-			estimate: string;
-			possibleEstimate: string;
-			possibleEstimateReason: string;
-			status: "submitted" | "accepted" | "backup" | "rejected";
-			newDonationIncentives?: {
-				title: string;
-				time?: string;
-				description?: string;
-			}[];
-			race?: string;
-			racer?: string;
-			coop?: boolean;
-			video: string;
-			ageRating?: string;
-			event: {
-				id: string;
-				name: string;
-				shortname: string;
-				acceptingSubmissions: boolean;
-				acceptingBackups: boolean;
-				startDate: string;
-				endDate: string;
-				eventTimezone: string;
-			};
-			runner: {
-				username: string;
-			};
-			willingBackup: boolean;
-			specialReqs: string;
-			availability: boolean[];
-		}[];
+		submissions: Submission[];
 		tickets: {
 			ticketID: string;
 			totalCost: number;
@@ -272,10 +245,7 @@ const makeClient = () => {
 	return createClient({
 		url: "http://localhost:8000/api/graphql",
 		// url: "https://keystone.ausspeedruns.com/api/graphql",
-		exchanges: [
-			cacheExchange,
-			fetchExchange,
-		],
+		exchanges: [cacheExchange, fetchExchange],
 		fetchOptions: () => {
 			const cookie = cookies();
 			if (cookie.has("keystonejs-session")) {
@@ -288,13 +258,25 @@ const makeClient = () => {
 			}
 
 			return {};
-		}
+		},
 	});
 };
 
 const { getClient } = registerUrql(makeClient);
 
-export default async function ProfilePage({ params }: { params: { username: string } }) {
+type ProfilePageParams = {
+	params: {
+		username: string;
+	};
+};
+
+export async function generateMetadata({ params }: ProfilePageParams): Promise<Metadata> {
+	return {
+		title: params.username,
+	};
+}
+
+export default async function ProfilePage({ params }: ProfilePageParams) {
 	const { data: ssrData } = await getClient().query<QUERY_USER_RESULTS>(QUERY_USER, { username: params.username });
 
 	if (!ssrData?.user) {
@@ -304,13 +286,11 @@ export default async function ProfilePage({ params }: { params: { username: stri
 	const session = await auth();
 
 	let privateDataResults = null;
-	const { data } = await getClient().query<QUERY_PRIVATE_RESULTS>(QUERY_PRIVATE, {
-		username: ssrData.user.username,
-		// currentTime: new Date().toISOString(),
-	});
 	if (session?.user.username === ssrData.user.username) {
-
-		console.log(data);
+		const { data } = await getClient().query<QUERY_PRIVATE_RESULTS>(QUERY_PRIVATE, {
+			username: ssrData.user.username,
+			currentTime: new Date().toISOString(),
+		});
 
 		if (data?.user) {
 			privateDataResults = data.user;
@@ -337,18 +317,6 @@ export default async function ProfilePage({ params }: { params: { username: stri
 
 	const upcomingRunsList = ssrData.user.runs.filter((run) => !run.finalTime);
 
-	// Get all event names for tabs
-	// Would just do [...new Set(****)] buuuuuuuut... https://stackoverflow.com/questions/33464504/using-spread-syntax-and-new-set-with-typescript
-	// const allSubmissionEvents = [
-	// 	...Array.from(
-	// 		new Set(
-	// 			privateDataResults?.user.submissions.map(
-	// 				(submission) => submission.event?.shortname,
-	// 			),
-	// 		),
-	// 	),
-	// ];
-
 	return (
 		<ThemeProvider theme={theme}>
 			{/* <Head>
@@ -361,7 +329,13 @@ export default async function ProfilePage({ params }: { params: { username: stri
 			<div className={styles.content}>
 				<div className={styles.profileHeader}>
 					<h1>{ssrData.user.username}</h1>
-					{session?.user?.username === ssrData.user.username && <EditUserButton />}
+					{session?.user?.username === ssrData.user.username && (
+						<Link href="/user/edit-user">
+							<IconButton style={{ float: "right" }}>
+								<FontAwesomeIcon icon={faEdit} />
+							</IconButton>
+						</Link>
+					)}
 				</div>
 				<hr />
 				{/* Profile Information */}
@@ -380,51 +354,16 @@ export default async function ProfilePage({ params }: { params: { username: stri
 					)}
 				</div>
 				{/* Submissions */}
-				{/* {privateDataResults?.user && privateDataResults.user.submissions.length > 0 && (
-					<div className={styles.submissions}>
-						<h3>Submissions (Private)</h3>
-						<Box>
-							<Tabs
-								value={submissionTab}
-								onChange={(_e: any, newVal: number) =>
-									setSubmissionTab(newVal)
-								}
-								aria-label="basic tabs example">
-								{allSubmissionEvents.map((event) => (
-									<Tab label={event} key={event} />
-								))}
-							</Tabs>
-						</Box>
-						{privateDataResults.user.submissions.map(
-							(submission) => {
-								if (
-									submission.event?.shortname !==
-									allSubmissionEvents[submissionTab]
-								)
-									return;
-								return (
-									<SubmissionAccordion
-										key={submission.id}
-										submission={submission}
-										event={submission.event}
-									/>
-								);
-							},
-						)}
-					</div>
-				)} */}
+				{privateDataResults && privateDataResults.submissions.length > 0 && (
+					<Submissions submissions={privateDataResults.submissions} />
+				)}
 
 				{/* Tickets */}
 				{privateDataResults && privateDataResults.tickets.length > 0 && (
 					<div className={styles.submissions}>
 						<h3 id="tickets">Tickets (Private)</h3>
 						{privateDataResults.tickets.map((ticket) => {
-							return (
-								<Ticket
-									key={ticket.ticketID}
-									ticketData={ticket}
-								/>
-							);
+							return <Ticket key={ticket.ticketID} ticketData={ticket} />;
 						})}
 					</div>
 				)}

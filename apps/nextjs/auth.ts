@@ -1,31 +1,9 @@
 import NextAuth, { type DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { cacheExchange, Client, fetchExchange, gql } from "@urql/core";
 import { cookies } from "next/headers";
 
-const client = new Client({
-	url: "http://localhost:8000/api/graphql",
-	exchanges: [cacheExchange, fetchExchange],
-});
-
-const MUTATION_AUTHENTICATE = gql`
-	mutation ($email: String!, $password: String!) {
-		authenticateUserWithPassword(email: $email, password: $password) {
-			__typename
-			... on UserAuthenticationWithPasswordSuccess {
-				item {
-					id
-					username
-				}
-			}
-			... on UserAuthenticationWithPasswordFailure {
-				message
-			}
-		}
-	}
-`;
-
 import type { JWT } from "next-auth/jwt";
+import { redirect } from "next/navigation";
 declare module "next-auth/jwt" {
 	interface JWT {
 		username: string;
@@ -57,11 +35,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 				password: {},
 			},
 			authorize: async (credentials) => {
-				// const response = await client.mutation(MUTATION_AUTHENTICATE, {
-				// 	email: credentials.email,
-				// 	password: credentials.password,
-				// });
-
 				const response = await fetch("http://localhost:8000/api/graphql", {
 					method: "POST",
 					headers: {
@@ -140,8 +113,79 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 			return token;
 		},
 		session: async ({ session, token }) => {
+			session.user.id = token.sub ?? "";
 			session.user.username = token.username;
 			return session;
 		},
 	},
 });
+
+// Sign Up Error
+
+type SignUpErrorType = "email" | "username" | "password" | "dob";
+
+export class SignUpError extends Error {
+	readonly type: SignUpErrorType;
+
+	constructor(message: string, type: SignUpErrorType) {
+		super(message);
+		this.name = "SignUpError";
+		this.type = type;
+	}
+}
+
+export async function signUp(formData: FormData) {
+	const email = formData.get("email") as string;
+	const password = formData.get("password") as string;
+	const username = formData.get("username") as string;
+	const dob = new Date(formData.get("dob") as string);
+
+	console.log(email, password, username, dob);
+	
+	// Validation
+	if (password.length < 8) {
+		throw new SignUpError("Password Too Short", "password");
+	}
+
+	// Create user
+	const response = await fetch("http://localhost:8000/api/graphql", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			query: `
+				mutation ($username: String!, $email: String!, $password: String!, $dob: DateTime!) {
+					createUser(data: { username: $username, email: $email, password: $password, dateOfBirth: $dob }) {
+						__typename
+						id
+					}
+				}
+			`,
+			variables: {
+				email,
+				password,
+				username,
+				dob: dob,
+			},
+		}),
+	});
+
+	console.log(response);
+
+	const responseJson = await response.json();
+
+	console.log(responseJson);
+
+	if (responseJson.error) {
+		return { error: responseJson.error.message };
+	}
+
+	const data = responseJson.data?.createUser;
+
+	if (data?.__typename === "User") {
+		await signIn("credentials", { email, password });
+	}
+
+	return null;
+}

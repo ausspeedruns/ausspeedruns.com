@@ -1,7 +1,7 @@
-import "../styles/global.scss";
-import "../styles/App.scss";
+import "./global.scss";
 
-import { cacheExchange, createClient, fetchExchange, gql } from "@urql/core";
+import { gql } from "@urql/core";
+import { getUrqlClient } from "@libs/urql";
 import { registerUrql } from "@urql/next/rsc";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 
@@ -13,14 +13,11 @@ import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../mui-theme";
 
-const makeClient = () => {
-	return createClient({
-		url: "http://localhost:8000/api/graphql",
-		exchanges: [cacheExchange, fetchExchange],
-	});
-};
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
+config.autoAddCss = false
 
-const { getClient } = registerUrql(makeClient);
+const { getClient } = registerUrql(getUrqlClient);
 
 const QUERY_EVENTS = gql`
 	query LiveOrUpcomingEvents($currentTime: DateTime) {

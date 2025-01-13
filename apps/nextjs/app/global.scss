@@ -1,0 +1,54 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+@import "../styles/responsive.scss";
+@import "../styles/typography.scss";
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scrollbar-gutter: stable both-edges;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+main {
+  flex-grow: 1;
+}
+
+.content {
+  display: flex;
+  width: 100%;
+  margin: auto;
+  padding: 24px;
+
+  @include breakpoint($sm) {
+    padding: 40px 24px;
+  }
+
+  @include breakpoint($lg) {
+    max-width: 1200px;
+  }
+}
+
+header .content, .footer .content {
+  min-height: 50px;
+  padding: 8px;
+}
+
+.sr-only {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}

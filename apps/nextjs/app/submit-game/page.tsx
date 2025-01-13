@@ -1,9 +1,6 @@
-"use client";
-
-import { useState } from "react";
 import Head from "next/head";
 import { Alert, Snackbar, ThemeProvider } from "@mui/material";
-import { useQuery, gql, useMutation } from "urql";
+import { useQuery, gql, useMutation, createClient, cacheExchange, fetchExchange } from "urql";
 
 import styles from "../../styles/SubmitGame.module.scss";
 import theme from "../../mui-theme";
@@ -11,13 +8,37 @@ import { useAuth } from "../../components/auth";
 import LinkButton from "../../components/Button/Button";
 import { faArrowRight, faL } from "@fortawesome/free-solid-svg-icons";
 import DiscordEmbed from "../../components/DiscordEmbed";
-import GameSubmissions from "../../components/GameSubmission/GameSubmission";
-import {
-	MUTATION_SUBMISSION_RESULTS,
-	QUERY_USER_RESULTS,
-} from "../../components/GameSubmission/submissionTypes";
+import GameSubmissions from "./GameSubmission/GameSubmission";
+import { MUTATION_SUBMISSION_RESULTS, QUERY_USER_RESULTS } from "./GameSubmission/submissionTypes";
+import { auth } from "../../auth";
 
 // import SubmitGameOG from "../styles/img/ogImages/SubmitGame.jpg";
+
+import { cookies } from "next/headers";
+import { registerUrql } from "@urql/next/rsc";
+
+const makeClient = () => {
+	return createClient({
+		url: "http://localhost:8000/api/graphql",
+		// url: "https://keystone.ausspeedruns.com/api/graphql",
+		exchanges: [cacheExchange, fetchExchange],
+		fetchOptions: () => {
+			const cookie = cookies();
+			if (cookie.has("keystonejs-session")) {
+				const keystoneCookie = cookie.get("keystonejs-session");
+				return {
+					headers: {
+						cookie: `keystonejs-session=${keystoneCookie?.value}`,
+					},
+				};
+			}
+
+			return {};
+		},
+	});
+};
+
+const { getClient } = registerUrql(makeClient);
 
 const QUERY_INITIAL = gql`
 	query Profile($userId: ID!) {
@@ -32,14 +53,7 @@ const QUERY_INITIAL = gql`
 				ageRating
 			}
 		}
-		events(
-			where: {
-				OR: [
-					{ acceptingSubmissions: { equals: true } }
-					{ acceptingBackups: { equals: true } }
-				]
-			}
-		) {
+		events(where: { OR: [{ acceptingSubmissions: { equals: true } }, { acceptingBackups: { equals: true } }] }) {
 			id
 			shortname
 			submissionInstructions {
@@ -129,74 +143,44 @@ function BasePage({ children }: { children: React.ReactNode }) {
 	);
 }
 
-export default function SubmitGamePage() {
-	const auth = useAuth();
-	const [successSubmit, setSuccessSubmit] = useState(false);
+export default async function SubmitGamePage() {
+	const session = await auth();
+	// const [successSubmit, setSuccessSubmit] = useState(false);
+
+	if (!session || !session.user.id) {
+		return (
+			<BasePage>
+				<main className={`content ${styles.content} ${styles.noEvents}`}>
+					<h2>Please sign in to submit games.</h2>
+					<LinkButton actionText="Sign In" iconRight={faArrowRight} link="/signin" />
+					<br />
+					<LinkButton actionText="Join" iconRight={faArrowRight} link="/signup" />
+				</main>
+			</BasePage>
+		);
+	}
 
 	// Query if able to submit game (has discord)
-	const [initialQueryResult] = useQuery<QUERY_USER_RESULTS>({
-		query: QUERY_INITIAL,
-		variables: {
-			userId: auth.ready ? auth.sessionData?.id ?? "" : "",
-		},
+	const { data } = await getClient().query<QUERY_USER_RESULTS>(QUERY_INITIAL, {
+		userId: session.user.id,
 	});
 
 	// Mutation for game submission
-	const submissionMutation =
-		useMutation<MUTATION_SUBMISSION_RESULTS>(MUTATION_SUBMIT);
+	const submissionMutation = useMutation<MUTATION_SUBMISSION_RESULTS>(MUTATION_SUBMIT);
 
-	if (
-		!initialQueryResult.fetching &&
-		initialQueryResult.data?.events.length === 0
-	) {
+	if (data?.events.length === 0) {
 		return (
 			<BasePage>
-				<main
-					className={`content ${styles.content} ${styles.noEvents}`}>
-					<h2>
-						Unfortunately we have no events currently accepting
-						submissions.
-					</h2>
-					<p>
-						Follow us on Twitter and Join our Discord to stay up to
-						date!
-					</p>
-					<LinkButton
-						actionText="Home"
-						iconRight={faArrowRight}
-						link="/"
-					/>
+				<main className={`content ${styles.content} ${styles.noEvents}`}>
+					<h2>Unfortunately we have no events currently accepting submissions.</h2>
+					<p>Follow us on Twitter and Join our Discord to stay up to date!</p>
+					<LinkButton actionText="Home" iconRight={faArrowRight} link="/" />
 				</main>
 			</BasePage>
 		);
 	}
 
-	if (auth.ready && !auth.sessionData) {
-		return (
-			<BasePage>
-				<main
-					className={`content ${styles.content} ${styles.noEvents}`}>
-					<h2>Please sign in to submit games.</h2>
-					<LinkButton
-						actionText="Sign In"
-						iconRight={faArrowRight}
-						link="/signin"
-					/>
-					<br />
-					<LinkButton
-						actionText="Join"
-						iconRight={faArrowRight}
-						link="/signup"
-					/>
-				</main>
-			</BasePage>
-		);
-	}
-
-	const singleEvent =
-		initialQueryResult.data?.events.length === 1
-			? initialQueryResult.data.events[0]
-			: undefined;
+	const singleEvent = initialQueryResult.data?.events.length === 1 ? initialQueryResult.data.events[0] : undefined;
 
 	// console.log(submissionMutation[0]);
 
@@ -205,21 +189,17 @@ export default function SubmitGamePage() {
 			<main className={styles.content}>
 				<h1>
 					{singleEvent?.shortname}{" "}
-					{singleEvent?.acceptingBackups &&
-					!singleEvent?.acceptingSubmissions
-						? "Backup"
-						: "Game"}{" "}
-					Submission
+					{singleEvent?.acceptingBackups && !singleEvent?.acceptingSubmissions ? "Backup" : "Game"} Submission
 				</h1>
-				<a href="https://ausspeedruns.sharepoint.com/:w:/s/Main/Efo5GBDHzvRElYyMBpyucFgBYBfJAGLsP6qf1pE9ebU6-w?e=TKimUn" target="_blank" rel="noopener noreferrer">
+				<a
+					href="https://ausspeedruns.sharepoint.com/:w:/s/Main/Efo5GBDHzvRElYyMBpyucFgBYBfJAGLsP6qf1pE9ebU6-w?e=TKimUn"
+					target="_blank"
+					rel="noopener noreferrer">
 					AusSpeedruns Submission Guidelines
 				</a>
-				{!initialQueryResult.data?.user?.discord ||
-				!initialQueryResult.data?.user.verified ? (
+				{!initialQueryResult.data?.user?.discord || !initialQueryResult.data?.user.verified ? (
 					<>
-						<p>
-							Please make sure you have these set on your profile:
-						</p>
+						<p>Please make sure you have these set on your profile:</p>
 						<ul>
 							<li>Verified Email</li>
 							<li>Discord ID</li>
@@ -233,14 +213,8 @@ export default function SubmitGamePage() {
 					/>
 				)}
 
-				<Snackbar
-					open={successSubmit}
-					autoHideDuration={6000}
-					onClose={() => setSuccessSubmit(false)}>
-					<Alert
-						onClose={() => setSuccessSubmit(false)}
-						variant="filled"
-						severity="success">
+				<Snackbar open={successSubmit} autoHideDuration={6000} onClose={() => setSuccessSubmit(false)}>
+					<Alert onClose={() => setSuccessSubmit(false)} variant="filled" severity="success">
 						Successfully submitted run!
 					</Alert>
 				</Snackbar>

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { DocumentRenderer } from "@keystone-6/document-renderer";
 import styles from "./GameSubmission.module.scss";
-import { platforms, techPlatforms } from "../platforms";
-import useFormInput from "../../hooks/useFormInput";
-import useAutoCompleteFormInput from "../../hooks/useAutocompleteFormInput";
+import { platforms, techPlatforms } from "../../../components/platforms";
+import useFormInput from "../../../hooks/useFormInput";
+import useAutoCompleteFormInput from "../../../hooks/useAutocompleteFormInput";
 
 import {
 	FormControl,
@@ -30,7 +30,7 @@ import {
 } from "@mui/material";
 import { GameSubmitPage } from "./GameSubmitPage";
 import type { UseMutationResponse } from "urql";
-import type { AuthReturnData } from "../auth";
+import type { AuthReturnData } from "../../../components/auth";
 import { useLoadingTimeout } from "apps/nextjs/hooks/useLoadingTimeout";
 import PreviousSubmissions from "./PreviousSubmissions";
 import EstimateInput from "./EstimateInput";

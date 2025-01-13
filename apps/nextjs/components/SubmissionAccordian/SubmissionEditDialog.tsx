@@ -1,3 +1,5 @@
+"use client";
+
 import { gql } from "urql";
 import {
 	Button,
@@ -21,10 +23,10 @@ import { useState } from "react";
 import { useMutation } from "urql";
 
 import styles from "./SubmissionEditDialog.module.scss";
-import Availability from "../GameSubmission/Availability";
-import { DonationIncentive } from "../GameSubmission/submissionTypes";
-import DonationIncentiveInput from "../GameSubmission/DonationIncentive";
-import EstimateInput from "../GameSubmission/EstimateInput";
+import Availability from "../../app/submit-game/GameSubmission/Availability";
+import { DonationIncentive } from "../../app/submit-game/GameSubmission/submissionTypes";
+import DonationIncentiveInput from "../../app/submit-game/GameSubmission/DonationIncentive";
+import EstimateInput from "../../app/submit-game/GameSubmission/EstimateInput";
 import { Submission } from "./submission";
 
 type AgeRatingLiterals = "m_or_lower" | "ma15" | "ra18";

@@ -2,37 +2,22 @@ import Link from "next/link";
 import { TextField, Button } from "@mui/material";
 import styles from "./SignIn.module.scss";
 
-import { signIn } from "../../auth";
-import { AuthError } from "next-auth";
-import { redirect } from "next/navigation";
 import SignInError from "./signin-error";
 import { Metadata } from "next";
+import { signInAction } from "./signin-action";
 
 export const metadata: Metadata = {
 	title: "Sign In",
 	description: "Sign In to AusSpeedruns",
-}
+};
 
 export default function SignInPage() {
 	return (
-		<div>
+		<>
 			<div className={styles.background} />
 			<div className={`${styles.content} ${styles.form}`}>
 				<h1>Sign In</h1>
-				<form
-					action={async (formData) => {
-						"use server";
-						try {
-							console.log("c");
-							// await signIn("credentials", { email: formData.email, password: formData.password });
-							await signIn("credentials", formData);
-						} catch (error) {
-							if (error instanceof AuthError) {
-								return redirect(`/signin?error=${error.type}`);
-							}
-							throw error;
-						}
-					}}>
+				<form action={signInAction}>
 					<TextField
 						label="Email"
 						type="email"
@@ -63,6 +48,6 @@ export default function SignInPage() {
 					Forgot password?
 				</Link>
 			</div>
-		</div>
+		</>
 	);
 }

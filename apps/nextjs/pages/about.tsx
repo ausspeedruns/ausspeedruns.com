@@ -8,49 +8,46 @@ import { Carousel } from "react-responsive-carousel";
 import DiscordEmbed from "../components/DiscordEmbed";
 import { globals } from "../globals";
 import Button from "../components/Button/Button";
-import {
-	faDiscord,
-	faTwitch,
-	faTwitter,
-} from "@fortawesome/free-brands-svg-icons";
+import { faBluesky, faDiscord, faTwitch } from "@fortawesome/free-brands-svg-icons";
 
 import styles from "../styles/about.module.scss";
 import ASRLogo from "../styles/img/AusSpeedruns-Logo-Full-White.svg";
 import ASMLogo from "../styles/img/about/ASMLogo.svg";
 import DHLogo from "../styles/img/about/DreamHack_Logo_RGB_WHITE.svg";
 import PAXLogo from "../styles/img/about/PAXLogo.png";
-import PAXBackground from "../styles/img/about/IMG_0059.jpg";
-import ASMBackground from "../styles/img/about/IMG_9222-edited.jpg";
-import DHBackground from "../styles/img/about/DSC_0894.jpg";
+import PAXBackground from "../styles/img/about/PAX.jpg";
+import ASMBackground from "../styles/img/about/asm.jpg";
+import DHBackground from "../styles/img/about/Dreamhack.jpg";
 import AllCharities from "../styles/img/about/AllCharities.png";
 
-import HeroImage1 from "../styles/img/about/IMG_5192.jpg";
-import HeroImage2 from "../styles/img/about/IMG_9785.jpg";
-import HeroImage3 from "../styles/img/about/IMG_4289.jpg";
-import HeroImage4 from "../styles/img/about/IMG_5053.jpg";
-import HeroImage5 from "../styles/img/about/IMG_5837.jpg";
+import HerpPAXRexDamosk from "../styles/img/about/pax-rex-damosk.jpg";
+import HeroASM24Group from "../styles/img/about/asm24-group.jpg";
+import HeroPAXGlintOpal from "../styles/img/about/pax-glint-opal.jpg";
+import HeroASM24Cheer from "../styles/img/about/asm24-cheer.jpg";
+import HeroASM24Soap from "../styles/img/about/asm24-soap.jpg";
+import HeroASM24OverShoulder from "../styles/img/about/asm24-overshoulder.jpg";
 
 const HERO_IMAGES = [
-	{ img: HeroImage1, alt: "Rexaaayyy and Damosk having a laugh" },
+	{ img: HeroASM24OverShoulder, alt: "A photo of ASM2024 taken over the shoulder of a runner." },
 	{
-		img: HeroImage2,
-		alt: "The community cheering after ASM2022 for having raised $24,500!",
+		img: HeroASM24Group,
+		alt: "The community cheering after completing ASM2024!",
 	},
 	{
-		img: HeroImage3,
-		alt: "DaMidg, Paladinight and LaceyStripes running Kingdom Hearts at ASM2022",
+		img: HeroASM24Cheer,
+		alt: "ASM2024 attendees cheering during a successful run",
 	},
 	{
-		img: HeroImage4,
+		img: HeroASM24Soap,
+		alt: "ZoomieG dressed as a bar of soap, Softman25 dressed as a stack of dollar bills and Astrious dressed as himself, laugh at LiquidWifi at ASM2024",
+	},
+	{
+		img: HerpPAXRexDamosk,
+		alt: "Rexaaayyy and Damosk having a laugh",
+	},
+	{
+		img: HeroPAXGlintOpal,
 		alt: "Glint and Opallua running Kingdom Hearts at ASAP2022",
-	},
-	{
-		img: HeroImage5,
-		alt: "Clockdistrict running Spyro at ASM2022 with Bored_Banana and Prophetblack commentating",
-	},
-	{
-		img: ASMBackground,
-		alt: "The crowd watches Paracusia run Super Mario 64 at ASM2022"
 	},
 ];
 
@@ -61,9 +58,7 @@ function useOnScreen(ref: RefObject<HTMLElement>) {
 
 	useEffect(() => {
 		if (ref.current) {
-			observer = new IntersectionObserver(([entry]) =>
-				setIntersecting(entry.isIntersecting),
-			);
+			observer = new IntersectionObserver(([entry]) => setIntersecting(entry.isIntersecting));
 			observer.observe(ref.current);
 		}
 		return () => observer?.disconnect();
@@ -75,11 +70,7 @@ function useOnScreen(ref: RefObject<HTMLElement>) {
 function padZerosLocaleString(num: number, zeros: number): string {
 	const numString = num.toString();
 	const paddedString = "0".repeat(zeros - numString.length) + numString;
-	return (
-		paddedString.slice(0, -3).replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-		"," +
-		paddedString.slice(-3)
-	);
+	return paddedString.slice(0, -3).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "," + paddedString.slice(-3);
 }
 
 const AMOUNT_RAISED = 160000; // $160,000
@@ -102,10 +93,7 @@ export default function Home() {
 				update: function (a) {
 					if (a.animations.length > 0 && amountRef.current) {
 						const value = a.animations[0].currentValue;
-						const formattedNumber = padZerosLocaleString(
-							parseInt(value),
-							6,
-						);
+						const formattedNumber = padZerosLocaleString(parseInt(value), 6);
 						amountRef.current.innerText = formattedNumber;
 					}
 				},
@@ -117,11 +105,7 @@ export default function Home() {
 		<div>
 			<Head>
 				<title>About Us - AusSpeedruns</title>
-				<DiscordEmbed
-					title="AusSpeedruns"
-					description="About AusSpeedruns"
-					pageUrl="/"
-				/>
+				<DiscordEmbed title="AusSpeedruns" description="About AusSpeedruns" pageUrl="/" />
 			</Head>
 			<main className={styles.aboutUs}>
 				{/* Hero Image */}
@@ -137,18 +121,12 @@ export default function Home() {
 						interval={5000}
 						transitionTime={1500}>
 						{HERO_IMAGES.map((image, i) => {
-							return (
-								<Image key={i} src={image.img} alt={image.alt} fill />
-							);
+							return <Image key={i} src={image.img} alt={image.alt} fill />;
 						})}
 					</Carousel>
 
 					<div className={styles.overlay}>
-						<Image
-							src={ASRLogo}
-							alt="AusSpeedruns Logo"
-							width={800}
-						/>
+						<Image src={ASRLogo} alt="AusSpeedruns Logo" width={800} />
 						Australian Speedrunners coming together for charity
 					</div>
 				</div>
@@ -157,36 +135,30 @@ export default function Home() {
 				<section className={styles.content}>
 					<div className={styles.definition}>
 						<h2>Speedrun</h2>
-						<span className={styles.pronounciation}>
-							/ ˈspiː drʌn /
-						</span>
+						<span className={styles.pronounciation}>/ ˈspiː drʌn /</span>
 						<p>
 							<span className={styles.noun}>noun</span>
 							<span>
-								an instance of completing a video game, or level
-								of a game,
+								an instance of completing a video game, or level of a game,
 								<b> as fast as possible</b>
 							</span>
 						</p>
 					</div>
 					<p className={styles.tagline}>
 						We are AusSpeedruns.
-						<br />A non-profit organisation dedicated to raising
-						money for charity through speedrun marathons.
+						<br />A non-profit organisation dedicated to raising money for charity through speedrun
+						marathons.
 					</p>
 				</section>
 
 				{/* AusSpeedruns description */}
 				<section className={styles.description}>
 					<p className={[styles.content, styles.tagline].join(" ")}>
-						We have been organising speedrun marathons since 2015,
-						starting with AVCon in Adelaide. Since then, we have
-						grown to become the largest speedrun marathon
-						organisation in Australia, with a strong and dedicated
-						community. In addition to working with conventions such
-						as PAX Australia, The Game Expo, AVCon, and Comic Con
-						Australia, we also run our own annual event, the
-						Australian Speedrun Marathon.
+						We have been organising speedrun marathons since 2015, starting with AVCon in Adelaide. Since
+						then, we have grown to become the largest speedrun marathon organisation in Australia, with a
+						strong and dedicated community. In addition to working with conventions such as PAX Australia,
+						The Game Expo, AVCon, and Comic Con Australia, we also run our own annual event, the Australian
+						Speedrun Marathon.
 					</p>
 				</section>
 
@@ -221,30 +193,20 @@ export default function Home() {
 						<span>So far we have raised over</span>
 						<span className={styles.amount}>
 							<span className={styles.dollarSymbol}>$</span>
-							<span ref={amountRef}>
-								{(AMOUNT_RAISED).toLocaleString()}
-							</span>
+							<span ref={amountRef}>{AMOUNT_RAISED.toLocaleString()}</span>
 						</span>
 						<span>for different charities in Australia.</span>
 					</div>
-					<Image
-						src={AllCharities}
-						alt="Image collage of charities"
-						height={300}
-						width={800}
-					/>
+					<Image src={AllCharities} alt="Image collage of charities" height={300} width={800} />
 				</section>
 
 				{/* CTA */}
 				<section className={styles.callToAction}>
 					<p className={[styles.content, styles.tagline].join(" ")}>
-						So if you're a fan of playing games as fast as possible
-						and want to make a difference, we encourage you to get
-						involved with AusSpeedruns. Whether you're a veteran
-						speedrunner or just picked up your first speedgame, we
-						welcome you to join us and be a part of something
-						special. Together, we can make a difference while going
-						fast.
+						So if you're a fan of playing games as fast as possible and want to make a difference, we
+						encourage you to get involved with AusSpeedruns. Whether you're a veteran speedrunner or just
+						picked up your first speedgame, we welcome you to join us and be a part of something special.
+						Together, we can make a difference while going fast.
 					</p>
 					<div className={styles.buttons}>
 						<Button
@@ -262,10 +224,10 @@ export default function Home() {
 							openInNewTab
 						/>
 						<Button
-							actionText="Follow us on Twitter"
-							iconRight={faTwitter}
+							actionText="Follow us on Bluesky"
+							iconRight={faBluesky}
 							colorScheme="secondary lightHover"
-							link={globals.socialLinks.twitter}
+							link={globals.socialLinks.bluesky}
 							openInNewTab
 						/>
 					</div>
@@ -276,21 +238,15 @@ export default function Home() {
 					<p className={[styles.content, styles.tagline].join(" ")}>
 						<span>
 							For any questions please join our{" "}
-							<a
-								href={globals.socialLinks.discord}
-								target="_blank"
-								rel="noreferrer">
+							<a href={globals.socialLinks.discord} target="_blank" rel="noreferrer">
 								{" "}
 								Discord{" "}
 							</a>
 						</span>
 					</p>
 					<p className={[styles.content, styles.tagline].join(" ")}>
-						If you would like to collaborate with us please reach
-						out to
-						<a href="mailto:ausspeedruns@ausspeedruns.com">
-							ausspeedruns@ausspeedruns.com
-						</a>
+						If you would like to collaborate with us please reach out to
+						<a href="mailto:ausspeedruns@ausspeedruns.com">ausspeedruns@ausspeedruns.com</a>
 					</p>
 				</section>
 			</main>

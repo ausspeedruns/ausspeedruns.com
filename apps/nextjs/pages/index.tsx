@@ -81,7 +81,7 @@ const ASM2024: AusSpeedrunsEvent = {
 		name: "Game On Cancer",
 	},
 	logo: "events/asm24/ASM24 SVG.svg",
-	heroImage: "events/asm24/asm24-hero-temp.png",
+	heroImage: "events/asm24/ASM24Hero.png",
 	total: "30,500",
 };
 

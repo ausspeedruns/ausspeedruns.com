@@ -5,19 +5,19 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { globals } from "../../globals";
 import Button from "../../components/Button/Button";
 import { faDiscord, faTwitch, faTwitter } from "@fortawesome/free-brands-svg-icons";
+import { ImageCarousel } from "./image-carousel";
+import { AnimatedTotal } from "./animated-total";
 
 import styles from "./About.module.scss";
+
 import ASRLogo from "../../styles/img/AusSpeedruns-Logo-Full-White.svg";
 import ASMLogo from "./images/ASMLogo.svg";
 import DHLogo from "./images/DreamHack_Logo_RGB_WHITE.svg";
 import PAXLogo from "./images/PAXLogo.png";
-import PAXBackground from "./images/IMG_0059.jpg";
-import ASMBackground from "./images/IMG_9222-edited.jpg";
-import DHBackground from "./images/DSC_0894.jpg";
+import PAXBackground from "./images/PAX.jpg";
+import ASMBackground from "./images/asm.jpg";
+import DHBackground from "./images/Dreamhack.jpg";
 import AllCharities from "./images/AllCharities.png";
-
-import AnimatedTotal from "./animated-total";
-import ImageCarousel from "./image-carousel";
 
 export const metadata: Metadata = {
 	title: "About Us",

@@ -26,10 +26,13 @@ type PrefilledFormData = {
 		dateOfBirth: string;
 		state: string;
 		verified: boolean;
+		bluesky: string;
 	};
 };
 
 export function EditUserForm({ data }: PrefilledFormData) {
+	const updateProfileWithId = updateProfile.bind(null, data.userId);
+
 	const [discordWarning, setDiscordWarning] = useState(false);
 	const [twitterWarning, setTwitterWarning] = useState(false);
 	const [twitchWarning, setTwitchWarning] = useState(false);
@@ -42,6 +45,7 @@ export function EditUserForm({ data }: PrefilledFormData) {
 	const [discord, setDiscord] = useState(data.discord);
 	const [twitter, setTwitter] = useState(data.twitter);
 	const [twitch, setTwitch] = useState(data.twitch);
+	const [bluesky, setBluesky] = useState(data.bluesky);
 	const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(
 		data.dateOfBirth ? new Date(data.dateOfBirth) : undefined,
 	);
@@ -54,107 +58,125 @@ export function EditUserForm({ data }: PrefilledFormData) {
 		(discord !== "" && !DiscordRegex.test(discord.toLowerCase()));
 
 	return (
-		<form className={styles.profileInformation} action={updateProfile}>
-			{!data.verified && (
-				<>
-					<div>Email not verified!</div>
-					<Button variant="contained" onClick={() => resendVerificationEmail(data.userId)}>
-						Send verification
-					</Button>
-				</>
-			)}
-			<h3>Personal Information</h3>
-			<div />
-			<div>Name</div>
-			<TextField
-				value={name}
-				onChange={(e) => setName(e.target.value)}
-				variant={"outlined"}
-				autoComplete="name"
-				slotProps={{ htmlInput: { maxLength: 100 } }}
-			/>
-			<div>Email{data.verified ? " ✓" : ""}</div>
-			<TextField
-				value={email}
-				onChange={(e) => setEmail(e.target.value)}
-				variant={"outlined"}
-				autoComplete="email"
-			/>
-			<div>Pronouns</div>
-			<TextField
-				value={pronouns}
-				onChange={(e) => setPronouns(e.target.value)}
-				variant={"outlined"}
-				autoComplete="pronouns"
-				slotProps={{ htmlInput: { maxLength: 100 } }}
-			/>
-			<div>Date of birth</div>
-			<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enAU}>
-				<DatePicker
-					value={new Date(dateOfBirth || Date.now())}
-					onChange={(newValue) => {
-						if (newValue) setDateOfBirth(newValue);
-					}}
-					openTo={"year"}
-					maxDate={maxDate}
-					views={["year", "month", "day"]}
+		<form action={updateProfileWithId} style={{display: "flex", flexDirection: "column"}}>
+			<div className={styles.profileInformation}>
+				{!data.verified && (
+					<>
+						<div>Email not verified!</div>
+						<Button variant="contained" onClick={() => resendVerificationEmail(data.userId)}>
+							Send verification
+						</Button>
+					</>
+				)}
+				<h3>Personal Information</h3>
+				<div />
+				<div>Name</div>
+				<TextField
+					value={name}
+					onChange={(e) => setName(e.target.value)}
+					variant={"outlined"}
+					autoComplete="name"
+					slotProps={{ htmlInput: { maxLength: 100 } }}
+					name="name"
 				/>
-			</LocalizationProvider>
-			<div>State</div>
-			<Select value={state ?? "none"} onChange={(e) => setState(e.target.value)}>
-				<MenuItem value="none">
-					<i>No state</i>
-				</MenuItem>
-				<MenuItem value="vic">Victoria</MenuItem>
-				<MenuItem value="nsw">New South Wales</MenuItem>
-				<MenuItem value="qld">Queensland</MenuItem>
-				<MenuItem value="sa">South Australia</MenuItem>
-				<MenuItem value="nt">Northern Territory</MenuItem>
-				<MenuItem value="act">ACT</MenuItem>
-				<MenuItem value="tas">Tasmania</MenuItem>
-				<MenuItem value="wa">Western Australia</MenuItem>
-				<MenuItem value="outer">Outside of Australia</MenuItem>
-			</Select>
-			<Link href="/reset-password">Reset password</Link>
-			<div />
-			<h3>Socials</h3>
-			<div />
-			<div>Discord</div>
-			<TextField
-				error={discordWarning}
-				helperText="e.g. ausspeedruns"
-				label={discordWarning ? "Error" : undefined}
-				value={discord}
-				variant={"outlined"}
-				onChange={(e) => setDiscord(e.target.value)}
-				onBlur={(e) =>
-					setDiscordWarning(!DiscordRegex.test(e.target.value.toLowerCase()) && e.target.value !== "")
-				}
-				autoComplete="discord"
-			/>
-			<div>Twitter</div>
-			<TextField
-				error={twitterWarning}
-				helperText="e.g. @AusSpeedruns"
-				label={twitterWarning ? "Error" : undefined}
-				value={twitter}
-				variant={"outlined"}
-				onChange={(e) => setTwitter(e.target.value)}
-				onBlur={(e) => setTwitterWarning(!TwitterRegex.test(e.target.value) && e.target.value !== "")}
-				autoComplete="twitter"
-			/>
-			<div>Twitch</div>
-			<TextField
-				error={twitchWarning}
-				label={twitchWarning ? "Error" : undefined}
-				value={twitch}
-				variant={"outlined"}
-				onChange={(e) => setTwitch(e.target.value)}
-				onBlur={(e) => setTwitchWarning(!TwitchRegex.test(e.target.value) && e.target.value !== "")}
-				helperText="e.g. AusSpeedruns"
-				autoComplete="twitch"
-			/>
-			<Button variant="contained" disabled={disableSave} type="submit">
+				<div>Email{data.verified ? " ✓" : ""}</div>
+				<TextField
+					value={email}
+					onChange={(e) => setEmail(e.target.value)}
+					variant={"outlined"}
+					autoComplete="email"
+					name="email"
+				/>
+				<div>Pronouns</div>
+				<TextField
+					value={pronouns}
+					onChange={(e) => setPronouns(e.target.value)}
+					variant={"outlined"}
+					autoComplete="pronouns"
+					slotProps={{ htmlInput: { maxLength: 100 } }}
+					name="pronouns"
+				/>
+				<div>Date of birth</div>
+				<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enAU}>
+					<DatePicker
+						value={new Date(dateOfBirth || Date.now())}
+						onChange={(newValue) => {
+							if (newValue) setDateOfBirth(newValue);
+						}}
+						openTo={"year"}
+						maxDate={maxDate}
+						views={["year", "month", "day"]}
+						name="dateOfBirth"
+					/>
+				</LocalizationProvider>
+				<div>State</div>
+				<Select value={state ?? "none"} onChange={(e) => setState(e.target.value)} name="state">
+					<MenuItem value="none">
+						<i>No state</i>
+					</MenuItem>
+					<MenuItem value="vic">Victoria</MenuItem>
+					<MenuItem value="nsw">New South Wales</MenuItem>
+					<MenuItem value="qld">Queensland</MenuItem>
+					<MenuItem value="sa">South Australia</MenuItem>
+					<MenuItem value="nt">Northern Territory</MenuItem>
+					<MenuItem value="act">ACT</MenuItem>
+					<MenuItem value="tas">Tasmania</MenuItem>
+					<MenuItem value="wa">Western Australia</MenuItem>
+					<MenuItem value="outer">Outside of Australia</MenuItem>
+				</Select>
+				<Link href="/reset-password">Reset password</Link>
+				<div />
+				<h3>Socials</h3>
+				<div />
+				<div>Discord</div>
+				<TextField
+					error={discordWarning}
+					helperText="e.g. ausspeedruns"
+					label={discordWarning ? "Error" : undefined}
+					value={discord}
+					variant={"outlined"}
+					onChange={(e) => setDiscord(e.target.value)}
+					onBlur={(e) =>
+						setDiscordWarning(!DiscordRegex.test(e.target.value.toLowerCase()) && e.target.value !== "")
+					}
+					autoComplete="discord"
+					name="discord"
+				/>
+				<div>Twitter</div>
+				<TextField
+					error={twitterWarning}
+					helperText="e.g. @AusSpeedruns"
+					label={twitterWarning ? "Error" : undefined}
+					value={twitter}
+					variant={"outlined"}
+					onChange={(e) => setTwitter(e.target.value)}
+					onBlur={(e) => setTwitterWarning(!TwitterRegex.test(e.target.value) && e.target.value !== "")}
+					autoComplete="twitter"
+					name="twitter"
+				/>
+				<div>Bluesky</div>
+				<TextField
+					value={bluesky}
+					variant={"outlined"}
+					onChange={(e) => setBluesky(e.target.value)}
+					helperText="e.g. AusSpeedruns.bsky.app or AusSpeedruns.com"
+					autoComplete="bluesky"
+					name="bluesky"
+				/>
+				<div>Twitch</div>
+				<TextField
+					error={twitchWarning}
+					label={twitchWarning ? "Error" : undefined}
+					value={twitch}
+					variant={"outlined"}
+					onChange={(e) => setTwitch(e.target.value)}
+					onBlur={(e) => setTwitchWarning(!TwitchRegex.test(e.target.value) && e.target.value !== "")}
+					helperText="e.g. AusSpeedruns"
+					autoComplete="twitch"
+					name="twitch"
+				/>
+			</div>
+			<Button variant="contained" disabled={disableSave} type="submit" style={{ flexGrow: 1 }}>
 				Save
 			</Button>
 			{/* <Snackbar

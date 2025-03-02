@@ -15,6 +15,9 @@ import {
 import { addDays, differenceInDays } from "date-fns";
 
 import { createSubmission } from "./volunteer-action";
+import ASButton from "../../components/Button/Button";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const VolunteerTypes = {
 	host: "Host",
@@ -62,11 +65,6 @@ export function Form({ events, userId }: Props) {
 	const [techAvailability, setTechAvailability] = useState("");
 	const [techExperience, setTechExperience] = useState("");
 
-	
-	if (successSubmit) {
-		return <ConfirmedSubmission role={VolunteerTypes[jobType]} reset={clearInputs} />;
-	}
-
 	const currentEvent = events.find((eventResult) => eventResult.id === event);
 
 	let eventLength = 0;
@@ -77,6 +75,10 @@ export function Form({ events, userId }: Props) {
 	useEffect(() => {
 		clearAvailabilityDates(eventLength);
 	}, [eventLength]);
+
+	if (successSubmit) {
+		return <ConfirmedSubmission role={VolunteerTypes[jobType]} reset={clearInputs} />;
+	}
 
 	function clearAvailabilityDates(numberOfDays: number) {
 		const cleanArray = [];
@@ -426,7 +428,17 @@ const ConfirmedSubmission = (props: { role: string; reset: () => void }) => {
 	return (
 		<main className={`content ${styles.content} ${styles.noEvents}`}>
 			<h2>{props.role} volunteer submitted!</h2>
-			<p>Thank you so much for offering to volunteer! We'll get back to you soon about more information.</p>
+			<p>
+				Thank you so much for offering to volunteer!
+				<br />
+				We'll get back to you soon about more information.
+			</p>
+			<Button
+				onClick={() => window.location.reload()}
+				variant="contained"
+				startIcon={<FontAwesomeIcon icon={faArrowLeft} />}>
+				Volunteer for another role?
+			</Button>
 		</main>
 	);
 };

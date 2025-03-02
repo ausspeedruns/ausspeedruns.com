@@ -27,7 +27,7 @@ function padZerosLocaleString(num: number, zeros: number): string {
 	return paddedString.slice(0, -3).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "," + paddedString.slice(-3);
 }
 
-export default function AnimatedTotal() {
+export function AnimatedTotal() {
 	const amountRef = useRef<HTMLSpanElement>(null);
 	const amountVisible = useOnScreen(amountRef);
 	const [amountAnimated, setAmountAnimated] = useState(false);

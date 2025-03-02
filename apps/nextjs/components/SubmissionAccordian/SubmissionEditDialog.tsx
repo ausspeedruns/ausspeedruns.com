@@ -20,7 +20,6 @@ import {
 	ToggleButtonGroup,
 } from "@mui/material";
 import { useState } from "react";
-import { useMutation } from "urql";
 
 import styles from "./SubmissionEditDialog.module.scss";
 import Availability from "../../app/submit-game/GameSubmission/Availability";
@@ -28,76 +27,13 @@ import { DonationIncentive } from "../../app/submit-game/GameSubmission/submissi
 import DonationIncentiveInput from "../../app/submit-game/GameSubmission/DonationIncentive";
 import EstimateInput from "../../app/submit-game/GameSubmission/EstimateInput";
 import { Submission } from "./submission";
+import { deleteSubmission, updateSubmission, updateSubmissionBackup } from "./submission-edit-action";
 
 type AgeRatingLiterals = "m_or_lower" | "ma15" | "ra18";
 type RaceLiterals = "no" | "solo" | "only";
 
-const MUTATION_SUBMISSION = gql`
-	mutation (
-		$submissionID: ID!
-		$game: String!
-		$category: String!
-		$platform: String!
-		$techPlatform: String!
-		$estimate: String!
-		$possibleEstimate: String
-		$possibleEstimateReason: String
-		$ageRating: SubmissionAgeRatingType
-		$newDonationIncentives: JSON
-		$race: SubmissionRaceType
-		$racer: String
-		$coop: Boolean
-		$video: String!
-		$specialReqs: String
-		$willingBackup: Boolean
-		$availableDates: JSON!
-	) {
-		updateSubmission(
-			where: { id: $submissionID }
-			data: {
-				game: $game
-				category: $category
-				platform: $platform
-				techPlatform: $techPlatform
-				estimate: $estimate
-				possibleEstimate: $possibleEstimate
-				possibleEstimateReason: $possibleEstimateReason
-				ageRating: $ageRating
-				newDonationIncentives: $newDonationIncentives
-				race: $race
-				racer: $racer
-				coop: $coop
-				video: $video
-				specialReqs: $specialReqs
-				willingBackup: $willingBackup
-				availability: $availableDates
-			}
-		) {
-			__typename
-		}
-	}
-`;
-
-const MUTATION_BACKUP = gql`
-	mutation ($submissionID: ID, $willingBackup: Boolean!) {
-		updateSubmission(
-			where: { id: $submissionID }
-			data: { willingBackup: $willingBackup }
-		) {
-			__typename
-		}
-	}
-`;
-
-const MUTATION_DELETE = gql`
-	mutation ($submissionID: ID) {
-		deleteSubmission(where: { id: $submissionID }) {
-			__typename
-		}
-	}
-`;
-
 type SubmissionEditProps = {
+	cookie?: string;
 	open: boolean;
 	submission: Submission;
 	event: {
@@ -115,6 +51,7 @@ const SubmissionEditDialog = ({
 	submission,
 	handleClose,
 	event,
+	cookie
 }: SubmissionEditProps) => {
 	const [deleteDialog, setDeleteDialog] = useState(false);
 
@@ -153,15 +90,6 @@ const SubmissionEditDialog = ({
 		setDeleteDialog(false);
 	};
 
-	// Mutation for game submission
-	const [submissionResult, editSubmission] = useMutation(MUTATION_SUBMISSION);
-
-	// Mutation for backup
-	const [backupResult, editBackup] = useMutation(MUTATION_BACKUP);
-
-	// Mutation for deleting game submission
-	const [deleteResult, deleteSubmission] = useMutation(MUTATION_DELETE);
-
 	function handleNewDonationIncentive() {
 		if (typeof donationIncentives === "undefined") {
 			setDonationIncentives([{ title: "" }]);
@@ -197,7 +125,8 @@ const SubmissionEditDialog = ({
 
 	const UpdateSubmission = () => {
 		if (!event.acceptingSubmissions) return;
-		editSubmission({
+		updateSubmission({
+			userCookie: cookie,
 			submissionID: submission.id,
 			game,
 			category,
@@ -207,28 +136,30 @@ const SubmissionEditDialog = ({
 			possibleEstimate:
 				possibleEstimate === "00:00:00" ? "" : possibleEstimate,
 			possibleEstimateReason,
-			ageRating,
+			ageRating: ageRating as AgeRatingLiterals,
 			newDonationIncentives: donationIncentives,
-			race,
+			race: race as RaceLiterals,
 			racer,
-			coop,
+			coop: coop ?? false,
 			video,
 			specialReqs: specialRequirements,
 			willingBackup: backup,
 			availableDates,
 		}).then((result) => {
+			console.log(result);
 			if (!result.error) {
 				handleClose({}, "escapeKeyDown");
-			} else {
-				handleClose({error: result.error.message}, "escapeKeyDown");
-				console.error(result.error);
 			}
+		}).catch((error) => {
+			handleClose({error: error.message}, "escapeKeyDown");
+			console.error(error);
 		});
 	};
 
 	const BackupSubmission = () => {
 		if (!event.acceptingBackups && submission.status !== "accepted") return;
-		editBackup({
+		updateSubmissionBackup({
+			cookie: cookie,
 			submissionID: submission.id,
 			willingBackup: backup,
 		}).then((result) => {
@@ -242,7 +173,7 @@ const SubmissionEditDialog = ({
 	};
 
 	const DeleteSubmission = () => {
-		deleteSubmission({ submissionID: submission.id });
+		deleteSubmission({ cookie: cookie, submissionID: submission.id });
 	};
 
 	return (
@@ -285,7 +216,7 @@ const SubmissionEditDialog = ({
 							}
 							label="Provide details as to why"
 							autoComplete="off"
-							inputProps={{ maxLength: 200 }}
+							slotProps={{ htmlInput: { maxLength: 200 } }}
 							required
 							multiline
 							rows={2}
@@ -305,7 +236,7 @@ const SubmissionEditDialog = ({
 					label="Special Requirements"
 					value={specialRequirements}
 					onChange={(e) => setSpecialRequirements(e.target.value)}
-					inputProps={{ maxLength: 300 }}
+					slotProps={{ htmlInput: { maxLength: 300 } }}
 					helperText="This involves any: mods, downpatches, software, controllers (if a PC game) and any other requirements."
 				/>
 				{typeof donationIncentives !== "undefined" && (

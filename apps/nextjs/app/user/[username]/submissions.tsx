@@ -6,7 +6,7 @@ import styles from "./submissions.module.scss";
 import SubmissionAccordion from "../../../components/SubmissionAccordian/SubmissionAccordion";
 import { Submission } from "./submission";
 
-export default function Submissions({ submissions }: { submissions: Submission[] }) {
+export default function Submissions({ submissions, cookie }: { submissions: Submission[]; cookie?: string }) {
 	const [submissionTab, setSubmissionTab] = useState(0);
 
 	// Get all event names for tabs
@@ -25,7 +25,14 @@ export default function Submissions({ submissions }: { submissions: Submission[]
 			</Box>
 			{submissions.map((submission) => {
 				if (submission.event?.shortname !== allSubmissionEvents[submissionTab]) return;
-				return <SubmissionAccordion key={submission.id} submission={submission} event={submission.event} />;
+				return (
+					<SubmissionAccordion
+						key={submission.id}
+						submission={submission}
+						event={submission.event}
+						cookie={cookie}
+					/>
+				);
 			})}
 		</div>
 	);

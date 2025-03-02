@@ -6,9 +6,9 @@ import { PostEventComponentRenderers } from "../../components/ComponentBlocks/po
 
 import styles from "../../styles/Event.module.scss";
 import { customDocumentRenderer } from "../../components/ComponentBlocks/custom-renders";
-import { cacheExchange, createClient, fetchExchange, gql } from "@urql/core";
-import { registerUrql } from "@urql/next/rsc";
+import { gql } from "@urql/core";
 import { notFound } from "next/navigation";
+import { getUrqlClient } from "@libs/urql";
 
 const QUERY_EVENT = gql`
 	query ($event: String!) {
@@ -16,6 +16,9 @@ const QUERY_EVENT = gql`
 			id
 			shortname
 			endDate
+			eventPage {
+				document(hydrateRelationships: true)
+			}
 		}
 	}
 `;
@@ -23,8 +26,6 @@ const QUERY_EVENT = gql`
 const QUERY_LIVE_EVENT = gql`
 	query ($event: String!) {
 		event(where: { shortname: $event }) {
-			id
-			shortname
 			eventPage {
 				document(hydrateRelationships: true)
 			}
@@ -38,7 +39,6 @@ const QUERY_LIVE_EVENT = gql`
 const QUERY_PAST_EVENT = gql`
 	query ($event: String!) {
 		event(where: { shortname: $event }) {
-			shortname
 			raised
 			postEventPage {
 				document(hydrateRelationships: true)
@@ -90,18 +90,6 @@ interface QUERY_PAST_EVENT_RESULTS {
 	};
 }
 
-const makeClient = () => {
-	return createClient({
-		url:
-			process.env.NODE_ENV === "production"
-				? "https://keystone.ausspeedruns.com/api/graphql"
-				: "http://localhost:8000/api/graphql",
-		exchanges: [cacheExchange, fetchExchange],
-	});
-};
-
-const { getClient } = registerUrql(makeClient);
-
 function documentTrim(document: any[]) {
 	const mutableDocument = [...document];
 
@@ -121,7 +109,7 @@ function documentTrim(document: any[]) {
 }
 
 export default async function EventPage({ params }: { params: { event: string } }) {
-	const data = await getClient().query<QUERY_EVENT_RESULTS>(QUERY_EVENT, { event: params.event });
+	const data = await getUrqlClient().query<QUERY_EVENT_RESULTS>(QUERY_EVENT, { event: params.event });
 
 	if (!data?.data || data?.error || !data.data.event) {
 		return notFound();
@@ -131,7 +119,7 @@ export default async function EventPage({ params }: { params: { event: string } 
 
 	// If still live
 	if (data.data.event.endDate && new Date(data.data.event?.endDate) > new Date()) {
-		const liveData = await getClient()
+		const liveData = await getUrqlClient()
 			.query<QUERY_LIVE_EVENT_RESULTS>(QUERY_LIVE_EVENT, { event: params.event })
 			.toPromise();
 
@@ -139,12 +127,14 @@ export default async function EventPage({ params }: { params: { event: string } 
 			return notFound();
 		}
 
+		// console.log(liveData.data.event.eventPage)
+
 		eventData = {
 			event: liveData.data.event,
 			past: false,
 		};
 	} else {
-		const pastData = await getClient()
+		const pastData = await getUrqlClient()
 			.query<QUERY_PAST_EVENT_RESULTS>(QUERY_PAST_EVENT, { event: params.event })
 			.toPromise();
 
@@ -159,7 +149,7 @@ export default async function EventPage({ params }: { params: { event: string } 
 	}
 
 	const trimmedDocument = documentTrim(
-		eventData.past === true ? eventData.event.postEventPage.document : eventData.event.eventPage.document,
+		eventData.past ? eventData.event.postEventPage.document : eventData.event.eventPage.document,
 	);
 
 			/* <Head>
@@ -171,11 +161,10 @@ export default async function EventPage({ params }: { params: { event: string } 
 				/>
 			</Head> */
 
-	console.log(trimmedDocument);
 
 	return (
 		<div
-			className={eventData.past === true ? styles.postEvent : ""}
+			className={eventData.past ? styles.postEvent : ""}
 			style={{ backgroundImage: eventData.past ? `url('${eventData.event.postEventBackground?.url}')` : "" }}>
 			<div className={styles.document}>
 				<DocumentRenderer

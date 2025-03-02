@@ -1,10 +1,8 @@
 import Head from "next/head";
-import { Alert, Snackbar, ThemeProvider } from "@mui/material";
-import { useQuery, gql, useMutation, createClient, cacheExchange, fetchExchange } from "urql";
+import { Alert, Snackbar } from "@mui/material";
+import { gql, useMutation, createClient, cacheExchange, fetchExchange } from "urql";
 
 import styles from "../../styles/SubmitGame.module.scss";
-import theme from "../../mui-theme";
-import { useAuth } from "../../components/auth";
 import LinkButton from "../../components/Button/Button";
 import { faArrowRight, faL } from "@fortawesome/free-solid-svg-icons";
 import DiscordEmbed from "../../components/DiscordEmbed";
@@ -68,66 +66,9 @@ const QUERY_INITIAL = gql`
 	}
 `;
 
-const MUTATION_SUBMIT = gql`
-	mutation (
-		$userId: ID!
-		$game: String!
-		$category: String!
-		$platform: String!
-		$techPlatform: String!
-		$estimate: String!
-		$possibleEstimate: String
-		$possibleEstimateReason: String
-		$ageRating: SubmissionAgeRatingType
-		$newDonationIncentives: JSON
-		$specialReqs: String
-		$availableDates: JSON!
-		$race: SubmissionRaceType
-		$racer: String
-		$coop: Boolean
-		$video: String!
-		$eventId: ID!
-		$willingBackup: Boolean
-	) {
-		createSubmission(
-			data: {
-				runner: { connect: { id: $userId } }
-				game: $game
-				category: $category
-				platform: $platform
-				techPlatform: $techPlatform
-				estimate: $estimate
-				possibleEstimate: $possibleEstimate
-				possibleEstimateReason: $possibleEstimateReason
-				ageRating: $ageRating
-				newDonationIncentives: $newDonationIncentives
-				specialReqs: $specialReqs
-				availability: $availableDates
-				race: $race
-				racer: $racer
-				coop: $coop
-				video: $video
-				event: { connect: { id: $eventId } }
-				willingBackup: $willingBackup
-			}
-		) {
-			game
-			category
-			estimate
-			possibleEstimate
-			platform
-			techPlatform
-			race
-			coop
-			racer
-			newDonationIncentives
-		}
-	}
-`;
-
 function BasePage({ children }: { children: React.ReactNode }) {
 	return (
-		<ThemeProvider theme={theme}>
+		<div>
 			{/* <Head>
 				<title>Game Submission - AusSpeedruns</title>
 				<DiscordEmbed
@@ -139,7 +80,7 @@ function BasePage({ children }: { children: React.ReactNode }) {
 			</Head> */}
 			<div className={styles.backgroundContainer}></div>
 			{children}
-		</ThemeProvider>
+		</div>
 	);
 }
 
@@ -166,7 +107,7 @@ export default async function SubmitGamePage() {
 	});
 
 	// Mutation for game submission
-	const submissionMutation = useMutation<MUTATION_SUBMISSION_RESULTS>(MUTATION_SUBMIT);
+	// const submissionMutation = useMutation<MUTATION_SUBMISSION_RESULTS>(MUTATION_SUBMIT);
 
 	if (data?.events.length === 0) {
 		return (
@@ -180,7 +121,7 @@ export default async function SubmitGamePage() {
 		);
 	}
 
-	const singleEvent = initialQueryResult.data?.events.length === 1 ? initialQueryResult.data.events[0] : undefined;
+	const singleEvent = data?.events.length === 1 ? data.events[0] : undefined;
 
 	// console.log(submissionMutation[0]);
 
@@ -197,7 +138,7 @@ export default async function SubmitGamePage() {
 					rel="noopener noreferrer">
 					AusSpeedruns Submission Guidelines
 				</a>
-				{!initialQueryResult.data?.user?.discord || !initialQueryResult.data?.user.verified ? (
+				{!data?.user?.discord || !data?.user.verified ? (
 					<>
 						<p>Please make sure you have these set on your profile:</p>
 						<ul>
@@ -206,18 +147,14 @@ export default async function SubmitGamePage() {
 						</ul>
 					</>
 				) : (
-					<GameSubmissions
-						auth={auth}
-						submissionMutation={submissionMutation}
-						userQueryResult={initialQueryResult.data}
-					/>
+					data.events.length > 1 && <GameSubmissions userId={session.user.id} userQueryResult={data} />
 				)}
 
-				<Snackbar open={successSubmit} autoHideDuration={6000} onClose={() => setSuccessSubmit(false)}>
+				{/* <Snackbar open={successSubmit} autoHideDuration={6000} onClose={() => setSuccessSubmit(false)}>
 					<Alert onClose={() => setSuccessSubmit(false)} variant="filled" severity="success">
 						Successfully submitted run!
 					</Alert>
-				</Snackbar>
+				</Snackbar> */}
 			</main>
 		</BasePage>
 	);

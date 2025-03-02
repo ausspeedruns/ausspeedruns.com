@@ -67,7 +67,7 @@ const ASDH2024: AusSpeedrunsEvent = {
 		name: "Game On Cancer",
 	},
 	logo: "events/asdh24/DreamHack24Logo.png",
-	heroImage: "events/asdh24/DreamHack24Hero.png",
+	heroImage: "Dreamhack.jpg",
 	total: "10,000",
 };
 
@@ -99,6 +99,19 @@ const ASAP2024: AusSpeedrunsEvent = {
 	total: "15,000",
 };
 
+const ASM2025: AusSpeedrunsEvent = {
+	fullName: "Australian Speedrun Marathon 2025",
+	preferredName: "ASM2025",
+	shortName: "ASM2025",
+	startDate: "15 July 2025 09:00:00 GMT+0930",
+	dates: "July 15 – 20, 2025",
+	charity: {
+		name: "Game On Cancer",
+	},
+	logo: "events/asm25/logo.svg",
+	heroImage: "events/asm24/asm24-hero-temp.png",
+};
+
 export const metadata: Metadata = {
 	description: "Home of the AusSpeedruns events",
 	openGraph: {
@@ -111,12 +124,13 @@ export default function Home() {
 	return (
 		<main>
 			{/* <EventLive event={"ASAP2024"} /> */}
-			{/* <HeroBlock
-					event={ASAP2024}
-					tagLine="PAX Aus 2024 is coming up!"
-					ticketLink="https://aus.paxsite.com/"
-					schedule
-				/> */}
+			<HeroBlock
+				event={ASM2025}
+				tagLine="Our 10th Anniversary! Join us for a week of speedrunning and raising money for Game On Cancer!"
+				ticketLink="/ASM2025#tickets"
+				submitRuns={true}
+				schedule={false}
+			/>
 			<LastEventBlock
 				tagLine="AusSpeedruns At PAX 2024 was fantastic, raising over $15,000 for Game On Cancer!"
 				event={ASAP2024}

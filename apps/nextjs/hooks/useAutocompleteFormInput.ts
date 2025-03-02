@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState } from 'react';
+import { type SyntheticEvent, useState } from "react";
 
 const useAutocompleteFormInput = (initialValue: string) => {
 	const [value, setValue] = useState<string | undefined>(initialValue);
@@ -6,7 +6,7 @@ const useAutocompleteFormInput = (initialValue: string) => {
 
 	const handleChange = (_e: SyntheticEvent<Element, Event>, newValue: string | null) => {
 		if (newValue === null) {
-			setValue(undefined)
+			setValue(undefined);
 		} else {
 			setValue(newValue);
 		}
@@ -14,7 +14,7 @@ const useAutocompleteFormInput = (initialValue: string) => {
 
 	const handleInputChange = (_e: SyntheticEvent<Element, Event>, newInputValue: string | null) => {
 		if (newInputValue === null) {
-			setInputValue(undefined)
+			setInputValue(undefined);
 		} else {
 			setInputValue(newInputValue);
 		}
@@ -27,13 +27,15 @@ const useAutocompleteFormInput = (initialValue: string) => {
 
 	const setInputValueManually = (newInputValue: string) => {
 		setInputValue(newInputValue);
-	}
+	};
 
 	return {
-		value,
-		onChange: handleChange,
-		inputValue,
-		onInputChange: handleInputChange,
+		elementProps: {
+			value,
+			onChange: handleChange,
+			inputValue,
+			onInputChange: handleInputChange,
+		},
 		reset,
 		setInputValue: setInputValueManually,
 	};

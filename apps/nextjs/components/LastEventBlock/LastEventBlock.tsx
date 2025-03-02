@@ -28,14 +28,7 @@ const Heroblock = ({ event, backgroundPos, tagLine, overrideHeight }: LastEventB
 			<div className={`${styles.content} content`}>
 				<div className={styles.ctaBlock}>
 					<h1>{event.preferredName}</h1>
-					<h2>
-						{event.preferredName} raised a total of ${event.total}
-					</h2>
 					<br />
-					{/* <p>
-						Australian Speedrunners came together to raise money for
-						Cure Cancer Australia at {event.preferredName}!
-					</p> */}
 					<p>{tagLine}</p>
 					<Button
 						actionText={event.preferredName}

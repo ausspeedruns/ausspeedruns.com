@@ -7,7 +7,7 @@ interface FormInputState<T> {
 	setValue: (value: T) => void;
 }
 
-const useFormInput = <T>(initialValue: T): FormInputState<T> => {
+const useFormInput = <T>(initialValue: T) => {
 	const [value, setValue] = useState<T>(initialValue);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,10 +23,12 @@ const useFormInput = <T>(initialValue: T): FormInputState<T> => {
 	}
 
 	return {
-		value,
-		onChange: handleChange,
-		reset,
+		elementProps: {
+			value,
+			onChange: handleChange,
+		},
 		setValue: setValueManually,
+		reset,
 	};
 };
 

@@ -1,0 +1,99 @@
+@import "../../styles/colors.scss";
+@import "../../styles/responsive.scss";
+
+.divider {
+	margin: 0;
+}
+
+.hero {
+	position: relative;
+	height: 600px;
+
+	.marquee {
+		overflow: hidden;
+
+		div {
+			background-color: $color-ochre;
+
+			div {
+				height: 600px;
+			}
+		}
+
+		img {
+			mix-blend-mode: soft-light;
+		}
+	}
+
+	.heroContent {
+		position: absolute;
+		top: 0;
+		height: 100%;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		z-index: 2;
+
+		text-align: center;
+		text-wrap: balance;
+
+		color: white;
+
+		.logo {
+			margin-bottom: 2rem;
+			width: 80vw;
+			height: auto;
+			max-height: 150px;
+		}
+	}
+}
+
+.quickActions {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 2rem;
+	gap: 1rem;
+	flex-direction: column;
+
+	@include breakpoint($md) {
+		flex-direction: row;
+	}
+}
+
+.content,
+.infoTable {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	text-wrap: balance;
+	width: 100%;
+	padding: 1rem;
+
+	* {
+		max-width: 900px;
+	}
+}
+
+.infoTable {
+	background-color: $color-teal;
+	color: $light-text;
+
+	table {
+		tbody {
+			tr {
+				td {
+					padding: 0.5rem;
+
+					&:nth-child(2) {
+						font-weight: bold;
+					}
+				}
+			}
+		}
+	}
+}

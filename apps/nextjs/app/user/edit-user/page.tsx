@@ -70,8 +70,8 @@ export default async function EditUser() {
 
 	return (
 		<div className={styles.content}>
-			<h1>{session.user.name}</h1>
-			<Link href={`/user/${session.user.name}`} passHref className={styles.return}>
+			<h1>{session.user.username}</h1>
+			<Link href={`/user/${session.user.username}`} passHref className={styles.return}>
 				<FontAwesomeIcon icon={faChevronLeft} /> Return
 			</Link>
 			<EditUserForm
@@ -86,6 +86,7 @@ export default async function EditUser() {
 					twitch: user.twitch,
 					dateOfBirth: user.dateOfBirth,
 					verified: user.verified,
+					bluesky: "",
 				}}
 			/>
 		</div>

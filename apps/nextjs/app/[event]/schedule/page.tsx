@@ -23,9 +23,9 @@ import Head from "next/head";
 import Image from "next/image";
 import DiscordEmbed from "../../../components/DiscordEmbed";
 import { format, addSeconds } from "date-fns";
+import { getUrqlClient } from "@libs/urql";
 
-import { cacheExchange, createClient, fetchExchange, gql } from "@urql/core";
-import { registerUrql } from "@urql/next/rsc";
+import { gql } from "@urql/core";
 
 import styles from "../../../styles/Schedule.event.module.scss";
 import theme from "../../../mui-theme";
@@ -162,7 +162,7 @@ type EventScheduleProps = {
 
 // const TEST_CURRENT_TIME = new Date(2025, 6, 9, 16, 25);
 export default async function EventSchedule({ params }: { params: { event: string } }) {
-	const { data } = await getClient().query<QUERY_EVENT_RESULTS>(QUERY_EVENT, { event: params.event }).toPromise();
+	const { data } = await getUrqlClient().query<QUERY_EVENT_RESULTS>(QUERY_EVENT, { event: params.event }).toPromise();
 	const event = data?.event;
 
 	if (!event) {
@@ -309,12 +309,12 @@ export default async function EventSchedule({ params }: { params: { event: strin
 						className={styles.localTimeToggle}
 						control={
 							<Switch
-								// onChange={(e) =>
-								// 	setSettings({
-								// 		...settings,
-								// 		showLocalTime: e.target.checked,
-								// 	})
-								// }
+							// onChange={(e) =>
+							// 	setSettings({
+							// 		...settings,
+							// 		showLocalTime: e.target.checked,
+							// 	})
+							// }
 							/>
 						}
 						label={`Show in Event Time? (${event.eventTimezone})`}
@@ -664,9 +664,7 @@ const DateDivider: React.FC<DateDividerProps> = (props: DateDividerProps) => {
 	const dateString = format(props.date, "EEEE do, MMMM");
 	return (
 		// <div className={styles.dateDivider} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-		<div className={styles.dateDivider}>
-			{dateString}
-		</div>
+		<div className={styles.dateDivider}>{dateString}</div>
 	);
 };
 
@@ -849,7 +847,7 @@ const RunVisualiser = ({ run, proportion, block }: { run: Run; proportion: numbe
 			run-odd={oddRun.toString()}
 			// odd={oddRun}
 			// block={block}
-			>
+		>
 			<div
 				className={styles.visualiserRun}
 				style={{
@@ -866,15 +864,3 @@ const RunVisualiser = ({ run, proportion, block }: { run: Run; proportion: numbe
 		</Tooltip>
 	);
 };
-
-const makeClient = () => {
-	return createClient({
-		url:
-			process.env.NODE_ENV === "production"
-				? "https://keystone.ausspeedruns.com/api/graphql"
-				: "http://localhost:8000/api/graphql",
-		exchanges: [cacheExchange, fetchExchange],
-	});
-};
-
-const { getClient } = registerUrql(makeClient);

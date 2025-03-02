@@ -1,7 +1,8 @@
 "use server";
 
-import { getUrqlClient } from "@libs/urql";
+import { getUrqlCookieClient } from "@libs/urql";
 import { gql } from "urql";
+import { parse } from "date-fns";
 
 type EditProfileData = {
 	userId: string;
@@ -45,21 +46,25 @@ const UPDATE_PROFILE = gql`
 	}
 `;
 
-export async function updateProfile(formData: FormData) {
+// export async function updateProfile(boundData: { userId: string; cookie: string }, formData: FormData) {
+export async function updateProfile(userId: string, formData: FormData) {
+	const dateOfBirth = parse(formData.get("dateOfBirth") as string, "dd/MM/yyyy", new Date());
+
 	const profileData: EditProfileData = {
-		userId: formData.get("userId") as string,
+		userId: userId,
 		name: formData.get("name") as string,
 		email: formData.get("email") as string,
 		pronouns: formData.get("pronouns") as string,
 		discord: formData.get("discord") as string,
 		twitter: formData.get("twitter") as string,
 		twitch: formData.get("twitch") as string,
-		dateOfBirth: formData.get("dateOfBirth") as string,
+		dateOfBirth: dateOfBirth.toISOString(),
 		state: formData.get("state") as string,
 	};
 
-	const client = getUrqlClient();
+	const client = getUrqlCookieClient();
 	const result = await client.mutation(UPDATE_PROFILE, profileData).toPromise();
+
 	return result.data;
 }
 
@@ -76,7 +81,7 @@ const UPDATE_VERIFICATION = gql`
 `;
 
 export async function resendVerificationEmail(userId: string) {
-	const client = getUrqlClient();
+	const client = getUrqlCookieClient();
 	const result = await client.mutation(UPDATE_VERIFICATION, { userId, time: new Date().toISOString() }).toPromise();
 	return result.data;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { styled } from "@mui/material/styles";
 import {
 	Accordion,
@@ -19,6 +19,7 @@ import SubmissionEditDialog from "./SubmissionEditDialog";
 import { Submission } from "./submission";
 
 type SubmissionProps = {
+	cookie?: string;
 	submission: Submission;
 	event: {
 		acceptingSubmissions: boolean;
@@ -44,7 +45,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 	backgroundColor: "#F9F9F9",
 }));
 
-const SubmissionAccordion = ({ submission, event }: SubmissionProps) => {
+const SubmissionAccordion = ({ submission, event, cookie }: SubmissionProps) => {
 	const [editDialog, setEditDialog] = useState(false);
 	const [showSnackbar, setSnackbar] = useState({ error: false, reason: "" });
 
@@ -197,6 +198,7 @@ const SubmissionAccordion = ({ submission, event }: SubmissionProps) => {
 				event={event}
 				handleClose={closeDialog}
 				open={editDialog}
+				cookie={cookie}
 			/>
 			<Snackbar
 				anchorOrigin={{ horizontal: "right", vertical: "bottom" }}

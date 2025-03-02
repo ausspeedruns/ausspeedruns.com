@@ -4,33 +4,38 @@ import Image from "next/image";
 import { Carousel } from "react-responsive-carousel";
 import styles from "./About.module.scss";
 
-import HeroImage1 from "./images/IMG_5192.jpg";
-import HeroImage2 from "./images/IMG_9785.jpg";
-import HeroImage3 from "./images/IMG_4289.jpg";
-import HeroImage4 from "./images/IMG_5053.jpg";
-import ASMBackground from "./images/IMG_9222-edited.jpg";
+import HerpPAXRexDamosk from "./images/pax-rex-damosk.jpg";
+import HeroASM24Group from "./images/asm24-group.jpg";
+import HeroPAXGlintOpal from "./images/pax-glint-opal.jpg";
+import HeroASM24Cheer from "./images/asm24-cheer.jpg";
+import HeroASM24Soap from "./images/asm24-soap.jpg";
+import HeroASM24OverShoulder from "./images/asm24-overshoulder.jpg";
 
 const HERO_IMAGES = [
-	{ img: HeroImage1, alt: "Rexaaayyy and Damosk having a laugh" },
+	{ img: HeroASM24OverShoulder, alt: "A photo of ASM2024 taken over the shoulder of a runner." },
 	{
-		img: HeroImage2,
-		alt: "The community cheering after ASM2022 for having raised $24,500!",
+		img: HeroASM24Group,
+		alt: "The community cheering after completing ASM2024!",
 	},
 	{
-		img: HeroImage3,
-		alt: "DaMidg, Paladinight and LaceyStripes running Kingdom Hearts at ASM2022",
+		img: HeroASM24Cheer,
+		alt: "ASM2024 attendees cheering during a successful run",
 	},
 	{
-		img: HeroImage4,
+		img: HeroASM24Soap,
+		alt: "ZoomieG dressed as a bar of soap, Softman25 dressed as a stack of dollar bills and Astrious dressed as himself, laugh at LiquidWifi at ASM2024",
+	},
+	{
+		img: HerpPAXRexDamosk,
+		alt: "Rexaaayyy and Damosk having a laugh",
+	},
+	{
+		img: HeroPAXGlintOpal,
 		alt: "Glint and Opallua running Kingdom Hearts at ASAP2022",
-	},
-	{
-		img: ASMBackground,
-		alt: "The crowd watches Paracusia run Super Mario 64 at ASM2022",
 	},
 ];
 
-export default function ImageCarousel() {
+export function ImageCarousel() {
 	return (
 		<Carousel
 			className={styles.carousel}

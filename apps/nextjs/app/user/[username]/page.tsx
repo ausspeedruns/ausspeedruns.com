@@ -277,7 +277,9 @@ export async function generateMetadata({ params }: ProfilePageParams): Promise<M
 }
 
 export default async function ProfilePage({ params }: ProfilePageParams) {
-	const { data: ssrData } = await getClient().query<QUERY_USER_RESULTS>(QUERY_USER, { username: params.username });
+	const cookieStore = cookies();
+	const client = getClient();
+	const { data: ssrData } = await client.query<QUERY_USER_RESULTS>(QUERY_USER, { username: params.username });
 
 	if (!ssrData?.user) {
 		return notFound();
@@ -287,7 +289,7 @@ export default async function ProfilePage({ params }: ProfilePageParams) {
 
 	let privateDataResults = null;
 	if (session?.user.username === ssrData.user.username) {
-		const { data } = await getClient().query<QUERY_PRIVATE_RESULTS>(QUERY_PRIVATE, {
+		const { data } = await client.query<QUERY_PRIVATE_RESULTS>(QUERY_PRIVATE, {
 			username: ssrData.user.username,
 			currentTime: new Date().toISOString(),
 		});
@@ -355,7 +357,10 @@ export default async function ProfilePage({ params }: ProfilePageParams) {
 				</div>
 				{/* Submissions */}
 				{privateDataResults && privateDataResults.submissions.length > 0 && (
-					<Submissions submissions={privateDataResults.submissions} />
+					<Submissions
+						submissions={privateDataResults.submissions}
+						cookie={cookieStore.get("keystonejs-session")?.value}
+					/>
 				)}
 
 				{/* Tickets */}

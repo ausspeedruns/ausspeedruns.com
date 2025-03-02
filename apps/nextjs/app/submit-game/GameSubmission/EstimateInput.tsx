@@ -8,6 +8,7 @@ type EstimateInputProps = {
 	required?: boolean;
 	value: string;
 	disabled?: boolean;
+	name?: string;
 };
 
 function parseEstimateString(estimate: string) {
@@ -62,6 +63,7 @@ function EstimateInput(props: EstimateInputProps) {
 
 	return (
 		<div className={styles.estimateContainer}>
+			<input type="hidden" name={props.name} value={formatTime()} />
 			<InputLabel
 				disabled={props.disabled}
 				id="estimate-label"

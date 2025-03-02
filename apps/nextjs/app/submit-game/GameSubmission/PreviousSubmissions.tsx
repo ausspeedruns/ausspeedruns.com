@@ -21,7 +21,7 @@ function removeDuplicates<T extends ObjectWithProperties>(
 		}
 	});
 }
-interface Submission {
+export interface Submission {
 	game: string;
 	platform: string;
 	// techPlatform: string;
@@ -44,7 +44,8 @@ function PreviousSubmissions(props: PreviousSubmissionsProps) {
 				return (
 					<Card
 						variant="outlined"
-						onClick={() => props.onGameClick(submission)}>
+						onClick={() => props.onGameClick(submission)}
+						key={`${submission.game}-${submission.platform}`}>
 						<CardActionArea
 							style={{
 								height: "100%",

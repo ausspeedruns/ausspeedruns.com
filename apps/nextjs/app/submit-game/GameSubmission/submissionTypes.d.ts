@@ -49,3 +49,7 @@ export type QUERY_USER_RESULTS = {
 	};
 	events: Event[];
 }
+
+export type SubmissionPageRef = {
+	reset: () => void;
+};

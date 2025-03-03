@@ -10,8 +10,6 @@ import { getUrqlClient } from "@libs/urql";
 const stripeApiKey = process.env.STRIPE_SECRET_KEY as string;
 const websiteApiKey = process.env.API_KEY as string;
 
-const stripe = new Stripe(stripeApiKey);
-
 const ticketId = "price_1QyTCuKT8G4cNWT5XZ4mnwYZ";
 
 const event = "ASM2025";
@@ -38,6 +36,7 @@ export const stripeCheckoutAction = async () => {
 		throw new Error("Unauthorized");
 	}
 
+	const stripe = new Stripe(stripeApiKey);
 	const origin = headers().get("origin");
 
 	const session = await stripe.checkout.sessions.create({

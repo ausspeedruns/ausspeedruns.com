@@ -90,7 +90,7 @@ export function TicketPurchase(props: TicketPurchaseProps) {
 					</ToggleButtonGroup>
 					{!props.userId && (
 						<p>
-							You must be logged in to purchase a ticket. <Link href="/login">Login</Link>
+							You must be logged in to purchase a ticket. <Link href="/signin">Sign In</Link>
 						</p>
 					)}
 					{purchaseType === "stripe" ? (

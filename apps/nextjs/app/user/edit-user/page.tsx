@@ -14,8 +14,8 @@ import { cookies } from "next/headers";
 
 const makeClient = () => {
 	return createClient({
-		url: "http://localhost:8000/api/graphql",
-		// url: "https://keystone.ausspeedruns.com/api/graphql",
+		// url: "http://localhost:8000/api/graphql",
+		url: "https://keystone.ausspeedruns.com/api/graphql",
 		exchanges: [cacheExchange, fetchExchange],
 		fetchOptions: () => {
 			const cookie = cookies();

@@ -9,7 +9,8 @@ export default function Layout({ children }: React.PropsWithChildren) {
 			isClient: typeof window !== "undefined",
 		});
 		const client = createClient({
-			url: "http://localhost:8000/api/graphql",
+			// url: "http://localhost:8000/api/graphql",
+			url: "https://keystone.ausspeedruns.com/api/graphql",
 			exchanges: [cacheExchange, ssr, fetchExchange],
 			suspense: true,
 		});

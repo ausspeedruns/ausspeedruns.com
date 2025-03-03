@@ -3,10 +3,12 @@ import { Client, cacheExchange, createClient, fetchExchange } from "urql/core";
 
 let _client: Client | null = null;
 
+const KeystoneURL = process.env.KEYSTONE_URL!;
+
 export const getUrqlClient = () => {
 	if (!_client) {
 		_client = createClient({
-			url: "http://localhost:8000/api/graphql",
+			url: KeystoneURL,
 			exchanges: [cacheExchange, fetchExchange],
 		});
 	}
@@ -24,7 +26,7 @@ export const getUrqlCookieClient = () => {
 	}
 
 	const client = createClient({
-		url: "http://localhost:8000/api/graphql",
+		url: KeystoneURL,
 		exchanges: [cacheExchange, fetchExchange],
 		fetchOptions: () => {
 			return {

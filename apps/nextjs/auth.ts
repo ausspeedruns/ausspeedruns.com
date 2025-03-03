@@ -4,6 +4,9 @@ import { cookies } from "next/headers";
 
 import type { JWT } from "next-auth/jwt";
 import { redirect } from "next/navigation";
+
+const KeystoneURL = process.env.KEYSTONE_URL!;
+
 declare module "next-auth/jwt" {
 	interface JWT {
 		username: string;
@@ -35,7 +38,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 				password: {},
 			},
 			authorize: async (credentials) => {
-				const response = await fetch("http://localhost:8000/api/graphql", {
+				const response = await fetch(KeystoneURL, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
@@ -148,7 +151,7 @@ export async function signUp(formData: FormData) {
 	}
 
 	// Create user
-	const response = await fetch("http://localhost:8000/api/graphql", {
+	const response = await fetch(KeystoneURL, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",

@@ -109,7 +109,7 @@ const ASM2025: AusSpeedrunsEvent = {
 		name: "Game On Cancer",
 	},
 	logo: "events/asm25/logo.svg",
-	heroImage: "events/asm24/asm24-hero-temp.png",
+	heroImage: "events/asm25/asm25-hero.png",
 };
 
 export const metadata: Metadata = {

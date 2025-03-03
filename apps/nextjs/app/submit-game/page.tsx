@@ -1,13 +1,10 @@
-import Head from "next/head";
-import { Alert, Snackbar } from "@mui/material";
-import { gql, useMutation, createClient, cacheExchange, fetchExchange } from "urql";
+import { gql, createClient, cacheExchange, fetchExchange } from "urql";
 
 import styles from "../../styles/SubmitGame.module.scss";
 import LinkButton from "../../components/Button/Button";
 import { faArrowRight, faL } from "@fortawesome/free-solid-svg-icons";
-import DiscordEmbed from "../../components/DiscordEmbed";
 import GameSubmissions from "./GameSubmission/GameSubmission";
-import { MUTATION_SUBMISSION_RESULTS, QUERY_USER_RESULTS } from "./GameSubmission/submissionTypes";
+import { QUERY_USER_RESULTS } from "./GameSubmission/submissionTypes";
 import { auth } from "../../auth";
 
 // import SubmitGameOG from "../styles/img/ogImages/SubmitGame.jpg";
@@ -69,7 +66,7 @@ const QUERY_INITIAL = gql`
 
 function BasePage({ children }: { children: React.ReactNode }) {
 	return (
-		<div style={{ display: "flex", flexDirection: "column" }}>
+		<div style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
 			<div className={styles.backgroundContainer}></div>
 			{children}
 		</div>
@@ -109,11 +106,11 @@ export default async function SubmitGamePage() {
 	if (data?.events.length === 0) {
 		return (
 			<BasePage>
-				<main className={`content ${styles.content} ${styles.noEvents}`}>
+				<div className={`content ${styles.content} ${styles.noEvents}`}>
 					<h2>Unfortunately we have no events currently accepting submissions.</h2>
 					<p>Follow us on Twitter and Join our Discord to stay up to date!</p>
 					<LinkButton actionText="Home" iconRight={faArrowRight} link="/" />
-				</main>
+				</div>
 			</BasePage>
 		);
 	}
@@ -124,7 +121,7 @@ export default async function SubmitGamePage() {
 
 	return (
 		<BasePage>
-			<main className={styles.content}>
+			<div className={styles.content}>
 				<h1>
 					{singleEvent?.shortname}{" "}
 					{singleEvent?.acceptingBackups && !singleEvent?.acceptingSubmissions ? "Backup" : "Game"} Submission
@@ -144,7 +141,7 @@ export default async function SubmitGamePage() {
 						</ul>
 					</>
 				) : (
-					data.events.length > 1 && <GameSubmissions userId={session.user.id} userQueryResult={data} />
+					data.events.length > 0 && <GameSubmissions userId={session.user.id} userQueryResult={data} />
 				)}
 
 				{/* <Snackbar open={successSubmit} autoHideDuration={6000} onClose={() => setSuccessSubmit(false)}>
@@ -152,7 +149,7 @@ export default async function SubmitGamePage() {
 						Successfully submitted run!
 					</Alert>
 				</Snackbar> */}
-			</main>
+			</div>
 		</BasePage>
 	);
 }

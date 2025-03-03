@@ -26,7 +26,7 @@ declare module "next-auth" {
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-	debug: true,
+	debug: process.env.NODE_ENV !== "production",
 	session: {
 		strategy: "jwt",
 		maxAge: 60 * 60 * 24 * 30, // 30 days

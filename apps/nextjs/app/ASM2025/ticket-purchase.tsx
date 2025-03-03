@@ -6,6 +6,7 @@ import { Box, Button, Skeleton, ToggleButton, ToggleButtonGroup } from "@mui/mat
 import { useEffect, useState } from "react";
 
 import ImageFakeTicket from "./images/FakeTickets.png";
+import Link from "next/link";
 
 type PurchaseType = "stripe" | "bank";
 
@@ -59,8 +60,6 @@ export function TicketPurchase(props: TicketPurchaseProps) {
 		setGenTicketLoading(true);
 		const res = await fetch(`/api/tickets/bank?userId=${props.userId}&event=${props.event}`, { method: "POST" });
 
-		console.log(res);
-
 		if (res.status === 200) {
 			const data = await res.json();
 			console.log(data);
@@ -80,14 +79,20 @@ export function TicketPurchase(props: TicketPurchaseProps) {
 				<Image src={ImageFakeTicket} alt="Two ASM2025 Ticket Designs" height="300" />
 			</div>
 			<div>
-				All attendees, including runners and staff must purchase tickets to attend the event.<br />Purchasing a
-				ticket before 16th June 2025 will have your name printed on the ticket.
+				All attendees, including runners and staff must purchase tickets to attend the event.
+				<br />
+				Purchasing a ticket before 16th June 2025 will have your name printed on the ticket.
 				<p className={styles.cost}>$35</p>
 				<div className={styles.purchaseButtons}>
 					<ToggleButtonGroup value={purchaseType} exclusive onChange={handlePurchaseType} fullWidth>
 						<ToggleButton value="stripe">Stripe</ToggleButton>
 						<ToggleButton value="bank">Bank Transfer (Australia Only)</ToggleButton>
 					</ToggleButtonGroup>
+					{!props.userId && (
+						<p>
+							You must be logged in to purchase a ticket. <Link href="/login">Login</Link>
+						</p>
+					)}
 					{purchaseType === "stripe" ? (
 						<Button type="submit" variant="contained" color="primary" disabled={!props.canBuy} fullWidth>
 							Purchase Ticket via Stripe

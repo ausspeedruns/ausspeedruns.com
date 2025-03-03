@@ -61,6 +61,8 @@ async function Navbar({ events = [], live, noPrizes }: NavbarProps) {
 					aria-label="Main menu">
 					<ul className={styles.links}>
 						{events.map((event) => {
+							if (!event.published || !event.scheduleReleased) return null;
+
 							return (
 								<li key={event.shortname}>
 									<Link href={`/${event.shortname}/schedule`} passHref className={styles.text}>

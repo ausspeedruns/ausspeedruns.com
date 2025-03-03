@@ -139,9 +139,11 @@ export default async function ASM2025() {
 						</tr>
 						<tr>
 							<td>Hotel Booking</td>
-							<Link href="https://www.idem.events/r/ausspeedruns-2025-6d96b342" target="_blank">
-								Adelaide Rockford
-							</Link>
+							<td>
+								<Link href="https://www.idem.events/r/ausspeedruns-2025-6d96b342" target="_blank">
+									Adelaide Rockford
+								</Link>
+							</td>
 						</tr>
 						<tr>
 							<td>Event Dates</td>
@@ -156,11 +158,6 @@ export default async function ASM2025() {
 			</section>
 			<section className={styles.content} id="tickets">
 				<h1>Tickets</h1>
-				{!session && (
-					<p>
-						You must be logged in to purchase a ticket. <Link href="/login">Login</Link>
-					</p>
-				)}
 				<form action={stripeCheckoutAction}>
 					<TicketPurchase
 						canBuy={emailVerified}
@@ -170,14 +167,6 @@ export default async function ASM2025() {
 					/>
 				</form>
 			</section>
-			{/* <section className={styles.content} id="shirts">
-				<h1>Shirt</h1>
-				{!session && (
-					<p>
-						You must be logged in to purchase a shirt. <Link href="/login">Login</Link>
-					</p>
-				)}
-			</section> */}
 			<section className={styles.content}>
 				<h3>Refund Policy</h3>
 				<p>

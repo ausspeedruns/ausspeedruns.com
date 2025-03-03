@@ -57,28 +57,20 @@ export default function SignUpPage() {
 					action={async (formData) => {
 						"use server";
 
+						let redirectUrl = "/user/edit-user";
+
 						try {
 							await signUp(formData);
-							return redirect("/user/edit-user");
 						} catch (error) {
 							if (error instanceof SignUpError) {
-								return redirect(`/signup?error=${error.type}`);
+								redirectUrl = `/signup?error=${error.type}`;
 							}
 
 							throw error;
+						} finally {
+							redirect(redirectUrl);
 						}
 					}}
-					// onSubmit={(event) => {
-					// 	event.preventDefault();
-					// 	signup({ username, email: email.toLowerCase(), password, dob }).then((result) => {
-					// 		if (result.data?.createUser) {
-					// 			// FIXME: there's a cache issue with Urql where it's not reloading the
-					// 			// current user properly if we do a client-side redirect here.
-					// 			// router.push('/');
-					// 			if (top) top.location.href = '/user/edit-user';
-					// 		}
-					// 	});
-					// }}
 				>
 					{/* {error && <div>{HumanErrorMsg(error.message)}</div>} */}
 					<TextField name="email" variant="outlined" label="Email" type="email" autoComplete="email" />

@@ -1,12 +1,7 @@
-import React, { useState } from "react";
 import styles from "./Navbar.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
-import Button from "../Button/Button";
-// import { useAuth } from "../auth";
 import Link from "next/link";
 import { auth, signOut } from "../../auth";
-import { cookies } from "next/headers";
+import { NavbarContent } from "./Navbar-Content";
 
 type NavbarProps = {
 	events: {
@@ -19,11 +14,8 @@ type NavbarProps = {
 	noPrizes?: boolean;
 };
 
-async function Navbar({ events = [], live, noPrizes }: NavbarProps) {
-	// const auth = useAuth();
+async function Navbar(props: NavbarProps) {
 	const session = await auth();
-	// const [isOpen, setIsOpen] = useState<Boolean>(false);
-	const isOpen = false;
 
 	return (
 		<header className={`App-header ${styles.navbar}`}>
@@ -45,110 +37,11 @@ async function Navbar({ events = [], live, noPrizes }: NavbarProps) {
 						</svg>{" "}
 						AusSpeedruns
 					</Link>
-					{/* <button
-						className={styles.menuToggle}
-						onClick={() => setIsOpen(!isOpen)}
-						aria-expanded={isOpen.valueOf()}>
-						{!isOpen ? (
-							<FontAwesomeIcon size="xl" icon={faBars} />
-						) : (
-							<FontAwesomeIcon size="xl" icon={faTimes} />
-						)}
-					</button> */}
 				</div>
-				<nav
-					className={`${styles.mainmenu} ${isOpen ? styles.menuopen : styles.menuclosed}`}
-					aria-label="Main menu">
-					<ul className={styles.links}>
-						{events.map((event) => {
-							if (!event.published || !event.scheduleReleased) return null;
-
-							return (
-								<li key={event.shortname}>
-									<Link href={`/${event.shortname}/schedule`} passHref className={styles.text}>
-										{events.length > 1 && `${event.shortname} `}Schedule
-									</Link>
-								</li>
-							);
-						})}
-
-						{live && (
-							<>
-								<li>
-									<Link href={`/${live}/incentives`} className={styles.text}>
-										Incentives
-									</Link>
-								</li>
-								{!noPrizes && (
-									<li>
-										<Link href={`/${live}/prizes`} className={styles.text}>
-											Prizes
-										</Link>
-									</li>
-								)}
-								<li>
-									<Button actionText="Donate" link="/donate" colorScheme="orange" />
-								</li>
-							</>
-						)}
-
-						{events.map((event) => {
-							return (
-								<li key={event.shortname}>
-									<Link href={`/${event.shortname}`} className={styles.text}>
-										{event.shortname}
-									</Link>
-								</li>
-							);
-						})}
-
-						<li>
-							<Link href="/about" className={styles.text}>
-								About Us
-							</Link>
-						</li>
-						<li>
-							<Link href="/events" className={styles.text}>
-								Events
-							</Link>
-						</li>
-						<li>
-							<Link href="http://ausspeedruns.theprintbar.com/" className={styles.text}>
-								Merch
-							</Link>
-						</li>
-					</ul>
-				</nav>
-				<div className={`${styles.auth} ${isOpen ? styles.menuopen : styles.menuclosed}`}>
-					{session?.user ? (
-						<>
-							<Button
-								actionText={session.user?.username}
-								link={`/user/${session.user?.username}`}
-								colorScheme={"secondary inverted"}
-							/>
-							<form action={signUserOut}>
-								<button style={{display: "block"}} type="submit">Sign Out</button>
-							</form>
-						</>
-					) : (
-						<span className={styles.join}>
-							<Link href="/signin">Sign In</Link> | <Link href="/signup">Join</Link>
-						</span>
-					)}
-				</div>
+				<NavbarContent events={props.events} live={props.live} noPrizes={props.noPrizes} session={session} />
 			</div>
 		</header>
 	);
-}
-
-async function signUserOut() {
-	"use server";
-
-	const cookie = cookies();
-	cookie.delete("keystonejs-session");
-
-	await signOut();
 }
 
 export default Navbar;

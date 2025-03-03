@@ -13,9 +13,9 @@ import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../mui-theme";
 
-import { config } from '@fortawesome/fontawesome-svg-core'
-import '@fortawesome/fontawesome-svg-core/styles.css'
-config.autoAddCss = false
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+config.autoAddCss = false;
 
 const { getClient } = registerUrql(getUrqlClient);
 
@@ -60,7 +60,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 				<AppRouterCacheProvider>
 					<Navbar events={result.data?.events ?? []} />
 					<ThemeProvider theme={theme}>
-						<main>{children}</main>
+						<main style={{ display: "flex", flexDirection: "column" }}>{children}</main>
 					</ThemeProvider>
 					<Footer />
 					{/* <CookieConsent

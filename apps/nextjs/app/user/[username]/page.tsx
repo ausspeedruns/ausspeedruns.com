@@ -1,22 +1,15 @@
-// "use client";
 
-// import { useState } from "react";
-import { initUrqlClient } from "next-urql";
-// import Head from "next/head";
-import { Box, colors, IconButton, Tab, Tabs, ThemeProvider } from "@mui/material";
-// import { useRouter } from "next/router";
+import { IconButton } from "@mui/material";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import styles from "../../../styles/User.username.module.scss";
-import { useAuth } from "../../../components/auth";
-import theme from "../../../mui-theme";
-import SubmissionAccordion from "../../../components/SubmissionAccordian/SubmissionAccordion";
+// import SubmissionAccordion from "../../../components/SubmissionAccordian/SubmissionAccordion";
 import RunUpcoming from "../../../components/RunUpcoming/RunUpcoming";
-import RunCompleted from "../../../components/RunCompleted/RunCompleted";
-import DiscordEmbed from "../../../components/DiscordEmbed";
+// import RunCompleted from "../../../components/RunCompleted/RunCompleted";
+// import DiscordEmbed from "../../../components/DiscordEmbed";
 import Ticket from "../../../components/Ticket/Ticket";
-import ASMShirt from "../../../components/ShirtOrder/ShirtOrder";
+// import ASMShirt from "../../../components/ShirtOrder/ShirtOrder";
 
 import { cacheExchange, createClient, fetchExchange, gql } from "@urql/core";
 import { registerUrql } from "@urql/next/rsc";
@@ -320,7 +313,7 @@ export default async function ProfilePage({ params }: ProfilePageParams) {
 	const upcomingRunsList = ssrData.user.runs.filter((run) => !run.finalTime);
 
 	return (
-		<ThemeProvider theme={theme}>
+		<>
 			{/* <Head>
 				<title>{`${ssrData.user.username} - AusSpeedruns`}</title>
 				<DiscordEmbed
@@ -404,6 +397,6 @@ export default async function ProfilePage({ params }: ProfilePageParams) {
 				{/* Runs */}
 				<PreviousRuns runs={ssrData.user.runs} />
 			</div>
-		</ThemeProvider>
+		</>
 	);
 }

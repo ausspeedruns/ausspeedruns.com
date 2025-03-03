@@ -5,13 +5,20 @@ import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 
 export async function signInAction(formData: FormData) {
+	let redirectUrl = "/";
+
 	try {
 		await signIn("credentials", formData);
-		return redirect("/");
+		redirect("/ASM2025");
 	} catch (error) {
+		console.log(error);
+
 		if (error instanceof AuthError) {
-			return redirect(`/signin?error=${error.type}`);
+			redirectUrl = `/signin?error=${error.type}`;
 		}
+
 		throw error;
+	} finally {
+		redirect(redirectUrl);
 	}
 }

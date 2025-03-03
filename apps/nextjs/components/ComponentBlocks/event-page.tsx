@@ -1,5 +1,5 @@
 import React from "react";
-import { EventPageRenderers } from "@ausspeedruns/component-blocks";
+// import { EventPageRenderers } from "@ausspeedruns/component-blocks";
 
 import Image from "next/image";
 import Button from "../Button/Button";
@@ -7,8 +7,10 @@ import { faArrowRight, faTicket, faCalendar, faPerson } from "@fortawesome/free-
 import { Theme } from "../../styles/colors";
 import styles from "./event-page.module.scss";
 
+type EventPageRenderers = any;
+
 export const EventComponentRenderers: EventPageRenderers = {
-	header: (props) => {
+	header: (props: any) => {
 		if (!props.event) return <p>Missing Event Data</p>;
 		return (
 			<div
@@ -28,11 +30,7 @@ export const EventComponentRenderers: EventPageRenderers = {
 						fill
 					/>
 				</div>
-				<div className={styles.taglines}>
-					{props.taglines?.map((tagline) => (
-						<h1>{tagline}</h1>
-					))}
-				</div>
+				<div className={styles.taglines}>{props.taglines?.map((tagline: string) => <h1>{tagline}</h1>)}</div>
 				<div className={styles.buttons}>
 					{props.donateLink && <Button actionText="Donate" link={props.donateLink} openInNewTab />}
 
@@ -64,14 +62,14 @@ export const EventComponentRenderers: EventPageRenderers = {
 						<Button actionText="Be a volunteer!" link="/volunteers" iconRight={faPerson} />
 					)}
 
-					{props.buttons.map((button) => (
+					{props.buttons.map((button: { text: string; link: string; openInNewTab: boolean }) => (
 						<Button actionText={button.text} link={button.link} openInNewTab={button.openInNewTab} />
 					))}
 				</div>
 			</div>
 		);
 	},
-	imageParagraph: (props) => {
+	imageParagraph: (props: any) => {
 		return (
 			<div
 				className={styles.imageParagraph}
@@ -90,13 +88,13 @@ export const EventComponentRenderers: EventPageRenderers = {
 			</div>
 		);
 	},
-	infoTable: (props) => {
+	infoTable: (props: any) => {
 		return (
 			<section className={styles.informationSection}>
 				<h3>Information</h3>
 				<table className={styles.information}>
 					<tbody>
-						{props.info.map((info) => {
+						{props.info.map((info: any) => {
 							return (
 								<tr key={info.info}>
 									<td>{info.label}</td>
@@ -109,7 +107,7 @@ export const EventComponentRenderers: EventPageRenderers = {
 			</section>
 		);
 	},
-	fullWidthImage: (props) => {
+	fullWidthImage: (props: any) => {
 		return (
 			<Image
 				className={styles.footerImage}
@@ -120,7 +118,7 @@ export const EventComponentRenderers: EventPageRenderers = {
 			/>
 		);
 	},
-	standardImage: (props) => {
+	standardImage: (props: any) => {
 		return (
 			<Image
 				className={styles.standardImage}

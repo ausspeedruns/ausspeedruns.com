@@ -21,7 +21,11 @@
     ],
     "strictNullChecks": true,
     "paths": {
-      "@libs/*": ["./apps/nextjs/libs/*"]
+      "@libs/*": [
+        "./apps/nextjs/libs/*"
+      ],
+			"@ausspeedruns.com/keystone-plugin": ["../../libs/keystone-plugin/src/index.ts"],
+			"@ausspeedruns/component-blocks": ["../../libs/component-blocks/component-blocks/src/index.ts"]
     }
   },
   "include": [
@@ -30,7 +34,8 @@
     "**/*.js",
     "**/*.jsx",
     "next-env.d.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "../../dist/apps/nextjs/.next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

@@ -14,6 +14,7 @@ import { auth } from "../../auth";
 
 import { cookies } from "next/headers";
 import { registerUrql } from "@urql/next/rsc";
+import { Metadata } from "next";
 
 const makeClient = () => {
 	return createClient({
@@ -68,21 +69,17 @@ const QUERY_INITIAL = gql`
 
 function BasePage({ children }: { children: React.ReactNode }) {
 	return (
-		<div>
-			{/* <Head>
-				<title>Game Submission - AusSpeedruns</title>
-				<DiscordEmbed
-					title="Speedrun Submissions - AusSpeedruns"
-					description="Submit your speedrun to an AusSpeedrun Event!"
-					pageUrl="/submit-game"
-					imageSrc={SubmitGameOG.src}
-				/>
-			</Head> */}
+		<div style={{ display: "flex", flexDirection: "column" }}>
 			<div className={styles.backgroundContainer}></div>
 			{children}
 		</div>
 	);
 }
+
+export const metadata: Metadata = {
+	title: "Speedrun Submission",
+	description: "Submit a run to an AusSpeedruns event!",
+};
 
 export default async function SubmitGamePage() {
 	const session = await auth();
@@ -91,12 +88,12 @@ export default async function SubmitGamePage() {
 	if (!session || !session.user.id) {
 		return (
 			<BasePage>
-				<main className={`content ${styles.content} ${styles.noEvents}`}>
+				<div className={`content ${styles.content} ${styles.noEvents}`}>
 					<h2>Please sign in to submit games.</h2>
 					<LinkButton actionText="Sign In" iconRight={faArrowRight} link="/signin" />
 					<br />
 					<LinkButton actionText="Join" iconRight={faArrowRight} link="/signup" />
-				</main>
+				</div>
 			</BasePage>
 		);
 	}

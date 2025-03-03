@@ -7,6 +7,7 @@ import styles from "../../styles/Events.module.scss";
 import { cacheExchange, createClient, fetchExchange, gql } from "@urql/core";
 import { registerUrql } from "@urql/next/rsc";
 import { getUrqlClient } from "@libs/urql";
+import { Metadata } from "next";
 
 const QUERY_EVENT = gql`
 	query {
@@ -60,6 +61,11 @@ interface QUERY_EVENT_RESULTS {
 		};
 	}[];
 }
+
+export const metadata: Metadata = {
+	title: "Events",
+	description: "A list of all of our upcoming and past events.",
+};
 
 export default async function Events() {
 	const { data } = await getUrqlClient().query<QUERY_EVENT_RESULTS>(QUERY_EVENT, {});

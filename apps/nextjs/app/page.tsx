@@ -122,7 +122,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
 	return (
-		<main>
+		<>
 			{/* <EventLive event={"ASAP2024"} /> */}
 			<HeroBlock
 				event={ASM2025}
@@ -167,6 +167,6 @@ export default function Home() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</>
 	);
 }

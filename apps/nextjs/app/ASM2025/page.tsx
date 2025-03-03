@@ -9,7 +9,7 @@ import { TicketPurchase } from "./ticket-purchase";
 import { gql } from "urql";
 import { getUrqlClient } from "@libs/urql";
 import Marquee from "react-fast-marquee";
-import { faArrowRight, faTicket, faCalendar, faPerson, faShirt, faGamepad } from "@fortawesome/free-solid-svg-icons";
+import { faTicket, faCalendar, faPerson, faShirt, faPersonRunning } from "@fortawesome/free-solid-svg-icons";
 
 import ImageFiveMinShowcase01 from "./images/5MinsShowcase.jpg";
 import ImageFiveMinShowcase02 from "./images/5MinsShowcase2.jpg";
@@ -19,6 +19,7 @@ import ImageLumpyPumpkin from "./images/LumpyPumpkin.jpg";
 import ImageRunners from "./images/Runners.jpg";
 
 import Logo from "../../styles/img/events/asm25/logo.svg";
+import { Metadata } from "next";
 
 const images = [
 	{ src: ImageFiveMinShowcase01, alt: "An enthusiastic watcher" },
@@ -51,6 +52,12 @@ const EVENT_QUERY = gql`
 		}
 	}
 `;
+
+export const metadata: Metadata = {
+	title: "ASM2025",
+	description:
+		"The Australian Speedrun Marathon 2025 is coming up! Celebrate 10 years of Aussie Speedrunning in Adelaide with us between July 15 - 20.",
+};
 
 export default async function ASM2025() {
 	const session = await auth();
@@ -94,7 +101,7 @@ export default async function ASM2025() {
 					<Button
 						actionText={acceptingSubmissions ? "Submit a Run" : "Submit a Backup"}
 						link="/submit-game"
-						iconLeft={faGamepad}
+						iconLeft={faPersonRunning}
 					/>
 				)}
 				<Button actionText="Buy a Ticket" link="#tickets" iconLeft={faTicket} />
@@ -103,17 +110,25 @@ export default async function ASM2025() {
 			</section>
 			<hr className={styles.divider} />
 			<section className={styles.content}>
-				<p>Join us as we celebrate 10 years of Australian Speedrunning in Adelaide.</p>
 				<p>
-					The Australian Speedrun Marathon will be held at the Adelaide Rockford Hotel between the 15th and
-					20th of July 2025.
+					The Australian Speedrunning Marathon returns for its 10th anniversary in 2025! Join us for a
+					celebration of the AusSpeedruns community's achievements as we ring in the decade. With something
+					special planned every night, your ticket gives you twenty four hour access to the greatest
+					speedrunning show in the southern hemisphere!{" "}
 				</p>
 				<p>
-					If you are planning to stay at the Hotel, please use our link for room discounts!{" "}
+					ASM 2025 will run from the 15th to the 20th of July at the Adelaide Rockford, 164 Hindley St,
+					Adelaide SA 5000
+				</p>
+				<p>
+					Please book your hotel rooms through our event link for a discount and to directly support the
+					event:{" "}
 					<Link href="https://www.idem.events/r/ausspeedruns-2025-6d96b342" target="_blank">
 						Adelaide Rockford Booking
 					</Link>
 				</p>
+				<p>Tickets are now on sale with shirt design submissions to come after the schedule is released.</p>
+				<p>We can't wait to celebrate 10 years of the Australian Speedrunning Marathon with you at ASM 2025!</p>
 			</section>
 			<section className={styles.infoTable}>
 				<table>
@@ -121,6 +136,12 @@ export default async function ASM2025() {
 						<tr>
 							<td>Location</td>
 							<td>Adelaide Rockford Hotel, Adelaide, Australia</td>
+						</tr>
+						<tr>
+							<td>Hotel Booking</td>
+							<Link href="https://www.idem.events/r/ausspeedruns-2025-6d96b342" target="_blank">
+								Adelaide Rockford
+							</Link>
 						</tr>
 						<tr>
 							<td>Event Dates</td>

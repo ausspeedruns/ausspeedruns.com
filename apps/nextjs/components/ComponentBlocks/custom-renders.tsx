@@ -1,5 +1,4 @@
 import { DocumentRendererProps } from "@keystone-6/document-renderer";
-import Balance from "react-wrap-balancer";
 
 import styles from "./custom-renders.module.scss";
 

@@ -1,11 +1,13 @@
 import Image from "next/image";
 import styles from "./post-event.module.scss";
-import { PostEventRenderers } from "@ausspeedruns/component-blocks";
+// import { PostEventRenderers } from "@ausspeedruns/component-blocks";
+
+type PostEventRenderers = any;
 
 import { AllRuns } from "./all-runs";
 
 export const PostEventComponentRenderers: PostEventRenderers = {
-	eventLogo: (props) => {
+	eventLogo: (props: any) => {
 		return (
 			<div className={styles.eventLogo}>
 				<Image
@@ -16,7 +18,7 @@ export const PostEventComponentRenderers: PostEventRenderers = {
 			</div>
 		);
 	},
-	raisedAmount: (props) => {
+	raisedAmount: (props: any) => {
 		return (
 			<div className={styles.raisedAmount}>
 				<span className={styles.amount}>{props.amount}</span>
@@ -31,8 +33,8 @@ export const PostEventComponentRenderers: PostEventRenderers = {
 			</div>
 		);
 	},
-	AllRuns: (props) => <AllRuns event={props.event} />,
-	image: (props) => {
+	AllRuns: (props: any) => <AllRuns event={props.event} />,
+	image: (props: any) => {
 		return (
 			<figure className={styles.image}>
 				<div className={styles.image}>

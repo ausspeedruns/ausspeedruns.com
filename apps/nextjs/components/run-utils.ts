@@ -13,6 +13,8 @@ interface Run {
 	race?: boolean;
 	coop?: boolean;
 	racer: string;
+	youtubeVOD?: string;
+	twitchVOD?: string;
 };
 
 interface Filters {

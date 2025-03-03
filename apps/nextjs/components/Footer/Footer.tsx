@@ -5,6 +5,7 @@ import {
 	faDiscord,
 	faInstagram,
 	faTiktok,
+	faBluesky,
 	// faFacebook,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -43,9 +44,9 @@ const Footer = (props: FooterProps) => {
 							</a>
 						</li>
 						<li className="social">
-							<a href={globals.socialLinks.twitter} target="_blank" rel="noreferrer">
-								<FontAwesomeIcon icon={faTwitter} />
-								<span className={styles.text}>Twitter</span>
+							<a href={globals.socialLinks.bluesky} target="_blank" rel="noreferrer">
+								<FontAwesomeIcon icon={faBluesky} />
+								<span className={styles.text}>Bluesky</span>
 							</a>
 						</li>
 						<li className="social">
@@ -70,6 +71,12 @@ const Footer = (props: FooterProps) => {
 							<a href={globals.socialLinks.tiktok} target="_blank" rel="noreferrer">
 								<FontAwesomeIcon icon={faTiktok} />
 								<span className={styles.text}>Tiktok</span>
+							</a>
+						</li>
+						<li className="social">
+							<a href={globals.socialLinks.twitter} target="_blank" rel="noreferrer">
+								<FontAwesomeIcon icon={faTwitter} />
+								<span className={styles.text}>Twitter</span>
 							</a>
 						</li>
 					</ul>

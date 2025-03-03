@@ -57,7 +57,7 @@ const HeroBlock = ({ event, tagLine, darkText, schedule, submitRuns, ticketLink 
 					)}
 					{submitRuns && (
 						<Button
-							actionText="Submit a run!"
+							actionText="Submit a Run!"
 							link="/submit-game"
 							iconRight={faPersonRunning}
 							colorScheme={"secondary"}

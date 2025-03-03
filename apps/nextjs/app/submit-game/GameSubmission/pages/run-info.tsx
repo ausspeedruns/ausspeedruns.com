@@ -15,8 +15,8 @@ type GameInfoProps = {
 };
 
 export const RunInfo = forwardRef<SubmissionPageRef, GameInfoProps>((props, ref) => {
-	const category = useFormInput("d");
-	const video = useFormInput("d");
+	const category = useFormInput("");
+	const video = useFormInput("");
 	const specialReqs = useFormInput("");
 	const [donationIncentives, setDonationIncentives] = useState<DonationIncentive[] | undefined>(undefined);
 	const [estimate, setEstimate] = useState("01:00:00");

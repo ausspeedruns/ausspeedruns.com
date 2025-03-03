@@ -76,5 +76,6 @@ export const globals: Globals = {
     facebook: '//www.facebook.com/ausspeedruns',
     instagram: '//instagram.com/ausspeedruns',
     tiktok: '//tiktok.com/@ausspeedruns',
+    bluesky: '//bsky.app/profile/ausspeedruns.com',
   }
 }

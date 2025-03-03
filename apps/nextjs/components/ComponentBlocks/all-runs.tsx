@@ -3,14 +3,18 @@
 import { useState } from "react";
 import styles from "./post-event.module.scss";
 
-import type { AllRunsEvent } from "@ausspeedruns/component-blocks";
+// import type { AllRunsEvent } from "@ausspeedruns/component-blocks";
 import { Accordion, AccordionDetails, AccordionSummary, Button, TextField } from "@mui/material";
 import { faTwitch } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FilterRuns } from "../run-utils";
 
-import type { PostEventRenderers } from "@ausspeedruns/component-blocks";
+// import type { PostEventRenderers } from "@ausspeedruns/component-blocks";
 import Link from "next/link";
+
+// TODO: Fix
+type AllRunsEvent = any;
+type PostEventRenderers = any;
 
 function RunnerLinks(runners: { id?: string; username: string }[], race = false, className?: string) {
 	return runners.map((runner, i) => {
@@ -54,7 +58,7 @@ function GetRunnerElement(runner: { id?: string; username: string }, className?:
 	);
 }
 
-export function AllRuns({ event }: { event: Parameters<PostEventRenderers["AllRuns"]>[0]['event'] }) {
+export function AllRuns({ event }: { event: any }) {
 	const [search, setSearch] = useState("");
 
 	if (!event) return <></>;

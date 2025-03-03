@@ -1,4 +1,4 @@
-import styles from "../../../../styles/User.PasswordReset.code.module.scss";
+import styles from "./User.PasswordReset.code.module.scss";
 import { Metadata } from "next";
 import { PasswordResetForm } from "./form";
 import { auth } from "../../../auth";

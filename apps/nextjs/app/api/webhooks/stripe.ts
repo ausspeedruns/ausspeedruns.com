@@ -6,9 +6,9 @@ const stripeApiKey = process.env.STRIPE_SECRET_KEY as string;
 const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
 const websiteApiKey = process.env.API_KEY as string;
 
-const stripe = new Stripe(stripeApiKey);
-
 export async function StripeHandler(request: Request) {
+	const stripe = new Stripe(stripeApiKey);
+
 	const buf = await request.arrayBuffer();
 	const signature = request.headers.get("stripe-signature") as string;
 

@@ -11,12 +11,12 @@ import { getUrqlClient } from "@libs/urql";
 import Marquee from "react-fast-marquee";
 import { faTicket, faCalendar, faPerson, faShirt, faPersonRunning } from "@fortawesome/free-solid-svg-icons";
 
-import ImageFiveMinShowcase01 from "./images/5MinsShowcase.jpg";
-import ImageFiveMinShowcase02 from "./images/5MinsShowcase2.jpg";
-import ImageCrowd from "./images/Crowd.jpg";
-import ImageLiquid from "./images/Liquid.jpg";
-import ImageLumpyPumpkin from "./images/LumpyPumpkin.jpg";
-import ImageRunners from "./images/Runners.jpg";
+import ImageFiveMinShowcase01 from "./images/5MinsShowcase.JPG";
+import ImageFiveMinShowcase02 from "./images/5MinsShowcase2.JPG";
+import ImageCrowd from "./images/Crowd.JPG";
+import ImageLiquid from "./images/Liquid.JPG";
+import ImageLumpyPumpkin from "./images/LumpyPumpkin.JPG";
+import ImageRunners from "./images/Runners.JPG";
 
 import Logo from "../../styles/img/events/asm25/logo.svg";
 import { Metadata } from "next";

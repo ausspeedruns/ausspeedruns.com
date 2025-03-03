@@ -12,7 +12,7 @@ const websiteApiKey = process.env.API_KEY as string;
 
 const stripe = new Stripe(stripeApiKey);
 
-const ticketId = "price_1Qv7U8KT8G4cNWT58vJrvRZG";
+const ticketId = "price_1QyTCuKT8G4cNWT5XZ4mnwYZ";
 
 const event = "ASM2025";
 

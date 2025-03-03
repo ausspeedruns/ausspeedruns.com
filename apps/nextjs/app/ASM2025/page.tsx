@@ -113,7 +113,7 @@ export default async function ASM2025() {
 				<p>
 					The Australian Speedrunning Marathon returns for its 10th anniversary in 2025! Join us for a
 					celebration of the AusSpeedruns community's achievements as we ring in the decade. With something
-					special planned every night, your ticket gives you twenty four hour access to the greatest
+					special planned every night, your ticket gives you 24 hour access to the greatest
 					speedrunning show in the southern hemisphere!{" "}
 				</p>
 				<p>

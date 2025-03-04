@@ -44,6 +44,7 @@ export default function SignUpPage() {
 						try {
 							await signUp(formData);
 						} catch (error) {
+							console.error(error);
 							if (error instanceof SignUpError) {
 								redirectUrl = `/signup?error=${error.type}`;
 							} else {

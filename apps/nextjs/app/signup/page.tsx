@@ -28,25 +28,7 @@ export const metadata: Metadata = {
 };
 
 export default function SignUpPage() {
-	// const [{ error, data }, signup] = useMutation(gql`
-	// 	mutation ($username: String!, $email: String!, $password: String!, $dob: DateTime!) {
-	// 		createUser(data: { username: $username, email: $email, password: $password, dateOfBirth: $dob }) {
-	// 			__typename
-	// 			id
-	// 		}
-	// 		authenticateUserWithPassword(email: $email, password: $password) {
-	// 			__typename
-	// 		}
-	// 	}
-	// `);
-
 	const maxDate = sub(new Date(), { years: 13 });
-	// const [username, setUsername] = useState('');
-	// const [email, setEmail] = useState('');
-	// const [password, setPassword] = useState('');
-	// const [dob, setDob] = useState<Date | undefined>();
-
-	// const cantSignUp = !Boolean(username) || !Boolean(email)|| !Boolean(dob) || password.length < 8 || maxDate < new Date(dob || Date.now()) || !UsernameRegex.test(username);
 
 	return (
 		<>
@@ -64,6 +46,8 @@ export default function SignUpPage() {
 						} catch (error) {
 							if (error instanceof SignUpError) {
 								redirectUrl = `/signup?error=${error.type}`;
+							} else {
+								redirectUrl = `/signup?error=unknown`;
 							}
 
 							throw error;
@@ -72,7 +56,7 @@ export default function SignUpPage() {
 						}
 					}}
 				>
-					{/* {error && <div>{HumanErrorMsg(error.message)}</div>} */}
+					{/* {error && <div>{HumanErrorMsg(error)}</div>} */}
 					<TextField name="email" variant="outlined" label="Email" type="email" autoComplete="email" />
 					<TextField
 						name="password"

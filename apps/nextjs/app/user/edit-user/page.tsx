@@ -68,6 +68,10 @@ export default async function EditUser() {
 
 	const user = data.user;
 
+	if (!user) {
+		return <div>User not found</div>;
+	}
+
 	return (
 		<div className={styles.content}>
 			<h1>{session.user.username}</h1>
@@ -77,15 +81,15 @@ export default async function EditUser() {
 			<EditUserForm
 				data={{
 					userId: session.user.id,
-					name: user.name,
+					name: user?.name,
 					email: user.email,
-					state: user.state,
-					pronouns: user.pronouns,
-					discord: user.discord,
-					twitter: user.twitter,
-					twitch: user.twitch,
+					state: user?.state,
+					pronouns: user?.pronouns,
+					discord: user?.discord,
+					twitter: user?.twitter,
+					twitch: user?.twitch,
 					dateOfBirth: user.dateOfBirth,
-					verified: user.verified,
+					verified: user?.verified,
 					bluesky: "",
 				}}
 			/>

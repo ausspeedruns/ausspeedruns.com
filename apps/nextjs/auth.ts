@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 
 import type { JWT } from "next-auth/jwt";
 import { redirect } from "next/navigation";
+import { sub } from "date-fns";
 
 const KeystoneURL = process.env.KEYSTONE_URL!;
 
@@ -125,7 +126,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
 // Sign Up Error
 
-type SignUpErrorType = "email" | "username" | "password" | "dob";
+type SignUpErrorType = "email" | "username" | "password" | "dob" | "unknown";
 
 export class SignUpError extends Error {
 	readonly type: SignUpErrorType;
@@ -137,17 +138,40 @@ export class SignUpError extends Error {
 	}
 }
 
+const UsernameRegex = /^[a-zA-Z0-9_-~][\w-]{2,24}$/;
+
 export async function signUp(formData: FormData) {
 	const email = formData.get("email") as string;
 	const password = formData.get("password") as string;
 	const username = formData.get("username") as string;
-	const dob = new Date(formData.get("dob") as string);
+	const dobString = formData.get("dob") as string;
+	const dob = new Date(dobString);
 
-	console.log(email, password, username, dob);
+	// console.log(email, password, username, dob);
+
 	
 	// Validation
+	if (email.length === 0) {
+		throw new SignUpError("Email Required", "email");
+	}
+
+	if (!UsernameRegex.test(username)) {
+		throw new SignUpError("Invalid Username", "username");
+	}
+
 	if (password.length < 8) {
 		throw new SignUpError("Password Too Short", "password");
+	}
+
+	if (isNaN(dob.getTime())) {
+		throw new SignUpError("Invalid Date of Birth", "dob");
+	}
+
+	// Age check to see if they are 13 or older
+	const maxDate = sub(new Date(), { years: 13 });
+
+	if (maxDate < dob) {
+		throw new SignUpError("You must be 13 or older to sign up", "dob");
 	}
 
 	// Create user
@@ -169,19 +193,16 @@ export async function signUp(formData: FormData) {
 				email,
 				password,
 				username,
-				dob: dob,
+				dob,
 			},
 		}),
 	});
 
-	console.log(response);
-
 	const responseJson = await response.json();
 
-	console.log(responseJson);
-
 	if (responseJson.error) {
-		return { error: responseJson.error.message };
+		console.error(responseJson.error);
+		throw new SignUpError(responseJson.error.message, "unknown");
 	}
 
 	const data = responseJson.data?.createUser;

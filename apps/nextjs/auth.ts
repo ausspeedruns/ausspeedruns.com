@@ -3,7 +3,6 @@ import Credentials from "next-auth/providers/credentials";
 import { cookies } from "next/headers";
 
 import type { JWT } from "next-auth/jwt";
-import { redirect } from "next/navigation";
 import { sub } from "date-fns";
 
 const KeystoneURL = process.env.KEYSTONE_URL!;
@@ -140,16 +139,18 @@ export class SignUpError extends Error {
 
 const UsernameRegex = /^[a-zA-Z0-9_-~][\w-]{2,24}$/;
 
+function parseDMY(originalDate: string) {
+	let [day, month, year] = originalDate.split(/\D/);
+	return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+};
+
 export async function signUp(formData: FormData) {
 	const email = formData.get("email") as string;
 	const password = formData.get("password") as string;
 	const username = formData.get("username") as string;
 	const dobString = formData.get("dob") as string;
-	const dob = new Date(dobString);
+	const dob = new Date(parseDMY(dobString));
 
-	// console.log(email, password, username, dob);
-
-	
 	// Validation
 	if (email.length === 0) {
 		throw new SignUpError("Email Required", "email");
@@ -208,7 +209,7 @@ export async function signUp(formData: FormData) {
 	const data = responseJson.data?.createUser;
 
 	if (data?.__typename === "User") {
-		await signIn("credentials", { email, password });
+		await signIn("credentials", { email, password, redirect: false });
 	}
 
 	return null;

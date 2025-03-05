@@ -7,6 +7,7 @@ import { Metadata } from "next";
 import LocalisedDatePicker from "./localised-date-picker";
 import { signUp, SignUpError } from "apps/nextjs/auth";
 import { redirect } from "next/navigation";
+import { signUpAction } from "./signup-action";
 
 function HumanErrorMsg(error: string) {
 	switch (error) {
@@ -35,28 +36,7 @@ export default function SignUpPage() {
 			<div className={styles.background} />
 			<div className={`${styles.content} ${styles.form}`}>
 				<h1>Join</h1>
-				<form
-					action={async (formData) => {
-						"use server";
-
-						let redirectUrl = "/user/edit-user";
-
-						try {
-							await signUp(formData);
-						} catch (error) {
-							console.error(error);
-							if (error instanceof SignUpError) {
-								redirectUrl = `/signup?error=${error.type}`;
-							} else {
-								redirectUrl = `/signup?error=unknown`;
-							}
-
-							throw error;
-						} finally {
-							redirect(redirectUrl);
-						}
-					}}
-				>
+				<form action={signUpAction}>
 					{/* {error && <div>{HumanErrorMsg(error)}</div>} */}
 					<TextField name="email" variant="outlined" label="Email" type="email" autoComplete="email" />
 					<TextField

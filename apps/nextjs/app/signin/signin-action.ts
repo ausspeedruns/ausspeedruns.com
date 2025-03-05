@@ -9,7 +9,6 @@ export async function signInAction(formData: FormData) {
 
 	try {
 		await signIn("credentials", formData);
-		redirect("/ASM2025");
 	} catch (error) {
 		console.log(error);
 

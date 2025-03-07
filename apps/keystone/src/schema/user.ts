@@ -165,7 +165,7 @@ export const User: Lists.User = list({
 				},
 			},
 		}),
-		bluesky: text({ validation: { length: { max: 200 } } }),
+		bluesky: text({ validation: { isRequired: false, length: { max: 200 } } }),
 		// Ticketing
 		tickets: relationship({ ref: "Ticket.user", ui: { hideCreate: true }, many: true }),
 		// Volunteer

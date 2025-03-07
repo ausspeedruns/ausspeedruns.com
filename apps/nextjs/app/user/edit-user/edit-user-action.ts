@@ -30,6 +30,7 @@ const UPDATE_PROFILE = gql`
 		$twitch: String!
 		$dateOfBirth: DateTime!
 		$state: UserStateType!
+		$bluesky: String!
 	) {
 		updateUser(
 			where: { id: $userId }
@@ -42,6 +43,7 @@ const UPDATE_PROFILE = gql`
 				discord: $discord
 				twitter: $twitter
 				twitch: $twitch
+				bluesky: $bluesky
 			}
 		) {
 			__typename
@@ -49,7 +51,6 @@ const UPDATE_PROFILE = gql`
 	}
 `;
 
-// export async function updateProfile(boundData: { userId: string; cookie: string }, formData: FormData) {
 export async function updateProfile(formData: FormData) {
 	const session = await auth();
 
@@ -73,7 +74,7 @@ export async function updateProfile(formData: FormData) {
 	};
 
 	const client = getUrqlCookieClient();
-	const result = await client.mutation(UPDATE_PROFILE, profileData).toPromise();
+	await client.mutation(UPDATE_PROFILE, profileData).toPromise();
 
 	redirect(`/user/${session.user.username}`);
 }

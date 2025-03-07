@@ -214,6 +214,7 @@ type User {
   discord: String
   twitter: String
   twitch: String
+  bluesky: String
   tickets(where: TicketWhereInput! = {}, orderBy: [TicketOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TicketWhereUniqueInput): [Ticket!]
   ticketsCount(where: TicketWhereInput! = {}): Int
   volunteer(where: VolunteerWhereInput! = {}, orderBy: [VolunteerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: VolunteerWhereUniqueInput): [Volunteer!]
@@ -268,6 +269,7 @@ input UserWhereInput {
   discord: StringFilter
   twitter: StringFilter
   twitch: StringFilter
+  bluesky: StringFilter
   tickets: TicketManyRelationFilter
   volunteer: VolunteerManyRelationFilter
   shirts: ShirtOrderManyRelationFilter
@@ -337,6 +339,7 @@ input UserOrderByInput {
   discord: OrderDirection
   twitter: OrderDirection
   twitch: OrderDirection
+  bluesky: OrderDirection
   passwordResetIssuedAt: OrderDirection
   passwordResetRedeemedAt: OrderDirection
 }
@@ -358,6 +361,7 @@ input UserUpdateInput {
   discord: String
   twitter: String
   twitch: String
+  bluesky: String
   tickets: TicketRelateToManyForUpdateInput
   volunteer: VolunteerRelateToManyForUpdateInput
   shirts: ShirtOrderRelateToManyForUpdateInput
@@ -430,6 +434,7 @@ input UserCreateInput {
   discord: String
   twitter: String
   twitch: String
+  bluesky: String
   tickets: TicketRelateToManyForCreateInput
   volunteer: VolunteerRelateToManyForCreateInput
   shirts: ShirtOrderRelateToManyForCreateInput

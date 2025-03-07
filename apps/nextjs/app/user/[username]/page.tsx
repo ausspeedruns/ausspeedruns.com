@@ -1,5 +1,4 @@
-
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -7,7 +6,6 @@ import styles from "../../../styles/User.username.module.scss";
 // import SubmissionAccordion from "../../../components/SubmissionAccordian/SubmissionAccordion";
 import RunUpcoming from "../../../components/RunUpcoming/RunUpcoming";
 // import RunCompleted from "../../../components/RunCompleted/RunCompleted";
-// import DiscordEmbed from "../../../components/DiscordEmbed";
 import Ticket from "../../../components/Ticket/Ticket";
 // import ASMShirt from "../../../components/ShirtOrder/ShirtOrder";
 
@@ -21,6 +19,7 @@ import { Metadata } from "next";
 import { Submission } from "./submission";
 import Submissions from "./submissions";
 import Link from "next/link";
+import { faBluesky, faTwitch, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
 
 const QUERY_USER = gql`
 	query Profile($username: String) {
@@ -29,8 +28,9 @@ const QUERY_USER = gql`
 			username
 			pronouns
 			state
-			discord
 			twitter
+			twitch
+			bluesky
 			roles(where: { show: { equals: true } }) {
 				id
 				name
@@ -146,9 +146,9 @@ type QUERY_USER_RESULTS = {
 		username: string;
 		pronouns?: string;
 		state: string;
-		discord?: string;
 		twitter?: string;
 		twitch?: string;
+		bluesky?: string;
 		roles: {
 			id: string;
 			name: string;
@@ -236,8 +236,8 @@ function StateCodeToString(stateCode: string) {
 
 const makeClient = () => {
 	return createClient({
-		// url: "http://localhost:8000/api/graphql",
-		url: "https://keystone.ausspeedruns.com/api/graphql",
+		url: "http://localhost:8000/api/graphql",
+		// url: "https://keystone.ausspeedruns.com/api/graphql",
 		exchanges: [cacheExchange, fetchExchange],
 		fetchOptions: () => {
 			const cookie = cookies();
@@ -314,16 +314,28 @@ export default async function ProfilePage({ params }: ProfilePageParams) {
 
 	return (
 		<>
-			{/* <Head>
-				<title>{`${ssrData.user.username} - AusSpeedruns`}</title>
-				<DiscordEmbed
-					title={`${ssrData.user.username}'s Profile - AusSpeedruns`}
-					pageUrl={`/user/${ssrData.user.username}`}
-				/>
-			</Head> */}
 			<div className={styles.content}>
 				<div className={styles.profileHeader}>
-					<h1>{ssrData.user.username}</h1>
+					<h1 style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+						{ssrData.user.username}
+						<div style={{ display: "flex", gap: "0.5rem", fontSize: "75%" }}>
+							<SocialMediaLink
+								icon={faTwitch}
+								handle={ssrData.user.twitch}
+								link={`https://www.twitch.tv/${ssrData.user.twitch}`}
+							/>
+							<SocialMediaLink
+								icon={faBluesky}
+								handle={ssrData.user.bluesky}
+								link={`https://bsky.app/profile/${ssrData.user.bluesky}`}
+							/>
+							<SocialMediaLink
+								icon={faTwitter}
+								handle={ssrData.user.twitter}
+								link={`https://www.twitter.com/${ssrData.user.twitter}`}
+							/>
+						</div>
+					</h1>
 					{session?.user?.username === ssrData.user.username && (
 						<Link href="/user/edit-user">
 							<IconButton style={{ float: "right" }}>
@@ -398,5 +410,19 @@ export default async function ProfilePage({ params }: ProfilePageParams) {
 				<PreviousRuns runs={ssrData.user.runs} />
 			</div>
 		</>
+	);
+}
+
+function SocialMediaLink({ icon, handle, link }: { icon: any; handle?: string; link: string }) {
+	if (!handle) {
+		return null;
+	}
+
+	return (
+		<Tooltip title={handle} placement="top">
+			<a href={link} target="_blank" rel="noreferrer">
+				<FontAwesomeIcon icon={icon} />
+			</a>
+		</Tooltip>
 	);
 }

@@ -31,8 +31,6 @@ type PrefilledFormData = {
 };
 
 export function EditUserForm({ data }: PrefilledFormData) {
-	const updateProfileWithId = updateProfile.bind(null, data.userId);
-
 	const [discordWarning, setDiscordWarning] = useState(false);
 	const [twitterWarning, setTwitterWarning] = useState(false);
 	const [twitchWarning, setTwitchWarning] = useState(false);
@@ -58,7 +56,7 @@ export function EditUserForm({ data }: PrefilledFormData) {
 		(discord !== "" && !DiscordRegex.test(discord.toLowerCase()));
 
 	return (
-		<form action={updateProfileWithId} style={{display: "flex", flexDirection: "column"}}>
+		<form action={updateProfile} style={{display: "flex", flexDirection: "column"}}>
 			<div className={styles.profileInformation}>
 				{!data.verified && (
 					<>

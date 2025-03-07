@@ -3,6 +3,8 @@
 import { getUrqlCookieClient } from "@libs/urql";
 import { gql } from "urql";
 import { parse } from "date-fns";
+import { auth } from "../../../auth";
+import { redirect } from "next/navigation";
 
 type EditProfileData = {
 	userId: string;
@@ -14,6 +16,7 @@ type EditProfileData = {
 	twitch: string;
 	dateOfBirth: string;
 	state: string;
+	bluesky: string;
 };
 
 const UPDATE_PROFILE = gql`
@@ -47,17 +50,24 @@ const UPDATE_PROFILE = gql`
 `;
 
 // export async function updateProfile(boundData: { userId: string; cookie: string }, formData: FormData) {
-export async function updateProfile(userId: string, formData: FormData) {
+export async function updateProfile(formData: FormData) {
+	const session = await auth();
+
+	if (!session || !session.user.id) {
+		redirect("/signin");
+	}
+
 	const dateOfBirth = parse(formData.get("dateOfBirth") as string, "dd/MM/yyyy", new Date());
 
 	const profileData: EditProfileData = {
-		userId: userId,
+		userId: session.user.id,
 		name: formData.get("name") as string,
 		email: formData.get("email") as string,
 		pronouns: formData.get("pronouns") as string,
 		discord: formData.get("discord") as string,
 		twitter: formData.get("twitter") as string,
 		twitch: formData.get("twitch") as string,
+		bluesky: formData.get("bluesky") as string,
 		dateOfBirth: dateOfBirth.toISOString(),
 		state: formData.get("state") as string,
 	};
@@ -65,7 +75,7 @@ export async function updateProfile(userId: string, formData: FormData) {
 	const client = getUrqlCookieClient();
 	const result = await client.mutation(UPDATE_PROFILE, profileData).toPromise();
 
-	return result.data;
+	redirect(`/user/${session.user.username}`);
 }
 
 type UpdateVerificationData = {

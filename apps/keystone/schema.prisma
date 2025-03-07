@@ -47,6 +47,7 @@ model User {
   discord                 String         @default("")
   twitter                 String         @default("")
   twitch                  String         @default("")
+  bluesky                 String         @default("")
   tickets                 Ticket[]       @relation("Ticket_user")
   volunteer               Volunteer[]    @relation("Volunteer_volunteer")
   shirts                  ShirtOrder[]   @relation("ShirtOrder_user")

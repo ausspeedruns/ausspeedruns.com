@@ -46,7 +46,9 @@ export default async function EditUser() {
 		return redirect("/signin");
 	}
 
-	const { data } = await getClient().query(
+	const client = getClient();
+
+	const result = await client.query(
 		gql`
 			query Profile($userId: ID!) {
 				user(where: { id: $userId }) {
@@ -60,17 +62,18 @@ export default async function EditUser() {
 					discord
 					twitter
 					twitch
+					bluesky
 				}
 			}
 		`,
 		{ userId: session.user.id },
-	);
+	).toPromise();
 
-	const user = data.user;
-
-	if (!user) {
+	if (!result.data?.user) {
 		return <div>User not found</div>;
 	}
+
+	const user = result.data.user;
 
 	return (
 		<div className={styles.content}>
@@ -90,7 +93,7 @@ export default async function EditUser() {
 					twitch: user?.twitch,
 					dateOfBirth: user.dateOfBirth,
 					verified: user?.verified,
-					bluesky: "",
+					bluesky: user?.bluesky,
 				}}
 			/>
 		</div>

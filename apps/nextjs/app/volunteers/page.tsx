@@ -4,7 +4,7 @@ import { gql } from "urql";
 import styles from "../../styles/Volunteers.module.scss";
 import LinkButton from "../../components/Button/Button";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { getUrqlClient } from "@libs/urql";
+import { getRegisteredClient } from "@libs/urql";
 import { registerUrql } from "@urql/next/rsc";
 import { auth } from "../../auth";
 import { Metadata } from "next";
@@ -26,7 +26,7 @@ function HumanErrorMsg(error: string) {
 	}
 }
 
-const { getClient } = registerUrql(getUrqlClient);
+const { getClient } = registerUrql(getRegisteredClient);
 
 type VolunteerData = {
 	user: {

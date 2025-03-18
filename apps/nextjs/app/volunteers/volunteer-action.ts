@@ -1,6 +1,6 @@
 "use server";
 
-import { getUrqlClient } from "@libs/urql";
+import { getRegisteredClient } from "@libs/urql";
 import { gql } from "urql";
 
 type VolunteerSubmission = {
@@ -61,7 +61,7 @@ const ADD_VOLUNTEER_MUTATION = gql`
 `;
 
 export async function createSubmission(volunteer: VolunteerSubmission) {
-	const client = getUrqlClient();
+	const client = getRegisteredClient();
 	const result = await client.mutation(ADD_VOLUNTEER_MUTATION, volunteer).toPromise();
 	return result.data?.createVolunteer;
 }

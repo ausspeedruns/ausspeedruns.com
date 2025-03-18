@@ -123,7 +123,13 @@ export async function createSubmissionFromForm(submissionData: FormData) {
 		userId: user.user.id,
 	};
 
-	const result = await getUrqlCookieClient().mutation(CREATE_GAME_SUBMISSION, data).toPromise();
+	const client = getUrqlCookieClient();
+
+	if (!client) {
+		throw new Error("Unauthorized");
+	}
+
+	const result = await client.mutation(CREATE_GAME_SUBMISSION, data).toPromise();
 
 	if (result.error) {
 		throw result.error;

@@ -77,8 +77,12 @@ const MUTATION_SUBMISSION = gql`
 
 export async function updateSubmission(submission: Submission) {
 	const client = getUrqlCookieClient();
+
+	if (!client) {
+		throw new Error("Unauthorized");
+	}
+
 	const result = await client.mutation(MUTATION_SUBMISSION, submission).toPromise();
-	console.log(result);
 
 	if (result.error) {
 		throw new Error(result.error.message);
@@ -103,7 +107,13 @@ const MUTATION_BACKUP = gql`
 
 export async function updateSubmissionBackup(submission: SubmissionBackup) {
 	const client = getUrqlCookieClient();
+
+	if (!client) {
+		throw new Error("Unauthorized");
+	}
+
 	const result = await client.mutation(MUTATION_BACKUP, submission).toPromise();
+
 	return result.data?.updateSubmission;
 }
 
@@ -122,6 +132,12 @@ const MUTATION_DELETE = gql`
 
 export async function deleteSubmission(submission: SubmissionDelete) {
 	const client = getUrqlCookieClient();
+
+	if (!client) {
+		throw new Error("Unauthorized");
+	}
+
 	const result = await client.mutation(MUTATION_DELETE, submission).toPromise();
+	
 	return result.data?.deleteSubmission;
 }

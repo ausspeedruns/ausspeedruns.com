@@ -6,7 +6,7 @@ import styles from "../../styles/Events.module.scss";
 
 import { gql } from "@urql/core";
 import { registerUrql } from "@urql/next/rsc";
-import { getUrqlClient } from "@libs/urql";
+import { getRegisteredClient } from "@libs/urql";
 import { Metadata } from "next";
 
 const QUERY_EVENT = gql`
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Events() {
-	const { data } = await getUrqlClient().query<QUERY_EVENT_RESULTS>(QUERY_EVENT, {});
+	const { data } = await getRegisteredClient().query<QUERY_EVENT_RESULTS>(QUERY_EVENT, {});
 	return (
 		<div>
 			<Head>

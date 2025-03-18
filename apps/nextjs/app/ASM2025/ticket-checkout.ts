@@ -5,7 +5,7 @@ import { auth } from "../../auth";
 import { Stripe } from "stripe";
 import { redirect } from "next/navigation";
 import { gql } from "urql";
-import { getUrqlClient } from "@libs/urql";
+import { getRegisteredClient } from "@libs/urql";
 
 const stripeApiKey = process.env.STRIPE_SECRET_KEY as string;
 const websiteApiKey = process.env.API_KEY as string;
@@ -56,7 +56,7 @@ export const stripeCheckoutAction = async () => {
 		throw new Error("Failed to create session");
 	}
 
-	const client = getUrqlClient();
+	const client = getRegisteredClient();
 	await client.mutation(CREATE_TICKET_MUTATION, {
 		userID: user.user.id,
 		stripeID: session.id,

@@ -34,6 +34,11 @@ export async function POST(request: Request) {
 	}
 
 	const client = getUrqlCookieClient();
+
+	if (!client) {
+		return new Response("Unauthorized", { status: 401 });
+	}
+
 	const result = await client
 		.mutation(CREATE_TICKET_MUTATION, { userID: userId, numberOfTickets: 1, event: "ASM2025", apiKey: API_KEY })
 		.toPromise();

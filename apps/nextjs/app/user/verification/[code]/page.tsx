@@ -1,7 +1,7 @@
 import { gql } from "urql";
 
 import styles from "../../../../styles/User.Verification.code.module.scss";
-import { getUrqlClient } from "@libs/urql";
+import { getRegisteredClient } from "@libs/urql";
 import { auth } from "../../../../auth";
 import { redirect } from "next/navigation";
 
@@ -23,7 +23,7 @@ const DELETE_VERIFICATION_MUTATION = gql`
 
 export default async function Verification({ params }: { params: Promise<{ code: string }> }) {
 	const verificationCode = (await params).code;
-	const client = getUrqlClient();
+	const client = getRegisteredClient();
 	const session = await auth();
 
 	const data = await client.query(VERIFICATION_QUERY, { code: verificationCode }).toPromise();

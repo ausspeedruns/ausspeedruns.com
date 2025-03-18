@@ -23,7 +23,7 @@ import Head from "next/head";
 import Image from "next/image";
 import DiscordEmbed from "../../../components/DiscordEmbed";
 import { format, addSeconds } from "date-fns";
-import { getUrqlClient } from "@libs/urql";
+import { getRegisteredClient } from "@libs/urql";
 
 import { gql } from "@urql/core";
 
@@ -162,7 +162,7 @@ type EventScheduleProps = {
 
 // const TEST_CURRENT_TIME = new Date(2025, 6, 9, 16, 25);
 export default async function EventSchedule({ params }: { params: { event: string } }) {
-	const { data } = await getUrqlClient().query<QUERY_EVENT_RESULTS>(QUERY_EVENT, { event: params.event }).toPromise();
+	const { data } = await getRegisteredClient().query<QUERY_EVENT_RESULTS>(QUERY_EVENT, { event: params.event }).toPromise();
 	const event = data?.event;
 
 	if (!event) {

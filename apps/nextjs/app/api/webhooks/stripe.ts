@@ -1,4 +1,4 @@
-import { getUrqlClient } from "@libs/urql";
+import { getRegisteredClient } from "@libs/urql";
 import { Stripe } from "stripe";
 import { gql } from "urql";
 
@@ -38,6 +38,6 @@ const TICKET_MUTATION = gql`
 `;
 
 async function ticketOrder(sessionId: string) {
-	const client = getUrqlClient();
+	const client = getRegisteredClient();
 	await client.mutation(TICKET_MUTATION, { sessionID: sessionId, apiKey: websiteApiKey });
 }

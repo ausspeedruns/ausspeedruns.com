@@ -17,9 +17,12 @@ export async function GET(request: Request) {
 
 	if (session_id) {
 		const client = getUrqlCookieClient();
-		const result = await client.mutation(DELETE_TICKET_MUTATION, { sessionID: session_id });
 
-		console.log(result);
+		if (!client) {
+			return new Response("Unauthorized", { status: 401 });
+		}
+
+		const result = await client.mutation(DELETE_TICKET_MUTATION, { sessionID: session_id });
 	}
 
 	redirect("/tickets");

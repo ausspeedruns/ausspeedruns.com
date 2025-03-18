@@ -7,7 +7,7 @@ import styles from "./asm2025.module.scss";
 import { stripeCheckoutAction } from "./ticket-checkout";
 import { TicketPurchase } from "./ticket-purchase";
 import { gql } from "urql";
-import { getUrqlClient } from "@libs/urql";
+import { getRegisteredClient } from "@libs/urql";
 import Marquee from "react-fast-marquee";
 import { faTicket, faCalendar, faPerson, faShirt, faPersonRunning } from "@fortawesome/free-solid-svg-icons";
 
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
 export default async function ASM2025() {
 	const session = await auth();
 
-	const client = getUrqlClient();
+	const client = getRegisteredClient();
 
 	const acceptingTicketsQuery = await client.query(EVENT_QUERY, { eventShortname: EVENT }).toPromise();
 

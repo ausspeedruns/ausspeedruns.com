@@ -1,8 +1,7 @@
 import "./global.scss";
 
 import { gql } from "@urql/core";
-import { getUrqlClient } from "@libs/urql";
-import { registerUrql } from "@urql/next/rsc";
+import { getRegisteredClient } from "@libs/urql";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 
 import CookieConsent from "react-cookie-consent";
@@ -16,8 +15,6 @@ import theme from "../mui-theme";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 config.autoAddCss = false;
-
-const { getClient } = registerUrql(getUrqlClient);
 
 const QUERY_EVENTS = gql`
 	query LiveOrUpcomingEvents($currentTime: DateTime) {
@@ -53,7 +50,7 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-	const result = await getClient().query<Query_Events>(QUERY_EVENTS, { currentTime: new Date().toISOString() });
+	const result = await getRegisteredClient().query<Query_Events>(QUERY_EVENTS, { currentTime: new Date().toISOString() });
 	return (
 		<html lang="en">
 			<body>

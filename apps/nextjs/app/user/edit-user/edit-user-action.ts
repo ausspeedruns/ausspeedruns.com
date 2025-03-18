@@ -73,8 +73,7 @@ export async function updateProfile(formData: FormData) {
 		state: formData.get("state") as string,
 	};
 
-	const client = getUrqlCookieClient();
-	await client.mutation(UPDATE_PROFILE, profileData).toPromise();
+	await getUrqlCookieClient()?.mutation(UPDATE_PROFILE, profileData).toPromise();
 
 	redirect(`/user/${session.user.username}`);
 }
@@ -92,7 +91,13 @@ const UPDATE_VERIFICATION = gql`
 `;
 
 export async function resendVerificationEmail(userId: string) {
-	const client = getUrqlCookieClient();
-	const result = await client.mutation(UPDATE_VERIFICATION, { userId, time: new Date().toISOString() }).toPromise();
+	const result = await getUrqlCookieClient()
+		?.mutation(UPDATE_VERIFICATION, { userId, time: new Date().toISOString() })
+		.toPromise();
+
+	if (!result) {
+		return;
+	}
+
 	return result.data;
 }

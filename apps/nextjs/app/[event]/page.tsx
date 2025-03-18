@@ -8,7 +8,7 @@ import styles from "../../styles/Event.module.scss";
 import { customDocumentRenderer } from "../../components/ComponentBlocks/custom-renders";
 import { gql } from "@urql/core";
 import { notFound } from "next/navigation";
-import { getUrqlClient } from "@libs/urql";
+import { getRegisteredClient } from "@libs/urql";
 
 const QUERY_EVENT = gql`
 	query ($event: String!) {
@@ -109,7 +109,8 @@ function documentTrim(document: any[]) {
 }
 
 export default async function EventPage({ params }: { params: { event: string } }) {
-	const data = await getUrqlClient().query<QUERY_EVENT_RESULTS>(QUERY_EVENT, { event: params.event });
+	const client = getRegisteredClient();
+	const data = await client.query<QUERY_EVENT_RESULTS>(QUERY_EVENT, { event: params.event });
 
 	if (!data?.data || data?.error || !data.data.event) {
 		return notFound();
@@ -119,7 +120,7 @@ export default async function EventPage({ params }: { params: { event: string } 
 
 	// If still live
 	if (data.data.event.endDate && new Date(data.data.event?.endDate) > new Date()) {
-		const liveData = await getUrqlClient()
+		const liveData = await client
 			.query<QUERY_LIVE_EVENT_RESULTS>(QUERY_LIVE_EVENT, { event: params.event })
 			.toPromise();
 
@@ -134,7 +135,7 @@ export default async function EventPage({ params }: { params: { event: string } 
 			past: false,
 		};
 	} else {
-		const pastData = await getUrqlClient()
+		const pastData = await client
 			.query<QUERY_PAST_EVENT_RESULTS>(QUERY_PAST_EVENT, { event: params.event })
 			.toPromise();
 

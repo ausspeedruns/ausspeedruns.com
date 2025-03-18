@@ -9,8 +9,7 @@ import RunUpcoming from "../../../components/RunUpcoming/RunUpcoming";
 import Ticket from "../../../components/Ticket/Ticket";
 // import ASMShirt from "../../../components/ShirtOrder/ShirtOrder";
 
-import { cacheExchange, createClient, fetchExchange, gql } from "@urql/core";
-import { registerUrql } from "@urql/next/rsc";
+import { gql } from "@urql/core";
 import { notFound } from "next/navigation";
 import { auth } from "../../../auth";
 import PreviousRuns from "./previous-runs";
@@ -20,6 +19,7 @@ import { Submission } from "./submission";
 import Submissions from "./submissions";
 import Link from "next/link";
 import { faBluesky, faTwitch, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { getUrqlCookieClient, normalClient } from "@libs/urql";
 
 const QUERY_USER = gql`
 	query Profile($username: String) {
@@ -234,29 +234,6 @@ function StateCodeToString(stateCode: string) {
 	}
 }
 
-const makeClient = () => {
-	return createClient({
-		// url: "http://localhost:8000/api/graphql",
-		url: "https://keystone.ausspeedruns.com/api/graphql",
-		exchanges: [cacheExchange, fetchExchange],
-		fetchOptions: () => {
-			const cookie = cookies();
-			if (cookie.has("keystonejs-session")) {
-				const keystoneCookie = cookie.get("keystonejs-session");
-				return {
-					headers: {
-						cookie: `keystonejs-session=${keystoneCookie?.value}`,
-					},
-				};
-			}
-
-			return {};
-		},
-	});
-};
-
-const { getClient } = registerUrql(makeClient);
-
 type ProfilePageParams = {
 	params: {
 		username: string;
@@ -271,8 +248,7 @@ export async function generateMetadata({ params }: ProfilePageParams): Promise<M
 
 export default async function ProfilePage({ params }: ProfilePageParams) {
 	const cookieStore = cookies();
-	const client = getClient();
-	const { data: ssrData } = await client.query<QUERY_USER_RESULTS>(QUERY_USER, { username: params.username });
+	const { data: ssrData } = await normalClient.query<QUERY_USER_RESULTS>(QUERY_USER, { username: params.username });
 
 	if (!ssrData?.user) {
 		return notFound();
@@ -282,13 +258,13 @@ export default async function ProfilePage({ params }: ProfilePageParams) {
 
 	let privateDataResults = null;
 	if (session?.user.username === ssrData.user.username) {
-		const { data } = await client.query<QUERY_PRIVATE_RESULTS>(QUERY_PRIVATE, {
+		const results = await getUrqlCookieClient()?.query<QUERY_PRIVATE_RESULTS>(QUERY_PRIVATE, {
 			username: ssrData.user.username,
 			currentTime: new Date().toISOString(),
 		});
 
-		if (data?.user) {
-			privateDataResults = data.user;
+		if (results?.data?.user) {
+			privateDataResults = results.data.user;
 		}
 	}
 

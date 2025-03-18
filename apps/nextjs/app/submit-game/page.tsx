@@ -1,4 +1,4 @@
-import { gql, createClient, cacheExchange, fetchExchange } from "urql";
+import { gql } from "urql";
 
 import styles from "../../styles/SubmitGame.module.scss";
 import LinkButton from "../../components/Button/Button";
@@ -9,32 +9,8 @@ import { auth } from "../../auth";
 
 // import SubmitGameOG from "../styles/img/ogImages/SubmitGame.jpg";
 
-import { cookies } from "next/headers";
-import { registerUrql } from "@urql/next/rsc";
 import { Metadata } from "next";
-
-const makeClient = () => {
-	return createClient({
-		// url: "http://localhost:8000/api/graphql",
-		url: "https://keystone.ausspeedruns.com/api/graphql",
-		exchanges: [cacheExchange, fetchExchange],
-		fetchOptions: () => {
-			const cookie = cookies();
-			if (cookie.has("keystonejs-session")) {
-				const keystoneCookie = cookie.get("keystonejs-session");
-				return {
-					headers: {
-						cookie: `keystonejs-session=${keystoneCookie?.value}`,
-					},
-				};
-			}
-
-			return {};
-		},
-	});
-};
-
-const { getClient } = registerUrql(makeClient);
+import { getRegisteredClient, getRegisteredUrqlCookieClient } from "@libs/urql";
 
 const QUERY_INITIAL = gql`
 	query Profile($userId: ID!) {
@@ -80,9 +56,11 @@ export const metadata: Metadata = {
 
 export default async function SubmitGamePage() {
 	const session = await auth();
-	// const [successSubmit, setSuccessSubmit] = useState(false);
+	
+	// Query if able to submit game (has discord)
+	const client = getRegisteredUrqlCookieClient();
 
-	if (!session || !session.user.id) {
+	if (!session || !session.user.id || !client) {
 		return (
 			<BasePage>
 				<div className={`content ${styles.content} ${styles.noEvents}`}>
@@ -95,13 +73,10 @@ export default async function SubmitGamePage() {
 		);
 	}
 
-	// Query if able to submit game (has discord)
-	const { data } = await getClient().query<QUERY_USER_RESULTS>(QUERY_INITIAL, {
+
+	const { data } = await client().query<QUERY_USER_RESULTS>(QUERY_INITIAL, {
 		userId: session.user.id,
 	});
-
-	// Mutation for game submission
-	// const submissionMutation = useMutation<MUTATION_SUBMISSION_RESULTS>(MUTATION_SUBMIT);
 
 	if (data?.events.length === 0) {
 		return (
@@ -116,8 +91,6 @@ export default async function SubmitGamePage() {
 	}
 
 	const singleEvent = data?.events.length === 1 ? data.events[0] : undefined;
-
-	// console.log(submissionMutation[0]);
 
 	return (
 		<BasePage>

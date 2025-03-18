@@ -4,7 +4,7 @@ import Link from "next/link";
 import DiscordEmbed from "../../components/DiscordEmbed";
 import styles from "../../styles/Events.module.scss";
 
-import { cacheExchange, createClient, fetchExchange, gql } from "@urql/core";
+import { gql } from "@urql/core";
 import { registerUrql } from "@urql/next/rsc";
 import { getUrqlClient } from "@libs/urql";
 import { Metadata } from "next";

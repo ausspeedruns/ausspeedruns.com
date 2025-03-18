@@ -3,37 +3,13 @@ import styles from "../../../styles/User.EditUser.module.scss";
 import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { registerUrql } from "@urql/next/rsc";
-import { cacheExchange, createClient, fetchExchange, gql } from "@urql/core";
+import {  gql } from "@urql/core";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { EditUserForm } from "./form";
 import { auth } from "../../../auth";
-import { cookies } from "next/headers";
-
-const makeClient = () => {
-	return createClient({
-		// url: "http://localhost:8000/api/graphql",
-		url: "https://keystone.ausspeedruns.com/api/graphql",
-		exchanges: [cacheExchange, fetchExchange],
-		fetchOptions: () => {
-			const cookie = cookies();
-			if (cookie.has("keystonejs-session")) {
-				const keystoneCookie = cookie.get("keystonejs-session");
-				return {
-					headers: {
-						cookie: `keystonejs-session=${keystoneCookie?.value}`,
-					},
-				};
-			}
-
-			return {};
-		},
-	});
-};
-
-const { getClient } = registerUrql(makeClient);
+import { getRegisteredUrqlCookieClient } from "@libs/urql";
 
 export const metadata: Metadata = {
 	title: "Edit User",
@@ -43,12 +19,16 @@ export default async function EditUser() {
 	const session = await auth();
 
 	if (!session || !session.user.id) {
-		return redirect("/signin");
+		redirect("/signin");
 	}
 
-	const client = getClient();
+	const client = getRegisteredUrqlCookieClient();
 
-	const result = await client.query(
+	if (!client) {
+		redirect("/signin");
+	}
+
+	const result = await client().query(
 		gql`
 			query Profile($userId: ID!) {
 				user(where: { id: $userId }) {

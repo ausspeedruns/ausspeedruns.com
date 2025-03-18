@@ -31,7 +31,7 @@ const { withAuth } = createAuth({
 	secretField: "password",
 	sessionData: "username id roles { admin canManageUsers canManageContent runner volunteer event { shortname } }",
 	passwordResetLink: {
-		sendToken: async ({ itemId, identity, token, context }) => {
+		sendToken: async ({ identity, token }) => {
 			sendResetPassword(identity, token);
 		},
 	},

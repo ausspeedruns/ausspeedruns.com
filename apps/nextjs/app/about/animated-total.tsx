@@ -3,7 +3,7 @@
 import anime from "animejs";
 import { type RefObject, useEffect, useRef, useState } from "react";
 
-const AMOUNT_RAISED = 160_000;
+const AMOUNT_RAISED = 220_000;
 
 function useOnScreen(ref: RefObject<HTMLElement>) {
 	const [isIntersecting, setIntersecting] = useState(false);

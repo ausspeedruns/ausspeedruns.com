@@ -4,9 +4,8 @@ import { useState } from "react";
 import { Button, TextField } from "@mui/material";
 import { resetPassword } from "./reset-password-action";
 import { useSearchParams } from "next/navigation";
-import { signInAction } from "../../signin/signin-action";
 
-export async function PasswordResetForm() {
+export function PasswordResetForm() {
 	const searchParams = useSearchParams();
 
 	const [password, setPassword] = useState("");
@@ -18,46 +17,15 @@ export async function PasswordResetForm() {
 	}
 
 	return (
-		<form
-			onSubmit={(e) => {
-				e.preventDefault();
-
-				if (!passwordsMatch) {
-					return;
-				}
-
-				const email = searchParams.get("email");
-				const code = searchParams.get("code");
-
-				if (!email || !code) {
-					console.error("Email or code missing");
-					return;
-				}
-
-				resetPassword({
-					email,
-					password,
-					token: code,
-				}).then((result) => {
-					// console.log('Reset result', result)
-
-					const formdata = new FormData();
-					formdata.append("email", email);
-					formdata.append("password", password);
-
-					if (!result.error && !["TOKEN_REDEEMED", "TOKEN_EXPIRED", "FAILURE"].includes(result.data.code)) {
-						signInAction(formdata);
-					} else {
-						console.error(result.error);
-						console.error(result.data);
-					}
-				});
-			}}>
+		<form action={resetPassword}>
+			<input type="hidden" name="email" value={searchParams.get("email") ?? ""} />
+			<input type="hidden" name="token" value={searchParams.get("code") ?? ""} />
 			<TextField
 				value={password}
 				type="password"
 				onChange={(e) => setPassword(e.target.value)}
 				label="Password"
+				name="password"
 				required
 			/>
 			<TextField
@@ -66,6 +34,7 @@ export async function PasswordResetForm() {
 				onChange={(e) => setPasswordConfirm(e.target.value)}
 				onBlur={() => checkPasswordsMatch()}
 				label="Confirm Password"
+				name="passwordConfirm"
 				required
 				error={!passwordsMatch}
 			/>

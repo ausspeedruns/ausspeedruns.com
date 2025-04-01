@@ -5,7 +5,7 @@ const KeystoneURL = process.env.KEYSTONE_URL!;
 
 function makeClient() {
 	return createClient({
-		url: "http://localhost:8000/api/graphql",
+		url: KeystoneURL,
 		exchanges: [cacheExchange, fetchExchange],
 	});
 }

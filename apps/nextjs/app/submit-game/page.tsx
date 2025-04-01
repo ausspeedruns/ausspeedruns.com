@@ -7,10 +7,8 @@ import GameSubmissions from "./GameSubmission/GameSubmission";
 import { QUERY_USER_RESULTS } from "./GameSubmission/submissionTypes";
 import { auth } from "../../auth";
 
-// import SubmitGameOG from "../styles/img/ogImages/SubmitGame.jpg";
-
 import { Metadata } from "next";
-import { getRegisteredClient, getRegisteredUrqlCookieClient } from "@libs/urql";
+import { getRegisteredUrqlCookieClient } from "@libs/urql-cookie";
 
 const QUERY_INITIAL = gql`
 	query Profile($userId: ID!) {

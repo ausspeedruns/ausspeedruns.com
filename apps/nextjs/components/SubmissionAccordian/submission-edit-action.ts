@@ -1,6 +1,6 @@
 "use server";
 
-import { getUrqlCookieClient } from "@libs/urql";
+import { getUrqlCookieClient } from "@libs/urql-cookie";
 import { gql } from "urql";
 
 type SubmissionAgeRatingType = "m_or_lower" | "ma15" | "ra18";

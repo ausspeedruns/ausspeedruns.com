@@ -1,4 +1,4 @@
-import { getUrqlCookieClient } from "@libs/urql";
+import { getUrqlCookieClient } from "@libs/urql-cookie";
 import { NextResponse } from "next/server";
 import { gql } from "urql";
 

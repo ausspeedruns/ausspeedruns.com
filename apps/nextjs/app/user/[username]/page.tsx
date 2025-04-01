@@ -3,11 +3,8 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import styles from "../../../styles/User.username.module.scss";
-// import SubmissionAccordion from "../../../components/SubmissionAccordian/SubmissionAccordion";
 import RunUpcoming from "../../../components/RunUpcoming/RunUpcoming";
-// import RunCompleted from "../../../components/RunCompleted/RunCompleted";
 import Ticket from "../../../components/Ticket/Ticket";
-// import ASMShirt from "../../../components/ShirtOrder/ShirtOrder";
 
 import { gql } from "@urql/core";
 import { notFound } from "next/navigation";
@@ -18,8 +15,9 @@ import { Metadata } from "next";
 import { Submission } from "./submission";
 import Submissions from "./submissions";
 import Link from "next/link";
-import { faBluesky, faTwitch, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { getUrqlCookieClient, normalClient } from "@libs/urql";
+import { faBluesky, faTwitch, faTwitter } from "@fortawesome/free-brands-svg-icons";
+import { normalClient } from "@libs/urql";
+import { getUrqlCookieClient } from "@libs/urql-cookie";
 
 const QUERY_USER = gql`
 	query Profile($username: String) {

@@ -1,6 +1,6 @@
 "use server";
 
-import { getUrqlCookieClient } from "@libs/urql";
+import { getUrqlCookieClient } from "@libs/urql-cookie";
 import { gql } from "urql";
 import { parse } from "date-fns";
 import { auth } from "../../../auth";

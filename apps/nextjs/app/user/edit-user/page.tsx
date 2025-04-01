@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { EditUserForm } from "./form";
 import { auth } from "../../../auth";
-import { getRegisteredUrqlCookieClient } from "@libs/urql";
+import { getRegisteredUrqlCookieClient } from "@libs/urql-cookie";
 
 export const metadata: Metadata = {
 	title: "Edit User",

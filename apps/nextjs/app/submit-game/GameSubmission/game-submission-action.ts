@@ -2,7 +2,7 @@
 
 import { gql } from "urql";
 import type { AgeRatingLiterals, DonationIncentive, RaceLiterals } from "./submissionTypes";
-import { getUrqlCookieClient } from "@libs/urql";
+import { getUrqlCookieClient } from "@libs/urql-cookie";
 import { auth } from "../../../auth";
 
 export type GameSubmissionData = {

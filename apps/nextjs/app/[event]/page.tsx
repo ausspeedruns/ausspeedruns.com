@@ -165,7 +165,7 @@ export default async function EventPage({ params }: { params: { event: string } 
 
 	return (
 		<div
-			className={eventData.past ? styles.postEvent : ""}
+			className={eventData.past ? styles.postEvent : styles.event}
 			style={{ backgroundImage: eventData.past ? `url('${eventData.event.postEventBackground?.url}')` : "" }}>
 			<div className={styles.document}>
 				<DocumentRenderer

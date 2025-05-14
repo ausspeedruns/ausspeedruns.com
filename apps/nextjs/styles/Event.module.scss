@@ -2,6 +2,17 @@
 @import './colors.scss';
 @import './responsive.scss';
 
+.event {
+	.document {
+		ul {
+			margin: 0 auto;
+			padding: 0;
+			list-style-position: inside;
+			text-align: center;
+		}
+	}
+}
+
 .postEvent {
 	background-color: $primary;
 	background-size: 100% auto;

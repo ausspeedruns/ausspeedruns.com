@@ -112,6 +112,16 @@ const ASM2025: AusSpeedrunsEvent = {
 	heroImage: "events/asm25/asm25-hero.png",
 };
 
+const ACMI: AusSpeedrunsEvent = {
+	fullName: "ACMI Speedrun Weekend",
+	preferredName: "ACMI",
+	shortName: "ACMI",
+	startDate: "21 June 2025 13:30:00 GMT+0930",
+	dates: "June 21 – 22, 2025",
+	logo: "events/acmi/logo.svg",
+	heroImage: "events/acmi/hero.jpg",
+};
+
 export const metadata: Metadata = {
 	description: "Home of the AusSpeedruns events",
 	openGraph: {
@@ -130,6 +140,12 @@ export default function Home() {
 				ticketLink="/ASM2025#tickets"
 				submitRuns={true}
 				schedule={false}
+			/>
+			<HeroBlock
+				event={ACMI}
+				tagLine="ACMI & AusSpeedruns presents a weekend of speedrunning!"
+				ticketLink="https://www.acmi.net.au/whats-on/speedrun-weekend/"
+				schedule={true}
 			/>
 			<LastEventBlock
 				tagLine="AusSpeedruns At PAX 2024 was fantastic, raising over $15,000 for Game On Cancer!"

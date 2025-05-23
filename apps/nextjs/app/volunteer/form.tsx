@@ -253,7 +253,7 @@ export function Form({ events, userId }: Props) {
 						You are the voice of the event reading off donations and letting the viewers know about the
 						charity and any sponsors.
 						<br />
-						Any queries please contact <i>werster</i> on Discord.
+						Any queries please contact <i>Lacey</i> on Discord.
 					</p>
 					<div className={styles.question}>
 						<span>

@@ -77,7 +77,7 @@ export default async function SubmitGamePage() {
 		return <NoAuth />;
 	}
 
-	if (!data.user.verified || !data.user.discord) {
+	if (!data.user?.verified || !data.user?.discord) {
 		<main>
 			<p>Please make sure you have these set on your profile:</p>
 			<ul>

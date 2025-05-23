@@ -76,7 +76,7 @@ export default async function ASM2025() {
 	let emailVerified = false;
 	if (session) {
 		const { data } = await client.query(EMAIL_VERIFIED_QUERY, { userId: session.user.id }).toPromise();
-		emailVerified = data.user.verified;
+		emailVerified = data.user?.verified;
 	}
 
 	return (

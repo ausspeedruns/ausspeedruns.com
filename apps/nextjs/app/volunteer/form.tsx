@@ -15,7 +15,6 @@ import {
 import { addDays, differenceInDays } from "date-fns";
 
 import { createSubmission } from "./volunteer-action";
-import ASButton from "../../components/Button/Button";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -40,7 +39,7 @@ type Props = {
 };
 
 export function Form({ events, userId }: Props) {
-	const [event, setEvent] = useState("");
+	const [event, setEvent] = useState(events[0].id);
 	const [jobType, setJobType] = useState<keyof typeof VolunteerTypes>("host");
 	const [confirmation, setConfirmation] = useState(false);
 	const [successSubmit, setSuccessSubmit] = useState(false);
@@ -198,7 +197,8 @@ export function Form({ events, userId }: Props) {
 						techExperience,
 						eventId: event,
 					}).then((result) => {
-						if (!result.error) {
+						console.log(result);
+						if (!result?.error) {
 							clearInputs();
 							window.scrollY = 0;
 							setSuccessSubmit(true);

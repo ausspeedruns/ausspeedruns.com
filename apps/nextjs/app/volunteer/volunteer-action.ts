@@ -63,5 +63,10 @@ const ADD_VOLUNTEER_MUTATION = gql`
 export async function createSubmission(volunteer: VolunteerSubmission) {
 	const client = getRegisteredClient();
 	const result = await client.mutation(ADD_VOLUNTEER_MUTATION, volunteer).toPromise();
+
+	if (result.error) {
+		return { error: result.error.message };
+	}
+
 	return result.data?.createVolunteer;
 }

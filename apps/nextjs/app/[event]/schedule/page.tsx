@@ -112,7 +112,9 @@ export const metadata: Metadata = {
 	},
 };
 
-// const TEST_CURRENT_TIME = new Date(2025, 6, 9, 16, 25);
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function EventSchedule({ params }: { params: { event: string } }) {
 	const { data } = await getRegisteredClient()
 		.query<QUERY_EVENT_RESULTS>(QUERY_EVENT, { event: params.event })

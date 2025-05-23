@@ -23,6 +23,7 @@ const QUERY_EVENT = gql`
 			eventTimezone
 			startDate
 			endDate
+			scheduleReleased
 			logo {
 				url
 				height
@@ -66,6 +67,7 @@ interface QUERY_EVENT_RESULTS {
 		eventTimezone: string;
 		startDate: string;
 		endDate: string;
+		scheduleReleased: boolean;
 		logo: {
 			url: string;
 			height: number;
@@ -118,6 +120,11 @@ export default async function EventSchedule({ params }: { params: { event: strin
 	const event = data?.event;
 
 	if (!event) {
+		return notFound();
+	}
+
+	if (!event.scheduleReleased)
+	{
 		return notFound();
 	}
 

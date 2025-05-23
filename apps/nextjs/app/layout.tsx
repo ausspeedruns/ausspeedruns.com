@@ -14,6 +14,12 @@ import theme from "../mui-theme";
 
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
+
+import "@fontsource/roboto-mono";
+import "@fontsource/russo-one";
+import "@fontsource/finger-paint";
+import "@fontsource/noto-sans";
+
 config.autoAddCss = false;
 
 const QUERY_EVENTS = gql`
@@ -50,7 +56,9 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-	const result = await getRegisteredClient().query<Query_Events>(QUERY_EVENTS, { currentTime: new Date().toISOString() });
+	const result = await getRegisteredClient().query<Query_Events>(QUERY_EVENTS, {
+		currentTime: new Date().toISOString(),
+	});
 	return (
 		<html lang="en">
 			<body>

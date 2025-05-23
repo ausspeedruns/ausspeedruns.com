@@ -139,7 +139,7 @@ export default function Home() {
 				tagLine="Our 10th Anniversary! Join us for a week of speedrunning and raising money for Game On Cancer!"
 				ticketLink="/ASM2025#tickets"
 				submitRuns={true}
-				schedule={false}
+				schedule={true}
 			/>
 			<HeroBlock
 				event={ACMI}

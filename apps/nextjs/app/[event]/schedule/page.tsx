@@ -6,6 +6,7 @@ import styles from "../../../styles/Schedule.event.module.scss";
 import { notFound } from "next/navigation";
 import { Schedule } from "./schedule";
 import type { Metadata } from "next";
+import { format, parseISO } from "date-fns";
 
 export type Block = {
 	name: string;
@@ -103,14 +104,42 @@ interface QUERY_EVENT_RESULTS {
 	};
 }
 
-export const metadata: Metadata = {
-	title: "Schedule",
-	description: "AusSpeedruns Schedule",
-	openGraph: {
-		title: "Schedule",
-		description: "AusSpeedruns Schedule",
-	},
-};
+export async function generateMetadata({ params }: { params: { event: string } }): Promise<Metadata> {
+	const { data } = await getRegisteredClient()
+		.query<QUERY_EVENT_RESULTS>(QUERY_EVENT, { event: params.event })
+		.toPromise();
+	const event = data?.event;
+
+	if (!event) {
+		return {
+			title: "Schedule",
+			description: "AusSpeedruns Schedule",
+			openGraph: {
+				title: "Schedule",
+				description: "AusSpeedruns Schedule",
+			},
+		};
+	}
+
+	const start = format(parseISO(event.startDate), "d MMMM yyyy");
+	const end = format(parseISO(event.endDate), "d MMMM yyyy");
+	const duration = `${start} – ${end}`;
+	const title = `${event.shortname} Schedule`;
+	const description = `Schedule for ${event.shortname} running from ${duration}`;
+
+	return {
+		title,
+		description,
+		openGraph: {
+			title,
+			description,
+			images: event.ogImage?.url ? [event.ogImage.url] : undefined,
+		},
+		twitter: {
+			images: event.ogImage?.url ? [event.ogImage.url] : undefined,
+		},
+	};
+}
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -121,12 +150,10 @@ export default async function EventSchedule({ params }: { params: { event: strin
 		.toPromise();
 	const event = data?.event;
 
-	if (!event) {
-		return notFound();
-	}
+	console.log("EventSchedule", event);
+	console.log("AAAAAAAAAAAAAAAAAAAAA", event, event?.scheduleReleased);
 
-	if (!event.scheduleReleased)
-	{
+	if (!event || !event.scheduleReleased) {
 		return notFound();
 	}
 

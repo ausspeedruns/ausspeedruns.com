@@ -109,3 +109,6 @@ apps/nextjs/styles/img/sponsors
 
 # Next.js
 .next
+
+.cursor\rules\nx-rules.mdc
+.github\instructions\nx.instructions.md

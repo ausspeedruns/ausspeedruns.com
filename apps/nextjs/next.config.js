@@ -46,7 +46,7 @@ const nextConfig = {
 				destination:
 					process.env.NODE_ENV === "production"
 						? "https://keystone.ausspeedruns.com/api/graphql"
-						: "http://localhost:8000/api/graphql",
+						: "https://keystone.ausspeedruns.com/api/graphql",
 			},
 		];
 	},

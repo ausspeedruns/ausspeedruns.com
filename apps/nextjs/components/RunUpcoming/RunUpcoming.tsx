@@ -19,6 +19,7 @@ type Run = {
 				width: number;
 				height: number;
 			};
+			eventTimezone: string;
 		};
 	};
 };
@@ -60,6 +61,7 @@ const RunUpcoming = ({ run }: Run) => {
 								hour: 'numeric',
 								minute: '2-digit',
 								weekday: 'long',
+								timeZone: run.event.eventTimezone,
 							})}
 						</b>
 					</span>

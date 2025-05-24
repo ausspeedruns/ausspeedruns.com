@@ -50,6 +50,7 @@ const QUERY_USER = gql`
 				event {
 					name
 					shortname
+					eventTimezone
 					logo {
 						url
 						width
@@ -168,6 +169,7 @@ type QUERY_USER_RESULTS = {
 			event: {
 				name: string;
 				shortname: string;
+				eventTimezone: string;
 				logo: {
 					url: string;
 					width: number;

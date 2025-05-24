@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { Schedule } from "./schedule";
 import type { Metadata } from "next";
 import { format, parseISO } from "date-fns";
+import { tz } from "@date-fns/tz";
 
 export type Block = {
 	name: string;
@@ -121,8 +122,8 @@ export async function generateMetadata({ params }: { params: { event: string } }
 		};
 	}
 
-	const start = format(parseISO(event.startDate), "d MMMM yyyy");
-	const end = format(parseISO(event.endDate), "d MMMM yyyy");
+	const start = format(parseISO(event.startDate, { in: tz(event.eventTimezone) }), "d MMMM yyyy");
+	const end = format(parseISO(event.endDate, { in: tz(event.eventTimezone) }), "d MMMM yyyy");
 	const duration = `${start} – ${end}`;
 	const title = `${event.shortname} Schedule`;
 	const description = `Schedule for ${event.shortname} running from ${duration}`;

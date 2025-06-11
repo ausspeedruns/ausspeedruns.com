@@ -18,6 +18,7 @@ import Link from "next/link";
 import { faBluesky, faTwitch, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { normalClient } from "@libs/urql";
 import { getUrqlCookieClient } from "@libs/urql-cookie";
+import { ASMShirt } from "../../ASM2025/shirt-purchase";
 
 const QUERY_USER = gql`
 	query Profile($username: String) {
@@ -268,24 +269,6 @@ export default async function ProfilePage({ params }: ProfilePageParams) {
 		}
 	}
 
-	// const [submissionTab, setSubmissionTab] = useState(0);
-	// const [eventTab, setEventTab] = useState(0);
-	// const [currentTime] = useState(new Date().toISOString());
-
-	// console.log(ssrData)
-	// const [{ data: privateDataResults }] = useQuery<QUERY_PRIVATE_RESULTS>({
-	// 	query: QUERY_PRIVATE,
-	// 	variables: {
-	// 		username: ssrData.user.username,
-	// 		currentTime: currentTime,
-	// 	},
-	// 	pause:
-	// 		!auth.ready ||
-	// 		(auth.ready
-	// 			? !(auth.sessionData?.username === ssrData.user.username)
-	// 			: true),
-	// });
-
 	const upcomingRunsList = ssrData.user.runs.filter((run) => !run.finalTime);
 
 	return (
@@ -355,10 +338,10 @@ export default async function ProfilePage({ params }: ProfilePageParams) {
 				)}
 
 				{/* Shirt Orders */}
-				{/* {privateDataResults?.user && privateDataResults.user.shirts.length > 0 && (
-					<div className={styles.submissions}>
+				{privateDataResults?.shirts && privateDataResults.shirts.length > 0 && (
+					<div className={[styles.submissions, styles.shirts].join(" ")}>
 						<h3 id="shirts">Shirt Orders (Private)</h3>
-						{privateDataResults.user.shirts.map((shirt) => {
+						{privateDataResults.shirts.map((shirt) => {
 							// console.log(shirt);
 							return (
 								<ASMShirt
@@ -368,7 +351,7 @@ export default async function ProfilePage({ params }: ProfilePageParams) {
 							);
 						})}
 					</div>
-				)} */}
+				)}
 
 				{/* Upcoming Runs */}
 				{upcomingRunsList.length > 0 && (

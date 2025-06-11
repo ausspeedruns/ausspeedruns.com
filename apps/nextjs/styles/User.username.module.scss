@@ -47,4 +47,10 @@
 	.upcomingRuns {
 		margin-top: 2rem;		
 	}
+
+	.shirts {
+		@include breakpoint($sm-zero-only) {
+			width: 100%;
+		}
+	}
 }

@@ -6,6 +6,8 @@ import Button from "../../components/Button/Button";
 import styles from "./asm2025.module.scss";
 import { stripeCheckoutAction } from "./ticket-checkout";
 import { TicketPurchase } from "./ticket-purchase";
+import { ShirtPurchase } from "./shirt-purchase";
+import { stripeCheckoutAction as shirtStripeCheckoutAction } from "./shirt-checkout";
 import { gql } from "urql";
 import { getRegisteredClient } from "@libs/urql";
 import Marquee from "react-fast-marquee";
@@ -158,12 +160,23 @@ export default async function ASM2025() {
 			</section>
 			<section className={styles.content} id="tickets">
 				<h1>Tickets</h1>
-				<form action={stripeCheckoutAction}>
+				<form action={stripeCheckoutAction} className={styles.form}>
 					<TicketPurchase
 						canBuy={emailVerified}
 						userId={session?.user.id}
 						event={EVENT}
 						eventAcceptingTickets={acceptingTickets}
+					/>
+				</form>
+			</section>
+			<hr className={styles.divider} />
+			<section className={styles.content} id="shirts">
+				<h1>Shirts</h1>
+				<form action={shirtStripeCheckoutAction} className={styles.form}>
+					<ShirtPurchase
+						canBuy={emailVerified}
+						userId={session?.user.id}
+						eventAcceptingShirts={acceptingShirts}
 					/>
 				</form>
 			</section>

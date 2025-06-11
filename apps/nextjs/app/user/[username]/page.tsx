@@ -126,7 +126,7 @@ const QUERY_PRIVATE = gql`
 				where: {
 					AND: [
 						{ OR: [{ method: { equals: bank } }, { paid: { equals: true } }] }
-						{ created: { gt: "2024-01-01T00:00:00.000Z" } }
+						{ created: { gt: "2025-01-01T00:00:00.000Z" } }
 					]
 				}
 			) {

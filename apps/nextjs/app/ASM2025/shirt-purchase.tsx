@@ -241,10 +241,14 @@ export function ASMShirt(props: ASMShirtProps) {
 				<span className={styles.label}>{shirtID}</span>
 			</div>
 			<div className={styles.informationGrid}>
-				<span>BSB</span>
-				<span>085-005</span>
-				<span>Account #</span>
-				<span>30-192-8208</span>
+				{!paid && (
+					<>
+						<span>BSB</span>
+						<span>085-005</span>
+						<span>Account #</span>
+						<span>30-192-8208</span>
+					</>
+				)}
 				<span>Shirt ID</span>
 				<span>{shirtID}</span>
 				<span>Shirt Size</span>

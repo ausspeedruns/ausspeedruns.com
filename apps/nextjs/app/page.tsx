@@ -122,6 +122,20 @@ const ACMI: AusSpeedrunsEvent = {
 	heroImage: "events/acmi/hero.jpg",
 };
 
+const ASAP2025: AusSpeedrunsEvent = {
+	fullName: "AusSpeedruns At PAX 2025",
+	preferredName: "ASAP2025",
+	shortName: "ASAP2025",
+	startDate: "10 October 2025 09:00:00 GMT+0100",
+	dates: "October 10 - 12, 2025",
+	charity: {
+		name: "Game On Cancer",
+	},
+	logo: "events/asap25/asap25-logo.svg",
+	heroImage: "events/asap25/asap25-hero.jpg",
+	total: "15,000",
+};
+
 export const metadata: Metadata = {
 	description: "Home of the AusSpeedruns events",
 	openGraph: {
@@ -142,10 +156,11 @@ export default function Home() {
 				schedule={true}
 			/>
 			<HeroBlock
-				event={ACMI}
-				tagLine="ACMI & AusSpeedruns presents a weekend of speedrunning!"
-				ticketLink="https://www.acmi.net.au/whats-on/speedrun-weekend/"
-				schedule={true}
+				event={ASAP2025}
+				tagLine="AusSpeedruns is back at PAX Australia once again!"
+				ticketLink="https://aus.paxsite.com/"
+				schedule={false}
+				submitRuns={true}
 			/>
 			<LastEventBlock
 				tagLine="AusSpeedruns At PAX 2024 was fantastic, raising over $15,000 for Game On Cancer!"
@@ -160,11 +175,6 @@ export default function Home() {
 			<LastEventBlock
 				tagLine="The turn out for DreamHack Melbourne was incredible and we loved showcasing Australia's fastest gamers there!"
 				event={ASDH2024}
-				backgroundPos="center"
-			/>
-			<LastEventBlock
-				tagLine="The Game Expo 2024 was awesome and we have now raised over $100,000 for Game On Cancer!"
-				event={ASGX2024}
 				backgroundPos="center"
 			/>
 			<section className={styles.archive}>

@@ -63,7 +63,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 		<html lang="en">
 			<body>
 				<AppRouterCacheProvider>
-					<Navbar events={result.data?.events ?? []} />
+					<Navbar live="ASM2025" events={result.data?.events ?? []} />
 					<ThemeProvider theme={theme}>
 						<main style={{ display: "flex", flexDirection: "column" }}>{children}</main>
 					</ThemeProvider>

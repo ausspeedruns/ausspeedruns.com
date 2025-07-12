@@ -1,3 +1,5 @@
+"use client";
+
 import { format } from "date-fns";
 import styles from "../../styles/Event.incentives.module.scss";
 import { BaseIncentiveData } from "./IncentiveType";
@@ -11,12 +13,16 @@ export interface WarProps extends BaseIncentiveData {
 }
 
 function isColor(strColor: string) {
+	if (typeof window === "undefined") {
+		return false;
+	}
+
 	const s = new Option().style;
 	s.color = strColor;
 	return s.color !== "";
 }
 
-export const War: React.FC<WarProps> = (props) => {
+export function War(props: WarProps) {
 	const time = new Date(props.run.scheduledTime);
 	const sortedOptions = props.options.sort((a, b) => b.total - a.total);
 

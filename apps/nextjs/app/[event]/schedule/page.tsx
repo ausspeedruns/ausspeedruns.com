@@ -151,9 +151,6 @@ export default async function EventSchedule({ params }: { params: { event: strin
 		.toPromise();
 	const event = data?.event;
 
-	console.log("EventSchedule", event);
-	console.log("AAAAAAAAAAAAAAAAAAAAA", event, event?.scheduleReleased);
-
 	if (!event || !event.scheduleReleased) {
 		return notFound();
 	}

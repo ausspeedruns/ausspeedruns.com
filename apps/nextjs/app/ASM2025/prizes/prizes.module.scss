@@ -1,0 +1,93 @@
+@use 'base';
+@import './colors.scss';
+@import './responsive.scss';
+
+.appIncentives {
+	position: relative;
+}
+
+.content {
+	// display: flex;
+	// flex-direction: column;
+	flex-flow: column;
+	color: $light-text;
+
+	// align-items: center;
+	h1,
+	h2,
+	h3 {
+		text-align: center;
+	}
+
+	h1 {
+		margin-top: 1rem;
+	}
+
+	h3 {
+		font-size: 2rem;
+	}
+
+	.donate {
+		text-align: center;
+	}
+
+	.instructions {
+		text-align: center;
+		font-size: 1.2rem;
+		margin: 1rem 0;
+		font-style: italic;
+
+		.emphasis {
+			text-decoration: underline;
+		}
+	}
+
+	hr {
+		width: 80%;
+		margin: 48px auto;
+		border-top: white 1px solid;
+	}
+}
+
+.prizeToC {
+	padding: 2rem;
+	font-size: 1.1rem;
+	text-align: center;
+	
+	a {
+		color: white;
+	}
+}
+
+.prizes {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 48px;
+
+	.prize {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		width: 40%;
+		
+		background: white;
+		color: black;
+		padding: 32px;
+		border-radius: 8px;
+
+		p {
+			margin: 0;
+			text-align: center;
+			text-wrap: balance;
+		}
+
+		.requirement {
+			font-style: italic;
+			margin-top: -16px;
+			margin-bottom: 16px;
+		}
+	}
+}
+

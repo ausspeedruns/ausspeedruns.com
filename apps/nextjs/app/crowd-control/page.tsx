@@ -7,14 +7,18 @@ export const metadata: Metadata = {
 	description: "Information about Crowd Control",
 };
 
+const EVENT = "ASM2025";
+
+const RUNS = ["Super Smash Bros Melee: 19 July, 1:15 PM"] as const;
+
 export default function CrowdControl() {
 	return (
 		<div>
 			<div className={styles.background} />
 			<div className={`${styles.content} ${styles.form}`} style={{ padding: "5rem" }}>
-				<h1 style={{ marginBottom: "3rem" }}>Crowd Control at ASM2024</h1>
+				<h1 style={{ marginBottom: "3rem" }}>Crowd Control at {EVENT}</h1>
 				<p>
-					During ASM2024, you will have the opportunity on four occasions to use{" "}
+					During {EVENT}, you will have the opportunity on four occasions to use{" "}
 					<a target="_blank" rel="noopener noreferrer" href="https://crowdcontrol.live/">
 						Crowd Control
 					</a>
@@ -31,14 +35,13 @@ export default function CrowdControl() {
 				</p>
 				<h2>Runs</h2>
 				<ul>
-					<li>Hades: 17 July, 4:15 PM</li>
-					<li>Sonic Superstars: 19 July, 12:55 PM</li>
-					<li>Celeste: 20 July, 3:25 PM</li>
-					<li>Simpsons Hit and Run: 21 July, 1:30 PM</li>
+					{RUNS.map((run, index) => (
+						<li key={index}>{run}</li>
+					))}
 				</ul>
 				<h2>How to interact</h2>
 				<p>
-					The below is a short guide on how to interact with Crowd Control at ASM2024, being used by
+					The below is a short guide on how to interact with Crowd Control at {EVENT}, being used by
 					AusSpeedruns in “Charity Mode”, meaning ALL Crowd Control donations go towards Game On Cancer, an
 					initiative of Cure Cancer, our charity of choice for this event.
 				</p>
@@ -49,8 +52,8 @@ export default function CrowdControl() {
 					</li>
 					<li>Go to “Donate”, then click “Donate to Cure Cancer”.</li>
 					<li>
-						This will link to the Tiltify campaign for ASM2024. Please note that donations made towards
-						ASM2024 <b>WITHOUT</b> having clicked on this link will not provide you with Crowd Control
+						This will link to the Tiltify campaign for {EVENT}. Please note that donations made towards
+						{EVENT} <b>WITHOUT</b> having clicked on this link will not provide you with Crowd Control
 						Coins.
 						<br />
 						Donations convert to Crowd Control Coins at a rate of 1c USD to 1 Coin.
@@ -73,7 +76,7 @@ export default function CrowdControl() {
 					addressed to Crowd Control / Warp World.
 				</p>
 				<p>
-					AusSpeedruns wishes you all the best creating some Crowd Control chaos with our runners at ASM2024!
+					AusSpeedruns wishes you all the best creating some Crowd Control chaos with our runners at {EVENT}!
 				</p>
 			</div>
 		</div>

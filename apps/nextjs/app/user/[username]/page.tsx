@@ -385,3 +385,6 @@ function SocialMediaLink({ icon, handle, link }: { icon: any; handle?: string; l
 		</Tooltip>
 	);
 }
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;

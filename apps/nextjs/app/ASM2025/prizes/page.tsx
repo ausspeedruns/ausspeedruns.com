@@ -15,8 +15,8 @@ const prizes = [
 	{
 		name: "Urban Climb Pass",
 		requirement: "$10 Minimum Donation",
-		givingAway: 2,
-		description: "Voucher for entry to any Urban Climb across Australia, including gear hire. Australia Only.",
+		givingAway: 7,
+		description: "Voucher for entry to any Urban Climb across Australia, including gear hire. Provided by Urban Climb, Australia Only.",
 	},
 	{
 		name: "Steam Game Bundle A",
@@ -34,13 +34,13 @@ const prizes = [
 		name: "GIGABYTE MO32U Monitor",
 		requirement: "$50 Minimum Donation",
 		givingAway: 2,
-		description: "A new 32-inch GIGABYTE MO32U Monitor. Australia Only.",
+		description: "A new 32-inch GIGABYTE MO32U Monitor provided by GIGABYTE. Australia Only.",
 	},
 	{
 		name: "Nintendo Switch 2 console",
 		requirement: "$50 Minimum Donation",
 		givingAway: 1,
-		description: "A new Nintendo Switch 2 console.",
+		description: "A new Nintendo Switch 2 console, provided by community member tutelarfiber7. US Model adaptor.",
 	}
 ] as const satisfies PrizeData[];
 

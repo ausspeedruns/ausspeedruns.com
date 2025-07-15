@@ -14,7 +14,7 @@ const QUERY_EVENT = gql`
 				category
 				scheduledTime
 			}
-			donationIncentives(take: 1, where: { active: { equals: true } }) {
+			donationIncentives(where: { active: { equals: true } }) {
 				title
 				type
 				run {
@@ -25,6 +25,7 @@ const QUERY_EVENT = gql`
 				}
 				data
 				notes
+				active
 			}
 		}
 	}
@@ -72,7 +73,5 @@ export async function EventLive(props: EventProps) {
 		return null;
 	}
 
-	return (
-			<EventLiveClient eventData={data} />
-	);
-};
+	return <EventLiveClient eventData={data} />;
+}

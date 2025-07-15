@@ -1,6 +1,6 @@
-import { format } from 'date-fns';
 import styles from '../../styles/Event.incentives.module.scss';
 import { BaseIncentiveData } from './IncentiveType';
+import { FormatLocalTime } from './localTime.client';
 
 export interface GoalProps extends BaseIncentiveData {
 	type: 'goal';
@@ -18,7 +18,7 @@ export const Goal: React.FC<GoalProps> = (props) => {
 				{' - '}
 				<span className={styles.category}>{props.run.category}</span>
 				{' - '}
-				<span className={styles.category}>{format(time, "EEEE h:mm a")}</span>
+				<span className={styles.category}>{<FormatLocalTime date={time} />}</span>
 			</div>
 			<span className={styles.title}>{props.title}</span>
 			<span className={styles.category}>{props.notes}</span>

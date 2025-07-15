@@ -43,13 +43,21 @@ export function EventLiveClient(props: EventProps) {
 
 	// console.log(eventQuery);
 
+	const sortedIncentives = props.eventData?.event.donationIncentives.sort((a, b) => {
+		const aTime = new Date(a.run.scheduledTime).getTime();
+		const bTime = new Date(b.run.scheduledTime).getTime();
+		return aTime - bTime;
+	});
+
+	const nextActiveIncentive = sortedIncentives[0];
+
 	const incentiveData = {
-		title: props.eventData?.event.donationIncentives?.[0]?.title ?? "",
-		run: props.eventData?.event.donationIncentives?.[0]?.run ?? "",
+		title: nextActiveIncentive?.title ?? "",
+		run: nextActiveIncentive?.run ?? "",
 		active: true,
-		notes: props.eventData?.event.donationIncentives?.[0]?.notes ?? "",
-		type: props.eventData?.event.donationIncentives?.[0]?.type ?? "",
-		...props.eventData?.event.donationIncentives?.[0]?.data,
+		notes: nextActiveIncentive?.notes ?? "",
+		type: nextActiveIncentive?.type ?? "",
+		...nextActiveIncentive?.data,
 	};
 
 	let nextRunIndex = -1;
@@ -118,7 +126,6 @@ export function EventLiveClient(props: EventProps) {
 			<div className={styles.sponsors}>
 				{/* <h2>Our Sponsors</h2> */}
 				<div className={styles.images}>
-					{/* <Image src={playsideLogo} width={300} height={playsideAspectRatio * 300} alt="PlaySide Logo" /> */}
 					<Link href="https://www.aorus.com/" target="_blank" rel="noreferrer">
 						<Image
 							src={gigabyteLogo}

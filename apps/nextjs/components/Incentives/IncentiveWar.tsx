@@ -1,8 +1,8 @@
 "use client";
 
-import { format } from "date-fns";
 import styles from "../../styles/Event.incentives.module.scss";
 import { BaseIncentiveData } from "./IncentiveType";
+import { FormatLocalTime } from "./localTime.client";
 
 export interface WarProps extends BaseIncentiveData {
 	type: "war";
@@ -33,7 +33,7 @@ export function War(props: WarProps) {
 				{" - "}
 				<span className={styles.category}>{props.run.category}</span>
 				{" - "}
-				<span className={styles.category}>{format(time, "EEEE h:mm a")}</span>
+				<span className={styles.category}>{<FormatLocalTime date={time} />}</span>
 			</div>
 			<span className={styles.title}>{props.title}</span>
 			<span className={styles.category}>{props.notes}</span>

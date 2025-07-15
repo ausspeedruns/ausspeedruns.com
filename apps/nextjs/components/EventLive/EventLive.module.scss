@@ -272,9 +272,15 @@
 
 		.liveContent {
 			padding: 1rem;
-			border-radius: 5px;
-			backdrop-filter: blur(5px);
-			background-color: #522277;
+			backdrop-filter: blur(10px);
+			// background-color: #522277;
+			border-radius: 22px;
+
+			box-shadow:
+				2px 2px 3px rgba(217, 211, 224, 0.34),
+				inset 2px 2px 3px rgba(217, 211, 224, 0.34),
+				-2px -2px 3px rgba(68, 42, 105, 0.77),
+				inset -2px -2px 3px rgba(68, 42, 105, 0.77);
 		}
 	}
 
@@ -287,7 +293,7 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: space-around;
-			border: 2px solid $primary;
+			border: 2px solid #00000074;
 			font-size: 1.2rem;
 			width: fit-content;
 			word-break: break-all;
@@ -343,7 +349,7 @@
 			flex-direction: column;
 			height: 100%;
 			justify-content: space-around;
-			border: 2px solid $primary;
+			border: 2px solid #00000074;
 			// width: 50%;
 
 			@include breakpoint($sm-zero-only) {

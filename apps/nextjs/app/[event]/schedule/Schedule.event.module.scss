@@ -16,19 +16,6 @@ $normalWidth: 800px;
 	max-width: 1200px;
 }
 
-.currentRun {
-	margin: 1rem 0;
-	// background: transparentize($primary, 0.7);
-	background: $primary;
-	border-radius: 10px;
-	padding: 1rem;
-
-	.run {
-		border: none !important;
-		background: $primary !important;
-	}
-}
-
 .info {
 	margin: 16px 0;
 
@@ -167,7 +154,7 @@ $normalWidth: 800px;
 		background: $primary !important;
 
 		* {
-			color: $light-text !important;
+			color: $dark-text !important;
 		}
 	}
 }

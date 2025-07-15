@@ -23,13 +23,14 @@ $normalWidth: 800px;
 	border-radius: 10px;
 	padding: 1rem;
 
-	* {
-		color: $light-text !important;
+	color: $light-text;
+
+	h3 {
+		color: $dark-text;
 	}
 
-	.run {
-		border: none !important;
-		background: $primary !important;
+	& > h3 {
+		color: $light-text;
 	}
 }
 

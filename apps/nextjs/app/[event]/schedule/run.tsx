@@ -97,7 +97,7 @@ export const RunElement: React.FC<RunItemProps> = (props: RunItemProps) => {
 				{convertedTimezone}
 			</span>
 			{props.block?.name && <span className={styles.blockName}>{props.block?.name}</span>}
-			<span className={styles.game}>{run.game}</span>
+			<h3 className={styles.game}>{run.game}</h3>
 			<span className={styles.category} style={{ color: props.block?.textColour }}>
 				{categoryExtras}
 				{run.category}

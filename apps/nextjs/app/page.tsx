@@ -109,7 +109,8 @@ const ASM2025: AusSpeedrunsEvent = {
 		name: "Game On Cancer",
 	},
 	logo: "events/asm25/logo.svg",
-	heroImage: "events/asm25/asm25-hero.png",
+	heroImage: "events/asm25/asm25-post-hero.jpg",
+	total: "51,000",
 };
 
 const ACMI: AusSpeedrunsEvent = {
@@ -147,14 +148,6 @@ export const metadata: Metadata = {
 export default function Home() {
 	return (
 		<>
-			<EventLive event={"ASM2025"} />
-			{/* <HeroBlock
-				event={ASM2025}
-				tagLine="Our 10th Anniversary! Join us for a week of speedrunning and raising money for Game On Cancer!"
-				ticketLink="/ASM2025#tickets"
-				submitRuns={false}
-				schedule={true}
-			/> */}
 			<HeroBlock
 				event={ASAP2025}
 				tagLine="AusSpeedruns is back at PAX Australia once again!"
@@ -162,14 +155,22 @@ export default function Home() {
 				schedule={false}
 				submitRuns={true}
 			/>
+			{/* <EventLive event={"ASM2025"} /> */}
+			{/* <HeroBlock
+				event={ASM2025}
+				tagLine="Our 10th Anniversary! Join us for a week of speedrunning and raising money for Game On Cancer!"
+				ticketLink="/ASM2025#tickets"
+				submitRuns={false}
+				schedule={true}
+			/> */}
 			<LastEventBlock
-				tagLine="AusSpeedruns At PAX 2024 was fantastic, raising over $15,000 for Game On Cancer!"
-				event={ASAP2024}
+				tagLine="The best ASM ever, rasing over $50,000 for Game On Cancer!!!!"
+				event={ASM2025}
 				backgroundPos="center"
 			/>
 			<LastEventBlock
-				tagLine="A stunning 6 days of non-stop speedrunning led us to raise over $30,000 for Game On Cancer!"
-				event={ASM2024}
+				tagLine="AusSpeedruns At PAX 2024 was fantastic, raising over $15,000 for Game On Cancer!"
+				event={ASAP2024}
 				backgroundPos="center"
 			/>
 			<LastEventBlock

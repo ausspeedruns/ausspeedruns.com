@@ -20,9 +20,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const VolunteerTypes = {
 	host: "Host",
-	runMgmt: "Runner Manager",
+	runMgmt: "Front Table",
 	tech: "Tech",
-	social: "Social Media",
+	social: "Stage Hand",
 } as const;
 
 type ExperienceLiterals = "None" | "Casual" | "Enthusiast" | "Expert";
@@ -239,9 +239,9 @@ export function Form({ events, userId }: Props) {
 					onChange={(e) => setJobType(e.target.value as keyof typeof VolunteerTypes)}
 					required>
 					<MenuItem value={"host"}>Host</MenuItem>
-					<MenuItem value={"social"}>Social Media</MenuItem>
-					<MenuItem value={"runMgmt"}>Runner Management</MenuItem>
+					<MenuItem value={"runMgmt"}>Front Desk (Formerly Runner Management)</MenuItem>
 					<MenuItem value={"tech"}>Tech</MenuItem>
+					<MenuItem value={"social"}>Stage Hand (Social Media and 2nd Tech)</MenuItem>
 				</Select>
 			</FormControl>
 
@@ -253,7 +253,7 @@ export function Form({ events, userId }: Props) {
 						You are the voice of the event reading off donations and letting the viewers know about the
 						charity and any sponsors.
 						<br />
-						Any queries please contact <i>Lacey</i> on Discord.
+						Any queries please contact <i>Kenorah</i> on Discord.
 					</p>
 					<div className={styles.question}>
 						<span>
@@ -320,12 +320,12 @@ export function Form({ events, userId }: Props) {
 			{jobType === "social" && (
 				<>
 					<p>
-						In charge of creating and posting social media content throughout the event (ie. tweets of
-						upcoming runs, Instagram stories, photos).
+						Assisting runners by plugging in their consoles during setup, and taking photos of the
+						runners, crowd, and event as a whole the rest of the time.
 						<br />
 						Any queries please contact <i>Kuiperbole</i> on Discord.
 					</p>
-					<FormControl fullWidth>
+					{/* <FormControl fullWidth>
 						<InputLabel id="socialmedia-experience-label">Experience level</InputLabel>
 						<Select
 							labelId="socialmedia-experience-label"
@@ -337,15 +337,15 @@ export function Form({ events, userId }: Props) {
 							<MenuItem value={"Casual"}>Casual</MenuItem>
 							<MenuItem value={"Expert"}>Expert</MenuItem>
 						</Select>
-					</FormControl>
+					</FormControl> */}
 					<div className={styles.question}>
 						<span>What times are you available on each day?*</span>
 						{eventDatesAvailability}
 					</div>
-					<div className={styles.question}>
+					{/* <div className={styles.question}>
 						<span>Post a link to your favourite meme</span>
 						<TextField fullWidth value={favMeme} onChange={(e) => setFavMeme(e.target.value)} />
-					</div>
+					</div> */}
 				</>
 			)}
 
@@ -355,22 +355,11 @@ export function Form({ events, userId }: Props) {
 						Assisting runners with any queries they may have throughout the events, making sure runners are
 						present for their runs, updating the whiteboard and handing out passes to attendees.
 						<br />
-						Any queries please contact <i>LaceyStripes</i> on Discord.
+						Any queries please contact <i>Sten</i> on Discord.
 					</p>
 					<div className={styles.question}>
-						<span>
-							What is your availability? This should include the setup day as well as the actual marathon
-							days.*
-						</span>
-						<TextField
-							fullWidth
-							value={runnerManagementAvailability}
-							onChange={(e) => setRunnerManagementAvailability(e.target.value)}
-							label=""
-							required
-							multiline
-							minRows={4}
-						/>
+						<span>What times are you available on each day?*</span>
+						{eventDatesAvailability}
 					</div>
 				</>
 			)}
@@ -378,24 +367,14 @@ export function Form({ events, userId }: Props) {
 			{jobType === "tech" && (
 				<>
 					<p>
-						Setting up next runs and managing the stream. Some roles vary in difficulty and experience
-						required.
+						Members of this team will balance the stream and in-person audio, crop the game feeds and
+						camera, and transition between runs and intermission.
 						<br />
 						Any queries please contact <i>nei</i> or <i>Clubwho</i> on Discord.
 					</p>
 					<div className={styles.question}>
-						<span>
-							What is your availability? This should include the setup day as well as the actual marathon
-							days.*
-						</span>
-						<TextField
-							fullWidth
-							value={techAvailability}
-							onChange={(e) => setTechAvailability(e.target.value)}
-							required
-							multiline
-							minRows={4}
-						/>
+						<span>What times are you available on each day?*</span>
+						{eventDatesAvailability}
 					</div>
 					<div className={styles.question}>
 						<span>Previous tech experience.</span>
@@ -406,6 +385,7 @@ export function Form({ events, userId }: Props) {
 							value={techExperience}
 							onChange={(e) => setTechExperience(e.target.value)}
 							label=""
+							helperText="Mention if you have any experience with OBS, Analogue Upscalers (e.g. RetroTINK), or Audio Mixing. It's ok if you don't!"
 							required
 						/>
 					</div>

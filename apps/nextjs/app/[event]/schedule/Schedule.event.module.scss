@@ -231,6 +231,9 @@ $normalWidth: 800px;
 		max-width: 60%;
 		padding-top: 0;
 		line-height: 100%;
+		font-weight: normal;
+		text-align: center;
+		text-wrap: balance;
 
 		@include breakpoint($sm-zero-only) {
 			max-width: 100%;

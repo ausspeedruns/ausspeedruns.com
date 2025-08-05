@@ -25,6 +25,10 @@ jobs:
         name: Install dependencies
         run: npm ci --force
       -
+        name: Build keystone
+        working-directory: ./apps/keystone/
+        run: npx keystone build
+      -
         name: Update prisma
         working-directory: ./apps/keystone/
         run: npx keystone prisma migrate deploy

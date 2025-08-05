@@ -152,8 +152,8 @@ export default function Home() {
 				event={ASAP2025}
 				tagLine="AusSpeedruns is back at PAX Australia once again!"
 				ticketLink="https://aus.paxsite.com/"
-				schedule={false}
-				submitRuns={true}
+				schedule={true}
+				submitRuns={false}
 			/>
 			{/* <EventLive event={"ASM2025"} /> */}
 			{/* <HeroBlock

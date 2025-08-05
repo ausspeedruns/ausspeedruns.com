@@ -1,29 +1,65 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import styles from "../../styles/Volunteers.module.scss";
 import {
 	Button,
 	Checkbox,
 	FormControl,
 	FormControlLabel,
+	FormGroup,
 	InputLabel,
 	MenuItem,
 	Select,
 	TextField,
+	Tooltip,
 } from "@mui/material";
 import { addDays, differenceInDays } from "date-fns";
 
 import { createSubmission } from "./volunteer-action";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import HelpOutline from "@mui/icons-material/HelpOutline";
 
 const VolunteerTypes = {
 	host: "Host",
-	runMgmt: "Front Table",
+	runMgmt: "Front Desk (Formerly Runner Management)",
 	tech: "Tech",
-	social: "Stage Hand",
+	social: "Stage Hand (Social Media and 2nd Tech)",
 } as const;
+
+const VolunteerDescriptions = {
+	host: (
+		<>
+			You are the voice of the event reading off donations and letting the viewers know about the charity and any
+			sponsors.
+			<br />
+			Any queries please contact <i>Kenorah</i> on Discord.
+		</>
+	),
+	runMgmt: (
+		<>
+			As the first point of contact, your roles include handing out passes to attendees, taking in person
+			donations and general queries from the public, and making sure runners are present for their runs.
+			<br />
+			Any queries please contact <i>Sten</i> on Discord.
+		</>
+	),
+	tech: (
+		<>
+			Members of this team will balance the stream and in-person audio, crop the game feeds and camera, and
+			transition between runs and intermission.
+			<br />
+			Any queries please contact <i>nei</i> or <i>Clubwho</i> on Discord.
+		</>
+	),
+	social: (
+		<>
+			Assisting runners by plugging in their consoles during setup, and taking photos of the runners, crowd, and
+			event as a whole the rest of the time.
+			<br />
+			Any queries please contact <i>Kuiperbole</i> or <i>nei</i> on Discord.
+		</>
+	),
+} as const satisfies Record<keyof typeof VolunteerTypes, ReactNode>;
 
 type ExperienceLiterals = "None" | "Casual" | "Enthusiast" | "Expert";
 
@@ -41,6 +77,7 @@ type Props = {
 export function Form({ events, userId }: Props) {
 	const [event, setEvent] = useState(events[0].id);
 	const [jobType, setJobType] = useState<keyof typeof VolunteerTypes>("host");
+	const [jobsType, setJobsType] = useState<(keyof typeof VolunteerTypes)[]>([]);
 	const [confirmation, setConfirmation] = useState(false);
 	const [successSubmit, setSuccessSubmit] = useState(false);
 
@@ -76,7 +113,7 @@ export function Form({ events, userId }: Props) {
 	}, [eventLength]);
 
 	if (successSubmit) {
-		return <ConfirmedSubmission role={VolunteerTypes[jobType]} reset={clearInputs} />;
+		return <ConfirmedSubmission />;
 	}
 
 	function clearAvailabilityDates(numberOfDays: number) {
@@ -114,39 +151,49 @@ export function Form({ events, userId }: Props) {
 		setTechExperience("");
 	}
 
-	let disableSend = !confirmation;
-	switch (jobType) {
-		case "host":
-			if (
-				isNaN(eventHostTime) ||
-				eventHostTime <= 0 ||
-				isNaN(maxDailyHostTime) ||
-				maxDailyHostTime <= 0 ||
-				!availabilityDates
-			) {
-				disableSend = true;
-			}
-			break;
-		case "runMgmt":
-			if (!runnerManagementAvailability) {
-				disableSend = true;
-			}
-			break;
-		case "social":
-			if (!availabilityDates) {
-				disableSend = true;
-			}
-			break;
-		case "tech":
-			if (!techAvailability) {
-				disableSend = true;
-			}
-			break;
+	function handleJobTypeChange(checked: boolean, job: keyof typeof VolunteerTypes) {
+		if (checked) {
+			setJobsType((prev) => [...prev, job]);
+		} else {
+			setJobsType((prev) => prev.filter((j) => j !== job));
+		}
+	}
 
-		default:
-			// What
-			disableSend = true;
-			break;
+	let disableSend = !confirmation;
+	for (const job of jobsType) {
+		switch (job) {
+			case "host":
+				if (
+					isNaN(eventHostTime) ||
+					eventHostTime <= 0 ||
+					isNaN(maxDailyHostTime) ||
+					maxDailyHostTime <= 0 ||
+					!availabilityDates
+				) {
+					disableSend = true;
+				}
+				break;
+			case "runMgmt":
+				if (!availabilityDates) {
+					disableSend = true;
+				}
+				break;
+			case "social":
+				if (!availabilityDates) {
+					disableSend = true;
+				}
+				break;
+			case "tech":
+				if (!availabilityDates) {
+					disableSend = true;
+				}
+				break;
+
+			default:
+				// What
+				disableSend = true;
+				break;
+		}
 	}
 
 	const eventDatesAvailability = [];
@@ -183,7 +230,7 @@ export function Form({ events, userId }: Props) {
 				if (!disableSend) {
 					createSubmission({
 						userId: userId,
-						jobType,
+						roles: jobsType,
 						eventHostTime,
 						maxDailyHostTime,
 						dayTimes: availabilityDates,
@@ -229,7 +276,7 @@ export function Form({ events, userId }: Props) {
 					</Select>
 				</FormControl>
 			)}
-
+			{/* 
 			<FormControl fullWidth>
 				<InputLabel id="job-type-label">Job Type</InputLabel>
 				<Select
@@ -243,31 +290,25 @@ export function Form({ events, userId }: Props) {
 					<MenuItem value={"tech"}>Tech</MenuItem>
 					<MenuItem value={"social"}>Stage Hand (Social Media and 2nd Tech)</MenuItem>
 				</Select>
-			</FormControl>
+			</FormControl> */}
+
+			<FormGroup>
+				<InputLabel id="job-selection-label">Roles to apply to</InputLabel>
+				{Object.keys(VolunteerTypes).map((job) => (
+					<JobCheckbox
+						key={job}
+						job={job as keyof typeof VolunteerTypes}
+						checked={jobsType.includes(job as keyof typeof VolunteerTypes)}
+						onChange={handleJobTypeChange}
+					/>
+				))}
+			</FormGroup>
 
 			<hr />
 
-			{jobType === "host" && (
+			{jobsType.includes("host") && (
 				<>
-					<p>
-						You are the voice of the event reading off donations and letting the viewers know about the
-						charity and any sponsors.
-						<br />
-						Any queries please contact <i>Kenorah</i> on Discord.
-					</p>
-					<div className={styles.question}>
-						<span>
-							What is the maximum amount of hours you are comfortable hosting for the entire event?*
-						</span>
-						<span className={styles.subtitle}>This could be all at once, or in multiple sessions.</span>
-						<TextField
-							type="number"
-							fullWidth
-							value={eventHostTime}
-							onChange={(e) => setEventHostTime(parseInt(e.target.value))}
-							required
-						/>
-					</div>
+					<h2>Host</h2>
 					<div className={styles.question}>
 						<span>
 							What is the maximum amount of hours you are comfortable hosting for in one sitting?*
@@ -282,10 +323,6 @@ export function Form({ events, userId }: Props) {
 							onChange={(e) => setMaxDailyHostTime(parseInt(e.target.value))}
 							required
 						/>
-					</div>
-					<div className={styles.question}>
-						<span>What times are you available to host on each day?*</span>
-						{eventDatesAvailability}
 					</div>
 					<div className={styles.question}>
 						<span>
@@ -314,68 +351,21 @@ export function Form({ events, userId }: Props) {
 							onChange={(e) => setAdditionalInfo(e.target.value)}
 						/>
 					</div>
+					<hr />
 				</>
 			)}
 
-			{jobType === "social" && (
+			{jobsType.includes("runMgmt") && (
 				<>
-					<p>
-						Assisting runners by plugging in their consoles during setup, and taking photos of the
-						runners, crowd, and event as a whole the rest of the time.
-						<br />
-						Any queries please contact <i>Kuiperbole</i> on Discord.
-					</p>
-					{/* <FormControl fullWidth>
-						<InputLabel id="socialmedia-experience-label">Experience level</InputLabel>
-						<Select
-							labelId="socialmedia-experience-label"
-							value={experience}
-							label="Experience level"
-							onChange={(e) => setExperience(e.target.value as ExperienceLiterals)}
-							required>
-							<MenuItem value={"None"}>None</MenuItem>
-							<MenuItem value={"Casual"}>Casual</MenuItem>
-							<MenuItem value={"Expert"}>Expert</MenuItem>
-						</Select>
-					</FormControl> */}
-					<div className={styles.question}>
-						<span>What times are you available on each day?*</span>
-						{eventDatesAvailability}
-					</div>
-					{/* <div className={styles.question}>
-						<span>Post a link to your favourite meme</span>
-						<TextField fullWidth value={favMeme} onChange={(e) => setFavMeme(e.target.value)} />
-					</div> */}
+					<h2>Front Desk</h2>
+					{jobsType.length > 1 && <p>No extra questions, just submit your availability.</p>}
+					<hr />
 				</>
 			)}
 
-			{jobType === "runMgmt" && (
+			{jobsType.includes("tech") && (
 				<>
-					<p>
-						Assisting runners with any queries they may have throughout the events, making sure runners are
-						present for their runs, updating the whiteboard and handing out passes to attendees.
-						<br />
-						Any queries please contact <i>Sten</i> on Discord.
-					</p>
-					<div className={styles.question}>
-						<span>What times are you available on each day?*</span>
-						{eventDatesAvailability}
-					</div>
-				</>
-			)}
-
-			{jobType === "tech" && (
-				<>
-					<p>
-						Members of this team will balance the stream and in-person audio, crop the game feeds and
-						camera, and transition between runs and intermission.
-						<br />
-						Any queries please contact <i>nei</i> or <i>Clubwho</i> on Discord.
-					</p>
-					<div className={styles.question}>
-						<span>What times are you available on each day?*</span>
-						{eventDatesAvailability}
-					</div>
+					<h2>Tech</h2>
 					<div className={styles.question}>
 						<span>Previous tech experience.</span>
 						<TextField
@@ -389,6 +379,55 @@ export function Form({ events, userId }: Props) {
 							required
 						/>
 					</div>
+					<hr />
+				</>
+			)}
+
+			{jobsType.includes("social") && (
+				<>
+					<h2>Stage Hand</h2>
+					{/* <FormControl fullWidth>
+						<InputLabel id="socialmedia-experience-label">Experience level</InputLabel>
+						<Select
+							labelId="socialmedia-experience-label"
+							value={experience}
+							label="Experience level"
+							onChange={(e) => setExperience(e.target.value as ExperienceLiterals)}
+							required>
+							<MenuItem value={"None"}>None</MenuItem>
+							<MenuItem value={"Casual"}>Casual</MenuItem>
+							<MenuItem value={"Expert"}>Expert</MenuItem>
+						</Select>
+					</FormControl> */}
+					{/* <div className={styles.question}>
+						<span>Post a link to your favourite meme</span>
+						<TextField fullWidth value={favMeme} onChange={(e) => setFavMeme(e.target.value)} />
+					</div> */}
+					{jobsType.length > 1 && <p>No extra questions, just submit your availability.</p>}
+					<hr />
+				</>
+			)}
+
+			{jobsType.length > 0 && (
+				<>
+					<div className={styles.question}>
+						<span>What times are you available on each day?*</span>
+						{eventDatesAvailability}
+					</div>
+					<div className={styles.question}>
+						<span>
+							What is the maximum amount of hours you are comfortable volunteering for the entire event?*
+						</span>
+						<span className={styles.subtitle}>This could be all at once, or in multiple sessions.</span>
+						<TextField
+							type="number"
+							fullWidth
+							value={eventHostTime}
+							onChange={(e) => setEventHostTime(parseInt(e.target.value))}
+							required
+						/>
+					</div>
+					<hr />
 				</>
 			)}
 
@@ -404,21 +443,41 @@ export function Form({ events, userId }: Props) {
 	);
 }
 
-const ConfirmedSubmission = (props: { role: string; reset: () => void }) => {
+function ConfirmedSubmission() {
 	return (
-		<main className={`content ${styles.content} ${styles.noEvents}`}>
-			<h2>{props.role} volunteer submitted!</h2>
+		<main className={`content ${styles.noEvents}`}>
+			<h2>Submitted!</h2>
 			<p>
 				Thank you so much for offering to volunteer!
 				<br />
 				We'll get back to you soon about more information.
 			</p>
-			<Button
-				onClick={() => window.location.reload()}
-				variant="contained"
-				startIcon={<FontAwesomeIcon icon={faArrowLeft} />}>
-				Volunteer for another role?
-			</Button>
 		</main>
 	);
 };
+
+interface JobCheckboxProps {
+	checked: boolean;
+	onChange: (checked: boolean, job: keyof typeof VolunteerTypes) => void;
+	job: keyof typeof VolunteerTypes;
+}
+
+function JobCheckbox(props: JobCheckboxProps) {
+	return (
+		<FormControlLabel
+			control={
+				<Checkbox onChange={(_e, checked) => props.onChange(checked, props.job)} checked={props.checked} />
+			}
+			label={
+				<span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+					{VolunteerTypes[props.job]}
+					<Tooltip title={VolunteerDescriptions[props.job]} arrow>
+						<span style={{ cursor: "pointer" }} tabIndex={0}>
+							<HelpOutline fontSize="small" />
+						</span>
+					</Tooltip>
+				</span>
+			}
+		/>
+	);
+}

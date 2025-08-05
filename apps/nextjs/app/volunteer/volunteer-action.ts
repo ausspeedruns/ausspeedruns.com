@@ -5,7 +5,7 @@ import { gql } from "urql";
 
 type VolunteerSubmission = {
 	userId: string;
-	jobType: string;
+	roles: string[];
 	eventHostTime: number;
 	maxDailyHostTime: number;
 	dayTimes: string[];
@@ -23,7 +23,7 @@ type VolunteerSubmission = {
 const ADD_VOLUNTEER_MUTATION = gql`
 	mutation (
 		$userId: ID
-		$jobType: VolunteerJobTypeType
+		$roles: [VolunteerRoleType!]
 		$eventHostTime: Int
 		$maxDailyHostTime: Int
 		$dayTimes: JSON
@@ -40,7 +40,8 @@ const ADD_VOLUNTEER_MUTATION = gql`
 		createVolunteer(
 			data: {
 				volunteer: { connect: { id: $userId } }
-				jobType: $jobType
+				jobType: host
+				roles: $roles
 				eventHostTime: $eventHostTime
 				maxDailyHostTime: $maxDailyHostTime
 				dayTimes: $dayTimes

@@ -1,6 +1,6 @@
 import { list } from '@keystone-6/core';
 import { Lists } from '.keystone/types';
-import { integer, json, relationship, select, text } from '@keystone-6/core/fields';
+import { integer, json, multiselect, relationship, select, text } from '@keystone-6/core/fields';
 import { SessionContext } from './access';
 import { availability } from './fields/availability';
 import { allowAll } from '@keystone-6/core/access';
@@ -49,5 +49,14 @@ export const Volunteer: Lists.Volunteer = list({
 		techAvailablity: text(),
 		techExperience: text(),
 		event: relationship({ ref: 'Event.volunteer', ui: { hideCreate: true } }),
+		roles: multiselect({
+			type: 'enum',
+			options: [
+				{ label: "Host", value: "host" },
+				{ label: "Stage Hand", value: "social" },
+				{ label: "Front Desk", value: "runMgmt" },
+				{ label: "Tech", value: "tech" },
+			]
+		}),
 	}
 });

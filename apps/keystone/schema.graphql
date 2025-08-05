@@ -1282,9 +1282,17 @@ type Volunteer {
   techAvailablity: String
   techExperience: String
   event: Event
+  roles: [VolunteerRoleType!]
 }
 
 enum VolunteerJobTypeType {
+  host
+  social
+  runMgmt
+  tech
+}
+
+enum VolunteerRoleType {
   host
   social
   runMgmt
@@ -1352,6 +1360,7 @@ input VolunteerUpdateInput {
   techAvailablity: String
   techExperience: String
   event: EventRelateToOneForUpdateInput
+  roles: [VolunteerRoleType!]
 }
 
 input VolunteerUpdateArgs {
@@ -1374,6 +1383,7 @@ input VolunteerCreateInput {
   techAvailablity: String
   techExperience: String
   event: EventRelateToOneForCreateInput
+  roles: [VolunteerRoleType!]
 }
 
 type ShirtOrder {

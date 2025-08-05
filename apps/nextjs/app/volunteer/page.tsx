@@ -88,9 +88,20 @@ export default async function SubmitGamePage() {
 	}
 
 	return (
-		<main className={styles.content}>
-			<Form events={data.events} userId={session.user.id} />
-		</main>
+		<PageBackground>
+			<main className={styles.content}>
+				<Form events={data.events} userId={session.user.id} />
+			</main>
+		</PageBackground>
+	);
+}
+
+function PageBackground({ children }: { children: React.ReactNode }) {
+	return (
+		<>
+			<div className={styles.background} />
+			{children}
+		</>
 	);
 }
 

@@ -233,6 +233,7 @@ model Volunteer {
   techExperience               String                @default("")
   event                        Event?                @relation("Volunteer_event", fields: [eventId], references: [id])
   eventId                      String?               @map("event")
+  roles                        Json                  @default("[]")
 
   @@index([volunteerId])
   @@index([eventId])

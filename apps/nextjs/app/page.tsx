@@ -148,21 +148,7 @@ export const metadata: Metadata = {
 export default function Home() {
 	return (
 		<>
-			<HeroBlock
-				event={ASAP2025}
-				tagLine="AusSpeedruns is back at PAX Australia once again!"
-				ticketLink="https://aus.paxsite.com/"
-				schedule={true}
-				submitRuns={false}
-			/>
-			{/* <EventLive event={"ASM2025"} /> */}
-			{/* <HeroBlock
-				event={ASM2025}
-				tagLine="Our 10th Anniversary! Join us for a week of speedrunning and raising money for Game On Cancer!"
-				ticketLink="/ASM2025#tickets"
-				submitRuns={false}
-				schedule={true}
-			/> */}
+			<EventLive event={"ASAP2025"} />
 			<LastEventBlock
 				tagLine="The best ASM ever, rasing over $50,000 for Game On Cancer!!!!"
 				event={ASM2025}

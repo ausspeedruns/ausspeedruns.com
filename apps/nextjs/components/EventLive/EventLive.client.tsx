@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import TwitchChatEmbed from "../TwitchChatEmbed/TwitchChatEmbed";
 import TwitchVideoEmbed from "../TwitchVideoEmbed/TwitchVideoEmbed";
 
-import EventLogo from "../../styles/img/events/asm25/logo.svg";
+import EventLogo from "../../styles/img/events/asap25/asap25-logo-orange.svg";
 import { Incentive } from "../Incentives/Incentive";
 import Button from "../Button/Button";
 
@@ -17,18 +17,11 @@ import Link from "next/link";
 import { faCalendar } from "@fortawesome/free-solid-svg-icons";
 
 import { QUERY_EVENT_RESULTS } from "./EventLive";
-import { Circuitry } from "../ASM25/circuitry";
 
-import GameOnCancer from "../../styles/img/sponsors/GameOnCancer/GoCCCPAX23.svg";
-import InfiniteWorldsLogo from "../../styles/img/sponsors/Infinite Worlds/sunset+logo.png";
-import gigabyteLogo from "../../styles/img/sponsors/AORUS - Gigabyte/GIGABYTE LOGO_white-01.png";
-import urbanClimbLogo from "../../styles/img/sponsors/Urban Climb/UrbanClimb_Logo_Master_Horizontal_Chalk.png";
+import GameOnCancer from "../../styles/img/sponsors/GameOnCancer/logo-coloured.png";
 
 const aspectRatio = EventLogo.height / EventLogo.width;
 const gocAspectRatio = GameOnCancer.height / GameOnCancer.width;
-const infiniteWorldsAspectRatio = InfiniteWorldsLogo.height / InfiniteWorldsLogo.width;
-const gigabyteAspectRatio = gigabyteLogo.height / gigabyteLogo.width;
-const urbanClimbAspectRatio = urbanClimbLogo.height / urbanClimbLogo.width;
 
 interface EventProps {
 	eventData: QUERY_EVENT_RESULTS;
@@ -84,10 +77,6 @@ export function EventLiveClient(props: EventProps) {
 
 	return (
 		<div className={styles.eventLive}>
-			<Circuitry
-				bigShadowAngle={90}
-				style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
-			/>
 			<div className={styles.logo}>
 				<Link href={`/${props.eventData.event.shortname}`} passHref legacyBehavior>
 					<Image
@@ -103,9 +92,9 @@ export function EventLiveClient(props: EventProps) {
 				</Link>
 			</div>
 			<div className={styles.eventInfo}>
-				<h2>July 15 - 20 | Adelaide</h2>
+				<h2>October 10 – 12 | Melbourne</h2>
 				<div className={styles.link}>
-					<Button actionText="Donate!" link="/donate" colorScheme="primary" />
+					<Button actionText="Donate!" link="/donate" colorScheme="primary" noMarginRight />
 				</div>
 				<Image
 					src={GameOnCancer}
@@ -123,8 +112,8 @@ export function EventLiveClient(props: EventProps) {
 				<Button actionText="Schedule" link="/schedule" colorScheme="secondary lightHover" />
 			</div>
 
-			<div className={styles.sponsors}>
-				{/* <h2>Our Sponsors</h2> */}
+			{/* <div className={styles.sponsors}>
+				<h2>Our Sponsors</h2>
 				<div className={styles.images}>
 					<Link href="https://www.aorus.com/" target="_blank" rel="noreferrer">
 						<Image
@@ -151,7 +140,7 @@ export function EventLiveClient(props: EventProps) {
 						/>
 					</Link>
 				</div>
-			</div>
+			</div> */}
 
 			<div className={styles.onDeck}>
 				<div className={styles.columnLeft}>
@@ -220,7 +209,7 @@ export function EventLiveClient(props: EventProps) {
 								<Button
 									actionText="Schedule"
 									link={`/${props.eventData.event.shortname}/schedule`}
-									colorScheme="secondary inverted"
+									colorScheme="secondary"
 									openInNewTab
 									iconRight={faCalendar}
 								/>
@@ -234,9 +223,9 @@ export function EventLiveClient(props: EventProps) {
 						<div className={styles.liveContent}>
 							<h2>Donation Incentives</h2>
 							<span className={styles.instructions}>
-								Make a{" "}
-								<span style={{ textDecoration: "underline" }}>donation and write in the message</span>{" "}
-								that you want to put the money towards this or another incentive
+								Make a donation and{" "}
+								<span style={{ textDecoration: "underline" }}>write in the message</span> that you want
+								to put the money towards this or another incentive
 							</span>
 							<div className={styles.divider} />
 							{incentiveData.title !== "" ? (
@@ -248,7 +237,7 @@ export function EventLiveClient(props: EventProps) {
 								<Button
 									actionText="Incentives"
 									link={`/${props.eventData.event.shortname}/incentives`}
-									colorScheme="secondary inverted"
+									colorScheme="secondary"
 									openInNewTab
 								/>
 							</div>

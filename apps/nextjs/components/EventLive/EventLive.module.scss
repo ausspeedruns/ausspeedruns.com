@@ -3,9 +3,9 @@
 @import "./responsive.scss";
 
 .eventLive {
-	color: $light-text;
+	color: $dark-text;
 	// background: $asm24-main-bg;
-	// background-image: url("./ASM2025BG.png");
+	background-image: url("./ASAP2025BG.png");
 	background-size: 100%;
 	background-position-x: center;
 	background-repeat: repeat-y;
@@ -14,6 +14,7 @@
 
 	h2 {
 		font-family: "Russo One", sans-serif;
+		font-weight: normal;
 	}
 
 	@include breakpoint($sm-zero-only) {
@@ -74,6 +75,11 @@
 
 	.link {
 		text-align: center;
+		@include breakpoint($sm-zero-only) {
+			display: flex;
+			justify-content: center;
+			width: 100%;
+		}
 	}
 
 	.schedule {
@@ -117,7 +123,7 @@
 		margin: auto;
 
 		@include breakpoint($sm-zero-only) {
-			flex-direction: column;
+			grid-template-columns: 1fr;
 		}
 
 		.columnLeft,
@@ -272,15 +278,9 @@
 
 		.liveContent {
 			padding: 1rem;
-			backdrop-filter: blur(10px);
-			// background-color: #522277;
+			// backdrop-filter: blur(10px);
+			background-color: #f7e2d5;
 			border-radius: 22px;
-
-			box-shadow:
-				2px 2px 3px rgba(217, 211, 224, 0.34),
-				inset 2px 2px 3px rgba(217, 211, 224, 0.34),
-				-2px -2px 3px rgba(68, 42, 105, 0.77),
-				inset -2px -2px 3px rgba(68, 42, 105, 0.77);
 		}
 	}
 
@@ -293,7 +293,7 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: space-around;
-			border: 2px solid #00000074;
+			border: 8px solid #ffc75b;
 			font-size: 1.2rem;
 			width: fit-content;
 			word-break: break-all;
@@ -324,7 +324,7 @@
 			}
 
 			.subtitle {
-				color: $light-text;
+				color: $dark-text;
 				font-weight: bold;
 				margin-bottom: 0;
 			}
@@ -349,7 +349,7 @@
 			flex-direction: column;
 			height: 100%;
 			justify-content: space-around;
-			border: 2px solid #00000074;
+			border: 8px solid #009aa1;
 			// width: 50%;
 
 			@include breakpoint($sm-zero-only) {
@@ -372,7 +372,7 @@
 			margin-top: 10px;
 			width: 80%;
 			height: 1px;
-			background: white;
+			background: black;
 		}
 	}
 

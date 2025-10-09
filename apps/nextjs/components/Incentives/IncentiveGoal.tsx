@@ -15,9 +15,9 @@ export const Goal: React.FC<GoalProps> = (props) => {
 		<div className={styles.goal} style={{ color: props.active ? undefined : '#b7b7b7' }}>
 			<div className={styles.gameinfo}>
 				<span className={styles.game}>{props.run.game}</span>
-				{' - '}
+				{' – '}
 				<span className={styles.category}>{props.run.category}</span>
-				{' - '}
+				{' – '}
 				<span className={styles.category}>{<FormatLocalTime date={time} />}</span>
 			</div>
 			<span className={styles.title}>{props.title}</span>

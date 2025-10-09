@@ -19,6 +19,7 @@ export type ButtonProps = {
 	rel?: string;
 	type?: string;
 	openInNewTab?: boolean;
+	noMarginRight?: boolean;
 };
 
 const Button = ({
@@ -31,6 +32,7 @@ const Button = ({
 	target = "_self",
 	type,
 	openInNewTab,
+	noMarginRight = false,
 }: ButtonProps) => {
 	if (openInNewTab) {
 		rel = "noopener noreferrer";
@@ -46,7 +48,8 @@ const Button = ({
 			href={link}
 			target={target}
 			rel={rel}
-			type={type}>
+			type={type}
+			style={{ marginRight: noMarginRight ? "0" : undefined }}>
 			{iconLeft && <FontAwesomeIcon icon={iconLeft} />}
 			<span>{actionText}</span>
 			{iconRight && <FontAwesomeIcon icon={iconRight} />}

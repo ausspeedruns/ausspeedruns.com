@@ -134,7 +134,7 @@ const ASAP2025: AusSpeedrunsEvent = {
 	},
 	logo: "events/asap25/asap25-logo.svg",
 	heroImage: "events/asap25/asap25-hero.jpg",
-	total: "15,000",
+	total: "20,000",
 };
 
 export const metadata: Metadata = {
@@ -148,22 +148,28 @@ export const metadata: Metadata = {
 export default function Home() {
 	return (
 		<>
-			<EventLive event={"ASAP2025"} />
+			{/* <EventLive event={"ASAP2025"} /> */}
+
 			<LastEventBlock
-				tagLine="The best ASM ever, rasing over $50,000 for Game On Cancer!!!!"
+				tagLine="PAX Aus 2025 was a blast, raising over $20,000 for Game On Cancer!"
+				event={ASAP2025}
+				backgroundPos="center"
+			/>
+			<LastEventBlock
+				tagLine="The best ASM ever, raising over $50,000 for Game On Cancer!!!!"
 				event={ASM2025}
 				backgroundPos="center"
 			/>
-			<LastEventBlock
+			{/* <LastEventBlock
 				tagLine="AusSpeedruns At PAX 2024 was fantastic, raising over $15,000 for Game On Cancer!"
 				event={ASAP2024}
 				backgroundPos="center"
-			/>
-			<LastEventBlock
+			/> */}
+			{/* <LastEventBlock
 				tagLine="The turn out for DreamHack Melbourne was incredible and we loved showcasing Australia's fastest gamers there!"
 				event={ASDH2024}
 				backgroundPos="center"
-			/>
+			/> */}
 			<section className={styles.archive}>
 				<div className={styles.content}>
 					<div className={styles.filler}></div>

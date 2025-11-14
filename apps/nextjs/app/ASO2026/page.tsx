@@ -84,7 +84,13 @@ export default async function ASO2026() {
 
 	return (
 		<main>
-			<section className={styles.hero} style={{ backgroundImage: `url(${HeroImage.src})`, backgroundPosition: "center" }}>
+			<section
+				className={styles.hero}
+				style={{
+					backgroundImage: `url(${HeroImage.src})`,
+					backgroundPosition: "center",
+					backgroundSize: "cover",
+				}}>
 				{/* <Marquee className={styles.marquee} speed={20}>
 					{images.map((image, i) => (
 						<Image key={i} src={image.src} alt={image.alt} height="600" style={{ marginRight: -0.1 }} />

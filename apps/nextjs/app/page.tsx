@@ -137,6 +137,19 @@ const ASAP2025: AusSpeedrunsEvent = {
 	total: "20,000",
 };
 
+const ASO2026: AusSpeedrunsEvent = {
+	fullName: "AusSpeedruns Open 2026",
+	preferredName: "ASO2026",
+	shortName: "ASO2026",
+	startDate: "24 January 2026 09:00:00 GMT+1100",
+	dates: "January 24 - 25, 2026",
+	charity: {
+		name: "Game On Cancer",
+	},
+	logo: "events/aso26/aso26-temp.svg",
+	heroImage: "events/aso26/sydney.jpg",
+};
+
 export const metadata: Metadata = {
 	description: "Home of the AusSpeedruns events",
 	openGraph: {
@@ -148,6 +161,8 @@ export const metadata: Metadata = {
 export default function Home() {
 	return (
 		<>
+			<HeroBlock event={ASO2026} tagLine="A Speedrun Event in Sydney? Finally!!" />
+
 			{/* <EventLive event={"ASAP2025"} /> */}
 
 			<LastEventBlock
@@ -160,16 +175,6 @@ export default function Home() {
 				event={ASM2025}
 				backgroundPos="center"
 			/>
-			{/* <LastEventBlock
-				tagLine="AusSpeedruns At PAX 2024 was fantastic, raising over $15,000 for Game On Cancer!"
-				event={ASAP2024}
-				backgroundPos="center"
-			/> */}
-			{/* <LastEventBlock
-				tagLine="The turn out for DreamHack Melbourne was incredible and we loved showcasing Australia's fastest gamers there!"
-				event={ASDH2024}
-				backgroundPos="center"
-			/> */}
 			<section className={styles.archive}>
 				<div className={styles.content}>
 					<div className={styles.filler}></div>

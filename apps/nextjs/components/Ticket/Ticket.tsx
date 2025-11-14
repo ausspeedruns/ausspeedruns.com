@@ -29,7 +29,7 @@ interface Props {
 
 const LOGO_HEIGHT = 50;
 
-const Ticket: React.FC<Props> = (props: Props) => {
+function Ticket(props: Props) {
 	const { numberOfTickets, paid, ticketID, totalCost, method, taken, event } = props.ticketData;
 	const barcodeRef = useRef<SVGSVGElement>(null);
 
@@ -80,7 +80,7 @@ const Ticket: React.FC<Props> = (props: Props) => {
 						<span>Account #</span>
 						<span>30-192-8208</span>
 						<span>Amount</span>
-						<span>${totalCost + (props.extraCost ?? 0)} AUD</span>
+						<span>${10 + (props.extraCost ?? 0)} AUD</span>
 					</>
 				)}
 				<span>Ticket ID</span>

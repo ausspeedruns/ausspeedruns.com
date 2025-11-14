@@ -80,9 +80,7 @@ export function TicketPurchase(props: TicketPurchaseProps) {
 			</div>
 			<div>
 				All attendees, including runners and staff must purchase tickets to attend the event.
-				<br />
-				Purchasing a ticket before 16th June 2025 will have your name printed on the ticket.
-				<p className={styles.cost}>$35</p>
+				<p className={styles.cost}>$10</p>
 				<div className={styles.purchaseButtons}>
 					<ToggleButtonGroup value={purchaseType} exclusive onChange={handlePurchaseType} fullWidth>
 						<ToggleButton value="stripe">Stripe</ToggleButton>
@@ -140,7 +138,7 @@ const ASMTicket = (props: ASMTicketProps) => {
 				<span>Ticket ID</span>
 				<span>{ticketID}</span>
 				<span>Amount</span>
-				<span>${totalCost} AUD</span>
+				<span>$10 AUD</span>
 			</div>
 			<p>
 				You <b>MUST</b> send the Ticket ID as the &quot;reference&quot;. Failure to do so will result in your

@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 	}
 
 	const result = await client
-		.mutation(CREATE_TICKET_MUTATION, { userID: userId, numberOfTickets: 1, event: "ASM2025", apiKey: API_KEY })
+		.mutation(CREATE_TICKET_MUTATION, { userID: userId, numberOfTickets: 1, event: event, apiKey: API_KEY })
 		.toPromise();
 
 	return NextResponse.json(result);

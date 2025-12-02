@@ -1,15 +1,14 @@
-import React from 'react'
-import clsx from 'clsx'
-import styles from './logo.module.css'
+import clsx from "clsx";
+import styles from "./logo.module.css";
 
-import LogoSVG from './Ausspeedruns_Logo.svg'
+import LogoSVG from "./Ausspeedruns_Logo.svg";
 
 interface Props {
-  className?: string
+	className?: string;
 }
 
-export const Logo = (props: Props) => {
-  const { className } = props
+export function Logo(props: Props) {
+	const { className } = props;
 
-  return <LogoSVG className={clsx(styles.logo, className)} />
+	return <LogoSVG className={clsx(styles.logo, className)} />;
 }

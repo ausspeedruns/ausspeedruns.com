@@ -1,19 +1,19 @@
 services:
-  db:
-    image: postgres:18
-    restart: always
-    # set shared memory limit when using docker compose
-    shm_size: 128mb
-    # or set shared memory limit when deploy via swarm stack
-    environment:
-      POSTGRES_USER: ewan
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: website
-    ports:
-      - 5433:5432
+    db:
+        image: postgres:18
+        restart: always
+        # set shared memory limit when using docker compose
+        shm_size: 128mb
+        # or set shared memory limit when deploy via swarm stack
+        environment:
+            POSTGRES_USER: ewan
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: website
+        ports:
+            - 5433:5432
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+            - 8080:8080

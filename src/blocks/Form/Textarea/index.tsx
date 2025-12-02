@@ -1,40 +1,39 @@
-import type { TextField } from '@payloadcms/plugin-form-builder/types'
-import type { FieldErrorsImpl, FieldValues, UseFormRegister } from 'react-hook-form'
+import type { TextField } from "@payloadcms/plugin-form-builder/types";
+import type { FieldErrorsImpl, FieldValues, UseFormRegister } from "react-hook-form";
 
-import { Label } from '@/components/ui/label'
-import { Textarea as TextAreaComponent } from '@/components/ui/textarea'
-import React from 'react'
+import { Label } from "@/components/ui/label";
+import { Textarea as TextAreaComponent } from "@/components/ui/textarea";
 
-import { Error } from '../Error'
-import { Width } from '../Width'
+import { Error } from "../Error";
+import { Width } from "../Width";
 
-export const Textarea: React.FC<
-  TextField & {
-    errors: Partial<FieldErrorsImpl>
-    register: UseFormRegister<FieldValues>
-    rows?: number
-  }
-> = ({ name, defaultValue, errors, label, register, required, rows = 3, width }) => {
-  return (
-    <Width width={width}>
-      <Label htmlFor={name}>
-        {label}
+interface TextareaProps extends TextField {
+	errors: Partial<FieldErrorsImpl>;
+	register: UseFormRegister<FieldValues>;
+	rows?: number;
+}
 
-        {required && (
-          <span className="required">
-            * <span className="sr-only">(required)</span>
-          </span>
-        )}
-      </Label>
+export function Textarea({ name, defaultValue, errors, label, register, required, rows = 3, width }: TextareaProps) {
+	return (
+		<Width width={width}>
+			<Label htmlFor={name}>
+				{label}
 
-      <TextAreaComponent
-        defaultValue={defaultValue}
-        id={name}
-        rows={rows}
-        {...register(name, { required: required })}
-      />
+				{required && (
+					<span className="required">
+						* <span className="sr-only">(required)</span>
+					</span>
+				)}
+			</Label>
 
-      {errors[name] && <Error name={name} />}
-    </Width>
-  )
+			<TextAreaComponent
+				defaultValue={defaultValue}
+				id={name}
+				rows={rows}
+				{...register(name, { required: required })}
+			/>
+
+			{errors[name] && <Error name={name} />}
+		</Width>
+	);
 }

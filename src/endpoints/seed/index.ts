@@ -89,6 +89,8 @@ export const seed = async ({ payload, req }: { payload: Payload; req: PayloadReq
 				name: "Demo Author",
 				email: "demo-author@example.com",
 				password: "password",
+				username: "demo-author",
+				dateOfBirth: new Date(0).toISOString(),
 			},
 		}),
 		payload.create({

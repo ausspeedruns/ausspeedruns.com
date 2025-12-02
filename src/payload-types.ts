@@ -72,6 +72,14 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    roles: Role;
+    events: Event;
+    incentives: Incentive;
+    products: Product;
+    orders: Order;
+    runs: Run;
+    submissions: Submission;
+    volunteers: Volunteer;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -84,6 +92,18 @@ export interface Config {
     'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {
+    users: {
+      'speedrunData.runs': 'runs';
+      'speedrunData.submissions': 'submissions';
+      'speedrunData.orders': 'orders';
+      'speedrunData.volunteers': 'volunteers';
+    };
+    roles: {
+      users: 'users';
+    };
+    events: {
+      'submittedItems.runs': 'runs';
+    };
     'payload-folders': {
       documentsAndFolders: 'payload-folders' | 'media';
     };
@@ -94,6 +114,14 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    roles: RolesSelect<false> | RolesSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
+    incentives: IncentivesSelect<false> | IncentivesSelect<true>;
+    products: ProductsSelect<false> | ProductsSelect<true>;
+    orders: OrdersSelect<false> | OrdersSelect<true>;
+    runs: RunsSelect<false> | RunsSelect<true>;
+    submissions: SubmissionsSelect<false> | SubmissionsSelect<true>;
+    volunteers: VolunteersSelect<false> | VolunteersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -253,7 +281,7 @@ export interface Post {
     description?: string | null;
   };
   publishedAt?: string | null;
-  authors?: (number | User)[] | null;
+  authors?: (string | User)[] | null;
   populatedAuthors?:
     | {
         id?: string | null;
@@ -417,8 +445,40 @@ export interface Category {
  * via the `definition` "users".
  */
 export interface User {
-  id: number;
+  id: string;
+  username: string;
   name?: string | null;
+  dateOfBirth: string;
+  pronouns?: string | null;
+  state?: ('vic' | 'nsw' | 'qld' | 'wa' | 'sa' | 'tas' | 'nt' | 'act' | 'nz' | 'international') | null;
+  speedrunData?: {
+    runs?: {
+      docs?: (number | Run)[];
+      hasNextPage?: boolean;
+      totalDocs?: number;
+    };
+    submissions?: {
+      docs?: (number | Submission)[];
+      hasNextPage?: boolean;
+      totalDocs?: number;
+    };
+    orders?: {
+      docs?: (number | Order)[];
+      hasNextPage?: boolean;
+      totalDocs?: number;
+    };
+    volunteers?: {
+      docs?: (number | Volunteer)[];
+      hasNextPage?: boolean;
+      totalDocs?: number;
+    };
+  };
+  roles?: (number | Role)[] | null;
+  socials?: {
+    Discord?: string | null;
+    Twitch?: string | null;
+    Bluesky?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -436,6 +496,233 @@ export interface User {
       }[]
     | null;
   password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "runs".
+ */
+export interface Run {
+  id: number;
+  game: string;
+  category: string;
+  platform: string;
+  runner?: (string | null) | User;
+  estimate: string;
+  time?: string | null;
+  event?: (number | null) | Event;
+  youtube?: string | null;
+  twitch?: string | null;
+  specialRequirements?: string | null;
+  isRace?: boolean | null;
+  isCoop?: boolean | null;
+  techPlatform?: string | null;
+  scheduledTime?: string | null;
+  racers?: string | null;
+  submission?: (number | null) | Submission;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  name: string;
+  shortname: string;
+  settings?: {
+    isPublished?: boolean | null;
+    isAcceptingSubmissions?: boolean | null;
+    isAcceptingBackups?: boolean | null;
+    isScheduleReleased?: boolean | null;
+    isAcceptingVolunteers?: boolean | null;
+  };
+  timeSettings?: {
+    timezone?: string | null;
+    startTime?: string | null;
+    endTime?: string | null;
+  };
+  submittedItems?: {
+    runs?: {
+      docs?: (number | Run)[];
+      hasNextPage?: boolean;
+      totalDocs?: number;
+    };
+  };
+  postEvent?: {
+    raised?: number | null;
+    postEventPage?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  media?: {
+    logo?: (number | null) | Media;
+    darkModeLogo?: (number | null) | Media;
+    heroImage?: (number | null) | Media;
+    openGraphImage?: (number | null) | Media;
+    postEventBackground?: (number | null) | Media;
+  };
+  submissionInstructions?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  eventPage?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  scheduleMetadata?: {
+    horaro?: string | null;
+    oengus?: string | null;
+    scheduleBlocks?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "submissions".
+ */
+export interface Submission {
+  id: number;
+  runner: string | User;
+  game: string;
+  category: string;
+  platform: string;
+  techPlatform?: string | null;
+  estimate: string;
+  possibleEstimate?: string | null;
+  possibleEstimateReason?: string | null;
+  event?: (number | null) | Event;
+  specialRequirements?: string | null;
+  raceType?: ('noRace' | 'solo' | 'only') | null;
+  racer?: string | null;
+  isCoop?: boolean | null;
+  video?: string | null;
+  status?: ('pending' | 'accepted' | 'rejected' | 'backup') | null;
+  canBackup?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders".
+ */
+export interface Order {
+  id: number;
+  orderId: string;
+  user: string | User;
+  products?: (number | Product)[] | null;
+  status?: ('pending' | 'completed' | 'collected' | 'cancelled') | null;
+  purchaseType?: ('bankTransfer' | 'stripe' | 'other') | null;
+  stripePaymentId?: string | null;
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: number;
+  name: string;
+  description?: string | null;
+  price: number;
+  image?: (number | null) | Media;
+  isAvailable?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "volunteers".
+ */
+export interface Volunteer {
+  id: number;
+  volunteer?: (string | null) | User;
+  event?: (number | null) | Event;
+  role: 'runnerManagement' | 'host' | 'tech' | 'socialMedia';
+  availability?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  eventHostTime?: number | null;
+  maxDailyHostTime?: number | null;
+  hostSpecificGame?: string | null;
+  hostSpecificRunner?: string | null;
+  hostOtherInformation?: string | null;
+  techExperience?: string | null;
+  socialMediaExperience?: string | null;
+  socialMediaFavouriteMeme?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "roles".
+ */
+export interface Role {
+  id: number;
+  name: string;
+  users?: {
+    docs?: (string | User)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  admin?: boolean | null;
+  canManageContent?: boolean | null;
+  canManageUsers?: boolean | null;
+  colour?: string | null;
+  textColour?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -781,6 +1068,30 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "incentives".
+ */
+export interface Incentive {
+  id: number;
+  title: string;
+  run?: (number | null) | Run;
+  event?: (number | null) | Event;
+  description?: string | null;
+  notes?: string | null;
+  isActive?: boolean | null;
+  data?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -987,7 +1298,39 @@ export interface PayloadLockedDocument {
       } | null)
     | ({
         relationTo: 'users';
-        value: number | User;
+        value: string | User;
+      } | null)
+    | ({
+        relationTo: 'roles';
+        value: number | Role;
+      } | null)
+    | ({
+        relationTo: 'events';
+        value: number | Event;
+      } | null)
+    | ({
+        relationTo: 'incentives';
+        value: number | Incentive;
+      } | null)
+    | ({
+        relationTo: 'products';
+        value: number | Product;
+      } | null)
+    | ({
+        relationTo: 'orders';
+        value: number | Order;
+      } | null)
+    | ({
+        relationTo: 'runs';
+        value: number | Run;
+      } | null)
+    | ({
+        relationTo: 'submissions';
+        value: number | Submission;
+      } | null)
+    | ({
+        relationTo: 'volunteers';
+        value: number | Volunteer;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1012,7 +1355,7 @@ export interface PayloadLockedDocument {
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: number | User;
+    value: string | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -1025,7 +1368,7 @@ export interface PayloadPreference {
   id: number;
   user: {
     relationTo: 'users';
-    value: number | User;
+    value: string | User;
   };
   key?: string | null;
   value?:
@@ -1336,7 +1679,28 @@ export interface CategoriesSelect<T extends boolean = true> {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  id?: T;
+  username?: T;
   name?: T;
+  dateOfBirth?: T;
+  pronouns?: T;
+  state?: T;
+  speedrunData?:
+    | T
+    | {
+        runs?: T;
+        submissions?: T;
+        orders?: T;
+        volunteers?: T;
+      };
+  roles?: T;
+  socials?:
+    | T
+    | {
+        Discord?: T;
+        Twitch?: T;
+        Bluesky?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -1353,6 +1717,187 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "roles_select".
+ */
+export interface RolesSelect<T extends boolean = true> {
+  name?: T;
+  users?: T;
+  admin?: T;
+  canManageContent?: T;
+  canManageUsers?: T;
+  colour?: T;
+  textColour?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  name?: T;
+  shortname?: T;
+  settings?:
+    | T
+    | {
+        isPublished?: T;
+        isAcceptingSubmissions?: T;
+        isAcceptingBackups?: T;
+        isScheduleReleased?: T;
+        isAcceptingVolunteers?: T;
+      };
+  timeSettings?:
+    | T
+    | {
+        timezone?: T;
+        startTime?: T;
+        endTime?: T;
+      };
+  submittedItems?:
+    | T
+    | {
+        runs?: T;
+      };
+  postEvent?:
+    | T
+    | {
+        raised?: T;
+        postEventPage?: T;
+      };
+  media?:
+    | T
+    | {
+        logo?: T;
+        darkModeLogo?: T;
+        heroImage?: T;
+        openGraphImage?: T;
+        postEventBackground?: T;
+      };
+  submissionInstructions?: T;
+  eventPage?: T;
+  scheduleMetadata?:
+    | T
+    | {
+        horaro?: T;
+        oengus?: T;
+        scheduleBlocks?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "incentives_select".
+ */
+export interface IncentivesSelect<T extends boolean = true> {
+  title?: T;
+  run?: T;
+  event?: T;
+  description?: T;
+  notes?: T;
+  isActive?: T;
+  data?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  price?: T;
+  image?: T;
+  isAvailable?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders_select".
+ */
+export interface OrdersSelect<T extends boolean = true> {
+  orderId?: T;
+  user?: T;
+  products?: T;
+  status?: T;
+  purchaseType?: T;
+  stripePaymentId?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "runs_select".
+ */
+export interface RunsSelect<T extends boolean = true> {
+  game?: T;
+  category?: T;
+  platform?: T;
+  runner?: T;
+  estimate?: T;
+  time?: T;
+  event?: T;
+  youtube?: T;
+  twitch?: T;
+  specialRequirements?: T;
+  isRace?: T;
+  isCoop?: T;
+  techPlatform?: T;
+  scheduledTime?: T;
+  racers?: T;
+  submission?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "submissions_select".
+ */
+export interface SubmissionsSelect<T extends boolean = true> {
+  runner?: T;
+  game?: T;
+  category?: T;
+  platform?: T;
+  techPlatform?: T;
+  estimate?: T;
+  possibleEstimate?: T;
+  possibleEstimateReason?: T;
+  event?: T;
+  specialRequirements?: T;
+  raceType?: T;
+  racer?: T;
+  isCoop?: T;
+  video?: T;
+  status?: T;
+  canBackup?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "volunteers_select".
+ */
+export interface VolunteersSelect<T extends boolean = true> {
+  volunteer?: T;
+  event?: T;
+  role?: T;
+  availability?: T;
+  eventHostTime?: T;
+  maxDailyHostTime?: T;
+  hostSpecificGame?: T;
+  hostSpecificRunner?: T;
+  hostOtherInformation?: T;
+  techExperience?: T;
+  socialMediaExperience?: T;
+  socialMediaFavouriteMeme?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1751,7 +2296,7 @@ export interface TaskSchedulePublish {
           value: number | Post;
         } | null);
     global?: string | null;
-    user?: (number | null) | User;
+    user?: (string | null) | User;
   };
   output?: unknown;
 }

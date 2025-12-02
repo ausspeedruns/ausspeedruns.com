@@ -7,10 +7,19 @@ import { buildConfig, PayloadRequest } from "payload";
 import { fileURLToPath } from "url";
 
 import { Categories } from "./collections/Categories";
-import { Media } from "./collections/Media";
 import { Pages } from "./collections/Pages";
 import { Posts } from "./collections/Posts";
+import { Events } from "./collections/Events";
+import { Incentives } from "./collections/Incentives";
+import { Media } from "./collections/Media";
+import { Orders } from "./collections/Orders";
+import { Products } from "./collections/Products";
+import { Roles } from "./collections/Roles";
+import { Runs } from "./collections/Runs";
+import { Submissions } from "./collections/Submissions";
 import { Users } from "./collections/Users";
+import { Volunteers } from "./collections/Volunteers";
+
 import { Footer } from "./Footer/config";
 import { Header } from "./Header/config";
 import { plugins } from "./plugins";
@@ -64,7 +73,21 @@ export default buildConfig({
 			connectionString: process.env.DATABASE_URI || "",
 		},
 	}),
-	collections: [Pages, Posts, Media, Categories, Users],
+	collections: [
+		Pages,
+		Posts,
+		Media,
+		Categories,
+		Users,
+		Roles,
+		Events,
+		Incentives,
+		Products,
+		Orders,
+		Runs,
+		Submissions,
+		Volunteers,
+	],
 	cors: [getServerSideURL()].filter(Boolean),
 	globals: [Header, Footer],
 	plugins: [

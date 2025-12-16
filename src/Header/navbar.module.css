@@ -1,0 +1,17 @@
+.header {
+	background: var(--ausspeedruns-orange);
+	max-width: 100%;
+	padding: 0 1rem;
+
+	@media (min-width: 600px) {
+		padding: 0 5rem;
+	}
+
+	@media (min-width: 1024px) {
+		padding: 0 10rem;
+	}
+
+	@media (min-width: 2560px) {
+		padding: 0 30rem;
+	}
+}

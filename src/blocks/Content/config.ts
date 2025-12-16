@@ -32,10 +32,10 @@ const columnFields: Field[] = [
 		name: "richText",
 		type: "richText",
 		editor: lexicalEditor({
-			features: ({ rootFeatures }) => {
+			features: ({ rootFeatures, defaultFeatures }) => {
 				return [
 					...rootFeatures,
-					HeadingFeature({ enabledHeadingSizes: ["h2", "h3", "h4"] }),
+					...defaultFeatures,
 					FixedToolbarFeature(),
 					InlineToolbarFeature(),
 				];
@@ -70,5 +70,9 @@ export const Content: Block = {
 			},
 			fields: columnFields,
 		},
+		{
+			name: "style",
+			type: "text",
+		}
 	],
 };

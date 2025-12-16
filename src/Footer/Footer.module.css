@@ -1,0 +1,7 @@
+.container {
+	background-color: var(--ausspeedruns-blue);
+}
+
+.container a[href^="mailto:"] {
+	text-decoration: underline;
+}

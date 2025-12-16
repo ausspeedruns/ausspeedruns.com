@@ -1,0 +1,9 @@
+.blue {
+	background-color: var(--ausspeedruns-blue);
+	color: white;
+}
+
+.orange {
+	background-color: var(--ausspeedruns-orange);
+	color: white;
+}

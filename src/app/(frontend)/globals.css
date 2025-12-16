@@ -14,6 +14,9 @@
 	}
 
 	:root {
+		--ausspeedruns-orange: #c72;
+		--ausspeedruns-blue: #3f7d8f;
+
 		--background: 0 0% 100%;
 		--foreground: 222.2 84% 4.9%;
 

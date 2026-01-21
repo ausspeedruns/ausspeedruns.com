@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import TwitchChatEmbed from "../TwitchChatEmbed/TwitchChatEmbed";
 import TwitchVideoEmbed from "../TwitchVideoEmbed/TwitchVideoEmbed";
 
-import EventLogo from "../../styles/img/events/asap25/asap25-logo-orange.svg";
+import EventLogo from "../../styles/img/events/aso26/aso26-temp.svg";
 import { Incentive } from "../Incentives/Incentive";
 import Button from "../Button/Button";
 
@@ -18,7 +18,7 @@ import { faCalendar } from "@fortawesome/free-solid-svg-icons";
 
 import { QUERY_EVENT_RESULTS } from "./EventLive";
 
-import GameOnCancer from "../../styles/img/sponsors/GameOnCancer/logo-coloured.png";
+import GameOnCancer from "../../styles/img/sponsors/GameOnCancer/logo-white.svg";
 
 const aspectRatio = EventLogo.height / EventLogo.width;
 const gocAspectRatio = GameOnCancer.height / GameOnCancer.width;
@@ -81,9 +81,9 @@ export function EventLiveClient(props: EventProps) {
 				<Link href={`/${props.eventData.event.shortname}`} passHref legacyBehavior>
 					<Image
 						src={EventLogo}
-						width={600}
-						height={aspectRatio * 600}
-						alt="ASM2025 Logo"
+						width={200}
+						height={aspectRatio * 200}
+						alt="ASO2026 Logo"
 						style={{
 							maxWidth: "100%",
 							height: "auto",
@@ -92,7 +92,7 @@ export function EventLiveClient(props: EventProps) {
 				</Link>
 			</div>
 			<div className={styles.eventInfo}>
-				<h2>October 10 – 12 | Melbourne</h2>
+				<h2>January 24 - 25 | Sydney</h2>
 				<div className={styles.link}>
 					<Button actionText="Donate!" link="/donate" colorScheme="primary" noMarginRight />
 				</div>
@@ -228,11 +228,13 @@ export function EventLiveClient(props: EventProps) {
 								to put the money towards this or another incentive
 							</span>
 							<div className={styles.divider} />
-							{incentiveData.title !== "" ? (
-								<Incentive incentive={incentiveData as any} />
-							) : (
-								<h4>Loading</h4>
-							)}
+							<div style={{ margin: "20px 0" }}>
+								{incentiveData.title !== "" ? (
+									<Incentive incentive={incentiveData as any} />
+								) : (
+									<h4>Loading</h4>
+								)}
+							</div>
 							<div className={styles.link}>
 								<Button
 									actionText="Incentives"

@@ -7,7 +7,8 @@ export interface GoalProps extends BaseIncentiveData {
 	goal: number;
 	current: number;
 }
-export const Goal: React.FC<GoalProps> = (props) => {
+
+export function Goal(props: GoalProps) {
 	const time = new Date(props.run.scheduledTime);
 	const progress = Math.min(props.current / props.goal, 1);
 
@@ -21,7 +22,7 @@ export const Goal: React.FC<GoalProps> = (props) => {
 				<span className={styles.category}>{<FormatLocalTime date={time} />}</span>
 			</div>
 			<span className={styles.title}>{props.title}</span>
-			<span className={styles.category}>{props.notes}</span>
+			<span className={styles.notes}>{props.notes}</span>
 			<span className={styles.current}>
 				${props?.current?.toLocaleString() ?? 'Error'} / ${props?.goal?.toLocaleString() ?? 'Error'}
 			</span>

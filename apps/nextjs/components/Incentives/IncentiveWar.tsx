@@ -36,7 +36,7 @@ export function War(props: WarProps) {
 				<span className={styles.category}>{<FormatLocalTime date={time} />}</span>
 			</div>
 			<span className={styles.title}>{props.title}</span>
-			<span className={styles.category}>{props.notes}</span>
+			<span className={styles.notes}>{props.notes}</span>
 			{sortedOptions.length > 0 ? (
 				<div className={styles.options}>
 					{sortedOptions.map((option, i) => {

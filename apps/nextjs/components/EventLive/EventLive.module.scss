@@ -3,9 +3,10 @@
 @import "./responsive.scss";
 
 .eventLive {
-	color: $dark-text;
+	color: $light-text;
 	// background: $asm24-main-bg;
-	background-image: url("./ASAP2025BG.png");
+	// background-image: url("./ASAP2025BG.png");
+	background-image: linear-gradient(180deg, #005BC4 0%, #18C9CC 50%, #81EEFA 100%);
 	background-size: 100%;
 	background-position-x: center;
 	background-repeat: repeat-y;
@@ -275,11 +276,13 @@
 		box-sizing: border-box;
 		display: flex;
 		justify-content: center;
+		color: $dark-text;
 
 		.liveContent {
 			padding: 1rem;
 			// backdrop-filter: blur(10px);
-			background-color: #f7e2d5;
+			// background-color: #f7e2d5;
+			background-image: linear-gradient(#FFFCD8, #EFCCAA);
 			border-radius: 22px;
 		}
 	}
@@ -293,14 +296,19 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: space-around;
-			border: 8px solid #ffc75b;
+			border: 8px solid rgb(176 130 90);
 			font-size: 1.2rem;
 			width: fit-content;
 			word-break: break-all;
 			min-width: 400px;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 
 			@include breakpoint($sm-zero-only) {
 				width: 100%;
+			}
+
+			h2 {
+				margin-bottom: 0.75rem;
 			}
 
 			.info {
@@ -311,11 +319,13 @@
 				.game {
 					font-size: 150%;
 					font-weight: bolder;
-					margin-bottom: 0;
+					margin-bottom: 0.25rem;
 				}
 
 				.category {
 					font-size: 120%;
+					opacity: 0.8;
+					margin-bottom: 0.75rem;
 				}
 			}
 
@@ -326,7 +336,9 @@
 			.subtitle {
 				color: $dark-text;
 				font-weight: bold;
-				margin-bottom: 0;
+				margin-bottom: 0.25rem;
+				font-size: 0.85em;
+				opacity: 0.7;
 			}
 
 			.link {
@@ -349,7 +361,7 @@
 			flex-direction: column;
 			height: 100%;
 			justify-content: space-around;
-			border: 8px solid #009aa1;
+			border: 8px solid rgb(176 130 90);
 			// width: 50%;
 
 			@include breakpoint($sm-zero-only) {

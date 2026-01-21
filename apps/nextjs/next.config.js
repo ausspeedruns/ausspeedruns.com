@@ -3,8 +3,8 @@ const path = require("path");
 require("dotenv").config();
 
 const currentEventData = {
-	id: "ASAP2025",
-	donateLink: "https://donate.tiltify.com/2b915469-250d-47f8-82cb-73507d54f62c/details",
+	id: "ASO2026",
+	donateLink: "https://donate.tiltify.com/5b8fd54d-735b-4970-89fc-523204308060/details",
 }
 
 const socialMedias = [

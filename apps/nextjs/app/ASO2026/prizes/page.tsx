@@ -52,7 +52,7 @@ export default function Prizes() {
 				<Button actionText="Donate" link="/donate" openInNewTab iconRight={faChevronRight} />
 			</div>
 			<p className={styles.prizeToC}>
-				<a href="https://ausspeedruns.sharepoint.com/:w:/s/Main/IQBL1J-gU0OQQYi5X2FASWpJAcgFS293D_5Hh9UcTQwzOfQ?e=zuhBZP">
+				<a href="https://ausspeedruns.sharepoint.com/:w:/s/Main/IQBL1J-gU0OQQYi5X2FASWpJAUtMz0rJV3d60X4JTFC99es">
 					Prizes Terms and Conditions
 				</a>
 			</p>

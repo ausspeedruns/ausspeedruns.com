@@ -148,6 +148,7 @@ const ASO2026: AusSpeedrunsEvent = {
 	},
 	logo: "events/aso26/aso26-temp.svg",
 	heroImage: "events/aso26/sydney.jpg",
+	total: "10,000",
 };
 
 export const metadata: Metadata = {
@@ -163,8 +164,13 @@ export default function Home() {
 		<>
 			{/* <HeroBlock event={ASO2026} tagLine="A Speedrun Event in Sydney? Finally!!" /> */}
 
-			<EventLive event={"ASO2026"} />
+			{/* <EventLive event={"ASO2026"} /> */}
 
+			<LastEventBlock
+				tagLine="The Inaugural AusSpeedruns Open was a huge success, raising over $10,000 for Game On Cancer!"
+				event={ASO2026}
+				backgroundPos="center"
+			/>
 			<LastEventBlock
 				tagLine="PAX Aus 2025 was a blast, raising over $20,000 for Game On Cancer!"
 				event={ASAP2025}

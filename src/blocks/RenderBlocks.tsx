@@ -9,6 +9,8 @@ import { FormBlock } from "@/blocks/Form/Component";
 import { MediaBlock } from "@/blocks/MediaBlock/Component";
 import { ImageCarouselBlock } from "./ImageCarousel/ImageCarousel";
 import { WordDefinitionBlock } from "./WordDefinition/WordDefinition";
+import { UpcomingEventBlock } from "./UpcomingEvent/UpcomingEvent";
+import { RecentEventBlock } from "./RecentEvent/RecentEvent";
 
 const blockComponents = {
 	archive: ArchiveBlock,
@@ -18,6 +20,8 @@ const blockComponents = {
 	mediaBlock: MediaBlock,
 	imageCarousel: ImageCarouselBlock,
 	wordDefinition: WordDefinitionBlock,
+	upcomingEvent: UpcomingEventBlock,
+	recentEvent: RecentEventBlock,
 };
 
 interface RenderBlocksProps {

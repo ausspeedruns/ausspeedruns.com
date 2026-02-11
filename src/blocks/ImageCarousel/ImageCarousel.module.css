@@ -1,6 +1,5 @@
 .carousel {
-	/* height: 50vh; */
-	height: 50vh;
+	height: 80vh;
 	width: 100%;
 	top: 0;
 	margin-top: -8rem;
@@ -28,7 +27,7 @@
 	align-items: center;
 
 	& picture {
-		max-width: 75%;
+		max-width: 50%;
 	}
 
 	* {

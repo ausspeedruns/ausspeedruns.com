@@ -236,6 +236,8 @@ export interface Page {
     | FormBlock
     | ImageCarouselBlock
     | WordDefinitionBlock
+    | UpcomingEventBlock
+    | RecentEventBlock
   )[];
   meta?: {
     title?: string | null;
@@ -1133,6 +1135,63 @@ export interface WordDefinitionBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "UpcomingEventBlock".
+ */
+export interface UpcomingEventBlock {
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  eventStartDate: string;
+  eventLogo: number | Media;
+  eventName: string;
+  eventDates?: string | null;
+  eventBackgroundImage: number | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'upcomingEvent';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RecentEventBlock".
+ */
+export interface RecentEventBlock {
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  eventLogo: number | Media;
+  eventName: string;
+  eventRaised: string;
+  eventBackgroundImage: number | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'recentEvent';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "incentives".
  */
 export interface Incentive {
@@ -1497,6 +1556,8 @@ export interface PagesSelect<T extends boolean = true> {
         formBlock?: T | FormBlockSelect<T>;
         imageCarousel?: T | ImageCarouselBlockSelect<T>;
         wordDefinition?: T | WordDefinitionBlockSelect<T>;
+        upcomingEvent?: T | UpcomingEventBlockSelect<T>;
+        recentEvent?: T | RecentEventBlockSelect<T>;
       };
   meta?:
     | T
@@ -1620,6 +1681,33 @@ export interface WordDefinitionBlockSelect<T extends boolean = true> {
   word?: T;
   pronunciation?: T;
   definition?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "UpcomingEventBlock_select".
+ */
+export interface UpcomingEventBlockSelect<T extends boolean = true> {
+  richText?: T;
+  eventStartDate?: T;
+  eventLogo?: T;
+  eventName?: T;
+  eventDates?: T;
+  eventBackgroundImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RecentEventBlock_select".
+ */
+export interface RecentEventBlockSelect<T extends boolean = true> {
+  richText?: T;
+  eventLogo?: T;
+  eventName?: T;
+  eventRaised?: T;
+  eventBackgroundImage?: T;
   id?: T;
   blockName?: T;
 }

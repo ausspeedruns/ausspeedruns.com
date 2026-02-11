@@ -11,7 +11,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 export function ImageCarouselBlock({ richText, images }: ImageCarouselBlockProps) {
 	return (
-		<div className="container" style={{ position: "relative" }}>
+		<div style={{ position: "relative" }}>
 			<Carousel
 				className={styles.carousel}
 				// centerMode

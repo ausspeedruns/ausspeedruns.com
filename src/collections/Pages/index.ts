@@ -8,6 +8,8 @@ import { Content } from "../../blocks/Content/config";
 import { FormBlock } from "../../blocks/Form/config";
 import { MediaBlock } from "../../blocks/MediaBlock/config";
 import { ImageCarousel } from "../../blocks/ImageCarousel/ImageCarousel-config";
+import { WordDefinition } from "@/blocks/WordDefinition/WordDefinitionConfig";
+import { UpcomingEvent } from "@/blocks/UpcomingEvent/UpcomingEvent-config";
 
 import { hero } from "@/heros/config";
 import { slugField } from "payload";
@@ -22,7 +24,7 @@ import {
 	OverviewField,
 	PreviewField,
 } from "@payloadcms/plugin-seo/fields";
-import { WordDefinition } from "@/blocks/WordDefinition/WordDefinitionConfig";
+import { RecentEvent } from "@/blocks/RecentEvent/RecentEvent-config";
 
 export const Pages: CollectionConfig<"pages"> = {
 	slug: "pages",
@@ -83,6 +85,8 @@ export const Pages: CollectionConfig<"pages"> = {
 								FormBlock,
 								ImageCarousel,
 								WordDefinition,
+								UpcomingEvent,
+								RecentEvent,
 							],
 							required: true,
 							admin: {

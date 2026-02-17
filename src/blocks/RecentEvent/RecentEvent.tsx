@@ -1,5 +1,5 @@
 import { Media } from "@/components/Media";
-import styles from "./LastEventBlock.module.scss";
+import styles from "./RecentEvent.module.css";
 
 import type { RecentEventBlock as RecentEventBlockProps } from "@/payload-types";
 import RichText from "@/components/RichText";

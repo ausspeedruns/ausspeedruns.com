@@ -1,8 +1,8 @@
-import { Media } from "@/components/Media";
+import { Media } from "#/components/Media";
 import styles from "./RecentEvent.module.css";
 
-import type { RecentEventBlock as RecentEventBlockProps } from "@/payload-types";
-import RichText from "@/components/RichText";
+import type { RecentEventBlock as RecentEventBlockProps } from "#/payload-types";
+import RichText from "#/components/RichText";
 
 export function RecentEventBlock(props: RecentEventBlockProps) {
 	return (

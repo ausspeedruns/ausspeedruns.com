@@ -1,6 +1,6 @@
-import { cn } from "@/utilities/ui";
+import { cn } from "#/utilities/ui";
 
-import { Card, CardPostData } from "@/components/Card";
+import { Card, CardPostData } from "#/components/Card";
 
 export type Props = {
 	posts: CardPostData[];

@@ -2,9 +2,9 @@ import styles from "./UpcomingEvent.module.css";
 // import Button from "../Button/Button";
 // import { AusSpeedrunsEvent } from "../../types/types";
 import { Countdown } from "./Countdown";
-import type { UpcomingEventBlock as UpcomingEventBlockProps } from "@/payload-types";
-import RichText from "@/components/RichText";
-import { Media } from "@/components/Media";
+import type { UpcomingEventBlock as UpcomingEventBlockProps } from "#/payload-types";
+import RichText from "#/components/RichText";
+import { Media } from "#/components/Media";
 
 export function UpcomingEventBlock(props: UpcomingEventBlockProps) {
 	return (

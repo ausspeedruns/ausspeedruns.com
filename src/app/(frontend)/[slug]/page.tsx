@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 
-import { PayloadRedirects } from "@/components/PayloadRedirects";
-import configPromise from "@payload-config";
+import { PayloadRedirects } from "#/components/PayloadRedirects";
+import configPromise from "#payload-config";
 import { getPayload, type RequiredDataFromCollectionSlug } from "payload";
 import { draftMode } from "next/headers";
 import React, { cache } from "react";
-import { homeStatic } from "@/endpoints/seed/home-static";
+import { homeStatic } from "#/endpoints/seed/home-static";
 
-import { RenderBlocks } from "@/blocks/RenderBlocks";
-import { RenderHero } from "@/heros/RenderHero";
-import { generateMeta } from "@/utilities/generateMeta";
+import { RenderBlocks } from "#/blocks/RenderBlocks";
+import { RenderHero } from "#/heros/RenderHero";
+import { generateMeta } from "#/utilities/generateMeta";
 import PageClient from "./page.client";
-import { LivePreviewListener } from "@/components/LivePreviewListener";
+import { LivePreviewListener } from "#/components/LivePreviewListener";
 
 export async function generateStaticParams() {
 	const payload = await getPayload({ config: configPromise });

@@ -7,8 +7,8 @@ import {
 	PaginationLink,
 	PaginationNext,
 	PaginationPrevious,
-} from "@/components/ui/pagination";
-import { cn } from "@/utilities/ui";
+} from "#/components/ui/pagination";
+import { cn } from "#/utilities/ui";
 import { useRouter } from "next/navigation";
 
 interface PaginationProps {

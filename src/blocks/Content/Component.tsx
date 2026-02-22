@@ -1,7 +1,7 @@
-import { cn } from "@/utilities/ui";
-import RichText from "@/components/RichText";
+import { cn } from "#/utilities/ui";
+import RichText from "#/components/RichText";
 
-import type { ContentBlock as ContentBlockProps } from "@/payload-types";
+import type { ContentBlock as ContentBlockProps } from "#/payload-types";
 
 import styles from "./content.module.css";
 import { CMSLink } from "../../components/Link";

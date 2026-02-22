@@ -1,12 +1,12 @@
 "use client";
-import { useHeaderTheme } from "@/providers/HeaderTheme";
+import { useHeaderTheme } from "#/providers/HeaderTheme";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-import type { Header } from "@/payload-types";
+import type { Header } from "#/payload-types";
 
-import { Logo } from "@/components/Logo/Logo";
+import { Logo } from "#/components/Logo/Logo";
 import styles from "./navbar.module.css";
 import { HeaderNav } from "./Nav";
 import { type AuthResult } from "node_modules/payload/dist/auth/operations/auth";

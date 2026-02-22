@@ -1,7 +1,7 @@
-import type { CallToActionBlock as CTABlockProps } from "@/payload-types";
+import type { CallToActionBlock as CTABlockProps } from "#/payload-types";
 
-import RichText from "@/components/RichText";
-import { CMSLink } from "@/components/Link";
+import RichText from "#/components/RichText";
+import { CMSLink } from "#/components/Link";
 
 export function CallToActionBlock({ links, richText }: CTABlockProps) {
 	return (

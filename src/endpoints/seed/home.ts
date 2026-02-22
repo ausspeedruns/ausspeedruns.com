@@ -1,5 +1,5 @@
 import type { RequiredDataFromCollectionSlug } from "payload";
-import type { Media } from "@/payload-types";
+import type { Media } from "#/payload-types";
 
 type HomeArgs = {
 	heroImage: Media;

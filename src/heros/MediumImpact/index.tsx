@@ -1,8 +1,8 @@
-import type { Page } from "@/payload-types";
+import type { Page } from "#/payload-types";
 
-import { CMSLink } from "@/components/Link";
-import { Media } from "@/components/Media";
-import RichText from "@/components/RichText";
+import { CMSLink } from "#/components/Link";
+import { Media } from "#/components/Media";
+import RichText from "#/components/RichText";
 
 export function MediumImpactHero({ links, media, richText }: Page["hero"]) {
 	return (

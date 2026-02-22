@@ -13,7 +13,7 @@
     "skipLibCheck": true,
     "noEmit": true,
     "incremental": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
@@ -37,9 +37,10 @@
     },
     "erasableSyntaxOnly": true,
     "verbatimModuleSyntax": true,
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": true
   },
   "include": [
+    "svgr.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",

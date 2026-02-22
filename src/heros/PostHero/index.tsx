@@ -1,9 +1,9 @@
 import { formatDateTime } from "src/utilities/formatDateTime";
 
-import type { Post } from "@/payload-types";
+import type { Post } from "#/payload-types";
 
-import { Media } from "@/components/Media";
-import { formatAuthors } from "@/utilities/formatAuthors";
+import { Media } from "#/components/Media";
+import { formatAuthors } from "#/utilities/formatAuthors";
 import { Fragment } from "react";
 
 export function PostHero({ post }: { post: Post }) {

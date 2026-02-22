@@ -1,5 +1,5 @@
 "use client";
-import { Header } from "@/payload-types";
+import { Header } from "#/payload-types";
 import { RowLabelProps, useRowLabel } from "@payloadcms/ui";
 
 export function RowLabel(props: RowLabelProps) {

@@ -2,11 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 
-import configPromise from "@payload-config";
+import configPromise from "#payload-config";
 import { getPayload } from "payload";
 
-import type { Event, Media } from "@/payload-types";
-import { getMediaUrl } from "@/utilities/getMediaUrl";
+import type { Event, Media } from "#/payload-types";
+import { getMediaUrl } from "#/utilities/getMediaUrl";
 
 export const metadata: Metadata = {
 	title: "Events",

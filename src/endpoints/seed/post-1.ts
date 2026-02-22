@@ -1,4 +1,4 @@
-import type { Media, User } from "@/payload-types";
+import type { Media, User } from "#/payload-types";
 import { RequiredDataFromCollectionSlug } from "payload";
 
 export type PostArgs = {

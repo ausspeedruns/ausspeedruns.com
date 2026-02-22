@@ -3,8 +3,8 @@ import type { FieldErrorsImpl, FieldValues, UseFormRegister } from "react-hook-f
 
 import { useFormContext } from "react-hook-form";
 
-import { Checkbox as CheckboxUi } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { Checkbox as CheckboxUi } from "#/components/ui/checkbox";
+import { Label } from "#/components/ui/label";
 
 import { Error } from "../Error";
 import { Width } from "../Width";

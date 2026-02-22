@@ -2,13 +2,13 @@
 
 import type { StaticImageData } from "next/image";
 
-import { cn } from "@/utilities/ui";
+import { cn } from "#/utilities/ui";
 import NextImage from "next/image";
 
 import type { Props as MediaProps } from "../types";
 
-import { cssVariables } from "@/cssVariables";
-import { getMediaUrl } from "@/utilities/getMediaUrl";
+import { cssVariables } from "#/cssVariables";
+import { getMediaUrl } from "#/utilities/getMediaUrl";
 
 const { breakpoints } = cssVariables;
 

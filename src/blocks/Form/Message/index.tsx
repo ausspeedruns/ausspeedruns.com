@@ -1,4 +1,4 @@
-import RichText from "@/components/RichText";
+import RichText from "#/components/RichText";
 
 import { Width } from "../Width";
 import { DefaultTypedEditorState } from "@payloadcms/richtext-lexical";

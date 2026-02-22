@@ -8,6 +8,8 @@ interface Props {
 }
 
 export function Logo(props: Props) {
+	console.log(LogoSVG);
+
 	const { className } = props;
 
 	return <LogoSVG className={clsx(styles.logo, className)} />;

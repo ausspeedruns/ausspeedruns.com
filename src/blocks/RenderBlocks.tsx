@@ -1,12 +1,12 @@
 import React, { Fragment } from "react";
 
-import type { Page } from "@/payload-types";
+import type { Page } from "#/payload-types";
 
-import { ArchiveBlock } from "@/blocks/ArchiveBlock/Component";
-import { CallToActionBlock } from "@/blocks/CallToAction/Component";
-import { ContentBlock } from "@/blocks/Content/Component";
-import { FormBlock } from "@/blocks/Form/Component";
-import { MediaBlock } from "@/blocks/MediaBlock/Component";
+import { ArchiveBlock } from "#/blocks/ArchiveBlock/Component";
+import { CallToActionBlock } from "#/blocks/CallToAction/Component";
+import { ContentBlock } from "#/blocks/Content/Component";
+import { FormBlock } from "#/blocks/Form/Component";
+import { MediaBlock } from "#/blocks/MediaBlock/Component";
 import { ImageCarouselBlock } from "./ImageCarousel/ImageCarousel";
 import { WordDefinitionBlock } from "./WordDefinition/WordDefinition";
 import { UpcomingEventBlock } from "./UpcomingEvent/UpcomingEvent";

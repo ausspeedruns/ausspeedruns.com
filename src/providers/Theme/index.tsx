@@ -4,7 +4,7 @@ import React, { createContext, useCallback, use, useEffect, useState } from "rea
 
 import type { Theme, ThemeContextType } from "./types";
 
-import canUseDOM from "@/utilities/canUseDOM";
+import canUseDOM from "#/utilities/canUseDOM";
 import { defaultTheme, getImplicitPreference, themeLocalStorageKey } from "./shared";
 import { themeIsValid } from "./types";
 

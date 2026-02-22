@@ -74,7 +74,7 @@ export const Runs: CollectionConfig = {
         },
       },
     },
-    {
+  {
       name: 'racers',
       type: 'text',
     },
@@ -83,5 +83,11 @@ export const Runs: CollectionConfig = {
       type: 'relationship',
       relationTo: 'submissions',
     },
+    // TODO: Remove this field after migration is complete
+		{
+			name: "legacyKeystoneId",
+			type: "text",
+			unique: true,
+		},
   ],
 };

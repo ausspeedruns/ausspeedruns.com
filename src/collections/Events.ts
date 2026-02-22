@@ -1,8 +1,8 @@
 import type { CollectionConfig } from "payload";
-import { AllTimeZones, DefaultTimeZone } from "./Fields/TimezoneSelect";
+import { AllTimeZones, DefaultTimeZone } from "./Fields/TimezoneSelect.ts";
 
-import { authenticated } from "../access/authenticated";
-import { authenticatedOrEventLive } from "@/access/authenticatedOrEventLive";
+import { authenticated } from "#access/authenticated.ts";
+import { authenticatedOrEventLive } from "#access/authenticatedOrEventLive.ts";
 
 export const Events: CollectionConfig = {
 	slug: "events",
@@ -173,6 +173,12 @@ export const Events: CollectionConfig = {
 					type: "json",
 				},
 			],
+		},
+		// TODO: Remove this field after migration is complete
+		{
+			name: "legacyKeystoneId",
+			type: "text",
+			unique: true,
 		},
 	],
 };

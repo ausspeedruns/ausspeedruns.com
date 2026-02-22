@@ -529,6 +529,7 @@ export interface Run {
   scheduledTime?: string | null;
   racers?: string | null;
   submission?: (number | null) | Submission;
+  legacyKeystoneId?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -627,6 +628,7 @@ export interface Event {
       | boolean
       | null;
   };
+  legacyKeystoneId?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -652,6 +654,7 @@ export interface Submission {
   video?: string | null;
   status?: ('pending' | 'accepted' | 'rejected' | 'backup') | null;
   canBackup?: boolean | null;
+  legacyKeystoneId?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1967,6 +1970,7 @@ export interface EventsSelect<T extends boolean = true> {
         oengus?: T;
         scheduleBlocks?: T;
       };
+  legacyKeystoneId?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2034,6 +2038,7 @@ export interface RunsSelect<T extends boolean = true> {
   scheduledTime?: T;
   racers?: T;
   submission?: T;
+  legacyKeystoneId?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2058,6 +2063,7 @@ export interface SubmissionsSelect<T extends boolean = true> {
   video?: T;
   status?: T;
   canBackup?: T;
+  legacyKeystoneId?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -1,5 +1,5 @@
 import type { CollectionAfterReadHook } from "payload";
-import { User } from "src/payload-types";
+import type { User } from "#payload-types.ts";
 
 // The `user` collection has access control locked so that users are not publicly accessible
 // This means that we need to populate the authors manually here to protect user privacy

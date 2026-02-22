@@ -1,7 +1,7 @@
 import type { CollectionConfig } from "payload";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 
-import { authenticated } from "../access/authenticated";
+import { authenticated } from "#access/authenticated.ts";
 
 const usernameRegex = /^[a-zA-Z0-9_-~][\w-]{2,24}$/;
 

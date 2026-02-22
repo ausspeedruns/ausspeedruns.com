@@ -2,29 +2,29 @@
 import { postgresAdapter } from "@payloadcms/db-postgres";
 
 import sharp from "sharp"; // sharp-import
-import path from "path";
-import { buildConfig, PayloadRequest } from "payload";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import { buildConfig, type PayloadRequest } from "payload";
+import { fileURLToPath } from "node:url";
 
-import { Categories } from "./collections/Categories";
-import { Pages } from "./collections/Pages";
-import { Posts } from "./collections/Posts";
-import { Events } from "./collections/Events";
-import { Incentives } from "./collections/Incentives";
-import { Media } from "./collections/Media";
-import { Orders } from "./collections/Orders";
-import { Products } from "./collections/Products";
-import { Roles } from "./collections/Roles";
-import { Runs } from "./collections/Runs";
-import { Submissions } from "./collections/Submissions";
-import { Users } from "./collections/Users";
-import { Volunteers } from "./collections/Volunteers";
+import { Categories } from "./collections/Categories.ts";
+import { Pages } from "./collections/Pages/index.ts";
+import { Posts } from "./collections/Posts/index.ts";
+import { Events } from "./collections/Events.ts";
+import { Incentives } from "./collections/Incentives.ts";
+import { Media } from "./collections/Media.ts";
+import { Orders } from "./collections/Orders.ts";
+import { Products } from "./collections/Products.ts";
+import { Roles } from "./collections/Roles.ts";
+import { Runs } from "./collections/Runs.ts";
+import { Submissions } from "./collections/Submissions.ts";
+import { Users } from "./collections/Users.ts";
+import { Volunteers } from "./collections/Volunteers.ts";
 
-import { Footer } from "./Footer/config";
-import { Header } from "./Header/config";
-import { plugins } from "./plugins";
-import { defaultLexical } from "@/fields/defaultLexical";
-import { getServerSideURL } from "./utilities/getURL";
+import { Footer } from "./Footer/config.ts";
+import { Header } from "./Header/config.ts";
+import { plugins } from "./plugins/index.ts";
+import { defaultLexical } from "#fields/defaultLexical.ts";
+import { getServerSideURL } from "./utilities/getURL.ts";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -34,10 +34,10 @@ export default buildConfig({
 		components: {
 			// The `BeforeLogin` component renders a message that you see while logging into your admin panel.
 			// Feel free to delete this at any time. Simply remove the line below.
-			beforeLogin: ["@/components/BeforeLogin"],
+			beforeLogin: ["#components/BeforeLogin"],
 			// The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
 			// Feel free to delete this at any time. Simply remove the line below.
-			beforeDashboard: ["@/components/BeforeDashboard"],
+			beforeDashboard: ["#components/BeforeDashboard"],
 		},
 		importMap: {
 			baseDir: path.resolve(dirname),

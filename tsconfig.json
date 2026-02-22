@@ -25,16 +25,19 @@
       }
     ],
     "paths": {
-      "@payload-config": [
+      "#payload-config": [
         "./src/payload.config.ts"
       ],
       "react": [
         "./node_modules/@types/react"
       ],
-      "@/*": [
+      "#/*": [
         "./src/*"
       ]
-    }
+    },
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
   },
   "include": [
     "**/*.ts",

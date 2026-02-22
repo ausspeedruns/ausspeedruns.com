@@ -1,7 +1,7 @@
 import type { GlobalConfig } from "payload";
 
-import { link } from "@/fields/link";
-import { revalidateHeader } from "./hooks/revalidateHeader";
+import { link } from "#fields/link.ts";
+import { revalidateHeader } from "./hooks/revalidateHeader.ts";
 
 export const Header: GlobalConfig = {
 	slug: "header",
@@ -21,7 +21,7 @@ export const Header: GlobalConfig = {
 			admin: {
 				initCollapsed: true,
 				components: {
-					RowLabel: "@/Header/RowLabel#RowLabel",
+					RowLabel: "#Header/RowLabel#RowLabel",
 				},
 			},
 		},

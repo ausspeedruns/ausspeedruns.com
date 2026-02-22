@@ -6,6 +6,9 @@ node_modules
 .next
 .vercel
 
+# Converting
+scripts/keystone.sql
+
 # Payload default media upload directory
 public/media/
 

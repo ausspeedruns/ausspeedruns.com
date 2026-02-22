@@ -1,21 +1,22 @@
+import { slugField } from "payload";
 import type { CollectionConfig } from "payload";
 
-import { authenticated } from "../../access/authenticated";
-import { authenticatedOrPublished } from "../../access/authenticatedOrPublished";
-import { Archive } from "../../blocks/ArchiveBlock/config";
-import { CallToAction } from "../../blocks/CallToAction/config";
-import { Content } from "../../blocks/Content/config";
-import { FormBlock } from "../../blocks/Form/config";
-import { MediaBlock } from "../../blocks/MediaBlock/config";
-import { ImageCarousel } from "../../blocks/ImageCarousel/ImageCarousel-config";
-import { WordDefinition } from "@/blocks/WordDefinition/WordDefinitionConfig";
-import { UpcomingEvent } from "@/blocks/UpcomingEvent/UpcomingEvent-config";
+import { authenticated } from "#access/authenticated.ts";
+import { authenticatedOrPublished } from "#access/authenticatedOrPublished.ts";
+import { Archive } from "#blocks/ArchiveBlock/config.ts";
+import { CallToAction } from "#blocks/CallToAction/config.ts";
+import { Content } from "#blocks/Content/config.ts";
+import { FormBlock } from "#blocks/Form/config.ts";
+import { MediaBlock } from "#blocks/MediaBlock/config.ts";
+import { ImageCarousel } from "#blocks/ImageCarousel/ImageCarousel-config.ts";
+import { WordDefinition } from "#blocks/WordDefinition/WordDefinitionConfig.ts";
+import { UpcomingEvent } from "#blocks/UpcomingEvent/UpcomingEvent-config.ts";
+import { RecentEvent } from "#blocks/RecentEvent/RecentEvent-config.ts";
 
-import { hero } from "@/heros/config";
-import { slugField } from "payload";
-import { populatePublishedAt } from "../../hooks/populatePublishedAt";
-import { generatePreviewPath } from "../../utilities/generatePreviewPath";
-import { revalidateDelete, revalidatePage } from "./hooks/revalidatePage";
+import { hero } from "#heros/config.ts";
+import { populatePublishedAt } from "#hooks/populatePublishedAt.ts";
+import { generatePreviewPath } from "#utilities/generatePreviewPath.ts";
+import { revalidateDelete, revalidatePage } from "./hooks/revalidatePage.ts";
 
 import {
 	MetaDescriptionField,
@@ -24,7 +25,6 @@ import {
 	OverviewField,
 	PreviewField,
 } from "@payloadcms/plugin-seo/fields";
-import { RecentEvent } from "@/blocks/RecentEvent/RecentEvent-config";
 
 export const Pages: CollectionConfig<"pages"> = {
 	slug: "pages",

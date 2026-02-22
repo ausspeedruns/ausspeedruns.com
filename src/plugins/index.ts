@@ -3,15 +3,15 @@ import { nestedDocsPlugin } from "@payloadcms/plugin-nested-docs";
 import { redirectsPlugin } from "@payloadcms/plugin-redirects";
 import { seoPlugin } from "@payloadcms/plugin-seo";
 import { searchPlugin } from "@payloadcms/plugin-search";
-import { Plugin } from "payload";
-import { revalidateRedirects } from "@/hooks/revalidateRedirects";
-import { GenerateTitle, GenerateURL } from "@payloadcms/plugin-seo/types";
+import type { Plugin } from "payload";
+import { revalidateRedirects } from "#hooks/revalidateRedirects.ts";
+import type { GenerateTitle, GenerateURL } from "@payloadcms/plugin-seo/types";
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from "@payloadcms/richtext-lexical";
-import { searchFields } from "@/search/fieldOverrides";
-import { beforeSyncWithSearch } from "@/search/beforeSync";
+import { searchFields } from "#search/fieldOverrides.ts";
+import { beforeSyncWithSearch } from "#search/beforeSync.ts";
 
-import { Page, Post } from "@/payload-types";
-import { getServerSideURL } from "@/utilities/getURL";
+import type { Page, Post } from "#payload-types.ts";
+import { getServerSideURL } from "#utilities/getURL.ts";
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
 	return doc?.title ? `${doc.title} | Payload Website Template` : "Payload Website Template";

@@ -9,14 +9,14 @@ import {
 	lexicalEditor,
 } from "@payloadcms/richtext-lexical";
 
-import { authenticated } from "../../access/authenticated";
-import { authenticatedOrPublished } from "../../access/authenticatedOrPublished";
-import { Banner } from "../../blocks/Banner/config";
-import { Code } from "../../blocks/Code/config";
-import { MediaBlock } from "../../blocks/MediaBlock/config";
-import { generatePreviewPath } from "../../utilities/generatePreviewPath";
-import { populateAuthors } from "./hooks/populateAuthors";
-import { revalidateDelete, revalidatePost } from "./hooks/revalidatePost";
+import { authenticated } from "#access/authenticated.ts";
+import { authenticatedOrPublished } from "#access/authenticatedOrPublished.ts";
+import { Banner } from "#blocks/Banner/config.ts";
+import { Code } from "#blocks/Code/config.ts";
+import { MediaBlock } from "#blocks/MediaBlock/config.ts";
+import { generatePreviewPath } from "#utilities/generatePreviewPath.ts";
+import { populateAuthors } from "./hooks/populateAuthors.ts";
+import { revalidateDelete, revalidatePost } from "./hooks/revalidatePost.ts";
 
 import {
 	MetaDescriptionField,

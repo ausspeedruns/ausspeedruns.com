@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Script from "next/script";
 import { TextField, Button } from "@mui/material";
-import styles from "./SignIn.module.scss";
+import styles from "../../styles/SignIn.module.scss";
 
 import SignInError from "./signin-error";
 import { Metadata } from "next";
@@ -16,7 +16,7 @@ export default function SignInPage() {
 	return (
 		<>
 			<div className={styles.background} />
-			<div className={`${styles.content} ${styles.form}`}>
+			<div className={styles.form}>
 				<h1>Sign In</h1>
 				<form action={signInAction}>
 					<TextField
@@ -37,7 +37,7 @@ export default function SignInPage() {
 						name="password"
 					/>
 					<div className="cf-turnstile" data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}></div>
-					<Button variant="contained" type="submit">
+					<Button variant="contained" type="submit" size="large" sx={{ mt: 1, borderRadius: 2 }}>
 						Sign In
 					</Button>
 				</form>

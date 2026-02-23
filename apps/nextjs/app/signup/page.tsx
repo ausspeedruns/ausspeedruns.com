@@ -9,6 +9,7 @@ import LocalisedDatePicker from "./localised-date-picker";
 import { signUp, SignUpError } from "apps/nextjs/auth";
 import { redirect } from "next/navigation";
 import { signUpAction } from "./signup-action";
+import SignUpErrorComponent from "./signup-error";
 
 function HumanErrorMsg(error: string) {
 	switch (error) {
@@ -35,7 +36,7 @@ export default function SignUpPage() {
 	return (
 		<>
 			<div className={styles.background} />
-			<div className={`${styles.content} ${styles.form}`}>
+			<div className={styles.form}>
 				<h1>Join</h1>
 				<form action={signUpAction}>
 					{/* {error && <div>{HumanErrorMsg(error)}</div>} */}
@@ -58,11 +59,12 @@ export default function SignUpPage() {
 					/>
 					<LocalisedDatePicker maxDate={maxDate} />
 					<div className="cf-turnstile" data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}></div>
-					<Button type="submit" variant="contained">
+					<Button type="submit" variant="contained" size="large" sx={{ mt: 1, borderRadius: 2 }}>
 						Sign Up
 					</Button>
 				</form>
-				<hr className="my-4" />
+				<SignUpErrorComponent />
+				<hr />
 				<Link className={styles.links} href="/signin">
 					Already have an account? Sign in
 				</Link>

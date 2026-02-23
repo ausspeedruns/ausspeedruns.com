@@ -15,8 +15,8 @@ export default function CrowdControl() {
 	return (
 		<div>
 			<div className={styles.background} />
-			<div className={`${styles.content} ${styles.form}`} style={{ padding: "5rem" }}>
-				<h1 style={{ marginBottom: "3rem" }}>Crowd Control at {EVENT}</h1>
+			<div className={styles.form} style={{ maxWidth: "800px" }}>
+				<h1 style={{ marginBottom: "2rem" }}>Crowd Control at {EVENT}</h1>
 				<p>
 					During {EVENT}, you will have the opportunity on four occasions to use{" "}
 					<a target="_blank" rel="noopener noreferrer" href="https://crowdcontrol.live/">

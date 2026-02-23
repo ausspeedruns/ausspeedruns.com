@@ -14,12 +14,12 @@ export default function ResetPasswordPage() {
 	return (
 		<>
 			<div className={styles.background} />
-			<div className={`${styles.content} ${styles.form}`}>
+			<div className={styles.form}>
 				<h1>Reset Password</h1>
 				<form action={resetPassword}>
 					<TextField label="Email" variant="outlined" fullWidth name="email" />
 					<div className="cf-turnstile" data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}></div>
-					<Button type="submit" variant="contained">
+					<Button type="submit" variant="contained" size="large" sx={{ mt: 1, borderRadius: 2 }}>
 						Reset password
 					</Button>
 				</form>

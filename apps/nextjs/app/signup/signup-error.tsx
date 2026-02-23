@@ -3,22 +3,31 @@
 import { useSearchParams } from "next/navigation";
 import styles from "../../styles/SignIn.module.scss";
 
-const SignInError: React.FC = () => {
+const SignUpError: React.FC = () => {
 	const params = useSearchParams();
 
 	const error = params.get("error");
 
 	if (!error) {
-		return;
+		return null;
 	}
 
 	let readableError;
 
 	switch (error) {
-		case "CallbackRouteError":
-			readableError = "Invalid Email or Password";
+		case "email":
+			readableError = "Email already in use or invalid";
 			break;
-		case "TurnstileError":
+		case "username":
+			readableError = "Username already in use or invalid";
+			break;
+		case "password":
+			readableError = "Password is too short";
+			break;
+		case "dob":
+			readableError = "Invalid Date of Birth or you must be 13 or older";
+			break;
+		case "turnstile":
 			readableError = "Turnstile verification failed";
 			break;
 		default:
@@ -26,7 +35,7 @@ const SignInError: React.FC = () => {
 			break;
 	}
 
-	console.error(`Sign In Error: ${error}`);
+	console.error(`Sign Up Error: ${error}`);
 
 	return (
 		<div className={styles.errorBox}>
@@ -36,4 +45,4 @@ const SignInError: React.FC = () => {
 	);
 };
 
-export default SignInError;
+export default SignUpError;

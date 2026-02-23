@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Script from "next/script";
 import { Button, TextField } from "@mui/material";
 
 import styles from "../../styles/SignIn.module.scss";
@@ -56,6 +57,7 @@ export default function SignUpPage() {
 						slotProps={{ htmlInput: { maxLength: 25 } }}
 					/>
 					<LocalisedDatePicker maxDate={maxDate} />
+					<div className="cf-turnstile" data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}></div>
 					<Button type="submit" variant="contained">
 						Sign Up
 					</Button>
@@ -65,6 +67,7 @@ export default function SignUpPage() {
 					Already have an account? Sign in
 				</Link>
 			</div>
+			<Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
 		</>
 	);
 }

@@ -24,6 +24,7 @@ export async function resetPassword(formData: FormData) {
 	const passwordConfirm = formData.get("passwordConfirm") as string;
 	const email = formData.get("email") as string;
 	const token = formData.get("token") as string;
+	const turnstileResponse = formData.get("cf-turnstile-response") as string;
 
 	if (!email || !token || !password) {
 		console.error(email, token, password);
@@ -32,6 +33,24 @@ export async function resetPassword(formData: FormData) {
 
 	if (password !== passwordConfirm) {
 		throw new Error("Passwords do not match");
+	}
+
+	if (!turnstileResponse) {
+		throw new Error("Turnstile verification failed");
+	}
+
+	const turnstileVerify = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded",
+		},
+		body: `secret=${process.env.TURNSTILE_SECRET_KEY}&response=${turnstileResponse}`,
+	});
+
+	const turnstileVerifyJson = await turnstileVerify.json();
+
+	if (!turnstileVerifyJson.success) {
+		throw new Error("Turnstile verification failed");
 	}
 
 	const passwordResetData: PasswordResetData = {

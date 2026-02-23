@@ -1,5 +1,6 @@
 import styles from "./User.PasswordReset.code.module.scss";
 import { Metadata } from "next";
+import Script from "next/script";
 import { PasswordResetForm } from "./form";
 import { Suspense } from "react";
 
@@ -17,6 +18,7 @@ export default async function PasswordResetPage() {
 					<PasswordResetForm />
 				</Suspense>
 			</div>
+			<Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
 		</>
 	);
 }

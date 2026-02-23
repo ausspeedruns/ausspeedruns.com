@@ -38,6 +38,7 @@ export function PasswordResetForm() {
 				required
 				error={!passwordsMatch}
 			/>
+			<div className="cf-turnstile" data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}></div>
 			<Button variant="contained" type="submit">
 				Submit
 			</Button>

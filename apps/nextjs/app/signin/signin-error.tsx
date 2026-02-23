@@ -17,6 +17,9 @@ const SignInError: React.FC = () => {
 		case "CallbackRouteError":
 			readableError = "Invalid Email or Password";
 			break;
+		case "TurnstileError":
+			readableError = "Turnstile verification failed";
+			break;
 		default:
 			readableError = "An unknown error occurred";
 			break;

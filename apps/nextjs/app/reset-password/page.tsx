@@ -1,4 +1,5 @@
 import React from "react";
+import Script from "next/script";
 import { TextField, Button } from "@mui/material";
 import styles from "../../styles/SignIn.module.scss";
 import { Metadata } from "next";
@@ -17,11 +18,13 @@ export default function ResetPasswordPage() {
 				<h1>Reset Password</h1>
 				<form action={resetPassword}>
 					<TextField label="Email" variant="outlined" fullWidth name="email" />
+					<div className="cf-turnstile" data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}></div>
 					<Button type="submit" variant="contained">
 						Reset password
 					</Button>
 				</form>
 			</div>
+			<Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
 		</>
 	);
 }

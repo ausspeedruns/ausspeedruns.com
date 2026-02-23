@@ -125,7 +125,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
 // Sign Up Error
 
-type SignUpErrorType = "email" | "username" | "password" | "dob" | "unknown";
+type SignUpErrorType = "email" | "username" | "password" | "dob" | "turnstile" | "unknown";
 
 export class SignUpError extends Error {
 	readonly type: SignUpErrorType;
@@ -150,6 +150,7 @@ export async function signUp(formData: FormData) {
 	const username = formData.get("username") as string;
 	const dobString = formData.get("dob") as string;
 	const dob = new Date(parseDMY(dobString));
+	const turnstileResponse = formData.get("cf-turnstile-response") as string;
 
 	// Validation
 	if (email.length === 0) {
@@ -173,6 +174,24 @@ export async function signUp(formData: FormData) {
 
 	if (maxDate < dob) {
 		throw new SignUpError("You must be 13 or older to sign up", "dob");
+	}
+
+	if (!turnstileResponse) {
+		throw new SignUpError("Turnstile verification failed", "turnstile");
+	}
+
+	const turnstileVerify = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded",
+		},
+		body: `secret=${process.env.TURNSTILE_SECRET_KEY}&response=${turnstileResponse}`,
+	});
+
+	const turnstileVerifyJson = await turnstileVerify.json();
+
+	if (!turnstileVerifyJson.success) {
+		throw new SignUpError("Turnstile verification failed", "turnstile");
 	}
 
 	// Create user

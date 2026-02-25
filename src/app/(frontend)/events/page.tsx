@@ -7,6 +7,8 @@ import { getPayload } from "payload";
 
 import type { Event, Media } from "#/payload-types";
 import { getMediaUrl } from "#/utilities/getMediaUrl";
+import styles from "./events.module.css";
+import { up } from "node_modules/payload/dist/versions/migrations/localizeStatus/mongo/up";
 
 export const metadata: Metadata = {
 	title: "Events",
@@ -48,23 +50,25 @@ export default async function Events() {
 	});
 
 	return (
-		<main className="container pt-24 pb-24">
-			<div className="prose dark:prose-invert max-w-none">
+		<main className={`container ${styles.main}`}>
+			<div className={styles.header}>
 				<h1>Events</h1>
 			</div>
 
-			<section className="mt-8">
-				<h2 className="text-2xl font-semibold">Upcoming</h2>
-				<div className="mt-4 grid gap-6 md:grid-cols-2">
-					{upcomingEvents.map((event) => (
-						<EventBlock key={event.shortname} event={event} />
-					))}
-				</div>
-			</section>
+			{upcomingEvents.length > 0 && (
+				<section className={styles.section}>
+					<h2 className={styles.sectionTitle}>Upcoming</h2>
+					<div className={styles.grid}>
+						{upcomingEvents.map((event) => (
+							<EventBlock key={event.shortname} event={event} />
+						))}
+					</div>
+				</section>
+			)}
 
-			<section className="mt-12">
-				<h2 className="text-2xl font-semibold">Past</h2>
-				<div className="mt-4 grid gap-6 md:grid-cols-2">
+			<section className={styles.section}>
+				<h2 className={styles.sectionTitle}>Past</h2>
+				<div className={styles.grid}>
 					{pastEvents.map((event) => (
 						<EventBlock key={event.shortname} event={event} />
 					))}
@@ -79,8 +83,8 @@ interface EventBlockProps {
 }
 
 function EventBlock({ event }: EventBlockProps) {
-	const logo = getMediaObject(event.media?.darkModeLogo) ?? getMediaObject(event.media?.logo);
-	const heroImage = getMediaObject(event.media?.heroImage);
+	const logo = getMediaObject(event.media?.logoDarkMode) ?? getMediaObject(event.media?.logo);
+	const heroImage = getMediaObject(event.media?.hero);
 	const heroUrl = getMediaUrl(heroImage?.url);
 
 	const dateString =
@@ -93,32 +97,29 @@ function EventBlock({ event }: EventBlockProps) {
 	const raisedString = event.postEvent?.raised ? `$${event.postEvent.raised.toLocaleString()}` : "";
 
 	return (
-		<Link
-			href={`${event.shortname}`}
-			className="group block overflow-hidden rounded-2xl border border-border bg-card"
-		>
+		<Link href={`${event.shortname}`} className={styles.eventLink}>
 			<section
-				className="relative flex min-h-[260px] flex-col justify-end bg-cover bg-center p-6 text-white"
+				className={styles.eventSection}
 				style={heroUrl ? { backgroundImage: `url("${heroUrl}")` } : undefined}
 			>
-				<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-				<div className="relative z-10">
-					<div className="relative mb-4 h-16 w-40">
+				<div className={styles.overlay} />
+				<div className={styles.content}>
+					<div className={styles.logoContainer}>
 						{logo?.url ? (
 							<Image
-								src={getMediaUrl(logo.url)}
+								src={getMediaUrl(logo?.url)}
 								fill
 								alt={`${event.name} logo`}
 								sizes="(max-width: 768px) 160px, 200px"
-								className="object-contain"
+								className={styles.logoImage}
 							/>
 						) : (
-							<h3 className="text-xl font-semibold">{event.shortname}</h3>
+							<h3 className={styles.logoFallback}>{event.shortname}</h3>
 						)}
 					</div>
-					<h3 className="text-2xl font-semibold">{event.name}</h3>
+					<h3 className={styles.eventName}>{event.name}</h3>
 					{(dateString || raisedString) && (
-						<p className="mt-2 text-sm text-white/80">
+						<p className={styles.eventDetails}>
 							{[dateString, raisedString].filter((el) => el).join(" | ")}
 						</p>
 					)}

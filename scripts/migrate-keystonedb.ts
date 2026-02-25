@@ -53,6 +53,22 @@ async function migrate() {
 
 	const payload = await getPayload({ config });
 
+	// Add default admin user
+	try {
+		await payload.create({
+			collection: "users",
+			draft: false,
+			data: {
+				username: "admin",
+				email: "test@example.com",
+				password: "123456789",
+				dateOfBirth: new Date(0).toISOString(),
+			},
+		});
+	} catch (e) {
+		handlePayloadCreateError(e, "default admin user");
+	}
+
 	const client = new pg.Client({
 		connectionString: "postgresql://payloadcms:testing@localhost:5433/keystone_staging",
 	});
@@ -84,6 +100,7 @@ async function migrateRoles(payload: BasePayload, pgClient: pg.Client) {
 		try {
 			await payload.create({
 				collection: "roles",
+				draft: false,
 				data: {
 					name,
 					admin,
@@ -121,6 +138,7 @@ async function migrateUsers(payload: BasePayload, pgClient: pg.Client) {
 		try {
 			await payload.create({
 				collection: "users",
+				draft: false,
 				data: {
 					id,
 					name,
@@ -165,9 +183,46 @@ async function migrateEvents(payload: BasePayload, pgClient: pg.Client) {
 			oengus,
 			scheduleBlocks,
 		} = event;
+
+		const images = await getEventImage(shortname);
+
+		if (!images) {
+			console.warn("MISSING IMAGES for event", shortname);
+			continue;
+		}
+
+		if (!images.logoLight && !images.logoDark) {
+			console.warn("MISSING LOGO VARIANT for event", shortname);
+		}
+
+		if (!images.hero) {
+			console.warn("MISSING HERO IMAGE for event", shortname);
+		}
+
+		if (!images.embed) {
+			console.warn("MISSING EMBED IMAGE for event", shortname);
+		}
+
 		try {
+			const imageMediaIds: Record<string, number> = {};
+
+			for (const key in images) {
+				const imagePath = images[key as keyof typeof images];
+				if (imagePath) {
+					const media = await payload.create({
+						collection: "media",
+						data: {
+							alt: `${shortname} ${key}`,
+						},
+						filePath: imagePath,
+					});
+					imageMediaIds[key] = media.id;
+				}
+			}
+
 			await payload.create({
 				collection: "events",
+				draft: false,
 				data: {
 					id,
 					name,
@@ -193,12 +248,57 @@ async function migrateEvents(payload: BasePayload, pgClient: pg.Client) {
 						scheduleBlocks: scheduleBlocks ? JSON.parse(scheduleBlocks) : undefined,
 					},
 					legacyKeystoneId: id, // Store the old Keystone ID for reference (to be removed later)
+					media: {
+						hero: imageMediaIds.hero,
+						logo: imageMediaIds.logoLight,
+						logoDarkMode: imageMediaIds.logoDark,
+						embed: imageMediaIds.embed,
+					},
 				},
 			});
 		} catch (e) {
 			handlePayloadCreateError(e, `event ${name}`);
 		}
 	}
+}
+
+const shortnameToFolder = {
+	ASAP2025: "PAX2025",
+	ASAP2024: "PAX2024",
+	ASAP2023: "PAX2023",
+	ASAP2022: "PAX2022",
+	PAXxAusSpeedruns2021: "PAX2021",
+	AusSpeedrunsxPAX2020: "PAX2020",
+};
+
+async function getEventImage(eventShortname: string) {
+	const folder = shortnameToFolder[eventShortname as keyof typeof shortnameToFolder] || eventShortname;
+	const assetsPath = path.join(projectRoot, "scripts/assets", folder);
+
+	if (!fs.existsSync(assetsPath)) {
+		console.warn(`Assets folder for event ${eventShortname} not found at path: ${assetsPath}`);
+		return null;
+	}
+
+	const images: Record<string, string | null> = {
+		embed: null,
+		hero: null,
+		logoLight: null,
+		logoDark: null,
+	};
+
+	const files = fs.readdirSync(assetsPath);
+
+	for (const file of files) {
+		const name = path.parse(file).name.toLowerCase();
+		if (name === "embed") images.embed = path.join(assetsPath, file);
+		else if (name === "hero") images.hero = path.join(assetsPath, file);
+		else if (name === "logo-light-mode") images.logoLight = path.join(assetsPath, file);
+		else if (name === "logo-dark-mode") images.logoDark = path.join(assetsPath, file);
+		else if (name === "logo" && !images.logoLight) images.logoLight = path.join(assetsPath, file);
+	}
+
+	return images;
 }
 
 async function migrateSubmissions(payload: BasePayload, pgClient: pg.Client) {
@@ -229,6 +329,7 @@ async function migrateSubmissions(payload: BasePayload, pgClient: pg.Client) {
 		try {
 			const submission = await payload.create({
 				collection: "submissions",
+				draft: false,
 				data: {
 					id,
 					runner,
@@ -305,6 +406,7 @@ async function migrateRuns(payload: BasePayload, pgClient: pg.Client) {
 		try {
 			const run = await payload.create({
 				collection: "runs",
+				draft: false,
 				data: {
 					id,
 					game,
@@ -383,6 +485,7 @@ async function migrateIncentives(payload: BasePayload, pgClient: pg.Client) {
 		try {
 			const incentive = await payload.create({
 				collection: "incentives",
+				draft: false,
 				data: {
 					id,
 					title,
@@ -482,6 +585,7 @@ async function migrateVolunteers(payload: BasePayload, pgClient: pg.Client) {
 		try {
 			const volunteer = await payload.create({
 				collection: "volunteers",
+				draft: false,
 				data: {
 					id,
 					volunteer: userId,

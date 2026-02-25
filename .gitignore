@@ -7,7 +7,8 @@ node_modules
 .vercel
 
 # Converting
-scripts/keystone.sql
+scripts/*.sql
+scripts/assets
 
 # Payload default media upload directory
 public/media/

@@ -125,24 +125,21 @@ export const Events: CollectionConfig = {
 					name: "logo",
 					type: "upload",
 					relationTo: "media",
+					label: "Logo (Light Mode / Default)",
 				},
 				{
-					name: "darkModeLogo",
+					name: "logoDarkMode",
+					type: "upload",
+					relationTo: "media",
+					label: "Logo (Dark Mode)",
+				},
+				{
+					name: "hero",
 					type: "upload",
 					relationTo: "media",
 				},
 				{
-					name: "heroImage",
-					type: "upload",
-					relationTo: "media",
-				},
-				{
-					name: "openGraphImage",
-					type: "upload",
-					relationTo: "media",
-				},
-				{
-					name: "postEventBackground",
+					name: "embed",
 					type: "upload",
 					relationTo: "media",
 				},

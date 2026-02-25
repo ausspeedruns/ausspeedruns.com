@@ -579,10 +579,9 @@ export interface Event {
   };
   media?: {
     logo?: (number | null) | Media;
-    darkModeLogo?: (number | null) | Media;
-    heroImage?: (number | null) | Media;
-    openGraphImage?: (number | null) | Media;
-    postEventBackground?: (number | null) | Media;
+    logoDarkMode?: (number | null) | Media;
+    hero?: (number | null) | Media;
+    embed?: (number | null) | Media;
   };
   submissionInstructions?: {
     root: {
@@ -1955,10 +1954,9 @@ export interface EventsSelect<T extends boolean = true> {
     | T
     | {
         logo?: T;
-        darkModeLogo?: T;
-        heroImage?: T;
-        openGraphImage?: T;
-        postEventBackground?: T;
+        logoDarkMode?: T;
+        hero?: T;
+        embed?: T;
       };
   submissionInstructions?: T;
   eventPage?: T;

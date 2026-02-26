@@ -1,0 +1,10 @@
+.container {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.button {
+	display: flex;
+	gap: 0.25rem;
+}

@@ -31,8 +31,8 @@ export function HeaderNav({ data, auth }: HeaderNavProps) {
 				</Button>
 			)}
 			{/* <Link href="/search">
-				<span className="sr-only">Search</span>
-				<SearchIcon className="w-5 text-primary" />
+				<span className={styles.srOnly}>Search</span>
+				<SearchIcon className={styles.searchIcon} />
 			</Link> */}
 			{auth?.user && (
 				<Button asChild size="clear" variant="link">

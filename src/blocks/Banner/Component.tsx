@@ -2,6 +2,7 @@ import type { BannerBlock as BannerBlockProps } from "src/payload-types";
 
 import { cn } from "#/utilities/ui";
 import RichText from "#/components/RichText";
+import styles from "./Component.module.css";
 
 type Props = {
 	className?: string;
@@ -9,13 +10,13 @@ type Props = {
 
 export function BannerBlock({ className, content, style }: Props) {
 	return (
-		<div className={cn("mx-auto my-8 w-full", className)}>
+		<div className={cn(styles.wrapper, className)}>
 			<div
-				className={cn("border py-3 px-6 flex items-center rounded", {
-					"border-border bg-card": style === "info",
-					"border-error bg-error/30": style === "error",
-					"border-success bg-success/30": style === "success",
-					"border-warning bg-warning/30": style === "warning",
+				className={cn(styles.banner, {
+					[styles.info]: style === "info",
+					[styles.error]: style === "error",
+					[styles.success]: style === "success",
+					[styles.warning]: style === "warning",
 				})}
 			>
 				<RichText data={content} enableGutter={false} enableProse={false} />

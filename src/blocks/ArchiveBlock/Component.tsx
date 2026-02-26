@@ -6,6 +6,8 @@ import RichText from "#/components/RichText";
 
 import { CollectionArchive } from "#/components/CollectionArchive";
 
+import styles from "./Component.module.css";
+
 export async function ArchiveBlock(props: ArchiveBlockProps & { id?: string }) {
 	const { id, categories, introContent, limit: limitFromProps, populateBy, selectedDocs } = props;
 
@@ -48,10 +50,10 @@ export async function ArchiveBlock(props: ArchiveBlockProps & { id?: string }) {
 	}
 
 	return (
-		<div className="my-16" id={`block-${id}`}>
+		<div className={styles.archiveBlock} id={`block-${id}`}>
 			{introContent && (
-				<div className="container mb-16">
-					<RichText className="ms-0 max-w-[48rem]" data={introContent} enableGutter={false} />
+				<div className={`container ${styles.introContainer}`}>
+					<RichText className={styles.introContent} data={introContent} enableGutter={false} />
 				</div>
 			)}
 			<CollectionArchive posts={posts} />

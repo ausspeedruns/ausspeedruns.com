@@ -5,6 +5,8 @@ import React, { useState, useEffect } from "react";
 import { useDebounce } from "#/utilities/useDebounce";
 import { useRouter } from "next/navigation";
 
+import styles from "./Component.module.css";
+
 export function Search() {
 	const [value, setValue] = useState("");
 	const router = useRouter();
@@ -22,7 +24,7 @@ export function Search() {
 					e.preventDefault();
 				}}
 			>
-				<Label htmlFor="search" className="sr-only">
+				<Label htmlFor="search" className={styles.srOnly}>
 					Search
 				</Label>
 				<Input
@@ -32,7 +34,7 @@ export function Search() {
 					}}
 					placeholder="Search"
 				/>
-				<button type="submit" className="sr-only">
+				<button type="submit" className={styles.srOnly}>
 					submit
 				</button>
 			</form>

@@ -1,0 +1,40 @@
+.container {
+	/* lg:container */
+}
+
+@media (min-width: 1024px) {
+	.container {
+		width: 100%;
+		margin-right: auto;
+		margin-left: auto;
+		padding-right: 2rem;
+		padding-left: 2rem;
+		max-width: 64rem;
+	}
+}
+
+@media (min-width: 1280px) {
+	.container {
+		max-width: 80rem;
+	}
+}
+
+@media (min-width: 1400px) {
+	.container {
+		max-width: 86rem;
+	}
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(1, minmax(0, 1fr));
+	gap: 1rem;
+	align-items: stretch;
+}
+
+@media (min-width: 768px) {
+	.grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 2rem;
+	}
+}

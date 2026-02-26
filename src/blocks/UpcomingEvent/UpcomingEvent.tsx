@@ -9,9 +9,9 @@ import { Media } from "#/components/Media";
 export function UpcomingEventBlock(props: UpcomingEventBlockProps) {
 	return (
 		<section className={styles.heroblock}>
-			<div className="min-h-[80vh] select-none" style={{ position: "relative" }}>
+			<div className={styles.mediaContainer}>
 				{props.eventBackgroundImage && typeof props.eventBackgroundImage === "object" && (
-					<Media fill imgClassName="-z-10 object-cover" priority resource={props.eventBackgroundImage} />
+					<Media fill imgClassName={styles.mediaImage} priority resource={props.eventBackgroundImage} />
 				)}
 			</div>
 			<div className={`${styles.content} content`}>

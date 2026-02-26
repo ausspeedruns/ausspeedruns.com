@@ -6,6 +6,7 @@ import { Textarea as TextAreaComponent } from "#/components/ui/textarea";
 
 import { Error } from "../Error";
 import { Width } from "../Width";
+import styles from "./index.module.css";
 
 interface TextareaProps extends TextField {
 	errors: Partial<FieldErrorsImpl>;
@@ -20,8 +21,8 @@ export function Textarea({ name, defaultValue, errors, label, register, required
 				{label}
 
 				{required && (
-					<span className="required">
-						* <span className="sr-only">(required)</span>
+					<span className={styles.required}>
+						* <span className={styles.srOnly}>(required)</span>
 					</span>
 				)}
 			</Label>

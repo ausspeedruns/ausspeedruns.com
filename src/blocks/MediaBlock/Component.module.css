@@ -1,0 +1,8 @@
+.image {
+	border: 1px solid var(--border);
+	border-radius: 0.8rem;
+}
+
+.caption {
+	margin-top: 1.5rem;
+}

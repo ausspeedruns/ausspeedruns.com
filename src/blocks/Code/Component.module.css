@@ -1,0 +1,25 @@
+.pre {
+	background-color: black;
+	padding: 1rem;
+	border: 1px solid hsl(var(--border));
+	font-size: 0.75rem;
+	line-height: 1rem;
+	border-radius: var(--radius);
+	overflow-x: auto;
+}
+
+.row {
+	display: table-row;
+}
+
+.lineNumber {
+	display: table-cell;
+	user-select: none;
+	text-align: right;
+	color: rgba(255, 255, 255, 0.25);
+}
+
+.lineContent {
+	display: table-cell;
+	padding-left: 1rem;
+}

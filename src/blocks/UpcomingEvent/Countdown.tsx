@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import styles from "./Countdown.module.css";
+
 type CountdownProps = {
 	eventDate?: string;
 };
@@ -42,7 +44,7 @@ function countdownRender(currentTime: number, eventDate: number) {
 	if (days > 0) {
 		return (
 			<span>
-				<span className="sr-only">
+				<span className={styles.srOnly}>
 					{days} days, {hours} hours, {minutes} minutes and {seconds} seconds remaining
 				</span>
 				<span aria-hidden>
@@ -55,7 +57,7 @@ function countdownRender(currentTime: number, eventDate: number) {
 	if (hours > 0) {
 		return (
 			<span>
-				<span className="sr-only">
+				<span className={styles.srOnly}>
 					{hours} hours, {minutes} minutes and {seconds} seconds remaining
 				</span>
 				<span aria-hidden>
@@ -67,7 +69,7 @@ function countdownRender(currentTime: number, eventDate: number) {
 
 	return (
 		<span>
-			<span className="sr-only">
+			<span className={styles.srOnly}>
 				{minutes} minutes and {seconds} seconds remaining
 			</span>
 			<span aria-hidden>

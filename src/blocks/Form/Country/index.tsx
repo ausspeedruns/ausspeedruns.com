@@ -9,6 +9,8 @@ import { Error } from "../Error";
 import { Width } from "../Width";
 import { countryOptions } from "./options";
 
+import styles from "./index.module.css";
+
 interface CountryFieldProps extends CountryField {
 	control: Control;
 	errors: Partial<FieldErrorsImpl>;
@@ -17,12 +19,12 @@ interface CountryFieldProps extends CountryField {
 export function Country({ name, control, errors, label, required, width }: CountryFieldProps) {
 	return (
 		<Width width={width}>
-			<Label className="" htmlFor={name}>
+			<Label htmlFor={name}>
 				{label}
 
 				{required && (
-					<span className="required">
-						* <span className="sr-only">(required)</span>
+					<span className={styles.required}>
+						* <span className={styles.srOnly}>(required)</span>
 					</span>
 				)}
 			</Label>
@@ -35,7 +37,7 @@ export function Country({ name, control, errors, label, required, width }: Count
 
 					return (
 						<Select onValueChange={(val) => onChange(val)} value={controlledValue?.value}>
-							<SelectTrigger className="w-full" id={name}>
+							<SelectTrigger className={styles.trigger} id={name}>
 								<SelectValue placeholder={label} />
 							</SelectTrigger>
 							<SelectContent>

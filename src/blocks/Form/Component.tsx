@@ -11,6 +11,8 @@ import type { DefaultTypedEditorState } from "@payloadcms/richtext-lexical";
 import { fields } from "./fields";
 import { getClientSideURL } from "#/utilities/getURL";
 
+import styles from "./Component.module.css";
+
 export type FormBlockType = {
 	blockName?: string;
 	blockType?: "formBlock";
@@ -114,11 +116,11 @@ export function FormBlock(props: FormBlockProps) {
 	);
 
 	return (
-		<div className="container lg:max-w-[48rem]">
+		<div className={`container ${styles.container}`}>
 			{enableIntro && introContent && !hasSubmitted && (
-				<RichText className="mb-8 lg:mb-12" data={introContent} enableGutter={false} />
+				<RichText className={styles.intro} data={introContent} enableGutter={false} />
 			)}
-			<div className="p-4 lg:p-6 border border-border rounded-[0.8rem]">
+			<div className={styles.formContainer}>
 				<FormProvider {...formMethods}>
 					{!isLoading && hasSubmitted && confirmationType === "message" && (
 						<RichText data={confirmationMessage} />
@@ -127,7 +129,7 @@ export function FormBlock(props: FormBlockProps) {
 					{error && <div>{`${error.status || "500"}: ${error.message || ""}`}</div>}
 					{!hasSubmitted && (
 						<form id={formID} onSubmit={handleSubmit(onSubmit)}>
-							<div className="mb-4 last:mb-0">
+							<div className={styles.fields}>
 								{formFromProps &&
 									formFromProps.fields &&
 									formFromProps.fields?.map((field, index) => {
@@ -135,7 +137,7 @@ export function FormBlock(props: FormBlockProps) {
 										const Field: React.FC<any> = fields?.[field.blockType as keyof typeof fields];
 										if (Field) {
 											return (
-												<div className="mb-6 last:mb-0" key={index}>
+												<div className={styles.field} key={index}>
 													<Field
 														form={formFromProps}
 														{...field}

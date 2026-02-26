@@ -1,0 +1,52 @@
+.hero {
+	position: relative;
+	margin-top: -10.4rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: white;
+}
+
+.container {
+	margin-bottom: 2rem;
+	z-index: 10;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.content {
+	max-width: 36.5rem;
+}
+
+@media (min-width: 768px) {
+	.content {
+		text-align: center;
+	}
+}
+
+.richText {
+	margin-bottom: 1.5rem;
+}
+
+.links {
+	display: flex;
+	gap: 1rem;
+}
+
+@media (min-width: 768px) {
+	.links {
+		justify-content: center;
+	}
+}
+
+.mediaContainer {
+	min-height: 80vh;
+	user-select: none;
+}
+
+.mediaImage {
+	z-index: -10;
+	object-fit: cover;
+}

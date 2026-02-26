@@ -7,6 +7,8 @@ import { Label } from "#/components/ui/label";
 import { Error } from "../Error";
 import { Width } from "../Width";
 
+import styles from "./index.module.css";
+
 interface NumberProps extends TextField {
 	errors: Partial<FieldErrorsImpl>;
 	register: UseFormRegister<FieldValues>;
@@ -19,8 +21,8 @@ export function Number({ name, defaultValue, errors, label, register, required, 
 				{label}
 
 				{required && (
-					<span className="required">
-						* <span className="sr-only">(required)</span>
+					<span className={styles.required}>
+						* <span className={styles.srOnly}>(required)</span>
 					</span>
 				)}
 			</Label>

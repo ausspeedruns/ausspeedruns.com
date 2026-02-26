@@ -1,0 +1,13 @@
+.archiveBlock {
+	margin-top: 4rem;
+	margin-bottom: 4rem;
+}
+
+.introContainer {
+	margin-bottom: 4rem;
+}
+
+.introContent {
+	margin-inline-start: 0;
+	max-width: 48rem;
+}

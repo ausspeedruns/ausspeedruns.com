@@ -6,6 +6,7 @@ import { Label } from "#/components/ui/label";
 
 import { Error } from "../Error";
 import { Width } from "../Width";
+import styles from "./index.module.css";
 
 interface TextFieldProps extends TextField {
 	errors: Partial<FieldErrorsImpl>;
@@ -19,8 +20,8 @@ export function Text({ name, defaultValue, errors, label, register, required, wi
 				{label}
 
 				{required && (
-					<span className="required">
-						* <span className="sr-only">(required)</span>
+					<span className={styles.required}>
+						* <span className={styles.srOnly}>(required)</span>
 					</span>
 				)}
 			</Label>

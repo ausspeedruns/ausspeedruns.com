@@ -11,6 +11,7 @@ import { ImageCarouselBlock } from "./ImageCarousel/ImageCarousel";
 import { WordDefinitionBlock } from "./WordDefinition/WordDefinition";
 import { UpcomingEventBlock } from "./UpcomingEvent/UpcomingEvent";
 import { RecentEventBlock } from "./RecentEvent/RecentEvent";
+import styles from "./RenderBlocks.module.css";
 
 const blockComponents = {
 	archive: ArchiveBlock,
@@ -44,7 +45,7 @@ export function RenderBlocks(props: RenderBlocksProps) {
 
 						if (Block) {
 							return (
-								<div className="my-16" key={index}>
+								<div className={styles.blockWrapper} key={index}>
 									{/* @ts-expect-error there may be some mismatch between the expected types here */}
 									<Block {...block} disableInnerContainer />
 								</div>

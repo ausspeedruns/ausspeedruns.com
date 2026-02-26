@@ -1,0 +1,29 @@
+.page {
+	padding-top: 6rem;
+	padding-bottom: 6rem;
+}
+
+.headerContainer {
+	margin-bottom: 4rem;
+}
+
+.prose {
+	max-width: none;
+	text-align: center;
+}
+
+.title {
+	margin-bottom: 2rem;
+}
+
+@media (min-width: 1024px) {
+	.title {
+		margin-bottom: 4rem;
+	}
+}
+
+.searchContainer {
+	max-width: 50rem;
+	margin-left: auto;
+	margin-right: auto;
+}

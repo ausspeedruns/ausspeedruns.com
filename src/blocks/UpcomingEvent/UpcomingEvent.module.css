@@ -5,6 +5,17 @@
 	background-position: center;
 	/* color: $dark-text; */
 
+	.mediaContainer {
+		min-height: 80vh;
+		user-select: none;
+		position: relative;
+	}
+
+	.mediaImage {
+		z-index: -10;
+		object-fit: cover;
+	}
+
 	.content {
 		display: flex;
 		flex-flow: column;

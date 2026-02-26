@@ -8,6 +8,8 @@ import { CMSLink } from "#/components/Link";
 import { Media } from "#/components/Media";
 import RichText from "#/components/RichText";
 
+import styles from "./index.module.css";
+
 export function HighImpactHero({ links, media, richText }: Page["hero"]) {
 	const { setHeaderTheme } = useHeaderTheme();
 
@@ -16,12 +18,12 @@ export function HighImpactHero({ links, media, richText }: Page["hero"]) {
 	});
 
 	return (
-		<div className="relative -mt-[10.4rem] flex items-center justify-center text-white" data-theme="dark">
-			<div className="container mb-8 z-10 relative flex items-center justify-center">
-				<div className="max-w-[36.5rem] md:text-center">
-					{richText && <RichText className="mb-6" data={richText} enableGutter={false} />}
+		<div className={styles.hero} data-theme="dark">
+			<div className={styles.container}>
+				<div className={styles.content}>
+					{richText && <RichText className={styles.richText} data={richText} enableGutter={false} />}
 					{Array.isArray(links) && links.length > 0 && (
-						<ul className="flex md:justify-center gap-4">
+						<ul className={styles.links}>
 							{links.map(({ link }, i) => {
 								return (
 									<li key={i}>
@@ -33,9 +35,9 @@ export function HighImpactHero({ links, media, richText }: Page["hero"]) {
 					)}
 				</div>
 			</div>
-			<div className="min-h-[80vh] select-none">
+			<div className={styles.mediaContainer}>
 				{media && typeof media === "object" && (
-					<Media fill imgClassName="-z-10 object-cover" priority resource={media} />
+					<Media fill imgClassName={styles.mediaImage} priority resource={media} />
 				)}
 			</div>
 		</div>

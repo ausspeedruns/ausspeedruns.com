@@ -1,0 +1,41 @@
+.container {
+	max-width: 48rem;
+}
+
+.intro {
+	margin-bottom: 2rem;
+}
+
+@media (min-width: 1024px) {
+	.intro {
+		margin-bottom: 3rem;
+	}
+}
+
+.formContainer {
+	padding: 1rem;
+	border: 1px solid hsl(var(--border));
+	border-radius: 0.8rem;
+}
+
+@media (min-width: 1024px) {
+	.formContainer {
+		padding: 1.5rem;
+	}
+}
+
+.fields {
+	margin-bottom: 1rem;
+}
+
+.fields:last-child {
+	margin-bottom: 0;
+}
+
+.field {
+	margin-bottom: 1.5rem;
+}
+
+.field:last-child {
+	margin-bottom: 0;
+}

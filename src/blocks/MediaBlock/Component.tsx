@@ -6,6 +6,7 @@ import RichText from "#/components/RichText";
 import type { MediaBlock as MediaBlockProps } from "#/payload-types";
 
 import { Media } from "../../components/Media";
+import styles from "./Component.module.css";
 
 type Props = MediaBlockProps & {
 	breakout?: boolean;
@@ -42,16 +43,12 @@ export function MediaBlock(props: Props) {
 			)}
 		>
 			{(media || staticImage) && (
-				<Media
-					imgClassName={cn("border border-border rounded-[0.8rem]", imgClassName)}
-					resource={media}
-					src={staticImage}
-				/>
+				<Media imgClassName={cn(styles.image, imgClassName)} resource={media} src={staticImage} />
 			)}
 			{caption && (
 				<div
 					className={cn(
-						"mt-6",
+						styles.caption,
 						{
 							container: !disableInnerContainer,
 						},

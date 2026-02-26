@@ -7,6 +7,7 @@ import configPromise from "#payload-config";
 import { getPayload } from "payload";
 import PageClient from "./page.client";
 import { notFound } from "next/navigation";
+import styles from "./page.module.css";
 
 export const revalidate = 600;
 
@@ -33,21 +34,21 @@ export default async function Page({ params: paramsPromise }: Args) {
 	});
 
 	return (
-		<div className="pt-24 pb-24">
+		<div className={styles.page}>
 			<PageClient />
-			<div className="container mb-16">
-				<div className="prose dark:prose-invert max-w-none">
+			<div className={`container ${styles.headerContainer}`}>
+				<div className={styles.prose}>
 					<h1>Posts</h1>
 				</div>
 			</div>
 
-			<div className="container mb-8">
+			<div className={`container ${styles.rangeContainer}`}>
 				<PageRange collection="posts" currentPage={posts.page} limit={12} totalDocs={posts.totalDocs} />
 			</div>
 
 			<CollectionArchive posts={posts.docs} />
 
-			<div className="container">
+			<div className={`container ${styles.paginationContainer}`}>
 				{posts?.page && posts?.totalPages > 1 && <Pagination page={posts.page} totalPages={posts.totalPages} />}
 			</div>
 		</div>

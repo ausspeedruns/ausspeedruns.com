@@ -9,6 +9,8 @@ import { Label } from "#/components/ui/label";
 import { Error } from "../Error";
 import { Width } from "../Width";
 
+import styles from "./index.module.css";
+
 interface CheckboxProps extends CheckboxField {
 	errors: Partial<FieldErrorsImpl>;
 	register: UseFormRegister<FieldValues>;
@@ -20,7 +22,7 @@ export function Checkbox({ name, defaultValue, errors, label, register, required
 
 	return (
 		<Width width={width}>
-			<div className="flex items-center gap-2">
+			<div className={styles.container}>
 				<CheckboxUi
 					defaultChecked={defaultValue}
 					id={name}
@@ -31,8 +33,8 @@ export function Checkbox({ name, defaultValue, errors, label, register, required
 				/>
 				<Label htmlFor={name}>
 					{required && (
-						<span className="required">
-							* <span className="sr-only">(required)</span>
+						<span className={styles.required}>
+							* <span className={styles.srOnly}>(required)</span>
 						</span>
 					)}
 					{label}

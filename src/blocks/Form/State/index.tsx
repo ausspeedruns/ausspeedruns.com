@@ -8,6 +8,7 @@ import { Controller } from "react-hook-form";
 import { Error } from "../Error";
 import { Width } from "../Width";
 import { stateOptions } from "./options";
+import styles from "./index.module.css";
 
 interface StateFieldProps extends StateField {
 	control: Control;
@@ -20,8 +21,8 @@ export function State({ name, control, errors, label, required, width }: StateFi
 			<Label htmlFor={name}>
 				{label}
 				{required && (
-					<span className="required">
-						* <span className="sr-only">(required)</span>
+					<span className={styles.required}>
+						* <span className={styles.srOnly}>(required)</span>
 					</span>
 				)}
 			</Label>
@@ -34,7 +35,7 @@ export function State({ name, control, errors, label, required, width }: StateFi
 
 					return (
 						<Select onValueChange={(val) => onChange(val)} value={controlledValue?.value}>
-							<SelectTrigger className="w-full" id={name}>
+							<SelectTrigger className={styles.trigger} id={name}>
 								<SelectValue placeholder={label} />
 							</SelectTrigger>
 							<SelectContent>

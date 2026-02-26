@@ -1,0 +1,16 @@
+.page {
+	padding-top: 6rem;
+	padding-bottom: 6rem;
+}
+
+.headerContainer {
+	margin-bottom: 4rem;
+}
+
+.prose {
+	max-width: none;
+}
+
+.rangeContainer {
+	margin-bottom: 2rem;
+}

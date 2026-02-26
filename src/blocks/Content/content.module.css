@@ -55,3 +55,46 @@
 		padding-left: 2rem;
 	}
 }
+
+.wrapper {
+	margin-top: 4rem;
+	margin-bottom: 4rem;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	row-gap: 2rem;
+	column-gap: 4rem;
+}
+
+@media (min-width: 1024px) {
+	.grid {
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+	}
+}
+
+.colSpan4 {
+	grid-column: span 4 / span 4;
+}
+
+@media (min-width: 768px) {
+	.mdColSpan2 {
+		grid-column: span 2 / span 2;
+	}
+}
+
+@media (min-width: 1024px) {
+	.lgColSpan12 {
+		grid-column: span 12 / span 12;
+	}
+	.lgColSpan6 {
+		grid-column: span 6 / span 6;
+	}
+	.lgColSpan4 {
+		grid-column: span 4 / span 4;
+	}
+	.lgColSpan8 {
+		grid-column: span 8 / span 8;
+	}
+}

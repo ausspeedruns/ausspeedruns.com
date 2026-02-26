@@ -1,3 +1,5 @@
+import styles from "./index.module.css";
+
 const defaultLabels = {
 	plural: "Docs",
 	singular: "Doc",
@@ -38,7 +40,7 @@ export function PageRange(props: PageRangeProps) {
 		{};
 
 	return (
-		<div className={[className, "font-semibold"].filter(Boolean).join(" ")}>
+		<div className={[className, styles.pageRange].filter(Boolean).join(" ")}>
 			{(typeof totalDocs === "undefined" || totalDocs === 0) && "Search produced no results."}
 			{typeof totalDocs !== "undefined" &&
 				totalDocs > 0 &&

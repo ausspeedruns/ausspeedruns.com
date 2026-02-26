@@ -7,8 +7,8 @@ import React, { useEffect, useState } from "react";
 import type { Header } from "#/payload-types";
 
 import { Logo } from "#/components/Logo/Logo";
-import styles from "./navbar.module.css";
-import { HeaderNav } from "./Nav";
+import styles from "./Header.module.css";
+import { HeaderNav } from "./Nav/Navigation";
 import { type AuthResult } from "node_modules/payload/dist/auth/operations/auth";
 import { propsToJSXString } from "@payloadcms/richtext-lexical";
 
@@ -34,10 +34,10 @@ export function HeaderClient({ data, auth }: HeaderClientProps) {
 	}, [headerTheme]);
 
 	return (
-		<header className={`container relative z-20 ${styles.header}`} {...(theme ? { "data-theme": theme } : {})}>
-			<div className="py-8 flex justify-between">
+		<header className={styles.header} {...(theme ? { "data-theme": theme } : {})}>
+			<div className={styles.headerContent}>
 				<Link href="/">
-					<Logo className="invert dark:invert-0" />
+					<Logo className={styles.logo} />
 				</Link>
 				<HeaderNav data={data} auth={auth} />
 			</div>

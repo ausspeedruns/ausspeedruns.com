@@ -1,6 +1,10 @@
 .header {
 	background: var(--ausspeedruns-orange);
 	max-width: 100%;
+	width: 100%;
+	margin: 0 auto;
+	position: relative;
+	z-index: 20;
 	padding: 0 1rem;
 
 	@media (min-width: 600px) {
@@ -14,4 +18,18 @@
 	@media (min-width: 2560px) {
 		padding: 0 30rem;
 	}
+}
+
+.headerContent {
+	padding: 2rem 0;
+	display: flex;
+	justify-content: space-between;
+}
+
+.logo {
+	filter: invert(100%);
+}
+
+:global([data-theme="dark"]) .logo {
+	filter: invert(0);
 }

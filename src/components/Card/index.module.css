@@ -1,0 +1,54 @@
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background-color: var(--card);
+  cursor: pointer;
+}
+
+.mediaWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.content {
+  padding: 1rem;
+}
+
+.categories {
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.titleWrapper {
+  /* Replicating prose h3 styles */
+  color: var(--foreground);
+  max-width: 65ch;
+}
+
+.titleWrapper h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 1.3;
+}
+
+.titleLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.titleLink:hover {
+  text-decoration: underline;
+}
+
+.description {
+  margin-top: 0.5rem;
+}
+
+.description p {
+  margin: 0;
+}

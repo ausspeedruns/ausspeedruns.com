@@ -1,7 +1,5 @@
-@import "~@payloadcms/ui/scss";
-
 .dashboard .before-dashboard {
-	margin-bottom: base(1.5);
+	margin-bottom: 1.5rem;
 
 	&__banner {
 		& h4 {
@@ -11,7 +9,7 @@
 
 	&__instructions {
 		list-style: decimal;
-		margin-bottom: base(0.5);
+		margin-bottom: 0.5rem;
 
 		& li {
 			width: 100%;

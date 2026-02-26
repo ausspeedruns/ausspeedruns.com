@@ -1,7 +1,63 @@
-.container {
+.footer {
 	background-color: var(--ausspeedruns-blue);
+	margin-top: auto;
+	border-top: 1px solid hsla(var(--border));
+	color: white;
 }
 
-.container a[href^="mailto:"] {
+.footer a[href^="mailto:"] {
 	text-decoration: underline;
+}
+
+.innerContainer {
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+	gap: 2rem;
+	display: flex;
+	flex-direction: column;
+}
+
+@media (min-width: 768px) {
+	.innerContainer {
+		flex-direction: row;
+		justify-content: space-between;
+	}
+}
+
+.logo {
+	filter: invert(100%);
+}
+
+:global([data-theme="dark"]) .logo {
+	filter: invert(0);
+}
+
+.navWrapper {
+	display: flex;
+	flex-direction: column-reverse;
+	align-items: flex-start;
+	gap: 1rem;
+}
+
+@media (min-width: 768px) {
+	.navWrapper {
+		flex-direction: row;
+		align-items: center;
+	}
+}
+
+.nav {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+@media (min-width: 768px) {
+	.nav {
+		flex-direction: row;
+	}
+}
+
+.link {
+	color: white;
 }

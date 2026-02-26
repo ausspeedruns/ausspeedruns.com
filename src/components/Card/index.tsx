@@ -7,6 +7,7 @@ import React, { Fragment } from "react";
 import type { Post } from "#/payload-types";
 
 import { Media } from "#/components/Media";
+import styles from "./index.module.css";
 
 export type CardPostData = Pick<Post, "slug" | "categories" | "meta" | "title">;
 
@@ -32,17 +33,14 @@ export function Card(props: CardProps) {
 	const href = `/${relationTo}/${slug}`;
 
 	return (
-		<article
-			className={cn("border border-border rounded-lg overflow-hidden bg-card hover:cursor-pointer", className)}
-			ref={card.ref}
-		>
-			<div className="relative w-full ">
-				{!metaImage && <div className="">No image</div>}
+		<article className={cn(styles.card, className)} ref={card.ref}>
+			<div className={styles.mediaWrapper}>
+				{!metaImage && <div>No image</div>}
 				{metaImage && typeof metaImage !== "string" && <Media resource={metaImage} size="33vw" />}
 			</div>
-			<div className="p-4">
+			<div className={styles.content}>
 				{showCategories && hasCategories && (
-					<div className="uppercase text-sm mb-4">
+					<div className={styles.categories}>
 						{showCategories && hasCategories && (
 							<div>
 								{categories?.map((category, index) => {
@@ -68,15 +66,17 @@ export function Card(props: CardProps) {
 					</div>
 				)}
 				{titleToUse && (
-					<div className="prose">
+					<div className={styles.titleWrapper}>
 						<h3>
-							<Link className="not-prose" href={href} ref={link.ref}>
+							<Link className={styles.titleLink} href={href} ref={link.ref}>
 								{titleToUse}
 							</Link>
 						</h3>
 					</div>
 				)}
-				{description && <div className="mt-2">{description && <p>{sanitizedDescription}</p>}</div>}
+				{description && (
+					<div className={styles.description}>{description && <p>{sanitizedDescription}</p>}</div>
+				)}
 			</div>
 		</article>
 	);

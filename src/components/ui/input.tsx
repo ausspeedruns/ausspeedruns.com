@@ -1,22 +1,13 @@
 import { cn } from "#/utilities/ui";
 import * as React from "react";
+import styles from "./input.module.css";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	ref?: React.Ref<HTMLInputElement>;
 }
 
 function Input({ type, className, ref, ...props }: InputProps) {
-	return (
-		<input
-			className={cn(
-				"flex h-10 w-full rounded border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-				className,
-			)}
-			ref={ref}
-			type={type}
-			{...props}
-		/>
-	);
+	return <input className={cn(styles.input, className)} ref={ref} type={type} {...props} />;
 }
 
 export { Input };

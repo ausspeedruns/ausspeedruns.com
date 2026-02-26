@@ -7,6 +7,7 @@ import Link from "next/link";
 import { cn } from "#/utilities/ui";
 import { Button } from "#/components/ui/button";
 import type { AuthResult } from "node_modules/payload/dist/auth/operations/auth";
+import styles from "./Navigation.module.css";
 // import { SearchIcon } from "lucide-react";
 
 interface HeaderNavProps {
@@ -18,7 +19,7 @@ export function HeaderNav({ data, auth }: HeaderNavProps) {
 	const navItems = data?.navItems || [];
 
 	return (
-		<nav className="flex gap-3 items-center">
+		<nav className={styles.nav}>
 			{navItems.map(({ link }, i) => {
 				return <CMSLink key={i} {...link} appearance="link" />;
 			})}

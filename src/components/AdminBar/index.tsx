@@ -8,7 +8,7 @@ import { PayloadAdminBar } from "@payloadcms/admin-bar";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import "./index.scss";
+import styles from "./index.module.css";
 
 import { getClientSideURL } from "#/utilities/getURL";
 
@@ -48,19 +48,19 @@ export function AdminBar(props: { adminBarProps?: PayloadAdminBarProps }) {
 
 	return (
 		<div
-			className={cn(baseClass, "py-2 bg-black text-white", {
-				block: show,
-				hidden: !show,
+			className={cn(baseClass, styles.adminBar, {
+				[styles.show]: show,
+				[styles.hide]: !show,
 			})}
 		>
-			<div className="container">
+			<div className={styles.container}>
 				<PayloadAdminBar
 					{...adminBarProps}
-					className="py-2 text-white"
+					className={styles.payloadAdminBar}
 					classNames={{
-						controls: "font-medium text-white",
-						logo: "text-white",
-						user: "text-white",
+						controls: styles.controls,
+						logo: styles.logo,
+						user: styles.user,
 					}}
 					cmsURL={getClientSideURL()}
 					collectionSlug={collection}

@@ -5,8 +5,8 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
 import { AdminBar } from "#/components/AdminBar";
-import { Footer } from "#/Footer/Component";
-import { Header } from "#/Header/Component";
+import { Footer } from "#Footer/Footer.tsx";
+import { Header } from "#Header/Header.tsx";
 import { Providers } from "#/providers";
 import { InitTheme } from "#/providers/Theme/InitTheme";
 import { mergeOpenGraph } from "#/utilities/mergeOpenGraph";

@@ -10,6 +10,7 @@ import {
 } from "#/components/ui/pagination";
 import { cn } from "#/utilities/ui";
 import { useRouter } from "next/navigation";
+import styles from "./index.module.css";
 
 interface PaginationProps {
 	className?: string;
@@ -28,7 +29,7 @@ export function Pagination(props: PaginationProps) {
 	const hasExtraNextPages = page + 1 < totalPages;
 
 	return (
-		<div className={cn("my-12", className)}>
+		<div className={cn(styles.pagination, className)}>
 			<PaginationComponent>
 				<PaginationContent>
 					<PaginationItem>

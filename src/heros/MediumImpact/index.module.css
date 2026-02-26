@@ -1,0 +1,35 @@
+.heroContent {
+	margin-bottom: 2rem;
+}
+
+.richText {
+	margin-bottom: 1.5rem;
+}
+
+.links {
+	display: flex;
+	gap: 1rem;
+}
+
+.media {
+	margin-left: -1rem;
+	margin-right: -1rem;
+}
+
+@media (min-width: 768px) {
+	.media {
+		margin-left: -2rem;
+		margin-right: -2rem;
+	}
+}
+
+@media (min-width: 1536px) {
+	.media {
+		margin-left: -4rem;
+		margin-right: -4rem;
+	}
+}
+
+.caption {
+	margin-top: 0.75rem;
+}

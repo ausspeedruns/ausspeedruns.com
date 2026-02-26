@@ -4,14 +4,16 @@ import { CMSLink } from "#/components/Link";
 import { Media } from "#/components/Media";
 import RichText from "#/components/RichText";
 
+import styles from "./index.module.css";
+
 export function MediumImpactHero({ links, media, richText }: Page["hero"]) {
 	return (
-		<div className="">
-			<div className="container mb-8">
-				{richText && <RichText className="mb-6" data={richText} enableGutter={false} />}
+		<div>
+			<div className={`container ${styles.heroContent}`}>
+				{richText && <RichText className={styles.richText} data={richText} enableGutter={false} />}
 
 				{Array.isArray(links) && links.length > 0 && (
-					<ul className="flex gap-4">
+					<ul className={styles.links}>
 						{links.map(({ link }, i) => {
 							return (
 								<li key={i}>
@@ -22,12 +24,12 @@ export function MediumImpactHero({ links, media, richText }: Page["hero"]) {
 					</ul>
 				)}
 			</div>
-			<div className="container ">
+			<div className="container">
 				{media && typeof media === "object" && (
 					<div>
-						<Media className="-mx-4 md:-mx-8 2xl:-mx-16" imgClassName="" priority resource={media} />
+						<Media className={styles.media} priority resource={media} />
 						{media?.caption && (
-							<div className="mt-3">
+							<div className={styles.caption}>
 								<RichText data={media.caption} enableGutter={false} />
 							</div>
 						)}

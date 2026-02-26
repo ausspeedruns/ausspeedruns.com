@@ -8,7 +8,6 @@ import { getPayload } from "payload";
 import type { Event, Media } from "#/payload-types";
 import { getMediaUrl } from "#/utilities/getMediaUrl";
 import styles from "./events.module.css";
-import { up } from "node_modules/payload/dist/versions/migrations/localizeStatus/mongo/up";
 
 export const metadata: Metadata = {
 	title: "Events",

@@ -4,7 +4,6 @@ import type { Header as HeaderType } from "#/payload-types";
 
 import { CMSLink } from "#/components/Link/CMSLink";
 import Link from "next/link";
-import { cn } from "#/utilities/ui";
 import { Button } from "#/components/ui/button";
 import type { AuthResult } from "node_modules/payload/dist/auth/operations/auth";
 import styles from "./Navigation.module.css";

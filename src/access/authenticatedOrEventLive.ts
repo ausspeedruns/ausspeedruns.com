@@ -1,5 +1,5 @@
 import type { Role } from "#/payload-types";
-import type { Access, CollectionSlug, DataFromCollectionSlug, Payload } from "payload";
+import type { Access } from "payload";
 
 export const authenticatedOrEventLive: Access = ({ req: { user } }) => {
 	if (
@@ -21,14 +21,14 @@ export const authenticatedOrEventLive: Access = ({ req: { user } }) => {
 	};
 };
 
-async function resolveRelation<T extends CollectionSlug>(
-	payload: Payload,
-	collection: T,
-	value: number | DataFromCollectionSlug<T>,
-): Promise<DataFromCollectionSlug<T>> {
-	if (typeof value === "number") {
-		return payload.findByID({ collection, id: value });
-	}
+// async function resolveRelation<T extends CollectionSlug>(
+// 	payload: Payload,
+// 	collection: T,
+// 	value: number | DataFromCollectionSlug<T>,
+// ): Promise<DataFromCollectionSlug<T>> {
+// 	if (typeof value === "number") {
+// 		return payload.findByID({ collection, id: value });
+// 	}
 
-	return value;
-}
+// 	return value;
+// }

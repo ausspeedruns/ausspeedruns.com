@@ -8,8 +8,6 @@ import { draftMode } from "next/headers";
 import React, { cache } from "react";
 import RichText from "#/components/RichText/RichText";
 
-import type { Post } from "#/payload-types";
-
 import { PostHero } from "#/heros/PostHero/PostHero";
 import { generateMeta } from "#/utilities/generateMeta";
 import PageClient from "./page.client";

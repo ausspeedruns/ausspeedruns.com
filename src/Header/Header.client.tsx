@@ -10,7 +10,6 @@ import { Logo } from "#/components/Logo/Logo";
 import styles from "./Header.module.css";
 import { HeaderNav } from "./Nav/Navigation";
 import { type AuthResult } from "node_modules/payload/dist/auth/operations/auth";
-import { propsToJSXString } from "@payloadcms/richtext-lexical";
 
 interface HeaderClientProps {
 	data: Header;

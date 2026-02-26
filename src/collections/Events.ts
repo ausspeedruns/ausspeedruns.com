@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { AllTimeZones, DefaultTimeZone } from "./Fields/TimezoneSelect.ts";
+import { DefaultTimeZone } from "./Fields/TimezoneSelect.ts";
 
 import { authenticated } from "#access/authenticated.ts";
 import { authenticatedOrEventLive } from "#access/authenticatedOrEventLive.ts";

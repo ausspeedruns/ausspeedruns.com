@@ -96,7 +96,7 @@ async function migrateRoles(payload: BasePayload, pgClient: pg.Client) {
 	const data = await pgClient.query('SELECT * FROM public."Role"');
 
 	for (const role of data.rows) {
-		const { id, name, admin, canManageContent, canManageUsers, colour, textColour } = role;
+		const { name, admin, canManageContent, canManageUsers, colour, textColour } = role;
 		try {
 			await payload.create({
 				collection: "roles",
@@ -121,7 +121,7 @@ async function migrateUsers(payload: BasePayload, pgClient: pg.Client) {
 	const data = await pgClient.query('SELECT * FROM public."User"');
 
 	for (const user of data.rows) {
-		const { id, name, username, email, password, dateOfBirth, pronouns, state, discord, twitter, twitch, bluesky } =
+		const { id, name, username, email, password, dateOfBirth, pronouns, state, discord, twitch, bluesky } =
 			user;
 
 		// console.log("Email for user", username, "is", email);
@@ -564,8 +564,8 @@ async function migrateVolunteers(payload: BasePayload, pgClient: pg.Client) {
 			additionalInfo,
 			experience,
 			favMeme,
-			runnerManagementAvailability,
-			techAvailablity,
+			// runnerManagementAvailability,
+			// techAvailablity,
 			techExperience,
 		} = volunteer;
 
@@ -579,7 +579,9 @@ async function migrateVolunteers(payload: BasePayload, pgClient: pg.Client) {
 					else if (firstRole === "social") role = "socialMedia";
 					else if (firstRole === "tech") role = "tech";
 				}
-			} catch (e) {}
+			} catch (e) {
+				console.warn(`Error processing roles for volunteer ${id}, defaulting to 'host'. Error:`, e);
+			}
 		}
 
 		try {

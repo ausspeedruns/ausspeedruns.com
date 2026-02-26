@@ -1,12 +1,12 @@
-import { test, expect, Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 
 test.describe("Frontend", () => {
-	let page: Page;
+	// let page: Page;
 
-	test.beforeAll(async ({ browser }, testInfo) => {
-		const context = await browser.newContext();
-		page = await context.newPage();
-	});
+	// test.beforeAll(async ({ browser }, _testInfo) => {
+	// 	const context = await browser.newContext();
+	// 	// page = await context.newPage();
+	// });
 
 	test("can go on homepage", async ({ page }) => {
 		await page.goto("http://localhost:3000");

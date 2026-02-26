@@ -25,7 +25,7 @@ export function ImageCarouselBlock({ richText, images }: ImageCarouselBlockProps
 				interval={5000}
 				transitionTime={1500}
 			>
-				{images?.map((image, i) => {
+				{images?.map((image) => {
 					return <Media resource={image.media} />;
 				})}
 			</Carousel>

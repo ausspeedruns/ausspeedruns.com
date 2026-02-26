@@ -46,8 +46,8 @@ export function CMSLink(props: CMSLinkType) {
 	if (appearance === "inline") {
 		return (
 			<Link className={cn(className)} href={href || url || ""} {...newTabProps}>
-				{label && label}
-				{children && children}
+				{label}
+				{children}
 			</Link>
 		);
 	}
@@ -55,8 +55,8 @@ export function CMSLink(props: CMSLinkType) {
 	return (
 		<Button asChild className={className} size={size} variant={appearance}>
 			<Link className={cn(className)} href={href || url || ""} {...newTabProps}>
-				{label && label}
-				{children && children}
+				{label}
+				{children}
 			</Link>
 		</Button>
 	);

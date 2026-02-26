@@ -1,4 +1,4 @@
-import { RequiredDataFromCollectionSlug } from "payload";
+import type { RequiredDataFromCollectionSlug } from "payload";
 
 export const contactForm: RequiredDataFromCollectionSlug<"forms"> = {
 	confirmationMessage: {

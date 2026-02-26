@@ -1,7 +1,7 @@
 import RichText from "#/components/RichText/RichText";
 
 import { Width } from "../Width/Width";
-import { DefaultTypedEditorState } from "@payloadcms/richtext-lexical";
+import type { DefaultTypedEditorState } from "@payloadcms/richtext-lexical";
 
 import styles from "./Message.module.css";
 

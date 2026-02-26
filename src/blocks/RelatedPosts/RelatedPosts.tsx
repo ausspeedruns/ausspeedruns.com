@@ -4,7 +4,7 @@ import RichText from "#/components/RichText/RichText";
 import type { Post } from "#/payload-types";
 
 import { Card } from "#/components/Card/Card";
-import { DefaultTypedEditorState } from "@payloadcms/richtext-lexical";
+import type { DefaultTypedEditorState } from "@payloadcms/richtext-lexical";
 
 import styles from "./RelatedPosts.module.css";
 

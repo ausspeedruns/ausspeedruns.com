@@ -1,0 +1,25 @@
+{
+	"$schema": "./node_modules/oxfmt/configuration_schema.json",
+	"singleQuote": false,
+	"trailingComma": "all",
+	"printWidth": 120,
+	"semi": true,
+	"tabWidth": 4,
+	"useTabs": true,
+	"sortPackageJson": false,
+	"ignorePatterns": [
+		"**/payload-types.ts",
+		".tmp",
+		"**/.git",
+		"**/.hg",
+		"**/.pnp.*",
+		"**/.svn",
+		"**/.yarn/**",
+		"**/build",
+		"**/dist/**",
+		"**/node_modules",
+		"**/temp",
+		"**/docs/**",
+		"tsconfig.json"
+	]
+}

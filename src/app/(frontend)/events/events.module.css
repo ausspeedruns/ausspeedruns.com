@@ -1,107 +1,107 @@
 .main {
-  padding-top: 6rem;
-  padding-bottom: 6rem;
+	padding-top: 6rem;
+	padding-bottom: 6rem;
 }
 
 .header h1 {
-  font-size: 2.25rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+	font-size: 2.25rem;
+	font-weight: 700;
+	margin-bottom: 1rem;
 }
 
 .section {
-  margin-top: 2rem;
+	margin-top: 2rem;
 }
 
 .section + .section {
-  margin-top: 3rem;
+	margin-top: 3rem;
 }
 
 .sectionTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
+	font-size: 1.5rem;
+	font-weight: 600;
 }
 
 .grid {
-  margin-top: 1rem;
-  display: grid;
-  gap: 1.5rem;
+	margin-top: 1rem;
+	display: grid;
+	gap: 1.5rem;
 }
 
 @media (min-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+	.grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
 }
 
 .eventLink {
-  display: block;
-  overflow: hidden;
-  border-radius: 1rem;
-  border: 1px solid hsla(var(--border));
-  background-color: hsl(var(--card));
-  text-decoration: none;
-  transition: transform 0.2s ease-in-out;
+	display: block;
+	overflow: hidden;
+	border-radius: 1rem;
+	border: 1px solid hsla(var(--border));
+	background-color: hsl(var(--card));
+	text-decoration: none;
+	transition: transform 0.2s ease-in-out;
 }
 
 .eventLink:hover {
-  transform: scale(1.02);
+	transform: scale(1.02);
 }
 
 .eventSection {
-  position: relative;
-  display: flex;
-  min-height: 260px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-size: cover;
-  background-position: center;
-  padding: 1.5rem;
-  color: white;
-  text-align: center;
+	position: relative;
+	display: flex;
+	min-height: 260px;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-size: cover;
+	background-position: center;
+	padding: 1.5rem;
+	color: white;
+	text-align: center;
 }
 
 .overlay {
-  position: absolute;
-  inset: 0;
-  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1));
+	position: absolute;
+	inset: 0;
+	background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1));
 }
 
 .content {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
+	position: relative;
+	z-index: 10;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
 }
 
 .logoContainer {
-  position: relative;
-  margin-bottom: 1rem;
-  height: 6rem;
-  width: 18rem;
-  max-width: 100%;
+	position: relative;
+	margin-bottom: 1rem;
+	height: 6rem;
+	width: 18rem;
+	max-width: 100%;
 }
 
 .logoImage {
-  object-fit: contain;
+	object-fit: contain;
 }
 
 .logoFallback {
-  font-size: 1.5rem;
-  font-weight: 600;
+	font-size: 1.5rem;
+	font-weight: 600;
 }
 
 .eventName {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0;
+	font-size: 1.5rem;
+	font-weight: 600;
+	margin: 0;
 }
 
 .eventDetails {
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.9);
+	margin-top: 0.5rem;
+	font-size: 0.875rem;
+	color: rgba(255, 255, 255, 0.9);
 }

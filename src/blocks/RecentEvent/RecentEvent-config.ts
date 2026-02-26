@@ -41,7 +41,7 @@ export const RecentEvent: Block = {
 			relationTo: "media",
 			label: "Event Background Image",
 			required: true,
-		}
+		},
 	],
 	labels: {
 		plural: "Recent Events",

@@ -111,7 +111,7 @@ export const Submissions: CollectionConfig = {
 			name: "canBackup",
 			type: "checkbox",
 		},
-    // TODO: Remove this field after migration is complete
+		// TODO: Remove this field after migration is complete
 		{
 			name: "legacyKeystoneId",
 			type: "text",

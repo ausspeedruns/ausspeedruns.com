@@ -1,115 +1,117 @@
 .button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  border-radius: var(--radius);
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-  border: none;
-  cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	white-space: nowrap;
+	border-radius: var(--radius);
+	font-size: 0.875rem;
+	font-weight: 500;
+	transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	transition-duration: 150ms;
+	border: none;
+	cursor: pointer;
 }
 
 .button:focus-visible {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--ring);
+	outline: 2px solid transparent;
+	outline-offset: 2px;
+	box-shadow:
+		0 0 0 2px var(--background),
+		0 0 0 4px var(--ring);
 }
 
 .button:disabled {
-  pointer-events: none;
-  opacity: 0.5;
+	pointer-events: none;
+	opacity: 0.5;
 }
 
 /* Sizes */
 .sizeDefault {
-  height: 2.5rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+	height: 2.5rem;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
 }
 
 .sizeIcon {
-  height: 2.5rem;
-  width: 2.5rem;
+	height: 2.5rem;
+	width: 2.5rem;
 }
 
 .sizeLg {
-  height: 2.75rem;
-  border-radius: var(--radius);
-  padding-left: 2rem;
-  padding-right: 2rem;
+	height: 2.75rem;
+	border-radius: var(--radius);
+	padding-left: 2rem;
+	padding-right: 2rem;
 }
 
 .sizeSm {
-  height: 2.25rem;
-  border-radius: calc(var(--radius) - 2px);
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
+	height: 2.25rem;
+	border-radius: calc(var(--radius) - 2px);
+	padding-left: 0.75rem;
+	padding-right: 0.75rem;
 }
 
 /* Variants */
 .variantDefault {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
+	background-color: var(--primary);
+	color: var(--primary-foreground);
 }
 
 .variantDefault:hover {
-  background-color: hsl(var(--primary) / 0.9);
+	background-color: hsl(var(--primary) / 0.9);
 }
 
 .variantDestructive {
-  background-color: var(--destructive);
-  color: var(--destructive-foreground);
+	background-color: var(--destructive);
+	color: var(--destructive-foreground);
 }
 
 .variantDestructive:hover {
-  background-color: hsl(var(--destructive) / 0.9);
+	background-color: hsl(var(--destructive) / 0.9);
 }
 
 .variantGhost {
-  background-color: transparent;
-  color: inherit;
+	background-color: transparent;
+	color: inherit;
 }
 
 .variantGhost:hover {
-  background-color: var(--card);
-  color: var(--accent-foreground);
+	background-color: var(--card);
+	color: var(--accent-foreground);
 }
 
 .variantLink {
-  background-color: transparent;
-  color: var(--primary);
-  justify-content: flex-start;
-  align-items: flex-start;
-  text-underline-offset: 4px;
-  padding: 0;
-  height: auto;
+	background-color: transparent;
+	color: var(--primary);
+	justify-content: flex-start;
+	align-items: flex-start;
+	text-underline-offset: 4px;
+	padding: 0;
+	height: auto;
 }
 
 .variantLink:hover {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 
 .variantOutline {
-  border: 1px solid var(--border);
-  background-color: var(--background);
+	border: 1px solid var(--border);
+	background-color: var(--background);
 }
 
 .variantOutline:hover {
-  background-color: var(--card);
-  color: var(--accent-foreground);
+	background-color: var(--card);
+	color: var(--accent-foreground);
 }
 
 .variantSecondary {
-  background-color: var(--secondary);
-  color: var(--secondary-foreground);
+	background-color: var(--secondary);
+	color: var(--secondary-foreground);
 }
 
 .variantSecondary:hover {
-  background-color: hsl(var(--secondary) / 0.8);
+	background-color: hsl(var(--secondary) / 0.8);
 }

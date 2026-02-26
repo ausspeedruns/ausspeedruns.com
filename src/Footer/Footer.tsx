@@ -4,8 +4,8 @@ import Link from "next/link";
 import type { Footer } from "#/payload-types";
 
 import styles from "./Footer.module.css";
-import { ThemeSelector } from "#/providers/Theme/ThemeSelector";
-import { CMSLink } from "#/components/Link";
+import { ThemeSelector } from "#/providers/Theme/ThemeSelector/ThemeSelector";
+import { CMSLink } from "#/components/Link/CMSLink";
 import { Logo } from "#/components/Logo/Logo";
 
 export async function Footer() {

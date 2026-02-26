@@ -7,8 +7,8 @@ import { buildConfig, type PayloadRequest } from "payload";
 import { fileURLToPath } from "node:url";
 
 import { Categories } from "./collections/Categories.ts";
-import { Pages } from "./collections/Pages/index.ts";
-import { Posts } from "./collections/Posts/index.ts";
+import { Pages } from "./collections/Pages/Pages.ts";
+import { Posts } from "./collections/Posts/Posts.ts";
 import { Events } from "./collections/Events.ts";
 import { Incentives } from "./collections/Incentives.ts";
 import { Media } from "./collections/Media.ts";
@@ -22,7 +22,7 @@ import { Volunteers } from "./collections/Volunteers.ts";
 
 import { Footer } from "./Footer/config.ts";
 import { Header } from "./Header/config.ts";
-import { plugins } from "./plugins/index.ts";
+import { plugins } from "./plugins/plugins.ts";
 import { defaultLexical } from "#fields/defaultLexical.ts";
 import { getServerSideURL } from "./utilities/getURL.ts";
 
@@ -34,10 +34,10 @@ export default buildConfig({
 		components: {
 			// The `BeforeLogin` component renders a message that you see while logging into your admin panel.
 			// Feel free to delete this at any time. Simply remove the line below.
-			beforeLogin: ["./components/BeforeLogin"],
+			beforeLogin: ["./components/BeforeLogin/BeforeLogin"],
 			// The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
 			// Feel free to delete this at any time. Simply remove the line below.
-			beforeDashboard: ["./components/BeforeDashboard"],
+			beforeDashboard: ["./components/BeforeDashboard/BeforeDashboard"],
 		},
 		importMap: {
 			baseDir: path.resolve(dirname),

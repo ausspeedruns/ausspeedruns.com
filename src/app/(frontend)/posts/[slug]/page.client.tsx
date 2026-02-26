@@ -1,5 +1,5 @@
 "use client";
-import { useHeaderTheme } from "#/providers/HeaderTheme";
+import { useHeaderTheme } from "#/providers/HeaderTheme/HeaderThemeProvider";
 import React, { useEffect } from "react";
 
 export default function PageClient() {

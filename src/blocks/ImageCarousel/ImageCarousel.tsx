@@ -3,8 +3,8 @@
 import type { ImageCarouselBlock as ImageCarouselBlockProps } from "#/payload-types";
 
 import styles from "./ImageCarousel.module.css";
-import RichText from "#/components/RichText";
-import { Media } from "#/components/Media";
+import RichText from "#/components/RichText/RichText";
+import { Media } from "#/components/Media/Media";
 
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";

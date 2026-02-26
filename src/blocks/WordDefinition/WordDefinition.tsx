@@ -1,7 +1,7 @@
 import type { WordDefinitionBlock as WordDefinitionBlockProps } from "#/payload-types";
 
 import styles from "./WordDefinition.module.css";
-import RichText from "#/components/RichText";
+import RichText from "#/components/RichText/RichText";
 
 export function WordDefinitionBlock({ word, pronunciation, definition }: WordDefinitionBlockProps) {
 	return (

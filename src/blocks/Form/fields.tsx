@@ -1,12 +1,12 @@
-import { Checkbox } from "./Checkbox";
-import { Country } from "./Country";
-import { Email } from "./Email";
-import { Message } from "./Message";
-import { Number } from "./Number";
-import { Select } from "./Select";
-import { State } from "./State";
-import { Text } from "./Text";
-import { Textarea } from "./Textarea";
+import { Checkbox } from "./Checkbox/Checkbox";
+import { Country } from "./Country/Country";
+import { Email } from "./Email/Email";
+import { Message } from "./Message/Message";
+import { Number } from "./Number/Number";
+import { Select } from "./Select/Select";
+import { State } from "./State/State";
+import { Text } from "./Text/Text";
+import { Textarea } from "./Textarea/Textarea";
 
 export const fields = {
 	checkbox: Checkbox,

@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
 
-import { RelatedPosts } from "#/blocks/RelatedPosts/Component";
-import { PayloadRedirects } from "#/components/PayloadRedirects";
+import { RelatedPosts } from "#/blocks/RelatedPosts/RelatedPosts";
+import { PayloadRedirects } from "#/components/PayloadRedirects/PayloadRedirects";
 import configPromise from "#payload-config";
 import { getPayload } from "payload";
 import { draftMode } from "next/headers";
 import React, { cache } from "react";
-import RichText from "#/components/RichText";
+import RichText from "#/components/RichText/RichText";
 
 import type { Post } from "#/payload-types";
 
-import { PostHero } from "#/heros/PostHero";
+import { PostHero } from "#/heros/PostHero/PostHero";
 import { generateMeta } from "#/utilities/generateMeta";
 import PageClient from "./page.client";
-import { LivePreviewListener } from "#/components/LivePreviewListener";
+import { LivePreviewListener } from "#/components/LivePreviewListener/LivePreviewListener";
 
 import styles from "./page.module.css";
 

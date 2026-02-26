@@ -1,11 +1,11 @@
 import type { Metadata } from "next/types";
 
-import { CollectionArchive } from "#/components/CollectionArchive";
+import { CollectionArchive } from "#/components/CollectionArchive/CollectionArchive";
 import configPromise from "#payload-config";
 import { getPayload } from "payload";
-import { Search } from "#/search/Component";
+import { Search } from "#/search/Search";
 import PageClient from "./page.client";
-import { CardPostData } from "#/components/Card";
+import { CardPostData } from "#/components/Card/Card";
 
 import styles from "./page.module.css";
 

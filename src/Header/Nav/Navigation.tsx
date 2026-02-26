@@ -2,7 +2,7 @@
 
 import type { Header as HeaderType } from "#/payload-types";
 
-import { CMSLink } from "#/components/Link";
+import { CMSLink } from "#/components/Link/CMSLink";
 import Link from "next/link";
 import { cn } from "#/utilities/ui";
 import { Button } from "#/components/ui/button";

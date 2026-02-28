@@ -1,0 +1,31 @@
+.container {
+	padding: 2rem 1rem;
+	background: #eaf4f4;
+}
+
+.title {
+	text-align: center;
+}
+
+.totalRaised {
+	text-align: center;
+	font-size: 2rem;
+	font-weight: bold;
+	margin: 1rem 0;
+}
+
+.grid {
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.card {
+	border: 1px solid #999;
+	padding: 1rem;
+	background: #fff;
+}
+
+.noIncentives {
+	text-align: center;
+}

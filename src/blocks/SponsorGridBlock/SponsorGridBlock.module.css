@@ -1,0 +1,30 @@
+.container {
+	padding: 3rem 1rem;
+	background: #fff;
+}
+
+.title {
+	text-align: center;
+	margin-bottom: 2rem;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 2rem;
+	align-items: center;
+	justify-items: center;
+}
+
+.sponsorLink {
+	display: block;
+	max-width: 200px;
+}
+
+.sponsorImage {
+	object-fit: contain;
+}
+
+.noSponsors {
+	text-align: center;
+}

@@ -9,9 +9,13 @@ import { Content } from "#blocks/Content/config.ts";
 import { FormBlock } from "#blocks/Form/config.ts";
 import { MediaBlock } from "#blocks/MediaBlock/config.ts";
 import { ImageCarousel } from "#blocks/ImageCarousel/ImageCarousel-config.ts";
-import { WordDefinition } from "#blocks/WordDefinition/WordDefinitionConfig.ts";
-import { UpcomingEvent } from "#blocks/UpcomingEvent/UpcomingEvent-config.ts";
-import { RecentEvent } from "#blocks/RecentEvent/RecentEvent-config.ts";
+
+import { EventHeroBlockConfig } from "#blocks/EventHeroBlock/config.ts";
+import { LiveStreamBlockConfig } from "#blocks/LiveStreamBlock/config.ts";
+import { DonationTrackerBlockConfig } from "#blocks/DonationTrackerBlock/config.ts";
+import { SponsorGridBlockConfig } from "#blocks/SponsorGridBlock/config.ts";
+import { CountdownBlockConfig } from "#blocks/CountdownBlock/config.ts";
+import { FAQBlockConfig } from "#blocks/FAQBlock/config.ts";
 
 import { hero } from "#heros/config.ts";
 import { populatePublishedAt } from "#hooks/populatePublishedAt.ts";
@@ -84,9 +88,12 @@ export const Pages: CollectionConfig<"pages"> = {
 								Archive,
 								FormBlock,
 								ImageCarousel,
-								WordDefinition,
-								UpcomingEvent,
-								RecentEvent,
+								EventHeroBlockConfig,
+								LiveStreamBlockConfig,
+								DonationTrackerBlockConfig,
+								SponsorGridBlockConfig,
+								CountdownBlockConfig,
+								FAQBlockConfig,
 							],
 							required: true,
 							admin: {

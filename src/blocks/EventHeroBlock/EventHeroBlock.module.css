@@ -1,0 +1,12 @@
+.container {
+	text-align: center;
+	padding: 4rem 1rem;
+	background: #f5f5f5;
+}
+
+.buttonGroup {
+	margin-top: 2rem;
+	display: flex;
+	gap: 1rem;
+	justify-content: center;
+}

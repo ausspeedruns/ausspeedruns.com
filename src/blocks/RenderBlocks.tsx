@@ -8,9 +8,14 @@ import { ContentBlock } from "#/blocks/Content/ContentBlock";
 import { FormBlock } from "#/blocks/Form/FormBlock";
 import { MediaBlock } from "#/blocks/MediaBlock/MediaBlock";
 import { ImageCarouselBlock } from "./ImageCarousel/ImageCarousel";
-import { WordDefinitionBlock } from "./WordDefinition/WordDefinition";
-import { UpcomingEventBlock } from "./UpcomingEvent/UpcomingEvent";
-import { RecentEventBlock } from "./RecentEvent/RecentEvent";
+
+import { EventHeroBlock } from "./EventHeroBlock/EventHeroBlock";
+import { LiveStreamBlock } from "./LiveStreamBlock/LiveStreamBlock";
+import { DonationTrackerBlock } from "./DonationTrackerBlock/DonationTrackerBlock";
+import { SponsorGridBlock } from "./SponsorGridBlock/SponsorGridBlock";
+import { CountdownBlock } from "./CountdownBlock/CountdownBlock";
+import { FAQBlock } from "./FAQBlock/FAQBlock";
+
 import styles from "./RenderBlocks.module.css";
 
 const blockComponents = {
@@ -20,9 +25,12 @@ const blockComponents = {
 	formBlock: FormBlock,
 	mediaBlock: MediaBlock,
 	imageCarousel: ImageCarouselBlock,
-	wordDefinition: WordDefinitionBlock,
-	upcomingEvent: UpcomingEventBlock,
-	recentEvent: RecentEventBlock,
+	eventHeroBlock: EventHeroBlock,
+	liveStreamBlock: LiveStreamBlock,
+	donationTrackerBlock: DonationTrackerBlock,
+	sponsorGridBlock: SponsorGridBlock,
+	countdownBlock: CountdownBlock,
+	faqBlock: FAQBlock,
 };
 
 interface RenderBlocksProps {
@@ -46,7 +54,6 @@ export function RenderBlocks(props: RenderBlocksProps) {
 						if (Block) {
 							return (
 								<div className={styles.blockWrapper} key={index}>
-									{/* @ts-expect-error there may be some mismatch between the expected types here */}
 									<Block {...block} disableInnerContainer />
 								</div>
 							);

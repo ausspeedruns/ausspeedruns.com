@@ -233,9 +233,12 @@ export interface Page {
     | ArchiveBlock
     | FormBlock
     | ImageCarouselBlock
-    | WordDefinitionBlock
-    | UpcomingEventBlock
-    | RecentEventBlock
+    | EventHeroBlock
+    | LiveStreamBlock
+    | DonationTrackerBlock
+    | SponsorGridBlock
+    | CountdownBlock
+    | FAQBlock
   )[];
   meta?: {
     title?: string | null;
@@ -1110,86 +1113,97 @@ export interface ImageCarouselBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "WordDefinitionBlock".
+ * via the `definition` "EventHeroBlock".
  */
-export interface WordDefinitionBlock {
-  word: string;
-  pronunciation?: string | null;
-  definition?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+export interface EventHeroBlock {
+  event: number | Event;
+  heading?: string | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'wordDefinition';
+  blockType: 'eventHeroBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "UpcomingEventBlock".
+ * via the `definition` "LiveStreamBlock".
  */
-export interface UpcomingEventBlock {
-  richText?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  eventStartDate: string;
-  eventLogo: number | Media;
-  eventName: string;
-  eventDates?: string | null;
-  eventBackgroundImage: number | Media;
+export interface LiveStreamBlock {
+  title?: string | null;
+  twitchChannel: string;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'upcomingEvent';
+  blockType: 'liveStreamBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "RecentEventBlock".
+ * via the `definition` "DonationTrackerBlock".
  */
-export interface RecentEventBlock {
-  richText?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  eventLogo: number | Media;
-  eventName: string;
-  eventRaised: string;
-  eventBackgroundImage: number | Media;
+export interface DonationTrackerBlock {
+  event: number | Event;
+  title?: string | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'recentEvent';
+  blockType: 'donationTrackerBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SponsorGridBlock".
+ */
+export interface SponsorGridBlock {
+  title?: string | null;
+  sponsors?:
+    | {
+        name: string;
+        logo: number | Media;
+        link?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'sponsorGridBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CountdownBlock".
+ */
+export interface CountdownBlock {
+  title?: string | null;
+  targetDate: string;
+  finishedMessage?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'countdownBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FAQBlock".
+ */
+export interface FAQBlock {
+  title?: string | null;
+  faqs?:
+    | {
+        question: string;
+        answer: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faqBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1556,9 +1570,12 @@ export interface PagesSelect<T extends boolean = true> {
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         imageCarousel?: T | ImageCarouselBlockSelect<T>;
-        wordDefinition?: T | WordDefinitionBlockSelect<T>;
-        upcomingEvent?: T | UpcomingEventBlockSelect<T>;
-        recentEvent?: T | RecentEventBlockSelect<T>;
+        eventHeroBlock?: T | EventHeroBlockSelect<T>;
+        liveStreamBlock?: T | LiveStreamBlockSelect<T>;
+        donationTrackerBlock?: T | DonationTrackerBlockSelect<T>;
+        sponsorGridBlock?: T | SponsorGridBlockSelect<T>;
+        countdownBlock?: T | CountdownBlockSelect<T>;
+        faqBlock?: T | FAQBlockSelect<T>;
       };
   meta?:
     | T
@@ -1676,39 +1693,75 @@ export interface ImageCarouselBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "WordDefinitionBlock_select".
+ * via the `definition` "EventHeroBlock_select".
  */
-export interface WordDefinitionBlockSelect<T extends boolean = true> {
-  word?: T;
-  pronunciation?: T;
-  definition?: T;
+export interface EventHeroBlockSelect<T extends boolean = true> {
+  event?: T;
+  heading?: T;
   id?: T;
   blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "UpcomingEventBlock_select".
+ * via the `definition` "LiveStreamBlock_select".
  */
-export interface UpcomingEventBlockSelect<T extends boolean = true> {
-  richText?: T;
-  eventStartDate?: T;
-  eventLogo?: T;
-  eventName?: T;
-  eventDates?: T;
-  eventBackgroundImage?: T;
+export interface LiveStreamBlockSelect<T extends boolean = true> {
+  title?: T;
+  twitchChannel?: T;
   id?: T;
   blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "RecentEventBlock_select".
+ * via the `definition` "DonationTrackerBlock_select".
  */
-export interface RecentEventBlockSelect<T extends boolean = true> {
-  richText?: T;
-  eventLogo?: T;
-  eventName?: T;
-  eventRaised?: T;
-  eventBackgroundImage?: T;
+export interface DonationTrackerBlockSelect<T extends boolean = true> {
+  event?: T;
+  title?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SponsorGridBlock_select".
+ */
+export interface SponsorGridBlockSelect<T extends boolean = true> {
+  title?: T;
+  sponsors?:
+    | T
+    | {
+        name?: T;
+        logo?: T;
+        link?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CountdownBlock_select".
+ */
+export interface CountdownBlockSelect<T extends boolean = true> {
+  title?: T;
+  targetDate?: T;
+  finishedMessage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FAQBlock_select".
+ */
+export interface FAQBlockSelect<T extends boolean = true> {
+  title?: T;
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }

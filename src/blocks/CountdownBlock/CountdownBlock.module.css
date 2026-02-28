@@ -1,0 +1,16 @@
+.container {
+	text-align: center;
+	padding: 2rem;
+	background: #fdfdfd;
+	border-top: 2px solid #ddd;
+}
+
+.finishedMessage {
+	color: #d9534f;
+}
+
+.timeLeft {
+	font-size: 2.5rem;
+	font-weight: bold;
+	font-family: monospace;
+}

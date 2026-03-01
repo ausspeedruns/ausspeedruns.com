@@ -6,6 +6,21 @@ import { fileURLToPath } from "node:url";
 import type { BasePayload } from "payload";
 import pg from "pg";
 
+import { seed } from "./seed/seed.ts";
+
+// --- Concurrency helper ---
+const BATCH_SIZE = 10;
+async function runInBatches<T>(items: T[], fn: (item: T) => Promise<void>, batchSize = BATCH_SIZE) {
+	for (let i = 0; i < items.length; i += batchSize) {
+		await Promise.allSettled(items.slice(i, i + batchSize).map(fn));
+	}
+}
+
+// --- Lookup caches (legacyKeystoneId → Payload ID) ---
+const eventIdMap = new Map<string, number>();
+const submissionIdMap = new Map<string, number>();
+const runIdMap = new Map<string, number>();
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
@@ -82,6 +97,8 @@ async function migrate() {
 	await migrateIncentives(payload, client);
 	await migrateVolunteers(payload, client);
 
+	await seed(payload);
+
 	await client.end();
 	process.exit(0);
 }
@@ -95,7 +112,7 @@ async function migrateRoles(payload: BasePayload, pgClient: pg.Client) {
 	console.log("Migrating roles...");
 	const data = await pgClient.query('SELECT * FROM public."Role"');
 
-	for (const role of data.rows) {
+	await runInBatches(data.rows, async (role) => {
 		const { name, admin, canManageContent, canManageUsers, colour, textColour } = role;
 		try {
 			await payload.create({
@@ -113,18 +130,15 @@ async function migrateRoles(payload: BasePayload, pgClient: pg.Client) {
 		} catch (e) {
 			handlePayloadCreateError(e, `role ${name}`);
 		}
-	}
+	});
 }
 
 async function migrateUsers(payload: BasePayload, pgClient: pg.Client) {
 	console.log("Migrating users...");
 	const data = await pgClient.query('SELECT * FROM public."User"');
 
-	for (const user of data.rows) {
-		const { id, name, username, email, password, dateOfBirth, pronouns, state, discord, twitch, bluesky } =
-			user;
-
-		// console.log("Email for user", username, "is", email);
+	await runInBatches(data.rows, async (user) => {
+		const { id, name, username, email, password, dateOfBirth, pronouns, state, discord, twitch, bluesky } = user;
 
 		let newState: User["state"] = state;
 		if (state === "none") {
@@ -132,8 +146,6 @@ async function migrateUsers(payload: BasePayload, pgClient: pg.Client) {
 		} else if (state === "outer") {
 			newState = "international";
 		}
-
-		// continue;
 
 		try {
 			await payload.create({
@@ -158,13 +170,14 @@ async function migrateUsers(payload: BasePayload, pgClient: pg.Client) {
 		} catch (e) {
 			handlePayloadCreateError(e, `user ${username}`);
 		}
-	}
+	});
 }
 
 async function migrateEvents(payload: BasePayload, pgClient: pg.Client) {
 	console.log("Migrating events...");
 	const data = await pgClient.query('SELECT * FROM public."Event"');
 
+	// Events have media uploads so we keep them sequential to avoid file I/O contention
 	for (const event of data.rows) {
 		const {
 			id,
@@ -220,7 +233,7 @@ async function migrateEvents(payload: BasePayload, pgClient: pg.Client) {
 				}
 			}
 
-			await payload.create({
+			const created = await payload.create({
 				collection: "events",
 				draft: false,
 				data: {
@@ -256,6 +269,9 @@ async function migrateEvents(payload: BasePayload, pgClient: pg.Client) {
 					},
 				},
 			});
+
+			// Cache the legacy → payload ID mapping
+			eventIdMap.set(id, created.id);
 		} catch (e) {
 			handlePayloadCreateError(e, `event ${name}`);
 		}
@@ -305,7 +321,7 @@ async function migrateSubmissions(payload: BasePayload, pgClient: pg.Client) {
 	console.log("Migrating submissions...");
 	const data = await pgClient.query('SELECT * FROM public."Submission"');
 
-	for (const submission of data.rows) {
+	await runInBatches(data.rows, async (row) => {
 		const {
 			id,
 			runner,
@@ -324,10 +340,10 @@ async function migrateSubmissions(payload: BasePayload, pgClient: pg.Client) {
 			video,
 			status,
 			willingBackup,
-		} = submission;
+		} = row;
 
 		try {
-			const submission = await payload.create({
+			const created = await payload.create({
 				collection: "submissions",
 				draft: false,
 				data: {
@@ -347,44 +363,25 @@ async function migrateSubmissions(payload: BasePayload, pgClient: pg.Client) {
 					video,
 					status: status === "submitted" ? "pending" : status,
 					canBackup: willingBackup,
-					legacyKeystoneId: id, // Store the old Keystone ID for reference (to be removed later)
+					legacyKeystoneId: id,
+					// Resolve event from cache instead of querying DB
+					...(event && eventIdMap.has(event) ? { event: eventIdMap.get(event) } : {}),
 				},
 			});
 
-			// Link submission to event
-			if (event) {
-				try {
-					const eventId = await payload.find({
-						collection: "events",
-						where: {
-							legacyKeystoneId: { equals: event },
-						},
-					});
-
-					if (eventId.totalDocs === 1) {
-						await payload.update({
-							collection: "submissions",
-							id: submission.id,
-							data: {
-								event: eventId.docs[0].id,
-							},
-						});
-					}
-				} catch (e) {
-					handlePayloadCreateError(e, `linking submission ${id} to event ${event}`);
-				}
-			}
+			// Cache the legacy → payload ID mapping
+			submissionIdMap.set(id, created.id);
 		} catch (e) {
 			handlePayloadCreateError(e, `submission ${id}`);
 		}
-	}
+	});
 }
 
 async function migrateRuns(payload: BasePayload, pgClient: pg.Client) {
 	console.log("Migrating runs...");
 	const data = await pgClient.query('SELECT * FROM public."Run"');
 
-	for (const run of data.rows) {
+	await runInBatches(data.rows, async (row) => {
 		const {
 			id,
 			game,
@@ -402,9 +399,9 @@ async function migrateRuns(payload: BasePayload, pgClient: pg.Client) {
 			scheduledTime,
 			racer,
 			originalSubmission,
-		} = run;
+		} = row;
 		try {
-			const run = await payload.create({
+			const created = await payload.create({
 				collection: "runs",
 				draft: false,
 				data: {
@@ -422,68 +419,31 @@ async function migrateRuns(payload: BasePayload, pgClient: pg.Client) {
 					techPlatform,
 					scheduledTime: scheduledTime ? new Date(scheduledTime).toISOString() : undefined,
 					racers: racer,
-					legacyKeystoneId: id, // Store the old Keystone ID for reference (to be removed later)
+					legacyKeystoneId: id,
+					// Resolve relationships from cache instead of querying DB
+					...(originalSubmission && submissionIdMap.has(originalSubmission)
+						? { submission: submissionIdMap.get(originalSubmission) }
+						: {}),
+					...(event && eventIdMap.has(event) ? { event: eventIdMap.get(event) } : {}),
 				},
 			});
 
-			// Link to original submission and event
-			if (originalSubmission) {
-				try {
-					const submission = await payload.find({
-						collection: "submissions",
-						where: {
-							legacyKeystoneId: { equals: originalSubmission },
-						},
-					});
-					if (submission.totalDocs === 1) {
-						await payload.update({
-							collection: "runs",
-							id: run.id,
-							data: {
-								submission: submission.docs[0].id,
-							},
-						});
-					}
-				} catch (e) {
-					handlePayloadCreateError(e, `linking run ${run.id} to submission ${originalSubmission}`);
-				}
-			}
-
-			if (event) {
-				try {
-					const eventId = await payload.find({
-						collection: "events",
-						where: {
-							legacyKeystoneId: { equals: event },
-						},
-					});
-					if (eventId.totalDocs === 1) {
-						await payload.update({
-							collection: "runs",
-							id: run.id,
-							data: {
-								event: eventId.docs[0].id,
-							},
-						});
-					}
-				} catch (e) {
-					handlePayloadCreateError(e, `linking run ${run.id} to event ${event}`);
-				}
-			}
+			// Cache the legacy → payload ID mapping
+			runIdMap.set(id, created.id);
 		} catch (e) {
 			handlePayloadCreateError(e, `run ${id}`);
 		}
-	}
+	});
 }
 
 async function migrateIncentives(payload: BasePayload, pgClient: pg.Client) {
 	console.log("Migrating incentives...");
 	const data = await pgClient.query('SELECT * FROM public."Incentive"');
 
-	for (const incentive of data.rows) {
-		const { id, title, run, event, notes, active, data: incentiveData } = incentive;
+	await runInBatches(data.rows, async (row) => {
+		const { id, title, run, event, notes, active, data: incentiveData } = row;
 		try {
-			const incentive = await payload.create({
+			await payload.create({
 				collection: "incentives",
 				draft: false,
 				data: {
@@ -492,65 +452,22 @@ async function migrateIncentives(payload: BasePayload, pgClient: pg.Client) {
 					notes,
 					isActive: active,
 					data: incentiveData,
+					// Resolve relationships from cache instead of querying DB
+					...(run && runIdMap.has(run) ? { run: runIdMap.get(run) } : {}),
+					...(event && eventIdMap.has(event) ? { event: eventIdMap.get(event) } : {}),
 				},
 			});
-
-			// Link to run and event
-			if (run) {
-				try {
-					const runId = await payload.find({
-						collection: "runs",
-						where: {
-							legacyKeystoneId: { equals: run },
-						},
-					});
-
-					if (runId.totalDocs === 1) {
-						await payload.update({
-							collection: "incentives",
-							id: incentive.id,
-							data: {
-								run: runId.docs[0].id,
-							},
-						});
-					}
-				} catch (e) {
-					handlePayloadCreateError(e, `linking incentive ${id} to run ${run}`);
-				}
-			}
-
-			if (event) {
-				try {
-					const eventId = await payload.find({
-						collection: "events",
-						where: {
-							legacyKeystoneId: { equals: event },
-						},
-					});
-					if (eventId.totalDocs === 1) {
-						await payload.update({
-							collection: "incentives",
-							id: incentive.id,
-							data: {
-								event: eventId.docs[0].id,
-							},
-						});
-					}
-				} catch (e) {
-					handlePayloadCreateError(e, `linking incentive ${id} to event ${event}`);
-				}
-			}
 		} catch (e) {
 			handlePayloadCreateError(e, `incentive ${id}`);
 		}
-	}
+	});
 }
 
 async function migrateVolunteers(payload: BasePayload, pgClient: pg.Client) {
 	console.log("Migrating volunteers...");
 	const data = await pgClient.query('SELECT * FROM public."Volunteer"');
 
-	for (const volunteer of data.rows) {
+	await runInBatches(data.rows, async (row) => {
 		const {
 			id,
 			volunteer: userId,
@@ -567,7 +484,7 @@ async function migrateVolunteers(payload: BasePayload, pgClient: pg.Client) {
 			// runnerManagementAvailability,
 			// techAvailablity,
 			techExperience,
-		} = volunteer;
+		} = row;
 
 		// Roles in Keystone was a multiselect, in Payload it's a single select. We'll just take the first one or default to 'host'
 		let role: "host" | "runnerManagement" | "socialMedia" | "tech" = "host";
@@ -585,7 +502,7 @@ async function migrateVolunteers(payload: BasePayload, pgClient: pg.Client) {
 		}
 
 		try {
-			const volunteer = await payload.create({
+			await payload.create({
 				collection: "volunteers",
 				draft: false,
 				data: {
@@ -601,35 +518,14 @@ async function migrateVolunteers(payload: BasePayload, pgClient: pg.Client) {
 					techExperience,
 					socialMediaExperience: experience,
 					socialMediaFavouriteMeme: favMeme,
+					// Resolve event from cache instead of querying DB
+					...(event && eventIdMap.has(event) ? { event: eventIdMap.get(event) } : {}),
 				},
 			});
-
-			// Link to event
-			if (event) {
-				try {
-					const eventId = await payload.find({
-						collection: "events",
-						where: {
-							legacyKeystoneId: { equals: event },
-						},
-					});
-					if (eventId.totalDocs === 1) {
-						await payload.update({
-							collection: "volunteers",
-							id: volunteer.id,
-							data: {
-								event: eventId.docs[0].id,
-							},
-						});
-					}
-				} catch (e) {
-					handlePayloadCreateError(e, `linking volunteer ${id} to event ${event}`);
-				}
-			}
 		} catch (e) {
 			handlePayloadCreateError(e, `volunteer ${id}`);
 		}
-	}
+	});
 }
 
 function handlePayloadCreateError(e: unknown, context: string) {

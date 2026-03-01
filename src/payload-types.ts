@@ -832,7 +832,33 @@ export interface ContentBlock {
         id?: string | null;
       }[]
     | null;
-  style?: string | null;
+  /**
+   * Control the visual appearance of this content section.
+   */
+  settings?: {
+    background?: ('none' | 'card' | 'muted' | 'primary' | 'secondary' | 'blue' | 'orange' | 'custom') | null;
+    /**
+     * Any valid CSS colour value (e.g. #1a1a2e, rgb(26,26,46), hsl(240 50% 14%)).
+     */
+    customBackgroundColor?: string | null;
+    /**
+     * Upload an image to use as the section background. Works alongside or instead of a background colour.
+     */
+    backgroundImage?: (number | null) | Media;
+    /**
+     * A semi-transparent overlay on top of the background image to keep text readable.
+     */
+    backgroundImageOverlay?: ('none' | 'dark25' | 'dark50' | 'dark75' | 'light25' | 'light50') | null;
+    /**
+     * Auto picks light or dark text based on the background. Override if auto gets it wrong.
+     */
+    textColor?: ('auto' | 'light' | 'dark') | null;
+    padding?: ('none' | 'small' | 'default' | 'large') | null;
+    /**
+     * When enabled, the background extends edge-to-edge. The content remains centred.
+     */
+    fullBleed?: boolean | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'content';
@@ -1638,7 +1664,17 @@ export interface ContentBlockSelect<T extends boolean = true> {
             };
         id?: T;
       };
-  style?: T;
+  settings?:
+    | T
+    | {
+        background?: T;
+        customBackgroundColor?: T;
+        backgroundImage?: T;
+        backgroundImageOverlay?: T;
+        textColor?: T;
+        padding?: T;
+        fullBleed?: T;
+      };
   id?: T;
   blockName?: T;
 }

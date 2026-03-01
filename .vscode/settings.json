@@ -2,7 +2,7 @@
 	"npm.packageManager": "pnpm",
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"[typescript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.defaultFormatter": "oxc.oxc-vscode",
 		"editor.formatOnSave": true,
 		"editor.codeActionsOnSave": {
 			"source.fixAll.eslint": "explicit"
@@ -16,7 +16,7 @@
 		}
 	},
 	"[javascript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.defaultFormatter": "oxc.oxc-vscode",
 		"editor.formatOnSave": true,
 		"editor.codeActionsOnSave": {
 			"source.fixAll.eslint": "explicit"

@@ -1,11 +1,125 @@
-.blue {
+/* ─── Background Variants ───────────────────────────────────────────────── */
+/* Theme-aware backgrounds using the project's CSS custom properties.       */
+/* Adding a new variant: add a class here + an option in config.ts.         */
+
+.bgCard {
+	background-color: hsl(var(--card));
+	color: hsl(var(--card-foreground));
+}
+
+.bgMuted {
+	background-color: hsl(var(--muted));
+	color: hsl(var(--muted-foreground));
+}
+
+.bgPrimary {
+	background-color: hsl(var(--primary));
+	color: hsl(var(--primary-foreground));
+}
+
+.bgSecondary {
+	background-color: hsl(var(--secondary));
+	color: hsl(var(--secondary-foreground));
+}
+
+.bgBlue {
 	background-color: var(--ausspeedruns-blue);
 	color: white;
 }
 
-.orange {
+.bgOrange {
 	background-color: var(--ausspeedruns-orange);
 	color: white;
+}
+
+/* ─── Text Colour Overrides ─────────────────────────────────────────────── */
+
+.textLight {
+	color: hsl(var(--primary-foreground));
+}
+
+.textDark {
+	color: hsl(var(--primary));
+}
+
+/* ─── Padding Variants ──────────────────────────────────────────────────── */
+
+.paddingNone {
+	padding-top: 0;
+	padding-bottom: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.paddingSmall {
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.paddingLarge {
+	padding-top: 6rem;
+	padding-bottom: 6rem;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+/* ─── Background helper ─────────────────────────────────────────────────── */
+/* When a background is set, use padding instead of margin for spacing, and */
+/* add border-radius for contained (non-full-bleed) blocks.                 */
+
+.hasBackground {
+	border-radius: var(--radius);
+	padding-top: 3rem;
+	padding-bottom: 3rem;
+}
+
+/* Full-bleed backgrounds should not be rounded. */
+.hasBackground:not(.container) {
+	border-radius: 0;
+}
+
+/* ─── Background Image ──────────────────────────────────────────────────── */
+
+.hasBgImage {
+	position: relative;
+	overflow: hidden;
+	isolation: isolate;
+}
+
+.bgImage {
+	object-fit: cover;
+	z-index: -2;
+	pointer-events: none;
+	user-select: none;
+}
+
+.overlay {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+}
+
+.overlayDark25 {
+	background-color: rgba(0, 0, 0, 0.25);
+}
+
+.overlayDark50 {
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.overlayDark75 {
+	background-color: rgba(0, 0, 0, 0.75);
+}
+
+.overlayLight25 {
+	background-color: rgba(255, 255, 255, 0.25);
+}
+
+.overlayLight50 {
+	background-color: rgba(255, 255, 255, 0.5);
 }
 
 .container {

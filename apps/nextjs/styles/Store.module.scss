@@ -1,6 +1,6 @@
-@use 'base';
-@import './colors.scss';
-@import './responsive.scss';
+@use "base";
+@import "./colors.scss";
+@import "./responsive.scss";
 
 .app {
 	min-height: 100vh;
@@ -87,7 +87,6 @@
 			}
 		}
 
-
 		table,
 		th,
 		td {
@@ -142,7 +141,7 @@
 		overflow: hidden;
 		display: flex;
 
-		background-image: url('./img/TicketWatermark.png');
+		background-image: url("./img/TicketWatermark.png");
 		background-size: 60px;
 
 		&.animation {

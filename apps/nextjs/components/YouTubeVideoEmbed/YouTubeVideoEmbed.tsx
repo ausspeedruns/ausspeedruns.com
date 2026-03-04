@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from './YouTubeVideoEmbed.module.scss';
+import React from "react";
+import styles from "./YouTubeVideoEmbed.module.scss";
 
 type YouTubeProps = {
 	videoID: string;

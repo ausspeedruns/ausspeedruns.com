@@ -254,7 +254,8 @@ export function Form({ events, userId }: Props) {
 						}
 					});
 				}
-			}}>
+			}}
+		>
 			<h1>{currentEvent?.shortname} Volunteer Submission</h1>
 
 			{events.length > 1 && (
@@ -265,7 +266,8 @@ export function Form({ events, userId }: Props) {
 						value={event}
 						label="Event"
 						onChange={(e) => setEvent(e.target.value)}
-						required>
+						required
+					>
 						{events.map((event) => {
 							return (
 								<MenuItem value={event.id} key={event.id}>
@@ -276,7 +278,7 @@ export function Form({ events, userId }: Props) {
 					</Select>
 				</FormControl>
 			)}
-			{/* 
+			{/*
 			<FormControl fullWidth>
 				<InputLabel id="job-type-label">Job Type</InputLabel>
 				<Select
@@ -454,7 +456,7 @@ function ConfirmedSubmission() {
 			</p>
 		</main>
 	);
-};
+}
 
 interface JobCheckboxProps {
 	checked: boolean;

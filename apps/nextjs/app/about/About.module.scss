@@ -140,7 +140,11 @@
 			}
 		}
 
-		@include breakpoint((max: 700px)) {
+		@include breakpoint(
+			(
+				max: 700px,
+			)
+		) {
 			.amount {
 				font-size: 20vw;
 

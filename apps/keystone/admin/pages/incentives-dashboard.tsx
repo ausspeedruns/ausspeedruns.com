@@ -292,7 +292,8 @@ export default function RunsManager() {
 				display: "flex",
 				flexDirection: "column",
 				alignItems: "center",
-			}}>
+			}}
+		>
 			<Head>
 				<title>Incentives</title>
 			</Head>
@@ -320,7 +321,8 @@ export default function RunsManager() {
 							display: "flex",
 							marginTop: 16,
 							minHeight: 600,
-						}}>
+						}}
+					>
 						<List
 							style={{
 								borderRight: "1px solid #e1e5e9",
@@ -329,14 +331,16 @@ export default function RunsManager() {
 								maxWidth: 400,
 								maxHeight: 800,
 								overflowY: "scroll",
-							}}>
+							}}
+						>
 							{sortedIncentives.map((incentive, i) => (
 								<ListItem key={incentive.id} disablePadding>
 									<ListItemButton
 										selected={selectedIncentiveIndex === i}
 										onClick={() => {
 											setSelectedIncentiveIndex(i);
-										}}>
+										}}
+									>
 										<ListItemIcon>
 											{incentive.type === "goal" ? <Flag /> : <PieChart />}
 										</ListItemIcon>
@@ -354,7 +358,8 @@ export default function RunsManager() {
 								padding: "0 16px 16px 16px",
 								minWidth: 800,
 								maxWidth: 800,
-							}}>
+							}}
+						>
 							<h1>{incentiveData?.title}</h1>
 							<Button
 								size="small"
@@ -362,7 +367,8 @@ export default function RunsManager() {
 								tone="active"
 								as={Link}
 								isDisabled={!incentiveData?.run}
-								href={`/runs/${incentiveData?.run.id}`}>
+								href={`/runs/${incentiveData?.run.id}`}
+							>
 								View Run details
 							</Button>
 							<p>

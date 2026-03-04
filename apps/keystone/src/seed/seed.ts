@@ -1,5 +1,5 @@
-import { events, users, roles, volunteers, submissions, runs, incentives, images_files } from './data';
-import { Context } from '.keystone/types';
+import { events, users, roles, volunteers, submissions, runs, incentives, images_files } from "./data";
+import { Context } from ".keystone/types";
 // import { prepareToUpload } from './parseToUpload';
 
 const SeedSettings = {
@@ -11,7 +11,7 @@ const SeedSettings = {
 	incentives: true,
 	volunteers: true,
 	files: true,
-}
+};
 
 export async function insertSeedData(context: Context) {
 	console.log(`🌱 Inserting seed data`);
@@ -19,13 +19,13 @@ export async function insertSeedData(context: Context) {
 	const createEvent = async (eventData) => {
 		let event = await context.query.Event.findOne({
 			where: { shortname: eventData.shortname },
-			query: 'id',
+			query: "id",
 		});
 
 		if (!event) {
 			await context.query.Event.createOne({
 				data: eventData,
-				query: 'id',
+				query: "id",
 			});
 		}
 	};
@@ -33,81 +33,95 @@ export async function insertSeedData(context: Context) {
 	const createUser = async (userData) => {
 		let user = await context.query.User.findOne({
 			where: { username: userData.username },
-			query: 'id',
+			query: "id",
 		});
 
 		if (!user) {
 			await context.query.User.createOne({
 				data: userData,
-				query: 'id',
+				query: "id",
 			});
 		}
-	}
+	};
 
 	const createRole = async (roleData) => {
 		let role = await context.query.Role.findMany({
 			where: { name: { equals: roleData.name } },
-			query: 'id',
+			query: "id",
 		});
 
 		if (!role) {
 			await context.query.Role.createOne({
 				data: { ...roleData, event: roleData.event ? { connect: { shortname: roleData.event } } : null },
-				query: 'id',
+				query: "id",
 			});
 		}
-	}
+	};
 
 	const createSubmission = async (submissionData) => {
 		await context.query.Submission.createOne({
-			data: { ...submissionData, runner: { connect: { username: submissionData.runner } }, event: { connect: { shortname: submissionData.event } } },
-			query: 'id',
+			data: {
+				...submissionData,
+				runner: { connect: { username: submissionData.runner } },
+				event: { connect: { shortname: submissionData.event } },
+			},
+			query: "id",
 		});
-	}
+	};
 
 	const createVolunteer = async (volunteerData) => {
 		await context.query.Volunteer.createOne({
-			data: { ...volunteerData, volunteer: { connect: { username: volunteerData.volunteer } }, event: { connect: { shortname: volunteerData.event } } },
-			query: 'id',
+			data: {
+				...volunteerData,
+				volunteer: { connect: { username: volunteerData.volunteer } },
+				event: { connect: { shortname: volunteerData.event } },
+			},
+			query: "id",
 		});
-	}
+	};
 
 	const createRun = async (runData) => {
 		await context.query.Run.createOne({
 			data: {
 				...runData,
-				...(runData.runners ? {
-					runners: {
-						connect: runData.runners.map(runner => {
-							return { username: runner }
-						})
-					}
-				} : {}),
+				...(runData.runners
+					? {
+							runners: {
+								connect: runData.runners.map((runner) => {
+									return { username: runner };
+								}),
+							},
+						}
+					: {}),
 				event: {
 					connect: {
-						shortname: runData.event
-					}
-				}
+						shortname: runData.event,
+					},
+				},
 			},
-			query: 'id',
+			query: "id",
 		});
 	};
 
 	const createIncentive = async (incentiveData) => {
 		let runs = await context.query.Run.findMany({
 			where: { game: { equals: incentiveData.run }, event: { shortname: { equals: incentiveData.event } } },
-			query: 'id',
+			query: "id",
 		});
 
 		await context.query.Incentive.createOne({
 			data: {
-				...incentiveData, ...(runs.length > 0 ? {
-					run: { connect: { id: runs[0].id } }, event: {
-						connect: { shortname: incentiveData.event }
-					}
-				} : {})
+				...incentiveData,
+				...(runs.length > 0
+					? {
+							run: { connect: { id: runs[0].id } },
+							event: {
+								connect: { shortname: incentiveData.event },
+							},
+						}
+					: {}),
 			},
-			query: 'id',
+			query: "id",
 		});
 	};
 
@@ -131,7 +145,7 @@ export async function insertSeedData(context: Context) {
 			await createEvent(event);
 		}
 	} else {
-		console.log('🎟️  Skipping events')
+		console.log("🎟️  Skipping events");
 	}
 
 	// USERS
@@ -145,7 +159,7 @@ export async function insertSeedData(context: Context) {
 			await createUser(user);
 		}
 	} else {
-		console.log('🤖 Skipping users');
+		console.log("🤖 Skipping users");
 	}
 
 	// ROLES
@@ -155,7 +169,7 @@ export async function insertSeedData(context: Context) {
 			await createRole(role);
 		}
 	} else {
-		console.log('📛 Skipping roles');
+		console.log("📛 Skipping roles");
 	}
 
 	// POSTS
@@ -168,7 +182,7 @@ export async function insertSeedData(context: Context) {
 			await createSubmission(submission);
 		}
 	} else {
-		console.log('📝 Skipping submissions');
+		console.log("📝 Skipping submissions");
 	}
 
 	// RUNS
@@ -178,7 +192,7 @@ export async function insertSeedData(context: Context) {
 			await createRun(run);
 		}
 	} else {
-		console.log('🏃 Skipping runs');
+		console.log("🏃 Skipping runs");
 	}
 
 	// INCENTIVES
@@ -188,7 +202,7 @@ export async function insertSeedData(context: Context) {
 			await createIncentive(incentive);
 		}
 	} else {
-		console.log('💰 Skipping incentives');
+		console.log("💰 Skipping incentives");
 	}
 
 	// VOLUNTEERS
@@ -198,7 +212,7 @@ export async function insertSeedData(context: Context) {
 			await createVolunteer(volunteer);
 		}
 	} else {
-		console.log('🙋 Skipping volunteers');
+		console.log("🙋 Skipping volunteers");
 	}
 
 	// IMAGES/FILES
@@ -207,9 +221,9 @@ export async function insertSeedData(context: Context) {
 		// 	console.log(`📦 Adding image/file: ${file.file} to ${file.list}`);
 		// 	await uploadFile(file);
 		// }
-		console.log(`📦 CURRENTLY AUTOMATICALLY UPLOADING FILES IS UNAVAILABLE. You must manuall upload images :(`)
+		console.log(`📦 CURRENTLY AUTOMATICALLY UPLOADING FILES IS UNAVAILABLE. You must manuall upload images :(`);
 	} else {
-		console.log('📦 Skipping images/files');
+		console.log("📦 Skipping images/files");
 	}
 
 	console.log(`✅ Seed data inserted`);

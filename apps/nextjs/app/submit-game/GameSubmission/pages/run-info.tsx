@@ -44,11 +44,11 @@ export const RunInfo = forwardRef<SubmissionPageRef, GameInfoProps>((props, ref)
 		props.onComplete(
 			Boolean(
 				category.elementProps.value &&
-					estimate !== "00:00:00" &&
-					(!showPossibleEstimate ||
-						(possibleEstimate !== "00:00:00" && possibleEstimateReason.elementProps.value)) &&
-					video.elementProps.value &&
-					(typeof donationIncentives === "undefined" || donationIncentives.at(-1)?.title),
+				estimate !== "00:00:00" &&
+				(!showPossibleEstimate ||
+					(possibleEstimate !== "00:00:00" && possibleEstimateReason.elementProps.value)) &&
+				video.elementProps.value &&
+				(typeof donationIncentives === "undefined" || donationIncentives.at(-1)?.title),
 			),
 		);
 	}, [
@@ -167,7 +167,8 @@ export const RunInfo = forwardRef<SubmissionPageRef, GameInfoProps>((props, ref)
 						disabled={Boolean(specialReqs.elementProps.value)}
 						onClick={() => setShowSpecialReqs(false)}
 						color="error"
-						className={styles.button}>
+						className={styles.button}
+					>
 						Cancel
 					</Button>
 				</div>
@@ -196,7 +197,8 @@ export const RunInfo = forwardRef<SubmissionPageRef, GameInfoProps>((props, ref)
 							variant="outlined"
 							disabled={Boolean(donationIncentive.title)}
 							onClick={() => handleDonationIncentiveCancel(i)}
-							color="error">
+							color="error"
+						>
 							Cancel
 						</Button>
 					</div>
@@ -205,7 +207,8 @@ export const RunInfo = forwardRef<SubmissionPageRef, GameInfoProps>((props, ref)
 			<Button
 				variant="contained"
 				onClick={handleNewDonationIncentive}
-				disabled={typeof donationIncentives !== "undefined" && !donationIncentives.at(-1)?.title}>
+				disabled={typeof donationIncentives !== "undefined" && !donationIncentives.at(-1)?.title}
+			>
 				Add {typeof donationIncentives !== "undefined" ? "another" : "a"} donation incentive
 			</Button>
 		</GameSubmitPage>

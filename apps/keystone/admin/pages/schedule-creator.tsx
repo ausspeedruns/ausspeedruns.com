@@ -1,22 +1,22 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { jsx, Inline, Stack, Heading } from '@keystone-ui/core';
-import React, { useEffect, useState } from 'react';
-import { PageContainer } from '@keystone-6/core/admin-ui/components';
-import { Link } from '@keystone-6/core/admin-ui/router';
-import { useMutation, useQuery, gql, useLazyQuery } from '@keystone-6/core/admin-ui/apollo';
-import { Button } from '@keystone-ui/button';
-import { Select, FieldContainer, FieldLabel, TextInput, DatePicker } from '@keystone-ui/fields';
-import { ListItem, ListItemButton, ListItemText, Paper } from '@mui/material';
-import { VariableSizeList, ListChildComponentProps } from 'react-window';
-import { format, parse, parseISO } from 'date-fns';
-import { useToasts } from '@keystone-ui/toast';
-import styled from '@emotion/styled';
-import { css } from '@emotion/react';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { jsx, Inline, Stack, Heading } from "@keystone-ui/core";
+import React, { useEffect, useState } from "react";
+import { PageContainer } from "@keystone-6/core/admin-ui/components";
+import { Link } from "@keystone-6/core/admin-ui/router";
+import { useMutation, useQuery, gql, useLazyQuery } from "@keystone-6/core/admin-ui/apollo";
+import { Button } from "@keystone-ui/button";
+import { Select, FieldContainer, FieldLabel, TextInput, DatePicker } from "@keystone-ui/fields";
+import { ListItem, ListItemButton, ListItemText, Paper } from "@mui/material";
+import { VariableSizeList, ListChildComponentProps } from "react-window";
+import { format, parse, parseISO } from "date-fns";
+import { useToasts } from "@keystone-ui/toast";
+import styled from "@emotion/styled";
+import { css } from "@emotion/react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
-import { Lists } from '.keystone/types';
+import { Lists } from ".keystone/types";
 
 const EventTitle = styled.h1`
 	text-align: center;
@@ -114,7 +114,7 @@ interface EventQuery {
 			estimate: string;
 			finalTime?: string;
 			donationIncentive?: string;
-			race: Lists.Run.Item['race'];
+			race: Lists.Run.Item["race"];
 			coop: boolean;
 			twitchVOD?: string;
 			youtubeVOD?: string;
@@ -134,8 +134,8 @@ interface EventQuery {
 			platform: string;
 			estimate: string;
 			donationIncentive?: string;
-			ageRating: Lists.Submission.Item['ageRating'];
-			race: Lists.Submission.Item['race'];
+			ageRating: Lists.Submission.Item["ageRating"];
+			race: Lists.Submission.Item["race"];
 			racer?: string;
 			coop: boolean;
 			specialReqs?: string;
@@ -147,7 +147,7 @@ interface EventQuery {
 }
 
 export default function ScheduleCreator() {
-	const [selectedEvent, setSelectedEvent] = useState({ label: '', value: '' });
+	const [selectedEvent, setSelectedEvent] = useState({ label: "", value: "" });
 
 	const { data: eventsList } = useQuery<EventsListQuery>(EVENTS_LIST_QUERY);
 	const { data: eventData } = useQuery<EventQuery>(EVENT_QUERY, { variables: { event: selectedEvent.value } });
@@ -163,8 +163,8 @@ export default function ScheduleCreator() {
 	return (
 		<PageContainer header={<Heading type="h3">Schedule Creator</Heading>}>
 			<div css={{ marginTop: 24 }} />
-			<FieldContainer style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-				<FieldLabel style={{ minWidth: '', marginRight: 8 }}>Event</FieldLabel>
+			<FieldContainer style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+				<FieldLabel style={{ minWidth: "", marginRight: 8 }}>Event</FieldLabel>
 				<Select
 					css={css`
 						min-width: 200px;
@@ -207,7 +207,7 @@ export default function ScheduleCreator() {
 }
 
 interface RunItemProps {
-	run: EventQuery['event']['runs'][0];
+	run: EventQuery["event"]["runs"][0];
 	index: number;
 }
 
@@ -220,7 +220,7 @@ function RunItem({ run, index }: RunItemProps) {
 }
 
 interface SubmissionItemProps {
-	submission: EventQuery['event']['submissions'][0];
+	submission: EventQuery["event"]["submissions"][0];
 	index: number;
 }
 

@@ -136,7 +136,8 @@ export function War({ incentive, incentiveUpdate }: WarProps) {
 						gridTemplateColumns: "2fr 1fr 0.5fr 2fr 0.5fr",
 						gap: "0.5rem 1rem",
 						alignItems: "center",
-					}}>
+					}}
+				>
 					<span>Name</span>
 					<span>Change by</span>
 					<span></span>
@@ -167,7 +168,8 @@ export function War({ incentive, incentiveUpdate }: WarProps) {
 									isDisabled={increments[i] === 0}
 									tone="positive"
 									weight={increments[i] === 0 ? "light" : "bold"}
-									key={`add-${i}`}>
+									key={`add-${i}`}
+								>
 									Add
 								</Button>
 								<span
@@ -175,7 +177,8 @@ export function War({ incentive, incentiveUpdate }: WarProps) {
 										fontWeight: highestNumber === item.total ? "bold" : "normal",
 										fontSize: "1.5rem",
 									}}
-									key={`total-${i}`}>
+									key={`total-${i}`}
+								>
 									${item.total.toLocaleString()}
 								</span>
 								{item.name === "" ? (
@@ -183,7 +186,8 @@ export function War({ incentive, incentiveUpdate }: WarProps) {
 										onClick={() => handleRemove(i)}
 										tone="negative"
 										weight="light"
-										key={`remove-${i}`}>
+										key={`remove-${i}`}
+									>
 										Remove
 									</Button>
 								) : (
@@ -208,7 +212,8 @@ export function War({ incentive, incentiveUpdate }: WarProps) {
 						...incentiveRawData,
 						options: mutableOptions,
 					});
-				}}>
+				}}
+			>
 				+ Add New Option
 			</Button>
 
@@ -219,7 +224,8 @@ export function War({ incentive, incentiveUpdate }: WarProps) {
 					style={{ marginRight: 16 }}
 					onChange={(e) => {
 						setActive(e.target.checked);
-					}}>
+					}}
+				>
 					Active
 				</Checkbox>
 			</FieldContainer>

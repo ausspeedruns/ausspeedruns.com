@@ -403,16 +403,19 @@ export default function ScheduleImport() {
 									style={{
 										marginRight: 4,
 										marginLeft: row.race === "RACE" ? 4 : 0,
-									}}>
+									}}
+								>
 									{row.race === "RACE" ? " vs." : ","}{" "}
 								</span>
-							}>
+							}
+						>
 							{row.runner.map((runner) =>
 								runner?.id ? (
 									<a
 										href={`http://localhost:8000/users/${runner.id}`}
 										target="_blank"
-										rel="noopener noreferrer">
+										rel="noopener noreferrer"
+									>
 										{runner.username}
 									</a>
 								) : (
@@ -420,7 +423,8 @@ export default function ScheduleImport() {
 										style={{
 											color: "red",
 											fontWeight: "bold",
-										}}>
+										}}
+									>
 										{runner?.username ?? "~~UNKNOWN~~"}
 									</span>
 								),
@@ -449,7 +453,8 @@ export default function ScheduleImport() {
 					flexDirection: "row",
 					alignItems: "center",
 					justifyContent: "center",
-				}}>
+				}}
+			>
 				<FieldLabel style={{ minWidth: "", marginRight: 8 }}>Event</FieldLabel>
 				<Select onChange={(e) => handleEventSelection(e)} value={selectedEvent} options={eventsOptions} />
 			</FieldContainer>
@@ -462,7 +467,8 @@ export default function ScheduleImport() {
 				tone="active"
 				weight="bold"
 				onClick={() => (selectedEvent?.value ? downloadSubmissions(selectedEvent.value) : undefined)}
-				style={{ margin: "auto", display: "block", marginTop: 24 }}>
+				style={{ margin: "auto", display: "block", marginTop: 24 }}
+			>
 				Download all {eventData?.event.submissionsCount} submissions
 			</Button>
 			<EventTitle>{selectedEvent?.label}</EventTitle>
@@ -474,7 +480,8 @@ export default function ScheduleImport() {
 						margin: "16px 0",
 						width: "75%",
 						gap: 16,
-					}}>
+					}}
+				>
 					<FieldContainer style={{ maxWidth: "20ch" }}>
 						<FieldLabel>Run setup time</FieldLabel>
 						<OutlinedInput
@@ -494,7 +501,8 @@ export default function ScheduleImport() {
 									style={{
 										display: "flex",
 										flexDirection: "column",
-									}}>
+									}}
+								>
 									{eventStartDate ? (
 										<span>{eventStartDate.timeZone}</span>
 									) : (
@@ -573,7 +581,8 @@ export default function ScheduleImport() {
 						margin: "16px 0",
 						width: "40%",
 						justifyContent: "flex-end",
-					}}>
+					}}
+				>
 					<CustomInput>
 						<HiddenInput
 							disabled={!selectedEvent?.label}

@@ -74,7 +74,6 @@ const MUTATION_SUBMISSION = gql`
 	}
 `;
 
-
 export async function updateSubmission(submission: Submission) {
 	const client = getUrqlCookieClient();
 
@@ -138,6 +137,6 @@ export async function deleteSubmission(submission: SubmissionDelete) {
 	}
 
 	const result = await client.mutation(MUTATION_DELETE, submission).toPromise();
-	
+
 	return result.data?.deleteSubmission;
 }

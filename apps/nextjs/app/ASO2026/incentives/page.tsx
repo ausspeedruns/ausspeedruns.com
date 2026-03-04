@@ -1,4 +1,3 @@
-
 import { getRegisteredClient } from "@libs/urql";
 import { gql } from "urql";
 import { IncentivesClient } from "./incentives.client";
@@ -61,7 +60,5 @@ export default async function ASAP2025Incentives() {
 		return <div>Error loading incentives.</div>;
 	}
 
-	return (
-		<IncentivesClient incentivesData={data} />
-	)
+	return <IncentivesClient incentivesData={data} />;
 }

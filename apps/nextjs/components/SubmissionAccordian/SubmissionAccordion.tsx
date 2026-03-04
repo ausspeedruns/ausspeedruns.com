@@ -87,13 +87,9 @@ const SubmissionAccordion = ({ submission, event, cookie }: SubmissionProps) => 
 
 	return (
 		<StyledAccordion className={styles.submission}>
-			<AccordionSummary
-				expandIcon={<FontAwesomeIcon icon={faAngleDown} />}
-				className={styles.submissionHeader}>
+			<AccordionSummary expandIcon={<FontAwesomeIcon icon={faAngleDown} />} className={styles.submissionHeader}>
 				{submission.status !== "submitted" && (
-					<span
-						className={styles.submissionStatus}
-						style={{ backgroundColor: colour, color: fontColor }}>
+					<span className={styles.submissionStatus} style={{ backgroundColor: colour, color: fontColor }}>
 						{submission.status}
 					</span>
 				)}
@@ -114,14 +110,10 @@ const SubmissionAccordion = ({ submission, event, cookie }: SubmissionProps) => 
 						<tr>
 							<td>Category</td>
 							<td>{submission.category}</td>
-							<td>
-								Estimate{" "}
-								{submission.possibleEstimate && "between"}
-							</td>
+							<td>Estimate {submission.possibleEstimate && "between"}</td>
 							<td>
 								{Boolean(submission.possibleEstimate) &&
-									submission.possibleEstimate !==
-										"00:00:00" &&
+									submission.possibleEstimate !== "00:00:00" &&
 									`${submission.possibleEstimate} – `}
 								{submission.estimate}
 							</td>
@@ -131,33 +123,25 @@ const SubmissionAccordion = ({ submission, event, cookie }: SubmissionProps) => 
 							<td>{submission.platform}</td>
 							<td>Video</td>
 							<td>
-								<a href={submission.video}>
-									{submission.video}
-								</a>
+								<a href={submission.video}>{submission.video}</a>
 							</td>
 						</tr>
 						<tr>
 							<td>Willing to be backup</td>
 							<td>{submission.willingBackup ? "Yes" : "No"}</td>
-							{submission.newDonationIncentives &&
-								submission.newDonationIncentives?.length >
-									0 && (
-									<>
-										<td>
-											Donation Incentive
-											{submission.newDonationIncentives
-												?.length > 1 && "s"}
-										</td>
-										<td>
-											{submission.newDonationIncentives
-												.map(
-													(incentive) =>
-														incentive.title,
-												)
-												.join(", ")}
-										</td>
-									</>
-								)}
+							{submission.newDonationIncentives && submission.newDonationIncentives?.length > 0 && (
+								<>
+									<td>
+										Donation Incentive
+										{submission.newDonationIncentives?.length > 1 && "s"}
+									</td>
+									<td>
+										{submission.newDonationIncentives
+											.map((incentive) => incentive.title)
+											.join(", ")}
+									</td>
+								</>
+							)}
 						</tr>
 					</tbody>
 				</table>
@@ -168,9 +152,7 @@ const SubmissionAccordion = ({ submission, event, cookie }: SubmissionProps) => 
 							<tbody>
 								<tr>
 									<td>{raceOrCoop} Type</td>
-									<td>
-										{RaceTypeLabels(submission.race ?? "")}
-									</td>
+									<td>{RaceTypeLabels(submission.race ?? "")}</td>
 								</tr>
 								<tr>
 									<td>Player(s)</td>
@@ -181,14 +163,10 @@ const SubmissionAccordion = ({ submission, event, cookie }: SubmissionProps) => 
 					</>
 				)}
 			</AccordionDetails>
-			{(submission.status === "submitted" ||
-				submission.status === "rejected") &&
+			{(submission.status === "submitted" || submission.status === "rejected") &&
 				(event.acceptingSubmissions || event.acceptingBackups) && (
 					<AccordionActions>
-						<Button
-							color="primary"
-							variant="contained"
-							onClick={() => setEditDialog(true)}>
+						<Button color="primary" variant="contained" onClick={() => setEditDialog(true)}>
 							Edit
 						</Button>
 					</AccordionActions>
@@ -207,21 +185,15 @@ const SubmissionAccordion = ({ submission, event, cookie }: SubmissionProps) => 
 				onClose={closeSnackbar}
 				action={
 					showSnackbar.error ? (
-						<IconButton
-							size="small"
-							aria-label="close"
-							color="inherit"
-							onClick={closeSnackbar}>
+						<IconButton size="small" aria-label="close" color="inherit" onClick={closeSnackbar}>
 							<CloseIcon fontSize="small" />
 						</IconButton>
 					) : (
 						<></>
 					)
-				}>
-				<Alert
-					variant="filled"
-					severity={showSnackbar.error ? "error" : "success"}
-					sx={{ width: "100%" }}>
+				}
+			>
+				<Alert variant="filled" severity={showSnackbar.error ? "error" : "success"} sx={{ width: "100%" }}>
 					{showSnackbar.reason}
 				</Alert>
 			</Snackbar>

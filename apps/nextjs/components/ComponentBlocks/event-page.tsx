@@ -21,7 +21,8 @@ export const EventComponentRenderers: EventPageRenderers = {
 					backgroundPosition: props.backgroundSettings.position,
 					backgroundSize: props.backgroundSettings.cover ? "cover" : "contain",
 					backgroundRepeat: props.backgroundSettings.repeat,
-				}}>
+				}}
+			>
 				<div className={styles.logo}>
 					<Image
 						src={props.darkModeLogo ? props.event.data.darkModeLogo?.url : props.event.data.logo?.url}
@@ -30,7 +31,11 @@ export const EventComponentRenderers: EventPageRenderers = {
 						fill
 					/>
 				</div>
-				<div className={styles.taglines}>{props.taglines?.map((tagline: string) => <h1>{tagline}</h1>)}</div>
+				<div className={styles.taglines}>
+					{props.taglines?.map((tagline: string) => (
+						<h1>{tagline}</h1>
+					))}
+				</div>
 				<div className={styles.buttons}>
 					{props.donateLink && <Button actionText="Donate" link={props.donateLink} openInNewTab />}
 
@@ -78,7 +83,8 @@ export const EventComponentRenderers: EventPageRenderers = {
 					color: props.textDark ? Theme.darkText : Theme.lightText,
 					background: props.colour,
 					flexDirection: props.swapSides ? "row-reverse" : "row",
-				}}>
+				}}
+			>
 				<div className={styles.image}>
 					<Image src={props.imageUrl} alt={props.imageAlt} fill style={{ objectFit: "cover" }} />
 				</div>

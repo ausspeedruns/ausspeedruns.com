@@ -19,12 +19,11 @@ const Heroblock = ({ event, backgroundPos, tagLine, overrideHeight }: LastEventB
 		<section
 			className={styles.lasteventblock}
 			style={{
-				backgroundImage: `url("${
-					require(`../../styles/img/${event.heroImage}`).default.src
-				}")`,
+				backgroundImage: `url("${require(`../../styles/img/${event.heroImage}`).default.src}")`,
 				backgroundPosition: backgroundPos,
-				height: overrideHeight
-			}}>
+				height: overrideHeight,
+			}}
+		>
 			<div className={`${styles.content} content`}>
 				<div className={styles.ctaBlock}>
 					<h1>{event.preferredName}</h1>

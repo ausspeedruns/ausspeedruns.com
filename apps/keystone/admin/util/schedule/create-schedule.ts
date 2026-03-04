@@ -1,5 +1,5 @@
-import { gql, ApolloClient, InMemoryCache } from '@keystone-6/core/admin-ui/apollo';
-import type { Run } from './schedule-types';
+import { gql, ApolloClient, InMemoryCache } from "@keystone-6/core/admin-ui/apollo";
+import type { Run } from "./schedule-types";
 
 const CREATE_RUNS_MUTATION = gql`
 	mutation CreateAllRuns($runs: [RunCreateInput!]!) {
@@ -37,10 +37,7 @@ interface CreateIncentives {
 
 const UPDATE_EVENT_END = gql`
 	mutation CreateAllIncentives($endDate: DateTime, $shortname: String) {
-		updateEvent(
-			where: { shortname: $shortname }
-			data: { endDate: $endDate }
-		) {
+		updateEvent(where: { shortname: $shortname }, data: { endDate: $endDate }) {
 			id
 			endDate
 		}
@@ -88,9 +85,7 @@ export async function createSchedule(
 			console.log(run.uuid, raceRunners);
 
 			let runners;
-			let manualRunners = raceRunners.find(
-				(raceRunners) => raceRunners.gameId === run.uuid,
-			);
+			let manualRunners = raceRunners.find((raceRunners) => raceRunners.gameId === run.uuid);
 			if (manualRunners) {
 				runners = {
 					runners: {
@@ -110,9 +105,7 @@ export async function createSchedule(
 			} else if (!runners) {
 				// If no runners ID then put them in the racer field
 				runners = {
-					racer: run.runner
-						.map((runner) => runner.username)
-						.join(", "),
+					racer: run.runner.map((runner) => runner.username).join(", "),
 				};
 			}
 
@@ -152,8 +145,7 @@ export async function createSchedule(
 				(run) => run.originalSubmission?.id === incentive.submissionId,
 			)?.id;
 
-			let connectedRun: { run: { connect: { id: string } } } | undefined =
-				undefined;
+			let connectedRun: { run: { connect: { id: string } } } | undefined = undefined;
 			if (originalRun) {
 				connectedRun = {
 					run: {
@@ -163,8 +155,8 @@ export async function createSchedule(
 					},
 				};
 			} else {
-				const allOriginalSubmissions = allRuns.data.createRuns.map(run => run.originalSubmission.id);
-				console.log("Couldn't find " + incentive.submissionId + " in", allOriginalSubmissions)
+				const allOriginalSubmissions = allRuns.data.createRuns.map((run) => run.originalSubmission.id);
+				console.log("Couldn't find " + incentive.submissionId + " in", allOriginalSubmissions);
 			}
 
 			return {
@@ -200,10 +192,7 @@ export async function createSchedule(
 		});
 
 		console.log(
-			endRunTime(
-				finalRuns[finalRuns.length - 1].scheduledTime,
-				finalRuns[finalRuns.length - 1].estimate,
-			),
+			endRunTime(finalRuns[finalRuns.length - 1].scheduledTime, finalRuns[finalRuns.length - 1].estimate),
 			updatedEventTime,
 			{
 				eventEnd: endRunTime(
@@ -248,9 +237,7 @@ export async function createSchedule(
 // Given the estimate and start time, get when the run ends as a date
 function endRunTime(scheduled: Date, estimate: string) {
 	const estimateParts = estimate.split(/:/);
-	const estimateMillis =
-		parseInt(estimateParts[0], 10) * 60 * 60 * 1000 +
-		parseInt(estimateParts[1], 10) * 60 * 1000;
+	const estimateMillis = parseInt(estimateParts[0], 10) * 60 * 60 * 1000 + parseInt(estimateParts[1], 10) * 60 * 1000;
 
 	const scheduledTime = new Date(scheduled);
 	// scheduledTime.setTime(scheduledTime.getTime());

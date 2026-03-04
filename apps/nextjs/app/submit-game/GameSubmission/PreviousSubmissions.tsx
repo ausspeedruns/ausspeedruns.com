@@ -1,15 +1,12 @@
 import { Card, CardActionArea, CardContent } from "@mui/material";
 import styles from "./PreviousSubmissions.module.scss";
-import { AgeRatingLiterals } from './submissionTypes';
+import { AgeRatingLiterals } from "./submissionTypes";
 
 interface ObjectWithProperties {
 	[key: string]: any;
 }
 
-function removeDuplicates<T extends ObjectWithProperties>(
-	arr: T[],
-	props: Array<keyof T>,
-): T[] {
+function removeDuplicates<T extends ObjectWithProperties>(arr: T[], props: Array<keyof T>): T[] {
 	const seen = new Set<string>();
 	return arr.filter((obj: T) => {
 		const key = props.map((prop) => obj[prop]).join("|");
@@ -36,7 +33,7 @@ interface PreviousSubmissionsProps {
 function PreviousSubmissions(props: PreviousSubmissionsProps) {
 	if (!props.submissions || props.submissions.length === 0) return <></>;
 
-	const collapseGames = removeDuplicates(props.submissions, ['game', 'platform']).slice(0, 3);
+	const collapseGames = removeDuplicates(props.submissions, ["game", "platform"]).slice(0, 3);
 
 	return (
 		<div className={styles.previousSubmissions}>
@@ -45,18 +42,16 @@ function PreviousSubmissions(props: PreviousSubmissionsProps) {
 					<Card
 						variant="outlined"
 						onClick={() => props.onGameClick(submission)}
-						key={`${submission.game}-${submission.platform}`}>
+						key={`${submission.game}-${submission.platform}`}
+					>
 						<CardActionArea
 							style={{
 								height: "100%",
-							}}>
+							}}
+						>
 							<CardContent className={styles.card}>
-								<span className={styles.gameName}>
-									{submission.game}
-								</span>
-								<span className={styles.platform}>
-									{submission.platform}
-								</span>
+								<span className={styles.gameName}>{submission.game}</span>
+								<span className={styles.platform}>{submission.platform}</span>
 							</CardContent>
 						</CardActionArea>
 					</Card>

@@ -1,14 +1,14 @@
-@use 'base';
+@use "base";
 @import "./colors.scss";
 @import "./responsive.scss";
 
 .content {
 	display: flex;
 	flex-direction: column;
-	
+
 	@include breakpoint($md) {
 		padding: 2rem 10%;
-    }
+	}
 
 	@include breakpoint($lg) {
 		padding: 2rem 0;
@@ -36,7 +36,7 @@
 	.userInfo {
 		width: 50%;
 		display: grid;
-		grid-template-columns: 1fr 1fr; 
+		grid-template-columns: 1fr 1fr;
 		gap: 5px 0px;
 
 		*:nth-child(odd) {
@@ -45,7 +45,7 @@
 	}
 
 	.upcomingRuns {
-		margin-top: 2rem;		
+		margin-top: 2rem;
 	}
 
 	.shirts {

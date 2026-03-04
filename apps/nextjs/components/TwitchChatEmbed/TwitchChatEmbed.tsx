@@ -1,7 +1,7 @@
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
-import styles from './TwitchChatEmbed.module.scss';
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from "react";
+import styles from "./TwitchChatEmbed.module.scss";
 
 type TwitchProps = {
 	channel: string;
@@ -17,7 +17,7 @@ const TwitchChatEmbed = ({ channel, parent, alwaysShow, darkMode = false }: Twit
 			<div className={styles.content}>
 				{!alwaysShow && (
 					<button onClick={() => setShowChat(!showChat)} className={styles.toggleChat}>
-						<span>{showChat ? 'Hide' : 'Show'} chat </span>
+						<span>{showChat ? "Hide" : "Show"} chat </span>
 						<FontAwesomeIcon icon={showChat ? faChevronUp : faChevronDown} />
 					</button>
 				)}
@@ -26,7 +26,7 @@ const TwitchChatEmbed = ({ channel, parent, alwaysShow, darkMode = false }: Twit
 					<iframe
 						className={styles.chatIframe}
 						title="Ausspeedruns twitch chat embed"
-						src={`https://www.twitch.tv/embed/${channel}/chat?parent=${parent}${darkMode ? '&darkpopout' : ''}`}
+						src={`https://www.twitch.tv/embed/${channel}/chat?parent=${parent}${darkMode ? "&darkpopout" : ""}`}
 						// height="<height>"
 						// width="<width>"
 					></iframe>

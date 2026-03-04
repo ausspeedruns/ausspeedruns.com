@@ -212,7 +212,8 @@ export function Schedule(props: ScheduleProps) {
 						endIcon={<OpenInNewIcon />}
 						href={event.horaro}
 						target="_blank"
-						rel="noopener noreferrer">
+						rel="noopener noreferrer"
+					>
 						Horaro
 					</Button>
 				)}
@@ -222,7 +223,8 @@ export function Schedule(props: ScheduleProps) {
 						endIcon={<OpenInNewIcon />}
 						href={event.oengus}
 						target="_blank"
-						rel="noopener noreferrer">
+						rel="noopener noreferrer"
+					>
 						Oengus
 					</Button>
 				)}
@@ -253,7 +255,8 @@ export function Schedule(props: ScheduleProps) {
 											dayElement.scrollIntoView({ behavior: "smooth", block: "start" });
 										}
 									}}
-									key={day}>
+									key={day}
+								>
 									{format(date, "EEEE")}
 									<br />
 									{format(date, "LLL d")}

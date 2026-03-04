@@ -22,7 +22,8 @@ const HeroBlock = ({ event, tagLine, darkText, schedule, submitRuns, ticketLink 
 			style={{
 				backgroundImage: `url("${require(`../../styles/img/${event.heroImage}`).default.src}")`,
 				color: darkText ? "#000" : "#fff",
-			}}>
+			}}
+		>
 			<div className={`${styles.content} content`}>
 				<div className={styles.ctaBlock}>
 					<h1>{event.preferredName}</h1>

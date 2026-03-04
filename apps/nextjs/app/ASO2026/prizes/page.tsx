@@ -16,8 +16,7 @@ const prizes = [
 		name: "Steam Bundle - Potico Games",
 		requirement: "$10 Minimum donation",
 		givingAway: 8,
-		description:
-			"Zebulon: A Lost Cat and PicoMix by NuSan.",
+		description: "Zebulon: A Lost Cat and PicoMix by NuSan.",
 	},
 	{
 		name: "Steam Bundle – Supergiant Games",

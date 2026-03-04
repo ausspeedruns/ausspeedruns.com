@@ -1,7 +1,7 @@
-import Papa from 'papaparse';
-import { gql, ApolloClient, InMemoryCache } from '@keystone-6/core/admin-ui/apollo';
+import Papa from "papaparse";
+import { gql, ApolloClient, InMemoryCache } from "@keystone-6/core/admin-ui/apollo";
 import { v4 as uuid } from "uuid";
-import type { Run } from './schedule-types';
+import type { Run } from "./schedule-types";
 
 const RUNNERS_NAMES_QUERY = gql`
 	query GetAllKnownRunners($runners: [ID!]) {
@@ -19,24 +19,19 @@ interface RunnersNames {
 	}[];
 }
 
-export async function parseScheduleToRuns(
-	file: File,
-	eventSettings: { startTime: Date; turnaroundTime: number },
-) {
-	return new Promise<Awaited<ReturnType<typeof csvToRuns>>>(
-		(resolve, reject) => {
-			Papa.parse<UploadedSchedule>(file, {
-				complete: async (results) => {
-					resolve(await csvToRuns(results.data, eventSettings));
-				},
-				error: (error) => {
-					reject(error);
-				},
-				header: true,
-				skipEmptyLines: true,
-			});
-		},
-	);
+export async function parseScheduleToRuns(file: File, eventSettings: { startTime: Date; turnaroundTime: number }) {
+	return new Promise<Awaited<ReturnType<typeof csvToRuns>>>((resolve, reject) => {
+		Papa.parse<UploadedSchedule>(file, {
+			complete: async (results) => {
+				resolve(await csvToRuns(results.data, eventSettings));
+			},
+			error: (error) => {
+				reject(error);
+			},
+			header: true,
+			skipEmptyLines: true,
+		});
+	});
 }
 
 interface UploadedSchedule {
@@ -88,36 +83,22 @@ async function csvToRuns(
 	eventSettings: { startTime: Date; turnaroundTime: number },
 ): Promise<Run[]> {
 	// Get all runner names
-	const runnerNames = await getRunners(
-		csvResults.map((submission) => submission.runnerId),
-	);
+	const runnerNames = await getRunners(csvResults.map((submission) => submission.runnerId));
 
 	const runningTime = new Date(eventSettings.startTime);
 	return csvResults.map((submission) => {
 		const estimateParts = submission.estimate.split(/:/);
 		const estimateMillis =
-			parseInt(estimateParts[0], 10) * 60 * 60 * 1000 +
-			parseInt(estimateParts[1], 10) * 60 * 1000;
+			parseInt(estimateParts[0], 10) * 60 * 60 * 1000 + parseInt(estimateParts[1], 10) * 60 * 1000;
 
 		const scheduledTime = new Date(runningTime);
 		// scheduledTime.setTime(scheduledTime.getTime());
-		runningTime.setTime(
-			scheduledTime.getTime() +
-			estimateMillis +
-			eventSettings.turnaroundTime * 60 * 1000,
-		);
+		runningTime.setTime(scheduledTime.getTime() + estimateMillis + eventSettings.turnaroundTime * 60 * 1000);
 
-		let runner = runnerNames.find(
-			(runner) => submission.runnerId == runner.id,
-		) ??
-			runnerNames.find(
-				(runner) => submission.runner == runner.username,
-			) ?? {
-			username:
-				submission?.racer !== ""
-					? `${submission?.runner}, ${submission?.racer}`
-					: submission?.runner,
-		};
+		let runner = runnerNames.find((runner) => submission.runnerId == runner.id) ??
+			runnerNames.find((runner) => submission.runner == runner.username) ?? {
+				username: submission?.racer !== "" ? `${submission?.runner}, ${submission?.racer}` : submission?.runner,
+			};
 
 		if (submission.game.toLowerCase() === "setup buffer") {
 			runner = {

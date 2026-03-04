@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function Custom404() {
 	const responses = [
@@ -8,23 +8,21 @@ export default function Custom404() {
 	];
 
 	return (
-        <main style={{ height: '100%', width: '100%' }}>
+		<main style={{ height: "100%", width: "100%" }}>
 			<div
 				style={{
-					display: 'flex',
-					flexFlow: 'column',
-					justifyContent: 'center',
-					alignItems: 'center',
-					height: '100vh',
-					gap: '1rem',
+					display: "flex",
+					flexFlow: "column",
+					justifyContent: "center",
+					alignItems: "center",
+					height: "100vh",
+					gap: "1rem",
 				}}
 			>
 				<h1>Error 404 - Page not found</h1>
 				{responses[~~(Math.random() * responses.length)]}
-				<Link href="/">
-					Go back home
-				</Link>
+				<Link href="/">Go back home</Link>
 			</div>
 		</main>
-    );
+	);
 }

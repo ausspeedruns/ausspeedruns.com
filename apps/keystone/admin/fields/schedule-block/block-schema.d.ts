@@ -4,4 +4,4 @@ export type Block = {
 	textColour: string;
 	startRunId: string;
 	endRunId?: string;
-}
+};

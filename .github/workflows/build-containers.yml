@@ -1,62 +1,53 @@
 name: Build Containers
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
 
 jobs:
-  build-containers:
-    runs-on: ubuntu-latest
-    steps:
-      -
-        name: Checkout public
-        uses: actions/checkout@v3
-        with:
-          path: main
-          fetch-depth: 0
-      -
-        name: Checkout private
-        uses: actions/checkout@v3
-        with:
-          repository: ausspeedruns/ausspeedruns.com-private
-          path: asr-private
-          token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
-      -
-        name: Move sponsors to right place
-        run: mv asr-private/sponsors main/apps/nextjs/styles/img/
-      -
-        name: Set up Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: main/package-lock.json
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      -
-        name: Login to ACR
-        uses: azure/docker-login@v1
-        with:
-          login-server: ausrunswebsitecontainersregistry.azurecr.io
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
-      -
-        name: Derive appropriate SHAs for base and head for `nx affected` commands
-        uses: nrwl/nx-set-shas@v3
-        with:
-          working-directory: ./main
-      -
-        name: 'Install Dependencies'
-        working-directory: ./main
-        run: npm ci --force
-      -
-        name: 'Build images'
-        working-directory: ./main
-        env:
-          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-        run: INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container-push
+    build-containers:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout public
+              uses: actions/checkout@v3
+              with:
+                  path: main
+                  fetch-depth: 0
+            - name: Checkout private
+              uses: actions/checkout@v3
+              with:
+                  repository: ausspeedruns/ausspeedruns.com-private
+                  path: asr-private
+                  token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
+            - name: Move sponsors to right place
+              run: mv asr-private/sponsors main/apps/nextjs/styles/img/
+            - name: Set up Node
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 20
+                  cache: "npm"
+                  cache-dependency-path: main/package-lock.json
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v2
+            - name: Login to ACR
+              uses: azure/docker-login@v1
+              with:
+                  login-server: ausrunswebsitecontainersregistry.azurecr.io
+                  username: ${{ secrets.ACR_USERNAME }}
+                  password: ${{ secrets.ACR_PASSWORD }}
+            - name: Derive appropriate SHAs for base and head for `nx affected` commands
+              uses: nrwl/nx-set-shas@v3
+              with:
+                  working-directory: ./main
+            - name: "Install Dependencies"
+              working-directory: ./main
+              run: npm ci --force
+            - name: "Build images"
+              working-directory: ./main
+              env:
+                  SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+                  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+                  AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+              run: INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=container-push

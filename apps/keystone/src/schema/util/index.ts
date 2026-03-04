@@ -1,2 +1,2 @@
-export { file } from './file';
-export { image } from './image';
+export { file } from "./file";
+export { image } from "./image";

@@ -153,7 +153,7 @@ export default async function EventPage({ params }: { params: { event: string } 
 		eventData.past ? eventData.event.postEventPage.document : eventData.event.eventPage.document,
 	);
 
-			/* <Head>
+	/* <Head>
 				<title>{`${eventData.event.shortname} - AusSpeedruns`}</title>
 				<DiscordEmbed
 					title={`${eventData.event.shortname} - AusSpeedruns`}
@@ -162,11 +162,11 @@ export default async function EventPage({ params }: { params: { event: string } 
 				/>
 			</Head> */
 
-
 	return (
 		<div
 			className={eventData.past ? styles.postEvent : styles.event}
-			style={{ backgroundImage: eventData.past ? `url('${eventData.event.postEventBackground?.url}')` : "" }}>
+			style={{ backgroundImage: eventData.past ? `url('${eventData.event.postEventBackground?.url}')` : "" }}
+		>
 			<div className={styles.document}>
 				<DocumentRenderer
 					document={trimmedDocument}

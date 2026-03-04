@@ -2,8 +2,8 @@ import styles from "./incentives.module.scss";
 
 import { Goal } from "../../../components/Incentives/IncentiveGoal";
 import { War } from "../../../components/Incentives/IncentiveWar";
-import Button from 'apps/nextjs/components/Button/Button';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import Button from "apps/nextjs/components/Button/Button";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { ReactNode } from "react";
 import { QUERY_INCENTIVES_RESULTS } from "./page";
 
@@ -39,12 +39,7 @@ export function IncentivesClient(props: IncentivesProps) {
 					much you want to put in for it!
 				</div>
 				<div className={styles.donate}>
-					<Button
-						actionText="Donate"
-						link="/donate"
-						openInNewTab
-						iconRight={faChevronRight}
-					/>
+					<Button actionText="Donate" link="/donate" openInNewTab iconRight={faChevronRight} />
 				</div>
 				{incentiveElements.active.length > 0 && (
 					<>
@@ -68,7 +63,7 @@ export function IncentivesClient(props: IncentivesProps) {
 			</main>
 		</div>
 	);
-};
+}
 
 function getIncentiveElement(incentive: any): ReactNode {
 	const runMetadata = {
@@ -79,9 +74,19 @@ function getIncentiveElement(incentive: any): ReactNode {
 	};
 	switch (incentive.type) {
 		case "goal":
-			return <><Goal key={incentive.id} {...runMetadata} {...incentive.data} /><hr /></>;
+			return (
+				<>
+					<Goal key={incentive.id} {...runMetadata} {...incentive.data} />
+					<hr />
+				</>
+			);
 		case "war":
-			return <><War key={incentive.id} {...runMetadata} {...incentive.data} /><hr /></>;
+			return (
+				<>
+					<War key={incentive.id} {...runMetadata} {...incentive.data} />
+					<hr />
+				</>
+			);
 		default:
 			return null;
 	}

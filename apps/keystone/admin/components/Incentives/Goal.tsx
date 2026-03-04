@@ -78,13 +78,15 @@ export function Goal({ incentive, incentiveUpdate }: GoalProps) {
 					gridTemplateColumns: "2fr 1fr",
 					width: "50%",
 					gap: "1rem",
-				}}>
+				}}
+			>
 				<TextInput onChange={(e) => setAdd(e.target.valueAsNumber)} type="number" value={add} />
 				<Button
 					isDisabled={add === 0}
 					tone="positive"
 					weight={add === 0 ? "light" : "bold"}
-					onClick={handleAdd}>
+					onClick={handleAdd}
+				>
 					Add
 				</Button>
 			</div>
@@ -96,7 +98,8 @@ export function Goal({ incentive, incentiveUpdate }: GoalProps) {
 					style={{ marginRight: 16 }}
 					onChange={(e) => {
 						setActive(e.target.checked);
-					}}>
+					}}
+				>
 					Active
 				</Checkbox>
 			</FieldContainer>

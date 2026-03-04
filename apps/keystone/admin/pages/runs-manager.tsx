@@ -1,17 +1,17 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { jsx, Inline, Stack, Heading } from '@keystone-ui/core';
-import React, { useEffect } from 'react';
-import { PageContainer } from '@keystone-6/core/admin-ui/components';
-import { Link } from '@keystone-6/core/admin-ui/router';
-import { useMutation, useQuery, gql, useLazyQuery } from '@keystone-6/core/admin-ui/apollo';
-import { Button } from '@keystone-ui/button';
-import { Select, FieldContainer, FieldLabel, TextInput, DatePicker } from '@keystone-ui/fields';
-import { ListItem, ListItemButton, ListItemText } from '@mui/material';
-import { VariableSizeList, ListChildComponentProps } from 'react-window';
-import { format, parse, parseISO } from 'date-fns';
-import { useToasts } from '@keystone-ui/toast';
+import { jsx, Inline, Stack, Heading } from "@keystone-ui/core";
+import React, { useEffect } from "react";
+import { PageContainer } from "@keystone-6/core/admin-ui/components";
+import { Link } from "@keystone-6/core/admin-ui/router";
+import { useMutation, useQuery, gql, useLazyQuery } from "@keystone-6/core/admin-ui/apollo";
+import { Button } from "@keystone-ui/button";
+import { Select, FieldContainer, FieldLabel, TextInput, DatePicker } from "@keystone-ui/fields";
+import { ListItem, ListItemButton, ListItemText } from "@mui/material";
+import { VariableSizeList, ListChildComponentProps } from "react-window";
+import { format, parse, parseISO } from "date-fns";
+import { useToasts } from "@keystone-ui/toast";
 
 const EVENTS_LIST_QUERY = gql`
 	query {
@@ -90,13 +90,13 @@ interface SubmissionData {
 }
 
 export default function RunsManager() {
-	const [selectedEvent, setSelectedEvent] = React.useState({ label: '', value: '' });
+	const [selectedEvent, setSelectedEvent] = React.useState({ label: "", value: "" });
 	const [selectedRunIndex, setSelectedRunIndex] = React.useState(0);
-	const [runDate, setRunDate] = React.useState('');
-	const [runTime, setRunTime] = React.useState('');
-	const [runYT, setRunYT] = React.useState('');
-	const [runTwitch, setRunTwitch] = React.useState('');
-	const [finalTime, setFinalTime] = React.useState('');
+	const [runDate, setRunDate] = React.useState("");
+	const [runTime, setRunTime] = React.useState("");
+	const [runYT, setRunYT] = React.useState("");
+	const [runTwitch, setRunTwitch] = React.useState("");
+	const [finalTime, setFinalTime] = React.useState("");
 	const { addToast } = useToasts();
 
 	const eventsList = useQuery(EVENTS_LIST_QUERY);
@@ -118,7 +118,12 @@ export default function RunsManager() {
 		mutation ($runID: ID, $scheduledTime: DateTime, $finalTime: String, $twitchVOD: String, $youtubeVOD: String) {
 			updateRun(
 				where: { id: $runID }
-				data: { finalTime: $finalTime, twitchVOD: $twitchVOD, youtubeVOD: $youtubeVOD, scheduledTime: $scheduledTime }
+				data: {
+					finalTime: $finalTime
+					twitchVOD: $twitchVOD
+					youtubeVOD: $youtubeVOD
+					scheduledTime: $scheduledTime
+				}
 			) {
 				id
 				game
@@ -136,7 +141,7 @@ export default function RunsManager() {
 		if (!eventData.data || !runData) return;
 
 		setRunDate(runData.scheduledTime);
-		setRunTime(runData.scheduledTime ? format(new Date(runData.scheduledTime), 'HH:ss') : '');
+		setRunTime(runData.scheduledTime ? format(new Date(runData.scheduledTime), "HH:ss") : "");
 		setFinalTime(runData.finalTime);
 		setRunTwitch(runData.twitchVOD);
 		setRunYT(runData.youtubeVOD);
@@ -146,12 +151,12 @@ export default function RunsManager() {
 		// console.log(updateRunMutationData);
 		if (updateRunMutationData.error) {
 			console.error(updateRunMutationData.error);
-			addToast({ title: 'Error updating run', tone: 'negative', message: updateRunMutationData.error.message });
+			addToast({ title: "Error updating run", tone: "negative", message: updateRunMutationData.error.message });
 		} else if (updateRunMutationData.data?.updateRun) {
 			addToast({
 				title: `Updated ${updateRunMutationData.data.updateRun.game}`,
 				id: updateRunMutationData.data.updateRun.id,
-				tone: 'positive',
+				tone: "positive",
 				preserve: false,
 			});
 		}
@@ -162,7 +167,7 @@ export default function RunsManager() {
 
 		let parsedTime;
 		try {
-			parsedTime = parse(format(parseISO(runDate), 'yyyy-MM-dd') + ' ' + runTime, 'yyyy-MM-dd HH:mm', new Date());
+			parsedTime = parse(format(parseISO(runDate), "yyyy-MM-dd") + " " + runTime, "yyyy-MM-dd HH:mm", new Date());
 		} catch (error) {
 			console.error(error);
 		}
@@ -190,7 +195,7 @@ export default function RunsManager() {
 				platform: submission.platform,
 				estimate: submission.estimate,
 				donationIncentive: submission.donationIncentive,
-				race: submission.race !== 'no',
+				race: submission.race !== "no",
 				coop: submission.coop,
 				originalSubmission: { connect: { id: submission.id } },
 				runners: { connect: { id: submission.runner.id } },
@@ -213,7 +218,7 @@ export default function RunsManager() {
 			{eventData?.data?.event && (
 				<>
 					<p>
-						There are {eventData.data.event.submissionsCount} accepted submissions. There are{' '}
+						There are {eventData.data.event.submissionsCount} accepted submissions. There are{" "}
 						{eventData.data.event.runsCount} runs.
 					</p>
 					{/* <Button
@@ -225,7 +230,7 @@ export default function RunsManager() {
 						Load submissions
 					</Button> */}
 					<Button
-						tone={eventData.data.event.runsCount > 0 ? 'passive' : 'active'}
+						tone={eventData.data.event.runsCount > 0 ? "passive" : "active"}
 						weight="bold"
 						isDisabled={
 							!submissionData.data ||
@@ -236,7 +241,7 @@ export default function RunsManager() {
 					>
 						Convert accepted submissions to runs
 					</Button>
-					<div css={{ border: '1px solid #e1e5e9', borderRadius: 6, display: 'flex', marginTop: 16 }}>
+					<div css={{ border: "1px solid #e1e5e9", borderRadius: 6, display: "flex", marginTop: 16 }}>
 						<VariableSizeList
 							height={650}
 							width={350}
@@ -247,7 +252,7 @@ export default function RunsManager() {
 							itemCount={eventData.data.event.runsCount}
 							overscanCount={5}
 							itemData={eventData.data.event.runs.map((run: any) => ({ ...run, setSelectedRunIndex }))}
-							css={{ borderRight: '1px solid #e1e5e9', background: '#fafbfc' }}
+							css={{ borderRight: "1px solid #e1e5e9", background: "#fafbfc" }}
 						>
 							{renderRunRow}
 						</VariableSizeList>
@@ -273,7 +278,7 @@ export default function RunsManager() {
 									<br />
 									Category <b>{runData.category}</b>
 									<br />
-									Runner{runData.runners.length > 1 ? 's' : ''}{' '}
+									Runner{runData.runners.length > 1 ? "s" : ""}{" "}
 									<b>
 										{runData.runners.map((runner) => (
 											<a href={`/users/${runner.id}`} target="_blank">
@@ -303,11 +308,15 @@ export default function RunsManager() {
 														setRunDate(date);
 													}}
 													onClear={() => {}}
-													value={runDate?.split('T')[0]}
+													value={runDate?.split("T")[0]}
 												/>
 											</Stack>
 											<Stack>
-												<TextInput placeholder="00:00" value={runTime} onChange={(e) => setRunTime(e.target.value)} />
+												<TextInput
+													placeholder="00:00"
+													value={runTime}
+													onChange={(e) => setRunTime(e.target.value)}
+												/>
 											</Stack>
 										</Inline>
 									</FieldContainer>
@@ -352,7 +361,7 @@ function renderRunRow(props: ListChildComponentProps) {
 			<ListItemButton onClick={() => data.setSelectedRunIndex(index)}>
 				<ListItemText
 					primary={data.game}
-					secondary={`${data.category} - ${data.runners.map((runner) => runner.username).join(', ')}`}
+					secondary={`${data.category} - ${data.runners.map((runner) => runner.username).join(", ")}`}
 				/>
 			</ListItemButton>
 		</ListItem>

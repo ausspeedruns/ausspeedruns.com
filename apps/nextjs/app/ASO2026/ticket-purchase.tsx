@@ -101,7 +101,8 @@ export function TicketPurchase(props: TicketPurchaseProps) {
 							color="primary"
 							fullWidth
 							disabled={!props.canBuy}
-							onClick={generateTicket}>
+							onClick={generateTicket}
+						>
 							Purchase Ticket via Bank Transfer
 						</Button>
 					)}

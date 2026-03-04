@@ -56,7 +56,8 @@ export function Block(props: BlockProps) {
 								setIsColourOpen(true);
 								setModalData({ title: "Set Colour", property: "colour" });
 								setColourState(props.value.colour);
-							}}>
+							}}
+						>
 							<div
 								style={{
 									background: props.value.colour,
@@ -78,7 +79,8 @@ export function Block(props: BlockProps) {
 								setIsColourOpen(true);
 								setModalData({ title: "Set Text Colour", property: "textColour" });
 								setColourState(props.value.textColour);
-							}}>
+							}}
+						>
 							<div
 								style={{
 									background: props.value.textColour,
@@ -128,7 +130,8 @@ export function Block(props: BlockProps) {
 						isDisabled={props.disabled}
 						tone="negative"
 						weight="bold"
-						onClick={() => props.onDelete?.(props.id ?? -1)}>
+						onClick={() => props.onDelete?.(props.id ?? -1)}
+					>
 						<DeleteIcon style={{ marginBottom: -7 }} /> Remove
 					</Button>
 				</Stack>
@@ -147,7 +150,8 @@ export function Block(props: BlockProps) {
 							},
 							label: "Confirm",
 						},
-					}}>
+					}}
+				>
 					<ChromePicker
 						color={colourState}
 						onChange={(e) => {

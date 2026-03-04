@@ -60,8 +60,9 @@ export default function Home() {
 				<p className={[styles.content, styles.tagline].join(" ")}>
 					We have been organising speedrun marathons since 2015, starting with AVCon in Adelaide. Since then,
 					we have grown to become the largest speedrun marathon organisation in Australia, with a strong and
-					dedicated community. In addition to working with conventions such as PAX Australia, DreamHack, The Game Expo,
-					AVCon, and Comic Con Australia. We also run our own annual event, the Australian Speedrun Marathon.
+					dedicated community. In addition to working with conventions such as PAX Australia, DreamHack, The
+					Game Expo, AVCon, and Comic Con Australia. We also run our own annual event, the Australian Speedrun
+					Marathon.
 				</p>
 			</section>
 
@@ -71,21 +72,24 @@ export default function Home() {
 					className={styles.event}
 					style={{
 						backgroundImage: `url(${DHBackground.src})`,
-					}}>
+					}}
+				>
 					<Image src={DHLogo} alt="TGX Logo" height={125} width={500} />
 				</div>
 				<div
 					className={styles.event}
 					style={{
 						backgroundImage: `url(${ASMBackground.src})`,
-					}}>
+					}}
+				>
 					<Image src={ASMLogo} alt="ASM Logo" height={125} />
 				</div>
 				<div
 					className={styles.event}
 					style={{
 						backgroundImage: `url(${PAXBackground.src})`,
-					}}>
+					}}
+				>
 					<Image src={PAXLogo} alt="PAX Logo" height={125} />
 				</div>
 			</div>

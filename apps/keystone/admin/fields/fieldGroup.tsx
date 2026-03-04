@@ -23,13 +23,16 @@ export function FieldGroup(props: { label: string; description: string | null; c
 		<div
 			role="group"
 			aria-labelledby={labelId}
-			aria-describedby={props.description === null ? undefined : descriptionId}>
+			aria-describedby={props.description === null ? undefined : descriptionId}
+		>
 			<details open>
-				<summary style={{
-					listStyle: "none",
-					outline: 0,
-					// "::-webkit-details-marker": { display: "none" }
-				}}>
+				<summary
+					style={{
+						listStyle: "none",
+						outline: 0,
+						// "::-webkit-details-marker": { display: "none" }
+					}}
+				>
 					<Stack across gap="medium">
 						<div // this is a div rather than a button because the interactive element here is the <summary> above
 							style={{
@@ -41,7 +44,8 @@ export function FieldGroup(props: { label: string; description: string | null; c
 								// "details[open] &": {
 								// 	transform: "rotate(90deg)",
 								// },
-							}}>
+							}}
+						>
 							{downChevron}
 						</div>
 						{divider}

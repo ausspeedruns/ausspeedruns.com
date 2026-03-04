@@ -16,9 +16,7 @@ const ContactPage: React.FC = () => {
 				<h1>Contact Us</h1>
 				<section>
 					<h2>Email</h2>
-					<a href="mailto:ausspeedruns@ausspeedruns.com">
-						ausspeedruns@ausspeedruns.com
-					</a>
+					<a href="mailto:ausspeedruns@ausspeedruns.com">ausspeedruns@ausspeedruns.com</a>
 				</section>
 				<section>
 					<h2>Twitter / X</h2>

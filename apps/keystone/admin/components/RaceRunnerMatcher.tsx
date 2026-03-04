@@ -1,9 +1,9 @@
-import { Stack } from '@keystone-ui/core';
-import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
-import { gql, useLazyQuery } from '@keystone-6/core/admin-ui/apollo';
-import { Button } from '@keystone-ui/button';
-import { FieldContainer, FieldLabel, TextInput } from '@keystone-ui/fields';
-import { Autocomplete, Paper, Stepper, Step, StepButton, MobileStepper } from '@mui/material';
+import { Stack } from "@keystone-ui/core";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { gql, useLazyQuery } from "@keystone-6/core/admin-ui/apollo";
+import { Button } from "@keystone-ui/button";
+import { FieldContainer, FieldLabel, TextInput } from "@keystone-ui/fields";
+import { Autocomplete, Paper, Stepper, Step, StepButton, MobileStepper } from "@mui/material";
 
 const ALL_RUNNER_NAMES_QUERY = gql`
 	query GetAllRunners {
@@ -47,7 +47,7 @@ export const RaceRunnerMatcher = forwardRef<RaceRunnerMatcherRef, RaceRunnerMatc
 		[k: number]: { gameId: string; runners: { label: string; value: string }[] };
 	}>({});
 
-	const [selectedRunner, setSelectedRunner] = useState({ label: '', value: '' });
+	const [selectedRunner, setSelectedRunner] = useState({ label: "", value: "" });
 	const [currentRunners, setCurrentRunners] = useState<{ label: string; value: string }[]>([]);
 	const [allRunnerNames, setAllRunnerNames] = useState<{ label: string; value: string }[]>([]);
 	const [queryAllRunnerNames] = useLazyQuery<AllRunnerNames>(ALL_RUNNER_NAMES_QUERY);
@@ -77,8 +77,8 @@ export const RaceRunnerMatcher = forwardRef<RaceRunnerMatcherRef, RaceRunnerMatc
 			isLastStep() && !allStepsCompleted()
 				? // It's the last step, but not all steps have been completed,
 
-				  // find the first step that has been completed
-				  props.races.findIndex((step, i) => !(i in allRaces))
+					// find the first step that has been completed
+					props.races.findIndex((step, i) => !(i in allRaces))
 				: raceStep + 1;
 		setRaceStep(newActiveStep);
 	};
@@ -146,7 +146,7 @@ export const RaceRunnerMatcher = forwardRef<RaceRunnerMatcherRef, RaceRunnerMatc
 		setAllRunnerNames(
 			data.users.map((runner) => {
 				return { label: runner.username, value: runner.id };
-			})
+			}),
 		);
 	}
 
@@ -161,7 +161,7 @@ export const RaceRunnerMatcher = forwardRef<RaceRunnerMatcherRef, RaceRunnerMatc
 			}
 		}
 
-		setSelectedRunner({ label: '', value: '' });
+		setSelectedRunner({ label: "", value: "" });
 	}, [raceStep, props.races]);
 
 	useEffect(() => {
@@ -180,9 +180,9 @@ export const RaceRunnerMatcher = forwardRef<RaceRunnerMatcherRef, RaceRunnerMatc
 	}));
 
 	return (
-		<Paper elevation={2} sx={{ p: 2, flexGrow: 1, maxWidth: '50%' }}>
-			<h2 style={{ textAlign: 'center', margin: '0' }}>Race/Coop Runners</h2>
-			<h3 style={{ textAlign: 'center', margin: '0' }}>
+		<Paper elevation={2} sx={{ p: 2, flexGrow: 1, maxWidth: "50%" }}>
+			<h2 style={{ textAlign: "center", margin: "0" }}>Race/Coop Runners</h2>
+			<h3 style={{ textAlign: "center", margin: "0" }}>
 				{completedSteps()}/{totalSteps()} {allStepsCompleted() && totalSteps() > 0 && <span>Done!</span>}
 			</h3>
 			<MobileStepper
@@ -190,14 +190,14 @@ export const RaceRunnerMatcher = forwardRef<RaceRunnerMatcherRef, RaceRunnerMatc
 				steps={totalSteps()}
 				position="static"
 				activeStep={raceStep}
-				sx={{ flexGrow: 1, justifyContent: 'center' }}
+				sx={{ flexGrow: 1, justifyContent: "center" }}
 				nextButton={<></>}
 				backButton={<></>}
 			/>
 			{props.races[raceStep] && (
 				<>
-					<h1 style={{ margin: 0, textAlign: 'center' }}>{props.races[raceStep].game}</h1>
-					<h3 style={{ margin: 0, textAlign: 'center' }}>{props.races[raceStep].category}</h3>
+					<h1 style={{ margin: 0, textAlign: "center" }}>{props.races[raceStep].game}</h1>
+					<h3 style={{ margin: 0, textAlign: "center" }}>{props.races[raceStep].category}</h3>
 				</>
 			)}
 			<Stack gap="medium">
@@ -219,14 +219,14 @@ export const RaceRunnerMatcher = forwardRef<RaceRunnerMatcherRef, RaceRunnerMatc
 					</span>
 				</FieldContainer>
 				<Autocomplete
-					options={[...allRunnerNames, { label: '', value: '' }]}
+					options={[...allRunnerNames, { label: "", value: "" }]}
 					getOptionLabel={(option: { value: string; label: string }) => option.label}
 					onChange={(e, newVal) => setSelectedRunner(newVal as { value: string; label: string })}
 					value={selectedRunner}
 					renderInput={(params) => (
 						<FieldContainer ref={params.InputProps.ref}>
 							<FieldLabel>Runner Name</FieldLabel>
-							<div style={{ display: 'flex' }}>
+							<div style={{ display: "flex" }}>
 								<TextInput
 									{...params.inputProps}
 									disabled={!enabled || allRunnerNames.length === 0}
@@ -235,18 +235,28 @@ export const RaceRunnerMatcher = forwardRef<RaceRunnerMatcherRef, RaceRunnerMatc
 									width="full"
 									type="text"
 								/>
-								<Button isDisabled={!enabled || !selectedRunner} style={{ marginLeft: 8 }} onClick={addRunnerToList} tone="positive" weight="bold">
+								<Button
+									isDisabled={!enabled || !selectedRunner}
+									style={{ marginLeft: 8 }}
+									onClick={addRunnerToList}
+									tone="positive"
+									weight="bold"
+								>
 									+
 								</Button>
 							</div>
 						</FieldContainer>
 					)}
 				/>
-				<div style={{ display: 'flex', gap: 8 }}>
+				<div style={{ display: "flex", gap: 8 }}>
 					{currentRunners.map((runner) => (
-						<Paper elevation={4} key={runner.value} sx={{ p: 1, width: 'fit-content' }}>
-							<span style={{ display: 'block', color: 'gray', fontSize: 10 }}>{runner.value}</span>
-							<a href={`http://localhost:8000/users/${runner.value}`} target="_blank" rel="noopener noreferrer">
+						<Paper elevation={4} key={runner.value} sx={{ p: 1, width: "fit-content" }}>
+							<span style={{ display: "block", color: "gray", fontSize: 10 }}>{runner.value}</span>
+							<a
+								href={`http://localhost:8000/users/${runner.value}`}
+								target="_blank"
+								rel="noopener noreferrer"
+							>
 								{runner.label}
 							</a>
 							<Button
@@ -262,11 +272,17 @@ export const RaceRunnerMatcher = forwardRef<RaceRunnerMatcherRef, RaceRunnerMatc
 					))}
 				</div>
 			</Stack>
-			<div style={{ display: 'flex', flexDirection: 'row', marginTop: 16 }}>
-				<Button isDisabled={!enabled} color="inherit" disabled={raceStep === 0} onClick={handleBack} tone="active">
+			<div style={{ display: "flex", flexDirection: "row", marginTop: 16 }}>
+				<Button
+					isDisabled={!enabled}
+					color="inherit"
+					disabled={raceStep === 0}
+					onClick={handleBack}
+					tone="active"
+				>
 					Back
 				</Button>
-				<div style={{ flex: '1 1 auto' }} />
+				<div style={{ flex: "1 1 auto" }} />
 				{allRaces[raceStep] && isRaceComplete() ? (
 					<Button isDisabled={!enabled} onClick={handleNext} tone="active" weight="bold">
 						Update

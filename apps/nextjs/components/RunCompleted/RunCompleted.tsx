@@ -4,7 +4,7 @@ import YouTubeVideoEmbed from "../YouTubeVideoEmbed/YouTubeVideoEmbed";
 import styles from "./RunCompleted.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitch } from "@fortawesome/free-brands-svg-icons";
-import TwitchVideoEmbed from '../TwitchVideoEmbed/TwitchVideoEmbed';
+import TwitchVideoEmbed from "../TwitchVideoEmbed/TwitchVideoEmbed";
 
 type Run = {
 	run: {
@@ -60,7 +60,7 @@ const RunCompleted = ({ run }: Run) => {
 						<span>{run.finalTime}</span>
 					</div>
 
-					{(run.twitchVOD && run.youtubeVOD) && (
+					{run.twitchVOD && run.youtubeVOD && (
 						<a className={styles.twitch} href={run.twitchVOD} target="_blank" rel="noreferrer">
 							<FontAwesomeIcon icon={faTwitch} />
 							Twitch VOD
@@ -70,12 +70,10 @@ const RunCompleted = ({ run }: Run) => {
 			</div>
 			{run.youtubeVOD ? (
 				<YouTubeVideoEmbed videoID={run.youtubeVOD.split("=")[1]} />
+			) : run.twitchVOD && typeof window !== "undefined" ? (
+				<TwitchVideoEmbed video={run.twitchVOD.split("/")[4]} channel="" parent={window.location.hostname} />
 			) : (
-				(run.twitchVOD && typeof window !== "undefined") ? (
-					<TwitchVideoEmbed video={run.twitchVOD.split("/")[4]} channel='' parent={window.location.hostname} />
-				) : (
-					<p style={{ textAlign: "center" }}>No VOD exists</p>
-				)
+				<p style={{ textAlign: "center" }}>No VOD exists</p>
 			)}
 		</div>
 	);

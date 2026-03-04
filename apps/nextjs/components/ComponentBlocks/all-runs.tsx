@@ -162,10 +162,12 @@ export function AllRuns({ event }: { event: any }) {
 														href={run.twitchVOD}
 														target="_blank"
 														rel="noopener noreferrer"
-														className={styles.twitch}>
+														className={styles.twitch}
+													>
 														<Button
 															variant="contained"
-															startIcon={<FontAwesomeIcon icon={faTwitch} />}>
+															startIcon={<FontAwesomeIcon icon={faTwitch} />}
+														>
 															Twitch
 														</Button>
 													</a>

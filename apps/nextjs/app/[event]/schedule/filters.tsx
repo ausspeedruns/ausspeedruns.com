@@ -116,7 +116,8 @@ export const Filters = (props: FiltersProps) => {
 							(key) => props.currentSettings.filter[key as keyof Settings["filter"]],
 						)}
 						onChange={handleFilterChange}
-						aria-label="Run type filter">
+						aria-label="Run type filter"
+					>
 						<ToggleButton value="race" aria-label="Race">
 							Race
 						</ToggleButton>

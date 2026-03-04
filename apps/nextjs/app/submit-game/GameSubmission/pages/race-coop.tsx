@@ -44,14 +44,16 @@ export const RaceCoop = forwardRef<SubmissionPageRef, RaceCoopProps>((props, ref
 						style={{
 							textAlign: "center",
 							fontWeight: "bold",
-						}}>
+						}}
+					>
 						IMPORTANT! All other runners must also submit the game.
 					</p>
 					<FormControl>
 						<RadioGroup
 							aria-labelledby="race-type-label"
 							value={coop}
-							onChange={(_, value) => setCoop(value === "true")}>
+							onChange={(_, value) => setCoop(value === "true")}
+						>
 							<FormControlLabel value={false} control={<Radio />} label="Race" />
 							<FormControlLabel value={true} control={<Radio />} label="Co-op" />
 						</RadioGroup>
@@ -62,7 +64,8 @@ export const RaceCoop = forwardRef<SubmissionPageRef, RaceCoopProps>((props, ref
 						<RadioGroup
 							aria-labelledby="race-type-label"
 							value={race}
-							onChange={(_, value) => setRace(value as RaceLiterals)}>
+							onChange={(_, value) => setRace(value as RaceLiterals)}
+						>
 							<FormControlLabel value="solo" control={<Radio />} label="Possible to do solo" />
 							<FormControlLabel
 								value="only"

@@ -113,7 +113,8 @@ const HeroBlock = ({
 			style={{
 				backgroundImage: `url("${require(`../../styles/img/${event.heroImage}`).default.src}")`,
 				color: darkText ? "#000" : "#fff",
-			}}>
+			}}
+		>
 			<div className={`${styles.content} content`} style={{ flexDirection: reverse ? "row-reverse" : undefined }}>
 				<div className={styles.ctaBlock} style={{ textAlign: reverse ? "right" : undefined }}>
 					<h1>{event.preferredName}</h1>

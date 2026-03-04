@@ -49,7 +49,8 @@ const Button = ({
 			target={target}
 			rel={rel}
 			type={type}
-			style={{ marginRight: noMarginRight ? "0" : undefined }}>
+			style={{ marginRight: noMarginRight ? "0" : undefined }}
+		>
 			{iconLeft && <FontAwesomeIcon icon={iconLeft} />}
 			<span>{actionText}</span>
 			{iconRight && <FontAwesomeIcon icon={iconRight} />}

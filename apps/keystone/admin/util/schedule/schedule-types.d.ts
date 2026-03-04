@@ -3,10 +3,10 @@ export type Run = {
 	twitchVOD?: string | undefined;
 	finalTime?: string | undefined;
 	runnerId: string;
-	runner: ({
+	runner: {
 		id?: string;
 		username: string;
-	})[];
+	}[];
 	submissionId: string;
 	game: string;
 	category: string;
@@ -20,7 +20,7 @@ export type Run = {
 	uuid: string;
 	techPlatform: string;
 	specialReqs: string;
-}
+};
 
 type DonationIncentive = {
 	title: string;

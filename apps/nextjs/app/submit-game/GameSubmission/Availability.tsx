@@ -1,4 +1,4 @@
-import styles from './Availability.module.scss';
+import styles from "./Availability.module.scss";
 import { useEffect, useMemo, useState } from "react";
 import { FormControlLabel, Checkbox } from "@mui/material";
 import { addDays, differenceInDays } from "date-fns";
@@ -16,11 +16,7 @@ type AvailabilityProps = {
 export default function Availability(props: AvailabilityProps) {
 	const [dates, setDates] = useState<boolean[]>(props.value ?? []);
 	const eventLength = useMemo(
-		() =>
-			differenceInDays(
-				new Date(props.event.endDate),
-				new Date(props.event.startDate),
-			) + 1,
+		() => differenceInDays(new Date(props.event.endDate), new Date(props.event.startDate)) + 1,
 		[props.event],
 	);
 
@@ -50,8 +46,7 @@ export default function Availability(props: AvailabilityProps) {
 					day: "2-digit",
 					month: "2-digit",
 					year: "numeric",
-					timeZone:
-						props.event.eventTimezone || "Australia/Melbourne",
+					timeZone: props.event.eventTimezone || "Australia/Melbourne",
 				})}
 			/>,
 		);

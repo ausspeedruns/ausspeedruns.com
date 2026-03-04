@@ -1,6 +1,6 @@
-import Papa from 'papaparse';
-import { gql, ApolloClient, InMemoryCache } from '@keystone-6/core/admin-ui/apollo';
-import { differenceInDays, addDays, format } from 'date-fns';
+import Papa from "papaparse";
+import { gql, ApolloClient, InMemoryCache } from "@keystone-6/core/admin-ui/apollo";
+import { differenceInDays, addDays, format } from "date-fns";
 
 const EVENT_SUBMISSIONS_QUERY = gql`
 	query ($event: String) {
@@ -55,9 +55,9 @@ interface EventSubmissions {
 			platform: string;
 			techPlatform: string;
 			estimate: string;
-			ageRating: 'm_or_lower' | 'ma15' | 'ra18';
+			ageRating: "m_or_lower" | "ma15" | "ra18";
 			specialReqs: string;
-			race: 'no' | 'solo' | 'only';
+			race: "no" | "solo" | "only";
 			racer: string;
 			coop: boolean;
 			video: string;
@@ -70,17 +70,20 @@ interface EventSubmissions {
 	};
 }
 
-const client = new ApolloClient({ uri: '/api/graphql', cache: new InMemoryCache() });
+const client = new ApolloClient({ uri: "/api/graphql", cache: new InMemoryCache() });
 
 export async function downloadSubmissions(eventId: string) {
-	const eventSubmissions = await client.query<EventSubmissions>({ query: EVENT_SUBMISSIONS_QUERY, variables: { event: eventId } });
+	const eventSubmissions = await client.query<EventSubmissions>({
+		query: EVENT_SUBMISSIONS_QUERY,
+		variables: { event: eventId },
+	});
 
 	const csvBlob = parseSubmissionsToCSV(eventSubmissions.data);
 
 	const csvURL = window.URL.createObjectURL(csvBlob);
-	const tempLink = document.createElement('a');
+	const tempLink = document.createElement("a");
 	tempLink.href = csvURL;
-	tempLink.setAttribute('download', `${eventSubmissions.data.event.shortname}-submissions.csv`);
+	tempLink.setAttribute("download", `${eventSubmissions.data.event.shortname}-submissions.csv`);
 	tempLink.click();
 }
 
@@ -92,16 +95,14 @@ function parseSubmissionsToCSV(submissionData: EventSubmissions) {
 			newDonationIncentives = JSON.stringify(submission.newDonationIncentives);
 		}
 
-		const eventLength = differenceInDays(
-			new Date(submissionData.event.endDate),
-			new Date(submissionData.event.startDate),
-		) + 1;
+		const eventLength =
+			differenceInDays(new Date(submissionData.event.endDate), new Date(submissionData.event.startDate)) + 1;
 
 		let dates: Record<string, boolean> = {};
 
 		for (let i = 0; i < eventLength; i++) {
 			const date = addDays(new Date(submissionData.event.startDate), i);
-			dates[format(date, 'E-ii')] = submission.availability[i] ?? 'FALSE';
+			dates[format(date, "E-ii")] = submission.availability[i] ?? "FALSE";
 		}
 
 		const flattenedSubmission = {
@@ -130,5 +131,5 @@ function parseSubmissionsToCSV(submissionData: EventSubmissions) {
 	});
 
 	const papaCSV = Papa.unparse(csvData);
-	return new Blob([papaCSV], { type: 'text/csv;charset=utf-8;' });
+	return new Blob([papaCSV], { type: "text/csv;charset=utf-8;" });
 }

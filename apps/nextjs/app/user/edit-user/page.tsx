@@ -3,7 +3,7 @@ import styles from "../../../styles/User.EditUser.module.scss";
 import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import {  gql } from "@urql/core";
+import { gql } from "@urql/core";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -28,26 +28,28 @@ export default async function EditUser() {
 		redirect("/signin");
 	}
 
-	const result = await client().query(
-		gql`
-			query Profile($userId: ID!) {
-				user(where: { id: $userId }) {
-					name
-					username
-					email
-					dateOfBirth
-					pronouns
-					state
-					verified
-					discord
-					twitter
-					twitch
-					bluesky
+	const result = await client()
+		.query(
+			gql`
+				query Profile($userId: ID!) {
+					user(where: { id: $userId }) {
+						name
+						username
+						email
+						dateOfBirth
+						pronouns
+						state
+						verified
+						discord
+						twitter
+						twitch
+						bluesky
+					}
 				}
-			}
-		`,
-		{ userId: session.user.id },
-	).toPromise();
+			`,
+			{ userId: session.user.id },
+		)
+		.toPromise();
 
 	if (!result.data?.user) {
 		return <div>User not found</div>;

@@ -142,7 +142,7 @@ const UsernameRegex = /^[a-zA-Z0-9_-~][\w-]{2,24}$/;
 function parseDMY(originalDate: string) {
 	let [day, month, year] = originalDate.split(/\D/);
 	return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-};
+}
 
 export async function signUp(formData: FormData) {
 	const email = formData.get("email") as string;

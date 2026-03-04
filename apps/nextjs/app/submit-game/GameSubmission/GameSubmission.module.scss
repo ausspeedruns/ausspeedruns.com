@@ -43,7 +43,7 @@
 			min-height: 100%;
 		}
 	}
-	
+
 	.toggleButtons {
 		margin: 0.5rem auto !important;
 	}
@@ -73,7 +73,7 @@
 			padding: 8px;
 			text-align: left;
 			width: 100%;
-			overflow-wrap: break-word; 
+			overflow-wrap: break-word;
 			hyphens: manual;
 			vertical-align: text-top;
 		}
@@ -95,7 +95,6 @@
 		}
 	}
 
-	
 	@include breakpoint($sm-zero-only) {
 		.formAndData {
 			flex-direction: column;

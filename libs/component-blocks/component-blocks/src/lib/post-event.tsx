@@ -1,7 +1,12 @@
-import React from 'react';
-import { NotEditable, component, fields, InferRenderersForComponentBlocks } from '@keystone-6/fields-document/component-blocks';
+import React from "react";
+import {
+	NotEditable,
+	component,
+	fields,
+	InferRenderersForComponentBlocks,
+} from "@keystone-6/fields-document/component-blocks";
 
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
 interface HeaderProps {
 	image: string;
@@ -38,15 +43,19 @@ const AmountRaisedImage = styled.img`
 export const PostEventComponentBlocks = {
 	eventLogo: component({
 		preview(props) {
-			return <EventLogo src={props.fields.eventLogo.value?.data.logo.url} alt={`${props.fields.eventLogo.value?.data.name} Logo`} />;
+			return (
+				<EventLogo
+					src={props.fields.eventLogo.value?.data.logo.url}
+					alt={`${props.fields.eventLogo.value?.data.name} Logo`}
+				/>
+			);
 		},
-		label: 'Event Logo',
+		label: "Event Logo",
 		schema: {
 			eventLogo: fields.relationship({
-				label: 'Event',
-				listKey: 'Event',
-				selection:
-					'name logo { url }',
+				label: "Event",
+				listKey: "Event",
+				selection: "name logo { url }",
 			}),
 		},
 	}),
@@ -60,24 +69,24 @@ export const PostEventComponentBlocks = {
 				</AmountRaisedContainer>
 			);
 		},
-		label: 'Raised Amount',
+		label: "Raised Amount",
 		schema: {
-			charityName: fields.text({ label: 'Charity Name ' }),
-			charityImage: fields.url({ label: 'Charity URL' }),
-			amount: fields.text({ label: 'Amount Raised' }),
+			charityName: fields.text({ label: "Charity Name " }),
+			charityImage: fields.url({ label: "Charity URL" }),
+			amount: fields.text({ label: "Amount Raised" }),
 		},
 	}),
 	AllRuns: component({
 		preview(props) {
 			return <NotEditable>Big ol block here lol</NotEditable>;
 		},
-		label: 'All runs list',
+		label: "All runs list",
 		schema: {
 			event: fields.relationship({
-				label: 'Event',
-				listKey: 'Event',
+				label: "Event",
+				listKey: "Event",
 				selection:
-					'id startDate shortname runs(orderBy: { scheduledTime: asc }) { id game category runners { id username } finalTime platform youtubeVOD twitchVOD racer race coop }',
+					"id startDate shortname runs(orderBy: { scheduledTime: asc }) { id game category runners { id username } finalTime platform youtubeVOD twitchVOD racer race coop }",
 			}),
 		},
 	}),
@@ -90,10 +99,10 @@ export const PostEventComponentBlocks = {
 				</div>
 			);
 		},
-		label: 'Image',
+		label: "Image",
 		schema: {
-			imgUrl: fields.url({ label: 'Image URL' }),
-			caption: fields.text({ label: '' }),
+			imgUrl: fields.url({ label: "Image URL" }),
+			caption: fields.text({ label: "" }),
 		},
 	}),
 };

@@ -11,10 +11,7 @@ import { Metadata } from "next";
 
 const QUERY_EVENT = gql`
 	query {
-		events(
-			orderBy: { startDate: desc }
-			where: { published: { equals: true } }
-		) {
+		events(orderBy: { startDate: desc }, where: { published: { equals: true } }) {
 			id
 			startDate
 			endDate
@@ -82,27 +79,15 @@ export default async function Events() {
 					{data?.events
 						.filter((event) => new Date(event.endDate) > new Date())
 						.map((event) => {
-							return (
-								<EventBlock
-									key={event.shortname}
-									event={event}
-								/>
-							);
+							return <EventBlock key={event.shortname} event={event} />;
 						})}
 				</div>
 				<h2>Past</h2>
 				<div className={styles.eventList}>
 					{data?.events
-						.filter(
-							(event) => new Date(event.startDate) < new Date(),
-						)
+						.filter((event) => new Date(event.startDate) < new Date())
 						.map((event) => {
-							return (
-								<EventBlock
-									key={event.shortname}
-									event={event}
-								/>
-							);
+							return <EventBlock key={event.shortname} event={event} />;
 						})}
 				</div>
 			</main>
@@ -117,27 +102,18 @@ interface EventBlockProps {
 function EventBlock({ event }: EventBlockProps) {
 	const dateString =
 		event.startDate && event.endDate
-			? `${new Date(event.startDate).toLocaleDateString()} – ${new Date(
-					event.endDate,
-			  ).toLocaleDateString()}`
+			? `${new Date(event.startDate).toLocaleDateString()} – ${new Date(event.endDate).toLocaleDateString()}`
 			: "";
 
-	const raisedString = event.raised
-		? `$${event.raised.toLocaleString()}`
-		: "";
+	const raisedString = event.raised ? `$${event.raised.toLocaleString()}` : "";
 
 	return (
 		<Link href={`${event.shortname}`} className={styles.event}>
-			<section
-				style={{ backgroundImage: `url("${event.heroImage?.url}")` }}>
+			<section style={{ backgroundImage: `url("${event.heroImage?.url}")` }}>
 				<div className={styles.eventTitle}>
 					{event?.logo ? (
 						<Image
-							src={
-								event.darkModeLogo
-									? event.darkModeLogo.url
-									: event.logo.url
-							}
+							src={event.darkModeLogo ? event.darkModeLogo.url : event.logo.url}
 							fill
 							alt={`${event.name} logo`}
 						/>
@@ -146,9 +122,7 @@ function EventBlock({ event }: EventBlockProps) {
 					)}
 				</div>
 				<h3>{event.name}</h3>
-				<p>
-					{[dateString, raisedString].filter((el) => el).join(" | ")}
-				</p>
+				<p>{[dateString, raisedString].filter((el) => el).join(" | ")}</p>
 			</section>
 		</Link>
 	);

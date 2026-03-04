@@ -1,5 +1,5 @@
-import { Goal, GoalProps } from './IncentiveGoal';
-import { War, WarProps } from './IncentiveWar';
+import { Goal, GoalProps } from "./IncentiveGoal";
+import { War, WarProps } from "./IncentiveWar";
 
 interface IncentiveProps {
 	incentive: WarProps | GoalProps;
@@ -7,9 +7,9 @@ interface IncentiveProps {
 
 export const Incentive = (props: IncentiveProps) => {
 	switch (props.incentive.type) {
-		case 'goal':
+		case "goal":
 			return <Goal key={props.incentive.title} {...props.incentive} />;
-		case 'war':
+		case "war":
 			return <War key={props.incentive.title} {...props.incentive} />;
 		default:
 			return <></>;

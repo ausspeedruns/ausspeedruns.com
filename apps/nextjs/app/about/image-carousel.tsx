@@ -46,7 +46,8 @@ export function ImageCarousel() {
 			showIndicators={false}
 			showThumbs={false}
 			interval={5000}
-			transitionTime={1500}>
+			transitionTime={1500}
+		>
 			{HERO_IMAGES.map((image, i) => {
 				return <Image key={i} src={image.img} alt={image.alt} fill />;
 			})}

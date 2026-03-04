@@ -18,7 +18,7 @@ interface CircuitryProps {
 	bigShadowAngle?: number;
 }
 
-console.log(circuitBoardImage.src)
+console.log(circuitBoardImage.src);
 
 export function Circuitry(props: CircuitryProps) {
 	const test = generateBoxShadows(props.bigShadowAngle ?? 90);
@@ -32,7 +32,8 @@ export function Circuitry(props: CircuitryProps) {
 				backgroundRepeat: "repeat-y",
 				zIndex: -3,
 				...props.style,
-			}}>
+			}}
+		>
 			<div
 				style={{
 					backgroundColor: "#C39CE2",

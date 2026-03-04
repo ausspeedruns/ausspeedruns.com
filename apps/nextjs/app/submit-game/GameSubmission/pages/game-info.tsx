@@ -40,7 +40,9 @@ export const GameInfo = forwardRef<SubmissionPageRef, RunInfoProps>((props, ref)
 
 	useEffect(() => {
 		props.onComplete(
-			Boolean(game.elementProps.value && platform.elementProps.inputValue && techPlatform.elementProps.inputValue),
+			Boolean(
+				game.elementProps.value && platform.elementProps.inputValue && techPlatform.elementProps.inputValue,
+			),
 		);
 	}, [game.elementProps.value, platform.elementProps.inputValue, techPlatform.elementProps.inputValue]);
 
@@ -100,7 +102,8 @@ export const GameInfo = forwardRef<SubmissionPageRef, RunInfoProps>((props, ref)
 					ageRating.setValue(newVal);
 				}}
 				color="primary"
-				exclusive>
+				exclusive
+			>
 				<ToggleButton value="m_or_lower">G, PG or M</ToggleButton>
 				<ToggleButton value="ma15">MA15+</ToggleButton>
 				<ToggleButton value="ra18">RA18+</ToggleButton>

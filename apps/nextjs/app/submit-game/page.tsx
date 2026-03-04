@@ -54,7 +54,7 @@ export const metadata: Metadata = {
 
 export default async function SubmitGamePage() {
 	const session = await auth();
-	
+
 	// Query if able to submit game (has discord)
 	const client = getRegisteredUrqlCookieClient();
 
@@ -70,7 +70,6 @@ export default async function SubmitGamePage() {
 			</BasePage>
 		);
 	}
-
 
 	const { data } = await client().query<QUERY_USER_RESULTS>(QUERY_INITIAL, {
 		userId: session.user.id,
@@ -100,7 +99,8 @@ export default async function SubmitGamePage() {
 				<a
 					href="https://ausspeedruns.sharepoint.com/:w:/s/Main/Efo5GBDHzvRElYyMBpyucFgBYBfJAGLsP6qf1pE9ebU6-w?e=TKimUn"
 					target="_blank"
-					rel="noopener noreferrer">
+					rel="noopener noreferrer"
+				>
 					AusSpeedruns Submission Guidelines
 				</a>
 				{!data?.user?.discord || !data?.user.verified ? (

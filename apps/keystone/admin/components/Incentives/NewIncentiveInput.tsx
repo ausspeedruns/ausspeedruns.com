@@ -1,19 +1,11 @@
 import { useEffect, useState } from "react";
 import { Inline, Stack } from "@keystone-ui/core";
 import { Button } from "@keystone-ui/button";
-import {
-	Select,
-	FieldContainer,
-	FieldLabel,
-	TextInput,
-} from "@keystone-ui/fields";
+import { Select, FieldContainer, FieldLabel, TextInput } from "@keystone-ui/fields";
 import { useToasts } from "@keystone-ui/toast";
 import { useMutation, useQuery, gql } from "@keystone-6/core/admin-ui/apollo";
 
-import type {
-	Goal as GoalData,
-	War as WarData,
-} from "../../../src/schema/incentives";
+import type { Goal as GoalData, War as WarData } from "../../../src/schema/incentives";
 
 const INCENTIVE_TYPES = ["war", "goal"];
 
@@ -45,14 +37,7 @@ interface QUERY_INCENTIVES_RESULTS {
 }
 
 const MUTATION_NEW_INCENTIVE = gql`
-	mutation (
-		$run: ID
-		$runEvent: String
-		$title: String
-		$notes: String
-		$type: String
-		$data: JSON
-	) {
+	mutation ($run: ID, $runEvent: String, $title: String, $notes: String, $type: String, $data: JSON) {
 		createIncentive(
 			data: {
 				run: { connect: { id: $run } }
@@ -87,15 +72,14 @@ export function NewIncentiveInput(props: NewIncentiveInputProps) {
 		variables: { event: props.eventId },
 	});
 
-	const [addIncentiveMutation, addIncentiveMutationData] = useMutation<MUTATION_NEW_INCENTIVE_RESULTS>(
-		MUTATION_NEW_INCENTIVE,
-	);
+	const [addIncentiveMutation, addIncentiveMutationData] =
+		useMutation<MUTATION_NEW_INCENTIVE_RESULTS>(MUTATION_NEW_INCENTIVE);
 
 	const [title, setTitle] = useState("");
 	const [run, setRun] = useState({ value: "", label: "" });
 	const [notes, setNotes] = useState("");
 	const [type, setType] = useState(INCENTIVE_OPTIONS[0]);
-	const [data, setData] = useState<GoalData['data'] | WarData['data'] | {}>({});
+	const [data, setData] = useState<GoalData["data"] | WarData["data"] | {}>({});
 
 	const { addToast } = useToasts();
 
@@ -131,8 +115,7 @@ export function NewIncentiveInput(props: NewIncentiveInputProps) {
 	}));
 
 	function AddIncentive() {
-		if (!title || !run.value || !type.value)
-			return;
+		if (!title || !run.value || !type.value) return;
 
 		switch (type.value) {
 			case "goal":
@@ -164,16 +147,14 @@ export function NewIncentiveInput(props: NewIncentiveInputProps) {
 			<Inline gap="small">
 				<FieldContainer>
 					<FieldLabel>Incentive Name</FieldLabel>
-					<TextInput
-						onChange={(e) => setTitle(e.target.value)}
-						value={title}
-						disabled={!props.eventId}
-					/>
+					<TextInput onChange={(e) => setTitle(e.target.value)} value={title} disabled={!props.eventId} />
 				</FieldContainer>
 				<FieldContainer>
 					<FieldLabel>Run</FieldLabel>
 					<Select
-						onChange={(e) => {if (e) setRun(e)}}
+						onChange={(e) => {
+							if (e) setRun(e);
+						}}
 						value={run}
 						options={runOptions}
 						isDisabled={!props.eventId}
@@ -183,11 +164,7 @@ export function NewIncentiveInput(props: NewIncentiveInputProps) {
 			</Inline>
 			<FieldContainer>
 				<FieldLabel>Notes/Instructions</FieldLabel>
-				<TextInput
-					onChange={(e) => setNotes(e.target.value)}
-					value={notes}
-					disabled={!props.eventId}
-				/>
+				<TextInput onChange={(e) => setNotes(e.target.value)} value={notes} disabled={!props.eventId} />
 			</FieldContainer>
 			<FieldContainer>
 				<FieldLabel>Type</FieldLabel>
@@ -216,15 +193,11 @@ export function NewIncentiveInput(props: NewIncentiveInputProps) {
 			</FieldContainer>
 			{type.value === "goal" && (
 				<FieldContainer>
-					<FieldLabel>
-						Goal ${(data as GoalData['data'])?.goal?.toLocaleString() ?? 0}
-					</FieldLabel>
+					<FieldLabel>Goal ${(data as GoalData["data"])?.goal?.toLocaleString() ?? 0}</FieldLabel>
 					<TextInput
-						onChange={(e) =>
-							setData({ ...data, goal: parseInt(e.target.value) })
-						}
+						onChange={(e) => setData({ ...data, goal: parseInt(e.target.value) })}
 						type="number"
-						value={(data as GoalData['data'])?.goal ?? 0}
+						value={(data as GoalData["data"])?.goal ?? 0}
 						disabled={!props.eventId}
 					/>
 				</FieldContainer>
@@ -233,32 +206,29 @@ export function NewIncentiveInput(props: NewIncentiveInputProps) {
 				<>
 					<FieldContainer>
 						<FieldLabel>Options</FieldLabel>
-						{(data as WarData['data'])?.options && (data as WarData['data']).options.map((item, i) => {
-							return (
-								<TextInput
-									placeholder="Name"
-									onChange={(e) => {
-										const mutableOptions = [
-											...(data as WarData['data']).options,
-										];
-										mutableOptions[i].name = e.target.value;
-										setData({
-											...data,
-											options: mutableOptions,
-										});
-									}}
-									value={item.name}
-								/>
-							);
-						})}
+						{(data as WarData["data"])?.options &&
+							(data as WarData["data"]).options.map((item, i) => {
+								return (
+									<TextInput
+										placeholder="Name"
+										onChange={(e) => {
+											const mutableOptions = [...(data as WarData["data"]).options];
+											mutableOptions[i].name = e.target.value;
+											setData({
+												...data,
+												options: mutableOptions,
+											});
+										}}
+										value={item.name}
+									/>
+								);
+							})}
 					</FieldContainer>
 					<Button
 						tone="positive"
 						weight="bold"
 						onClick={() => {
-							const mutableOptions = [
-								...(data as WarData['data']).options,
-							];
+							const mutableOptions = [...(data as WarData["data"]).options];
 							mutableOptions.push({
 								name: "",
 								total: 0,
@@ -267,7 +237,8 @@ export function NewIncentiveInput(props: NewIncentiveInputProps) {
 								...data,
 								options: mutableOptions,
 							});
-						}}>
+						}}
+					>
 						+ Add
 					</Button>
 				</>
@@ -277,7 +248,8 @@ export function NewIncentiveInput(props: NewIncentiveInputProps) {
 				onClick={AddIncentive}
 				tone="active"
 				weight="bold"
-				isDisabled={!props.eventId || !title || !run.value}>
+				isDisabled={!props.eventId || !title || !run.value}
+			>
 				Add new incentive
 			</Button>
 		</Stack>

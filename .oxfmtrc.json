@@ -1,0 +1,12 @@
+{
+	"$schema": "./node_modules/oxfmt/configuration_schema.json",
+	"singleQuote": false,
+	"tabWidth": 4,
+	"useTabs": true,
+	"semi": true,
+	"trailingComma": "all",
+	"jsxBracketSameLine": true,
+	"printWidth": 120,
+	"sortPackageJson": false,
+	"ignorePatterns": ["/dist", "/coverage", "/.nx/cache"]
+}

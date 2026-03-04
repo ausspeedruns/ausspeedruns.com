@@ -1,4 +1,4 @@
-import mjml2html from 'mjml';
+import mjml2html from "mjml";
 
 export function generateVerification(code: string) {
 	const { html } = mjml2html(`

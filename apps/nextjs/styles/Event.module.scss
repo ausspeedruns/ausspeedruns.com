@@ -1,6 +1,6 @@
-@use 'base';
-@import './colors.scss';
-@import './responsive.scss';
+@use "base";
+@import "./colors.scss";
+@import "./responsive.scss";
 
 .event {
 	.document {
@@ -35,7 +35,12 @@
 			padding: 2rem 100px;
 		}
 
-		h1, h2, h3, h4, h5, h6 {
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
 			text-wrap: balance;
 		}
 	}

@@ -172,7 +172,8 @@ export const EventPageComponentBlocks = {
 					image={props.fields.backgroundImage.value}
 					position={props.fields.backgroundSettings.fields.position.value}
 					cover={props.fields.backgroundSettings.fields.cover.value}
-					repeat={props.fields.backgroundSettings.fields.repeat.value}>
+					repeat={props.fields.backgroundSettings.fields.repeat.value}
+				>
 					<HeaderLogo>
 						<EventLogo src={props.fields.event?.value?.data?.logo ?? ""} alt="Logo" />
 					</HeaderLogo>
@@ -222,7 +223,8 @@ export const EventPageComponentBlocks = {
 								<Button
 									key={i}
 									href={button.fields.link.value}
-									{...(button.fields.openInNewTab.value ? openInNewTabProps : undefined)}>
+									{...(button.fields.openInNewTab.value ? openInNewTabProps : undefined)}
+								>
 									{button.fields.text.value}
 								</Button>
 							);
@@ -282,7 +284,8 @@ export const EventPageComponentBlocks = {
 						color: props.fields.textDark.value ? "#000" : "#fff",
 						background: props.fields.colour.value,
 						flexDirection: props.fields.swapSides.value ? "row-reverse" : "row",
-					}}>
+					}}
+				>
 					<ImageContainer>
 						<img src={props.fields.imageUrl.value} alt={props.fields.imageAlt.value} />
 					</ImageContainer>

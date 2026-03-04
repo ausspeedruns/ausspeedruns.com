@@ -1,4 +1,4 @@
-@use 'base';
+@use "base";
 @import "./responsive.scss";
 @import "./colors.scss";
 
@@ -9,7 +9,7 @@
 }
 
 .backgroundContainer {
-	background-image: url('./img/MuralSmall.jpg');
+	background-image: url("./img/MuralSmall.jpg");
 	background-size: 43%;
 	background-position: center;
 	flex-grow: 1;
@@ -22,7 +22,7 @@
 	height: 100%;
 	filter: blur(2px);
 	z-index: -1;
-	transform: scale(1.1); 
+	transform: scale(1.1);
 }
 
 .content {
@@ -33,9 +33,11 @@
 	background: white;
 	box-shadow: 0px 0px 24px 19px rgba(0, 0, 0, 0.3);
 	height: 100%;
-	
+
 	h1 {
 		text-align: center;
-		font-family: Russo One, sans-serif;
+		font-family:
+			Russo One,
+			sans-serif;
 	}
 }

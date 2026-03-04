@@ -1,41 +1,40 @@
-@import './responsive.scss';
+@import "./responsive.scss";
 
 @mixin nav-lists {
-  ul {
-    display: flex;
-    flex-flow: column nowrap;
-    list-style-type: none;
-    margin-block: 0;
-    padding-inline: 0;
+	ul {
+		display: flex;
+		flex-flow: column nowrap;
+		list-style-type: none;
+		margin-block: 0;
+		padding-inline: 0;
 
-    @include breakpoint($md) {
-        flex-flow: row nowrap;
-    }
+		@include breakpoint($md) {
+			flex-flow: row nowrap;
+		}
 
-    li {
-      display: flex;
-      align-items: center;
-      margin: 5px 10px;
+		li {
+			display: flex;
+			align-items: center;
+			margin: 5px 10px;
 
-      svg + .text {
-        margin-left: 10px;
-      }
-      
-    }
-  }
+			svg + .text {
+				margin-left: 10px;
+			}
+		}
+	}
 
-  a {
-    color: $light-text;
-    text-decoration: none;
-    white-space: nowrap;
+	a {
+		color: $light-text;
+		text-decoration: none;
+		white-space: nowrap;
 
-    &:visited {
-      color: $light-text;
-    }
+		&:visited {
+			color: $light-text;
+		}
 
-    &:hover {
-      color: $primary;
-      text-decoration: underline;
-    }
-  }
+		&:hover {
+			color: $primary;
+			text-decoration: underline;
+		}
+	}
 }

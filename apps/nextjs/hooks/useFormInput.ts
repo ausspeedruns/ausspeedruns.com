@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 interface FormInputState<T> {
 	value: T;
@@ -20,7 +20,7 @@ const useFormInput = <T>(initialValue: T) => {
 
 	const setValueManually = (newValue: T) => {
 		setValue(newValue);
-	}
+	};
 
 	return {
 		elementProps: {

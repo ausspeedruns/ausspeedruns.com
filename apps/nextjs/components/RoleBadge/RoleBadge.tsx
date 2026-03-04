@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from './RoleBadge.module.scss';
+import React from "react";
+import styles from "./RoleBadge.module.scss";
 
 interface Props {
 	className?: string;

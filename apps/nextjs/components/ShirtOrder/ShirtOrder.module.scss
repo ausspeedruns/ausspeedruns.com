@@ -1,5 +1,5 @@
-@import '../../styles/colors.scss';
-@import '../../styles/responsive.scss';
+@import "../../styles/colors.scss";
+@import "../../styles/responsive.scss";
 
 .generatedShirts {
 	border: 5px solid $primary;
@@ -10,13 +10,12 @@
 	padding: 1rem;
 	font-size: 1.2rem;
 
-	background-image: url('../../styles/img/TicketWatermark.png');
+	background-image: url("../../styles/img/TicketWatermark.png");
 	background-size: 60px;
 
 	display: flex;
 	justify-content: center;
 	gap: 1rem;
-
 
 	@include breakpoint($sm-zero-only) {
 		flex-direction: column;

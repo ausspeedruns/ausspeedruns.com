@@ -83,7 +83,7 @@
 			position: relative;
 
 			&::after {
-				content: '';
+				content: "";
 				position: absolute;
 				top: 0;
 				left: 0;
@@ -114,7 +114,9 @@
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 			border: 1px solid rgba(0, 0, 0, 0.08);
 			min-width: 140px;
-			transition: transform 0.2s ease, box-shadow 0.2s ease;
+			transition:
+				transform 0.2s ease,
+				box-shadow 0.2s ease;
 
 			&:hover {
 				transform: translateY(-2px);
@@ -171,7 +173,9 @@
 					bottom: 0;
 					background: linear-gradient(0deg, $color-ochre, lighten($color-ochre, 10%));
 					border-radius: 3px;
-					transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1), width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+					transition:
+						height 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+						width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 
 					@include breakpoint($md) {
 						width: 100% !important;

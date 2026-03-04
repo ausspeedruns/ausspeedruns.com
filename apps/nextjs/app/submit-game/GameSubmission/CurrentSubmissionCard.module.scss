@@ -26,8 +26,7 @@
 		overflow-wrap: break-word;
 		hyphens: manual;
 	}
-	
-	
+
 	@include breakpoint($sm-zero-only) {
 		width: 100%;
 		max-width: 100%;

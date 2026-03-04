@@ -9,8 +9,8 @@
 
 - [Table of Contents](#table-of-contents)
 - [Apps](#apps)
-	- [NextJS](#nextjs)
-	- [Keystone](#keystone)
+    - [NextJS](#nextjs)
+    - [Keystone](#keystone)
 - [Monorepo](#monorepo)
 - [Setup](#setup)
 - [Contributions](#contributions)

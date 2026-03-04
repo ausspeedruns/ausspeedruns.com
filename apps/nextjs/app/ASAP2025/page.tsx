@@ -43,8 +43,7 @@ const EVENT_QUERY = gql`
 
 export const metadata: Metadata = {
 	title: "ASAP2025",
-	description:
-		"AusSpeedruns At PAX 2025 is coming up! Join us at PAX Australia October 10 - 12.",
+	description: "AusSpeedruns At PAX 2025 is coming up! Join us at PAX Australia October 10 - 12.",
 };
 
 export default async function ASAP2025() {
@@ -87,10 +86,13 @@ export default async function ASAP2025() {
 			<hr className={styles.divider} />
 			<section className={styles.content}>
 				<p>
-					PAX is one of the biggest video gaming expos across the globe and AusSpeedruns has been a part of their Australian events since 2016! Perform infront of a live audience and showcase your skills and game to hundreds of people, all while raising money for charity!
+					PAX is one of the biggest video gaming expos across the globe and AusSpeedruns has been a part of
+					their Australian events since 2016! Perform infront of a live audience and showcase your skills and
+					game to hundreds of people, all while raising money for charity!
 				</p>
 				<p>
-					ASAP 2025 will take place at PAX Australia in Melbourne, Australia from the 10th to the 12th of October.
+					ASAP 2025 will take place at PAX Australia in Melbourne, Australia from the 10th to the 12th of
+					October.
 				</p>
 			</section>
 			<section className={styles.infoTable}>

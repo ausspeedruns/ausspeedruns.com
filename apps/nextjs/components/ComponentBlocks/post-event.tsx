@@ -10,11 +10,7 @@ export const PostEventComponentRenderers: PostEventRenderers = {
 	eventLogo: (props: any) => {
 		return (
 			<div className={styles.eventLogo}>
-				<Image
-					src={props?.eventLogo?.data.logo.url}
-					fill
-					alt={`${props?.eventLogo?.data.name} Logo`}
-				/>
+				<Image src={props?.eventLogo?.data.logo.url} fill alt={`${props?.eventLogo?.data.name} Logo`} />
 			</div>
 		);
 	},
@@ -24,11 +20,7 @@ export const PostEventComponentRenderers: PostEventRenderers = {
 				<span className={styles.amount}>{props.amount}</span>
 				raised for
 				<div className={styles.charityImage}>
-					<Image
-						src={props.charityImage}
-						alt={props.charityName}
-						fill
-					/>
+					<Image src={props.charityImage} alt={props.charityName} fill />
 				</div>
 			</div>
 		);

@@ -1,6 +1,6 @@
-@use 'base';
-@import './colors.scss';
-@import './responsive.scss';
+@use "base";
+@import "./colors.scss";
+@import "./responsive.scss";
 
 .content {
 	flex-direction: column;
@@ -67,7 +67,7 @@
 	h2 {
 		font-size: 3rem;
 	}
-	
+
 	p {
 		margin: 0;
 	}

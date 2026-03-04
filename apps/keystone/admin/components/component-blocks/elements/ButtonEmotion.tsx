@@ -1,8 +1,8 @@
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { HTMLAttributeAnchorTarget } from 'react';
-import styled from '@emotion/styled';
-import { Colours, Theme } from '../../colors';
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { HTMLAttributeAnchorTarget } from "react";
+import styled from "@emotion/styled";
+import { Colours, Theme } from "../../colors";
 
 export type ButtonProps = {
 	actionText: string;
@@ -10,12 +10,12 @@ export type ButtonProps = {
 	iconLeft?: IconProp;
 	iconRight?: IconProp;
 	colorScheme?:
-		| 'primary'
-		| 'secondary'
-		| 'secondary lightHover'
-		| 'secondary inverted'
-		| 'primary lightHover'
-		| 'orange';
+		| "primary"
+		| "secondary"
+		| "secondary lightHover"
+		| "secondary inverted"
+		| "primary lightHover"
+		| "orange";
 	target?: HTMLAttributeAnchorTarget;
 	rel?: string;
 	type?: string;
@@ -144,9 +144,9 @@ const Button = ({
 	iconLeft,
 	iconRight,
 	rel,
-	colorScheme = 'primary',
-	target = '_self',
-	type
+	colorScheme = "primary",
+	target = "_self",
+	type,
 }: ButtonProps) => {
 	return (
 		<ButtonLink className={colorScheme} href={link} target={target} rel={rel} type={type}>

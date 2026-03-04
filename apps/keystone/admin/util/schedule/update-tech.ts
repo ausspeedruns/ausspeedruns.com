@@ -1,4 +1,4 @@
-import { gql, ApolloClient, InMemoryCache } from '@keystone-6/core/admin-ui/apollo';
+import { gql, ApolloClient, InMemoryCache } from "@keystone-6/core/admin-ui/apollo";
 
 const QUERY_EVENT_RUNS_SUBMISSIONS = gql`
 	query ($eventShortname: String) {
@@ -54,11 +54,15 @@ export async function updateTech(eventShortname: string) {
 		variables: { eventShortname },
 	});
 
-	const runData = eventData.data.event.runs.map(
-		(run) => {
-			return { where: { id: run.id }, data: { specialRequirements: run.originalSubmission?.specialReqs, techPlatform: run.originalSubmission?.techPlatform } };
-		},
-	);
+	const runData = eventData.data.event.runs.map((run) => {
+		return {
+			where: { id: run.id },
+			data: {
+				specialRequirements: run.originalSubmission?.specialReqs,
+				techPlatform: run.originalSubmission?.techPlatform,
+			},
+		};
+	});
 
 	const result = await client.mutate<UpdateSubmissions>({
 		mutation: UPDATE_SUBMISSIONS,
@@ -69,6 +73,6 @@ export async function updateTech(eventShortname: string) {
 		console.error(result.errors);
 		return { success: false, submissions: 0 };
 	} else {
-		console.log('Yay!')
+		console.log("Yay!");
 	}
 }

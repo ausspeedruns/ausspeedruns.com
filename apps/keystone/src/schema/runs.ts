@@ -1,8 +1,8 @@
-import { graphql, list } from '@keystone-6/core';
-import { checkbox, relationship, text, timestamp, virtual } from '@keystone-6/core/fields';
-import { operations } from './access';
-import { Lists } from '.keystone/types';
-import type { Context } from '.keystone/types';
+import { graphql, list } from "@keystone-6/core";
+import { checkbox, relationship, text, timestamp, virtual } from "@keystone-6/core/fields";
+import { operations } from "./access";
+import { Lists } from ".keystone/types";
+import type { Context } from ".keystone/types";
 
 export const Run: Lists.Run = list({
 	access: {
@@ -11,11 +11,11 @@ export const Run: Lists.Run = list({
 			create: operations.canManageContent,
 			update: operations.canManageContent,
 			delete: operations.canManageContent,
-		}
+		},
 	},
 	fields: {
-		runners: relationship({ ref: 'User.runs', ui: { hideCreate: true, labelField: 'username' }, many: true }),
-		originalSubmission: relationship({ ref: 'Submission' }),
+		runners: relationship({ ref: "User.runs", ui: { hideCreate: true, labelField: "username" }, many: true }),
+		originalSubmission: relationship({ ref: "Submission" }),
 		game: text({ validation: { isRequired: true } }),
 		category: text({ validation: { isRequired: true } }),
 		platform: text({ validation: { isRequired: true } }), // Potentially an enum with "other"?
@@ -27,8 +27,8 @@ export const Run: Lists.Run = list({
 		coop: checkbox(),
 		twitchVOD: text(),
 		youtubeVOD: text(),
-		event: relationship({ ref: 'Event.runs', ui: { hideCreate: true, labelField: 'shortname' } }),
-		donationIncentiveObject: relationship({ ref: 'Incentive.run', many: true }),
+		event: relationship({ ref: "Event.runs", ui: { hideCreate: true, labelField: "shortname" } }),
+		donationIncentiveObject: relationship({ ref: "Incentive.run", many: true }),
 		scheduledTime: timestamp(),
 		techPlatform: text(),
 		specialRequirements: text({ ui: { displayMode: "textarea" } }),
@@ -38,15 +38,15 @@ export const Run: Lists.Run = list({
 				async resolve(item, _args, context: Context) {
 					const data = await context.query.Run.findOne({
 						where: { id: item.id.toString() },
-						query: 'game category runners { username } event { shortname }'
+						query: "game category runners { username } event { shortname }",
 					});
 
-					return `${data.game} - ${data.category} | ${data.runners.map((runner: { username: string }) => runner.username).join(', ')} - ${data.event.shortname}`;
-				}
-			})
-		})
+					return `${data.game} - ${data.category} | ${data.runners.map((runner: { username: string }) => runner.username).join(", ")} - ${data.event.shortname}`;
+				},
+			}),
+		}),
 	},
 	ui: {
-		labelField: 'label'
-	}
+		labelField: "label",
+	},
 });

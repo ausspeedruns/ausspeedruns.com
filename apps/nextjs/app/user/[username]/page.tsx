@@ -343,12 +343,7 @@ export default async function ProfilePage({ params }: ProfilePageParams) {
 						<h3 id="shirts">Shirt Orders (Private)</h3>
 						{privateDataResults.shirts.map((shirt) => {
 							// console.log(shirt);
-							return (
-								<ASMShirt
-									key={shirt.shirtID}
-									shirtData={shirt}
-								/>
-							);
+							return <ASMShirt key={shirt.shirtID} shirtData={shirt} />;
 						})}
 					</div>
 				)}

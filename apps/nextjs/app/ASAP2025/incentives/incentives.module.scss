@@ -1,6 +1,6 @@
-@use 'base';
-@import './colors.scss';
-@import './responsive.scss';
+@use "base";
+@import "./colors.scss";
+@import "./responsive.scss";
 
 .appIncentives {
 	position: relative;
@@ -226,7 +226,7 @@
 	padding: 2rem;
 	font-size: 1.1rem;
 	text-align: center;
-	
+
 	a {
 		color: white;
 	}
@@ -242,7 +242,7 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		
+
 		background: white;
 		color: black;
 		padding: 32px;
@@ -261,4 +261,3 @@
 		}
 	}
 }
-

@@ -56,7 +56,7 @@ function updatePackageJson(packageJson: PackageJson, context: ExecutorContext) {
 		logger.error("Keystone Project does not have a project graph");
 		return;
 	}
-	
+
 	if (!packageJson.scripts) {
 		packageJson.scripts = {};
 	}
@@ -66,11 +66,11 @@ function updatePackageJson(packageJson: PackageJson, context: ExecutorContext) {
 		packageJson.dependencies = {};
 	}
 
-	const requiredPackages = ['react', 'react-dom', 'next', 'typescript'];
+	const requiredPackages = ["react", "react-dom", "next", "typescript"];
 	for (const pkg of requiredPackages) {
-	  const externalNode = context.projectGraph.externalNodes[`npm:${pkg}`];
-	  if (externalNode) {
-		packageJson.dependencies[pkg] ??= externalNode.data.version;
-	  }
+		const externalNode = context.projectGraph.externalNodes[`npm:${pkg}`];
+		if (externalNode) {
+			packageJson.dependencies[pkg] ??= externalNode.data.version;
+		}
 	}
 }

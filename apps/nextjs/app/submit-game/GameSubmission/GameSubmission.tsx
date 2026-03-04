@@ -102,7 +102,8 @@ function GameSubmissions(props: GameSubmissionsProps) {
 						value={event}
 						label="Event"
 						onChange={(e) => setEvent(e.target.value)}
-						required>
+						required
+					>
 						{eventsList.map((event) => {
 							return (
 								<MenuItem value={event.id} key={event.id}>
@@ -176,7 +177,8 @@ function GameSubmissions(props: GameSubmissionsProps) {
 							<Button
 								onClick={handleNext}
 								disabled={!canComplete}
-								variant={currentStep === 4 ? "contained" : "outlined"}>
+								variant={currentStep === 4 ? "contained" : "outlined"}
+							>
 								{currentStep === 4 ? "Submit Run" : "Next"}
 							</Button>
 						</div>

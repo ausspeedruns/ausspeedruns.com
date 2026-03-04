@@ -50,7 +50,8 @@ export const RunElement: React.FC<RunItemProps> = (props: RunItemProps) => {
 				style={{
 					background: props.block && props.block.colour,
 					border: props.block && "3px solid #fff",
-				}}>
+				}}
+			>
 				RACE
 			</span>
 		);
@@ -61,7 +62,8 @@ export const RunElement: React.FC<RunItemProps> = (props: RunItemProps) => {
 				style={{
 					background: props.block && props.block.colour,
 					border: props.block && "3px solid #fff",
-				}}>
+				}}
+			>
 				CO-OP
 			</span>
 		);
@@ -92,7 +94,8 @@ export const RunElement: React.FC<RunItemProps> = (props: RunItemProps) => {
 			key={run.id}
 			style={{ background: props.block?.colour, color: props.block?.textColour, ...props.style }}
 			id={run.id}
-			run-odd={`${run.order !== undefined ? run.order % 2 != 0 : false}`}>
+			run-odd={`${run.order !== undefined ? run.order % 2 != 0 : false}`}
+		>
 			<span className={styles.time} style={props.block && { background: "white", color: "black" }}>
 				{convertedTimezone}
 			</span>
@@ -119,7 +122,8 @@ export const RunElement: React.FC<RunItemProps> = (props: RunItemProps) => {
 			{run.donationIncentiveObject && run.donationIncentiveObject.length > 0 && (
 				<div
 					className={styles.donationIncentives}
-					style={{ color: props.block?.textColour, borderColor: props.block && "white" }}>
+					style={{ color: props.block?.textColour, borderColor: props.block && "white" }}
+				>
 					<span className={styles.title}>
 						<PaidIcon /> Incentives
 					</span>
@@ -127,7 +131,8 @@ export const RunElement: React.FC<RunItemProps> = (props: RunItemProps) => {
 						<span
 							className={styles.donationIncentive}
 							style={{ color: props.block?.textColour }}
-							key={incentive.id}>
+							key={incentive.id}
+						>
 							{incentive.title}
 						</span>
 					))}

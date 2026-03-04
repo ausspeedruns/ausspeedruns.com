@@ -36,12 +36,8 @@ function parseEstimateString(estimate: string) {
 }
 
 function EstimateInput(props: EstimateInputProps) {
-	const [hours, setHours] = useState<number>(
-		parseEstimateString(props.value).hours,
-	);
-	const [mins, setMins] = useState<number>(
-		parseEstimateString(props.value).mins,
-	);
+	const [hours, setHours] = useState<number>(parseEstimateString(props.value).hours);
+	const [mins, setMins] = useState<number>(parseEstimateString(props.value).mins);
 
 	useEffect(() => {
 		const newTime = parseEstimateString(props.value);
@@ -64,17 +60,12 @@ function EstimateInput(props: EstimateInputProps) {
 	return (
 		<div className={styles.estimateContainer}>
 			<input type="hidden" name={props.name} value={formatTime()} />
-			<InputLabel
-				disabled={props.disabled}
-				id="estimate-label"
-				className={styles.label}>
+			<InputLabel disabled={props.disabled} id="estimate-label" className={styles.label}>
 				{props.label ?? "Estimate"}
 				{props.required && "*"}
 			</InputLabel>
 			<div className={styles.inputContainer}>
-				<FormControl
-					disabled={props.disabled}
-					className={styles.select}>
+				<FormControl disabled={props.disabled} className={styles.select}>
 					<InputLabel id="estimate-hour-label">Hour</InputLabel>
 					<Select
 						fullWidth
@@ -82,22 +73,18 @@ function EstimateInput(props: EstimateInputProps) {
 						id="estimate-hour-select"
 						value={hours}
 						onChange={(e) => setHours(e.target.value as number)}
-						label="Hour">
+						label="Hour"
+					>
 						{[...Array(14).keys()].map((number) => {
 							return (
-								<MenuItem
-									className={styles.menuItem}
-									value={number}
-									key={number}>
+								<MenuItem className={styles.menuItem} value={number} key={number}>
 									{number}
 								</MenuItem>
 							);
 						})}
 					</Select>
 				</FormControl>
-				<FormControl
-					disabled={props.disabled}
-					className={styles.select}>
+				<FormControl disabled={props.disabled} className={styles.select}>
 					<InputLabel id="estimate-mins-label">Mins</InputLabel>
 					<Select
 						fullWidth
@@ -105,19 +92,15 @@ function EstimateInput(props: EstimateInputProps) {
 						id="estimate-mins-select"
 						value={mins}
 						onChange={(e) => setMins(e.target.value as number)}
-						label="Mins">
-						{Array.from({ length: 12 }, (_, i) => i * 5).map(
-							(number) => {
-								return (
-									<MenuItem
-										className={styles.menuItem}
-										value={number}
-										key={number}>
-										{number.toString().padStart(2, "0")}
-									</MenuItem>
-								);
-							},
-						)}
+						label="Mins"
+					>
+						{Array.from({ length: 12 }, (_, i) => i * 5).map((number) => {
+							return (
+								<MenuItem className={styles.menuItem} value={number} key={number}>
+									{number.toString().padStart(2, "0")}
+								</MenuItem>
+							);
+						})}
 					</Select>
 				</FormControl>
 			</div>

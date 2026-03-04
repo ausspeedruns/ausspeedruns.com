@@ -29,7 +29,7 @@ export const events = [
 		eventTimezone: "Australia/Melbourne",
 		scheduleReleased: true,
 		published: true,
-	}
+	},
 ];
 
 export const images_files = [
@@ -37,55 +37,55 @@ export const images_files = [
 		list: "Event",
 		id: { shortname: "PTE20XX" },
 		key: "logo",
-		file: "/images/PTE Logo.png"
+		file: "/images/PTE Logo.png",
 	},
 	{
 		list: "Event",
 		id: { shortname: "PTE20XX" },
 		key: "darkModeLogo",
-		file: "/images/PTE Logo Dark.png"
+		file: "/images/PTE Logo Dark.png",
 	},
 	{
 		list: "Event",
 		id: { shortname: "PTE20XX" },
 		key: "heroImage",
-		file: "/images/PTE Hero.png"
+		file: "/images/PTE Hero.png",
 	},
 	{
 		list: "Event",
 		id: { shortname: "PTE20XX" },
 		key: "ogImage",
-		file: "/images/PTE OG Image.png"
+		file: "/images/PTE OG Image.png",
 	},
 	{
 		list: "Event",
 		id: { shortname: "PTE20XX" },
 		key: "postEventBackground",
-		file: "/images/PTE Post Event Background.png"
+		file: "/images/PTE Post Event Background.png",
 	},
 	{
 		list: "Event",
 		id: { shortname: "LTE20XX" },
 		key: "logo",
-		file: "/images/LTE Logo.png"
+		file: "/images/LTE Logo.png",
 	},
 	{
 		list: "Event",
 		id: { shortname: "LTE20XX" },
 		key: "ogImage",
-		file: "/images/LTE OG Image.png"
+		file: "/images/LTE OG Image.png",
 	},
 	{
 		list: "Event",
 		id: { shortname: "FTE20XX" },
 		key: "logo",
-		file: "/images/FTE Logo.png"
+		file: "/images/FTE Logo.png",
 	},
 	{
 		list: "Event",
 		id: { shortname: "FTE20XX" },
 		key: "ogImage",
-		file: "/images/FTE OG Image.png"
+		file: "/images/FTE OG Image.png",
 	},
 ];
 
@@ -100,7 +100,7 @@ export const roles = [
 		colour: "#ff0000",
 		textColour: "white",
 		runner: true,
-		volunteer: false
+		volunteer: false,
 	},
 	{
 		name: "PTE20XX Volunteer",
@@ -112,7 +112,7 @@ export const roles = [
 		colour: "#ff0000",
 		textColour: "white",
 		runner: false,
-		volunteer: true
+		volunteer: true,
 	},
 	{
 		name: "Coordinator",
@@ -124,8 +124,8 @@ export const roles = [
 		colour: "#cc7722",
 		textColour: "white",
 		runner: false,
-		volunteer: false
-	}
+		volunteer: false,
+	},
 ];
 
 export const users = [
@@ -140,7 +140,7 @@ export const users = [
 		state: "wa",
 		discord: "GLaDOS#0001",
 		twitch: "GLaDOS",
-		twitter: "Neurotoxin"
+		twitter: "Neurotoxin",
 	},
 	{
 		name: "Chell [REDACTED]",
@@ -173,7 +173,7 @@ export const users = [
 		verified: true,
 		state: "nsw",
 		discord: "Atlas#0009",
-		twitter: "WeightOfTheWorld"
+		twitter: "WeightOfTheWorld",
 	},
 	{
 		name: "Intelligence Dampening Sphere",
@@ -186,8 +186,8 @@ export const users = [
 		state: "qld",
 		discord: "Wheatley#1337",
 		twitch: "xX_Wheatley_Xx",
-		twitter: "TheSmartestCore"
-	}
+		twitter: "TheSmartestCore",
+	},
 ];
 
 export const runs = [
@@ -204,7 +204,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T23:45:00Z"
+		scheduledTime: "2025-07-09T23:45:00Z",
 	},
 	{
 		game: "Setup Buffer",
@@ -219,7 +219,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T01:35:00Z"
+		scheduledTime: "2025-07-11T01:35:00Z",
 	},
 	{
 		game: "Setup Buffer",
@@ -234,7 +234,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T05:55:00Z"
+		scheduledTime: "2025-07-12T05:55:00Z",
 	},
 	{
 		game: "A Hat in Time",
@@ -249,7 +249,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T00:20:00Z"
+		scheduledTime: "2025-07-09T00:20:00Z",
 	},
 	{
 		game: "Peter Jackson's King Kong: The Official Game of the Movie",
@@ -264,7 +264,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T06:25:00Z"
+		scheduledTime: "2025-07-09T06:25:00Z",
 	},
 	{
 		game: "Hollow Knight",
@@ -279,7 +279,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-08T21:50:00Z"
+		scheduledTime: "2025-07-08T21:50:00Z",
 	},
 	{
 		game: "Prey (2017)",
@@ -294,7 +294,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-08T22:45:00Z"
+		scheduledTime: "2025-07-08T22:45:00Z",
 	},
 	{
 		game: "Kingdom Hearts: Chain of Memories",
@@ -309,7 +309,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-08T17:10:00Z"
+		scheduledTime: "2025-07-08T17:10:00Z",
 	},
 	{
 		game: "Kingdom Hearts II Final Mix",
@@ -324,7 +324,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-08T19:00:00Z"
+		scheduledTime: "2025-07-08T19:00:00Z",
 	},
 	{
 		game: "Bomberman 64",
@@ -339,7 +339,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-08T23:15:00Z"
+		scheduledTime: "2025-07-08T23:15:00Z",
 	},
 	{
 		game: "Setup Buffer",
@@ -354,7 +354,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T22:45:00Z"
+		scheduledTime: "2025-07-12T22:45:00Z",
 	},
 	{
 		game: "Finish / Goodbye",
@@ -369,7 +369,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-13T05:20:00Z"
+		scheduledTime: "2025-07-13T05:20:00Z",
 	},
 	{
 		game: "Middle-Earth: Shadow Of Mordor",
@@ -384,7 +384,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T08:50:00Z"
+		scheduledTime: "2025-07-09T08:50:00Z",
 	},
 	{
 		game: "Spyro: Year of the Dragon",
@@ -399,7 +399,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T16:20:00Z"
+		scheduledTime: "2025-07-09T16:20:00Z",
 	},
 	{
 		game: "Spy vs. Spy (2005)",
@@ -414,7 +414,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T13:00:00Z"
+		scheduledTime: "2025-07-09T13:00:00Z",
 	},
 	{
 		game: "Shantae Half-Genie Hero",
@@ -429,7 +429,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-10T01:15:00Z"
+		scheduledTime: "2025-07-10T01:15:00Z",
 	},
 	{
 		game: "The Legend of Zelda: Ocarina of Time Master Quest",
@@ -444,7 +444,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T02:00:00Z"
+		scheduledTime: "2025-07-11T02:00:00Z",
 	},
 	{
 		game: "The Legend of Zelda: Twilight Princess",
@@ -459,7 +459,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-10T05:05:00Z"
+		scheduledTime: "2025-07-10T05:05:00Z",
 	},
 	{
 		game: "Fatal Frame 2: Crimson Butterfly",
@@ -474,7 +474,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T11:40:00Z"
+		scheduledTime: "2025-07-11T11:40:00Z",
 	},
 	{
 		game: "Lego Star Wars: The Complete Saga",
@@ -489,7 +489,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T02:40:00Z"
+		scheduledTime: "2025-07-09T02:40:00Z",
 	},
 	{
 		game: "Super Mario 3D Land",
@@ -504,7 +504,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T02:50:00Z"
+		scheduledTime: "2025-07-11T02:50:00Z",
 	},
 	{
 		game: "The Elder Scrolls V: Skyrim",
@@ -519,7 +519,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T00:00:00Z"
+		scheduledTime: "2025-07-11T00:00:00Z",
 	},
 	{
 		game: "Silent Hill",
@@ -534,7 +534,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-10T02:25:00Z"
+		scheduledTime: "2025-07-10T02:25:00Z",
 	},
 	{
 		game: "The Elder Scrolls 3: Morrowind",
@@ -549,7 +549,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-10T21:40:00Z"
+		scheduledTime: "2025-07-10T21:40:00Z",
 	},
 	{
 		game: "Final Fantasy 7 Remake Intergrade",
@@ -564,7 +564,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-10T15:40:00Z"
+		scheduledTime: "2025-07-10T15:40:00Z",
 	},
 	{
 		game: "Final Fantasy VII",
@@ -579,7 +579,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-10T08:25:00Z"
+		scheduledTime: "2025-07-10T08:25:00Z",
 	},
 	{
 		game: "Spyro: Year of the Dragon (Reignited)",
@@ -594,7 +594,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-10T16:45:00Z"
+		scheduledTime: "2025-07-10T16:45:00Z",
 	},
 	{
 		game: "The Elder Scrolls V: Skyrim",
@@ -609,7 +609,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-10T22:10:00Z"
+		scheduledTime: "2025-07-10T22:10:00Z",
 	},
 	{
 		game: "Middle-Earth: Shadow Of War",
@@ -624,7 +624,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T11:05:00Z"
+		scheduledTime: "2025-07-09T11:05:00Z",
 	},
 	{
 		game: "Silent Hill 4: The Room",
@@ -639,7 +639,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-10T03:45:00Z"
+		scheduledTime: "2025-07-10T03:45:00Z",
 	},
 	{
 		game: "Blinx 2: Masters of Time and Space",
@@ -654,7 +654,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T20:00:00Z"
+		scheduledTime: "2025-07-09T20:00:00Z",
 	},
 	{
 		game: "Super Mario Bros 3",
@@ -669,7 +669,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T17:35:00Z"
+		scheduledTime: "2025-07-09T17:35:00Z",
 	},
 	{
 		game: "James Bond 007 Nightfire",
@@ -684,7 +684,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T11:35:00Z"
+		scheduledTime: "2025-07-09T11:35:00Z",
 	},
 	{
 		game: "Kingdom Hearts 1.5",
@@ -699,7 +699,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-08T14:00:00Z"
+		scheduledTime: "2025-07-08T14:00:00Z",
 	},
 	{
 		game: "Crash Bandicoot 4: It's About Time",
@@ -714,7 +714,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T23:10:00Z"
+		scheduledTime: "2025-07-09T23:10:00Z",
 	},
 	{
 		game: "Donkey Kong Country",
@@ -729,7 +729,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T13:45:00Z"
+		scheduledTime: "2025-07-09T13:45:00Z",
 	},
 	{
 		game: "James Bond 007 Nightfire",
@@ -744,7 +744,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T12:45:00Z"
+		scheduledTime: "2025-07-09T12:45:00Z",
 	},
 	{
 		game: "Crash Bandicoot (N-Sane)",
@@ -759,7 +759,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T21:50:00Z"
+		scheduledTime: "2025-07-09T21:50:00Z",
 	},
 	{
 		game: "Final Fantasy X-2",
@@ -774,7 +774,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T07:55:00Z"
+		scheduledTime: "2025-07-11T07:55:00Z",
 	},
 	{
 		game: "Xenoblade Chronicles: Future Connected",
@@ -789,7 +789,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T00:20:00Z"
+		scheduledTime: "2025-07-11T00:20:00Z",
 	},
 	{
 		game: "Metroid Dread",
@@ -804,7 +804,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T15:40:00Z"
+		scheduledTime: "2025-07-11T15:40:00Z",
 	},
 	{
 		game: "The World's Hardest Game 3",
@@ -819,7 +819,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T23:55:00Z"
+		scheduledTime: "2025-07-11T23:55:00Z",
 	},
 	{
 		game: "Blinx: The Time Sweeper",
@@ -834,7 +834,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T18:45:00Z"
+		scheduledTime: "2025-07-09T18:45:00Z",
 	},
 	{
 		game: "Harry Potter and the Chamber of Secrets",
@@ -849,7 +849,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T22:50:00Z"
+		scheduledTime: "2025-07-11T22:50:00Z",
 	},
 	{
 		game: "Golden Sun",
@@ -864,7 +864,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T12:30:00Z"
+		scheduledTime: "2025-07-12T12:30:00Z",
 	},
 	{
 		game: "Mario Golf World Tour",
@@ -879,7 +879,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T17:05:00Z"
+		scheduledTime: "2025-07-12T17:05:00Z",
 	},
 	{
 		game: "Spyro the Dragon",
@@ -894,7 +894,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-09T14:35:00Z"
+		scheduledTime: "2025-07-09T14:35:00Z",
 	},
 	{
 		game: "Sonic the Hedgehog (Master System)",
@@ -909,7 +909,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T23:20:00Z"
+		scheduledTime: "2025-07-12T23:20:00Z",
 	},
 	{
 		game: "Jak 3",
@@ -924,7 +924,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T22:15:00Z"
+		scheduledTime: "2025-07-12T22:15:00Z",
 	},
 	{
 		game: "Prototype",
@@ -939,7 +939,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=PVPVwIY3YMQ",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T21:10:00Z"
+		scheduledTime: "2021-12-16T21:10:00Z",
 	},
 	{
 		game: "Smile For Me",
@@ -954,7 +954,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=cz81zIgScEs",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T00:10:00Z"
+		scheduledTime: "2021-12-14T00:10:00Z",
 	},
 	{
 		game: "Bioshock 2: Minerva's Den",
@@ -969,7 +969,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=-Sk6nTTesnk",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T15:05:00Z"
+		scheduledTime: "2021-12-17T15:05:00Z",
 	},
 	{
 		game: "Phonics Racing Adventure",
@@ -984,7 +984,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=Ck_iXV4ICrQ",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T12:00:00Z"
+		scheduledTime: "2021-12-14T12:00:00Z",
 	},
 	{
 		game: "Mike Tyson's Punch-Out!!",
@@ -999,7 +999,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=GnSkIIRBpRY",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T09:45:00Z"
+		scheduledTime: "2021-12-14T09:45:00Z",
 	},
 	{
 		game: "Resident Evil 2 (1998)",
@@ -1014,7 +1014,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=fiupwpVTlF0",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T03:00:00Z"
+		scheduledTime: "2021-12-14T03:00:00Z",
 	},
 	{
 		game: "Alex Rider: Stormbreaker",
@@ -1029,7 +1029,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=x0mXnQDK7S4",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T15:50:00Z"
+		scheduledTime: "2021-12-14T15:50:00Z",
 	},
 	{
 		game: "Call of Duty Modern Warfare 2",
@@ -1044,7 +1044,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=hJQzgYyGT8U",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-15T20:45:00Z"
+		scheduledTime: "2021-12-15T20:45:00Z",
 	},
 	{
 		game: "The Legend of Zelda: Link's Awakening",
@@ -1059,7 +1059,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=bT-DWR3_Eik",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-15T08:25:00Z"
+		scheduledTime: "2021-12-15T08:25:00Z",
 	},
 	{
 		game: "Fantasy Zone",
@@ -1074,7 +1074,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=XJBGVGgxmgw",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T14:35:00Z"
+		scheduledTime: "2021-12-16T14:35:00Z",
 	},
 	{
 		game: "Dustforce DX",
@@ -1089,7 +1089,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=FUTnVBvWR0M",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T23:35:00Z"
+		scheduledTime: "2021-12-16T23:35:00Z",
 	},
 	{
 		game: "Croc 2",
@@ -1104,7 +1104,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=sU5ZXJKfmhA",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T08:55:00Z"
+		scheduledTime: "2021-12-16T08:55:00Z",
 	},
 	{
 		game: "Shantae and the Seven Sirens",
@@ -1119,7 +1119,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=Pj_4nHJjFqo",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T17:50:00Z"
+		scheduledTime: "2021-12-16T17:50:00Z",
 	},
 	{
 		game: "Untitled Goose Game",
@@ -1134,7 +1134,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=7yDWAw1xXJk",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T13:15:00Z"
+		scheduledTime: "2021-12-16T13:15:00Z",
 	},
 	{
 		game: "Kingdom Hearts 0.2",
@@ -1149,7 +1149,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=0gH0ETNZ4g0",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T03:55:00Z"
+		scheduledTime: "2021-12-17T03:55:00Z",
 	},
 	{
 		game: "Tony Hawk's Pro Skater 3",
@@ -1164,7 +1164,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=mdANDIUleG4",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-13T07:15:00Z"
+		scheduledTime: "2021-12-13T07:15:00Z",
 	},
 	{
 		game: "The Simpsons Game",
@@ -1179,7 +1179,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T21:40:00Z"
+		scheduledTime: "2025-07-11T21:40:00Z",
 	},
 	{
 		game: "Pokemon Heart Gold",
@@ -1194,7 +1194,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T17:00:00Z"
+		scheduledTime: "2025-07-11T17:00:00Z",
 	},
 	{
 		game: "Setup Buffer",
@@ -1209,7 +1209,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-08T23:55:00Z"
+		scheduledTime: "2025-07-08T23:55:00Z",
 	},
 	{
 		game: "Digimon World",
@@ -1224,7 +1224,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T06:25:00Z"
+		scheduledTime: "2025-07-12T06:25:00Z",
 	},
 	{
 		game: "Ecco Jr",
@@ -1239,7 +1239,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T18:45:00Z"
+		scheduledTime: "2025-07-12T18:45:00Z",
 	},
 	{
 		game: "Celeste",
@@ -1254,7 +1254,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-13T03:50:00Z"
+		scheduledTime: "2025-07-13T03:50:00Z",
 	},
 	{
 		game: "Hollow Knight",
@@ -1269,7 +1269,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=DWSnbP2kB58",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-13T05:05:00Z"
+		scheduledTime: "2021-12-13T05:05:00Z",
 	},
 	{
 		game: "The World's Hardest Game",
@@ -1284,7 +1284,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=E7qBqzk6fKE",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T16:10:00Z"
+		scheduledTime: "2021-12-17T16:10:00Z",
 	},
 	{
 		game: "Outlast",
@@ -1299,7 +1299,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=0ENPwSxgFnU",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-13T07:40:00Z"
+		scheduledTime: "2021-12-13T07:40:00Z",
 	},
 	{
 		game: "Jak and Daxter: The Precursor Legacy",
@@ -1314,7 +1314,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=av4aOq_TDX4",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-15T04:30:00Z"
+		scheduledTime: "2021-12-15T04:30:00Z",
 	},
 	{
 		game: "Amnesia: Justine",
@@ -1329,7 +1329,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=2GJngEF7EOQ",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-15T08:00:00Z"
+		scheduledTime: "2021-12-15T08:00:00Z",
 	},
 	{
 		game: "VVVVVV",
@@ -1344,7 +1344,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=uGdKQQFUxes",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-15T10:45:00Z"
+		scheduledTime: "2021-12-15T10:45:00Z",
 	},
 	{
 		game: "Sonic the Hedgehog 2",
@@ -1359,7 +1359,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=-E6By9B8FSE",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T05:35:00Z"
+		scheduledTime: "2021-12-16T05:35:00Z",
 	},
 	{
 		game: "Tomba!/Tombi!",
@@ -1374,7 +1374,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=riXv8MQyl80",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T01:10:00Z"
+		scheduledTime: "2021-12-17T01:10:00Z",
 	},
 	{
 		game: "P.N.03",
@@ -1389,7 +1389,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=bpmRDXbUTco",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T15:00:00Z"
+		scheduledTime: "2021-12-16T15:00:00Z",
 	},
 	{
 		game: "Spyro the Dragon (Reignited)",
@@ -1404,7 +1404,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=hzI0isDfKV8",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T07:05:00Z"
+		scheduledTime: "2021-12-17T07:05:00Z",
 	},
 	{
 		game: "Super Monkey Ball",
@@ -1419,7 +1419,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=VbKZTx96rdU",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T15:40:00Z"
+		scheduledTime: "2021-12-17T15:40:00Z",
 	},
 	{
 		game: "Crash Bandicoot (N-Sane Trilogy)",
@@ -1434,7 +1434,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=Nou98_C2ZqE",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-13T00:00:00Z"
+		scheduledTime: "2021-12-13T00:00:00Z",
 	},
 	{
 		game: "Diablo III: Reaper of Souls",
@@ -1449,7 +1449,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=rYSocU5Nxy4",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-15T11:45:00Z"
+		scheduledTime: "2021-12-15T11:45:00Z",
 	},
 	{
 		game: "Spyro the Dragon: Year of the Dragon (Reignited)",
@@ -1464,7 +1464,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=vv49v8u7Av8",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-13T08:15:00Z"
+		scheduledTime: "2021-12-13T08:15:00Z",
 	},
 	{
 		game: "Super Mario 64",
@@ -1479,7 +1479,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T01:50:00Z"
+		scheduledTime: "2025-07-12T01:50:00Z",
 	},
 	{
 		game: "Middle-Earth: Shadow of War",
@@ -1494,7 +1494,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=LvGEClLB_iE",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-13T12:50:00Z"
+		scheduledTime: "2021-12-13T12:50:00Z",
 	},
 	{
 		game: "Spyro 2: Ripto's Rage",
@@ -1509,7 +1509,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=2pR2tqVMQXc",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T08:10:00Z"
+		scheduledTime: "2021-12-17T08:10:00Z",
 	},
 	{
 		game: "Blinx: The Time Sweeper ",
@@ -1524,7 +1524,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=Z0XAWU2e_m4",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-13T18:00:00Z"
+		scheduledTime: "2021-12-13T18:00:00Z",
 	},
 	{
 		game: "Jak II",
@@ -1539,7 +1539,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=yf9oo_ToJ-g",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-15T06:35:00Z"
+		scheduledTime: "2021-12-15T06:35:00Z",
 	},
 	{
 		game: "Grand Theft Auto V",
@@ -1554,7 +1554,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=uxdjvXD6K74",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T17:00:00Z"
+		scheduledTime: "2021-12-14T17:00:00Z",
 	},
 	{
 		game: "Need For Speed Most Wanted (2005)",
@@ -1569,7 +1569,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=1uZvrB1Cwnk",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-15T16:10:00Z"
+		scheduledTime: "2021-12-15T16:10:00Z",
 	},
 	{
 		game: "Mr. Driller Drill Land",
@@ -1584,7 +1584,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=iff3Vmbms2s",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T14:00:00Z"
+		scheduledTime: "2021-12-16T14:00:00Z",
 	},
 	{
 		game: "The Legend of Zelda: Ocarina of Time",
@@ -1599,7 +1599,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=tEVyxLVy50Y",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T07:45:00Z"
+		scheduledTime: "2021-12-16T07:45:00Z",
 	},
 	{
 		game: "Tony Hawk's Pro Skater 4",
@@ -1614,7 +1614,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=Xpy8ghSuTTw",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-13T06:25:00Z"
+		scheduledTime: "2021-12-13T06:25:00Z",
 	},
 	{
 		game: "A Hat in Time",
@@ -1629,7 +1629,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=DGXdRN9JBoI",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T02:55:00Z"
+		scheduledTime: "2021-12-17T02:55:00Z",
 	},
 	{
 		game: "Fire Emblem: Three Houses",
@@ -1644,7 +1644,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=L_ggiiG7wGY",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-13T16:10:00Z"
+		scheduledTime: "2021-12-13T16:10:00Z",
 	},
 	{
 		game: "Hollow Knight",
@@ -1659,7 +1659,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=oBOvAlk7g2o",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T20:10:00Z"
+		scheduledTime: "2021-12-14T20:10:00Z",
 	},
 	{
 		game: "Metroid Dread",
@@ -1674,7 +1674,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T13:40:00Z"
+		scheduledTime: "2025-07-11T13:40:00Z",
 	},
 	{
 		game: "Big Bass Fishing",
@@ -1689,7 +1689,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T16:05:00Z"
+		scheduledTime: "2025-07-11T16:05:00Z",
 	},
 	{
 		game: "Mario & Sonic at the Olympic Games Tokyo 2020",
@@ -1704,7 +1704,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T11:25:00Z"
+		scheduledTime: "2025-07-12T11:25:00Z",
 	},
 	{
 		game: "Diddy Kong Racing",
@@ -1719,7 +1719,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-13T00:20:00Z"
+		scheduledTime: "2025-07-13T00:20:00Z",
 	},
 	{
 		game: "Sonic the Hedgehog (Master System)",
@@ -1734,7 +1734,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T23:55:00Z"
+		scheduledTime: "2025-07-12T23:55:00Z",
 	},
 	{
 		game: "Tony Hawk's Underground",
@@ -1749,7 +1749,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-10T00:20:00Z"
+		scheduledTime: "2025-07-10T00:20:00Z",
 	},
 	{
 		game: "Diablo III: Reaper of Souls",
@@ -1764,7 +1764,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T08:20:00Z"
+		scheduledTime: "2025-07-12T08:20:00Z",
 	},
 	{
 		game: "Skully",
@@ -1779,7 +1779,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=sSPnwBUQwZY",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-13T03:55:00Z"
+		scheduledTime: "2021-12-13T03:55:00Z",
 	},
 	{
 		game: "Untitled Goose Game",
@@ -1794,7 +1794,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=eSz37TOZf54",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T05:20:00Z"
+		scheduledTime: "2021-12-17T05:20:00Z",
 	},
 	{
 		game: "Super Mario Galaxy",
@@ -1809,7 +1809,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=pjrWohvzg98",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-13T21:15:00Z"
+		scheduledTime: "2021-12-13T21:15:00Z",
 	},
 	{
 		game: "The Simpsons: Hit & Run",
@@ -1824,7 +1824,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=uBnW-fwwNUI",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-13T09:40:00Z"
+		scheduledTime: "2021-12-13T09:40:00Z",
 	},
 	{
 		game: "Hades",
@@ -1839,7 +1839,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=ddtQiXBzBbg",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T23:50:00Z"
+		scheduledTime: "2021-12-14T23:50:00Z",
 	},
 	{
 		game: "Girls Und Panzer: Dream Tank Match",
@@ -1854,7 +1854,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=FIw6Dt2TEjM",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T18:00:00Z"
+		scheduledTime: "2021-12-14T18:00:00Z",
 	},
 	{
 		game: "Hades",
@@ -1869,7 +1869,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=oSIjvJhB7X4",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T10:15:00Z"
+		scheduledTime: "2021-12-16T10:15:00Z",
 	},
 	{
 		game: "Herc's Adventures",
@@ -1884,7 +1884,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=HuHgJI6aluQ",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-15T14:50:00Z"
+		scheduledTime: "2021-12-15T14:50:00Z",
 	},
 	{
 		game: "Super Smash Bros. Ultimate",
@@ -1899,7 +1899,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=Mjp44n9ln_w",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T10:40:00Z"
+		scheduledTime: "2021-12-14T10:40:00Z",
 	},
 	{
 		game: "Pokemon Snap",
@@ -1914,7 +1914,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=n3f-pmsIx7o",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T04:35:00Z"
+		scheduledTime: "2021-12-17T04:35:00Z",
 	},
 	{
 		game: "A Short Hike",
@@ -1929,7 +1929,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=m4elRMzxM4Y",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T05:55:00Z"
+		scheduledTime: "2021-12-17T05:55:00Z",
 	},
 	{
 		game: "Final Speech",
@@ -1945,7 +1945,7 @@ export const runs = [
 		youtubeVOD: "https://www.youtube.com/watch?v=5XXvB13BraY",
 		event: "PTE20XX",
 		scheduledTime: "2021-12-17T16:30:00Z",
-		runners: ["GLaDOS"]
+		runners: ["GLaDOS"],
 	},
 	{
 		game: "Legend of Valkyrie",
@@ -1960,7 +1960,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T03:50:00Z"
+		scheduledTime: "2025-07-12T03:50:00Z",
 	},
 	{
 		game: "The Simpsons: Hit & Run",
@@ -1975,7 +1975,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-10T18:10:00Z"
+		scheduledTime: "2025-07-10T18:10:00Z",
 	},
 	{
 		game: "VVVVVV",
@@ -1990,7 +1990,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T18:15:00Z"
+		scheduledTime: "2025-07-12T18:15:00Z",
 	},
 	{
 		game: "Superliminal",
@@ -2005,7 +2005,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T11:00:00Z"
+		scheduledTime: "2025-07-12T11:00:00Z",
 	},
 	{
 		game: "Resident Evil 2 (1998)",
@@ -2020,7 +2020,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T00:45:00Z"
+		scheduledTime: "2025-07-12T00:45:00Z",
 	},
 	{
 		game: "Jak II",
@@ -2035,7 +2035,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T21:00:00Z"
+		scheduledTime: "2025-07-12T21:00:00Z",
 	},
 	{
 		game: "KeyWe",
@@ -2050,7 +2050,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T04:30:00Z"
+		scheduledTime: "2025-07-12T04:30:00Z",
 	},
 	{
 		game: "Jak and Daxter: The Precursor Legacy",
@@ -2065,7 +2065,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T19:05:00Z"
+		scheduledTime: "2025-07-12T19:05:00Z",
 	},
 	{
 		game: "Banjo-Kazooie",
@@ -2080,7 +2080,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=a0ZNQMTjBeU",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T01:00:00Z"
+		scheduledTime: "2021-12-14T01:00:00Z",
 	},
 	{
 		game: "Resident Evil 7 Biohazard",
@@ -2095,7 +2095,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=mEFreB3eCXc",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T06:20:00Z"
+		scheduledTime: "2021-12-14T06:20:00Z",
 	},
 	{
 		game: "Resident Evil 3: Nemesis",
@@ -2110,7 +2110,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=vIISB0W2OyA",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T04:10:00Z"
+		scheduledTime: "2021-12-14T04:10:00Z",
 	},
 	{
 		game: "Ecco Jr",
@@ -2125,7 +2125,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=WQVEoiGEPZA",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-15T11:20:00Z"
+		scheduledTime: "2021-12-15T11:20:00Z",
 	},
 	{
 		game: "Mario Golf: World Tour",
@@ -2140,7 +2140,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=oA8JuPqirWo",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T08:20:00Z"
+		scheduledTime: "2021-12-14T08:20:00Z",
 	},
 	{
 		game: "Sonic Adventure DX",
@@ -2155,7 +2155,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=QxUgGPR04vU",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T11:30:00Z"
+		scheduledTime: "2021-12-16T11:30:00Z",
 	},
 	{
 		game: "Ratchet & Clank: Into the Nexus",
@@ -2170,7 +2170,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=-vUjLV6ZvQM",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T11:35:00Z"
+		scheduledTime: "2021-12-17T11:35:00Z",
 	},
 	{
 		game: "Resident Evil 2 Remake",
@@ -2185,7 +2185,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=rZsvfMouRxg",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T05:10:00Z"
+		scheduledTime: "2021-12-14T05:10:00Z",
 	},
 	{
 		game: "Futurama",
@@ -2200,7 +2200,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=MHJ9RXJ2cZs",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T20:05:00Z"
+		scheduledTime: "2021-12-16T20:05:00Z",
 	},
 	{
 		game: "Crash Bandicoot 2: Cortex Strikes Back",
@@ -2215,7 +2215,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=y1yuRgvj_SY",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-13T01:20:00Z"
+		scheduledTime: "2021-12-13T01:20:00Z",
 	},
 	{
 		game: "Splatoon 2 - Octo Expansion",
@@ -2230,7 +2230,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=OjaWwM9rpSM",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T06:15:00Z"
+		scheduledTime: "2021-12-16T06:15:00Z",
 	},
 	{
 		game: "Grand Theft Auto: Vice City",
@@ -2245,7 +2245,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T19:50:00Z"
+		scheduledTime: "2025-07-11T19:50:00Z",
 	},
 	{
 		game: "Superliminal",
@@ -2260,7 +2260,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T10:20:00Z"
+		scheduledTime: "2025-07-12T10:20:00Z",
 	},
 	{
 		game: "Time Crisis 3",
@@ -2275,7 +2275,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-12T16:15:00Z"
+		scheduledTime: "2025-07-12T16:15:00Z",
 	},
 	{
 		game: "Half-life 2",
@@ -2290,7 +2290,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-13T02:30:00Z"
+		scheduledTime: "2025-07-13T02:30:00Z",
 	},
 	{
 		game: "Kirby's Dream Land",
@@ -2305,7 +2305,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T21:10:00Z"
+		scheduledTime: "2025-07-11T21:10:00Z",
 	},
 	{
 		game: "DOOM Eternal",
@@ -2320,7 +2320,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T04:15:00Z"
+		scheduledTime: "2025-07-11T04:15:00Z",
 	},
 	{
 		game: "Kena Bridge of Spirits",
@@ -2335,7 +2335,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "",
 		event: "LTE20XX",
-		scheduledTime: "2025-07-11T07:20:00Z"
+		scheduledTime: "2025-07-11T07:20:00Z",
 	},
 	{
 		game: "Blinx 2: Masters of Time and Space",
@@ -2350,7 +2350,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=AjocjVa9S4g",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-13T19:25:00Z"
+		scheduledTime: "2021-12-13T19:25:00Z",
 	},
 	{
 		game: "Super Mario World",
@@ -2365,7 +2365,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=wuzlXKex0TQ",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T14:40:00Z"
+		scheduledTime: "2021-12-17T14:40:00Z",
 	},
 	{
 		game: "Ratchet: Deadlocked",
@@ -2380,7 +2380,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=D90OsSQUxnw",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T10:05:00Z"
+		scheduledTime: "2021-12-17T10:05:00Z",
 	},
 	{
 		game: "Banjo-Kazooie",
@@ -2395,7 +2395,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=a0ZNQMTjBeU",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T02:30:00Z"
+		scheduledTime: "2021-12-14T02:30:00Z",
 	},
 	{
 		game: "Fisherman's Bait 2 Big Ol' Bass",
@@ -2410,7 +2410,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=pOysmuZZ508",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-13T02:55:00Z"
+		scheduledTime: "2021-12-13T02:55:00Z",
 	},
 	{
 		game: "Pokemon: Lets Go Pikachu",
@@ -2425,7 +2425,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=F44xGuh3c2o",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T12:25:00Z"
+		scheduledTime: "2021-12-14T12:25:00Z",
 	},
 	{
 		game: "Star Wars: Empire at War",
@@ -2440,7 +2440,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=gymU8-IMzYs",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-14T18:50:00Z"
+		scheduledTime: "2021-12-14T18:50:00Z",
 	},
 	{
 		game: "Silent Hill 2",
@@ -2455,7 +2455,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=RknTK_gn3Q8",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-15T13:45:00Z"
+		scheduledTime: "2021-12-15T13:45:00Z",
 	},
 	{
 		game: "Kingdom Hearts 1.5 Final Mix",
@@ -2470,7 +2470,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=vk8YW3gFlKo",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-15T22:40:00Z"
+		scheduledTime: "2021-12-15T22:40:00Z",
 	},
 	{
 		game: "Kingdom Hearts 3",
@@ -2485,7 +2485,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=qoSfVNZOTPY",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T01:55:00Z"
+		scheduledTime: "2021-12-16T01:55:00Z",
 	},
 	{
 		game: "Spyro the Dragon",
@@ -2500,7 +2500,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=TEnkLCBPJK0",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T06:20:00Z"
+		scheduledTime: "2021-12-17T06:20:00Z",
 	},
 	{
 		game: "Ratchet & Clank: Rift Apart",
@@ -2515,7 +2515,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=N6sBeIhOD9g",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T12:10:00Z"
+		scheduledTime: "2021-12-17T12:10:00Z",
 	},
 	{
 		game: "Puyo Puyo Tetris",
@@ -2530,7 +2530,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=mPqfv2ED6g8",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T12:00:00Z"
+		scheduledTime: "2021-12-16T12:00:00Z",
 	},
 	{
 		game: "Pokemon Heart Gold",
@@ -2545,7 +2545,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=hZ_qxlnXDG8",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-15T00:05:00Z"
+		scheduledTime: "2021-12-15T00:05:00Z",
 	},
 	{
 		game: "The Simpsons: Hit & Run",
@@ -2560,7 +2560,7 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=5aHT-774aq0",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-16T16:10:00Z"
+		scheduledTime: "2021-12-16T16:10:00Z",
 	},
 	{
 		game: "Ratchet: Deadlocked",
@@ -2575,117 +2575,117 @@ export const runs = [
 		twitchVOD: "",
 		youtubeVOD: "https://www.youtube.com/watch?v=I9CQXaOHEYw",
 		event: "PTE20XX",
-		scheduledTime: "2021-12-17T14:20:00Z"
-	}
-]
+		scheduledTime: "2021-12-17T14:20:00Z",
+	},
+];
 
 export const submissions = [
 	{
-		runner: 'Chell',
-		game: 'Portal',
-		category: 'Glitchless',
-		platform: 'PC',
-		techPlatform: 'PC',
-		estimate: '01:00:00',
-		ageRating: 'm_or_lower',
-		donationIncentive: '',
-		specialReqs: '',
+		runner: "Chell",
+		game: "Portal",
+		category: "Glitchless",
+		platform: "PC",
+		techPlatform: "PC",
+		estimate: "01:00:00",
+		ageRating: "m_or_lower",
+		donationIncentive: "",
+		specialReqs: "",
 		availability: [true, true, null, true, true],
-		race: 'no',
+		race: "no",
 		coop: false,
-		video: 'google.com',
-		status: 'accepted',
-		event: 'FTE20XX',
-		willingBackup: true
+		video: "google.com",
+		status: "accepted",
+		event: "FTE20XX",
+		willingBackup: true,
 	},
 	{
-		runner: 'Chell',
-		game: 'Portal 2',
-		category: 'Any%',
-		platform: 'PC',
-		techPlatform: 'PC',
-		estimate: '01:20:00',
-		ageRating: 'm_or_lower',
-		donationIncentive: 'I sing Cara Mia Addio',
-		specialReqs: '',
+		runner: "Chell",
+		game: "Portal 2",
+		category: "Any%",
+		platform: "PC",
+		techPlatform: "PC",
+		estimate: "01:20:00",
+		ageRating: "m_or_lower",
+		donationIncentive: "I sing Cara Mia Addio",
+		specialReqs: "",
 		availability: [true, false, true, false, true],
-		race: 'no',
+		race: "no",
 		coop: false,
-		video: 'google.com',
-		status: 'backup',
-		event: 'FTE20XX',
-		willingBackup: false
+		video: "google.com",
+		status: "backup",
+		event: "FTE20XX",
+		willingBackup: false,
 	},
 	{
-		runner: 'Chell',
-		game: 'Portal Stories: Mel',
-		category: 'Story Mode Inbounds',
-		platform: 'PC',
-		techPlatform: 'PC',
-		estimate: '00:40:00',
-		ageRating: 'm_or_lower',
+		runner: "Chell",
+		game: "Portal Stories: Mel",
+		category: "Story Mode Inbounds",
+		platform: "PC",
+		techPlatform: "PC",
+		estimate: "00:40:00",
+		ageRating: "m_or_lower",
 		availability: [false, true, false, true, false],
-		race: 'no',
+		race: "no",
 		coop: false,
-		video: 'google.com',
-		status: 'rejected',
-		event: 'FTE20XX',
-		willingBackup: false
+		video: "google.com",
+		status: "rejected",
+		event: "FTE20XX",
+		willingBackup: false,
 	},
 	{
-		runner: 'Chell',
-		game: 'Portal Reloaded',
-		category: 'No SLA',
-		platform: 'PC',
-		techPlatform: 'PC',
-		estimate: '02:15:00',
-		ageRating: 'm_or_lower',
-		donationIncentive: '',
-		specialReqs: 'Must be high fived after every test chamber',
+		runner: "Chell",
+		game: "Portal Reloaded",
+		category: "No SLA",
+		platform: "PC",
+		techPlatform: "PC",
+		estimate: "02:15:00",
+		ageRating: "m_or_lower",
+		donationIncentive: "",
+		specialReqs: "Must be high fived after every test chamber",
 		availability: [false, false, false, false, true],
-		race: 'only',
-		racer: 'Companion Cube',
+		race: "only",
+		racer: "Companion Cube",
 		coop: true,
-		video: 'google.com',
-		status: 'submitted',
-		event: 'FTE20XX',
-		willingBackup: true
+		video: "google.com",
+		status: "submitted",
+		event: "FTE20XX",
+		willingBackup: true,
 	},
-]
+];
 
 export const volunteers = [
 	{
-		volunteer: 'P-body',
-		jobType: 'host',
+		volunteer: "P-body",
+		jobType: "host",
 		eventHostTime: 7,
 		maxDailyHostTime: 4,
-		dayTimes: ['10 - 6', '10 - 6', '10 - 10', '10 - 6', 'None'],
-		specificGame: 'Any',
-		specificRunner: 'ATLAS',
-		additionalInfo: 'I will speak in bleeps and boops',
-		event: 'FTE20XX',
+		dayTimes: ["10 - 6", "10 - 6", "10 - 10", "10 - 6", "None"],
+		specificGame: "Any",
+		specificRunner: "ATLAS",
+		additionalInfo: "I will speak in bleeps and boops",
+		event: "FTE20XX",
 	},
 	{
-		volunteer: 'P-body',
-		jobType: 'social',
-		dayTimes: ['All', 'All', 'All', 'All', 'All'],
-		experience: 'Casual',
-		favMeme: 'christmas tiktok by tagashowie',
-		event: 'FTE20XX',
+		volunteer: "P-body",
+		jobType: "social",
+		dayTimes: ["All", "All", "All", "All", "All"],
+		experience: "Casual",
+		favMeme: "christmas tiktok by tagashowie",
+		event: "FTE20XX",
 	},
 	{
-		volunteer: 'P-body',
-		jobType: 'runMgmt',
-		event: 'FTE20XX',
-		runnerManagementAvailability: 'I will not be there for setup but all other days I can be there.'
+		volunteer: "P-body",
+		jobType: "runMgmt",
+		event: "FTE20XX",
+		runnerManagementAvailability: "I will not be there for setup but all other days I can be there.",
 	},
 	{
-		volunteer: 'P-body',
-		jobType: 'tech',
-		techAvailablity: 'I will be there for setup but not the other days.',
-		techExperience: 'I am literally a robot',
-		event: 'FTE20XX',
-	}
+		volunteer: "P-body",
+		jobType: "tech",
+		techAvailablity: "I will be there for setup but not the other days.",
+		techExperience: "I am literally a robot",
+		event: "FTE20XX",
+	},
 ];
 
 export const incentives = [
@@ -2693,180 +2693,180 @@ export const incentives = [
 		run: "The Elder Scrolls 3: Morrowind",
 		title: "Live any% Tutorial",
 		type: "goal",
-		data: "{\"goal\": 750, \"current\": 0}",
+		data: '{"goal": 750, "current": 0}',
 		active: true,
 		event: "LTE20XX",
-		notes: ""
+		notes: "",
 	},
 	{
 		run: "Hollow Knight",
 		title: "Save / Abandon the grub",
 		type: "war",
-		data: "{\"options\": [{\"name\": \"Save\", \"total\": 0}, {\"name\": \"Abandon\", \"total\": 0}]}",
+		data: '{"options": [{"name": "Save", "total": 0}, {"name": "Abandon", "total": 0}]}',
 		active: true,
 		event: "LTE20XX",
-		notes: ""
+		notes: "",
 	},
 	{
 		run: "Crash Bandicoot 4: It's About Time",
 		title: "Crash skin selection",
 		type: "war",
-		data: "{\"options\": [{\"name\": \"General Rule\", \"total\": 0}, {\"name\": \"Mother Clucker\", \"total\": 0}, {\"name\": \"Cats Meow\", \"total\": 0}, {\"name\": \"Warped Biker\", \"total\": 0}]}",
+		data: '{"options": [{"name": "General Rule", "total": 0}, {"name": "Mother Clucker", "total": 0}, {"name": "Cats Meow", "total": 0}, {"name": "Warped Biker", "total": 0}]}',
 		active: true,
 		event: "LTE20XX",
-		notes: ""
+		notes: "",
 	},
 	{
 		run: "Blinx 2: Masters of Time and Space",
 		title: "Name the Time Sweeper",
 		type: "war",
-		data: "{\"options\": []}",
+		data: '{"options": []}',
 		active: true,
 		event: "LTE20XX",
-		notes: "Max 12 characters"
+		notes: "Max 12 characters",
 	},
 	{
 		run: "The Legend of Zelda: Ocarina of Time Master Quest",
 		title: "File Name",
 		type: "war",
-		data: "{\"options\": []}",
+		data: '{"options": []}',
 		active: true,
 		event: "LTE20XX",
-		notes: "Max 8 characters"
+		notes: "Max 8 characters",
 	},
 	{
 		run: "Pokemon Heart Gold",
 		title: "Player name",
 		type: "war",
-		data: "{\"options\": []}",
+		data: '{"options": []}',
 		active: true,
 		event: "LTE20XX",
-		notes: "Max 7 characters"
+		notes: "Max 7 characters",
 	},
 	{
 		run: "Final Fantasy VII",
 		title: "Cloud's Name",
 		type: "war",
-		data: "{\"options\": []}",
+		data: '{"options": []}',
 		active: true,
 		event: "LTE20XX",
-		notes: "Max 9 characters"
+		notes: "Max 9 characters",
 	},
 	{
 		run: "Peter Jackson's King Kong: The Official Game of the Movie",
 		title: "Save or Leave Kong ",
 		type: "war",
-		data: "{\"options\": [{\"name\": \"Save\", \"total\": 0}, {\"name\": \"Leave\", \"total\": 0}]}",
+		data: '{"options": [{"name": "Save", "total": 0}, {"name": "Leave", "total": 0}]}',
 		active: true,
 		event: "LTE20XX",
-		notes: ""
+		notes: "",
 	},
 	{
 		run: "Grand Theft Auto: Vice City",
 		title: "Couch completes Autoscrollers",
 		type: "goal",
-		data: "{\"goal\": 500, \"current\": 0}",
+		data: '{"goal": 500, "current": 0}',
 		active: true,
 		event: "LTE20XX",
-		notes: ""
+		notes: "",
 	},
 	{
 		run: "Spy vs. Spy (2005)",
 		title: "Spy cosplay on stream",
 		type: "goal",
-		data: "{\"goal\": 500, \"current\": 0}",
+		data: '{"goal": 500, "current": 0}',
 		active: true,
 		event: "LTE20XX",
-		notes: ""
+		notes: "",
 	},
 	{
 		run: "Super Mario 3D Land",
 		title: "Special World 8 - Crown",
 		type: "goal",
-		data: "{\"goal\": 500, \"current\": 0}",
+		data: '{"goal": 500, "current": 0}',
 		active: true,
 		event: "LTE20XX",
-		notes: ""
+		notes: "",
 	},
 	{
 		run: "VVVVVV",
 		title: "Category Change to 100%",
 		type: "goal",
-		data: "{\"goal\": 1000, \"current\": 0}",
+		data: '{"goal": 1000, "current": 0}',
 		active: true,
 		event: "LTE20XX",
-		notes: ""
+		notes: "",
 	},
 	{
 		run: "Big Bass Fishing",
 		title: "Language Choice",
 		type: "war",
-		data: "{\"options\": [{\"name\": \"English\", \"total\": 0}, {\"name\": \"Italian\", \"total\": 0}, {\"name\": \"French\", \"total\": 0}, {\"name\": \"German\", \"total\": 0}]}",
+		data: '{"options": [{"name": "English", "total": 0}, {"name": "Italian", "total": 0}, {"name": "French", "total": 0}, {"name": "German", "total": 0}]}',
 		active: true,
 		event: "LTE20XX",
-		notes: ""
+		notes: "",
 	},
 	{
 		run: "Jak and Daxter: The Precursor Legacy",
 		title: "Language Choice",
 		type: "war",
-		data: "{\"options\": [{\"name\": \"Japanese\", \"total\": 0}, {\"name\": \"German\", \"total\": 0}, {\"name\": \"English\", \"total\": 0}, {\"name\": \"Spanish\", \"total\": 0}]}",
+		data: '{"options": [{"name": "Japanese", "total": 0}, {"name": "German", "total": 0}, {"name": "English", "total": 0}, {"name": "Spanish", "total": 0}]}',
 		active: true,
 		event: "LTE20XX",
-		notes: ""
+		notes: "",
 	},
 	{
 		run: "KeyWe",
 		title: "Play game in Italian",
 		type: "goal",
-		data: "{\"goal\": 750, \"current\": 0}",
+		data: '{"goal": 750, "current": 0}',
 		active: true,
 		event: "LTE20XX",
-		notes: ""
+		notes: "",
 	},
 	{
 		run: "Time Crisis 3",
 		title: "Category Selection",
 		type: "war",
-		data: "{\"options\": [{\"name\": \"Alan\", \"total\": 0}, {\"name\": \"Wesley\", \"total\": 0}]}",
+		data: '{"options": [{"name": "Alan", "total": 0}, {"name": "Wesley", "total": 0}]}',
 		active: true,
 		event: "LTE20XX",
-		notes: ""
+		notes: "",
 	},
 	{
 		run: "DOOM Eternal",
 		title: "No Frostbomb Trick on Marauder",
 		type: "goal",
-		data: "{\"goal\": 500, \"current\": 0}",
+		data: '{"goal": 500, "current": 0}',
 		active: true,
 		event: "LTE20XX",
-		notes: ""
+		notes: "",
 	},
 	{
 		run: "The World's Hardest Game 3",
 		title: "Player Colour",
 		type: "war",
-		data: "{\"options\": [{\"name\": \"Red\", \"total\": 0}, {\"name\": \"Green\", \"total\": 0}, {\"name\": \"Rainbow\", \"total\": 0}, {\"name\": \"Blue\", \"total\": 0}, {\"name\": \"Yellow\", \"total\": 0}, {\"name\": \"Grey\", \"total\": 0}, {\"name\": \"\", \"total\": 0}]}",
+		data: '{"options": [{"name": "Red", "total": 0}, {"name": "Green", "total": 0}, {"name": "Rainbow", "total": 0}, {"name": "Blue", "total": 0}, {"name": "Yellow", "total": 0}, {"name": "Grey", "total": 0}, {"name": "", "total": 0}]}',
 		active: true,
 		event: "LTE20XX",
-		notes: ""
+		notes: "",
 	},
 	{
 		run: "The Simpsons: Hit & Run",
 		title: "Homer 1 Outfit Choice",
 		type: "war",
-		data: "{\"options\": [{\"name\": \"Muumuu\", \"total\": 0}, {\"name\": \"Casual\", \"total\": 0}, {\"name\": \"Chosen One\", \"total\": 0}]}",
+		data: '{"options": [{"name": "Muumuu", "total": 0}, {"name": "Casual", "total": 0}, {"name": "Chosen One", "total": 0}]}',
 		active: true,
 		event: "LTE20XX",
-		notes: "Applies to both racers"
+		notes: "Applies to both racers",
 	},
 	{
 		run: "Silent Hill",
 		title: "Ending Choice",
 		type: "war",
-		data: "{\"options\": [{\"name\": \"Bad Ending\", \"total\": 0}, {\"name\": \"Bad+ Ending\", \"total\": 0}, {\"name\": \"Good Ending\", \"total\": 0}, {\"name\": \"Good+ Ending\", \"total\": 0}, {\"name\": \"UFO Ending\", \"total\": 0}]}",
+		data: '{"options": [{"name": "Bad Ending", "total": 0}, {"name": "Bad+ Ending", "total": 0}, {"name": "Good Ending", "total": 0}, {"name": "Good+ Ending", "total": 0}, {"name": "UFO Ending", "total": 0}]}',
 		active: true,
 		event: "LTE20XX",
-		notes: "Closes at run start"
-	}
-]
+		notes: "Closes at run start",
+	},
+];

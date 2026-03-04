@@ -1,10 +1,10 @@
-import styles from '../GameSubmission.module.scss'
+import styles from "../GameSubmission.module.scss";
 
 import { CircularProgress, Button } from "@mui/material";
 import { GameSubmitPage } from "../components/GameSubmitPage";
 import { MUTATION_SUBMISSION_RESULTS } from "../submissionTypes";
-import { useFormStatus } from 'react-dom';
-import { RefObject } from 'react';
+import { useFormStatus } from "react-dom";
+import { RefObject } from "react";
 
 type SubmissionResultsProps = {
 	show: boolean;
@@ -15,7 +15,7 @@ type SubmissionResultsProps = {
 };
 
 export const SubmissionResults = (props: SubmissionResultsProps) => {
-	const { pending } = useFormStatus();  
+	const { pending } = useFormStatus();
 
 	if (pending) {
 		return (
@@ -33,7 +33,6 @@ export const SubmissionResults = (props: SubmissionResultsProps) => {
 	// 	);
 	// }
 
-	
 	function getInputValue(name: string) {
 		return (props.formRef?.current?.querySelector(`input[name="${name}"]`) as HTMLInputElement)?.value;
 	}
@@ -45,7 +44,9 @@ export const SubmissionResults = (props: SubmissionResultsProps) => {
 		// <GameSubmitPage title={pending ? "Submitting" : !props.submissionResults ? "Error :(" : "Complete!"} show={props.show}>
 		<GameSubmitPage title={pending ? "Submitting" : "Complete!"} show={props.show}>
 			<div className={styles.finalGamePage}>
-				<p className={styles.game}>{game} - {category}</p>
+				<p className={styles.game}>
+					{game} - {category}
+				</p>
 				<hr />
 				{/* <table>
 					<tbody>

@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 import Image from "next/image";
-import styles from './RunUpcoming.module.scss';
+import styles from "./RunUpcoming.module.scss";
 
 type Run = {
 	run: {
@@ -32,20 +32,21 @@ const RunUpcoming = ({ run }: Run) => {
 	const aspectRatio = run.event.logo ? run.event.logo.width / run.event.logo.height : 0;
 
 	return (
-        <div className={styles.run}>
+		<div className={styles.run}>
 			<div key={run.id} className={styles.header}>
 				{run.event.logo && (
 					<div className={styles.logo}>
 						<Image
-                            src={run.event.logo.url}
-                            title={run.event.name}
-                            width={LOGO_HEIGHT * aspectRatio}
-                            height={LOGO_HEIGHT}
-                            alt={`${run.event.name} logo`}
-                            style={{
-                                maxWidth: "100%",
-                                height: "auto"
-                            }} />
+							src={run.event.logo.url}
+							title={run.event.name}
+							width={LOGO_HEIGHT * aspectRatio}
+							height={LOGO_HEIGHT}
+							alt={`${run.event.name} logo`}
+							style={{
+								maxWidth: "100%",
+								height: "auto",
+							}}
+						/>
 					</div>
 				)}
 				<div className={styles.runInfo}>
@@ -54,13 +55,13 @@ const RunUpcoming = ({ run }: Run) => {
 					</span>
 					<span>
 						<b>
-							{new Date(run.scheduledTime).toLocaleString('en-AU', {
-								day: '2-digit',
-								month: 'short',
+							{new Date(run.scheduledTime).toLocaleString("en-AU", {
+								day: "2-digit",
+								month: "short",
 								hour12: true,
-								hour: 'numeric',
-								minute: '2-digit',
-								weekday: 'long',
+								hour: "numeric",
+								minute: "2-digit",
+								weekday: "long",
 								timeZone: run.event.eventTimezone,
 							})}
 						</b>
@@ -68,7 +69,7 @@ const RunUpcoming = ({ run }: Run) => {
 				</div>
 			</div>
 		</div>
-    );
+	);
 };
 
 export default RunUpcoming;

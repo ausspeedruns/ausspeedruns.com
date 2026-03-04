@@ -1,11 +1,11 @@
-import React from 'react';
-import styles from './EventDetails.module.scss';
+import React from "react";
+import styles from "./EventDetails.module.scss";
 import Image from "next/image";
-import beyondBlue from '../../styles/img/sponsors/bblue-blue.png';
+import beyondBlue from "../../styles/img/sponsors/bblue-blue.png";
 // import oaksHotels from "../../styles/img/oaks-hotels.png";
 // import landfall from "../../styles/img/Landfall_Logo_1.png";
-import { globals } from '../../globals';
-import { AusSpeedrunsEvent } from '../../types/types';
+import { globals } from "../../globals";
+import { AusSpeedrunsEvent } from "../../types/types";
 
 type EventDetailsProps = {
 	event: AusSpeedrunsEvent;
@@ -13,7 +13,7 @@ type EventDetailsProps = {
 
 const EventDetails = ({ event }: EventDetailsProps) => {
 	return (
-        <div className={styles.eventDetails}>
+		<div className={styles.eventDetails}>
 			<div className={`${styles.content} content`}>
 				<h2>About {event.fullName}</h2>
 				{/* <p></p> */}
@@ -22,15 +22,16 @@ const EventDetails = ({ event }: EventDetailsProps) => {
 						<h3>{event.shortName} Charity</h3>
 						<div className={styles.charity}>
 							<a href={globals.donateLink}>
-                <div className={styles.logo}>
-                  <Image
-                      src={beyondBlue}
-                      alt="Proudly supporting Beyond Blue"
-                      style={{
-                          maxWidth: "100%",
-                          height: "auto"
-                      }} />
-                </div>
+								<div className={styles.logo}>
+									<Image
+										src={beyondBlue}
+										alt="Proudly supporting Beyond Blue"
+										style={{
+											maxWidth: "100%",
+											height: "auto",
+										}}
+									/>
+								</div>
 								<span className="sr-only">Proudly supporting Beyond Blue</span>
 							</a>
 							{/* <a href={globals.donateLink}><Image width={640} height={314} src={beyondBlue} alt="Proudly supporting Beyond Blue" /><span className="sr-only">Proudly supporting Beyond Blue</span></a> */}
@@ -46,12 +47,12 @@ const EventDetails = ({ event }: EventDetailsProps) => {
           </div> */}
 				</div>
 				<p>
-					Sponsors and donations make our events possible. If you would like to sponsor us for a future event, get in
-					touch!
+					Sponsors and donations make our events possible. If you would like to sponsor us for a future event,
+					get in touch!
 				</p>
 			</div>
 		</div>
-    );
+	);
 };
 
 export default EventDetails;

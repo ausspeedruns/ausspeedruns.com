@@ -46,25 +46,15 @@ type SubmissionEditProps = {
 	handleClose: (event: object, reason: "backdropClick" | "escapeKeyDown") => void;
 };
 
-const SubmissionEditDialog = ({
-	open,
-	submission,
-	handleClose,
-	event,
-	cookie
-}: SubmissionEditProps) => {
+const SubmissionEditDialog = ({ open, submission, handleClose, event, cookie }: SubmissionEditProps) => {
 	const [deleteDialog, setDeleteDialog] = useState(false);
 
 	const [backup, setBackup] = useState(submission.willingBackup);
 	const [game, setGame] = useState(submission.game);
 	const [category, setCategory] = useState(submission.category);
 	const [estimate, setEstimate] = useState(submission.estimate);
-	const [possibleEstimate, setPossibleEstimate] = useState(
-		submission.possibleEstimate,
-	);
-	const [possibleEstimateReason, setPossibleEstimateReason] = useState(
-		submission.possibleEstimateReason,
-	);
+	const [possibleEstimate, setPossibleEstimate] = useState(submission.possibleEstimate);
+	const [possibleEstimateReason, setPossibleEstimateReason] = useState(submission.possibleEstimateReason);
 	const [platform, setPlatform] = useState(submission.platform);
 	const [techPlatform, setTechPlatform] = useState(submission.techPlatform);
 	const [race, setRace] = useState(submission.race);
@@ -72,18 +62,11 @@ const SubmissionEditDialog = ({
 	const [racer, setRacer] = useState(submission.racer);
 	const [video, setVideo] = useState(submission.video);
 	const [ageRating, setAgeRating] = useState(submission.ageRating);
-	const [donationIncentives, setDonationIncentives] = useState(
-		submission.newDonationIncentives,
-	);
-	const [specialRequirements, setSpecialRequirements] = useState(
-		submission.specialReqs,
-	);
-	const [availableDates, setAvailableDates] = useState<boolean[]>(
-		submission.availability,
-	);
+	const [donationIncentives, setDonationIncentives] = useState(submission.newDonationIncentives);
+	const [specialRequirements, setSpecialRequirements] = useState(submission.specialReqs);
+	const [availableDates, setAvailableDates] = useState<boolean[]>(submission.availability);
 	const [showPossibleEstimate, setShowPossibleEstimate] = useState(
-		Boolean(submission.possibleEstimate) &&
-		submission.possibleEstimate !== "00:00:00",
+		Boolean(submission.possibleEstimate) && submission.possibleEstimate !== "00:00:00",
 	);
 
 	const closeDeleteDialog = () => {
@@ -94,7 +77,10 @@ const SubmissionEditDialog = ({
 		if (typeof donationIncentives === "undefined") {
 			setDonationIncentives([{ title: "" }]);
 		} else {
-			setDonationIncentives((prev) => [...(prev as { title: string; time?: string | undefined; description?: string | undefined; }[]), { title: "" }]);
+			setDonationIncentives((prev) => [
+				...(prev as { title: string; time?: string | undefined; description?: string | undefined }[]),
+				{ title: "" },
+			]);
 		}
 	}
 
@@ -102,16 +88,11 @@ const SubmissionEditDialog = ({
 		if (donationIncentives?.length === 1) {
 			setDonationIncentives(undefined);
 		} else {
-			setDonationIncentives(
-				donationIncentives?.filter((_, i) => i !== index),
-			);
+			setDonationIncentives(donationIncentives?.filter((_, i) => i !== index));
 		}
 	}
 
-	function handleDonationIncentiveChange(
-		updatedIncentive: DonationIncentive,
-		updateIndex: number,
-	) {
+	function handleDonationIncentiveChange(updatedIncentive: DonationIncentive, updateIndex: number) {
 		setDonationIncentives(
 			donationIncentives?.map((incentive, i) => {
 				if (i === updateIndex) {
@@ -133,8 +114,7 @@ const SubmissionEditDialog = ({
 			platform,
 			techPlatform,
 			estimate,
-			possibleEstimate:
-				possibleEstimate === "00:00:00" ? "" : possibleEstimate,
+			possibleEstimate: possibleEstimate === "00:00:00" ? "" : possibleEstimate,
 			possibleEstimateReason,
 			ageRating: ageRating as AgeRatingLiterals,
 			newDonationIncentives: donationIncentives,
@@ -145,15 +125,17 @@ const SubmissionEditDialog = ({
 			specialReqs: specialRequirements,
 			willingBackup: backup,
 			availableDates,
-		}).then((result) => {
-			console.log(result);
-			if (!result.error) {
-				handleClose({}, "escapeKeyDown");
-			}
-		}).catch((error) => {
-			handleClose({error: error.message}, "escapeKeyDown");
-			console.error(error);
-		});
+		})
+			.then((result) => {
+				console.log(result);
+				if (!result.error) {
+					handleClose({}, "escapeKeyDown");
+				}
+			})
+			.catch((error) => {
+				handleClose({ error: error.message }, "escapeKeyDown");
+				console.error(error);
+			});
 	};
 
 	const BackupSubmission = () => {
@@ -166,7 +148,7 @@ const SubmissionEditDialog = ({
 			if (!result.error) {
 				handleClose({}, "escapeKeyDown");
 			} else {
-				handleClose({error: result.error.message}, "escapeKeyDown");
+				handleClose({ error: result.error.message }, "escapeKeyDown");
 				console.error(result.error);
 			}
 		});
@@ -199,9 +181,7 @@ const SubmissionEditDialog = ({
 				<FormControlLabel
 					control={
 						<Checkbox
-							onChange={(e) =>
-								setShowPossibleEstimate(e.target.checked)
-							}
+							onChange={(e) => setShowPossibleEstimate(e.target.checked)}
 							checked={showPossibleEstimate}
 						/>
 					}
@@ -211,9 +191,7 @@ const SubmissionEditDialog = ({
 					<>
 						<TextField
 							value={possibleEstimateReason}
-							onChange={(e) =>
-								setPossibleEstimateReason(e.target.value)
-							}
+							onChange={(e) => setPossibleEstimateReason(e.target.value)}
 							label="Provide details as to why"
 							autoComplete="off"
 							slotProps={{ htmlInput: { maxLength: 200 } }}
@@ -239,9 +217,7 @@ const SubmissionEditDialog = ({
 					slotProps={{ htmlInput: { maxLength: 300 } }}
 					helperText="This involves any: mods, downpatches, software, controllers (if a PC game) and any other requirements."
 				/>
-				{typeof donationIncentives !== "undefined" && (
-					<InputLabel>Donation Incentives</InputLabel>
-				)}
+				{typeof donationIncentives !== "undefined" && <InputLabel>Donation Incentives</InputLabel>}
 				{donationIncentives?.map((donationIncentive, i) => {
 					return (
 						<div className={styles.optionalTextInputs} key={i}>
@@ -250,10 +226,7 @@ const SubmissionEditDialog = ({
 								onDonationChange={handleDonationIncentiveChange}
 								index={i}
 							/>
-							<Button
-								variant="outlined"
-								onClick={() => handleDonationIncentiveCancel(i)}
-								color="error">
+							<Button variant="outlined" onClick={() => handleDonationIncentiveCancel(i)} color="error">
 								Delete
 							</Button>
 						</div>
@@ -263,15 +236,9 @@ const SubmissionEditDialog = ({
 				<Button
 					variant="contained"
 					onClick={handleNewDonationIncentive}
-					disabled={
-						typeof donationIncentives !== "undefined" &&
-						!donationIncentives?.at(-1)?.title
-					}>
-					Add{" "}
-					{typeof donationIncentives !== "undefined"
-						? "another"
-						: "a"}{" "}
-					donation incentive
+					disabled={typeof donationIncentives !== "undefined" && !donationIncentives?.at(-1)?.title}
+				>
+					Add {typeof donationIncentives !== "undefined" ? "another" : "a"} donation incentive
 				</Button>
 				<TextField
 					disabled={!event.acceptingSubmissions}
@@ -281,12 +248,7 @@ const SubmissionEditDialog = ({
 				/>
 				{event.acceptingBackups && (
 					<FormControlLabel
-						control={
-							<Checkbox
-								onChange={(e) => setBackup(e.target.checked)}
-								checked={backup}
-							/>
-						}
+						control={<Checkbox onChange={(e) => setBackup(e.target.checked)} checked={backup} />}
 						label="Willing to be backup?"
 					/>
 				)}
@@ -319,17 +281,15 @@ const SubmissionEditDialog = ({
 						setAgeRating(newVal as AgeRatingLiterals);
 					}}
 					color="primary"
-					exclusive>
+					exclusive
+				>
 					<ToggleButton value="m_or_lower">G, PG or M</ToggleButton>
 					<ToggleButton value="ma15">MA15+</ToggleButton>
 					<ToggleButton value="ra18">RA18+</ToggleButton>
 				</ToggleButtonGroup>
 				<FormHelperText>
 					If unsure please search for the game title here:{" "}
-					<a
-						href="https://www.classification.gov.au/"
-						target="_blank"
-						rel="noreferrer noopener">
+					<a href="https://www.classification.gov.au/" target="_blank" rel="noreferrer noopener">
 						https://www.classification.gov.au/
 					</a>
 				</FormHelperText>
@@ -338,12 +298,7 @@ const SubmissionEditDialog = ({
 				<FormControlLabel
 					disabled={!event.acceptingSubmissions}
 					control={
-						<Checkbox
-							onChange={(e) =>
-								setRace(e.target.checked ? "solo" : "no")
-							}
-							checked={race !== "no"}
-						/>
+						<Checkbox onChange={(e) => setRace(e.target.checked ? "solo" : "no")} checked={race !== "no"} />
 					}
 					label="Race/Co-op?"
 				/>
@@ -354,42 +309,22 @@ const SubmissionEditDialog = ({
 							<RadioGroup
 								aria-labelledby="race-type-label"
 								value={coop}
-								onChange={(_, value) =>
-									setCoop(value === "true")
-								}>
-								<FormControlLabel
-									value={false}
-									control={<Radio />}
-									label="Race"
-								/>
-								<FormControlLabel
-									value={true}
-									control={<Radio />}
-									label="Co-op"
-								/>
+								onChange={(_, value) => setCoop(value === "true")}
+							>
+								<FormControlLabel value={false} control={<Radio />} label="Race" />
+								<FormControlLabel value={true} control={<Radio />} label="Co-op" />
 							</RadioGroup>
 						</FormControl>
 						<FormControl disabled={!event.acceptingSubmissions}>
 							{/* Don't think "type" is a good descriptor */}
-							<FormLabel id="race-type-label">
-								Race/Co-op Type
-							</FormLabel>
+							<FormLabel id="race-type-label">Race/Co-op Type</FormLabel>
 							<RadioGroup
 								aria-labelledby="race-type-label"
 								value={race}
-								onChange={(e) =>
-									setRace(e.target.value as RaceLiterals)
-								}>
-								<FormControlLabel
-									value="solo"
-									control={<Radio />}
-									label="Possible to do solo"
-								/>
-								<FormControlLabel
-									value="only"
-									control={<Radio />}
-									label="Only race/co-op"
-								/>
+								onChange={(e) => setRace(e.target.value as RaceLiterals)}
+							>
+								<FormControlLabel value="solo" control={<Radio />} label="Possible to do solo" />
+								<FormControlLabel value="only" control={<Radio />} label="Only race/co-op" />
 							</RadioGroup>
 						</FormControl>
 						<TextField
@@ -402,9 +337,7 @@ const SubmissionEditDialog = ({
 				)}
 				<h3>Availability</h3>
 				<Availability
-					onAvailabilityUpdate={(newDates) =>
-						setAvailableDates(newDates)
-					}
+					onAvailabilityUpdate={(newDates) => setAvailableDates(newDates)}
 					value={availableDates}
 					event={event}
 				/>
@@ -414,20 +347,18 @@ const SubmissionEditDialog = ({
 					disabled={!event.acceptingSubmissions}
 					color="error"
 					variant="outlined"
-					onClick={() => setDeleteDialog(true)}>
+					onClick={() => setDeleteDialog(true)}
+				>
 					Delete
 				</Button>
 				<Button
-					disabled={
-						!event.acceptingSubmissions && !event.acceptingBackups
-					}
+					disabled={!event.acceptingSubmissions && !event.acceptingBackups}
 					color="primary"
 					variant="contained"
 					onClick={
-						event.acceptingBackups && !event.acceptingSubmissions
-							? BackupSubmission
-							: UpdateSubmission
-					}>
+						event.acceptingBackups && !event.acceptingSubmissions ? BackupSubmission : UpdateSubmission
+					}
+				>
 					Update
 				</Button>
 			</DialogActions>
@@ -439,16 +370,10 @@ const SubmissionEditDialog = ({
 					<b>This cannot be undone.</b>
 				</DialogContent>
 				<DialogActions style={{ justifyContent: "space-between" }}>
-					<Button
-						color="error"
-						variant="contained"
-						onClick={DeleteSubmission}>
+					<Button color="error" variant="contained" onClick={DeleteSubmission}>
 						Delete
 					</Button>
-					<Button
-						color="success"
-						variant="contained"
-						onClick={closeDeleteDialog}>
+					<Button color="success" variant="contained" onClick={closeDeleteDialog}>
 						Cancel
 					</Button>
 				</DialogActions>

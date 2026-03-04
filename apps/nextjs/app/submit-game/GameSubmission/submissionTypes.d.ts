@@ -2,7 +2,7 @@ export type DonationIncentive = {
 	title: string;
 	time?: string;
 	description?: string;
-}
+};
 
 export type AgeRatingLiterals = "m_or_lower" | "ma15" | "ra18";
 export type RaceLiterals = "no" | "solo" | "only";
@@ -20,7 +20,7 @@ export type MUTATION_SUBMISSION_RESULTS = {
 		racer: string;
 		newDonationIncentives?: DonationIncentive[];
 	};
-}
+};
 
 export type Event = {
 	id: string;
@@ -33,7 +33,7 @@ export type Event = {
 	eventTimezone: string;
 	acceptingBackups: boolean;
 	acceptingSubmissions: boolean;
-}
+};
 
 export type QUERY_USER_RESULTS = {
 	user: {
@@ -48,7 +48,7 @@ export type QUERY_USER_RESULTS = {
 		}[];
 	};
 	events: Event[];
-}
+};
 
 export type SubmissionPageRef = {
 	reset: () => void;

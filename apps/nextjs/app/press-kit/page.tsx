@@ -1,11 +1,10 @@
-
-import styles from '../../styles/PressKit.module.scss';
-import { Metadata } from 'next';
+import styles from "../../styles/PressKit.module.scss";
+import { Metadata } from "next";
 
 const metadata: Metadata = {
 	title: "Press Kit",
 	description: "Press Kit for AusSpeedruns",
-}
+};
 
 const PressKit = () => {
 	return (
@@ -13,7 +12,12 @@ const PressKit = () => {
 			<main className={styles.content}>
 				<h2>Press Kit</h2>
 				<p>
-					<a target="_blank" rel="noreferrer" href="/AusSpeedruns_Logos.zip" className={styles.ausspeedrunsLogo}>
+					<a
+						target="_blank"
+						rel="noreferrer"
+						href="/AusSpeedruns_Logos.zip"
+						className={styles.ausspeedrunsLogo}
+					>
 						AusSpeedruns Logos
 					</a>
 				</p>

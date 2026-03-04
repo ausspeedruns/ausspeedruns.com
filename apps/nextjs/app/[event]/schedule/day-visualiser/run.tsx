@@ -44,7 +44,8 @@ export const RunVisualBlock = ({ run, proportion, block }: RunProps) => {
 			}
 			run-odd={oddRun.toString()}
 			odd={oddRun}
-			block={block}>
+			block={block}
+		>
 			<div
 				className={styles.visualiserRun}
 				style={{

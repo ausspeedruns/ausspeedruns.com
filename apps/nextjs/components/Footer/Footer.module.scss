@@ -3,53 +3,52 @@
 @import "../../styles/responsive.scss";
 
 .footer {
-  background-color: $nav-background;
-  color: $light-text;
+	background-color: $nav-background;
+	color: $light-text;
 
-  @include nav-lists;
+	@include nav-lists;
 
-  .content {
-    flex-direction: column;
-    max-width: 100%;
-    gap: 8px;
+	.content {
+		flex-direction: column;
+		max-width: 100%;
+		gap: 8px;
 
-    ul {
-      justify-content: center;
-      flex-wrap: wrap;
+		ul {
+			justify-content: center;
+			flex-wrap: wrap;
 
-      @include breakpoint($sm-zero-only) {
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-      }
-    }
+			@include breakpoint($sm-zero-only) {
+				flex-direction: column;
+				align-items: center;
+				gap: 8px;
+			}
+		}
 
-    .miscLinks {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      
-      a {
-        font-weight: 500;
-      }
+		.miscLinks {
+			display: flex;
+			justify-content: center;
+			gap: 16px;
 
-      .email
-      {
-        text-decoration: underline !important;
-      }
-      
-      @include breakpoint($sm-zero-only) {
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-      }
-    }
-  }
+			a {
+				font-weight: 500;
+			}
+
+			.email {
+				text-decoration: underline !important;
+			}
+
+			@include breakpoint($sm-zero-only) {
+				flex-direction: column;
+				align-items: center;
+				gap: 8px;
+			}
+		}
+	}
 }
 
 .acknowledgement {
-  background-color: $primary;
-  color: $light-text;
-  text-wrap: balance;
-  text-align: center;
+	background-color: $primary;
+	color: $light-text;
+	text-wrap: balance;
+	text-align: center;
 }

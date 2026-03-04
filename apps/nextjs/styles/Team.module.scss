@@ -1,5 +1,5 @@
-@use 'base';
-@import './colors.scss';
+@use "base";
+@import "./colors.scss";
 
 .app {
 	min-height: 100vh;
@@ -22,11 +22,11 @@
 	}
 
 	.orange {
-		background: $primary
+		background: $primary;
 	}
 
 	.blue {
-		background: $secondary
+		background: $secondary;
 	}
 }
 

@@ -36,7 +36,8 @@ export function NavbarContent({ events = [], live, noPrizes, session }: NavbarPr
 			</button>
 			<nav
 				className={`${styles.mainmenu} ${isOpen ? styles.menuopen : styles.menuclosed}`}
-				aria-label="Main menu">
+				aria-label="Main menu"
+			>
 				<ul className={styles.links}>
 					{events.map((event) => {
 						if (!event.published || !event.scheduleReleased) return null;

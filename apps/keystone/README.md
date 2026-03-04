@@ -23,7 +23,7 @@ When uploading a schedule to the schedule importer the csv file must have these 
 - estimate
 - donationIncentive
 - race
-  - It is considered a race if there is anything other than an empty cell or "no"
+    - It is considered a race if there is anything other than an empty cell or "no"
 - racer
 - coop
 
@@ -66,9 +66,9 @@ There is a seeding script that has:
 
 - 5 users
 - 3 events
-  - 1 unpublished
-  - 1 live
-  - 1 past
+    - 1 unpublished
+    - 1 live
+    - 1 past
 - 10 runs
 - 4 submissions
 

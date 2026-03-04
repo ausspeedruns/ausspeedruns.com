@@ -56,7 +56,7 @@ export function EditUserForm({ data }: PrefilledFormData) {
 		(discord !== "" && !DiscordRegex.test(discord.toLowerCase()));
 
 	return (
-		<form action={updateProfile} style={{display: "flex", flexDirection: "column"}}>
+		<form action={updateProfile} style={{ display: "flex", flexDirection: "column" }}>
 			<div className={styles.profileInformation}>
 				{!data.verified && (
 					<>

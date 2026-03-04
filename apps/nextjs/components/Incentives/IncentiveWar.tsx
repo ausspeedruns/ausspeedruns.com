@@ -70,4 +70,4 @@ export function War(props: WarProps) {
 			)}
 		</div>
 	);
-};
+}

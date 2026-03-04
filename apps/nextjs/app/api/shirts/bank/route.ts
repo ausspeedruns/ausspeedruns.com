@@ -6,12 +6,7 @@ const API_KEY = process.env.API_KEY as string;
 
 const CREATE_SHIRT_MUTATION = gql`
 	mutation ($userID: ID!, $size: ShirtOrderSizeType!, $apiKey: String!) {
-		generateShirt(
-			userID: $userID
-			method: bank
-			size: $size
-			apiKey: $apiKey
-		) {
+		generateShirt(userID: $userID, method: bank, size: $size, apiKey: $apiKey) {
 			shirtID
 			size
 		}
@@ -37,9 +32,7 @@ export async function POST(request: Request) {
 		return new Response("Unauthorized", { status: 401 });
 	}
 
-	const result = await client
-		.mutation(CREATE_SHIRT_MUTATION, { userID: userId, size, apiKey: API_KEY })
-		.toPromise();
+	const result = await client.mutation(CREATE_SHIRT_MUTATION, { userID: userId, size, apiKey: API_KEY }).toPromise();
 
 	return NextResponse.json(result);
 }

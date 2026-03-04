@@ -164,7 +164,8 @@ const PoliciesPage = () => {
 						<a
 							href="https://www.termsfeed.com/privacy-policy-generator/#faq-8"
 							target="_blank"
-							rel="noreferrer noopener">
+							rel="noreferrer noopener"
+						>
 							Cookies by TermsFeed Generator
 						</a>
 						.

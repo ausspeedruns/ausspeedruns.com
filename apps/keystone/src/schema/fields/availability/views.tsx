@@ -1,9 +1,9 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import React from 'react';
-import { jsx, Stack, Text } from '@keystone-ui/core';
-import { FieldContainer, FieldLabel, TextInput } from '@keystone-ui/fields';
+import React from "react";
+import { jsx, Stack, Text } from "@keystone-ui/core";
+import { FieldContainer, FieldLabel, TextInput } from "@keystone-ui/fields";
 import {
 	CardValueComponent,
 	CellComponent,
@@ -11,15 +11,15 @@ import {
 	JSONValue,
 	FieldControllerConfig,
 	FieldProps,
-} from '@keystone-6/core/types';
-import { CellContainer, CellLink } from '@keystone-6/core/admin-ui/components';
-import { gql, useQuery } from '@keystone-6/core/admin-ui/apollo';
-import { addDays, differenceInDays } from 'date-fns';
+} from "@keystone-6/core/types";
+import { CellContainer, CellLink } from "@keystone-6/core/admin-ui/components";
+import { gql, useQuery } from "@keystone-6/core/admin-ui/apollo";
+import { addDays, differenceInDays } from "date-fns";
 
 export const Field = ({ field, forceValidation, value, onChange, autoFocus }: FieldProps<typeof controller>) => {
 	const queryEventLength = useQuery(gql`
 		query {
-			${value['listKey']} (where: {id: "${value['id']}"}) {
+			${value["listKey"]} (where: {id: "${value["id"]}"}) {
 			  event {
 				startDate
 				endDate
@@ -29,8 +29,7 @@ export const Field = ({ field, forceValidation, value, onChange, autoFocus }: Fi
 		  }
 	`);
 
-
-	let currentEvent = queryEventLength?.data?.[value['listKey']]?.event ?? undefined;
+	let currentEvent = queryEventLength?.data?.[value["listKey"]]?.event ?? undefined;
 
 	let eventLength = 0;
 	if (currentEvent) {
@@ -43,11 +42,11 @@ export const Field = ({ field, forceValidation, value, onChange, autoFocus }: Fi
 		hostDates.push(
 			<>
 				<span key={i + "label"}>
-					{date.toLocaleDateString('en-AU', {
-						weekday: 'long',
-						day: '2-digit',
-						month: '2-digit',
-						year: 'numeric',
+					{date.toLocaleDateString("en-AU", {
+						weekday: "long",
+						day: "2-digit",
+						month: "2-digit",
+						year: "numeric",
 						timeZone: currentEvent.eventTimezone || undefined,
 					})}
 				</span>
@@ -65,9 +64,9 @@ export const Field = ({ field, forceValidation, value, onChange, autoFocus }: Fi
 					// 	newDates[i] = e.target.value;
 					// 	setDayTimes(newDates);
 					// }}
-					value={value[field.path][i] ?? ''}
+					value={value[field.path][i] ?? ""}
 				/>
-			</>
+			</>,
 		);
 	}
 
@@ -107,7 +106,7 @@ export const Field = ({ field, forceValidation, value, onChange, autoFocus }: Fi
 };
 
 export const Cell: CellComponent = ({ item, field, linkTo }) => {
-	let value = item[field.path] + '';
+	let value = item[field.path] + "";
 	return linkTo ? <CellLink {...linkTo}>{value}</CellLink> : <CellContainer>{value}</CellContainer>;
 };
 Cell.supportsLinkTo = true;
@@ -128,7 +127,8 @@ export const controller = (config: Config): FieldController<string, string> => {
 		path: config.path,
 		label: config.label,
 		graphqlSelection: config.path,
-		defaultValue: config.fieldMeta.defaultValue === null ? '' : JSON.stringify(config.fieldMeta.defaultValue, null, 2),
+		defaultValue:
+			config.fieldMeta.defaultValue === null ? "" : JSON.stringify(config.fieldMeta.defaultValue, null, 2),
 		validate: (value) => {
 			if (!value) return true;
 			try {

@@ -3,7 +3,7 @@ import Image from "next/image";
 import { auth } from "../../auth";
 import Button from "../../components/Button/Button";
 
-import styles from "./asm2025.module.scss";
+import styles from "./asm2026.module.scss";
 import { stripeCheckoutAction } from "./ticket-checkout";
 import { TicketPurchase } from "./ticket-purchase";
 import { ShirtPurchase } from "./shirt-purchase";
@@ -13,23 +13,25 @@ import { getRegisteredClient } from "@libs/urql";
 import Marquee from "react-fast-marquee";
 import { faTicket, faCalendar, faPerson, faShirt, faPersonRunning } from "@fortawesome/free-solid-svg-icons";
 
-import ImageFiveMinShowcase01 from "./images/5MinsShowcase.JPG";
-import ImageFiveMinShowcase02 from "./images/5MinsShowcase2.JPG";
-import ImageCrowd from "./images/Crowd.JPG";
-import ImageLiquid from "./images/Liquid.JPG";
-import ImageLumpyPumpkin from "./images/LumpyPumpkin.JPG";
-import ImageRunners from "./images/Runners.JPG";
+import ImageCrowdCheer from "./images/CrowdCheer.JPG";
+import ImageCrowd from "./images/CrowdStoic.JPG";
+import ImageCrowdGoingWild from "./images/CrowdGoingWild.JPG";
+import ImagePointingAtCamera from "./images/PointingAtCamera.JPG";
+import ImageSpeedrunning from "./images/Speedrunning.JPG";
+import ImageWhiteboard from "./images/Whiteboard.JPG";
+import ImageBand from "./images/ZoomieAndTheGs.JPG";
 
-import Logo from "../../styles/img/events/asm25/logo.svg";
+import Logo from "../../styles/img/events/asm26/ASM26_Logo.png";
 import { Metadata } from "next";
 
 const images = [
-	{ src: ImageFiveMinShowcase01, alt: "An enthusiastic watcher" },
-	{ src: ImageFiveMinShowcase02, alt: "The whole crowd enthusiastically cheering at the end of a run" },
-	{ src: ImageCrowd, alt: "The Crowd at ASM2024 clapping" },
-	{ src: ImageLiquid, alt: "A close up photos of speedrunners laughing" },
-	{ src: ImageLumpyPumpkin, alt: "A group of speedrunners cheering" },
-	{ src: ImageRunners, alt: "Runners at ASM2024" },
+	{ src: ImageCrowdCheer, alt: "The crowd cheering after a goal in speedrunning" },
+	{ src: ImageCrowdGoingWild, alt: "The whole crowd enthusiastically cheering at the end of a run" },
+	{ src: ImageCrowd, alt: "Beautiful crowd watching the event" },
+	{ src: ImagePointingAtCamera, alt: "A close up photos of speedrunners laughing" },
+	{ src: ImageSpeedrunning, alt: "syo going at it ferociously in FFX" },
+	{ src: ImageWhiteboard, alt: "ASM2025 whiteboard" },
+	{ src: ImageBand, alt: "Zoomie and the Gs performing" },
 ];
 
 const EVENT = "ASM2026";
@@ -90,7 +92,7 @@ export default async function ASM2026() {
 				</Marquee>
 				<div className={styles.heroContent}>
 					<Image className={styles.logo} src={Logo} alt="ASM 2026 Logo" />
-					<h1>Australian Speedrun Marathon 2026</h1>
+					<h1>Australian Speedrun Marathon 2026 | July 14 - 19</h1>
 				</div>
 			</section>
 			<section className={styles.quickActions}>
@@ -113,11 +115,18 @@ export default async function ASM2026() {
 				<p>
 					The Australian Speedrunning Marathon is back in 2026 at beloved home of the event the Adelaide
 					Rockford! ASM 2026 will run from the 14th to the 19th of July. Each night at 7pm will be something
-					worth coming in or tuning in for! Please book your hotel rooms through our event link for a discount
-					and to directly support the event [Link] Tickets are now on sale with shirt design submissions to
-					come after the schedule is released. There are so many fun surprises in store! You never know what
-					might pop up!
-				</p>{" "}
+					worth coming in or tuning in for!
+				</p>
+				<p>
+					Please book your hotel rooms through our event link for a discount and to directly support the event{" "}
+					<Link href="https://www.idem.events/r/ausspeedruns-2026-f7205658" target="_blank">
+						here
+					</Link>
+				</p>
+				<p>
+					Tickets are now on sale with shirt design submissions to come after the schedule is released. There
+					are so many fun surprises in store! You never know what might pop up!
+				</p>
 			</section>
 			<section className={styles.infoTable}>
 				<table>

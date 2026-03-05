@@ -151,6 +151,19 @@ const ASO2026: AusSpeedrunsEvent = {
 	total: "10,000",
 };
 
+const ASM2026: AusSpeedrunsEvent = {
+	fullName: "Australian Speedrun Marathon 2026",
+	preferredName: "ASM2026",
+	shortName: "ASM2026",
+	startDate: "14 July 2026 09:00:00 GMT+0930",
+	dates: "July 14 - 19, 2026",
+	charity: {
+		name: "Game On Cancer",
+	},
+	logo: "events/asm26/ASM26_Logo.png",
+	heroImage: "events/asm26/hero.jpg",
+};
+
 export const metadata: Metadata = {
 	description: "Home of the AusSpeedruns events",
 	openGraph: {
@@ -162,7 +175,7 @@ export const metadata: Metadata = {
 export default function Home() {
 	return (
 		<>
-			{/* <HeroBlock event={ASO2026} tagLine="A Speedrun Event in Sydney? Finally!!" /> */}
+			<HeroBlock event={ASM2026} tagLine="We're so back." submitRuns />
 
 			{/* <EventLive event={"ASO2026"} /> */}
 

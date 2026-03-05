@@ -10,9 +10,9 @@ import { getRegisteredClient } from "@libs/urql";
 const stripeApiKey = process.env.STRIPE_SECRET_KEY as string;
 const websiteApiKey = process.env.API_KEY as string;
 
-const ticketId = "price_1QyTCuKT8G4cNWT5XZ4mnwYZ";
+const ticketId = "price_1T7CVtKT8G4cNWT5W8WVYoxX";
 
-const event = "ASM2025";
+const event = "ASM2026";
 
 const CREATE_TICKET_MUTATION = gql`
 	mutation ($userID: ID!, $stripeID: String, $apiKey: String!, $event: String!) {

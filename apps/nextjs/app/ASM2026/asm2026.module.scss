@@ -43,9 +43,10 @@
 
 		.logo {
 			margin-bottom: 2rem;
-			width: 80vw;
+			max-width: 80vw;
 			height: auto;
 			max-height: 150px;
+			object-fit: contain;
 		}
 	}
 }

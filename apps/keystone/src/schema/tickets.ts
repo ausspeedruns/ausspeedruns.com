@@ -68,10 +68,10 @@ export const Ticket: Lists.Ticket = list({
 						query: "numberOfTickets",
 					});
 					if (result) {
-						return 35 * result.numberOfTickets;
+						return 40 * result.numberOfTickets;
 					}
 
-					return 35 * item.numberOfTickets;
+					return 40 * item.numberOfTickets;
 				},
 			}),
 		}),

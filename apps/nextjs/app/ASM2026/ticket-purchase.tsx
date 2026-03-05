@@ -76,13 +76,13 @@ export function TicketPurchase(props: TicketPurchaseProps) {
 	return (
 		<div className={styles.product}>
 			<div>
-				<Image src={ImageFakeTicket} alt="Two ASM2025 Ticket Designs" height="300" />
+				<Image src={ImageFakeTicket} alt="Two ASM2026 Ticket Designs" height="300" />
 			</div>
 			<div>
 				All attendees, including runners and staff must purchase tickets to attend the event.
 				<br />
-				Purchasing a ticket before 16th June 2025 will have your name printed on the ticket.
-				<p className={styles.cost}>$35</p>
+				Purchasing a ticket before 16th June 2026 will have your name printed on the ticket.
+				<p className={styles.cost}>$40</p>
 				<div className={styles.purchaseButtons}>
 					<ToggleButtonGroup value={purchaseType} exclusive onChange={handlePurchaseType} fullWidth>
 						<ToggleButton value="stripe">Stripe</ToggleButton>

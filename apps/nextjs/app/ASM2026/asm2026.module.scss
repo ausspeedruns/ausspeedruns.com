@@ -2,12 +2,16 @@
 @import "../../styles/responsive.scss";
 
 .divider {
-	margin: 0;
+	margin: 0 auto;
+	border: none;
+	border-top: 2px solid $color-grey;
+	width: min(90%, 900px);
 }
 
 .hero {
 	position: relative;
 	height: 600px;
+	overflow: hidden;
 
 	.marquee {
 		overflow: hidden;
@@ -35,18 +39,39 @@
 		justify-content: center;
 		align-items: center;
 		z-index: 2;
+		padding: 1rem;
 
 		text-align: center;
 		text-wrap: balance;
 
 		color: white;
 
+		// Gradient overlay for better text readability
+		background: linear-gradient(
+			to bottom,
+			rgba(0, 0, 0, 0.15) 0%,
+			rgba(0, 0, 0, 0.05) 40%,
+			rgba(0, 0, 0, 0.05) 60%,
+			rgba(0, 0, 0, 0.3) 100%
+		);
+
 		.logo {
-			margin-bottom: 2rem;
+			margin-bottom: 1.5rem;
 			max-width: 80vw;
 			height: auto;
-			max-height: 150px;
+			max-height: 200px;
 			object-fit: contain;
+			filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+		}
+
+		h1 {
+			text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+			font-size: 1.5rem;
+			max-width: 800px;
+
+			@include breakpoint($md) {
+				font-size: 2rem;
+			}
 		}
 	}
 }
@@ -55,12 +80,15 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	margin: 2rem;
-	gap: 1rem;
+	padding: 2rem 1.5rem;
+	gap: 0.75rem;
+	flex-wrap: wrap;
 	flex-direction: column;
 
 	@include breakpoint($md) {
 		flex-direction: row;
+		gap: 1rem;
+		padding: 2.5rem 2rem;
 	}
 }
 
@@ -73,25 +101,101 @@
 	text-align: center;
 	text-wrap: balance;
 	width: 100%;
-	padding: 1rem;
+	padding: 2rem 1.5rem;
+
+	@include breakpoint($md) {
+		padding: 3rem 2rem;
+	}
 
 	* {
 		max-width: 900px;
+	}
+
+	h1 {
+		margin-bottom: 1.5rem;
+		position: relative;
+
+		&::after {
+			content: "";
+			display: block;
+			width: 60px;
+			height: 3px;
+			background-color: $color-ochre;
+			margin: 0.75rem auto 0;
+			border-radius: 2px;
+		}
+	}
+
+	p {
+		line-height: 1.75;
+
+		a {
+			color: $color-teal;
+			font-weight: 600;
+			text-decoration: underline;
+			text-decoration-color: transparent;
+			text-underline-offset: 3px;
+			transition: text-decoration-color 0.2s ease;
+
+			&:hover {
+				text-decoration-color: $color-teal;
+			}
+		}
 	}
 }
 
 .infoTable {
 	background-color: $color-teal;
 	color: $light-text;
+	padding: 2.5rem 1.5rem;
+
+	@include breakpoint($md) {
+		padding: 3rem 2rem;
+	}
 
 	table {
+		border-collapse: separate;
+		border-spacing: 0;
+		border-radius: 8px;
+		overflow: hidden;
+		background-color: rgba(255, 255, 255, 0.08);
+
 		tbody {
 			tr {
+				transition: background-color 0.15s ease;
+
+				&:hover {
+					background-color: rgba(255, 255, 255, 0.08);
+				}
+
+				&:not(:last-child) td {
+					border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+				}
+
 				td {
-					padding: 0.5rem;
+					padding: 0.85rem 1.25rem;
+
+					&:first-child {
+						text-align: right;
+						opacity: 0.85;
+						white-space: nowrap;
+					}
 
 					&:nth-child(2) {
 						font-weight: bold;
+						text-align: left;
+
+						a {
+							color: $light-text;
+							text-decoration: underline;
+							text-decoration-color: rgba(255, 255, 255, 0.5);
+							text-underline-offset: 3px;
+							transition: text-decoration-color 0.2s ease;
+
+							&:hover {
+								text-decoration-color: $light-text;
+							}
+						}
 					}
 				}
 			}

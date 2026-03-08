@@ -15,6 +15,12 @@ import { draftMode } from "next/headers";
 import "./globals.css";
 import { getServerSideURL } from "#/utilities/getURL";
 
+import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
+import "@mantine/charts/styles.css";
+import "@mantine/notifications/styles.css";
+import "@mantine/nprogress/styles.css";
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 	const { isEnabled } = await draftMode();
 

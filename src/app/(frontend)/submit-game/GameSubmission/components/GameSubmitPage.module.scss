@@ -1,0 +1,23 @@
+.submissionPage {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	flex-grow: 1;
+
+	h3 {
+		text-align: center;
+	}
+
+	.formElements {
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		width: 100%;
+
+		& > * {
+			margin: 0.5rem 0 !important;
+		}
+	}
+}

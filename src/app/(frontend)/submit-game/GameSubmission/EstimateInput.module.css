@@ -1,0 +1,19 @@
+.estimateContainer {
+	.inputContainer {
+		display: flex;
+		gap: 16px;
+	}
+}
+
+.label {
+	margin-bottom: 8px;
+}
+
+.select {
+	min-width: 5rem !important;
+	text-align: center;
+}
+
+.menuItem {
+	justify-content: center !important;
+}

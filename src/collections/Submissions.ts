@@ -18,6 +18,15 @@ export const Submissions: CollectionConfig = {
 			required: true,
 		},
 		{
+			name: "ageRating",
+			type: "select",
+			options: [
+				{ label: "G, PG or M", value: "m_or_lower" },
+				{ label: "MA15+", value: "ma15" },
+				{ label: "R18+", value: "r18" },
+			],
+		},
+		{
 			name: "category",
 			type: "text",
 			required: true,
@@ -52,6 +61,10 @@ export const Submissions: CollectionConfig = {
 		{
 			name: "specialRequirements",
 			type: "textarea",
+		},
+		{
+			name: "donationIncentives",
+			type: "json",
 		},
 		{
 			name: "raceType",
@@ -106,6 +119,10 @@ export const Submissions: CollectionConfig = {
 				},
 			],
 			defaultValue: "pending",
+		},
+		{
+			name: "availability",
+			type: "json",
 		},
 		{
 			name: "canBackup",

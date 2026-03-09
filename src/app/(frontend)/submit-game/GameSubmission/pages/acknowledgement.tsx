@@ -1,28 +1,24 @@
 "use client";
 
-// import { DocumentRenderer } from "@keystone-6/document-renderer";
 import { GameSubmitPage } from "../components/GameSubmitPage";
 import { Checkbox } from "@mantine/core";
-import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
-import type { SubmissionPageRef } from "../submissionTypes";
+import { useState } from "react";
+import RichText from "#components/RichText/RichText.tsx";
+import type { UseFormReturnType } from "@mantine/form";
+import type { GameSubmissionResults } from "../submissionTypes";
 
-type AcknowledgementProps = {
-	show: boolean;
+interface AcknowledgementProps {
 	acceptingBackups: boolean;
 	acceptingSubmissions: boolean;
 	submissionInstructions?: any;
-};
+	form: UseFormReturnType<GameSubmissionResults>;
+}
 
-export const Acknowledgement = forwardRef<SubmissionPageRef, AcknowledgementProps>((props, ref) => {
+export function Acknowledgement(props: AcknowledgementProps) {
 	const [backup, setBackup] = useState(true);
 
-	useImperativeHandle(ref, () => ({
-		reset: () => setBackup(true),
-		canContinue: true,
-	}));
-
 	return (
-		<GameSubmitPage title="Submit" show={props.show} childrenJustify="space-evenly">
+		<>
 			{props.acceptingBackups && props.acceptingSubmissions && (
 				<Checkbox
 					onChange={(e) => setBackup(e.currentTarget.checked)}
@@ -33,9 +29,9 @@ export const Acknowledgement = forwardRef<SubmissionPageRef, AcknowledgementProp
 			)}
 			{props.submissionInstructions && (
 				<div>
-					{/* <DocumentRenderer document={props.submissionInstructions} /> */}
+					<RichText data={props.submissionInstructions} enableGutter={false} />
 				</div>
 			)}
-		</GameSubmitPage>
+		</>
 	);
-});
+}

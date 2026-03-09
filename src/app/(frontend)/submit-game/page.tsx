@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import { getPayload } from "payload";
 import configPromise from "#payload-config";
 import { Button } from "@mantine/core";
-import { ArrowRight, Home, Login } from "pixelarticons/react";
+import { ArrowRight, Files, Home, Login } from "pixelarticons/react";
 
 import styles from "./SubmitGame.module.css";
 import GameSubmissions from "./GameSubmission/GameSubmission";
@@ -21,9 +21,9 @@ export default async function SubmitGamePage() {
 
 	if (!user) {
 		return (
-			<div>
+			<div className={styles.signIn}>
 				<h2>Please sign in to submit games.</h2>
-				<Button component="a" href="/signin" rightSection={<Login />}>
+				<Button component="a" href="/login?redirect=/submit-game" rightSection={<Login />}>
 					Sign In
 				</Button>
 				<br />
@@ -69,15 +69,13 @@ export default async function SubmitGamePage() {
 				game: sub.game,
 				platform: sub.platform,
 				techPlatform: sub.techPlatform ?? undefined,
-				ageRating: "m_or_lower" as "m_or_lower", // Field doesn't exist in new schema — adjust as needed
+				ageRating: sub.ageRating,
 			})),
 		},
 		events: events.map((event) => ({
 			id: event.id,
 			shortname: event.shortname,
-			submissionInstructions: {
-				document: event.submissionInstructions ?? null,
-			},
+			submissionInstructions: event.submissionInstructions ?? null,
 			startDate: event.timeSettings?.startTime ?? "",
 			endDate: event.timeSettings?.endTime ?? "",
 			eventTimezone: event.timeSettings?.timezone ?? "",
@@ -104,19 +102,21 @@ export default async function SubmitGamePage() {
 	const singleEvent = data.events.length === 1 ? data.events[0] : undefined;
 
 	return (
-		<div>
+		<div className={styles.page}>
 			<h1>
 				{singleEvent?.shortname}{" "}
 				{singleEvent?.acceptingBackups && !singleEvent?.acceptingSubmissions ? "Backup" : "Game"} Submission
 			</h1>
-			<a
+			<Button
+				component="a"
 				href="https://ausspeedruns.sharepoint.com/:w:/s/Main/Efo5GBDHzvRElYyMBpyucFgBYBfJAGLsP6qf1pE9ebU6-w?e=TKimUn"
 				target="_blank"
 				rel="noopener noreferrer"
+				rightSection={<Files />}
 			>
 				AusSpeedruns Submission Guidelines
-			</a>
-			<GameSubmissions userId={user.id} userQueryResult={data} />
+			</Button>
+			<GameSubmissions availableEvents={data.events} oldSubmissions={data.user.submissions} />
 		</div>
 	);
 }

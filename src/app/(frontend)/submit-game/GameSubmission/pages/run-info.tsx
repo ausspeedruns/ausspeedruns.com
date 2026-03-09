@@ -1,116 +1,64 @@
 "use client";
 
+import { useState } from "react";
 import styles from "../GameSubmission.module.css";
 import { Button, Checkbox, Input, TextInput, Textarea } from "@mantine/core";
-import { GameSubmitPage } from "../components/GameSubmitPage";
-import DonationIncentiveInput from "../DonationIncentive";
-import EstimateInput from "../EstimateInput";
-// import useFormInput from "../../../../hooks/useFormInput";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import type { DonationIncentive, SubmissionPageRef } from "../submissionTypes";
+import DonationIncentiveInput from "../components/DonationIncentive.tsx";
+import EstimateInput from "../components/EstimateInput";
+import type { DonationIncentive, GameSubmissionResults } from "../submissionTypes";
+import type { UseFormReturnType } from "@mantine/form";
 
-type GameInfoProps = {
-	show: boolean;
-	onComplete: (isComplete: boolean) => void;
-};
+interface RunInfoProps {
+	form: UseFormReturnType<GameSubmissionResults>;
+}
 
-export const RunInfo = forwardRef<SubmissionPageRef, GameInfoProps>((props, ref) => {
-	// const category = useFormInput("");
-	// const video = useFormInput("");
-	// const specialReqs = useFormInput("");
-	const [donationIncentives, setDonationIncentives] = useState<DonationIncentive[] | undefined>(undefined);
-	const [estimate, setEstimate] = useState("01:00:00");
-	const [possibleEstimate, setLowerEstimate] = useState("");
-	// const possibleEstimateReason = useFormInput("");
-
+export function RunInfo(props: RunInfoProps) {
 	const [showPossibleEstimate, setShowPossibleEstimate] = useState(false);
 	const [showSpecialReqs, setShowSpecialReqs] = useState(false);
 
-	useImperativeHandle(ref, () => ({
-		reset: () => {
-			// category.reset();
-			// video.reset();
-			// specialReqs.reset();
-			// possibleEstimateReason.reset();
-			setEstimate("");
-			setLowerEstimate("");
-			setShowPossibleEstimate(false);
-			setShowSpecialReqs(false);
-			setDonationIncentives(undefined);
-		},
-	}));
-
-	useEffect(() => {
-		props.onComplete(
-			Boolean(
-				// category.elementProps.value &&
-				estimate !== "00:00:00" &&
-				(!showPossibleEstimate ||
-					(possibleEstimate !== "00:00:00" && /* possibleEstimateReason.elementProps.value */ true)) &&
-				// video.elementProps.value &&
-				(typeof donationIncentives === "undefined" || donationIncentives.at(-1)?.title),
-			),
-		);
-	}, [
-		// category.elementProps.value,
-		estimate,
-		possibleEstimate,
-		// possibleEstimateReason.elementProps.value,
-		// video.elementProps.value,
-		donationIncentives,
-	]);
-
-	function handleEstimateChange(time: string) {
-		setEstimate(time);
-	}
-
-	function handlePossibleEstimateChange(time: string) {
-		setLowerEstimate(time);
-	}
-
 	function handleNewDonationIncentive() {
-		if (typeof donationIncentives === "undefined") {
-			setDonationIncentives([{ title: "" }]);
+		if (typeof props.form.values.donationIncentives === "undefined") {
+			props.form.setFieldValue("donationIncentives", [{ title: "" }]);
 		} else {
-			setDonationIncentives((prev) => [...(prev as DonationIncentive[]), { title: "" }]);
+			props.form.setFieldValue("donationIncentives", [
+				...(props.form.values.donationIncentives as DonationIncentive[]),
+				{ title: "" },
+			]);
 		}
 	}
 
 	function handleDonationIncentiveCancel(index: number) {
-		if (donationIncentives?.length === 1) {
-			setDonationIncentives(undefined);
+		if (props.form.values.donationIncentives?.length === 1) {
+			props.form.setFieldValue("donationIncentives", undefined);
 		} else {
-			setDonationIncentives(donationIncentives?.filter((_, i) => i !== index));
+			props.form.setFieldValue(
+				"donationIncentives",
+				props.form.values.donationIncentives?.filter((_, i) => i !== index),
+			);
 		}
 	}
 
-	function handleDonationIncentiveChange(updatedIncentive: DonationIncentive, updateIndex: number) {
-		setDonationIncentives(
-			donationIncentives?.map((incentive, i) => {
-				if (i === updateIndex) {
-					return updatedIncentive;
-				} else {
-					return incentive;
-				}
-			}),
-		);
-	}
+	console.log(props.form.values.donationIncentives);
 
 	return (
-		<GameSubmitPage title="Speedrun Information" show={props.show}>
-			<input type="hidden" name="donationIncentives" value={JSON.stringify(donationIncentives)} />
-
+		<>
 			<TextInput
-				// {...category.elementProps}
 				label="Category"
 				autoComplete="category"
 				description="Do not use uncommon acronyms."
 				maxLength={100}
 				required
 				name="category"
+				key={props.form.key("category")}
+				{...props.form.getInputProps("category")}
 			/>
 
-			<EstimateInput required value={estimate} onTimeChange={handleEstimateChange} name="estimate" />
+			<EstimateInput
+				required
+				name="estimate"
+				key={props.form.key("estimate")}
+				{...props.form.getInputProps("estimate")}
+			/>
 			<Checkbox
 				onChange={(e) => setShowPossibleEstimate(e.currentTarget.checked)}
 				checked={showPossibleEstimate}
@@ -126,13 +74,15 @@ export const RunInfo = forwardRef<SubmissionPageRef, GameInfoProps>((props, ref)
 						required
 						minRows={2}
 						name="possibleEstimateReason"
+						key={props.form.key("possibleEstimateReason")}
+						{...props.form.getInputProps("possibleEstimateReason")}
 					/>
 					<EstimateInput
-						value={possibleEstimate}
 						required
 						label="Revised estimate based on reason above"
-						onTimeChange={handlePossibleEstimateChange}
 						name="possibleEstimate"
+						key={props.form.key("possibleEstimate")}
+						{...props.form.getInputProps("possibleEstimate")}
 					/>
 					<br />
 				</>
@@ -144,6 +94,8 @@ export const RunInfo = forwardRef<SubmissionPageRef, GameInfoProps>((props, ref)
 				maxLength={100}
 				required
 				name="video"
+				key={props.form.key("video")}
+				{...props.form.getInputProps("video")}
 			/>
 			{showSpecialReqs ? (
 				<div className={styles.optionalTextInputs}>
@@ -154,7 +106,9 @@ export const RunInfo = forwardRef<SubmissionPageRef, GameInfoProps>((props, ref)
 						maxLength={300}
 						minRows={2}
 						className={styles.input}
-						name="specialReqs"
+						name="specialRequirements"
+						key={props.form.key("specialRequirements")}
+						{...props.form.getInputProps("specialRequirements")}
 					/>
 					<Button
 						variant="outline"
@@ -178,15 +132,13 @@ export const RunInfo = forwardRef<SubmissionPageRef, GameInfoProps>((props, ref)
 				</div>
 			)}
 
-			{typeof donationIncentives !== "undefined" && <Input.Label>Donation Incentives</Input.Label>}
-			{donationIncentives?.map((donationIncentive, i) => {
+			{typeof props.form.values.donationIncentives !== "undefined" && (
+				<Input.Label>Donation Incentives</Input.Label>
+			)}
+			{props.form.values.donationIncentives?.map((donationIncentive, i) => {
 				return (
 					<div className={styles.optionalTextInputs} key={i}>
-						<DonationIncentiveInput
-							value={donationIncentive}
-							onDonationChange={handleDonationIncentiveChange}
-							index={i}
-						/>
+						<DonationIncentiveInput form={props.form} index={i} />
 						<Button
 							variant="outline"
 							disabled={Boolean(donationIncentive.title)}
@@ -201,10 +153,13 @@ export const RunInfo = forwardRef<SubmissionPageRef, GameInfoProps>((props, ref)
 			<Button
 				variant="filled"
 				onClick={handleNewDonationIncentive}
-				disabled={typeof donationIncentives !== "undefined" && !donationIncentives.at(-1)?.title}
+				disabled={
+					typeof props.form.values.donationIncentives !== "undefined" &&
+					!props.form.values.donationIncentives.at(-1)?.title
+				}
 			>
-				Add {typeof donationIncentives !== "undefined" ? "another" : "a"} donation incentive
+				Add {typeof props.form.values.donationIncentives !== "undefined" ? "another" : "a"} donation incentive
 			</Button>
-		</GameSubmitPage>
+		</>
 	);
-});
+}

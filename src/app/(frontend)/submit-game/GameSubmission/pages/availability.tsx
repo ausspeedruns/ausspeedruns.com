@@ -1,38 +1,24 @@
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Checkbox } from "@mantine/core";
 import dayjs from "dayjs";
 import { GameSubmitPage } from "../components/GameSubmitPage";
-import { SubmissionPageRef } from "../submissionTypes";
+import { type GameSubmissionResults } from "../submissionTypes";
+import type { UseFormReturnType } from "@mantine/form";
 
-type AvailabilityProps = {
+interface AvailabilityProps {
 	event: {
 		startDate: string;
 		endDate: string;
 		eventTimezone: string;
 	};
-	show: boolean;
-	onComplete: (isComplete: boolean) => void;
+	form: UseFormReturnType<GameSubmissionResults>;
 };
 
-function datesToString(dates: boolean[]) {
-	return JSON.stringify([...dates].map((date) => (date ? "true" : "false")));
-}
-
-export const Availability = forwardRef<SubmissionPageRef, AvailabilityProps>((props, ref) => {
-	const [dates, setDates] = useState<boolean[]>([true]);
-
+export function Availability(props: AvailabilityProps) {
 	const eventLength = useMemo(
 		() => dayjs(props.event.endDate).diff(dayjs(props.event.startDate), "day") + 1,
 		[props.event],
 	);
-
-	useImperativeHandle(ref, () => ({
-		reset: () => setDates([]),
-	}));
-
-	useEffect(() => {
-		props.onComplete(dates.some((date) => date));
-	}, [dates]);
 
 	let dateCheckboxes = [];
 	for (let i = 0; i < eventLength; i++) {
@@ -41,11 +27,11 @@ export const Availability = forwardRef<SubmissionPageRef, AvailabilityProps>((pr
 			<Checkbox
 				key={i}
 				onChange={(e) => {
-					const newDates = [...dates];
+					const newDates = [...props.form.values.availability];
 					newDates[i] = e.currentTarget.checked;
-					setDates(newDates);
+					props.form.setFieldValue("availability", newDates);
 				}}
-				checked={dates[i] ?? false}
+				checked={props.form.values.availability[i] ?? false}
 				label={date.toLocaleDateString("en-AU", {
 					weekday: "long",
 					day: "2-digit",
@@ -58,9 +44,8 @@ export const Availability = forwardRef<SubmissionPageRef, AvailabilityProps>((pr
 	}
 
 	return (
-		<GameSubmitPage title="Availability" show={props.show}>
-			<input type="hidden" name="availability" value={datesToString(dates)} />
+		<>
 			<div style={{ display: "flex", flexDirection: "column" }}>{dateCheckboxes}</div>
-		</GameSubmitPage>
+		</>
 	);
-});
+}

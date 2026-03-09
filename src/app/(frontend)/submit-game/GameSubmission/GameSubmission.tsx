@@ -1,89 +1,211 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import styles from "./GameSubmission.module.css";
 
 import { Checkbox, Stepper, Paper, Button, Select } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import type { QUERY_USER_RESULTS, SubmissionPageRef } from "./submissionTypes";
-import CurrentSubmissionCard from "./CurrentSubmissionCard";
-import { createSubmissionFromForm } from "./game-submission-action";
+import type { GameSubmissionResults } from "./submissionTypes";
+import CurrentSubmissionCard from "./components/CurrentSubmissionCard";
+import { createSubmission } from "./game-submission-action";
 import { GameInfo } from "./pages/game-info";
 import { RunInfo } from "./pages/run-info";
 import { Availability } from "./pages/availability";
 import { Acknowledgement } from "./pages/acknowledgement";
 import { SubmissionResults } from "./pages/results";
 import { RaceCoop } from "./pages/race-coop";
-
-const SubmissionSteps = ["Game", "Speedrun", "Availability", "Race/Co-op Opt-in", "Submit"];
+import { useForm } from "@mantine/form";
+import type { OldSubmission } from "./components/PreviousSubmissions";
+import type { Submission } from "#payload-types.ts";
 
 interface GameSubmissionsProps {
-	userId: string;
-	userQueryResult: QUERY_USER_RESULTS;
+	availableEvents: {
+		id: number;
+		shortname: string;
+		acceptingSubmissions: boolean;
+		acceptingBackups: boolean;
+		startDate: string;
+		endDate: string;
+		eventTimezone: string;
+		submissionInstructions: any | null;
+	}[];
+	oldSubmissions: OldSubmission[];
 }
 
 function GameSubmissions(props: GameSubmissionsProps) {
 	// const [state, formAction] = useActionState(createSubmissionFromForm, null);
-	const eventsList = props.userQueryResult?.events;
+	const [loading, setLoading] = useState(false);
+	const [submissionResults, setSubmissionResults] = useState<Submission | null>(null);
+	const form = useForm<GameSubmissionResults>({
+		mode: "uncontrolled",
+		initialValues: {
+			event: props.availableEvents.length > 0 ? props.availableEvents[0].id : 0,
 
-	const formRef = useRef<HTMLFormElement>(null);
-	const gameInfoRef = useRef<SubmissionPageRef>(null);
-	const runInfoRef = useRef<SubmissionPageRef>(null);
-	const availabilityRef = useRef<SubmissionPageRef>(null);
-	const raceCoopRef = useRef<SubmissionPageRef>(null);
-	const acknowledgementRef = useRef<SubmissionPageRef>(null);
+			// Game info
+			game: "",
+			platform: "",
+			techPlatform: "",
+			ageRating: "m_or_lower",
+
+			// Run info
+			category: "",
+			video: "",
+			estimate: "01:00:00",
+			possibleEstimate: undefined,
+			possibleEstimateReason: undefined,
+			lowerEstimate: "",
+			specialRequirements: "",
+			donationIncentives: undefined,
+
+			// Availability
+			availability: [],
+
+			// Race/Co-op
+			race: "noRace",
+			racer: "",
+			coop: false,
+
+			// Backup
+			backup: true,
+		},
+
+		validate: (values) => {
+			if (currentStep === 0) {
+				return {
+					game: values.game ? null : "Please enter a game",
+					platform: values.platform ? null : "Please enter a platform",
+					techPlatform: values.techPlatform ? null : "Please enter a tech platform",
+				};
+			}
+
+			if (currentStep === 1) {
+				return {
+					category: values.category ? null : "Please enter a category",
+					video: values.video ? null : "Please enter a video link",
+					estimate: values.estimate !== "00:00:00" ? null : "Please enter an estimate",
+					possibleEstimate: values.possibleEstimate
+						? values.possibleEstimate === "00:00:00"
+							? "Please enter a possible estimate"
+							: null
+						: null,
+					possibleEstimateReason:
+						values.possibleEstimateReason === "" ? "Please enter a reason for the possible estimate" : null,
+					donationIncentives:
+						values.donationIncentives && values.donationIncentives.length > 0
+							? values.donationIncentives.some((incentive) => !incentive.title)
+								? "Please fill out all donation incentive titles"
+								: null
+							: null,
+				};
+			}
+
+			if (currentStep === 2) {
+				return {
+					availability:
+						values.availability.length > 0 && values.availability.some((days) => days)
+							? null
+							: "Please select at least one availability option",
+				};
+			}
+
+			// Step 3 (Race / Co-op) has no required fields
+			if (currentStep === 3) {
+				return {};
+			}
+
+			// Step 4 (Acknowledgement) has no fields
+			if (currentStep === 4) {
+				return {};
+			}
+
+			return {};
+		},
+	});
+	const eventsList = props.availableEvents;
 
 	const mobileWidth = useMediaQuery("(max-width: 600px)");
 
 	const [backup, setBackup] = useState(true);
 	const [currentStep, setCurrentStep] = useState(0);
-	const [canComplete, setCanComplete] = useState(false);
 
-	const [event, setEvent] = useState(eventsList[0].id.toString());
+	const currentEvent = eventsList?.find((eventResult) => eventResult.id === form.values.event);
 
-	const currentEvent = eventsList?.find((eventResult) => eventResult.id.toString() === event);
+	function handleNext() {
+		setCurrentStep((current) => {
+			if (form.validate().hasErrors) {
+				return current;
+			}
 
-	useEffect(() => {
-		setCanComplete(currentStep >= 3);
-	}, [currentStep]);
+			// Submit form
+			if (currentStep === 4) {
+				handleSubmission(form.values);
+			}
 
-	function handleNext(e: React.MouseEvent<HTMLButtonElement>) {
-		e.preventDefault();
+			if (current < 5) {
+				return current + 1;
+			}
 
-		if (currentStep === 4) {
-			e.currentTarget.form?.requestSubmit();
-		}
-
-		setCurrentStep((activeStep) => activeStep + 1);
+			return current;
+		});
 	}
 
 	function handleBack() {
-		setCurrentStep((activeStep) => activeStep - 1);
+		setCurrentStep((activeStep) => (activeStep > 0 ? activeStep - 1 : activeStep));
 	}
 
 	function resetForm() {
 		setCurrentStep(0);
-		gameInfoRef.current?.reset();
-		runInfoRef.current?.reset();
-		availabilityRef.current?.reset();
-		raceCoopRef.current?.reset();
-		acknowledgementRef.current?.reset();
+		form.reset();
+		setSubmissionResults(null);
 	}
 
 	if (!currentEvent) {
 		return <h2>Event not found</h2>;
 	}
 
-	return (
-		<form className={styles.gameForm} action={createSubmissionFromForm} ref={formRef}>
-			<input type="hidden" name="eventId" value={event} />
+	async function handleSubmission(values: typeof form.values) {
+		setLoading(true);
+		try {
+			const result = await createSubmission(values);
 
+			if (result.success) {
+				console.log("Submission successful:", result.data);
+				// notifications.show({
+				// 	title: "Sent",
+				// 	message: "Form submitted successfully",
+				// 	color: "green",
+				// });
+				// form.reset();
+				setSubmissionResults(result.data ?? null);
+			} else {
+				console.error("Submission error:", result.error);
+				// notifications.show({
+				// 	title: "Error",
+				// 	message: result.error ?? "Something went wrong",
+				// 	color: "red",
+				// });
+			}
+		} catch {
+			// notifications.show({
+			// 	title: "Error",
+			// 	message: "Network error",
+			// 	color: "red",
+			// });
+			console.error("Network error");
+		} finally {
+			setLoading(false);
+		}
+	}
+
+	return (
+		// <form className={styles.gameForm} action={createSubmissionFromForm} ref={formRef}>
+		<div className={styles.gameForm}>
 			{eventsList.length > 1 && (
 				<div>
 					<Select
 						label="Event"
-						value={event}
-						onChange={(val) => val && setEvent(val)}
+						key={form.key("event")}
+						{...form.getInputProps("event")}
 						required
 						data={eventsList.map((event) => ({
 							value: event.id.toString(),
@@ -100,54 +222,44 @@ function GameSubmissions(props: GameSubmissionsProps) {
 					label="You understand that this is a submission for backup games"
 				/>
 			)}
-			<Stepper
-				active={currentStep}
-				onStepClick={setCurrentStep}
-				className={styles.stepper}
-				orientation={mobileWidth ? "vertical" : "horizontal"}
-			>
-				{SubmissionSteps.map((label) => (
-					<Stepper.Step key={label} label={label} />
-				))}
-			</Stepper>
 			<div className={styles.formAndData}>
 				<Paper shadow="md" className={styles.paper}>
-					<GameInfo
-						show={currentStep === 0}
-						previousSubmissions={props.userQueryResult.user.submissions}
-						ref={gameInfoRef}
-						onComplete={(isComplete) => setCanComplete(isComplete)}
-					/>
-					<RunInfo
-						show={currentStep === 1}
-						ref={runInfoRef}
-						onComplete={(isComplete) => setCanComplete(isComplete)}
-					/>
-					<Availability
-						show={currentStep === 2}
-						event={currentEvent}
-						ref={availabilityRef}
-						onComplete={(isComplete) => setCanComplete(isComplete)}
-					/>
-					<RaceCoop
-						show={currentStep === 3}
-						ref={raceCoopRef}
-						onComplete={(isComplete) => setCanComplete(isComplete)}
-					/>
-					<Acknowledgement
-						acceptingBackups={currentEvent?.acceptingBackups ?? false}
-						acceptingSubmissions={currentEvent?.acceptingSubmissions ?? false}
-						submissionInstructions={currentEvent?.submissionInstructions.document}
-						show={currentStep === 4}
-						ref={acknowledgementRef}
-					/>
-					<SubmissionResults
-						show={currentStep === 5}
-						resetForm={resetForm}
-						formRef={formRef}
-						results={null}
-						// submissionResults={submissionResults}
-					/>
+					<Stepper
+						active={currentStep}
+						onStepClick={setCurrentStep}
+						className={styles.stepper}
+						// orientation={mobileWidth ? "vertical" : "horizontal"}
+					>
+						<Stepper.Step label="Game">
+							<GameInfo
+								// show={currentStep === 0}
+								previousSubmissions={props.oldSubmissions}
+								// ref={gameInfoRef}
+								// onComplete={(isComplete) => setCanComplete(isComplete)}
+								form={form}
+							/>
+						</Stepper.Step>
+						<Stepper.Step label="Speedrun">
+							<RunInfo form={form} />
+						</Stepper.Step>
+						<Stepper.Step label="Availability">
+							<Availability event={currentEvent} form={form} />
+						</Stepper.Step>
+						<Stepper.Step label="Race/Co-op Opt-in">
+							<RaceCoop form={form} />
+						</Stepper.Step>
+						<Stepper.Step label="Submit">
+							<Acknowledgement
+								acceptingBackups={currentEvent?.acceptingBackups ?? false}
+								acceptingSubmissions={currentEvent?.acceptingSubmissions ?? false}
+								submissionInstructions={currentEvent?.submissionInstructions.document}
+								form={form}
+							/>
+						</Stepper.Step>
+						<Stepper.Completed>
+							<SubmissionResults resetForm={resetForm} results={submissionResults} loading={loading} />
+						</Stepper.Completed>
+					</Stepper>
 					{currentStep < 5 && (
 						<div className={styles.pageControls}>
 							<Button disabled={currentStep === 0 || currentStep > 4} onClick={handleBack}>
@@ -155,7 +267,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 							</Button>
 							<Button
 								onClick={handleNext}
-								disabled={!canComplete}
+								// disabled={!canComplete}
 								variant={currentStep === 4 ? "filled" : "outline"}
 							>
 								{currentStep === 4 ? "Submit Run" : "Next"}
@@ -166,7 +278,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 				{currentStep !== 5 && (
 					<CurrentSubmissionCard
 						currentStep={currentStep}
-						formRef={formRef}
+						form={form}
 						// submissionData={{
 						// 	game: game.value,
 						// 	platform: platform.elementProps.inputValue!,
@@ -182,7 +294,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 					/>
 				)}
 			</div>
-		</form>
+		</div>
 	);
 }
 

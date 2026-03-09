@@ -27,17 +27,6 @@ body {
 		sans-serif;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	font-size: unset;
-	font-weight: unset;
-	margin: 0;
-}
-
 /* Theme Variables */
 :root {
 	--ausspeedruns-orange: #c72;

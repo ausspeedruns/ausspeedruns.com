@@ -1,4 +1,5 @@
 .gameForm {
+	margin: auto;
 	width: 100%;
 
 	/* @include breakpoint($md) {

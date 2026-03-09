@@ -56,6 +56,9 @@ const nextConfig = {
 	},
 	reactStrictMode: true,
 	redirects,
+	experimental: {
+		optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
+	},
 };
 
 export default withPayload(nextConfig, { devBundleServerPackages: false });

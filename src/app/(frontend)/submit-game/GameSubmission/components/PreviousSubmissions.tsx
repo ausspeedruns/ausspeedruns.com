@@ -1,6 +1,6 @@
 import { Card, UnstyledButton } from "@mantine/core";
 import styles from "./PreviousSubmissions.module.css";
-import { AgeRatingLiterals } from "./submissionTypes";
+import type { Submission } from "#payload-types.ts";
 
 interface ObjectWithProperties {
 	[key: string]: any;
@@ -18,16 +18,16 @@ function removeDuplicates<T extends ObjectWithProperties>(arr: T[], props: Array
 		}
 	});
 }
-export interface Submission {
+export interface OldSubmission {
 	game: string;
 	platform: string;
-	// techPlatform: string;
-	ageRating: AgeRatingLiterals;
+	techPlatform?: string;
+	ageRating: Submission["ageRating"];
 }
 
 interface PreviousSubmissionsProps {
-	submissions?: Submission[];
-	onGameClick: (submission: Submission) => void;
+	submissions?: OldSubmission[];
+	onGameClick: (submission: OldSubmission) => void;
 }
 
 function PreviousSubmissions(props: PreviousSubmissionsProps) {

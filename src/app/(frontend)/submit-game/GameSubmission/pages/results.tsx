@@ -1,110 +1,83 @@
 import styles from "../GameSubmission.module.css";
 
 import { Loader, Button } from "@mantine/core";
-import { GameSubmitPage } from "../components/GameSubmitPage";
-// import { MUTATION_SUBMISSION_RESULTS } from "../submissionTypes";
-import { useFormStatus } from "react-dom";
-import type { RefObject } from "react";
+import type { Submission } from "#payload-types.ts";
 
 type SubmissionResultsProps = {
-	show: boolean;
-	// submissionResults?: MUTATION_SUBMISSION_RESULTS["createSubmission"];
 	resetForm: () => void;
-	results: any;
-	formRef?: RefObject<HTMLFormElement | null>; // Temporary
+	results: Submission | null;
+	loading?: boolean;
 };
 
-export const SubmissionResults = (props: SubmissionResultsProps) => {
-	const { pending } = useFormStatus();
-
-	if (pending) {
-		return (
-			<GameSubmitPage title="Submitting" show={props.show}>
-				<Loader />
-			</GameSubmitPage>
-		);
+export function SubmissionResults(props: SubmissionResultsProps) {
+	if (props.loading) {
+		return <Loader />;
 	}
 
-	// if (!props.submissionResults) {
-	// 	return (
-	// 		<GameSubmitPage title="Error :(" show={props.show}>
-	// 			<h3>Error</h3>
-	// 		</GameSubmitPage>
-	// 	);
-	// }
-
-	function getInputValue(name: string) {
-		return (props.formRef?.current?.querySelector(`input[name="${name}"]`) as HTMLInputElement)?.value;
+	if (!props.results) {
+		return <h3>Error</h3>;
 	}
-
-	const game = getInputValue("game");
-	const category = getInputValue("category");
 
 	return (
-		// <GameSubmitPage title={pending ? "Submitting" : !props.submissionResults ? "Error :(" : "Complete!"} show={props.show}>
-		<GameSubmitPage title={pending ? "Submitting" : "Complete!"} show={props.show}>
+		<>
 			<div className={styles.finalGamePage}>
 				<p className={styles.game}>
-					{game} - {category}
+					{props.results.game} - {props.results.category}
 				</p>
 				<hr />
-				{/* <table>
+				<table>
 					<tbody>
 						<tr>
 							<td>Category</td>
-							<td>{props.submissionResults.category}</td>
+							<td>{props.results.category}</td>
 						</tr>
 						<tr>
 							<td>
 								Estimate
-								{props.submissionResults.possibleEstimate && " between"}
+								{props.results.possibleEstimate && " between"}
 							</td>
 							<td>
-								{props.submissionResults.possibleEstimate &&
-									`${props.submissionResults.possibleEstimate} – `}
-								{props.submissionResults.estimate}
+								{props.results.possibleEstimate && `${props.results.possibleEstimate} – `}
+								{props.results.estimate}
 							</td>
 						</tr>
 						<tr>
 							<td>Platform</td>
 							<td>
-								{props.submissionResults.platform}{" "}
+								{props.results.platform}{" "}
 								<span className={styles.techPlatform}>
-									{props.submissionResults.platform !== props.submissionResults.techPlatform &&
-										`(Running on ${props.submissionResults.techPlatform})`}
+									{props.results.platform !== props.results.techPlatform &&
+										`(Running on ${props.results.techPlatform})`}
 								</span>
 							</td>
 						</tr>
-						{props.submissionResults.race !== "no" && (
+						{props.results.raceType !== "noRace" && (
 							<tr>
 								<td>
-									{props.submissionResults.race === "solo" && "Solo or "}
-									{props.submissionResults.coop ? "Co-op" : "Race"} with
+									{props.results.raceType === "solo" && "Solo or "}
+									{props.results.isCoop ? "Co-op" : "Race"} with
 								</td>
-								<td>{props.submissionResults.racer}</td>
+								<td>{props.results.racer}</td>
 							</tr>
 						)}
-						{props.submissionResults.newDonationIncentives &&
-							props.submissionResults.newDonationIncentives.length > 0 && (
-								<tr>
-									<td>
-										Donation Incentive
-										{props.submissionResults.newDonationIncentives?.length > 1 && "s"}
-									</td>
-									<td>
-										{props.submissionResults.newDonationIncentives
-											.map((incentive) => incentive.title)
-											.join(", ")}
-									</td>
-								</tr>
-							)}
+						{/* {props.results.donationIncentives && props.results.donationIncentives.length > 0 && (
+							<tr>
+								<td>
+									Donation Incentive
+									{props.results.donationIncentives?.length > 1 && "s"}
+								</td>
+								<td>
+									{props.results.donationIncentives.map((incentive) => incentive.title).join(", ")}
+								</td>
+							</tr>
+						)} */}
 					</tbody>
-				</table> */}
+				</table>
 			</div>
 
 			<Button variant="filled" fullWidth onClick={props.resetForm}>
 				Submit another game?
 			</Button>
-		</GameSubmitPage>
+		</>
 	);
-};
+}

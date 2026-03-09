@@ -1,12 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import type { ChangeEvent, FocusEvent, ReactNode } from "react";
 import styles from "./EstimateInput.module.css";
 import { Input, Select } from "@mantine/core";
 
 type EstimateInputProps = {
-	onTimeChange: (formattedTime: string) => void;
+	onTimeChange?: (formattedTime: string) => void;
 	label?: string;
 	required?: boolean;
-	value: string;
+	value?: string;
+	defaultValue?: string;
+	onChange?: (value: string | ChangeEvent<HTMLInputElement>) => void;
+	onFocus?: (event: FocusEvent<HTMLInputElement>) => void;
+	onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
+	error?: ReactNode;
 	disabled?: boolean;
 	name?: string;
 };
@@ -36,10 +42,16 @@ function parseEstimateString(estimate: string) {
 }
 
 function EstimateInput(props: EstimateInputProps) {
-	const [hours, setHours] = useState<number>(parseEstimateString(props.value).hours);
-	const [mins, setMins] = useState<number>(parseEstimateString(props.value).mins);
+	const initialTime = useMemo(
+		() => parseEstimateString(props.value ?? props.defaultValue ?? "00:00:00"),
+		[props.defaultValue, props.value],
+	);
+	const [hours, setHours] = useState<number>(initialTime.hours);
+	const [mins, setMins] = useState<number>(initialTime.mins);
 
 	useEffect(() => {
+		if (props.value === undefined) return;
+
 		const newTime = parseEstimateString(props.value);
 		setHours(newTime.hours);
 		setMins(newTime.mins);
@@ -54,12 +66,22 @@ function EstimateInput(props: EstimateInputProps) {
 
 	useEffect(() => {
 		const formattedTime = formatTime();
-		if (formattedTime !== props.value) props.onTimeChange(formatTime());
-	}, [hours, mins]);
+		if (formattedTime === props.value) return;
+
+		props.onTimeChange?.(formattedTime);
+		props.onChange?.(formattedTime);
+	}, [hours, mins, props.onChange, props.onTimeChange, props.value]);
 
 	return (
 		<div className={styles.estimateContainer}>
-			<input type="hidden" name={props.name} value={formatTime()} />
+			<input
+				type="hidden"
+				name={props.name}
+				value={formatTime()}
+				onFocus={props.onFocus}
+				onBlur={props.onBlur}
+				onChange={props.onChange}
+			/>
 			<Input.Label className={styles.label}>
 				{props.label ?? "Estimate"}
 				{props.required && "*"}
@@ -71,6 +93,8 @@ function EstimateInput(props: EstimateInputProps) {
 					label="Hour"
 					value={hours.toString()}
 					onChange={(val) => val !== null && setHours(parseInt(val))}
+					onFocus={(event) => props.onFocus?.(event as FocusEvent<HTMLInputElement>)}
+					onBlur={(event) => props.onBlur?.(event as FocusEvent<HTMLInputElement>)}
 					data={[...Array(14).keys()].map((n) => ({
 						value: n.toString(),
 						label: n.toString(),
@@ -82,12 +106,15 @@ function EstimateInput(props: EstimateInputProps) {
 					label="Mins"
 					value={mins.toString()}
 					onChange={(val) => val !== null && setMins(parseInt(val))}
+					onFocus={(event) => props.onFocus?.(event as FocusEvent<HTMLInputElement>)}
+					onBlur={(event) => props.onBlur?.(event as FocusEvent<HTMLInputElement>)}
 					data={Array.from({ length: 12 }, (_, i) => i * 5).map((n) => ({
 						value: n.toString(),
 						label: n.toString().padStart(2, "0"),
 					}))}
 				/>
 			</div>
+			{props.error ? <Input.Error>{props.error}</Input.Error> : null}
 		</div>
 	);
 }

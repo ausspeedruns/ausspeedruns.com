@@ -1,29 +1,9 @@
 "use server";
 
-// import { gql } from "urql";
-import type { AgeRatingLiterals, DonationIncentive, RaceLiterals } from "./submissionTypes";
-// import { getUrqlCookieClient } from "@libs/urql-cookie";
-// import { auth } from "../../../auth";
-
-export type GameSubmissionData = {
-	game: string;
-	category: string;
-	platform: string;
-	techPlatform: string;
-	estimate: string;
-	possibleEstimate: string;
-	possibleEstimateReason: string;
-	ageRating: AgeRatingLiterals;
-	newDonationIncentives: DonationIncentive[];
-	specialReqs: string;
-	availableDates: boolean[];
-	race: RaceLiterals;
-	racer: string;
-	coop: boolean;
-	video: string;
-	eventId: string;
-	willingBackup: boolean;
-};
+import { getPayload } from "payload";
+import config from "#payload-config";
+import type { GameSubmissionResults } from "./submissionTypes";
+import { headers } from "next/headers";
 
 // const CREATE_GAME_SUBMISSION = gql`
 // 	mutation (
@@ -90,12 +70,58 @@ function stringAvailabilityToBooleanArray(availability?: string) {
 	return JSON.parse(availability).map((date: string) => date === "true");
 }
 
-export async function createSubmissionFromForm(submissionData: FormData) {
-	// const user = await auth();
+export async function createSubmission(submissionData: GameSubmissionResults) {
+	const payload = await getPayload({ config });
+	const userHeaders = await headers();
+	const { user } = await payload.auth({ headers: userHeaders });
 
-	// if (!user || !user.user.id) {
-	// 	throw new Error("User not authenticated");
-	// }
+	if (!user || !user.id) {
+		throw new Error("User not authenticated");
+	}
+
+	if (!user.socials?.Discord) {
+		throw new Error("Discord handle is required to submit a game");
+	}
+
+	console.log(submissionData);
+
+	try {
+		const submission = await payload.create({
+			collection: "submissions",
+			data: {
+				event: submissionData.event,
+				runner: user,
+				canBackup: submissionData.backup,
+
+				game: submissionData.game,
+				platform: submissionData.platform,
+				techPlatform: submissionData.techPlatform,
+				ageRating: submissionData.ageRating,
+
+				category: submissionData.category,
+				estimate: submissionData.estimate,
+				possibleEstimate: submissionData.possibleEstimate,
+				possibleEstimateReason: submissionData.possibleEstimateReason,
+				specialRequirements: submissionData.specialRequirements,
+				donationIncentives: submissionData.donationIncentives ?? [],
+				video: submissionData.video,
+
+				availability: stringAvailabilityToBooleanArray(
+					JSON.stringify(submissionData.availability.map((available) => (available ? "true" : "false"))),
+				),
+
+				raceType: submissionData.race,
+				racer: submissionData.racer,
+				isCoop: submissionData.coop,
+			},
+		});
+		return { success: true, data: submission };
+	} catch (error) {
+		return {
+			success: false,
+			error: error instanceof Error ? error.message : "Submission failed",
+		};
+	}
 
 	// let donationIncentives = [];
 	// if (submissionData.get("donationIncentives")) {

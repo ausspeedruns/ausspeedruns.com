@@ -641,6 +641,7 @@ export interface Submission {
   id: number;
   runner: string | User;
   game: string;
+  ageRating?: ('m_or_lower' | 'ma15' | 'r18') | null;
   category: string;
   platform: string;
   techPlatform?: string | null;
@@ -649,11 +650,29 @@ export interface Submission {
   possibleEstimateReason?: string | null;
   event?: (number | null) | Event;
   specialRequirements?: string | null;
+  donationIncentives?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   raceType?: ('noRace' | 'solo' | 'only') | null;
   racer?: string | null;
   isCoop?: boolean | null;
   video?: string | null;
   status?: ('pending' | 'accepted' | 'rejected' | 'backup') | null;
+  availability?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   canBackup?: boolean | null;
   legacyKeystoneId?: string | null;
   updatedAt: string;
@@ -2135,6 +2154,7 @@ export interface RunsSelect<T extends boolean = true> {
 export interface SubmissionsSelect<T extends boolean = true> {
   runner?: T;
   game?: T;
+  ageRating?: T;
   category?: T;
   platform?: T;
   techPlatform?: T;
@@ -2143,11 +2163,13 @@ export interface SubmissionsSelect<T extends boolean = true> {
   possibleEstimateReason?: T;
   event?: T;
   specialRequirements?: T;
+  donationIncentives?: T;
   raceType?: T;
   racer?: T;
   isCoop?: T;
   video?: T;
   status?: T;
+  availability?: T;
   canBackup?: T;
   legacyKeystoneId?: T;
   updatedAt?: T;

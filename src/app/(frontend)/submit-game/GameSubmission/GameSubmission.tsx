@@ -220,21 +220,28 @@ function GameSubmissions(props: GameSubmissionsProps) {
 				/>
 			)}
 			<div className={styles.formAndData}>
-				<Paper shadow="md" className={styles.paper}>
-					<Stepper active={currentStep} onStepClick={setCurrentStep} className={styles.stepper}>
-						<Stepper.Step label="Game">
+				<Paper shadow="sm" withBorder className={styles.paper}>
+					<Stepper
+						active={currentStep}
+						onStepClick={(step) => {
+							if (step < currentStep) setCurrentStep(step);
+						}}
+						className={styles.stepper}
+						size="sm"
+					>
+						<Stepper.Step label="Game" description="Title &amp; platform">
 							<GameInfo previousSubmissions={props.oldSubmissions} form={form} />
 						</Stepper.Step>
-						<Stepper.Step label="Speedrun">
+						<Stepper.Step label="Speedrun" description="Category &amp; estimate">
 							<RunInfo form={form} />
 						</Stepper.Step>
-						<Stepper.Step label="Availability">
+						<Stepper.Step label="Availability" description="Event days">
 							<Availability event={currentEvent} form={form} />
 						</Stepper.Step>
-						<Stepper.Step label="Race/Co-op Opt-in">
+						<Stepper.Step label="Race/Co-op" description="Optional">
 							<RaceCoop form={form} />
 						</Stepper.Step>
-						<Stepper.Step label="Submit">
+						<Stepper.Step label="Submit" description="Review &amp; confirm">
 							<Acknowledgement
 								acceptingBackups={currentEvent?.acceptingBackups ?? false}
 								acceptingSubmissions={currentEvent?.acceptingSubmissions ?? false}
@@ -248,15 +255,19 @@ function GameSubmissions(props: GameSubmissionsProps) {
 					</Stepper>
 					{currentStep < 5 && (
 						<div className={styles.pageControls}>
-							<Button disabled={loading || currentStep === 0 || currentStep > 4} onClick={handleBack}>
+							<Button
+								variant="default"
+								disabled={loading || currentStep === 0 || currentStep > 4}
+								onClick={handleBack}
+							>
 								Back
 							</Button>
 							<Button
 								onClick={handleNext}
 								disabled={loading}
-								variant={currentStep === 4 ? "filled" : "outline"}
+								variant={currentStep === 4 ? "filled" : "light"}
 							>
-								{currentStep === 4 ? "Submit Run" : "Next"}
+								{currentStep === 4 ? "Submit Run" : "Continue"}
 							</Button>
 						</div>
 					)}

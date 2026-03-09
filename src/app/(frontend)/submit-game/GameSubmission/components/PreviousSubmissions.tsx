@@ -37,6 +37,7 @@ function PreviousSubmissions(props: PreviousSubmissionsProps) {
 
 	return (
 		<div className={styles.previousSubmissions}>
+			<p className={styles.label}>Quick fill from previous submissions</p>
 			{collapseGames.map((submission) => {
 				return (
 					<UnstyledButton

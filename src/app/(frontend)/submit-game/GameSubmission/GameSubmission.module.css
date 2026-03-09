@@ -1,37 +1,81 @@
 .gameForm {
 	margin: auto;
 	width: 100%;
-
-	/* @include breakpoint($md) {
-		padding: 0 10%;
-	} */
+	max-width: 960px;
 
 	.stepper {
-		margin: 2rem 0;
+		margin: 1.5rem 0 0.5rem;
 	}
 
 	.formAndData {
 		display: flex;
-		gap: 1rem;
+		gap: 1.5rem;
 	}
 
 	.paper {
-		padding: 2rem;
+		padding: 2rem 2.5rem;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
 		flex-grow: 1;
+		border-radius: 12px;
+	}
+
+	.pageContent {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding: 0.5rem 0 1rem;
+	}
+
+	.pageHeader {
+		margin-bottom: 0.25rem;
+
+		h3 {
+			font-size: 1.25rem;
+			font-weight: 600;
+			margin: 0;
+		}
+
+		p {
+			color: var(--mantine-color-dimmed);
+			font-size: 0.875rem;
+			margin: 0.25rem 0 0;
+		}
 	}
 
 	.pageControls {
 		display: flex;
 		justify-content: space-between;
-		margin-top: 1rem;
+		align-items: center;
+		margin-top: 1.5rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--mantine-color-default-border);
+	}
+
+	.fieldGroup {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.fieldGroupLabel {
+		font-size: 0.8rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		color: var(--mantine-color-dimmed);
+		margin: 0;
+	}
+
+	.fieldRow {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
 	}
 
 	.optionalTextInputs {
 		display: flex;
-		/* align-items: center; */
+		align-items: flex-end;
 		gap: 8px;
 
 		.input {
@@ -42,7 +86,13 @@
 			min-height: 100%;
 		}
 	}
-	
+
+	.optionalSection {
+		border: 1px solid var(--mantine-color-default-border);
+		border-radius: 8px;
+		padding: 1rem;
+	}
+
 	.toggleButtons {
 		margin: 0.5rem auto !important;
 	}
@@ -52,14 +102,11 @@
 	}
 
 	.error {
-		color: rgb(255, 60, 60);
+		color: var(--mantine-color-red-6);
 	}
 
 	.finalGamePage {
-		.header {
-			font-weight: bold;
-			margin-right: 1rem;
-		}
+		padding: 1rem 0;
 
 		table {
 			table-layout: fixed;
@@ -68,51 +115,56 @@
 		}
 
 		td {
-			font-size: 1.2rem;
-			padding: 8px;
+			font-size: 1.1rem;
+			padding: 10px 12px;
 			text-align: left;
 			width: 100%;
-			overflow-wrap: break-word; 
+			overflow-wrap: break-word;
 			hyphens: manual;
 			vertical-align: text-top;
 		}
 
 		td:first-child {
-			font-weight: bold;
+			font-weight: 600;
 			text-align: right;
+			color: var(--mantine-color-dimmed);
+			white-space: nowrap;
+			width: auto;
 		}
 
 		.techPlatform {
-			font-size: 1rem;
+			font-size: 0.9rem;
 			font-style: italic;
+			color: var(--mantine-color-dimmed);
 		}
 
 		.game {
-			font-weight: bold;
+			font-weight: 700;
 			font-size: 1.5rem;
 			text-align: center;
+			margin-bottom: 0.5rem;
+		}
+
+		.category {
+			text-align: center;
+			color: var(--mantine-color-dimmed);
+			font-size: 1rem;
+			margin-top: -0.25rem;
+			margin-bottom: 0.75rem;
 		}
 	}
 
-	
-	/* @include breakpoint($sm-zero-only) {
+	@media (max-width: 48em) {
 		.formAndData {
 			flex-direction: column;
 		}
-	} */
-}
 
-.submissionPage {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	flex-grow: 1;
+		.paper {
+			padding: 1.25rem;
+		}
 
-	h3 {
-		text-align: center;
-	}
-
-	& > * {
-		margin: 0.5rem 0 !important;
+		.fieldRow {
+			grid-template-columns: 1fr;
+		}
 	}
 }

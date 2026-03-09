@@ -38,10 +38,13 @@ export function RunInfo(props: RunInfoProps) {
 		}
 	}
 
-	console.log(props.form.values.donationIncentives);
-
 	return (
-		<>
+		<div className={styles.pageContent}>
+			<div className={styles.pageHeader}>
+				<h3>Speedrun Details</h3>
+				<p>Provide details about your run category and timing.</p>
+			</div>
+
 			<TextInput
 				label="Category"
 				autoComplete="category"
@@ -53,42 +56,7 @@ export function RunInfo(props: RunInfoProps) {
 				{...props.form.getInputProps("category")}
 			/>
 
-			<EstimateInput
-				required
-				name="estimate"
-				key={props.form.key("estimate")}
-				{...props.form.getInputProps("estimate")}
-			/>
-			<Checkbox
-				onChange={(e) => setShowPossibleEstimate(e.currentTarget.checked)}
-				checked={showPossibleEstimate}
-				label="Possible to go 15 minutes or more under?"
-			/>
-			{showPossibleEstimate && (
-				<>
-					<Textarea
-						// {...possibleEstimateReason.elementProps}
-						label="Provide details as to why"
-						autoComplete="off"
-						maxLength={200}
-						required
-						minRows={2}
-						name="possibleEstimateReason"
-						key={props.form.key("possibleEstimateReason")}
-						{...props.form.getInputProps("possibleEstimateReason")}
-					/>
-					<EstimateInput
-						required
-						label="Revised estimate based on reason above"
-						name="possibleEstimate"
-						key={props.form.key("possibleEstimate")}
-						{...props.form.getInputProps("possibleEstimate")}
-					/>
-					<br />
-				</>
-			)}
 			<TextInput
-				// {...video.elementProps}
 				label="Video of your own run"
 				autoComplete="off"
 				maxLength={100}
@@ -97,69 +65,111 @@ export function RunInfo(props: RunInfoProps) {
 				key={props.form.key("video")}
 				{...props.form.getInputProps("video")}
 			/>
-			{showSpecialReqs ? (
-				<div className={styles.optionalTextInputs}>
-					<Textarea
-						// {...specialReqs.elementProps}
-						label="Special Requirements to run your game"
-						autoComplete="off"
-						maxLength={300}
-						minRows={2}
-						className={styles.input}
-						name="specialRequirements"
-						key={props.form.key("specialRequirements")}
-						{...props.form.getInputProps("specialRequirements")}
-					/>
-					<Button
-						variant="outline"
-						// disabled={Boolean(specialReqs.elementProps.value)}
-						onClick={() => setShowSpecialReqs(false)}
-						color="red"
-						className={styles.button}
-					>
-						Cancel
-					</Button>
-				</div>
-			) : (
-				<div>
-					<Button variant="filled" onClick={() => setShowSpecialReqs(true)} className={styles.button}>
-						The speedrun needs special requirements
-					</Button>
-					<Input.Description>
-						This involves any: mods, downpatches, software, controllers (if a PC game) and any other
-						requirements. Layout requirements should be discussed with Clubwho.
-					</Input.Description>
-				</div>
-			)}
 
-			{typeof props.form.values.donationIncentives !== "undefined" && (
-				<Input.Label>Donation Incentives</Input.Label>
-			)}
-			{props.form.values.donationIncentives?.map((donationIncentive, i) => {
-				return (
-					<div className={styles.optionalTextInputs} key={i}>
-						<DonationIncentiveInput form={props.form} index={i} />
-						<Button
-							variant="outline"
-							disabled={Boolean(donationIncentive.title)}
-							onClick={() => handleDonationIncentiveCancel(i)}
-							color="red"
-						>
-							Cancel
-						</Button>
+			<div className={styles.fieldGroup}>
+				<p className={styles.fieldGroupLabel}>Timing</p>
+				<EstimateInput
+					required
+					name="estimate"
+					key={props.form.key("estimate")}
+					{...props.form.getInputProps("estimate")}
+				/>
+				<Checkbox
+					onChange={(e) => setShowPossibleEstimate(e.currentTarget.checked)}
+					checked={showPossibleEstimate}
+					label="Possible to go 15 minutes or more under?"
+				/>
+				{showPossibleEstimate && (
+					<div className={styles.optionalSection}>
+						<div className={styles.fieldGroup}>
+							<Textarea
+								label="Provide details as to why"
+								autoComplete="off"
+								maxLength={200}
+								required
+								minRows={2}
+								name="possibleEstimateReason"
+								key={props.form.key("possibleEstimateReason")}
+								{...props.form.getInputProps("possibleEstimateReason")}
+							/>
+							<EstimateInput
+								required
+								label="Revised estimate based on reason above"
+								name="possibleEstimate"
+								key={props.form.key("possibleEstimate")}
+								{...props.form.getInputProps("possibleEstimate")}
+							/>
+						</div>
 					</div>
-				);
-			})}
-			<Button
-				variant="filled"
-				onClick={handleNewDonationIncentive}
-				disabled={
-					typeof props.form.values.donationIncentives !== "undefined" &&
-					!props.form.values.donationIncentives.at(-1)?.title
-				}
-			>
-				Add {typeof props.form.values.donationIncentives !== "undefined" ? "another" : "a"} donation incentive
-			</Button>
-		</>
+				)}
+			</div>
+
+			<div className={styles.fieldGroup}>
+				<p className={styles.fieldGroupLabel}>Optional</p>
+				{showSpecialReqs ? (
+					<div className={styles.optionalSection}>
+						<div className={styles.optionalTextInputs}>
+							<Textarea
+								label="Special Requirements to run your game"
+								autoComplete="off"
+								maxLength={300}
+								minRows={2}
+								className={styles.input}
+								name="specialRequirements"
+								key={props.form.key("specialRequirements")}
+								{...props.form.getInputProps("specialRequirements")}
+							/>
+							<Button
+								variant="outline"
+								onClick={() => setShowSpecialReqs(false)}
+								color="red"
+								className={styles.button}
+							>
+								Remove
+							</Button>
+						</div>
+					</div>
+				) : (
+					<div>
+						<Button variant="light" onClick={() => setShowSpecialReqs(true)}>
+							Add special requirements
+						</Button>
+						<Input.Description>Mods, downpatches, software, controllers (PC games), etc.</Input.Description>
+					</div>
+				)}
+
+				{typeof props.form.values.donationIncentives !== "undefined" && (
+					<Input.Label>Donation Incentives</Input.Label>
+				)}
+				{props.form.values.donationIncentives?.map((donationIncentive, i) => {
+					return (
+						<div className={styles.optionalSection} key={i}>
+							<div className={styles.optionalTextInputs}>
+								<DonationIncentiveInput form={props.form} index={i} />
+								<Button
+									variant="outline"
+									disabled={Boolean(donationIncentive.title)}
+									onClick={() => handleDonationIncentiveCancel(i)}
+									color="red"
+								>
+									Remove
+								</Button>
+							</div>
+						</div>
+					);
+				})}
+				<Button
+					variant="light"
+					onClick={handleNewDonationIncentive}
+					disabled={
+						typeof props.form.values.donationIncentives !== "undefined" &&
+						!props.form.values.donationIncentives.at(-1)?.title
+					}
+				>
+					Add {typeof props.form.values.donationIncentives !== "undefined" ? "another" : "a"} donation
+					incentive
+				</Button>
+			</div>
+		</div>
 	);
 }

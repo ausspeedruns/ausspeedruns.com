@@ -1,34 +1,62 @@
 .data {
-	width: 15rem;
-	min-width: 15rem;
-	max-width: 15rem;
-	padding: 1rem;
+	width: 16rem;
+	min-width: 16rem;
+	max-width: 16rem;
+	padding: 1.25rem;
 	height: fit-content;
+	border-radius: 12px;
+	position: sticky;
+	top: 1rem;
 
 	.header {
 		width: 100%;
 		text-align: center;
-		font-weight: bold;
+		font-weight: 600;
+		font-size: 0.85rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		color: var(--mantine-color-dimmed);
 	}
 
-	h2 {
-		font-size: 1.3rem;
+	hr {
+		border: none;
+		border-top: 1px solid var(--mantine-color-default-border);
+		margin: 0.75rem 0;
 	}
 
-	h3 {
-		margin-top: 0.5rem;
-		font-size: 1rem;
+	.label {
+		margin-top: 0.75rem;
+		font-size: 0.75rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
+		color: var(--mantine-color-dimmed);
 	}
 
-	p {
+	.value {
+		font-size: 0.95rem;
+		margin-top: 0.15rem;
 		overflow-wrap: break-word;
 		hyphens: manual;
+		min-height: 1.4em;
 	}
-	
-	
-	/* @include breakpoint($sm-zero-only) {
+
+	@media (max-width: 48em) {
 		width: 100%;
 		max-width: 100%;
-		text-align: center;
-	} */
+		min-width: 100%;
+		position: static;
+
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0 1rem;
+
+		.header {
+			grid-column: 1 / -1;
+		}
+
+		hr {
+			grid-column: 1 / -1;
+		}
+	}
 }

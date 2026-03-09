@@ -1,7 +1,7 @@
-import { useEffect, useMemo } from "react";
-import { Checkbox } from "@mantine/core";
+import { useMemo } from "react";
+import { Checkbox, Input } from "@mantine/core";
 import dayjs from "dayjs";
-import { GameSubmitPage } from "../components/GameSubmitPage";
+import styles from "../GameSubmission.module.css";
 import { type GameSubmissionResults } from "../submissionTypes";
 import type { UseFormReturnType } from "@mantine/form";
 
@@ -12,13 +12,24 @@ interface AvailabilityProps {
 		eventTimezone: string;
 	};
 	form: UseFormReturnType<GameSubmissionResults>;
-};
+}
 
 export function Availability(props: AvailabilityProps) {
 	const eventLength = useMemo(
 		() => dayjs(props.event.endDate).diff(dayjs(props.event.startDate), "day") + 1,
 		[props.event],
 	);
+
+	const allSelected =
+		props.form.values.availability.length >= eventLength && props.form.values.availability.every(Boolean);
+
+	function toggleAll() {
+		if (allSelected) {
+			props.form.setFieldValue("availability", []);
+		} else {
+			props.form.setFieldValue("availability", Array(eventLength).fill(true));
+		}
+	}
 
 	let dateCheckboxes = [];
 	for (let i = 0; i < eventLength; i++) {
@@ -44,8 +55,19 @@ export function Availability(props: AvailabilityProps) {
 	}
 
 	return (
-		<>
-			<div style={{ display: "flex", flexDirection: "column" }}>{dateCheckboxes}</div>
-		</>
+		<div className={styles.pageContent}>
+			<div className={styles.pageHeader}>
+				<h3>Availability</h3>
+				<p>Select all days you are available to attend. More availability improves your chances.</p>
+			</div>
+
+			<Checkbox checked={allSelected} onChange={toggleAll} label="Available all days" fw={600} />
+
+			<div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", paddingLeft: "0.25rem" }}>
+				{dateCheckboxes}
+			</div>
+
+			{props.form.errors.availability && <Input.Error>{props.form.errors.availability}</Input.Error>}
+		</div>
 	);
 }

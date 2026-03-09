@@ -13,59 +13,28 @@ type CurrentSubmissionCardProps = {
 export default function CurrentSubmissionCard(props: CurrentSubmissionCardProps) {
 	return (
 		<Paper withBorder className={styles.data}>
-			<h2 className={styles.header}>Current Submission</h2>
+			<p className={styles.header}>Current Submission</p>
 			<hr />
-			<h3>Game</h3>
-			<p>{props.currentStep > 0 ? props.form.values.game : <br />}</p>
-			<h3>Console</h3>
-			<p>{props.currentStep > 0 ? props.form.values.platform : <br />}</p>
+			<p className={styles.label}>Game</p>
+			<p className={styles.value}>{props.currentStep > 0 ? props.form.values.game : "\u00A0"}</p>
+			<p className={styles.label}>Console</p>
+			<p className={styles.value}>{props.currentStep > 0 ? props.form.values.platform : "\u00A0"}</p>
 			{props.form.values.platform !== props.form.values.techPlatform && props.currentStep > 0 && (
 				<>
-					<h3>Running on</h3>
-					<p>{props.currentStep > 0 ? props.form.values.techPlatform : <br />}</p>
+					<p className={styles.label}>Running on</p>
+					<p className={styles.value}>{props.form.values.techPlatform}</p>
 				</>
 			)}
-			<h3>Category</h3>
-			<p>{props.currentStep > 1 ? props.form.values.category : <br />}</p>
-			<h3>Estimate</h3>
-			<p>
-				{props.currentStep > 1 ? (
-					props.form.values.possibleEstimate ? (
-						`${props.form.values.possibleEstimate} – ${props.form.values.estimate}`
-					) : (
-						`${props.form.values.estimate}`
-					)
-				) : (
-					<br />
-				)}
+			<p className={styles.label}>Category</p>
+			<p className={styles.value}>{props.currentStep > 1 ? props.form.values.category : "\u00A0"}</p>
+			<p className={styles.label}>Estimate</p>
+			<p className={styles.value}>
+				{props.currentStep > 1
+					? props.form.values.possibleEstimate
+						? `${props.form.values.possibleEstimate} – ${props.form.values.estimate}`
+						: props.form.values.estimate
+					: "\u00A0"}
 			</p>
-			{/* {props.form.values.race !== "no" && props.currentStep > 3 && (
-				<>
-					<h3>
-						{props.form.values.race === "solo" && "Solo or "}
-						{props.form.values.coop ? "Co-op" : "Race"} with
-					</h3>
-					<p>
-						{props.form.values.racer}
-						<br />
-					</p>
-				</>
-			)}
-			{props.form.values.donationIncentives && props.currentStep > 1 && (
-				<>
-					<h3>
-						Donation Incentive
-						{props.form.values.donationIncentives.length > 1 ? "s" : ""}
-					</h3>
-					{props.currentStep > 1 ? (
-						props.form.values.donationIncentives.map((incentive) => {
-							return <p>{incentive.title}</p>;
-						})
-					) : (
-						<br />
-					)}
-				</>
-			)} */}
 		</Paper>
 	);
 }

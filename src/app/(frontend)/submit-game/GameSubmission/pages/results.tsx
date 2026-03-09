@@ -1,6 +1,6 @@
 import styles from "../GameSubmission.module.css";
 
-import { Loader, Button } from "@mantine/core";
+import { Loader, Button, Alert } from "@mantine/core";
 import type { Submission } from "#payload-types.ts";
 
 type SubmissionResultsProps = {
@@ -11,31 +11,37 @@ type SubmissionResultsProps = {
 
 export function SubmissionResults(props: SubmissionResultsProps) {
 	if (props.loading) {
-		return <Loader />;
+		return (
+			<div
+				style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "2rem", gap: "1rem" }}
+			>
+				<Loader size="lg" />
+				<p style={{ color: "var(--mantine-color-dimmed)" }}>Submitting your run...</p>
+			</div>
+		);
 	}
 
 	if (!props.results) {
-		return <h3>Error</h3>;
+		return (
+			<Alert color="red" variant="light" title="Submission Error">
+				Something went wrong. Please try again.
+			</Alert>
+		);
 	}
 
 	return (
-		<>
+		<div className={styles.pageContent}>
+			<Alert color="green" variant="light" title="Submission Received">
+				Your run has been submitted successfully!
+			</Alert>
+
 			<div className={styles.finalGamePage}>
-				<p className={styles.game}>
-					{props.results.game} - {props.results.category}
-				</p>
-				<hr />
+				<p className={styles.game}>{props.results.game}</p>
+				<p className={styles.category}>{props.results.category}</p>
 				<table>
 					<tbody>
 						<tr>
-							<td>Category</td>
-							<td>{props.results.category}</td>
-						</tr>
-						<tr>
-							<td>
-								Estimate
-								{props.results.possibleEstimate && " between"}
-							</td>
+							<td>Estimate</td>
 							<td>
 								{props.results.possibleEstimate && `${props.results.possibleEstimate} – `}
 								{props.results.estimate}
@@ -60,24 +66,13 @@ export function SubmissionResults(props: SubmissionResultsProps) {
 								<td>{props.results.racer}</td>
 							</tr>
 						)}
-						{/* {props.results.donationIncentives && props.results.donationIncentives.length > 0 && (
-							<tr>
-								<td>
-									Donation Incentive
-									{props.results.donationIncentives?.length > 1 && "s"}
-								</td>
-								<td>
-									{props.results.donationIncentives.map((incentive) => incentive.title).join(", ")}
-								</td>
-							</tr>
-						)} */}
 					</tbody>
 				</table>
 			</div>
 
-			<Button variant="filled" fullWidth onClick={props.resetForm}>
-				Submit another game?
+			<Button variant="light" fullWidth onClick={props.resetForm}>
+				Submit another game
 			</Button>
-		</>
+		</div>
 	);
 }

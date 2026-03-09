@@ -1,12 +1,12 @@
 .estimateContainer {
 	.inputContainer {
 		display: flex;
-		gap: 16px;
+		gap: 1rem;
 	}
 }
 
 .label {
-	margin-bottom: 8px;
+	margin-bottom: 4px;
 }
 
 .select {

@@ -13,7 +13,8 @@ type CurrentSubmissionCardProps = {
 export default function CurrentSubmissionCard(props: CurrentSubmissionCardProps) {
 	return (
 		<Paper withBorder className={styles.data}>
-			<p className={styles.header}>Current Submission</p>
+			<p className={styles.storeName}>*** AusSpeedruns ***</p>
+			<p className={styles.header}>Game Submission</p>
 			<hr />
 			<p className={styles.label}>Game</p>
 			<p className={styles.value}>{props.currentStep > 0 ? props.form.values.game : "\u00A0"}</p>
@@ -35,6 +36,8 @@ export default function CurrentSubmissionCard(props: CurrentSubmissionCardProps)
 						: props.form.values.estimate
 					: "\u00A0"}
 			</p>
+			<hr />
+			<p className={styles.footer}>THANK YOU FOR SUBMITTING</p>
 		</Paper>
 	);
 }

@@ -2,43 +2,87 @@
 	width: 16rem;
 	min-width: 16rem;
 	max-width: 16rem;
-	padding: 1.25rem;
+	padding: 1rem 1.25rem 1.5rem;
 	height: fit-content;
-	border-radius: 12px;
+	border-radius: 0;
 	position: sticky;
 	top: 1rem;
+	font-family: "Courier New", Courier, monospace;
+	background: #fefcf5;
+	color: #2a2a2a;
+	border: none;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	/* Torn/zigzag top and bottom edges */
+	mask-image: linear-gradient(to right, transparent 0, #000 0),
+		linear-gradient(135deg, #000 33.33%, transparent 33.33%),
+		linear-gradient(-135deg, #000 33.33%, transparent 33.33%),
+		linear-gradient(45deg, #000 33.33%, transparent 33.33%),
+		linear-gradient(-45deg, #000 33.33%, transparent 33.33%);
+	mask-size: 100% calc(100% - 12px), 6px 6px, 6px 6px, 6px 6px, 6px 6px;
+	mask-position: center, bottom left, bottom left, top left, top left;
+	mask-repeat: no-repeat, repeat-x, repeat-x, repeat-x, repeat-x;
 
 	.header {
 		width: 100%;
 		text-align: center;
-		font-weight: 600;
-		font-size: 0.85rem;
+		font-weight: 700;
+		font-size: 0.95rem;
 		text-transform: uppercase;
-		letter-spacing: 0.04em;
-		color: var(--mantine-color-dimmed);
+		letter-spacing: 0.12em;
+		color: #2a2a2a;
+	}
+
+	.storeName {
+		width: 100%;
+		text-align: center;
+		font-weight: 700;
+		font-size: 0.7rem;
+		letter-spacing: 0.08em;
+		color: #555;
+		margin-bottom: 0.25rem;
 	}
 
 	hr {
 		border: none;
-		border-top: 1px solid var(--mantine-color-default-border);
-		margin: 0.75rem 0;
+		border-top: 1px dashed #999;
+		margin: 0.5rem 0;
 	}
 
 	.label {
-		margin-top: 0.75rem;
-		font-size: 0.75rem;
-		font-weight: 600;
+		margin-top: 0.5rem;
+		font-size: 0.65rem;
+		font-weight: 700;
 		text-transform: uppercase;
-		letter-spacing: 0.03em;
-		color: var(--mantine-color-dimmed);
+		letter-spacing: 0.06em;
+		color: #666;
 	}
 
 	.value {
-		font-size: 0.95rem;
-		margin-top: 0.15rem;
+		font-size: 0.85rem;
+		font-weight: 600;
+		margin-top: 0.1rem;
 		overflow-wrap: break-word;
 		hyphens: manual;
 		min-height: 1.4em;
+		color: #1a1a1a;
+	}
+
+	.footer {
+		margin-top: 0.75rem;
+		text-align: center;
+		font-size: 0.6rem;
+		letter-spacing: 0.04em;
+		color: #888;
+	}
+
+	.barcode {
+		margin-top: 0.5rem;
+		text-align: center;
+		font-size: 1.4rem;
+		letter-spacing: -0.05em;
+		line-height: 1;
+		color: #2a2a2a;
+		user-select: none;
 	}
 
 	@media (max-width: 48em) {
@@ -51,11 +95,17 @@
 		grid-template-columns: 1fr 1fr;
 		gap: 0 1rem;
 
-		.header {
+		.header,
+		.storeName {
 			grid-column: 1 / -1;
 		}
 
 		hr {
+			grid-column: 1 / -1;
+		}
+
+		.footer,
+		.barcode {
 			grid-column: 1 / -1;
 		}
 	}

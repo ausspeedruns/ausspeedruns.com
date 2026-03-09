@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styles from "./GameSubmission.module.css";
 
 import { Checkbox, Stepper, Paper, Button, Select } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
 import type { GameSubmissionResults } from "./submissionTypes";
 import CurrentSubmissionCard from "./components/CurrentSubmissionCard";
 import { createSubmission } from "./game-submission-action";
@@ -33,7 +32,6 @@ interface GameSubmissionsProps {
 }
 
 function GameSubmissions(props: GameSubmissionsProps) {
-	// const [state, formAction] = useActionState(createSubmissionFromForm, null);
 	const [loading, setLoading] = useState(false);
 	const [submissionResults, setSubmissionResults] = useState<Submission | null>(null);
 	const form = useForm<GameSubmissionResults>({
@@ -123,30 +121,29 @@ function GameSubmissions(props: GameSubmissionsProps) {
 	});
 	const eventsList = props.availableEvents;
 
-	const mobileWidth = useMediaQuery("(max-width: 600px)");
-
 	const [backup, setBackup] = useState(true);
 	const [currentStep, setCurrentStep] = useState(0);
+	const submissionInFlightRef = useRef(false);
 
 	const currentEvent = eventsList?.find((eventResult) => eventResult.id === form.values.event);
 
 	function handleNext() {
-		setCurrentStep((current) => {
-			if (form.validate().hasErrors) {
-				return current;
+		if (form.validate().hasErrors) {
+			return;
+		}
+
+		if (currentStep === 4) {
+			if (submissionInFlightRef.current) {
+				return;
 			}
 
-			// Submit form
-			if (currentStep === 4) {
-				handleSubmission(form.values);
-			}
+			submissionInFlightRef.current = true;
+			setCurrentStep(5);
+			void handleSubmission(form.values);
+			return;
+		}
 
-			if (current < 5) {
-				return current + 1;
-			}
-
-			return current;
-		});
+		setCurrentStep((current) => (current < 5 ? current + 1 : current));
 	}
 
 	function handleBack() {
@@ -193,12 +190,12 @@ function GameSubmissions(props: GameSubmissionsProps) {
 			// });
 			console.error("Network error");
 		} finally {
+			submissionInFlightRef.current = false;
 			setLoading(false);
 		}
 	}
 
 	return (
-		// <form className={styles.gameForm} action={createSubmissionFromForm} ref={formRef}>
 		<div className={styles.gameForm}>
 			{eventsList.length > 1 && (
 				<div>
@@ -224,20 +221,9 @@ function GameSubmissions(props: GameSubmissionsProps) {
 			)}
 			<div className={styles.formAndData}>
 				<Paper shadow="md" className={styles.paper}>
-					<Stepper
-						active={currentStep}
-						onStepClick={setCurrentStep}
-						className={styles.stepper}
-						// orientation={mobileWidth ? "vertical" : "horizontal"}
-					>
+					<Stepper active={currentStep} onStepClick={setCurrentStep} className={styles.stepper}>
 						<Stepper.Step label="Game">
-							<GameInfo
-								// show={currentStep === 0}
-								previousSubmissions={props.oldSubmissions}
-								// ref={gameInfoRef}
-								// onComplete={(isComplete) => setCanComplete(isComplete)}
-								form={form}
-							/>
+							<GameInfo previousSubmissions={props.oldSubmissions} form={form} />
 						</Stepper.Step>
 						<Stepper.Step label="Speedrun">
 							<RunInfo form={form} />
@@ -262,12 +248,12 @@ function GameSubmissions(props: GameSubmissionsProps) {
 					</Stepper>
 					{currentStep < 5 && (
 						<div className={styles.pageControls}>
-							<Button disabled={currentStep === 0 || currentStep > 4} onClick={handleBack}>
+							<Button disabled={loading || currentStep === 0 || currentStep > 4} onClick={handleBack}>
 								Back
 							</Button>
 							<Button
 								onClick={handleNext}
-								// disabled={!canComplete}
+								disabled={loading}
 								variant={currentStep === 4 ? "filled" : "outline"}
 							>
 								{currentStep === 4 ? "Submit Run" : "Next"}
@@ -275,24 +261,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 						</div>
 					)}
 				</Paper>
-				{currentStep !== 5 && (
-					<CurrentSubmissionCard
-						currentStep={currentStep}
-						form={form}
-						// submissionData={{
-						// 	game: game.value,
-						// 	platform: platform.elementProps.inputValue!,
-						// 	techPlatform: techPlatform.elementProps.inputValue!,
-						// 	category: category.value,
-						// 	estimate: estimate,
-						// 	lowerEstimate: possibleEstimate,
-						// 	race: race,
-						// 	racer: racer.value,
-						// 	coop: coop,
-						// 	donationIncentives: donationIncentives,
-						// }}
-					/>
-				)}
+				{currentStep !== 5 && <CurrentSubmissionCard currentStep={currentStep} form={form} />}
 			</div>
 		</div>
 	);

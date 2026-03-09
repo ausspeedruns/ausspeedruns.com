@@ -78,7 +78,7 @@ export function GameInfo(props: RunInfoProps) {
 					data={[
 						{ label: "G, PG or M", value: "m_or_lower" },
 						{ label: "MA15+", value: "ma15" },
-						{ label: "RA18+", value: "ra18" },
+						{ label: "RA18+", value: "r18" },
 					]}
 					name="ageRating"
 					key={props.form.key("ageRating")}

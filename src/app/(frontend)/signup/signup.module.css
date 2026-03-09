@@ -1,0 +1,100 @@
+.page {
+	display: grid;
+	place-items: center;
+	padding: clamp(2rem, 5vw, 4rem) 1rem;
+	min-height: min(72rem, calc(100vh - 8rem));
+	background: color-mix(in oklab, hsl(var(--background)), #e6ecef 15%);
+}
+
+[data-theme="dark"] .page {
+	background: color-mix(in oklab, hsl(var(--background)), #131d24 24%);
+}
+
+.card {
+	width: min(31rem, 100%);
+	padding: clamp(1.25rem, 3vw, 2rem);
+	border: 1px solid hsl(var(--border));
+	border-radius: 0;
+	box-shadow: 0 0.35rem 1rem color-mix(in oklab, hsl(var(--foreground)), transparent 92%);
+	background: hsl(var(--card));
+}
+
+.kicker {
+	margin: 0;
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.11em;
+	text-transform: uppercase;
+	color: color-mix(in oklab, hsl(var(--foreground)), var(--ausspeedruns-blue) 40%);
+}
+
+.title {
+	margin: 0.5rem 0 0;
+	font-size: clamp(1.8rem, 4vw, 2.4rem);
+	font-weight: 800;
+	line-height: 1.05;
+	text-wrap: balance;
+}
+
+.subtitle {
+	margin: 0.8rem 0 1.6rem;
+	font-size: 0.97rem;
+	line-height: 1.5;
+	color: hsl(var(--muted-foreground));
+}
+
+.form {
+	display: grid;
+	gap: 1rem;
+}
+
+.submit {
+	margin-top: 0.25rem;
+	padding: 0.78rem 1rem;
+	font-size: 0.95rem;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+	border-radius: 0;
+}
+
+.error,
+.success {
+	margin: 0.9rem 0 0;
+	padding: 0.7rem 0.9rem;
+	border-radius: 0;
+	font-size: 0.88rem;
+	line-height: 1.4;
+}
+
+.error {
+	border-color: color-mix(in oklab, #d94841, transparent 35%);
+	background: color-mix(in oklab, #d94841, transparent 90%);
+	color: color-mix(in oklab, #b72520, hsl(var(--foreground)) 30%);
+}
+
+.success {
+	border-color: color-mix(in oklab, #279d69, transparent 35%);
+	background: color-mix(in oklab, #279d69, transparent 90%);
+	color: color-mix(in oklab, #145f3f, hsl(var(--foreground)) 35%);
+}
+
+.footerText {
+	margin: 1.1rem 0 0;
+	font-size: 0.85rem;
+	color: hsl(var(--muted-foreground));
+}
+
+.footerText a {
+	color: color-mix(in oklab, hsl(var(--foreground)), var(--ausspeedruns-blue) 45%);
+	font-weight: 700;
+	text-underline-offset: 0.15rem;
+	text-decoration-thickness: 1px;
+}
+
+@media (max-width: 34rem) {
+	.page {
+		padding-top: 1.5rem;
+		padding-bottom: 2.5rem;
+		min-height: calc(100vh - 6rem);
+	}
+}

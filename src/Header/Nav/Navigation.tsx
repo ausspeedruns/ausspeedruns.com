@@ -33,12 +33,25 @@ export function HeaderNav({ data, auth }: HeaderNavProps) {
 				<span className={styles.srOnly}>Search</span>
 				<SearchIcon className={styles.searchIcon} />
 			</Link> */}
-			{auth?.user && (
+			{auth?.user ? (
 				<Button asChild size="clear" variant="link">
 					<Link href={`/user/${auth.user.username}`} rel="noopener noreferrer" target="_blank">
 						{auth.user.username}
 					</Link>
 				</Button>
+			) : (
+				<>
+					<Button asChild size="clear" variant="link">
+						<Link href="/login" className={styles.authLink}>
+							Log in
+						</Link>
+					</Button>
+					<Button asChild size="clear" variant="link">
+						<Link href="/signup" className={styles.authLink}>
+							Sign up
+						</Link>
+					</Button>
+				</>
 			)}
 		</nav>
 	);

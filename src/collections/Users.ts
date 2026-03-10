@@ -1,11 +1,12 @@
 import type { CollectionConfig } from "payload";
 import { randomUUID } from "node:crypto";
 
-import { authenticated } from "#access/authenticated.ts";
 import { staff } from "#access/staff.ts";
 import { manageUsers } from "#access/manageUsers.ts";
 import { sameUserOrManageUsers } from "#access/sameUserOrManageUsers.ts";
 import { anyone } from "#access/anyone.ts";
+import { anyoneField } from "#access/field/anyoneField.ts";
+import { isAdminField } from "#access/field/isAdmin.ts";
 
 const usernameRegex = /^[a-zA-Z0-9_-~][\w-]{2,24}$/;
 
@@ -13,9 +14,9 @@ export const Users: CollectionConfig = {
 	slug: "users",
 	access: {
 		admin: staff,
-		create: authenticated,
+		create: anyone, // Allow anyone to create an account
 		delete: manageUsers,
-		read: anyone,
+		read: sameUserOrManageUsers,
 		update: sameUserOrManageUsers,
 	},
 	admin: {
@@ -76,22 +77,8 @@ export const Users: CollectionConfig = {
 				return true;
 			},
 			access: {
-				read: (data) => {
-					if (!data.req.user) {
-						return false;
-					}
-
-					if (data.req.user.roles && data.req.user.roles.length > 0) {
-						return staff(data);
-					}
-
-					if (data.req.user.id === data.id) {
-						return true;
-					}
-
-					return false;
-				}
-			}
+				read: anyoneField,
+			},
 		},
 		{
 			name: "pronouns",
@@ -143,6 +130,9 @@ export const Users: CollectionConfig = {
 					value: "international",
 				},
 			],
+			access: {
+				read: anyoneField,
+			},
 		},
 		{
 			name: "speedrunData",
@@ -153,6 +143,9 @@ export const Users: CollectionConfig = {
 					type: "join",
 					collection: "runs",
 					on: "runner",
+					access: {
+						read: anyoneField,
+					},
 				},
 				{
 					name: "submissions",
@@ -179,6 +172,11 @@ export const Users: CollectionConfig = {
 			type: "relationship",
 			relationTo: "roles",
 			hasMany: true,
+			access: {
+				read: anyoneField,
+				update: isAdminField,
+				create: isAdminField,
+			},
 		},
 		// Socials
 		{
@@ -198,6 +196,9 @@ export const Users: CollectionConfig = {
 					type: "text",
 				},
 			],
+			access: {
+				read: anyoneField,
+			},
 		},
 	],
 };

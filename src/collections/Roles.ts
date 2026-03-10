@@ -1,7 +1,18 @@
 import type { CollectionConfig } from "payload";
 
+import { authenticated } from "#access/authenticated.ts";
+import { isAdmin } from "#access/isAdmin.ts";
+import { staff } from "#access/staff.ts";
+
 export const Roles: CollectionConfig = {
 	slug: "roles",
+	access: {
+		admin: staff,
+		create: isAdmin,
+		delete: isAdmin,
+		read: authenticated,
+		update: isAdmin,
+	},
 	admin: {
 		useAsTitle: "name",
 	},

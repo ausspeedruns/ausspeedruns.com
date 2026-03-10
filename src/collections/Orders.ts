@@ -1,9 +1,28 @@
+import { resolveUserRoles } from "#access/helpers.ts";
+import { manageUsers } from "#access/manageUsers.ts";
 import type { CollectionConfig } from "payload";
 
 export const Orders: CollectionConfig = {
 	slug: "orders",
 	admin: {
 		useAsTitle: "orderId",
+	},
+	access: {
+		create: manageUsers,
+		delete: manageUsers,
+		read: async ({ req: { user } }) => {
+			if (!user) return false;
+
+			const roles = await resolveUserRoles(user);
+			if (roles.some((role) => role.canManageUsers)) {
+				return true;
+			}
+
+			return {
+				"user.id": { equals: user.id },
+			};
+		},
+		update: manageUsers,
 	},
 	fields: [
 		{

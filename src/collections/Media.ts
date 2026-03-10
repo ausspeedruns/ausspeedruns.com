@@ -5,7 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { anyone } from "#access/anyone.ts";
-import { authenticated } from "#access/authenticated.ts";
+import { manageContent } from "#access/manageContent.ts";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -14,10 +14,10 @@ export const Media: CollectionConfig = {
 	slug: "media",
 	folders: true,
 	access: {
-		create: authenticated,
-		delete: authenticated,
+		create: manageContent,
+		delete: manageContent,
 		read: anyone,
-		update: authenticated,
+		update: manageContent,
 	},
 	fields: [
 		{

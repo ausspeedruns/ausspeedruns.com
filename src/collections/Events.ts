@@ -1,19 +1,24 @@
 import type { CollectionConfig } from "payload";
 import { DefaultTimeZone } from "./Fields/TimezoneSelect.ts";
 
-import { authenticated } from "#access/authenticated.ts";
 import { authenticatedOrEventLive } from "#access/authenticatedOrEventLive.ts";
+import { manageContent } from "#access/manageContent.ts";
 
 export const Events: CollectionConfig = {
 	slug: "events",
 	access: {
-		create: authenticated,
-		delete: authenticated,
+		create: manageContent,
+		delete: manageContent,
 		read: authenticatedOrEventLive,
-		update: authenticated,
+		update: manageContent,
 	},
 	admin: {
 		useAsTitle: "name",
+	},
+	versions: {
+		drafts: {
+			schedulePublish: true,
+		},
 	},
 	fields: [
 		{

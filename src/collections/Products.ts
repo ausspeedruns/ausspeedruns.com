@@ -1,9 +1,17 @@
+import { anyone } from "#access/anyone.ts";
+import { manageContent } from "#access/manageContent.ts";
 import type { CollectionConfig } from "payload";
 
 export const Products: CollectionConfig = {
 	slug: "products",
 	admin: {
 		useAsTitle: "name",
+	},
+	access: {
+		create: manageContent,
+		delete: manageContent,
+		read: anyone,
+		update: manageContent,
 	},
 	fields: [
 		{

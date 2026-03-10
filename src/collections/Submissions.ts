@@ -1,9 +1,17 @@
+import { authenticated } from "#access/authenticated.ts";
+import { sameUserOrManageContent } from "#access/field/sameUserOrManageContent.ts";
 import type { CollectionConfig } from "payload";
 
 export const Submissions: CollectionConfig = {
 	slug: "submissions",
 	admin: {
 		useAsTitle: "game",
+	},
+	access: {
+		create: authenticated,
+		delete: sameUserOrManageContent,
+		read: sameUserOrManageContent,
+		update: sameUserOrManageContent,
 	},
 	fields: [
 		{

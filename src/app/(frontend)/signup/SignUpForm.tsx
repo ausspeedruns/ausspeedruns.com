@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Alert, Button, PasswordInput, TextInput } from "@mantine/core";
+import { Alert, Button, PasswordInput, TextInput, Tooltip } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 
 import styles from "./signup.module.css";
@@ -137,7 +137,33 @@ export function SignUpForm() {
 				/>
 
 				<DatePickerInput
-					label="Date of Birth"
+					label={
+						<span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+							Date of Birth
+							<Tooltip
+								label="We collect your date of birth to verify you meet the minimum age requirement and to help us and events we partner with ensure a safe experience for all."
+								multiline
+								w={250}
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="2"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									style={{ cursor: "help", opacity: 0.6 }}
+								>
+									<circle cx="12" cy="12" r="10" />
+									<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+									<line x1="12" y1="17" x2="12.01" y2="17" />
+								</svg>
+							</Tooltip>
+						</span>
+					}
 					required
 					placeholder="Select your date of birth"
 					maxDate={new Date()}

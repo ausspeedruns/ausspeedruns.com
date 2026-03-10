@@ -30,6 +30,6 @@
 	filter: invert(100%);
 }
 
-:global([data-theme="dark"]) .logo {
+:global([data-mantine-color-scheme="dark"]) .logo {
 	filter: invert(0);
 }

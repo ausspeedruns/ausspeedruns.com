@@ -4,11 +4,11 @@ import { cn } from "#/utilities/ui";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
+import { ColorSchemeScript } from "@mantine/core";
 import { AdminBar } from "#/components/AdminBar/AdminBar";
 import { Footer } from "#Footer/Footer.tsx";
 import { Header } from "#Header/Header.tsx";
 import { Providers } from "#/providers/Providers";
-import { InitTheme } from "#/providers/Theme/InitTheme/InitTheme";
 import { mergeOpenGraph } from "#/utilities/mergeOpenGraph";
 import { draftMode } from "next/headers";
 
@@ -27,7 +27,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 	return (
 		<html className={cn(GeistSans.variable, GeistMono.variable)} lang="en" suppressHydrationWarning>
 			<head>
-				<InitTheme />
+				<ColorSchemeScript defaultColorScheme="auto" />
 				<link href="/favicon.ico" rel="icon" sizes="32x32" />
 				<link href="/favicon.svg" rel="icon" type="image/svg+xml" />
 			</head>

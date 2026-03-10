@@ -20,15 +20,3 @@ export const authenticatedOrEventLive: Access = ({ req: { user } }) => {
 		},
 	};
 };
-
-// async function resolveRelation<T extends CollectionSlug>(
-// 	payload: Payload,
-// 	collection: T,
-// 	value: number | DataFromCollectionSlug<T>,
-// ): Promise<DataFromCollectionSlug<T>> {
-// 	if (typeof value === "number") {
-// 		return payload.findByID({ collection, id: value });
-// 	}
-
-// 	return value;
-// }

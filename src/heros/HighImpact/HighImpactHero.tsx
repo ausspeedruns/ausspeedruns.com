@@ -18,7 +18,7 @@ export function HighImpactHero({ links, media, richText }: Page["hero"]) {
 	});
 
 	return (
-		<div className={styles.hero} data-theme="dark">
+		<div className={styles.hero} data-mantine-color-scheme="dark">
 			<div className={styles.container}>
 				<div className={styles.content}>
 					{richText && <RichText className={styles.richText} data={richText} enableGutter={false} />}

@@ -67,7 +67,7 @@ body {
 	--error: 10 100% 86%;
 }
 
-[data-theme="dark"] {
+[data-mantine-color-scheme="dark"] {
 	--background: 218 100% 5%;
 	--foreground: 210 40% 98%;
 
@@ -101,14 +101,7 @@ body {
 	--error: 10 39% 43%;
 }
 
-html {
-	opacity: 0;
-}
 
-html[data-theme="dark"],
-html[data-theme="light"] {
-	opacity: initial;
-}
 
 .container {
 	width: 100%;

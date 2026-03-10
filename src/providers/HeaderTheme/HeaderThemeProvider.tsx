@@ -1,14 +1,12 @@
 "use client";
 
-import type { Theme } from "#/providers/Theme/types";
-
 import React, { createContext, useCallback, use, useState } from "react";
 
-import canUseDOM from "#/utilities/canUseDOM";
+type HeaderTheme = "dark" | "light";
 
 export interface ContextType {
-	headerTheme?: Theme | null;
-	setHeaderTheme: (theme: Theme | null) => void;
+	headerTheme?: HeaderTheme | null;
+	setHeaderTheme: (theme: HeaderTheme | null) => void;
 }
 
 const initialContext: ContextType = {
@@ -19,11 +17,9 @@ const initialContext: ContextType = {
 const HeaderThemeContext = createContext(initialContext);
 
 export function HeaderThemeProvider({ children }: { children: React.ReactNode }) {
-	const [headerTheme, setThemeState] = useState<Theme | undefined | null>(
-		canUseDOM ? (document.documentElement.getAttribute("data-theme") as Theme) : undefined,
-	);
+	const [headerTheme, setThemeState] = useState<HeaderTheme | undefined | null>(undefined);
 
-	const setHeaderTheme = useCallback((themeToSet: Theme | null) => {
+	const setHeaderTheme = useCallback((themeToSet: HeaderTheme | null) => {
 		setThemeState(themeToSet);
 	}, []);
 

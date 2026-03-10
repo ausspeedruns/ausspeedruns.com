@@ -2,17 +2,21 @@ import type { CollectionConfig } from "payload";
 import { randomUUID } from "node:crypto";
 
 import { authenticated } from "#access/authenticated.ts";
+import { staff } from "#access/staff.ts";
+import { manageUsers } from "#access/manageUsers.ts";
+import { sameUserOrManageUsers } from "#access/sameUserOrManageUsers.ts";
+import { anyone } from "#access/anyone.ts";
 
 const usernameRegex = /^[a-zA-Z0-9_-~][\w-]{2,24}$/;
 
 export const Users: CollectionConfig = {
 	slug: "users",
 	access: {
-		admin: authenticated,
+		admin: staff,
 		create: authenticated,
-		delete: authenticated,
-		read: authenticated,
-		update: authenticated,
+		delete: manageUsers,
+		read: anyone,
+		update: sameUserOrManageUsers,
 	},
 	admin: {
 		useAsTitle: "username",
@@ -71,6 +75,23 @@ export const Users: CollectionConfig = {
 				}
 				return true;
 			},
+			access: {
+				read: (data) => {
+					if (!data.req.user) {
+						return false;
+					}
+
+					if (data.req.user.roles && data.req.user.roles.length > 0) {
+						return staff(data);
+					}
+
+					if (data.req.user.id === data.id) {
+						return true;
+					}
+
+					return false;
+				}
+			}
 		},
 		{
 			name: "pronouns",

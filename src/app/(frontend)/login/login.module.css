@@ -6,7 +6,7 @@
 	background: color-mix(in oklab, hsl(var(--background)), #e6ecef 15%);
 }
 
-[data-theme="dark"] .page {
+[data-mantine-color-scheme="dark"] .page {
 	background: color-mix(in oklab, hsl(var(--background)), #131d24 24%);
 }
 

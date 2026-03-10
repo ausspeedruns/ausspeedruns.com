@@ -33,7 +33,7 @@ export function HeaderClient({ data, auth }: HeaderClientProps) {
 	}, [headerTheme]);
 
 	return (
-		<header className={styles.header} {...(theme ? { "data-theme": theme } : {})}>
+		<header className={styles.header} {...(theme ? { "data-mantine-color-scheme": theme } : {})}>
 			<div className={styles.headerContent}>
 				<Link href="/">
 					<Logo className={styles.logo} />

@@ -15,20 +15,17 @@ jobs:
         steps:
             - name: Checkout public
               uses: actions/checkout@v3
-            - name: Install pnpm
-              uses: pnpm/action-setup@v4
             - name: Set up Node
               uses: actions/setup-node@v3
               with:
                   node-version: 20
-                  cache: "pnpm"
             - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+              run: npm ci --force
             - name: Build keystone
               working-directory: ./apps/keystone/
-              run: pnpm keystone build
+              run: npx keystone build
             - name: Update prisma
               working-directory: ./apps/keystone/
-              run: pnpm keystone prisma migrate deploy
+              run: npx keystone prisma migrate deploy
               env:
                   SESSION_SECRET: ${{ secrets.SESSION_SECRET }}

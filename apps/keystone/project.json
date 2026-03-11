@@ -15,12 +15,12 @@
 			"executor": "nx:run-commands",
 			"options": {
 				"cwd": "apps/keystone",
-				"commands": ["pnpm azurite-blob -l ./azurite --blobPort 9999", "pnpm keystone dev"],
+				"commands": ["npx azurite-blob -l ./azurite --blobPort 9999", "npx keystone dev"],
 				"parallel": true
 			},
 			"configurations": {
 				"production": {
-					"command": "pnpm keystone start"
+					"command": "npx keystone start"
 				}
 			}
 		},
@@ -44,7 +44,7 @@
 			"dependsOn": ["build"]
 		},
 		"seed": {
-			"command": "pnpm keystone --seed-data"
+			"command": "npx keystone --seed-data"
 		}
 	},
 	"tags": []

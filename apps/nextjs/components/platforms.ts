@@ -19,6 +19,7 @@ export const platforms = [
 	"Nintendo 3DS",
 	"Nintendo New 3DS",
 	"Nintendo Switch",
+	"Nintendo Switch 2",
 	"Sega Master System",
 	"Sega Mega Drive",
 	"Sega Game Gear",

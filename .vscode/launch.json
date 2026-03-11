@@ -8,7 +8,7 @@
 			"name": "Next.js: debug server-side",
 			"type": "node-terminal",
 			"request": "launch",
-			"command": "npm run serve:nextjs"
+			"command": "pnpm run serve:nextjs"
 		}
 	]
 }

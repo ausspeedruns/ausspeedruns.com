@@ -2,12 +2,7 @@
 
 import { getRegisteredClient } from "@libs/urql";
 import { gql } from "urql";
-
-type PasswordResetData = {
-	email: string;
-	token: string;
-	password: string;
-};
+import { redirect } from "next/navigation";
 
 const RESET_PASSWORD = gql`
 	mutation ($email: String!) {
@@ -20,11 +15,11 @@ export async function resetPassword(formData: FormData) {
 	const turnstileResponse = formData.get("cf-turnstile-response") as string;
 
 	if (!email) {
-		throw new Error("Email missing");
+		redirect("/reset-password?error=EmailMissing");
 	}
 
 	if (!turnstileResponse) {
-		throw new Error("Turnstile verification failed");
+		redirect("/reset-password?error=TurnstileError");
 	}
 
 	const turnstileVerify = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
@@ -38,15 +33,11 @@ export async function resetPassword(formData: FormData) {
 	const turnstileVerifyJson = await turnstileVerify.json();
 
 	if (!turnstileVerifyJson.success) {
-		throw new Error("Turnstile verification failed");
+		redirect("/reset-password?error=TurnstileError");
 	}
 
-	const result = await getRegisteredClient().mutation(RESET_PASSWORD, { email }).toPromise();
+	// Always show success regardless of whether the email exists to prevent email enumeration
+	await getRegisteredClient().mutation(RESET_PASSWORD, { email }).toPromise();
 
-	if (result.error) {
-		console.error(result.error);
-		throw result.error;
-	}
-
-	return;
+	redirect("/reset-password?success=true");
 }

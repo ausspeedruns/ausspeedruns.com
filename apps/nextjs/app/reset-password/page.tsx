@@ -4,6 +4,7 @@ import { TextField, Button } from "@mui/material";
 import styles from "../../styles/SignIn.module.scss";
 import { Metadata } from "next";
 import { resetPassword } from "./reset-password-action";
+import ResetPasswordStatus from "./reset-password-status";
 
 export const metadata: Metadata = {
 	title: "Reset Password",
@@ -23,6 +24,7 @@ export default function ResetPasswordPage() {
 						Reset password
 					</Button>
 				</form>
+				<ResetPasswordStatus />
 			</div>
 			<Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
 		</>

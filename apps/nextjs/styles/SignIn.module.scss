@@ -91,6 +91,22 @@
 	}
 }
 
+.successBox {
+	width: 100%;
+	padding: 1rem;
+	margin-top: 1.5rem;
+	background-color: #dcfce7;
+	border: 1px solid #22c55e;
+	border-radius: 8px;
+	color: #166534;
+	text-align: center;
+
+	p {
+		margin: 0;
+		font-size: 0.95rem;
+	}
+}
+
 .table {
 	text-align: center;
 	table-layout: fixed;

@@ -25,6 +25,7 @@
 		"@keystone-6/core": "^6.3.0",
 		"@keystone-6/document-renderer": "^1.1.2",
 		"@keystone-6/fields-document": "^9.1.0",
+		"@marsidev/react-turnstile": "^1.4.2",
 		"@mui/icons-material": "^6.1.4",
 		"@mui/material": "^6.1.4",
 		"@mui/material-nextjs": "^6.1.5",

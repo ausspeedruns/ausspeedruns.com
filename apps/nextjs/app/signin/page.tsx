@@ -1,11 +1,11 @@
 import Link from "next/link";
-import Script from "next/script";
 import { TextField, Button } from "@mui/material";
 import styles from "../../styles/SignIn.module.scss";
 
 import SignInError from "./signin-error";
 import { Metadata } from "next";
 import { signInAction } from "./signin-action";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 export const metadata: Metadata = {
 	title: "Sign In",
@@ -36,7 +36,7 @@ export default function SignInPage() {
 						fullWidth
 						name="password"
 					/>
-					<div className="cf-turnstile" data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}></div>
+					<Turnstile siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!} />
 					<Button variant="contained" type="submit" size="large" sx={{ mt: 1, borderRadius: 2 }}>
 						Sign In
 					</Button>
@@ -50,7 +50,6 @@ export default function SignInPage() {
 					Forgot password?
 				</Link>
 			</div>
-			<Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
 		</>
 	);
 }

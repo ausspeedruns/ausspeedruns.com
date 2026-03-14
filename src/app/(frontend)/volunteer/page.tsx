@@ -10,8 +10,8 @@ import { VolunteerForm } from "./form";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "Speedrun Submission",
-	description: "Submit a run to an AusSpeedruns event",
+	title: "Volunteer Submission",
+	description: "Submit a volunteer application to an AusSpeedruns event",
 };
 
 export default async function VolunteerPage() {
@@ -22,21 +22,22 @@ export default async function VolunteerPage() {
 	if (!user) {
 		return (
 			<div className={styles.signIn}>
-				<h2>Please sign in to submit games.</h2>
-				<Button component="a" href="/login?redirect=/submit-game" rightSection={<Login />}>
-					Sign In
-				</Button>
-				<br />
-				<Button component="a" href="/signup" rightSection={<ArrowRight />}>
-					Join
-				</Button>
+				<h2>Please sign in to submit volunteer applications.</h2>
+				<div className={styles.actionRow}>
+					<Button component="a" href="/login?redirect=/volunteer" rightSection={<Login />}>
+						Sign In
+					</Button>
+					<Button component="a" href="/signup" rightSection={<ArrowRight />}>
+						Join
+					</Button>
+				</div>
 			</div>
 		);
 	}
 
 	if (!user.socials?.Discord) {
 		return (
-			<div>
+			<div className={styles.noEvents}>
 				<h2>We require a Discord username to accept volunteer submissions.</h2>
 				<p>Please add your Discord username in your profile settings and try again.</p>
 				<Button component="a" href={`/user/${user.username}/edit`}>
@@ -93,15 +94,17 @@ export default async function VolunteerPage() {
 
 	if (data.events.length === 0) {
 		return (
-			<div>
+			<div className={styles.noEvents}>
 				<h2>Unfortunately we have no events currently accepting volunteers.</h2>
 				<p>Join our Discord to stay up to date!</p>
-				<Button component="a" href="/discord">
-					Discord
-				</Button>
-				<Button component="a" href="/" leftSection={<Home />}>
-					Home
-				</Button>
+				<div className={styles.actionRow}>
+					<Button component="a" href="/discord">
+						Discord
+					</Button>
+					<Button component="a" href="/" leftSection={<Home />}>
+						Home
+					</Button>
+				</div>
 			</div>
 		);
 	}

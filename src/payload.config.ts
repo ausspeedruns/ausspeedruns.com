@@ -17,7 +17,7 @@ import { Products } from "./collections/Products.ts";
 import { Roles } from "./collections/Roles.ts";
 import { Runs } from "./collections/Runs.ts";
 import { Submissions } from "./collections/Submissions.ts";
-import { Users } from "./collections/Users.ts";
+import { Users } from "./collections/Users/Users.ts";
 import { Volunteers } from "./collections/Volunteers.ts";
 
 import { Footer } from "./Footer/config.ts";

@@ -18,4 +18,5 @@ export const theme = createTheme({
 		ausSpeedrunsOrange,
 	},
 	primaryColor: "ausSpeedrunsOrange",
+	defaultRadius: "xs",
 });

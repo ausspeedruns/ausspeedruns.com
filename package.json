@@ -13,6 +13,7 @@
 		"postbuild": "next-sitemap --config next-sitemap.config.cjs",
 		"dev": "cross-env NODE_OPTIONS=--no-deprecation next dev --webpack",
 		"dev:prod": "cross-env NODE_OPTIONS=--no-deprecation rm -rf .next && pnpm build && pnpm start",
+		"email:dev": "email dev",
 		"generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
 		"generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
 		"ii": "cross-env NODE_OPTIONS=--no-deprecation pnpm --ignore-workspace install",
@@ -49,6 +50,7 @@
 		"@radix-ui/react-label": "^2.1.8",
 		"@radix-ui/react-select": "^2.2.6",
 		"@radix-ui/react-slot": "^1.2.4",
+		"@react-email/components": "^1.0.9",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
 		"cross-env": "^10.1.0",
@@ -72,6 +74,7 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "1.58.2",
+		"@react-email/preview-server": "5.2.9",
 		"@svgr/webpack": "^8.1.0",
 		"@testing-library/react": "16.3.2",
 		"@types/escape-html": "^1.0.4",
@@ -90,6 +93,7 @@
 		"postcss-preset-mantine": "^1.18.0",
 		"postcss-simple-vars": "^7.0.1",
 		"prettier": "^3.8.1",
+		"react-email": "5.2.9",
 		"typescript": "5.9.3",
 		"vite-tsconfig-paths": "6.1.1",
 		"vitest": "4.0.18"

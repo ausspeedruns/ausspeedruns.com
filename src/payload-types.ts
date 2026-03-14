@@ -497,6 +497,8 @@ export interface User {
   resetPasswordExpiration?: string | null;
   salt?: string | null;
   hash?: string | null;
+  _verified?: boolean | null;
+  _verificationToken?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -632,6 +634,7 @@ export interface Event {
   legacyKeystoneId?: string | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -716,24 +719,19 @@ export interface Volunteer {
   id: number;
   volunteer?: (string | null) | User;
   event?: (number | null) | Event;
-  role: 'runnerManagement' | 'host' | 'tech' | 'socialMedia';
+  role: ('frontDesk' | 'host' | 'tech' | 'stageHand')[];
   availability?:
     | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
+        time?: string | null;
+        id?: string | null;
+      }[]
     | null;
-  eventHostTime?: number | null;
+  maximumTime?: number | null;
   maxDailyHostTime?: number | null;
   hostSpecificGame?: string | null;
   hostSpecificRunner?: string | null;
   hostOtherInformation?: string | null;
   techExperience?: string | null;
-  socialMediaExperience?: string | null;
-  socialMediaFavouriteMeme?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1999,6 +1997,8 @@ export interface UsersSelect<T extends boolean = true> {
   resetPasswordExpiration?: T;
   salt?: T;
   hash?: T;
+  _verified?: T;
+  _verificationToken?: T;
   loginAttempts?: T;
   lockUntil?: T;
   sessions?:
@@ -2078,6 +2078,7 @@ export interface EventsSelect<T extends boolean = true> {
   legacyKeystoneId?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2183,15 +2184,18 @@ export interface VolunteersSelect<T extends boolean = true> {
   volunteer?: T;
   event?: T;
   role?: T;
-  availability?: T;
-  eventHostTime?: T;
+  availability?:
+    | T
+    | {
+        time?: T;
+        id?: T;
+      };
+  maximumTime?: T;
   maxDailyHostTime?: T;
   hostSpecificGame?: T;
   hostSpecificRunner?: T;
   hostOtherInformation?: T;
   techExperience?: T;
-  socialMediaExperience?: T;
-  socialMediaFavouriteMeme?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2590,6 +2594,10 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'posts';
           value: number | Post;
+        } | null)
+      | ({
+          relationTo: 'events';
+          value: number | Event;
         } | null);
     global?: string | null;
     user?: (string | null) | User;

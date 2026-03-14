@@ -1,0 +1,91 @@
+.noEvents {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.content {
+	flex-direction: column;
+	background-color: #ffffff;
+	box-shadow: 0px 0px 24px 19px rgba(0, 0, 0, 0.3);
+
+	h1,
+	h2 {
+		text-align: center;
+	}
+
+	p {
+		text-align: center;
+		text-wrap: balance;
+	}
+
+	.volunteerForm {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		width: 100%;
+
+		&>* {
+			margin: 10px 0;
+		}
+
+		&>p {
+			border: 5px solid #c72;
+			padding: 0.5rem;
+			border-radius: 5px;
+		}
+
+		.question {
+			width: 100%;
+
+			&>span {
+				display: block;
+				margin-bottom: 4px;
+				font-size: 1.1rem;
+			}
+
+			.subtitle {
+				color: rgb(133, 133, 133);
+				font-style: italic;
+				font-size: 1rem;
+			}
+
+			&>div {
+				margin: 5px 0;
+			}
+		}
+	}
+}
+
+.newSubmission {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 12px 32px;
+	border: 2px solid #fff;
+	border-radius: 0.375rem;
+	margin-right: 15px;
+	font-size: 110%;
+
+	color: #fff;
+	font-weight: bold;
+	text-decoration: none;
+
+	border-color: #c72;
+	background-color: #c72;
+	color: #fff;
+
+	&:hover,
+	&:focus {
+		background-color: transparent;
+		color: #c72;
+		border-color: #c72;
+		text-decoration: underline;
+		cursor: pointer;
+
+		&.lightHover {
+			border-color: #fff;
+			color: #fff;
+		}
+	}
+}

@@ -1,7 +1,7 @@
 import type { CollectionConfig } from "payload";
 import { DefaultTimeZone } from "./Fields/TimezoneSelect.ts";
 
-import { authenticatedOrEventLive } from "#access/authenticatedOrEventLive.ts";
+import { manageContentOrPublished } from "#access/manageContentOrPublished.ts";
 import { manageContent } from "#access/manageContent.ts";
 
 export const Events: CollectionConfig = {
@@ -9,7 +9,7 @@ export const Events: CollectionConfig = {
 	access: {
 		create: manageContent,
 		delete: manageContent,
-		read: authenticatedOrEventLive,
+		read: manageContentOrPublished,
 		update: manageContent,
 	},
 	admin: {

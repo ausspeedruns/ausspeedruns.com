@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { BasePayload } from "payload";
 import pg from "pg";
+import type { Volunteer } from "#/payload-types.ts";
 
 import { seed } from "./seed/seed.ts";
 
@@ -67,23 +68,6 @@ async function migrate() {
 	const { default: config } = await import("../src/payload.config.ts");
 
 	const payload = await getPayload({ config });
-
-	// Add default admin user
-	try {
-		await payload.create({
-			collection: "users",
-			draft: false,
-			data: {
-				username: "admin",
-				email: "test@example.com",
-				password: "123456789",
-				dateOfBirth: new Date(0).toISOString(),
-			},
-		});
-	} catch (e) {
-		handlePayloadCreateError(e, "default admin user");
-	}
-
 	const client = new pg.Client({
 		connectionString: "postgresql://payloadcms:testing@localhost:5433/keystone_staging",
 	});
@@ -96,6 +80,38 @@ async function migrate() {
 	await migrateRuns(payload, client);
 	await migrateIncentives(payload, client);
 	await migrateVolunteers(payload, client);
+
+	// Add default admin user
+	const adminRole = await payload.find({
+		collection: "roles",
+		where: {
+			admin: { equals: true },
+		},
+		pagination: false,
+	});
+
+	if (adminRole.docs.length === 0) {
+		console.warn("No admin role found, skipping default admin user creation");
+	} else {
+		const adminRoleId = adminRole.docs[0].id;
+
+		try {
+			await payload.create({
+				collection: "users",
+				draft: false,
+				data: {
+					username: "DELETE_ME_POST_SEED",
+					email: "test@example.com",
+					password: "123456789",
+					dateOfBirth: new Date(0).toISOString(),
+					_verified: true,
+					roles: [adminRoleId],
+				},
+			});
+		} catch (e) {
+			handlePayloadCreateError(e, "default admin user");
+		}
+	}
 
 	await seed(payload);
 
@@ -138,7 +154,20 @@ async function migrateUsers(payload: BasePayload, pgClient: pg.Client) {
 	const data = await pgClient.query('SELECT * FROM public."User"');
 
 	await runInBatches(data.rows, async (user) => {
-		const { id, name, username, email, password, dateOfBirth, pronouns, state, discord, twitch, bluesky } = user;
+		const {
+			id,
+			name,
+			username,
+			email,
+			password,
+			verified,
+			dateOfBirth,
+			pronouns,
+			state,
+			discord,
+			twitch,
+			bluesky,
+		} = user;
 
 		let newState: User["state"] = state;
 		if (state === "none") {
@@ -153,6 +182,7 @@ async function migrateUsers(payload: BasePayload, pgClient: pg.Client) {
 				draft: false,
 				data: {
 					id,
+					_verified: verified,
 					name,
 					username,
 					email,
@@ -481,25 +511,40 @@ async function migrateVolunteers(payload: BasePayload, pgClient: pg.Client) {
 			specificGame,
 			specificRunner,
 			additionalInfo,
-			experience,
-			favMeme,
-			// runnerManagementAvailability,
-			// techAvailablity,
-			techExperience,
 		} = row;
 
 		// Roles in Keystone was a multiselect, in Payload it's a single select. We'll just take the first one or default to 'host'
-		let role: "host" | "runnerManagement" | "socialMedia" | "tech" = "host";
+		let role: Volunteer["role"] = ["host"];
 		if (roles) {
 			try {
-				if (Array.isArray(roles) && roles.length > 0) {
-					const firstRole = roles[0];
-					if (firstRole === "runMgmt") role = "runnerManagement";
-					else if (firstRole === "social") role = "socialMedia";
-					else if (firstRole === "tech") role = "tech";
+				if (Array.isArray(roles)) {
+					role = roles.map((role) => {
+						switch (role) {
+							case "runMgmt":
+								return "frontDesk";
+							case "social":
+								return "stageHand";
+							case "tech":
+								return "tech";
+							case "host":
+							default:
+								return "host";
+						}
+					});
 				}
 			} catch (e) {
 				console.warn(`Error processing roles for volunteer ${id}, defaulting to 'host'. Error:`, e);
+			}
+		}
+
+		let availability: Volunteer["availability"] = [];
+		if (dayTimes) {
+			try {
+				if (Array.isArray(dayTimes)) {
+					availability = dayTimes.map((time) => ({ time }));
+				}
+			} catch (e) {
+				console.warn(`Error processing availability for volunteer ${id}, defaulting to empty. Error:`, e);
 			}
 		}
 
@@ -511,15 +556,12 @@ async function migrateVolunteers(payload: BasePayload, pgClient: pg.Client) {
 					id,
 					volunteer: userId,
 					role,
-					availability: dayTimes,
-					eventHostTime,
+					availability,
+					maximumTime: eventHostTime,
 					maxDailyHostTime,
 					hostSpecificGame: specificGame,
 					hostSpecificRunner: specificRunner,
 					hostOtherInformation: additionalInfo,
-					techExperience,
-					socialMediaExperience: experience,
-					socialMediaFavouriteMeme: favMeme,
 					// Resolve event from cache instead of querying DB
 					...(event && eventIdMap.has(event) ? { event: eventIdMap.get(event) } : {}),
 				},

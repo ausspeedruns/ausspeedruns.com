@@ -5,82 +5,30 @@ import config from "#payload-config";
 import type { GameSubmissionResults } from "./submissionTypes";
 import { headers } from "next/headers";
 
-// const CREATE_GAME_SUBMISSION = gql`
-// 	mutation (
-// 		$userId: ID!
-// 		$game: String!
-// 		$category: String!
-// 		$platform: String!
-// 		$techPlatform: String!
-// 		$estimate: String!
-// 		$possibleEstimate: String
-// 		$possibleEstimateReason: String
-// 		$ageRating: SubmissionAgeRatingType
-// 		$newDonationIncentives: JSON
-// 		$specialReqs: String
-// 		$availableDates: JSON!
-// 		$race: SubmissionRaceType
-// 		$racer: String
-// 		$coop: Boolean
-// 		$video: String!
-// 		$eventId: ID!
-// 		$willingBackup: Boolean
-// 	) {
-// 		createSubmission(
-// 			data: {
-// 				runner: { connect: { id: $userId } }
-// 				game: $game
-// 				category: $category
-// 				platform: $platform
-// 				techPlatform: $techPlatform
-// 				estimate: $estimate
-// 				possibleEstimate: $possibleEstimate
-// 				possibleEstimateReason: $possibleEstimateReason
-// 				ageRating: $ageRating
-// 				newDonationIncentives: $newDonationIncentives
-// 				specialReqs: $specialReqs
-// 				availability: $availableDates
-// 				race: $race
-// 				racer: $racer
-// 				coop: $coop
-// 				video: $video
-// 				event: { connect: { id: $eventId } }
-// 				willingBackup: $willingBackup
-// 			}
-// 		) {
-// 			game
-// 			category
-// 			estimate
-// 			possibleEstimate
-// 			platform
-// 			techPlatform
-// 			race
-// 			coop
-// 			racer
-// 			newDonationIncentives
-// 		}
-// 	}
-// `;
-
-function stringAvailabilityToBooleanArray(availability?: string) {
-	if (!availability) {
-		return [];
-	}
-
-	return JSON.parse(availability).map((date: string) => date === "true");
-}
-
 export async function createSubmission(submissionData: GameSubmissionResults) {
 	const payload = await getPayload({ config });
 	const userHeaders = await headers();
 	const { user } = await payload.auth({ headers: userHeaders });
 
 	if (!user || !user.id) {
-		throw new Error("User not authenticated");
+		return {
+			success: false,
+			error: "User not authenticated",
+		};
+	}
+
+	if (!user._verified) {
+		return {
+			success: false,
+			error: "Email not verified",
+		};
 	}
 
 	if (!user.socials?.Discord) {
-		throw new Error("Discord handle is required to submit a game");
+		return {
+			success: false,
+			error: "Discord account not linked",
+		};
 	}
 
 	try {
@@ -104,8 +52,8 @@ export async function createSubmission(submissionData: GameSubmissionResults) {
 				donationIncentives: submissionData.donationIncentives ?? [],
 				video: submissionData.video,
 
-				availability: stringAvailabilityToBooleanArray(
-					JSON.stringify(submissionData.availability.map((available) => (available ? "true" : "false"))),
+				availability: JSON.stringify(
+					submissionData.availability.map((available) => (available ? "true" : "false")),
 				),
 
 				raceType: submissionData.race,

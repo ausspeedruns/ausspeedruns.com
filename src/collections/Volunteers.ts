@@ -28,10 +28,11 @@ export const Volunteers: CollectionConfig = {
 			name: "role",
 			type: "select",
 			required: true,
+			hasMany: true,
 			options: [
 				{
-					label: "Runner Management",
-					value: "runnerManagement",
+					label: "Front Desk",
+					value: "frontDesk",
 				},
 				{
 					label: "Host",
@@ -42,14 +43,24 @@ export const Volunteers: CollectionConfig = {
 					value: "tech",
 				},
 				{
-					label: "Social Media",
-					value: "socialMedia",
+					label: "Stage Hand",
+					value: "stageHand",
 				},
 			],
 		},
 		{
 			name: "availability",
-			type: "json",
+			type: "array",
+			fields: [
+				{
+					name: "time",
+					type: "text",
+				},
+			],
+		},
+		{
+			name: "maximumTime",
+			type: "number",
 		},
 		{
 			type: "tabs",
@@ -57,10 +68,6 @@ export const Volunteers: CollectionConfig = {
 				{
 					label: "Host",
 					fields: [
-						{
-							name: "eventHostTime",
-							type: "number",
-						},
 						{
 							name: "maxDailyHostTime",
 							type: "number",
@@ -89,17 +96,9 @@ export const Volunteers: CollectionConfig = {
 					],
 				},
 				{
-					label: "Social Media",
-					fields: [
-						{
-							name: "socialMediaExperience",
-							type: "textarea",
-						},
-						{
-							name: "socialMediaFavouriteMeme",
-							type: "text",
-						},
-					],
+					label: "Stage Hand",
+					description: "Currently only requires their availability.",
+					fields: [],
 				},
 				{
 					label: "Runner Management",

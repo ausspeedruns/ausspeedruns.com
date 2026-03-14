@@ -1,6 +1,5 @@
 import type { Role, User } from "#/payload-types";
-import type { FieldAccess } from "payload";
-import { resolveRelation } from "#/utilities/resolveRelation";
+import { resolveRelation } from "#/utilities/resolveRelation.ts";
 
 /**
  * Resolves all roles for a user, handling both populated Role objects and numeric IDs.

@@ -1,5 +1,5 @@
 import type { Access } from "payload";
-import { resolveUserRoles } from "./helpers";
+import { resolveUserRoles } from "./helpers.ts";
 
 export const manageContentOrPublished: Access = async ({ req: { user } }) => {
 	if (user) {

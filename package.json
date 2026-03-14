@@ -11,7 +11,7 @@
 	"scripts": {
 		"build": "cross-env NODE_OPTIONS=--no-deprecation next build --webpack",
 		"postbuild": "next-sitemap --config next-sitemap.config.cjs",
-		"dev": "cross-env NODE_OPTIONS=--no-deprecation next dev --webpack",
+		"dev": "next dev --webpack",
 		"dev:prod": "cross-env NODE_OPTIONS=--no-deprecation rm -rf .next && pnpm build && pnpm start",
 		"email:dev": "email dev",
 		"generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",

@@ -76,7 +76,7 @@ interface ResetPasswordEmailProps {
 }
 
 export function ResetPasswordEmail({ email, token }: ResetPasswordEmailProps) {
-	const resetUrl = `https://ausspeedruns.com/user/password-reset?code=${token}&email=${encodeURI(email)}`;
+	const resetUrl = `https://ausspeedruns.com/user/reset-password?token=${token}&email=${encodeURI(email)}`;
 
 	return (
 		<Html>

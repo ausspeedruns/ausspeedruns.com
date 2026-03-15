@@ -28,13 +28,13 @@ export const Users: CollectionConfig = {
 	},
 	auth: {
 		verify: {
-			generateEmailSubject: () => "AusSpeedruns account verification code",
+			generateEmailSubject: () => "AusSpeedruns - Email Verification",
 			// generateEmailHTML: async ({ token }) => {
 			// 	return await render(VerificationEmail({ token: token }));
 			// },
 		},
 		forgotPassword: {
-			generateEmailSubject: () => "AusSpeedruns password reset",
+			generateEmailSubject: () => "AusSpeedruns - Password Reset",
 			// generateEmailHTML: async (data) => {
 			// 	if (!data) {
 			// 		throw new Error("No data provided for forgot password email");

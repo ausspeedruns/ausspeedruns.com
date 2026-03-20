@@ -15,6 +15,7 @@ import { DonationTrackerBlock } from "./DonationTrackerBlock/DonationTrackerBloc
 import { SponsorGridBlock } from "./SponsorGridBlock/SponsorGridBlock";
 import { CountdownBlock } from "./CountdownBlock/CountdownBlock";
 import { FAQBlock } from "./FAQBlock/FAQBlock";
+import { ProductBlock } from "./ProductBlock/ProductBlock";
 
 import styles from "./RenderBlocks.module.css";
 
@@ -31,6 +32,7 @@ const blockComponents = {
 	sponsorGridBlock: SponsorGridBlock,
 	countdownBlock: CountdownBlock,
 	faqBlock: FAQBlock,
+	productBlock: ProductBlock,
 };
 
 interface RenderBlocksProps {

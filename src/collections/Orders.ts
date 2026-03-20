@@ -5,7 +5,7 @@ import type { CollectionConfig } from "payload";
 export const Orders: CollectionConfig = {
 	slug: "orders",
 	admin: {
-		useAsTitle: "orderId",
+		useAsTitle: "reference",
 	},
 	access: {
 		create: manageUsers,
@@ -25,11 +25,7 @@ export const Orders: CollectionConfig = {
 		update: manageUsers,
 	},
 	fields: [
-		{
-			name: "orderId",
-			type: "text",
-			required: true,
-		},
+		{ name: "reference", type: "text", required: true, unique: true },
 		{
 			name: "user",
 			type: "relationship",
@@ -37,10 +33,14 @@ export const Orders: CollectionConfig = {
 			required: true,
 		},
 		{
-			name: "products",
-			type: "relationship",
-			relationTo: "products",
-			hasMany: true,
+			name: "items",
+			type: "array",
+			fields: [
+				{ name: "product", type: "relationship", relationTo: "products" },
+				{ name: "variantLabel", type: "text" },
+				{ name: "quantity", type: "number", required: true },
+				{ name: "unitPriceInCents", type: "number", required: true },
+			],
 		},
 		{
 			name: "status",
@@ -63,12 +63,16 @@ export const Orders: CollectionConfig = {
 			],
 		},
 		{
-			name: "stripePaymentId",
-			type: "text",
+			name: "stripe",
+			type: "group",
+			fields: [
+				{ name: "sessionId", type: "text" },
+				{ name: "paymentIntentId", type: "text" },
+			],
 		},
 		{
 			name: "notes",
-			type: "textarea",
+			type: "richText",
 		},
 	],
 };

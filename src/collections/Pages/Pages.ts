@@ -16,6 +16,7 @@ import { DonationTrackerBlockConfig } from "#blocks/DonationTrackerBlock/config.
 import { SponsorGridBlockConfig } from "#blocks/SponsorGridBlock/config.ts";
 import { CountdownBlockConfig } from "#blocks/CountdownBlock/config.ts";
 import { FAQBlockConfig } from "#blocks/FAQBlock/config.ts";
+import { ProductBlockConfig } from "#blocks/ProductBlock/product-block-config.ts";
 
 import { hero } from "#heros/config.ts";
 import { populatePublishedAt } from "#hooks/populatePublishedAt.ts";
@@ -94,6 +95,7 @@ export const Pages: CollectionConfig<"pages"> = {
 								SponsorGridBlockConfig,
 								CountdownBlockConfig,
 								FAQBlockConfig,
+								ProductBlockConfig,
 							],
 							required: true,
 							admin: {

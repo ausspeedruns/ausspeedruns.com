@@ -27,7 +27,7 @@ export const Events: CollectionConfig = {
 			required: true,
 		},
 		{
-			name: "shortname",
+			name: "shortName",
 			type: "text",
 			required: true,
 		},

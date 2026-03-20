@@ -20,13 +20,14 @@ export const Products: CollectionConfig = {
 			required: true,
 		},
 		{
-			name: "description",
-			type: "textarea",
+			name: "slug",
+			type: "text",
+			required: true,
+			unique: true,
 		},
 		{
-			name: "price",
-			type: "number",
-			required: true,
+			name: "description",
+			type: "richText",
 		},
 		{
 			name: "image",
@@ -34,8 +35,49 @@ export const Products: CollectionConfig = {
 			relationTo: "media",
 		},
 		{
-			name: "isAvailable",
+			name: "type",
+			type: "select",
+			required: true,
+			options: [
+				{ label: "Ticket", value: "ticket" },
+				{ label: "Merchandise", value: "merchandise" },
+			],
+		},
+		{
+			name: "variants",
+			type: "array",
+			required: true,
+			minRows: 1,
+			fields: [
+				{ name: "label", type: "text", required: true },
+				{ name: "priceInCents", type: "number", required: true },
+				{ name: "stock", type: "number" },
+				{
+					name: "stripePriceId",
+					type: "text",
+					admin: { description: "Optional — auto-created if blank" },
+				},
+			],
+		},
+		{
+			name: "availableFrom",
+			type: "date",
+			admin: { date: { pickerAppearance: "dayAndTime" } },
+		},
+		{
+			name: "availableUntil",
+			type: "date",
+			admin: { date: { pickerAppearance: "dayAndTime" } },
+		},
+		{
+			name: "allowBankTransfer",
 			type: "checkbox",
+			defaultValue: true,
+		},
+		{
+			name: "active",
+			type: "checkbox",
+			defaultValue: true,
 		},
 	],
 };

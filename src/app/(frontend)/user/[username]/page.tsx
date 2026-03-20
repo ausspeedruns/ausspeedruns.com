@@ -13,19 +13,6 @@ type Args = {
 	}>;
 };
 
-const stateLabels: Record<string, string> = {
-	vic: "Victoria",
-	nsw: "New South Wales",
-	qld: "Queensland",
-	wa: "Western Australia",
-	sa: "South Australia",
-	tas: "Tasmania",
-	nt: "Northern Territory",
-	act: "Australian Capital Territory",
-	nz: "New Zealand",
-	international: "International",
-};
-
 export default async function UserPage({ params: paramsPromise }: Args) {
 	const { username } = await paramsPromise;
 	const decodedUsername = decodeURIComponent(username);
@@ -35,26 +22,19 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 		notFound();
 	}
 
-	const displayName = user.name || user.username;
+	console.log(user);
 
 	return (
 		<article className={styles.page}>
 			<div className={styles.content}>
 				{/* Header */}
 				<div className={styles.header}>
-					<h1 className={styles.displayName}>{displayName}</h1>
-					{user.name && <p className={styles.username}>@{user.username}</p>}
+					<h1 className={styles.displayName}>{user.username}</h1>
 					{user.pronouns && <p className={styles.pronouns}>{user.pronouns}</p>}
 				</div>
 
 				{/* Info */}
 				<div className={styles.sections}>
-					{user.state && (
-						<div>
-							<h2 className={styles.sectionHeading}>Location</h2>
-							<p>{stateLabels[user.state] ?? user.state}</p>
-						</div>
-					)}
 
 					{/* Socials */}
 					{user.socials && (user.socials.Discord || user.socials.Twitch || user.socials.Bluesky) && (
@@ -112,6 +92,9 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 											{run.estimate && (
 												<p className={styles.runDetails}>Estimate: {run.estimate}</p>
 											)}
+											{run.time && (
+												<p className={styles.runDetails}>Final Time: {run.time}</p>
+											)}
 										</li>
 									);
 								})}
@@ -135,11 +118,9 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
 		};
 	}
 
-	const displayName = user.name || user.username;
-
 	return {
-		title: `${displayName} | AusSpeedruns`,
-		description: `${displayName}'s profile on AusSpeedruns`,
+		title: `${user.username} | AusSpeedruns`,
+		description: `${user.username}'s profile on AusSpeedruns`,
 	};
 }
 

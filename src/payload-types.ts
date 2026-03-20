@@ -239,6 +239,7 @@ export interface Page {
     | SponsorGridBlock
     | CountdownBlock
     | FAQBlock
+    | ProductBlock
   )[];
   meta?: {
     title?: string | null;
@@ -544,7 +545,7 @@ export interface Run {
 export interface Event {
   id: number;
   name: string;
-  shortname: string;
+  shortName: string;
   settings?: {
     isPublished?: boolean | null;
     isAcceptingSubmissions?: boolean | null;
@@ -687,13 +688,38 @@ export interface Submission {
  */
 export interface Order {
   id: number;
-  orderId: string;
+  reference: string;
   user: string | User;
-  products?: (number | Product)[] | null;
+  items?:
+    | {
+        product?: (number | null) | Product;
+        variantLabel?: string | null;
+        quantity: number;
+        unitPriceInCents: number;
+        id?: string | null;
+      }[]
+    | null;
   status?: ('pending' | 'completed' | 'collected' | 'cancelled') | null;
   purchaseType?: ('bankTransfer' | 'stripe' | 'other') | null;
-  stripePaymentId?: string | null;
-  notes?: string | null;
+  stripe?: {
+    sessionId?: string | null;
+    paymentIntentId?: string | null;
+  };
+  notes?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -704,10 +730,38 @@ export interface Order {
 export interface Product {
   id: number;
   name: string;
-  description?: string | null;
-  price: number;
+  slug: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   image?: (number | null) | Media;
-  isAvailable?: boolean | null;
+  type: 'ticket' | 'merchandise';
+  variants: {
+    label: string;
+    priceInCents: number;
+    stock?: number | null;
+    /**
+     * Optional — auto-created if blank
+     */
+    stripePriceId?: string | null;
+    id?: string | null;
+  }[];
+  availableFrom?: string | null;
+  availableUntil?: string | null;
+  allowBankTransfer?: boolean | null;
+  active?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1250,6 +1304,20 @@ export interface FAQBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProductBlock".
+ */
+export interface ProductBlock {
+  title?: string | null;
+  products: (number | Product)[];
+  showDescription?: boolean | null;
+  showVariants?: boolean | null;
+  ctaLabel?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'productBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "incentives".
  */
 export interface Incentive {
@@ -1619,6 +1687,7 @@ export interface PagesSelect<T extends boolean = true> {
         sponsorGridBlock?: T | SponsorGridBlockSelect<T>;
         countdownBlock?: T | CountdownBlockSelect<T>;
         faqBlock?: T | FAQBlockSelect<T>;
+        productBlock?: T | ProductBlockSelect<T>;
       };
   meta?:
     | T
@@ -1815,6 +1884,19 @@ export interface FAQBlockSelect<T extends boolean = true> {
         answer?: T;
         id?: T;
       };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProductBlock_select".
+ */
+export interface ProductBlockSelect<T extends boolean = true> {
+  title?: T;
+  products?: T;
+  showDescription?: T;
+  showVariants?: T;
+  ctaLabel?: T;
   id?: T;
   blockName?: T;
 }
@@ -2030,7 +2112,7 @@ export interface RolesSelect<T extends boolean = true> {
  */
 export interface EventsSelect<T extends boolean = true> {
   name?: T;
-  shortname?: T;
+  shortName?: T;
   settings?:
     | T
     | {
@@ -2101,10 +2183,23 @@ export interface IncentivesSelect<T extends boolean = true> {
  */
 export interface ProductsSelect<T extends boolean = true> {
   name?: T;
+  slug?: T;
   description?: T;
-  price?: T;
   image?: T;
-  isAvailable?: T;
+  type?: T;
+  variants?:
+    | T
+    | {
+        label?: T;
+        priceInCents?: T;
+        stock?: T;
+        stripePriceId?: T;
+        id?: T;
+      };
+  availableFrom?: T;
+  availableUntil?: T;
+  allowBankTransfer?: T;
+  active?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2113,12 +2208,25 @@ export interface ProductsSelect<T extends boolean = true> {
  * via the `definition` "orders_select".
  */
 export interface OrdersSelect<T extends boolean = true> {
-  orderId?: T;
+  reference?: T;
   user?: T;
-  products?: T;
+  items?:
+    | T
+    | {
+        product?: T;
+        variantLabel?: T;
+        quantity?: T;
+        unitPriceInCents?: T;
+        id?: T;
+      };
   status?: T;
   purchaseType?: T;
-  stripePaymentId?: T;
+  stripe?:
+    | T
+    | {
+        sessionId?: T;
+        paymentIntentId?: T;
+      };
   notes?: T;
   updatedAt?: T;
   createdAt?: T;

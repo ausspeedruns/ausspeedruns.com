@@ -80,6 +80,7 @@ async function migrate() {
 	await migrateRuns(payload, client);
 	await migrateIncentives(payload, client);
 	await migrateVolunteers(payload, client);
+	await migrateOrders(payload, client);
 
 	// Add default admin user
 	const adminRole = await payload.find({
@@ -269,7 +270,7 @@ async function migrateEvents(payload: BasePayload, pgClient: pg.Client) {
 				data: {
 					id,
 					name,
-					shortname,
+					shortName: shortname,
 					settings: {
 						isPublished: published,
 						isAcceptingSubmissions: acceptingSubmissions,
@@ -568,6 +569,229 @@ async function migrateVolunteers(payload: BasePayload, pgClient: pg.Client) {
 			});
 		} catch (e) {
 			handlePayloadCreateError(e, `volunteer ${id}`);
+		}
+	});
+}
+
+async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
+	console.log("Migrating orders...");
+
+	console.log("\tCreating products");
+	const ticketData = await pgClient.query('SELECT * FROM public."Ticket"');
+	const shirtData = await pgClient.query('SELECT * FROM public."ShirtOrder"');
+
+	// Go through all the tickets and create products for each unique item
+	const uniqueEvents = new Set<string>();
+	for (const row of ticketData.rows) {
+		if (row.event) uniqueEvents.add(row.event);
+	}
+
+	let ticketMap: Record<string, number> = {};
+
+	for (const eventId of uniqueEvents) {
+		const eventName = await payload
+			.find({ collection: "events", where: { legacyKeystoneId: { equals: eventId } }, pagination: false })
+			.then((res) => (res.docs[0] ? res.docs[0].shortName : `Event ${eventId}`));
+		try {
+			const product = await payload.create({
+				collection: "products",
+				data: {
+					name: `${eventName} Ticket`,
+					slug: `ticket-${eventId}`,
+					type: "ticket",
+					variants: [
+						{
+							label: "General Admission",
+							priceInCents: 3000,
+						},
+					],
+					allowBankTransfer: true,
+					active: false,
+				},
+			});
+
+			ticketMap[eventId] = product.id;
+		} catch (e) {
+			handlePayloadCreateError(e, `product for event ${eventId}`);
+		}
+	}
+
+	// Manual Shirt Products
+	const shirt2022 = await payload.create({
+		collection: "products",
+		data: {
+			name: `ASM2022 Shirt`,
+			slug: `shirt-asm2022`,
+			type: "merchandise",
+			variants: [
+				{ label: "Blue Small", priceInCents: 3050 },
+				{ label: "Blue Medium", priceInCents: 3050 },
+				{ label: "Blue Large", priceInCents: 3050 },
+				{ label: "Blue X-Large", priceInCents: 3050 },
+				{ label: "Blue 2 X-Large", priceInCents: 3050 },
+				{ label: "Blue 3 X-Large", priceInCents: 3050 },
+				{ label: "Blue 4 X-Large", priceInCents: 3050 },
+				{ label: "Purple Small", priceInCents: 3050 },
+				{ label: "Purple Medium", priceInCents: 3050 },
+				{ label: "Purple Large", priceInCents: 3050 },
+				{ label: "Purple X-Large", priceInCents: 3050 },
+				{ label: "Purple 2 X-Large", priceInCents: 3050 },
+				{ label: "Purple 3 X-Large", priceInCents: 3050 },
+				{ label: "Purple 4 X-Large", priceInCents: 3050 },
+			],
+			allowBankTransfer: true,
+			active: false,
+		},
+	});
+
+	const shirt2023 = await payload.create({
+		collection: "products",
+		data: {
+			name: `ASM2023 Shirt`,
+			slug: `shirt-asm2023`,
+			type: "merchandise",
+			variants: [
+				{ label: "Small", priceInCents: 3050 },
+				{ label: "Medium", priceInCents: 3050 },
+				{ label: "Large", priceInCents: 3050 },
+				{ label: "X-Large", priceInCents: 3050 },
+				{ label: "2 X-Large", priceInCents: 3050 },
+				{ label: "3 X-Large", priceInCents: 3050 },
+				{ label: "4 X-Large", priceInCents: 3050 },
+			],
+			allowBankTransfer: true,
+			active: false,
+		},
+	});
+
+	const shirt2024 = await payload.create({
+		collection: "products",
+		data: {
+			name: `ASM2024 Shirt`,
+			slug: `shirt-asm2024`,
+			type: "merchandise",
+			variants: [
+				{ label: "Small", priceInCents: 3000 },
+				{ label: "Medium", priceInCents: 3000 },
+				{ label: "Large", priceInCents: 3000 },
+				{ label: "X-Large", priceInCents: 3000 },
+				{ label: "2 X-Large", priceInCents: 3000 },
+				{ label: "3 X-Large", priceInCents: 3000 },
+				{ label: "4 X-Large", priceInCents: 3000 },
+			],
+			allowBankTransfer: true,
+			active: false,
+		},
+	});
+
+	const shirt2025 = await payload.create({
+		collection: "products",
+		data: {
+			name: `ASM2025 Shirt`,
+			slug: `shirt-asm2025`,
+			type: "merchandise",
+			variants: [
+				{ label: "Small", priceInCents: 3000 },
+				{ label: "Medium", priceInCents: 3000 },
+				{ label: "Large", priceInCents: 3000 },
+				{ label: "X-Large", priceInCents: 3000 },
+				{ label: "2 X-Large", priceInCents: 3000 },
+				{ label: "3 X-Large", priceInCents: 3000 },
+				{ label: "4 X-Large", priceInCents: 3000 },
+			],
+			allowBankTransfer: true,
+			active: false,
+		},
+	});
+
+	console.log("\tConverting shirt orders...");
+
+	await runInBatches(shirtData.rows, async (row) => {
+		const { id, user, taken, method, shirtID, paid, notes, size, colour, stripeID, created } = row;
+
+		let productId: number | null = null;
+		let shirtColour: string | null = null;
+		const createdYear = created ? new Date(created).getFullYear() : null;
+		if (createdYear === 2022) {
+			productId = shirt2022.id;
+			shirtColour = colour === "blue" ? "Blue" : colour === "purple" ? "Purple" : null;
+		} else if (createdYear === 2023) productId = shirt2023.id;
+		else if (createdYear === 2024) productId = shirt2024.id;
+		else if (createdYear === 2025) productId = shirt2025.id;
+
+		let sizeConversion = size;
+		if (size === "xs") sizeConversion = "X-Small";
+		else if (size === "s") sizeConversion = "Small";
+		else if (size === "m") sizeConversion = "Medium";
+		else if (size === "l") sizeConversion = "Large";
+		else if (size === "xl") sizeConversion = "X-Large";
+		else if (size === "xl2") sizeConversion = "2 X-Large";
+		else if (size === "xl3") sizeConversion = "3 X-Large";
+		else if (size === "xl4") sizeConversion = "4 X-Large";
+
+		if (!productId) {
+			console.warn(`No product found for shirt order ${id} with event ${event}, skipping...`);
+			return;
+		}
+
+		try {
+			await payload.create({
+				collection: "orders",
+				draft: false,
+				data: {
+					id,
+					reference: "ORD-" + shirtID, // You can customize this reference format as needed
+					user,
+					status: taken ? "collected" : paid ? "completed" : "pending",
+					purchaseType: method === "bank" ? "bankTransfer" : method === "stripe" ? "stripe" : "other",
+					items: [
+						{
+							product: productId,
+							variantLabel: `${shirtColour ? `${shirtColour} ` : ""}${sizeConversion}`,
+							quantity: 1,
+							unitPriceInCents: 0, // Price is determined by the product variant, so we can set this to 0
+						},
+					],
+					notes,
+					stripe: stripeID ? { sessionId: stripeID } : undefined,
+					createdAt: created ? new Date(created).toISOString() : new Date().toISOString(),
+				},
+			});
+		} catch (e) {
+			handlePayloadCreateError(e, `order (shirt) ${id}`);
+		}
+	});
+
+	console.log("\tConverting tickets...");
+
+	await runInBatches(ticketData.rows, async (row) => {
+		const { id, user, event, taken, method, ticketID, paid, notes, numberOfTickets, stripeID, created } = row;
+
+		try {
+			await payload.create({
+				collection: "orders",
+				draft: false,
+				data: {
+					id,
+					user,
+					status: taken ? "collected" : paid ? "completed" : "pending",
+					reference: ticketID,
+					purchaseType: method === "bank" ? "bankTransfer" : method === "stripe" ? "stripe" : "other",
+					items: [
+						{
+							product: ticketMap[event], // This is a placeholder. You may want to create actual product entries for each ticket type.
+							variantLabel: ticketID,
+							quantity: numberOfTickets || 1,
+							unitPriceInCents: 0,
+						},
+					],
+					notes,
+					stripe: stripeID ? { sessionId: stripeID } : undefined,
+					createdAt: created ? new Date(created).toISOString() : new Date().toISOString(),
+				},
+			});
+		} catch (e) {
+			handlePayloadCreateError(e, `order (ticket) ${id}`);
 		}
 	});
 }

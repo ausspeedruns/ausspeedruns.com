@@ -1,0 +1,11 @@
+.pageShell {
+	width: min(100%, 1520px);
+	margin-inline: auto;
+	padding: 1.5rem 1rem 3rem;
+}
+
+@media (min-width: 48rem) {
+	.pageShell {
+		padding: 3rem 2rem;
+	}
+}

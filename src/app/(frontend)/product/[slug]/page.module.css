@@ -1,0 +1,64 @@
+.page {
+	padding-top: 4rem;
+	padding-bottom: 6rem;
+}
+
+.grid {
+	display: grid;
+	gap: 2rem;
+	align-items: start;
+}
+
+@media (min-width: 768px) {
+	.grid {
+		grid-template-columns: 1fr 1fr;
+		gap: 3rem;
+	}
+}
+
+.imageWrapper {
+	position: relative;
+	aspect-ratio: 1;
+	border-radius: var(--mantine-radius-md);
+	overflow: hidden;
+	background-color: var(--mantine-color-default-border);
+}
+
+.image {
+	object-fit: cover;
+}
+
+.details {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.name {
+	font-size: 2rem;
+	font-weight: 700;
+	margin: 0;
+}
+
+.price {
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: var(--mantine-color-blue-6);
+}
+
+.description {
+	margin-top: 0.5rem;
+}
+
+.actions {
+	display: flex;
+	gap: 1rem;
+	align-items: flex-end;
+	flex-wrap: wrap;
+	margin-top: 0.5rem;
+}
+
+.unavailable {
+	font-weight: 500;
+	color: var(--mantine-color-red-6);
+}

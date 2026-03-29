@@ -39,7 +39,7 @@ export function ImageMedia(props: MediaProps) {
 
 		width = fullWidth!;
 		height = fullHeight!;
-		alt = altFromResource || "";
+		alt = altFromResource ?? "";
 
 		const cacheTag = resource.updatedAt;
 
@@ -58,7 +58,7 @@ export function ImageMedia(props: MediaProps) {
 	return (
 		<picture className={cn(pictureClassName)}>
 			<NextImage
-				alt={alt || ""}
+				alt={alt ?? ""}
 				className={cn(imgClassName)}
 				fill={fill}
 				height={!fill ? height : undefined}

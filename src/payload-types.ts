@@ -632,10 +632,53 @@ export interface Event {
       | boolean
       | null;
   };
+  products?: (number | Product)[] | null;
   legacyKeystoneId?: string | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: number;
+  name: string;
+  slug: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image?: (number | null) | Media;
+  type: 'ticket' | 'merchandise';
+  variants: {
+    label: string;
+    priceInCents: number;
+    stock?: number | null;
+    /**
+     * Optional — auto-created if blank
+     */
+    stripePriceId?: string | null;
+    id?: string | null;
+  }[];
+  availableFrom?: string | null;
+  availableUntil?: string | null;
+  allowBankTransfer?: boolean | null;
+  active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -688,80 +731,24 @@ export interface Submission {
  */
 export interface Order {
   id: number;
-  reference: string;
+  reference?: string | null;
   user: string | User;
-  items?:
-    | {
-        product?: (number | null) | Product;
-        variantLabel?: string | null;
-        quantity: number;
-        unitPriceInCents: number;
-        id?: string | null;
-      }[]
-    | null;
-  status?: ('pending' | 'completed' | 'collected' | 'cancelled') | null;
-  purchaseType?: ('bankTransfer' | 'stripe' | 'other') | null;
+  items: {
+    product: number | Product;
+    productName?: string | null;
+    variantLabel?: string | null;
+    quantity: number;
+    unitPriceInCents: number;
+    id?: string | null;
+  }[];
+  totalInCents: number;
+  status: 'pending' | 'completed' | 'collected' | 'cancelled';
+  purchaseType: 'bankTransfer' | 'stripe' | 'other';
   stripe?: {
     sessionId?: string | null;
     paymentIntentId?: string | null;
   };
-  notes?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "products".
- */
-export interface Product {
-  id: number;
-  name: string;
-  slug: string;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  image?: (number | null) | Media;
-  type: 'ticket' | 'merchandise';
-  variants: {
-    label: string;
-    priceInCents: number;
-    stock?: number | null;
-    /**
-     * Optional — auto-created if blank
-     */
-    stripePriceId?: string | null;
-    id?: string | null;
-  }[];
-  availableFrom?: string | null;
-  availableUntil?: string | null;
-  allowBankTransfer?: boolean | null;
-  active?: boolean | null;
+  notes?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -2157,6 +2144,7 @@ export interface EventsSelect<T extends boolean = true> {
         oengus?: T;
         scheduleBlocks?: T;
       };
+  products?: T;
   legacyKeystoneId?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -2214,11 +2202,13 @@ export interface OrdersSelect<T extends boolean = true> {
     | T
     | {
         product?: T;
+        productName?: T;
         variantLabel?: T;
         quantity?: T;
         unitPriceInCents?: T;
         id?: T;
       };
+  totalInCents?: T;
   status?: T;
   purchaseType?: T;
   stripe?:

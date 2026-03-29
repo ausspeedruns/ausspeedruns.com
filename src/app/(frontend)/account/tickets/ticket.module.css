@@ -1,0 +1,156 @@
+.ticket {
+	display: flex;
+	align-items: stretch;
+	border: 5px solid var(--ausspeedruns-orange);
+	border-radius: 10px;
+	overflow: hidden;
+	background-color: var(--mantine-color-body);
+
+	.imageSection {
+		flex: 0 0 33.333%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-8));
+		padding: 2rem;
+		min-width: 0;
+		overflow: hidden;
+		position: relative;
+		min-height: 220px;
+
+		.eventLogo {
+			image-rendering: pixelated;
+			object-position: center;
+			object-fit: contain;
+		}
+
+		.placeholderLogo {
+			font-size: 1.5rem;
+			font-weight: bold;
+			text-align: center;
+			color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+		}
+	}
+
+	.infoSection {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		padding: 2rem;
+		gap: 1.5rem;
+
+		.header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 1rem;
+
+			h3 {
+				margin: 0;
+				font-size: 1.5rem;
+			}
+
+			.statusBadge {
+				display: inline-block;
+				padding: 0.5rem 1rem;
+				border-radius: 6px;
+				font-weight: 600;
+				font-size: 0.875rem;
+
+				&[data-status="unpaid"] {
+					background-color: var(--mantine-color-red-light);
+					color: var(--mantine-color-red-light-color);
+				}
+
+				&[data-status="paid"] {
+					background-color: var(--mantine-color-yellow-light);
+					color: var(--mantine-color-yellow-light-color);
+				}
+
+				&[data-status="picked-up"] {
+					background-color: var(--mantine-color-green-light);
+					color: var(--mantine-color-green-light-color);
+				}
+			}
+		}
+
+		.informationGrid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+			gap: 1rem;
+
+			.gridItem {
+				display: flex;
+				flex-direction: column;
+				gap: 0.25rem;
+
+				.label {
+					font-size: 0.875rem;
+					color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+					text-transform: uppercase;
+					letter-spacing: 0.5px;
+				}
+
+				.value {
+					font-size: 1.125rem;
+					font-weight: 600;
+				}
+			}
+		}
+
+		.bankDetails {
+			border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-6));
+			padding-top: 1.5rem;
+
+			h4 {
+				margin: 0 0 1rem 0;
+				font-size: 1rem;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+			}
+
+			.bankGrid {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 1rem 0.5rem;
+				margin-bottom: 1rem;
+
+				span:nth-child(odd) {
+					font-size: 0.875rem;
+					color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+					text-transform: uppercase;
+					letter-spacing: 0.5px;
+				}
+
+				.value {
+					font-weight: 600;
+				}
+			}
+
+			.warning,
+			.note {
+				margin: 0;
+				font-size: 0.95rem;
+				line-height: 1.5;
+			}
+
+			.warning {
+				color: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-2));
+			}
+
+			.note {
+				color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+				font-size: 0.875rem;
+			}
+		}
+	}
+
+	@media (max-width: 768px) {
+		flex-direction: column;
+
+		.imageSection {
+			flex: 0 0 auto;
+			min-height: 180px;
+		}
+	}
+}

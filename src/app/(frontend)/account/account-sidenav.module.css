@@ -1,0 +1,81 @@
+.navbar {
+	height: 700px;
+	width: 300px;
+	flex-shrink: 0;
+	padding: var(--mantine-spacing-md);
+	display: flex;
+	flex-direction: column;
+	border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+	border-radius: var(--mantine-radius-md);
+	background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+	position: sticky;
+	top: 1rem;
+}
+
+.navbarMain {
+	flex: 1;
+}
+
+.header {
+	padding-bottom: var(--mantine-spacing-md);
+	margin-bottom: calc(var(--mantine-spacing-md) * 1.5);
+	border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}
+
+.footer {
+	padding-top: var(--mantine-spacing-md);
+	margin-top: var(--mantine-spacing-md);
+	border-top: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}
+
+.link {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	border: 0;
+	background: transparent;
+	text-align: left;
+	cursor: pointer;
+	font-size: var(--mantine-font-size-sm);
+	color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
+	padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+	border-radius: var(--mantine-radius-sm);
+	font-weight: 500;
+	margin: var(--mantine-spacing-xs) 0;
+}
+
+.link:hover {
+	background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+	color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+}
+
+.link:hover .linkIcon {
+	color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+}
+
+.link[data-active],
+.link[data-active]:hover {
+	background-color: var(--mantine-color-blue-light);
+	color: var(--mantine-color-blue-light-color);
+}
+
+.link[data-active] .linkIcon,
+.link[data-active]:hover .linkIcon {
+	color: var(--mantine-color-blue-light-color);
+}
+
+.linkIcon {
+	color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-2));
+	margin-right: var(--mantine-spacing-sm);
+	width: 25px;
+	height: 25px;
+	flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+	.navbar {
+		height: auto;
+		width: 100%;
+		position: static;
+	}
+}

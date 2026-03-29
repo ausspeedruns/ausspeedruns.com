@@ -68,7 +68,7 @@ body {
 }
 
 [data-mantine-color-scheme="dark"] {
-	--background: 218 100% 5%;
+	--background: 218 100% 3%;
 	--foreground: 210 40% 98%;
 
 	--card: 0 0% 4%;

@@ -1,4 +1,34 @@
 import type { Metadata } from "next";
+import {
+	ActionIcon,
+	Anchor,
+	Badge,
+	Box,
+	Button,
+	Container,
+	Group,
+	Paper,
+	SimpleGrid,
+	Stack,
+	Text,
+	Title,
+} from "@mantine/core";
+import {
+	AtSign,
+	Edit3,
+	History,
+	MessageCircle,
+	Package,
+	PlayCircle,
+	ShoppingCart,
+	Ticket,
+	Timer,
+	Trophy,
+	Tv,
+	UserCircle2,
+	Users,
+} from "lucide-react";
+import type { Run } from "#/payload-types";
 
 import configPromise from "#payload-config";
 import { getPayload } from "payload";
@@ -6,12 +36,23 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 
 import styles from "./page.module.css";
+import Link from "next/link";
+import { UserNavigation } from "./user-navigation";
 
 type Args = {
 	params: Promise<{
 		username: string;
 	}>;
 };
+
+const navLinks = ["Leaderboards", "Events", "Streams", "Community"];
+
+const fallbackThumbnails = [
+	"https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80",
+	"https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=1200&q=80",
+	"https://images.unsplash.com/photo-1560253023-3ec5d502959f?auto=format&fit=crop&w=1200&q=80",
+	"https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=1200&q=80",
+];
 
 export default async function UserPage({ params: paramsPromise }: Args) {
 	const { username } = await paramsPromise;
@@ -22,87 +63,176 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 		notFound();
 	}
 
-	console.log(user);
+	const runs = (user.speedrunData?.runs?.docs ?? []).filter((run): run is Run => typeof run !== "number");
+	const historicalRuns = runs.slice(0, 4);
+	const upcomingRuns = runs
+		.filter((run) => Boolean(run.scheduledTime || run.estimate))
+		.slice(0, 3)
+		.map((run, index) => ({
+			id: run.id,
+			date: run.scheduledTime ? formatDate(run.scheduledTime) : "Schedule TBD",
+			estimate: run.estimate,
+			game: run.game,
+			event: getEventLabel(run),
+			mode: run.isRace ? "Race" : run.isCoop ? "Co-op" : "Solo Showcase",
+			isHighlighted: index === 1,
+		}));
+
+	const socialItems = [
+		{
+			label: "Twitch",
+			href: user.socials?.Twitch ? `https://twitch.tv/${user.socials.Twitch}` : undefined,
+			icon: Tv,
+		},
+		{
+			label: "Bluesky",
+			href: user.socials?.Bluesky ? `https://bsky.app/profile/${user.socials.Bluesky}` : undefined,
+			icon: AtSign,
+		},
+		{
+			label: "Discord",
+			href: user.socials?.Discord ? `https://discord.com/users/${user.socials.Discord}` : undefined,
+			icon: MessageCircle,
+		},
+	].filter((item) => item.href);
 
 	return (
 		<article className={styles.page}>
-			<div className={styles.content}>
-				{/* Header */}
-				<div className={styles.header}>
-					<h1 className={styles.displayName}>{user.username}</h1>
-					{user.pronouns && <p className={styles.pronouns}>{user.pronouns}</p>}
-				</div>
+			<Container className={styles.main} size="xl">
+				<section className={styles.heroSection}>
+					<div className={styles.titleBlock}>
+						<Title className={styles.heroTitle} data-text={user.username} order={1}>
+							{user.username}
+						</Title>
+						{user.pronouns && <Text className={styles.pronouns}>{user.pronouns}</Text>}
+					</div>
 
-				{/* Info */}
-				<div className={styles.sections}>
+					<div className={styles.quickPanel}>
+						<Group className={styles.socialLinks} gap="sm">
+							{socialItems.map((item) => {
+								const Icon = item.icon;
+								return (
+									<Anchor
+										className={styles.socialPill}
+										href={item.href}
+										key={item.label}
+										rel="noreferrer"
+										target="_blank"
+									>
+										<Icon size={16} />
+										<Text>{item.label}</Text>
+									</Anchor>
+								);
+							})}
+						</Group>
 
-					{/* Socials */}
-					{user.socials && (user.socials.Discord || user.socials.Twitch || user.socials.Bluesky) && (
-						<div>
-							<h2 className={styles.sectionHeading}>Socials</h2>
-							<ul className={styles.socialList}>
-								{user.socials.Discord && (
-									<li>
-										<span className={styles.socialLabel}>Discord:</span> {user.socials.Discord}
-									</li>
-								)}
-								{user.socials.Twitch && (
-									<li>
-										<span className={styles.socialLabel}>Twitch:</span>{" "}
-										<a
-											href={`https://twitch.tv/${user.socials.Twitch}`}
-											target="_blank"
-											rel="noopener noreferrer"
-											className={styles.link}
-										>
-											{user.socials.Twitch}
-										</a>
-									</li>
-								)}
-								{user.socials.Bluesky && (
-									<li>
-										<span className={styles.socialLabel}>Bluesky:</span>{" "}
-										<a
-											href={`https://bsky.app/profile/${user.socials.Bluesky}`}
-											target="_blank"
-											rel="noopener noreferrer"
-											className={styles.link}
-										>
-											{user.socials.Bluesky}
-										</a>
-									</li>
-								)}
-							</ul>
+						<UserNavigation />
+					</div>
+				</section>
+
+				<div className={styles.contentGrid}>
+					<section className={styles.historySection}>
+						<div className={styles.sectionHeader}>
+							<Title className={styles.sectionTitle} data-text="Historical_Runs" order={2}>
+								Historical_Runs
+							</Title>
+							<Text className={styles.sectionHint}>Archived performance / frame perfect</Text>
 						</div>
-					)}
 
-					{/* Runs */}
-					{user.speedrunData?.runs?.docs && user.speedrunData.runs.docs.length > 0 && (
-						<div>
-							<h2 className={styles.sectionHeading}>Runs</h2>
-							<ul className={styles.runList}>
-								{user.speedrunData.runs.docs.map((run) => {
-									if (typeof run === "number") return null;
-									return (
-										<li key={run.id} className={styles.runCard}>
-											<p className={styles.runGame}>{run.game}</p>
-											<p className={styles.runDetails}>
-												{run.category} &middot; {run.platform}
-											</p>
-											{run.estimate && (
-												<p className={styles.runDetails}>Estimate: {run.estimate}</p>
-											)}
-											{run.time && (
-												<p className={styles.runDetails}>Final Time: {run.time}</p>
-											)}
-										</li>
-									);
-								})}
-							</ul>
+						{historicalRuns.length === 0 ? (
+							<Paper className={styles.emptyState} withBorder>
+								<Text c="dimmed">No historical runs available yet.</Text>
+							</Paper>
+						) : (
+							<SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
+								{historicalRuns.map((run, index) => (
+									<article className={styles.runCard} key={run.id}>
+										<Box className={styles.thumbWrap}>
+											<img
+												alt={`${run.game} run thumbnail`}
+												className={styles.thumbnail}
+												src={fallbackThumbnails[index % fallbackThumbnails.length]}
+											/>
+											<div className={styles.overlay}>
+												<PlayCircle className={styles.playIcon} size={58} />
+											</div>
+											<Badge className={styles.cardBadge}>{getEventLabel(run)}</Badge>
+										</Box>
+
+										<Stack className={styles.cardBody} gap="md">
+											<Group align="flex-start" justify="space-between" wrap="nowrap">
+												<div>
+													<Title className={styles.runTitle} order={3}>
+														{run.game}
+													</Title>
+													<Text
+														className={styles.runMeta}
+													>{`${run.category} · ${run.platform}`}</Text>
+												</div>
+												<div className={styles.timeBlock}>
+													<Text className={styles.finalTime}>{run.time || "TBD"}</Text>
+													<Text className={styles.timeLabel}>Final time</Text>
+												</div>
+											</Group>
+
+											<Group className={styles.cardFooter} gap="sm" wrap="nowrap">
+												<Box className={styles.trophyBox}>
+													{index % 2 === 0 ? <Trophy size={14} /> : <Users size={14} />}
+												</Box>
+												<Text className={styles.eventLine}>{getEventLabel(run)}</Text>
+											</Group>
+										</Stack>
+									</article>
+								))}
+							</SimpleGrid>
+						)}
+					</section>
+
+					<aside className={styles.upcomingSection}>
+						<div className={styles.sectionHeader}>
+							<Title className={styles.sectionTitleAlt} data-text="Upcoming" order={2}>
+								Upcoming
+							</Title>
 						</div>
-					)}
+
+						{upcomingRuns.length === 0 ? (
+							<Paper className={styles.emptyState} withBorder>
+								<Text c="dimmed">No upcoming schedule published.</Text>
+							</Paper>
+						) : (
+							<Stack gap="xs">
+								{upcomingRuns.map((run) => (
+									<article
+										className={`${styles.scheduleItem} ${run.isHighlighted ? styles.scheduleItemHighlight : ""}`}
+										key={run.id}
+									>
+										<div className={styles.scheduleRail} />
+										<Group justify="space-between" wrap="nowrap">
+											<Text className={styles.scheduleDate}>{run.date}</Text>
+											<Badge className={styles.scheduleEstimate} variant="outline">
+												EST: {run.estimate}
+											</Badge>
+										</Group>
+										<div>
+											<Title className={styles.scheduleTitle} order={4}>
+												{run.game}
+											</Title>
+											<Text className={styles.scheduleEvent}>{run.event}</Text>
+										</div>
+										<Group justify="space-between" wrap="nowrap">
+											<Group className={styles.avatarGroup} gap={0}>
+												<Box className={styles.avatarDot} />
+												<Box className={styles.avatarDotAlt} />
+											</Group>
+											<Text className={styles.scheduleMode}>{run.mode}</Text>
+										</Group>
+									</article>
+								))}
+							</Stack>
+						)}
+					</aside>
 				</div>
-			</div>
+			</Container>
 		</article>
 	);
 }
@@ -149,3 +279,25 @@ const queryUserByUsername = cache(async (username: string) => {
 
 	return result.docs?.[0] || null;
 });
+
+function getEventLabel(run: Run): string {
+	if (!run.event || typeof run.event === "number") {
+		return "Event Pending";
+	}
+
+	return run.event.shortName || run.event.name || "Event Pending";
+}
+
+function formatDate(value: string): string {
+	const date = new Date(value);
+
+	if (Number.isNaN(date.getTime())) {
+		return "Schedule TBD";
+	}
+
+	return new Intl.DateTimeFormat("en-AU", {
+		day: "2-digit",
+		month: "short",
+		year: "numeric",
+	}).format(date);
+}

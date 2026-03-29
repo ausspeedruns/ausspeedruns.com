@@ -64,8 +64,6 @@ export function UserEditForm({ initialValues, username, isEmailVerified, onResen
 					</div>
 
 					<div className={styles.formGrid}>
-						<TextInput id="username" label="Username" readOnly value={username} />
-
 						<TextInput
 							id="pronouns"
 							key={form.key("pronouns")}

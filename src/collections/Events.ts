@@ -176,6 +176,12 @@ export const Events: CollectionConfig = {
 				},
 			],
 		},
+		{
+			name: "products",
+			type: "relationship",
+			relationTo: "products",
+			hasMany: true,
+		},
 		// TODO: Remove this field after migration is complete
 		{
 			name: "legacyKeystoneId",

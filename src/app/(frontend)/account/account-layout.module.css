@@ -1,0 +1,22 @@
+.shell {
+	display: flex;
+	align-items: stretch;
+	width: 100%;
+	max-width: 1200px;
+	margin: 2rem auto;
+	padding: 0 1rem;
+	gap: 1.5rem;
+}
+
+.content {
+	flex: 1;
+	min-width: 0;
+}
+
+@media (max-width: 900px) {
+	.shell {
+		flex-direction: column;
+		margin: 1rem auto 2rem;
+		gap: 1rem;
+	}
+}

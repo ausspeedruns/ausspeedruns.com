@@ -9,9 +9,9 @@
 		"#*": "./src/*"
 	},
 	"scripts": {
-		"build": "next build --webpack",
+		"build": "next build",
 		"postbuild": "next-sitemap --config next-sitemap.config.cjs",
-		"dev": "next dev --webpack",
+		"dev": "next dev",
 		"dev:prod": "rm -rf .next && pnpm build && pnpm start",
 		"email:dev": "email dev",
 		"generate:importmap": "payload generate:importmap",

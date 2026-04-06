@@ -22,17 +22,9 @@ export default async function Events() {
 		overrideAccess: false,
 		pagination: false,
 		sort: "-timeSettings.startTime",
-		select: {
-			name: true,
-			shortname: true,
-			timeSettings: true,
-			postEvent: true,
-			media: true,
-			settings: true,
-		},
 		where: {
-			"settings.isPublished": {
-				equals: true,
+			_status: {
+				equals: "published",
 			},
 		},
 	});
@@ -59,7 +51,7 @@ export default async function Events() {
 					<h2 className={styles.sectionTitle}>Upcoming</h2>
 					<div className={styles.grid}>
 						{upcomingEvents.map((event) => (
-							<EventBlock key={event.shortname} event={event} />
+							<EventBlock key={event.shortName} event={event} />
 						))}
 					</div>
 				</section>
@@ -69,7 +61,7 @@ export default async function Events() {
 				<h2 className={styles.sectionTitle}>Past</h2>
 				<div className={styles.grid}>
 					{pastEvents.map((event) => (
-						<EventBlock key={event.shortname} event={event} />
+						<EventBlock key={event.shortName} event={event} />
 					))}
 				</div>
 			</section>
@@ -96,7 +88,7 @@ function EventBlock({ event }: EventBlockProps) {
 	const raisedString = event.postEvent?.raised ? `$${event.postEvent.raised.toLocaleString()}` : "";
 
 	return (
-		<Link href={`${event.shortname}`} className={styles.eventLink}>
+		<Link href={`${event.shortName}`} className={styles.eventLink}>
 			<section
 				className={styles.eventSection}
 				style={heroUrl ? { backgroundImage: `url("${heroUrl}")` } : undefined}
@@ -113,7 +105,7 @@ function EventBlock({ event }: EventBlockProps) {
 								className={styles.logoImage}
 							/>
 						) : (
-							<h3 className={styles.logoFallback}>{event.shortname}</h3>
+							<h3 className={styles.logoFallback}>{event.shortName}</h3>
 						)}
 					</div>
 					<h3 className={styles.eventName}>{event.name}</h3>

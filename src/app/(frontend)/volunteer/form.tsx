@@ -56,7 +56,7 @@ const VolunteerDescriptions = {
 interface VolunteerFormProps {
 	events: {
 		id: number;
-		shortname: string;
+		shortName: string;
 		startDate: string;
 		endDate: string;
 		eventTimezone: string;
@@ -183,12 +183,12 @@ export function VolunteerForm(props: VolunteerFormProps) {
 
 	return (
 		<form className={styles.volunteerForm} onSubmit={form.onSubmit(handleSubmit)}>
-			<h1>{currentEvent?.shortname} Volunteer Submission</h1>
+			<h1>{currentEvent?.shortName} Volunteer Submission</h1>
 
 			{props.events.length > 1 && (
 				<Select
 					label="Event"
-					data={props.events.map((event) => ({ value: String(event.id), label: event.shortname }))}
+					data={props.events.map((event) => ({ value: String(event.id), label: event.shortName }))}
 					required
 					key={form.key("event")}
 					{...form.getInputProps("event")}

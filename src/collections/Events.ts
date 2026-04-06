@@ -36,19 +36,11 @@ export const Events: CollectionConfig = {
 			type: "group",
 			fields: [
 				{
-					name: "isPublished",
-					type: "checkbox",
-				},
-				{
 					name: "isAcceptingSubmissions",
 					type: "checkbox",
 				},
 				{
 					name: "isAcceptingBackups",
-					type: "checkbox",
-				},
-				{
-					name: "isScheduleReleased",
 					type: "checkbox",
 				},
 				{
@@ -151,6 +143,20 @@ export const Events: CollectionConfig = {
 			],
 		},
 		{
+			name: "submissions",
+			type: "join",
+			collection: "submissions",
+			on: "event",
+			hasMany: true,
+		},
+		{
+			name: "runs",
+			type: "join",
+			collection: "runs",
+			on: "event",
+			hasMany: true,
+		},
+		{
 			name: "submissionInstructions",
 			type: "richText",
 		},
@@ -163,6 +169,10 @@ export const Events: CollectionConfig = {
 			type: "group",
 			fields: [
 				{
+					name: "published",
+					type: "checkbox",
+				},
+				{
 					name: "horaro",
 					type: "text",
 				},
@@ -172,7 +182,34 @@ export const Events: CollectionConfig = {
 				},
 				{
 					name: "scheduleBlocks",
-					type: "json",
+					type: "array",
+					fields: [
+						{
+							name: "name",
+							type: "text",
+						},
+						{
+							name: "colour",
+							type: "text",
+						},
+						{
+							name: "textColour",
+							type: "text",
+						},
+						// {
+						// 	name: "startRun",
+						// 	type: "join",
+						// 	collection: "runs",
+						// 	on: "event",
+						// },
+						// {
+						// 	name: "endRun",
+						// 	type: "join",
+						// 	collection: "runs",
+						// 	on: "event",
+						// },
+					],
+					label: "Schedule Blocks (for schedule visualiser)",
 				},
 			],
 		},

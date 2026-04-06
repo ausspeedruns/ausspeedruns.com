@@ -1,0 +1,20 @@
+.dateDivider {
+	width: 100%;
+	border-bottom: 2px solid var(--ausspeedruns-orange);
+	color: var(--ausspeedruns-blue);
+	font-weight: bold;
+	font-size: 1.3rem;
+	padding: 1rem;
+	margin-top: 1rem;
+	text-align: center;
+
+	position: sticky;
+	top: 0;
+	background: rgba(255, 255, 255, 0.808);
+	backdrop-filter: blur(10px);
+	z-index: 2;
+}
+
+:global([data-mantine-color-scheme="dark"]) .dateDivider {
+	background: rgba(0, 5, 20, 0.85);
+}

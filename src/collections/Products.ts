@@ -50,7 +50,29 @@ export const Products: CollectionConfig = {
 			minRows: 1,
 			fields: [
 				{ name: "label", type: "text", required: true },
-				{ name: "priceInCents", type: "number", required: true },
+				{
+					name: "priceInCents",
+					type: "number",
+					required: true,
+					min: 0,
+					admin: { step: 1 },
+					validate: (value: number, { siblingData }: { siblingData: { stripePriceId?: string | null } }) => {
+						if (siblingData.stripePriceId) {
+							return true; // If stripePriceId is set, we assume the price is managed in Stripe and skip validation
+						}
+						if (value === undefined || value === null) {
+							return "Price is required if no Stripe Price ID is provided.";
+						}
+						if (value < 0) {
+							return "Price cannot be negative.";
+						}
+						if (!Number.isInteger(value)) {
+							return "Price must be an integer representing cents.";
+						}
+
+						return true;
+					},
+				},
 				{ name: "stock", type: "number" },
 				{
 					name: "stripePriceId",
@@ -71,11 +93,6 @@ export const Products: CollectionConfig = {
 		},
 		{
 			name: "allowBankTransfer",
-			type: "checkbox",
-			defaultValue: true,
-		},
-		{
-			name: "active",
 			type: "checkbox",
 			defaultValue: true,
 		},

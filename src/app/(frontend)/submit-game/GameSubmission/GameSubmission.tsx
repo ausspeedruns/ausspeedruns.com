@@ -20,7 +20,7 @@ import type { Submission } from "#payload-types.ts";
 interface GameSubmissionsProps {
 	availableEvents: {
 		id: number;
-		shortname: string;
+		shortName: string;
 		acceptingSubmissions: boolean;
 		acceptingBackups: boolean;
 		startDate: string;
@@ -206,7 +206,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 						required
 						data={eventsList.map((event) => ({
 							value: event.id.toString(),
-							label: `${event.shortname}${event.acceptingBackups && !event.acceptingSubmissions ? " (Backups)" : ""}`,
+							label: `${event.shortName}${event.acceptingBackups && !event.acceptingSubmissions ? " (Backups)" : ""}`,
 						}))}
 					/>
 				</div>

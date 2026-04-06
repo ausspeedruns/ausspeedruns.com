@@ -1,0 +1,25 @@
+.info {
+	margin: 16px 0;
+
+	.runType {
+		margin: 1rem 0;
+
+		& > span {
+			display: block;
+			margin: 1rem 0 0.5rem 0;
+		}
+	}
+
+	.consoleFilters {
+		& > span {
+			display: block;
+			margin: 1rem 0 0.5rem 0;
+		}
+
+		.consoleList {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+		}
+	}
+}

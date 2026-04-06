@@ -1,0 +1,11 @@
+.day {
+	display: grid;
+	/* grid-template-columns: 10% 90%; */
+	gap: 16px;
+}
+
+.runs {
+	@media (max-width: 48em) {
+		padding: 0 1rem;
+	}
+}

@@ -29,7 +29,7 @@ const projectRoot = path.resolve(__dirname, "..");
 // load envs explicitly (supports .env.local too)
 for (const envFile of [".env.local", ".env"]) {
 	const full = path.join(projectRoot, envFile);
-	if (fs.existsSync(full)) dotenv.config({ path: full });
+	if (fs.existsSync(full)) dotenv.config({ path: full, quiet: true });
 }
 
 if (process.argv.includes("--reset")) {
@@ -268,14 +268,13 @@ async function migrateEvents(payload: BasePayload, pgClient: pg.Client) {
 				collection: "events",
 				draft: false,
 				data: {
+					_status: published ? "published" : "draft",
 					id,
 					name,
 					shortName: shortname,
 					settings: {
-						isPublished: published,
 						isAcceptingSubmissions: acceptingSubmissions,
 						isAcceptingBackups: acceptingBackups,
-						isScheduleReleased: scheduleReleased,
 						isAcceptingVolunteers: acceptingVolunteers,
 					},
 					timeSettings: {
@@ -287,9 +286,10 @@ async function migrateEvents(payload: BasePayload, pgClient: pg.Client) {
 						raised,
 					},
 					scheduleMetadata: {
+						published: scheduleReleased,
 						horaro,
 						oengus,
-						scheduleBlocks: scheduleBlocks ? JSON.parse(scheduleBlocks) : undefined,
+						// scheduleBlocks: scheduleBlocks ? JSON.parse(scheduleBlocks) : undefined,
 					},
 					legacyKeystoneId: id, // Store the old Keystone ID for reference (to be removed later)
 					media: {
@@ -412,6 +412,33 @@ async function migrateSubmissions(payload: BasePayload, pgClient: pg.Client) {
 
 async function migrateRuns(payload: BasePayload, pgClient: pg.Client) {
 	console.log("Migrating runs...");
+
+	const eventTimezoneData = await payload
+		.find({
+			collection: "events",
+			pagination: false,
+		})
+		.then((res) => {
+			const map = new Map<string, string>();
+			res.docs.forEach((event) => {
+				if (event.legacyKeystoneId && event.timeSettings?.timezone) {
+					map.set(event.legacyKeystoneId, event.timeSettings.timezone);
+				}
+			});
+			return map;
+		});
+
+	const runIdRunnersMap = new Map<string, string[]>();
+	const runRunnersData = await pgClient.query('SELECT * from public."_Run_runners"');
+
+	for (const row of runRunnersData.rows) {
+		const { A: runId, B: runnerId } = row;
+		if (!runIdRunnersMap.has(runId)) {
+			runIdRunnersMap.set(runId, []);
+		}
+		runIdRunnersMap.get(runId)!.push(runnerId);
+	}
+
 	const data = await pgClient.query('SELECT * FROM public."Run"');
 
 	await runInBatches(data.rows, async (row) => {
@@ -434,6 +461,12 @@ async function migrateRuns(payload: BasePayload, pgClient: pg.Client) {
 			originalSubmission,
 		} = row;
 		try {
+			// Correct the schedule time to be in the correct UTC time
+			// Currently all times are like double timezoned away from what they should be
+			const scheduledTimeInEventTZ = scheduledTime
+				? new Date(new Date(scheduledTime).getTime() - new Date(scheduledTime).getTimezoneOffset() * 60000)
+				: null;
+
 			const created = await payload.create({
 				collection: "runs",
 				draft: false,
@@ -450,14 +483,16 @@ async function migrateRuns(payload: BasePayload, pgClient: pg.Client) {
 					isRace: race,
 					isCoop: coop,
 					techPlatform,
-					scheduledTime: scheduledTime ? new Date(scheduledTime).toISOString() : undefined,
-					racers: racer,
+					scheduledTime: scheduledTimeInEventTZ?.toISOString(),
+					scheduledTime_tz: (eventTimezoneData.get(event) as "Australia/Melbourne") ?? "Australia/Melbourne", // Cheeky hack
+					otherRunners: racer,
 					legacyKeystoneId: id,
 					// Resolve relationships from cache instead of querying DB
 					...(originalSubmission && submissionIdMap.has(originalSubmission)
 						? { submission: submissionIdMap.get(originalSubmission) }
 						: {}),
 					...(event && eventIdMap.has(event) ? { event: eventIdMap.get(event) } : {}),
+					runners: runIdRunnersMap.has(id) ? runIdRunnersMap.get(id) : [],
 				},
 			});
 
@@ -606,7 +641,6 @@ async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
 						},
 					],
 					allowBankTransfer: true,
-					active: false,
 				},
 			});
 
@@ -640,7 +674,6 @@ async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
 				{ label: "Purple 4 X-Large", priceInCents: 3050 },
 			],
 			allowBankTransfer: true,
-			active: false,
 		},
 	});
 
@@ -660,7 +693,6 @@ async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
 				{ label: "4 X-Large", priceInCents: 3050 },
 			],
 			allowBankTransfer: true,
-			active: false,
 		},
 	});
 
@@ -680,7 +712,6 @@ async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
 				{ label: "4 X-Large", priceInCents: 3000 },
 			],
 			allowBankTransfer: true,
-			active: false,
 		},
 	});
 
@@ -700,7 +731,6 @@ async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
 				{ label: "4 X-Large", priceInCents: 3000 },
 			],
 			allowBankTransfer: true,
-			active: false,
 		},
 	});
 
@@ -755,6 +785,7 @@ async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
 					notes,
 					stripe: stripeID ? { sessionId: stripeID } : undefined,
 					createdAt: created ? new Date(created).toISOString() : new Date().toISOString(),
+					totalInCents: 0,
 				},
 			});
 		} catch (e) {
@@ -788,6 +819,7 @@ async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
 					notes,
 					stripe: stripeID ? { sessionId: stripeID } : undefined,
 					createdAt: created ? new Date(created).toISOString() : new Date().toISOString(),
+					totalInCents: 0,
 				},
 			});
 		} catch (e) {

@@ -8,7 +8,7 @@ import type { CheckoutResult } from "#actions/checkout.ts";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-03-25.dahlia" });
 
 export async function stripeCheckout(
-	userId: string,
+	user: { id: string; email: string; stripeCustomerId?: string | null },
 	items: { priceId: string; quantity: number; product: Product; variant: Product["variants"][number] }[],
 ): Promise<CheckoutResult> {
 	const payload = await getPayload({ config });
@@ -40,7 +40,7 @@ export async function stripeCheckout(
 		const order = await payload.create({
 			collection: "orders",
 			data: {
-				user: userId,
+				user: user.id,
 				items: orderItems,
 				purchaseType: "stripe",
 				totalInCents: -1, // Will be updated by webhook
@@ -53,6 +53,22 @@ export async function stripeCheckout(
 			return { success: false, error: "Error creating order. Please try again." };
 		}
 
+		// Get stripe customer ID, create if doesn't exist
+		let stripeCustomerId = user.stripeCustomerId;
+		if (!stripeCustomerId) {
+			const customer = await stripe.customers.create({
+				email: user.email,
+			});
+			stripeCustomerId = customer.id;
+
+			// Update user with stripe customer ID
+			await payload.update({
+				collection: "users",
+				id: user.id,
+				data: { stripeCustomerId },
+			});
+		}
+
 		const session = await stripe.checkout.sessions.create({
 			mode: "payment",
 			line_items: lineItems,
@@ -60,6 +76,7 @@ export async function stripeCheckout(
 			success_url: `${process.env.NEXT_PUBLIC_URL}/success?sessionId={CHECKOUT_SESSION_ID}`,
 			cancel_url: `${process.env.NEXT_PUBLIC_URL}/cancel?sessionId={CHECKOUT_SESSION_ID}`,
 			metadata: { orderId: order.id, reference: order.reference },
+			customer: stripeCustomerId,
 		});
 
 		// Store session ID

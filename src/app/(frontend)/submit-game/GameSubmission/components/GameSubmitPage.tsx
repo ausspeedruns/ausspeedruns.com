@@ -1,4 +1,4 @@
-import styles from "./GameSubmitPage.module.scss";
+import styles from "./GameSubmitPage.module.css";
 
 interface GameSubmitPageProps {
 	title: string;

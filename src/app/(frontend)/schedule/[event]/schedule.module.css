@@ -1,0 +1,65 @@
+.headerContent {
+	max-width: 1200px;
+}
+
+.eventLogo {
+	max-width: 450px;
+	width: 100%;
+	margin: auto;
+
+	picture {
+		display: block;
+		width: 100%;
+	}
+
+	img {
+		width: 100% !important;
+		height: auto !important;
+	}
+}
+
+.eventLabel {
+	text-align: center;
+	margin-top: 1rem;
+	font-size: 1.8rem;
+	font-weight: bold;
+}
+
+.eventTimeFrame {
+	text-align: center;
+	margin-top: -1.8rem;
+	font-size: 1.4rem;
+}
+
+.scheduleContainer {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	min-width: 50%;
+}
+
+.localTimeToggle {
+	margin: 0.5rem auto !important;
+}
+
+.externalSchedules {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.schedule {
+	/* border: 1px solid #f5f5f5; */
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.dayButtons {
+	display: flex;
+	gap: 8px;
+
+	@media (max-width: 48em) {
+		flex-wrap: wrap;
+	}
+}

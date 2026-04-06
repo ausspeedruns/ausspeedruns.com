@@ -84,7 +84,7 @@ export default async function VolunteerPage() {
 		},
 		events: events.map((event) => ({
 			id: event.id,
-			shortname: event.shortname,
+			shortName: event.shortName,
 			submissionInstructions: event.submissionInstructions ?? null,
 			startDate: event.timeSettings?.startTime ?? "",
 			endDate: event.timeSettings?.endTime ?? "",

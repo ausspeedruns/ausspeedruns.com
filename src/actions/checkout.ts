@@ -72,7 +72,9 @@ export async function checkout(items: CheckoutItem[], method: "stripe" | "bank")
 	}
 
 	// Check stock and availability
-	const itemsNotAvailable = allItemData.filter((item) => !item.product.active);
+	const itemsNotAvailable = allItemData.filter(
+		(item) => !item.product.availableUntil || new Date(item.product.availableUntil) < new Date(),
+	);
 	if (itemsNotAvailable.length > 0) {
 		return { success: false, error: "Some products in your cart are no longer available." };
 	}
@@ -92,6 +94,6 @@ export async function checkout(items: CheckoutItem[], method: "stripe" | "bank")
 	if (method === "bank") {
 		return bankCheckout(user.id, allItemData);
 	} else {
-		return stripeCheckout(user.id, allItemData);
+		return stripeCheckout({ id: user.id, email: user.email, stripeCustomerId: user.stripeCustomerId }, allItemData);
 	}
 }

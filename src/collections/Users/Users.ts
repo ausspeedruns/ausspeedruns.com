@@ -167,7 +167,7 @@ export const Users: CollectionConfig = {
 					name: "runs",
 					type: "join",
 					collection: "runs",
-					on: "runner",
+					on: "runners",
 					access: {
 						read: anyoneField,
 					},
@@ -203,7 +203,6 @@ export const Users: CollectionConfig = {
 				create: isAdminField,
 			},
 		},
-		// Socials
 		{
 			name: "socials",
 			type: "group",
@@ -224,6 +223,12 @@ export const Users: CollectionConfig = {
 			access: {
 				read: anyoneField,
 			},
+		},
+		{
+			name: "stripeCustomerId",
+			type: "text",
+			admin: { readOnly: true, position: "sidebar" },
+			access: { update: () => false }, // only set programmatically
 		},
 	],
 };

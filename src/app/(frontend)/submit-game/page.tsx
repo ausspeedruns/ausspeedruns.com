@@ -74,7 +74,7 @@ export default async function SubmitGamePage() {
 		},
 		events: events.map((event) => ({
 			id: event.id,
-			shortname: event.shortname,
+			shortName: event.shortName,
 			submissionInstructions: event.submissionInstructions ?? null,
 			startDate: event.timeSettings?.startTime ?? "",
 			endDate: event.timeSettings?.endTime ?? "",
@@ -104,7 +104,7 @@ export default async function SubmitGamePage() {
 	return (
 		<div className={styles.page}>
 			<h1>
-				{singleEvent?.shortname}{" "}
+				{singleEvent?.shortName}{" "}
 				{singleEvent?.acceptingBackups && !singleEvent?.acceptingSubmissions ? "Backup" : "Game"} Submission
 			</h1>
 			<Button

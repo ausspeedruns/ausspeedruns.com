@@ -1,0 +1,38 @@
+.visualiserRun {
+	cursor: pointer;
+	height: 40px;
+	flex-grow: 1;
+
+	&[run-odd="true"] {
+		background: var(--ausspeedruns-orange);
+	}
+
+	&[run-odd="false"] {
+		background: var(--ausspeedruns-blue);
+	}
+}
+
+.visualiserTooltip {
+	/* cursor: pointer; */
+
+	* {
+		text-align: center;
+		text-wrap: balance;
+	}
+
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	h3 {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+
+		img {
+			filter: invert(100%);
+		}
+	}
+}

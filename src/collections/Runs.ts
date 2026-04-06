@@ -30,9 +30,10 @@ export const Runs: CollectionConfig = {
 			required: true,
 		},
 		{
-			name: "runner",
+			name: "runners",
 			type: "relationship",
 			relationTo: "users",
+			hasMany: true,
 		},
 		{
 			name: "estimate",
@@ -81,15 +82,37 @@ export const Runs: CollectionConfig = {
 					timeIntervals: 5,
 				},
 			},
+			timezone: {
+				defaultTimezone: "Australia/Melbourne",
+				supportedTimezones: [
+					{ label: "Melbourne", value: "Australia/Melbourne" },
+					{ label: "Sydney", value: "Australia/Sydney" },
+					{ label: "Adelaide", value: "Australia/Adelaide" },
+					{ label: "Brisbane", value: "Australia/Brisbane" },
+					{ label: "Perth", value: "Australia/Perth" },
+					{ label: "Hobart", value: "Australia/Hobart" },
+					{ label: "Darwin", value: "Australia/Darwin" },
+					{ label: "New Zealand", value: "Pacific/Auckland" },
+				],
+			},
 		},
 		{
-			name: "racers",
+			name: "otherRunners",
 			type: "text",
+			admin: {
+				description: "Comma-separated list of other runners who do not have a user account in the system.",
+			},
 		},
 		{
 			name: "submission",
 			type: "relationship",
 			relationTo: "submissions",
+		},
+		{
+			name: "donationIncentives",
+			type: "relationship",
+			relationTo: "incentives",
+			hasMany: true,
 		},
 		// TODO: Remove this field after migration is complete
 		{

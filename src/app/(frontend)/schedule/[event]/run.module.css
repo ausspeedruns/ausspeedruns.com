@@ -1,0 +1,226 @@
+.setupBuffer {
+	font-style: italic;
+	background: color-mix(in srgb, var(--ausspeedruns-blue) 20%, transparent);
+	text-align: center;
+	padding: 0.5rem;
+	font-size: 1.2rem;
+	border-radius: 16px;
+	margin-top: 4px;
+	/* border-bottom: 2px solid $secondary; */
+}
+
+.liveRun {
+	background: var(--ausspeedruns-orange) !important;
+
+	* {
+		color: #111 !important;
+	}
+}
+
+.run {
+	padding: 16px;
+	margin-top: 4px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-size: 1.1rem;
+	border-radius: 20px 16px 16px 16px;
+	position: relative;
+	width: 100%;
+
+	@media (max-width: 48em) {
+		border-radius: 16px;
+		padding: 8px;
+		padding-bottom: 12px;
+	}
+
+	&[run-odd="true"] {
+		background: color-mix(in srgb, var(--ausspeedruns-orange) 10%, white);
+		--icon-filter: invert(48%) sepia(57%) saturate(650%) hue-rotate(349deg) brightness(97%) contrast(89%);
+		--colour-accent: color-mix(in srgb, var(--ausspeedruns-orange) 60%, black);
+		--colour-full: color-mix(in srgb, var(--ausspeedruns-orange) 30%, white);
+	}
+
+	&[run-odd="false"] {
+		background: color-mix(in srgb, var(--ausspeedruns-blue) 10%, white);
+		--icon-filter: invert(46%) sepia(14%) saturate(1227%) hue-rotate(150deg) brightness(94%) contrast(98%);
+		--colour-accent: color-mix(in srgb, var(--ausspeedruns-blue) 60%, black);
+		--colour-full: color-mix(in srgb, var(--ausspeedruns-blue) 30%, white);
+	}
+
+	& > span {
+		padding: 4px;
+		text-align: center;
+		text-wrap: balance;
+	}
+
+	.game {
+		font-family: Russo One;
+		font-size: 170%;
+		margin-bottom: 0;
+		margin-top: 0;
+		max-width: 60%;
+		padding-top: 0;
+		line-height: 100%;
+		font-weight: normal;
+		text-align: center;
+		text-wrap: balance;
+
+		@media (max-width: 48em) {
+			max-width: 100%;
+			padding: 16px;
+		}
+	}
+
+	.category {
+		font-weight: bold;
+		font-size: 120%;
+		margin-bottom: 0.5rem;
+		margin-top: 0.1rem;
+		color: var(--colour-accent);
+	}
+
+	.metaData {
+		width: 100%;
+		display: grid;
+		gap: 32px;
+		grid-template-columns: 1fr auto 1fr;
+		color: var(--colour-accent);
+
+		@media (max-width: 48em) {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 16px;
+		}
+	}
+
+	.runners,
+	.estimate,
+	.platform {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		img {
+			height: 1.5rem;
+			width: 1.5rem;
+			filter: var(--icon-filter);
+		}
+	}
+
+	.runners,
+	.platform {
+		flex-grow: 1;
+
+		@media (max-width: 48em) {
+			flex-grow: 0;
+		}
+	}
+
+	.runners {
+		text-align: center;
+		text-wrap: balance;
+		justify-content: flex-end;
+
+		a {
+			color: var(--color-accent);
+		}
+	}
+
+	.time,
+	.blockName {
+		position: absolute;
+		top: 0;
+		padding: 8px;
+
+		font-size: 120%;
+		font-weight: bold;
+		line-height: 40px;
+
+		@media (max-width: 48em) {
+			position: relative;
+			width: 100%;
+			line-height: unset;
+		}
+	}
+
+	.time {
+		font-weight: bold;
+		white-space: nowrap;
+		text-transform: uppercase;
+		min-width: 115px;
+
+		background: var(--colour-accent);
+		left: 0;
+		border-radius: 16px 0;
+		color: #fff;
+
+		@media (max-width: 48em) {
+			border-radius: 8px 8px 0px 0px;
+		}
+	}
+
+	.categoryExtras {
+		font-weight: bold;
+		background: var(--colour-accent);
+		color: #fff;
+		margin-right: 12px;
+		padding: 0 6px;
+		border-radius: 8px;
+	}
+
+	.donationIncentives {
+		margin-top: 1rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		color: var(--colour-accent);
+		border: 3px solid var(--colour-accent);
+		padding: 8px;
+		border-radius: 8px;
+
+		.title {
+			display: flex;
+			align-items: center;
+		}
+	}
+
+	.donationIncentive {
+		font-style: italic;
+		font-weight: bold;
+	}
+
+	.blockName {
+		right: 0;
+		border: 3px solid white;
+		border-top: 0;
+		border-right: 0;
+		border-bottom-left-radius: 16px;
+
+		@media (max-width: 48em) {
+			border-radius: 0;
+			border-left: 3px solid white;
+			border-right: 3px solid white;
+			border-radius: 0 0 8px 8px;
+		}
+	}
+
+	@media (max-width: 48em) {
+		width: 100%;
+	}
+}
+
+:global([data-mantine-color-scheme="dark"]) .run {
+	&[run-odd="true"] {
+		background: color-mix(in srgb, var(--ausspeedruns-orange) 15%, black);
+		--colour-accent: color-mix(in srgb, var(--ausspeedruns-orange) 80%, white);
+		--colour-full: color-mix(in srgb, var(--ausspeedruns-orange) 30%, black);
+	}
+
+	&[run-odd="false"] {
+		background: color-mix(in srgb, var(--ausspeedruns-blue) 15%, black);
+		--colour-accent: color-mix(in srgb, var(--ausspeedruns-blue) 80%, white);
+		--colour-full: color-mix(in srgb, var(--ausspeedruns-blue) 30%, black);
+	}
+}

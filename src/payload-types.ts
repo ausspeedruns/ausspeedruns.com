@@ -103,6 +103,8 @@ export interface Config {
     };
     events: {
       'submittedItems.runs': 'runs';
+      runs: 'runs';
+      submissions: 'submissions';
     };
     'payload-folders': {
       documentsAndFolders: 'payload-folders' | 'media';
@@ -491,6 +493,7 @@ export interface User {
     Twitch?: string | null;
     Bluesky?: string | null;
   };
+  stripeCustomerId?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -521,7 +524,7 @@ export interface Run {
   game: string;
   category: string;
   platform: string;
-  runner?: (string | null) | User;
+  runners?: (string | User)[] | null;
   estimate: string;
   time?: string | null;
   event?: (number | null) | Event;
@@ -532,8 +535,24 @@ export interface Run {
   isCoop?: boolean | null;
   techPlatform?: string | null;
   scheduledTime?: string | null;
-  racers?: string | null;
+  scheduledTime_tz?:
+    | (
+        | 'Australia/Melbourne'
+        | 'Australia/Sydney'
+        | 'Australia/Adelaide'
+        | 'Australia/Brisbane'
+        | 'Australia/Perth'
+        | 'Australia/Hobart'
+        | 'Australia/Darwin'
+        | 'Pacific/Auckland'
+      )
+    | null;
+  /**
+   * Comma-separated list of other runners who do not have a user account in the system.
+   */
+  otherRunners?: string | null;
   submission?: (number | null) | Submission;
+  donationIncentives?: (number | Incentive)[] | null;
   legacyKeystoneId?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -547,10 +566,8 @@ export interface Event {
   name: string;
   shortName: string;
   settings?: {
-    isPublished?: boolean | null;
     isAcceptingSubmissions?: boolean | null;
     isAcceptingBackups?: boolean | null;
-    isScheduleReleased?: boolean | null;
     isAcceptingVolunteers?: boolean | null;
   };
   timeSettings?: {
@@ -589,6 +606,16 @@ export interface Event {
     hero?: (number | null) | Media;
     embed?: (number | null) | Media;
   };
+  submissions?: {
+    docs?: (number | Submission)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  runs?: {
+    docs?: (number | Run)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   submissionInstructions?: {
     root: {
       type: string;
@@ -620,16 +647,16 @@ export interface Event {
     [k: string]: unknown;
   } | null;
   scheduleMetadata?: {
+    published?: boolean | null;
     horaro?: string | null;
     oengus?: string | null;
     scheduleBlocks?:
       | {
-          [k: string]: unknown;
-        }
-      | unknown[]
-      | string
-      | number
-      | boolean
+          name?: string | null;
+          colour?: string | null;
+          textColour?: string | null;
+          id?: string | null;
+        }[]
       | null;
   };
   products?: (number | Product)[] | null;
@@ -637,48 +664,6 @@ export interface Event {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "products".
- */
-export interface Product {
-  id: number;
-  name: string;
-  slug: string;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  image?: (number | null) | Media;
-  type: 'ticket' | 'merchandise';
-  variants: {
-    label: string;
-    priceInCents: number;
-    stock?: number | null;
-    /**
-     * Optional — auto-created if blank
-     */
-    stripePriceId?: string | null;
-    id?: string | null;
-  }[];
-  availableFrom?: string | null;
-  availableUntil?: string | null;
-  allowBankTransfer?: boolean | null;
-  active?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -722,6 +707,71 @@ export interface Submission {
     | null;
   canBackup?: boolean | null;
   legacyKeystoneId?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: number;
+  name: string;
+  slug: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image?: (number | null) | Media;
+  type: 'ticket' | 'merchandise';
+  variants: {
+    label: string;
+    priceInCents: number;
+    stock?: number | null;
+    /**
+     * Optional — auto-created if blank
+     */
+    stripePriceId?: string | null;
+    id?: string | null;
+  }[];
+  availableFrom?: string | null;
+  availableUntil?: string | null;
+  allowBankTransfer?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "incentives".
+ */
+export interface Incentive {
+  id: number;
+  title: string;
+  run?: (number | null) | Run;
+  event?: (number | null) | Event;
+  description?: string | null;
+  notes?: string | null;
+  isActive?: boolean | null;
+  data?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1302,30 +1352,6 @@ export interface ProductBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'productBlock';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "incentives".
- */
-export interface Incentive {
-  id: number;
-  title: string;
-  run?: (number | null) | Run;
-  event?: (number | null) | Event;
-  description?: string | null;
-  notes?: string | null;
-  isActive?: boolean | null;
-  data?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2059,6 +2085,7 @@ export interface UsersSelect<T extends boolean = true> {
         Twitch?: T;
         Bluesky?: T;
       };
+  stripeCustomerId?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -2103,10 +2130,8 @@ export interface EventsSelect<T extends boolean = true> {
   settings?:
     | T
     | {
-        isPublished?: T;
         isAcceptingSubmissions?: T;
         isAcceptingBackups?: T;
-        isScheduleReleased?: T;
         isAcceptingVolunteers?: T;
       };
   timeSettings?:
@@ -2135,14 +2160,24 @@ export interface EventsSelect<T extends boolean = true> {
         hero?: T;
         embed?: T;
       };
+  submissions?: T;
+  runs?: T;
   submissionInstructions?: T;
   eventPage?: T;
   scheduleMetadata?:
     | T
     | {
+        published?: T;
         horaro?: T;
         oengus?: T;
-        scheduleBlocks?: T;
+        scheduleBlocks?:
+          | T
+          | {
+              name?: T;
+              colour?: T;
+              textColour?: T;
+              id?: T;
+            };
       };
   products?: T;
   legacyKeystoneId?: T;
@@ -2187,7 +2222,6 @@ export interface ProductsSelect<T extends boolean = true> {
   availableFrom?: T;
   availableUntil?: T;
   allowBankTransfer?: T;
-  active?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2229,7 +2263,7 @@ export interface RunsSelect<T extends boolean = true> {
   game?: T;
   category?: T;
   platform?: T;
-  runner?: T;
+  runners?: T;
   estimate?: T;
   time?: T;
   event?: T;
@@ -2240,8 +2274,10 @@ export interface RunsSelect<T extends boolean = true> {
   isCoop?: T;
   techPlatform?: T;
   scheduledTime?: T;
-  racers?: T;
+  scheduledTime_tz?: T;
+  otherRunners?: T;
   submission?: T;
+  donationIncentives?: T;
   legacyKeystoneId?: T;
   updatedAt?: T;
   createdAt?: T;

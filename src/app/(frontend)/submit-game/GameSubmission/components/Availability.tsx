@@ -1,4 +1,4 @@
-import styles from "./Availability.module.scss";
+import styles from "./Availability.module.css";
 import { useEffect, useMemo, useState } from "react";
 import { Checkbox } from "@mantine/core";
 import dayjs from "dayjs";

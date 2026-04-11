@@ -30,6 +30,21 @@ export const Incentives: CollectionConfig = {
 			relationTo: "events",
 		},
 		{
+			name: "type",
+			type: "select",
+			options: [
+				{
+					label: "Goal",
+					value: "goal",
+				},
+				{
+					label: "War",
+					value: "war",
+				},
+			],
+			required: true,
+		},
+		{
 			name: "description",
 			type: "textarea",
 		},

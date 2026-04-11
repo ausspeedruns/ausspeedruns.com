@@ -509,7 +509,7 @@ async function migrateIncentives(payload: BasePayload, pgClient: pg.Client) {
 	const data = await pgClient.query('SELECT * FROM public."Incentive"');
 
 	await runInBatches(data.rows, async (row) => {
-		const { id, title, run, event, notes, active, data: incentiveData } = row;
+		const { id, title, run, event, notes, active, data: incentiveData, type } = row;
 		try {
 			await payload.create({
 				collection: "incentives",
@@ -519,6 +519,7 @@ async function migrateIncentives(payload: BasePayload, pgClient: pg.Client) {
 					title,
 					notes,
 					isActive: active,
+					type,
 					data: incentiveData,
 					// Resolve relationships from cache instead of querying DB
 					...(run && runIdMap.has(run) ? { run: runIdMap.get(run) } : {}),

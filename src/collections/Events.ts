@@ -30,6 +30,8 @@ export const Events: CollectionConfig = {
 			name: "shortName",
 			type: "text",
 			required: true,
+			unique: true,
+			index: true,
 		},
 		{
 			name: "settings",
@@ -91,13 +93,13 @@ export const Events: CollectionConfig = {
 					collection: "runs",
 					on: "event",
 				},
-				// {
-				// 	name: 'volunteers',
-				// 	type: 'join',
-				// 	collection: 'volunteers',
-				// 	on: 'event',
-				// 	hasMany: true,
-				// },
+				{
+					name: 'volunteers',
+					type: 'join',
+					collection: 'volunteers',
+					on: 'event',
+					hasMany: true,
+				},
 			],
 		},
 		{
@@ -153,6 +155,13 @@ export const Events: CollectionConfig = {
 			name: "runs",
 			type: "join",
 			collection: "runs",
+			on: "event",
+			hasMany: true,
+		},
+		{
+			name: "incentives",
+			type: "join",
+			collection: "incentives",
 			on: "event",
 			hasMany: true,
 		},

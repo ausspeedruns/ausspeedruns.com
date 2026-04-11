@@ -104,7 +104,9 @@ export interface Config {
     events: {
       'submittedItems.runs': 'runs';
       runs: 'runs';
+      'submittedItems.volunteers': 'volunteers';
       submissions: 'submissions';
+      incentives: 'incentives';
     };
     'payload-folders': {
       documentsAndFolders: 'payload-folders' | 'media';
@@ -581,6 +583,11 @@ export interface Event {
       hasNextPage?: boolean;
       totalDocs?: number;
     };
+    volunteers?: {
+      docs?: (number | Volunteer)[];
+      hasNextPage?: boolean;
+      totalDocs?: number;
+    };
   };
   postEvent?: {
     raised?: number | null;
@@ -613,6 +620,11 @@ export interface Event {
   };
   runs?: {
     docs?: (number | Run)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  incentives?: {
+    docs?: (number | Incentive)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
@@ -667,6 +679,30 @@ export interface Event {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "volunteers".
+ */
+export interface Volunteer {
+  id: number;
+  volunteer?: (string | null) | User;
+  event?: (number | null) | Event;
+  role: ('frontDesk' | 'host' | 'tech' | 'stageHand')[];
+  availability?:
+    | {
+        time?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  maximumTime?: number | null;
+  maxDailyHostTime?: number | null;
+  hostSpecificGame?: string | null;
+  hostSpecificRunner?: string | null;
+  hostOtherInformation?: string | null;
+  techExperience?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "submissions".
  */
 export interface Submission {
@@ -707,6 +743,31 @@ export interface Submission {
     | null;
   canBackup?: boolean | null;
   legacyKeystoneId?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "incentives".
+ */
+export interface Incentive {
+  id: number;
+  title: string;
+  run?: (number | null) | Run;
+  event?: (number | null) | Event;
+  type: 'goal' | 'war';
+  description?: string | null;
+  notes?: string | null;
+  isActive?: boolean | null;
+  data?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -753,30 +814,6 @@ export interface Product {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "incentives".
- */
-export interface Incentive {
-  id: number;
-  title: string;
-  run?: (number | null) | Run;
-  event?: (number | null) | Event;
-  description?: string | null;
-  notes?: string | null;
-  isActive?: boolean | null;
-  data?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "orders".
  */
 export interface Order {
@@ -799,30 +836,6 @@ export interface Order {
     paymentIntentId?: string | null;
   };
   notes?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "volunteers".
- */
-export interface Volunteer {
-  id: number;
-  volunteer?: (string | null) | User;
-  event?: (number | null) | Event;
-  role: ('frontDesk' | 'host' | 'tech' | 'stageHand')[];
-  availability?:
-    | {
-        time?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  maximumTime?: number | null;
-  maxDailyHostTime?: number | null;
-  hostSpecificGame?: string | null;
-  hostSpecificRunner?: string | null;
-  hostOtherInformation?: string | null;
-  techExperience?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -2145,6 +2158,7 @@ export interface EventsSelect<T extends boolean = true> {
     | T
     | {
         runs?: T;
+        volunteers?: T;
       };
   postEvent?:
     | T
@@ -2162,6 +2176,7 @@ export interface EventsSelect<T extends boolean = true> {
       };
   submissions?: T;
   runs?: T;
+  incentives?: T;
   submissionInstructions?: T;
   eventPage?: T;
   scheduleMetadata?:
@@ -2193,6 +2208,7 @@ export interface IncentivesSelect<T extends boolean = true> {
   title?: T;
   run?: T;
   event?: T;
+  type?: T;
   description?: T;
   notes?: T;
   isActive?: T;

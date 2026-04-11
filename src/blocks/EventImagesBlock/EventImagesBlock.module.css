@@ -1,0 +1,71 @@
+.wrapper {
+	display: grid;
+	gap: 1.25rem;
+	max-width: 56rem;
+	margin: 0 auto;
+}
+
+.content {
+	max-width: 60rem;
+	margin: 0 auto;
+}
+
+.carousel {
+	width: 100%;
+	max-width: 52rem;
+	margin: 0 auto;
+}
+
+.slide {
+	display: grid;
+}
+
+.mediaFrame {
+	position: relative;
+	width: 100%;
+	min-height: clamp(14rem, 42vw, 28rem);
+	max-height: clamp(14rem, 42vw, 28rem);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	background: #000;
+	border-radius: 0.4rem;
+}
+
+.uploadMedia {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.uploadedImage,
+.externalImage {
+	display: block;
+	max-width: 100%;
+	max-height: clamp(14rem, 42vw, 28rem);
+	width: auto;
+	height: auto;
+	object-fit: contain;
+	margin: 0 auto;
+}
+
+.captionOverlay {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: 2.25rem;
+	margin: 0;
+	padding: 0.45rem 0.75rem;
+	text-align: center;
+	font-size: 0.95rem;
+	line-height: 1.5;
+	color: #fff;
+	background: rgb(0 0 0 / 85%);
+	border-radius: 0.35rem;
+	inline-size: fit-content;
+	max-width: calc(100% - 1.5rem);
+	overflow-wrap: break-word;
+	pointer-events: none;
+}

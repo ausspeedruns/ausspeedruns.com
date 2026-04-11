@@ -9,6 +9,7 @@ import { Content } from "#blocks/Content/config.ts";
 import { FormBlock } from "#blocks/Form/config.ts";
 import { MediaBlock } from "#blocks/MediaBlock/config.ts";
 import { ImageCarousel } from "#blocks/ImageCarousel/ImageCarousel-config.ts";
+import { EventImagesBlockConfig } from "#blocks/EventImagesBlock/config.ts";
 
 import { EventHeroBlockConfig } from "#blocks/EventHeroBlock/config.ts";
 import { LiveStreamBlockConfig } from "#blocks/LiveStreamBlock/config.ts";
@@ -89,6 +90,7 @@ export const Pages: CollectionConfig<"pages"> = {
 								Archive,
 								FormBlock,
 								ImageCarousel,
+								EventImagesBlockConfig,
 								EventHeroBlockConfig,
 								LiveStreamBlockConfig,
 								DonationTrackerBlockConfig,

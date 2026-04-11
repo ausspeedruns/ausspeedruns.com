@@ -237,6 +237,7 @@ export interface Page {
     | ArchiveBlock
     | FormBlock
     | ImageCarouselBlock
+    | EventImagesBlock
     | EventHeroBlock
     | LiveStreamBlock
     | DonationTrackerBlock
@@ -1260,6 +1261,42 @@ export interface ImageCarouselBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EventImagesBlock".
+ */
+export interface EventImagesBlock {
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  images?:
+    | {
+        sourceType?: ('upload' | 'external') | null;
+        uploadMedia?: (number | null) | Media;
+        /**
+         * Use for images hosted in offsite photo apps.
+         */
+        externalUrl?: string | null;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'eventImagesBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "EventHeroBlock".
  */
 export interface EventHeroBlock {
@@ -1707,6 +1744,7 @@ export interface PagesSelect<T extends boolean = true> {
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         imageCarousel?: T | ImageCarouselBlockSelect<T>;
+        eventImagesBlock?: T | EventImagesBlockSelect<T>;
         eventHeroBlock?: T | EventHeroBlockSelect<T>;
         liveStreamBlock?: T | LiveStreamBlockSelect<T>;
         donationTrackerBlock?: T | DonationTrackerBlockSelect<T>;
@@ -1834,6 +1872,24 @@ export interface ImageCarouselBlockSelect<T extends boolean = true> {
     | T
     | {
         media?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EventImagesBlock_select".
+ */
+export interface EventImagesBlockSelect<T extends boolean = true> {
+  richText?: T;
+  images?:
+    | T
+    | {
+        sourceType?: T;
+        uploadMedia?: T;
+        externalUrl?: T;
+        caption?: T;
         id?: T;
       };
   id?: T;

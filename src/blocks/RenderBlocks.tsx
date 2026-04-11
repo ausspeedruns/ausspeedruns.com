@@ -8,6 +8,7 @@ import { ContentBlock } from "#/blocks/Content/ContentBlock";
 import { FormBlock } from "#/blocks/Form/FormBlock";
 import { MediaBlock } from "#/blocks/MediaBlock/MediaBlock";
 import { ImageCarouselBlock } from "./ImageCarousel/ImageCarousel";
+import { EventImagesBlock } from "./EventImagesBlock/EventImagesBlock";
 
 import { EventHeroBlock } from "./EventHeroBlock/EventHeroBlock";
 import { LiveStreamBlock } from "./LiveStreamBlock/LiveStreamBlock";
@@ -26,6 +27,7 @@ const blockComponents = {
 	formBlock: FormBlock,
 	mediaBlock: MediaBlock,
 	imageCarousel: ImageCarouselBlock,
+	eventImagesBlock: EventImagesBlock,
 	eventHeroBlock: EventHeroBlock,
 	liveStreamBlock: LiveStreamBlock,
 	donationTrackerBlock: DonationTrackerBlock,

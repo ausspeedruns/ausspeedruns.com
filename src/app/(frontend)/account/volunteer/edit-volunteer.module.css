@@ -1,0 +1,17 @@
+.triggerButton {
+	align-self: flex-start;
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--mantine-spacing-sm);
+}
+
+.status {
+	margin-top: var(--mantine-spacing-xs);
+}
+
+.actions {
+	justify-content: flex-end;
+}

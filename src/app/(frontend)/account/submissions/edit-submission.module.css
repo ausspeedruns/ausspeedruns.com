@@ -1,0 +1,27 @@
+.triggerButton {
+	align-self: flex-start;
+}
+
+.form {
+	display: grid;
+	gap: 1rem;
+}
+
+.grid {
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+
+.fullWidth {
+	grid-column: 1 / -1;
+}
+
+.actions {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.status {
+	margin-top: 0.25rem;
+}

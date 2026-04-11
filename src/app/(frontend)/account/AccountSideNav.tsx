@@ -4,13 +4,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Button, Group } from "@mantine/core";
-import { User, ArrowLeft, KeyboardMusic, Box } from "pixelarticons/react";
+import { User, ArrowLeft, Box, MemoryStick, Joystick, HumanArmsUp } from "pixelarticons/react";
 
 import classes from "./account-sidenav.module.css";
 
 const navItems = [
 	{ label: "Edit", href: "/account/edit", icon: User },
-	{ label: "Tickets", href: "/account/tickets", icon: KeyboardMusic },
+	{ label: "Tickets", href: "/account/tickets", icon: MemoryStick },
+	{ label: "Run Submissions", href: "/account/submissions", icon: Joystick },
+	{ label: "Volunteer Applications", href: "/account/volunteer", icon: HumanArmsUp },
 	{ label: "Orders", href: "/account/orders", icon: Box },
 ];
 

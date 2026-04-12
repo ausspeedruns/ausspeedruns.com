@@ -4,6 +4,15 @@
 	background: #f5f5f5;
 }
 
+.logoWrap {
+	margin: 0 auto 1.25rem;
+	max-width: 280px;
+}
+
+.logo {
+	width: 100%;
+}
+
 .buttonGroup {
 	margin-top: 2rem;
 	display: flex;

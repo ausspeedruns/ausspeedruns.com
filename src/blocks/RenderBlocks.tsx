@@ -17,6 +17,7 @@ import { SponsorGridBlock } from "./SponsorGridBlock/SponsorGridBlock";
 import { CountdownBlock } from "./CountdownBlock/CountdownBlock";
 import { FAQBlock } from "./FAQBlock/FAQBlock";
 import { ProductBlock } from "./ProductBlock/ProductBlock";
+import { PostEventStatsBlock } from "./PostEventStatsBlock/PostEventStatsBlock";
 
 import styles from "./RenderBlocks.module.css";
 
@@ -35,6 +36,7 @@ const blockComponents = {
 	countdownBlock: CountdownBlock,
 	faqBlock: FAQBlock,
 	productBlock: ProductBlock,
+	postEventStatsBlock: PostEventStatsBlock,
 };
 
 interface RenderBlocksProps {
@@ -58,7 +60,7 @@ export function RenderBlocks(props: RenderBlocksProps) {
 						if (Block) {
 							return (
 								<div className={styles.blockWrapper} key={index}>
-									<Block {...block} disableInnerContainer />
+									<Block {...(block as any)} />
 								</div>
 							);
 						}

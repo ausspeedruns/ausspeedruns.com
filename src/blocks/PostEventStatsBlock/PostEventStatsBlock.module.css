@@ -1,0 +1,42 @@
+.wrapper {
+	padding: 2rem 1rem;
+	max-width: 1080px;
+	margin: 0 auto;
+}
+
+.heading {
+	margin: 0 0 1rem;
+	font-size: 1.75rem;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	gap: 1rem;
+}
+
+.card {
+	background: #f4f7fb;
+	border: 1px solid #d7e2f0;
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+.label {
+	font-size: 0.9rem;
+	color: #3c4b5d;
+}
+
+.value {
+	font-size: 1.35rem;
+	font-weight: 700;
+	margin-top: 0.35rem;
+}
+
+.scheduleLink {
+	display: inline-flex;
+	margin-top: 1rem;
+	color: #0f4c81;
+	font-weight: 600;
+	text-decoration: underline;
+}

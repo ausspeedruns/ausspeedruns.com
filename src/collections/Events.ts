@@ -94,10 +94,10 @@ export const Events: CollectionConfig = {
 					on: "event",
 				},
 				{
-					name: 'volunteers',
-					type: 'join',
-					collection: 'volunteers',
-					on: 'event',
+					name: "volunteers",
+					type: "join",
+					collection: "volunteers",
+					on: "event",
 					hasMany: true,
 				},
 			],
@@ -115,6 +115,26 @@ export const Events: CollectionConfig = {
 					type: "richText",
 				},
 			],
+		},
+		{
+			name: "generatedPostEventPage",
+			type: "relationship",
+			relationTo: "pages",
+			admin: {
+				position: "sidebar",
+				readOnly: true,
+				description: "System-managed page generated from this event.",
+			},
+		},
+		{
+			name: "generatePostEventPageAction",
+			type: "ui",
+			admin: {
+				position: "sidebar",
+				components: {
+					Field: "./components/Events/GeneratePostEventPageButton",
+				},
+			},
 		},
 		{
 			name: "media",

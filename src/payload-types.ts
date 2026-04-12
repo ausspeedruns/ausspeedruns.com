@@ -245,6 +245,7 @@ export interface Page {
     | CountdownBlock
     | FAQBlock
     | ProductBlock
+    | PostEventStatsBlock
   )[];
   meta?: {
     title?: string | null;
@@ -608,6 +609,10 @@ export interface Event {
       [k: string]: unknown;
     } | null;
   };
+  /**
+   * System-managed page generated from this event.
+   */
+  generatedPostEventPage?: (number | null) | Page;
   media?: {
     logo?: (number | null) | Media;
     logoDarkMode?: (number | null) | Media;
@@ -1405,6 +1410,21 @@ export interface ProductBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PostEventStatsBlock".
+ */
+export interface PostEventStatsBlock {
+  title?: string | null;
+  totalRuns: number;
+  uniqueRunners: number;
+  totalRunDuration: string;
+  scheduleUrl?: string | null;
+  scheduleLabel?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'postEventStatsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1752,6 +1772,7 @@ export interface PagesSelect<T extends boolean = true> {
         countdownBlock?: T | CountdownBlockSelect<T>;
         faqBlock?: T | FAQBlockSelect<T>;
         productBlock?: T | ProductBlockSelect<T>;
+        postEventStatsBlock?: T | PostEventStatsBlockSelect<T>;
       };
   meta?:
     | T
@@ -1979,6 +2000,20 @@ export interface ProductBlockSelect<T extends boolean = true> {
   showDescription?: T;
   showVariants?: T;
   ctaLabel?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PostEventStatsBlock_select".
+ */
+export interface PostEventStatsBlockSelect<T extends boolean = true> {
+  title?: T;
+  totalRuns?: T;
+  uniqueRunners?: T;
+  totalRunDuration?: T;
+  scheduleUrl?: T;
+  scheduleLabel?: T;
   id?: T;
   blockName?: T;
 }
@@ -2222,6 +2257,7 @@ export interface EventsSelect<T extends boolean = true> {
         raised?: T;
         postEventPage?: T;
       };
+  generatedPostEventPage?: T;
   media?:
     | T
     | {

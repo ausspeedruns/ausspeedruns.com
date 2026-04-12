@@ -18,11 +18,12 @@ import { SponsorGridBlockConfig } from "#blocks/SponsorGridBlock/config.ts";
 import { CountdownBlockConfig } from "#blocks/CountdownBlock/config.ts";
 import { FAQBlockConfig } from "#blocks/FAQBlock/config.ts";
 import { ProductBlockConfig } from "#blocks/ProductBlock/product-block-config.ts";
+import { PostEventStatsBlockConfig } from "#blocks/PostEventStatsBlock/config.ts";
 
 import { hero } from "#heros/config.ts";
 import { populatePublishedAt } from "#hooks/populatePublishedAt.ts";
 import { generatePreviewPath } from "#utilities/generatePreviewPath.ts";
-import { revalidateDelete, revalidatePage } from "./hooks/revalidatePage.ts";
+import { revalidateDelete } from "./hooks/revalidatePage.ts";
 
 import {
 	MetaDescriptionField,
@@ -98,6 +99,7 @@ export const Pages: CollectionConfig<"pages"> = {
 								CountdownBlockConfig,
 								FAQBlockConfig,
 								ProductBlockConfig,
+								PostEventStatsBlockConfig,
 							],
 							required: true,
 							admin: {

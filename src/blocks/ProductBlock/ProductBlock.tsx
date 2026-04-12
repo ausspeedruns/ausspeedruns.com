@@ -4,6 +4,7 @@ import RichText from "#/components/RichText/RichText";
 import type { Media as MediaType } from "#/payload-types";
 import type { DefaultTypedEditorState } from "@payloadcms/richtext-lexical";
 import { getPayload } from "payload";
+import { ProductVariantActions } from "./ProductVariantActions.tsx";
 
 import styles from "./ProductBlock.module.css";
 
@@ -12,6 +13,10 @@ type ProductVariant = {
 	label?: string | null;
 	priceInCents?: number | null;
 	stock?: number | null;
+	stripePriceId?: string | null;
+	bankTransferDetails?: {
+		allowBankTransfer?: boolean | null;
+	} | null;
 };
 
 type ProductItem = {
@@ -45,6 +50,7 @@ function formatCents(priceInCents?: number | null): string {
 
 export async function ProductBlock(props: ProductBlockProps) {
 	const { title, products, showDescription = true, showVariants = true, ctaLabel = "Buy with Stripe" } = props;
+	const stripeLabel = ctaLabel ?? "Buy with Stripe";
 
 	if (!products?.length) return null;
 
@@ -110,19 +116,27 @@ export async function ProductBlock(props: ProductBlockProps) {
 								<ul className={styles.variantList}>
 									{product.variants.map((variant, index) => (
 										<li key={variant.id ?? `${product.id}-${index}`} className={styles.variantRow}>
-											<span>{variant.label || "Default"}</span>
-											<span>{formatCents(variant.priceInCents)}</span>
+											<div className={styles.variantMeta}>
+												<span>{variant.label || "Default"}</span>
+												<span>{formatCents(variant.priceInCents)}</span>
+											</div>
+											<ProductVariantActions
+												productName={product.name || "Product"}
+												variant={variant}
+												ctaLabel={stripeLabel}
+											/>
 										</li>
 									))}
 								</ul>
 							)}
 
-							<button type="button" className={styles.purchaseButton} disabled>
-								{ctaLabel}
-							</button>
-							<p className={styles.purchaseStub}>
-								Stripe checkout stub: wire payment intent/session creation here.
-							</p>
+							{!showVariants && !!product.variants?.[0] && (
+								<ProductVariantActions
+									productName={product.name || "Product"}
+									variant={product.variants[0]}
+									ctaLabel={stripeLabel}
+								/>
+							)}
 						</div>
 					</article>
 				))}

@@ -641,7 +641,6 @@ async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
 							priceInCents: 3000,
 						},
 					],
-					allowBankTransfer: true,
 				},
 			});
 
@@ -674,7 +673,6 @@ async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
 				{ label: "Purple 3 X-Large", priceInCents: 3050 },
 				{ label: "Purple 4 X-Large", priceInCents: 3050 },
 			],
-			allowBankTransfer: true,
 		},
 	});
 
@@ -693,7 +691,6 @@ async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
 				{ label: "3 X-Large", priceInCents: 3050 },
 				{ label: "4 X-Large", priceInCents: 3050 },
 			],
-			allowBankTransfer: true,
 		},
 	});
 
@@ -712,7 +709,6 @@ async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
 				{ label: "3 X-Large", priceInCents: 3000 },
 				{ label: "4 X-Large", priceInCents: 3000 },
 			],
-			allowBankTransfer: true,
 		},
 	});
 
@@ -731,7 +727,6 @@ async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
 				{ label: "3 X-Large", priceInCents: 3000 },
 				{ label: "4 X-Large", priceInCents: 3000 },
 			],
-			allowBankTransfer: true,
 		},
 	});
 

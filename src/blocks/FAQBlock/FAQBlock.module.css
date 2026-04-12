@@ -16,7 +16,7 @@
 }
 
 .item {
-	border: 1px solid #ddd;
+	border: 1px solid var(--border);
 	padding: 1rem;
 	border-radius: 4px;
 }

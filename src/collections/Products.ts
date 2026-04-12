@@ -30,9 +30,15 @@ export const Products: CollectionConfig = {
 			type: "richText",
 		},
 		{
-			name: "image",
-			type: "upload",
-			relationTo: "media",
+			name: "images",
+			type: "array",
+			fields: [
+				{
+					name: "image",
+					type: "upload",
+					relationTo: "media",
+				},
+			],
 		},
 		{
 			name: "type",
@@ -79,6 +85,16 @@ export const Products: CollectionConfig = {
 					type: "text",
 					admin: { description: "Optional — auto-created if blank" },
 				},
+				{
+					name: "bankTransferDetails",
+					type: "group",
+					fields: [
+						{ name: "allowBankTransfer", type: "checkbox" },
+						{ name: "accountName", type: "text", defaultValue: "AusSpeedruns" },
+						{ name: "bsb", type: "text", defaultValue: "085-005" },
+						{ name: "accountNumber", type: "text", defaultValue: "30-192-8208" },
+					],
+				},
 			],
 		},
 		{
@@ -90,11 +106,6 @@ export const Products: CollectionConfig = {
 			name: "availableUntil",
 			type: "date",
 			admin: { date: { pickerAppearance: "dayAndTime" } },
-		},
-		{
-			name: "allowBankTransfer",
-			type: "checkbox",
-			defaultValue: true,
 		},
 	],
 };

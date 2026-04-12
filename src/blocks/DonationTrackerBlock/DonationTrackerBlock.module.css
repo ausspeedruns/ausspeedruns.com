@@ -1,6 +1,6 @@
 .container {
 	padding: 2rem 1rem;
-	background: #eaf4f4;
+	background-color: hsl(var(--muted));
 }
 
 .title {
@@ -21,9 +21,9 @@
 }
 
 .card {
-	border: 1px solid #999;
+	border: 1px solid var(--border);
 	padding: 1rem;
-	background: #fff;
+	background-color: hsl(var(--card));
 }
 
 .noIncentives {

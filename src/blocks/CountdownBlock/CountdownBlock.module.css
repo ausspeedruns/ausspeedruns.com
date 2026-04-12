@@ -1,12 +1,12 @@
 .container {
 	text-align: center;
 	padding: 2rem;
-	background: #fdfdfd;
-	border-top: 2px solid #ddd;
+	background-color: hsl(var(--muted));
+	border-top: 2px solid var(--border);
 }
 
 .finishedMessage {
-	color: #d9534f;
+	color: hsl(var(--error));
 }
 
 .timeLeft {

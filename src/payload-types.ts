@@ -810,11 +810,16 @@ export interface Product {
      * Optional — auto-created if blank
      */
     stripePriceId?: string | null;
+    bankTransferDetails?: {
+      allowBankTransfer?: boolean | null;
+      accountName?: string | null;
+      bsb?: string | null;
+      accountNumber?: string | null;
+    };
     id?: string | null;
   }[];
   availableFrom?: string | null;
   availableUntil?: string | null;
-  allowBankTransfer?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -2325,11 +2330,18 @@ export interface ProductsSelect<T extends boolean = true> {
         priceInCents?: T;
         stock?: T;
         stripePriceId?: T;
+        bankTransferDetails?:
+          | T
+          | {
+              allowBankTransfer?: T;
+              accountName?: T;
+              bsb?: T;
+              accountNumber?: T;
+            };
         id?: T;
       };
   availableFrom?: T;
   availableUntil?: T;
-  allowBankTransfer?: T;
   updatedAt?: T;
   createdAt?: T;
 }

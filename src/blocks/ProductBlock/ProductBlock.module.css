@@ -17,8 +17,8 @@
 }
 
 .card {
-	background: #ffffff;
-	border: 1px solid #e5e7eb;
+	background-color: hsl(var(--card));
+	border: 1px solid var(--border);
 	border-radius: 0.75rem;
 	overflow: hidden;
 	display: flex;
@@ -28,7 +28,7 @@
 
 .media {
 	width: 100%;
-	background: #f8fafc;
+	background-color: hsl(var(--muted));
 	min-height: 220px;
 	position: relative;
 }
@@ -62,16 +62,20 @@
 .typeTag {
 	font-size: 0.75rem;
 	text-transform: capitalize;
-	background: #eef2ff;
-	color: #3730a3;
+	background-color: hsl(var(--secondary));
+	color: hsl(var(--secondary-foreground));
 	padding: 0.2rem 0.5rem;
 	border-radius: 999px;
 	white-space: nowrap;
+} @supports (color: hsl(var(--secondary))) {
+	.typeTag {
+		opacity: 0.85;
+	}
 }
 
 .description {
 	font-size: 0.95rem;
-	color: #334155;
+	color: hsl(var(--muted-foreground));
 }
 
 .variantList {
@@ -85,27 +89,107 @@
 
 .variantRow {
 	display: flex;
-	justify-content: space-between;
-	align-items: center;
+	flex-direction: column;
+	gap: 0.55rem;
 	font-size: 0.95rem;
 	padding: 0.45rem 0.6rem;
-	background: #f8fafc;
+	background-color: hsl(var(--muted));
 	border-radius: 0.45rem;
+}
+
+.variantMeta {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.actionsWrap {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.quantityRow {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.quantityLabel {
+	font-size: 0.8rem;
+	color: hsl(var(--muted-foreground));
+	font-weight: 600;
+}
+
+.quantityInput {
+	width: 90px;
+	border: 1px solid var(--border);
+	border-radius: 0.4rem;
+	padding: 0.35rem 0.5rem;
+	font: inherit;
+	background-color: hsl(var(--background));
+	color: hsl(var(--foreground));
+}
+
+.buttonRow {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 0.4rem;
 }
 
 .purchaseButton {
 	border: none;
 	border-radius: 0.55rem;
-	padding: 0.7rem 1rem;
+	padding: 0.55rem 0.65rem;
 	font-weight: 600;
-	background: #0f172a;
-	color: #ffffff;
-	opacity: 0.6;
+	background-color: hsl(var(--primary));
+	color: hsl(var(--primary-foreground));
+	cursor: pointer;
+}
+
+.bankButton,
+.addToCartButton {
+	border: 1px solid var(--border);
+	border-radius: 0.55rem;
+	padding: 0.55rem 0.65rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.bankButton {
+	background-color: hsl(var(--secondary));
+	color: hsl(var(--secondary-foreground));
+}
+
+.addToCartButton {
+	background-color: hsl(var(--background));
+	color: hsl(var(--foreground));
+}
+
+.purchaseButton:disabled,
+.bankButton:disabled,
+.addToCartButton:disabled {
+	opacity: 0.55;
 	cursor: not-allowed;
 }
 
-.purchaseStub {
+.errorText,
+.infoText {
 	margin: 0;
 	font-size: 0.8rem;
-	color: #64748b;
+}
+
+.errorText {
+	color: hsl(var(--destructive));
+}
+
+.infoText {
+	color: hsl(var(--muted-foreground));
+}
+
+@media (max-width: 640px) {
+	.buttonRow {
+		grid-template-columns: 1fr;
+	}
 }

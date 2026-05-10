@@ -175,7 +175,7 @@ export const metadata: Metadata = {
 export default function Home() {
 	return (
 		<>
-			<HeroBlock event={ASM2026} tagLine="We're so back." submitRuns />
+			<HeroBlock event={ASM2026} tagLine="We're so back." schedule ticketLink="/ASM2026#tickets"/>
 
 			{/* <EventLive event={"ASO2026"} /> */}
 

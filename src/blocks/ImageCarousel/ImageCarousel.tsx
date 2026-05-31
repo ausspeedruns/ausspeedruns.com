@@ -26,7 +26,7 @@ export function ImageCarouselBlock({ richText, images }: ImageCarouselBlockProps
 				transitionTime={1500}
 			>
 				{images?.map((image) => {
-					return <Media resource={image.media} />;
+					return <Media key={image.id} resource={image.media} />;
 				})}
 			</Carousel>
 			{richText && <RichText className={styles.content} data={richText} enableGutter={false} />}

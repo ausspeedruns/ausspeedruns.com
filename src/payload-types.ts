@@ -800,7 +800,12 @@ export interface Product {
     };
     [k: string]: unknown;
   } | null;
-  image?: (number | null) | Media;
+  images?:
+    | {
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
   type: 'ticket' | 'merchandise';
   variants: {
     label: string;
@@ -2321,7 +2326,12 @@ export interface ProductsSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
   description?: T;
-  image?: T;
+  images?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
   type?: T;
   variants?:
     | T

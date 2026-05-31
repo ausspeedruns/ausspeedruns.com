@@ -1,44 +1,12 @@
 import configPromise from "#payload-config";
 import { Media } from "#/components/Media/Media";
 import RichText from "#/components/RichText/RichText";
-import type { Media as MediaType } from "#/payload-types";
-import type { DefaultTypedEditorState } from "@payloadcms/richtext-lexical";
+import type { Product, ProductBlock as ProductBlockProps } from "#/payload-types";
 import { getPayload } from "payload";
 import { ProductVariantActions } from "./ProductVariantActions.tsx";
 
 import styles from "./ProductBlock.module.css";
-
-type ProductVariant = {
-	id?: string;
-	label?: string | null;
-	priceInCents?: number | null;
-	stock?: number | null;
-	stripePriceId?: string | null;
-	bankTransferDetails?: {
-		allowBankTransfer?: boolean | null;
-	} | null;
-};
-
-type ProductItem = {
-	id: string | number;
-	name?: string | null;
-	slug?: string | null;
-	type?: "ticket" | "merchandise" | null;
-	description?: DefaultTypedEditorState | null;
-	image?: MediaType | string | number | null;
-	variants?: ProductVariant[] | null;
-	active?: boolean | null;
-};
-
-type ProductReference = string | number | ProductItem;
-
-type ProductBlockProps = {
-	title?: string | null;
-	products?: ProductReference[] | null;
-	showDescription?: boolean | null;
-	showVariants?: boolean | null;
-	ctaLabel?: string | null;
-};
+import { ClientCarousel } from "#components/ClientCarousel/ClientCarousel.tsx";
 
 function formatCents(priceInCents?: number | null): string {
 	if (typeof priceInCents !== "number") return "$0.00";
@@ -55,14 +23,14 @@ export async function ProductBlock(props: ProductBlockProps) {
 	if (!products?.length) return null;
 
 	const selectedProducts = products.filter(
-		(product): product is ProductItem => typeof product === "object" && product !== null,
+		(product): product is Product => typeof product === "object" && product !== null,
 	);
 
 	const selectedProductIds = products
-		.filter((product): product is string | number => typeof product === "string" || typeof product === "number")
+		.filter((product): product is number => typeof product === "string" || typeof product === "number")
 		.map((product) => String(product));
 
-	let fetchedProducts: ProductItem[] = [];
+	let fetchedProducts: Product[] = [];
 
 	if (selectedProductIds.length > 0) {
 		const payload = await getPayload({ config: configPromise });
@@ -77,10 +45,14 @@ export async function ProductBlock(props: ProductBlockProps) {
 			},
 		});
 
-		fetchedProducts = result.docs as ProductItem[];
+		fetchedProducts = result.docs as Product[];
 	}
 
-	const productsToRender = [...selectedProducts, ...fetchedProducts].filter((product) => product.active !== false);
+	const currentTime = new Date().getTime();
+
+	const productsToRender = [...selectedProducts, ...fetchedProducts].filter((product) =>
+		product.availableUntil ? new Date(product.availableUntil).getTime() > currentTime : true,
+	);
 
 	if (productsToRender.length === 0) return null;
 
@@ -90,13 +62,18 @@ export async function ProductBlock(props: ProductBlockProps) {
 			<div className={styles.grid}>
 				{productsToRender.map((product) => (
 					<article key={product.id} className={styles.card}>
-						{product.image && (
-							<Media
-								resource={product.image}
-								className={styles.media}
-								imgClassName={styles.image}
-								size="(max-width: 768px) 100vw, 50vw"
-							/>
+						{product.images && (
+							<ClientCarousel>
+								{product.images.map((image, index) => (
+									<Media
+										key={index}
+										resource={image.image}
+										className={styles.media}
+										imgClassName={styles.image}
+										size="(max-width: 768px) 100vw, 50vw"
+									/>
+								))}
+							</ClientCarousel>
 						)}
 						<div className={styles.content}>
 							<div className={styles.headerRow}>

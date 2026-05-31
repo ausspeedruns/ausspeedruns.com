@@ -5,20 +5,11 @@ import { useCartStore } from "#/stores/useCartStore";
 import { useState } from "react";
 
 import styles from "./ProductBlock.module.css";
-
-type ProductVariant = {
-	id?: string;
-	label?: string | null;
-	priceInCents?: number | null;
-	stripePriceId?: string | null;
-	bankTransferDetails?: {
-		allowBankTransfer?: boolean | null;
-	} | null;
-};
+import type { Product } from "#payload-types.ts";
 
 type ProductVariantActionsProps = {
 	productName: string;
-	variant: ProductVariant;
+	variant: Product['variants'][number];
 	ctaLabel: string;
 };
 

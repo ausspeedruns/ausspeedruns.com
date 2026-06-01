@@ -35,20 +35,18 @@
 	}
 
 	&[run-odd="true"] {
-		background: color-mix(in srgb, var(--ausspeedruns-orange) 10%, white);
-		--icon-filter: invert(48%) sepia(57%) saturate(650%) hue-rotate(349deg) brightness(97%) contrast(89%);
+		background: color-mix(in srgb, var(--ausspeedruns-orange) 30%, white);
 		--colour-accent: color-mix(in srgb, var(--ausspeedruns-orange) 60%, black);
 		--colour-full: color-mix(in srgb, var(--ausspeedruns-orange) 30%, white);
 	}
 
 	&[run-odd="false"] {
-		background: color-mix(in srgb, var(--ausspeedruns-blue) 10%, white);
-		--icon-filter: invert(46%) sepia(14%) saturate(1227%) hue-rotate(150deg) brightness(94%) contrast(98%);
+		background: color-mix(in srgb, var(--ausspeedruns-blue) 20%, white);
 		--colour-accent: color-mix(in srgb, var(--ausspeedruns-blue) 60%, black);
 		--colour-full: color-mix(in srgb, var(--ausspeedruns-blue) 30%, white);
 	}
 
-	& > span {
+	&>span {
 		padding: 4px;
 		text-align: center;
 		text-wrap: balance;
@@ -101,12 +99,6 @@
 		display: flex;
 		align-items: center;
 		gap: 8px;
-
-		img {
-			height: 1.5rem;
-			width: 1.5rem;
-			filter: var(--icon-filter);
-		}
 	}
 
 	.runners,
@@ -124,7 +116,7 @@
 		justify-content: flex-end;
 
 		a {
-			color: var(--color-accent);
+			color: var(--colour-accent);
 		}
 	}
 
@@ -208,6 +200,11 @@
 
 	@media (max-width: 48em) {
 		width: 100%;
+	}
+
+	svg {
+		fill: var(--colour-accent);
+		overflow: visible;
 	}
 }
 

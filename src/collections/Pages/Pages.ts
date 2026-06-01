@@ -32,6 +32,7 @@ import {
 	OverviewField,
 	PreviewField,
 } from "@payloadcms/plugin-seo/fields";
+import { RandomRunBlockConfig } from "#blocks/RandomRunBlock/random-run-block-config.ts";
 
 export const Pages: CollectionConfig<"pages"> = {
 	slug: "pages",
@@ -100,6 +101,7 @@ export const Pages: CollectionConfig<"pages"> = {
 								FAQBlockConfig,
 								ProductBlockConfig,
 								PostEventStatsBlockConfig,
+								RandomRunBlockConfig,
 							],
 							required: true,
 							admin: {

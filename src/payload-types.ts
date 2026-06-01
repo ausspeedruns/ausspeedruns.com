@@ -246,6 +246,7 @@ export interface Page {
     | FAQBlock
     | ProductBlock
     | PostEventStatsBlock
+    | RandomRunBlock
   )[];
   meta?: {
     title?: string | null;
@@ -1435,6 +1436,17 @@ export interface PostEventStatsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RandomRunBlock".
+ */
+export interface RandomRunBlock {
+  specificEvent: number | Event;
+  specificRuns?: (number | Run)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'randomRunBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1783,6 +1795,7 @@ export interface PagesSelect<T extends boolean = true> {
         faqBlock?: T | FAQBlockSelect<T>;
         productBlock?: T | ProductBlockSelect<T>;
         postEventStatsBlock?: T | PostEventStatsBlockSelect<T>;
+        randomRunBlock?: T | RandomRunBlockSelect<T>;
       };
   meta?:
     | T
@@ -2024,6 +2037,16 @@ export interface PostEventStatsBlockSelect<T extends boolean = true> {
   totalRunDuration?: T;
   scheduleUrl?: T;
   scheduleLabel?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RandomRunBlock_select".
+ */
+export interface RandomRunBlockSelect<T extends boolean = true> {
+  specificEvent?: T;
+  specificRuns?: T;
   id?: T;
   blockName?: T;
 }

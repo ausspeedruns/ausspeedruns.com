@@ -9,7 +9,7 @@ import configPromise from "#payload-config";
 
 import type { User } from "#/payload-types";
 import { render } from "@react-email/components";
-import VerificationEmail from "emails/verification";
+import { VerificationEmail } from "#/collections/Users/emails/verification";
 
 export interface UserEditFormValues {
 	name: string;

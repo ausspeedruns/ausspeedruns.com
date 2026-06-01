@@ -79,6 +79,49 @@ export function UserEditForm({ initialValues, username, isEmailVerified, onResen
 			<Paper p="xl" withBorder>
 				<Stack gap="lg">
 					<div>
+						<Title order={3}>Social links</Title>
+						<Text c="dimmed" mt={4} size="sm">
+							Add the handles you want shown on your public profile.
+						</Text>
+					</div>
+
+					<div className={styles.formGrid}>
+						<TextInput
+							id="discord"
+							key={form.key("discord")}
+							label="Discord"
+							placeholder="runnername"
+							{...form.getInputProps("discord")}
+						/>
+
+						<TextInput
+							id="twitch"
+							key={form.key("twitch")}
+							label="Twitch"
+							placeholder="channelname"
+							{...form.getInputProps("twitch")}
+						/>
+
+						<TextInput
+							id="bluesky"
+							key={form.key("bluesky")}
+							label="Bluesky"
+							placeholder="handle.bsky.social"
+							{...form.getInputProps("bluesky")}
+						/>
+					</div>
+
+					{status && (
+						<Alert color={status.type === "error" ? "red" : "green"} radius="md" role="status">
+							{status.message}
+						</Alert>
+					)}
+				</Stack>
+			</Paper>
+
+			<Paper p="xl" withBorder>
+				<Stack gap="lg">
+					<div>
 						<Title order={3}>Account Information</Title>
 						<Text c="dimmed" mt={4} size="sm">
 							Not shown publicly. Used in case we need to get in touch about your account, or for
@@ -151,49 +194,6 @@ export function UserEditForm({ initialValues, username, isEmailVerified, onResen
 							{...form.getInputProps("state")}
 						/>
 					</div>
-				</Stack>
-			</Paper>
-
-			<Paper p="xl" withBorder>
-				<Stack gap="lg">
-					<div>
-						<Title order={3}>Social links</Title>
-						<Text c="dimmed" mt={4} size="sm">
-							Add the handles you want shown on your public profile.
-						</Text>
-					</div>
-
-					<div className={styles.formGrid}>
-						<TextInput
-							id="discord"
-							key={form.key("discord")}
-							label="Discord"
-							placeholder="runnername"
-							{...form.getInputProps("discord")}
-						/>
-
-						<TextInput
-							id="twitch"
-							key={form.key("twitch")}
-							label="Twitch"
-							placeholder="channelname"
-							{...form.getInputProps("twitch")}
-						/>
-
-						<TextInput
-							id="bluesky"
-							key={form.key("bluesky")}
-							label="Bluesky"
-							placeholder="handle.bsky.social"
-							{...form.getInputProps("bluesky")}
-						/>
-					</div>
-
-					{status && (
-						<Alert color={status.type === "error" ? "red" : "green"} radius="md" role="status">
-							{status.message}
-						</Alert>
-					)}
 				</Stack>
 			</Paper>
 

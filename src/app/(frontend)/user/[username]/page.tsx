@@ -1,33 +1,6 @@
 import type { Metadata } from "next";
-import {
-	ActionIcon,
-	Anchor,
-	Badge,
-	Box,
-	Button,
-	Container,
-	Group,
-	Paper,
-	SimpleGrid,
-	Stack,
-	Text,
-	Title,
-} from "@mantine/core";
-import {
-	AtSign,
-	Edit3,
-	History,
-	MessageCircle,
-	Package,
-	PlayCircle,
-	ShoppingCart,
-	Ticket,
-	Timer,
-	Trophy,
-	Tv,
-	UserCircle2,
-	Users,
-} from "lucide-react";
+import { Anchor, Badge, Box, Container, Group, Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { AtSign, MessageCircle, PlayCircle, Trophy, Tv, Users } from "lucide-react";
 import type { Run } from "#/payload-types";
 
 import configPromise from "#payload-config";
@@ -36,7 +9,6 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 
 import styles from "./page.module.css";
-import Link from "next/link";
 import { UserNavigation } from "./user-navigation";
 
 type Args = {
@@ -44,15 +16,6 @@ type Args = {
 		username: string;
 	}>;
 };
-
-const navLinks = ["Leaderboards", "Events", "Streams", "Community"];
-
-const fallbackThumbnails = [
-	"https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80",
-	"https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=1200&q=80",
-	"https://images.unsplash.com/photo-1560253023-3ec5d502959f?auto=format&fit=crop&w=1200&q=80",
-	"https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=1200&q=80",
-];
 
 export default async function UserPage({ params: paramsPromise }: Args) {
 	const { username } = await paramsPromise;
@@ -101,7 +64,7 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 			<Container className={styles.main} size="xl">
 				<section className={styles.heroSection}>
 					<div className={styles.titleBlock}>
-						<Title className={styles.heroTitle} data-text={user.username} order={1}>
+						<Title className={styles.heroTitle} order={1}>
 							{user.username}
 						</Title>
 						{user.pronouns && <Text className={styles.pronouns}>{user.pronouns}</Text>}
@@ -133,10 +96,9 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 				<div className={styles.contentGrid}>
 					<section className={styles.historySection}>
 						<div className={styles.sectionHeader}>
-							<Title className={styles.sectionTitle} data-text="Historical_Runs" order={2}>
-								Historical_Runs
+							<Title className={styles.sectionTitle} order={2}>
+								Runs
 							</Title>
-							<Text className={styles.sectionHint}>Archived performance / frame perfect</Text>
 						</div>
 
 						{historicalRuns.length === 0 ? (
@@ -148,11 +110,6 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 								{historicalRuns.map((run, index) => (
 									<article className={styles.runCard} key={run.id}>
 										<Box className={styles.thumbWrap}>
-											<img
-												alt={`${run.game} run thumbnail`}
-												className={styles.thumbnail}
-												src={fallbackThumbnails[index % fallbackThumbnails.length]}
-											/>
 											<div className={styles.overlay}>
 												<PlayCircle className={styles.playIcon} size={58} />
 											</div>

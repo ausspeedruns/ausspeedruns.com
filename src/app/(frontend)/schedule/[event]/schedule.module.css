@@ -46,6 +46,7 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
+	margin: 1rem 0;
 }
 
 .schedule {
@@ -57,7 +58,7 @@
 
 .dayButtons {
 	display: flex;
-	gap: 8px;
+	gap: 4px;
 
 	@media (max-width: 48em) {
 		flex-wrap: wrap;

@@ -70,16 +70,6 @@ export function RunElement(props: RunItemProps) {
 	const formattedMinutes = minutes.toString().padStart(2, "0");
 	const estimateText = `${formattedHours}:${formattedMinutes}:00`;
 
-	// Bad hardcoding bad!
-	let overwriteFilter;
-	if (props.block) {
-		if (props.block.textColour === "#ffffff") {
-			overwriteFilter = "invert(100%)";
-		} else {
-			overwriteFilter = "unset";
-		}
-	}
-
 	return (
 		<div
 			className={runClassNames.join(" ")}
@@ -99,15 +89,15 @@ export function RunElement(props: RunItemProps) {
 			</span>
 			<div className={styles.metaData} style={{ color: props.block?.textColour }}>
 				<span className={styles.runners}>
-					<RunnerIcon style={{ filter: overwriteFilter }} />
+					<RunnerIcon />
 					<Runners runners={run.runners} />
 				</span>
 				<span className={styles.estimate}>
-					<EstimateIcon style={{ filter: overwriteFilter }} />
+					<EstimateIcon />
 					{estimateText}
 				</span>
 				<span className={styles.platform}>
-					<ConsoleIcon style={{ filter: overwriteFilter }} />
+					<ConsoleIcon />
 					{run.platform}
 				</span>
 			</div>

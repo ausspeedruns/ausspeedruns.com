@@ -26,7 +26,7 @@ type DayVisualiserProps = {
 	currentDayIndex: number;
 };
 
-export const DayVisualiser = (props: DayVisualiserProps) => {
+export function DayVisualiser(props: DayVisualiserProps) {
 	let yesterdayRunTime = 0;
 	let yesterdaysFinalRun;
 
@@ -99,4 +99,4 @@ export const DayVisualiser = (props: DayVisualiserProps) => {
 			})}
 		</div>
 	);
-};
+}

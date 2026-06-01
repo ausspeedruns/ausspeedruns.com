@@ -33,11 +33,10 @@
 .heroTitle {
 	position: relative;
 	display: inline-block;
-	font-family: "Space Grotesk", Geist, sans-serif;
+	font-family: "Jersey10", Geist, sans-serif;
+	font-weight: normal;
 	font-size: clamp(2.4rem, 11vw, 7rem);
-	font-weight: 900;
-	line-height: 0.94;
-	letter-spacing: -0.05em;
+	letter-spacing: 0.05em;
 	text-transform: uppercase;
 	color: var(--on-surface);
 	word-break: break-word;

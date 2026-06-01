@@ -1,3 +1,5 @@
+"use client";
+
 import styles from "./run.module.css";
 import RunnerIcon from "../icons/runner.svg";
 import { Tooltip } from "@mantine/core";
@@ -44,7 +46,7 @@ type RunProps = {
 	block?: Block;
 };
 
-export const RunVisualBlock = ({ run, proportion, block }: RunProps) => {
+export function RunVisualBlock({ run, proportion, block }: RunProps) {
 	const oddRun = run.displayIndex % 2 != 0;
 
 	return (

@@ -90,9 +90,9 @@ export function ShirtPurchase(props: ShirtPurchaseProps) {
 					<Image src={ImageShirt} alt="ASM2025 Shirt Design" height="300" />
 				</div>
 				<div>
-					<p>Selling out June 18th 23:59 ACST.</p>
+					<p>Selling out June 17th 23:59 ACST.</p>
 					<p>
-						Please note that all ASM2025 Shirt purchases <b>must be collected at the ASM2025 event</b>. No
+						Please note that all ASM2026 Shirt purchases <b>must be collected at the ASM2026 event</b>. No
 						shipping will be offered.
 					</p>
 					<p>
@@ -104,7 +104,7 @@ export function ShirtPurchase(props: ShirtPurchaseProps) {
 					</p>
 					<p>
 						Please note that any shirt ordered using the bank transfer method will be considered cancelled
-						if payment is not cleared in the AusSpeedruns bank account before June 18 ACST 23:59.
+						if payment is not cleared in the AusSpeedruns bank account before June 17 ACST 23:59.
 					</p>
 
 					<h2>Size</h2>

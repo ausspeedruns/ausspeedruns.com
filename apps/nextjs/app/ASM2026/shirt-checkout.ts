@@ -10,7 +10,7 @@ import { getRegisteredClient } from "@libs/urql";
 const stripeApiKey = process.env.STRIPE_SECRET_KEY as string;
 const websiteApiKey = process.env.API_KEY as string;
 
-const shirtId = "price_1RYogFKT8G4cNWT5b46IZyWE";
+const shirtId = "price_1Tgi5kKT8G4cNWT5It9jdKgr";
 
 const CREATE_SHIRT_MUTATION = gql`
 	mutation ($userID: ID!, $stripeID: String, $size: ShirtOrderSizeType!, $apiKey: String!) {

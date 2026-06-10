@@ -74,7 +74,8 @@ export default async function ASM2026() {
 	const acceptingBackups = acceptingTicketsQuery.data.event?.acceptingBackups ?? false;
 	const scheduleReleased = acceptingTicketsQuery.data.event?.scheduleReleased ?? false;
 	const acceptingVolunteers = acceptingTicketsQuery.data.event?.acceptingVolunteers ?? false;
-	const acceptingShirts = acceptingTicketsQuery.data.event?.acceptingShirts ?? false;
+	// const acceptingShirts = acceptingTicketsQuery.data.event?.acceptingShirts ?? false;
+	const acceptingShirts = true;
 
 	let emailVerified = false;
 	if (session) {
@@ -107,7 +108,7 @@ export default async function ASM2026() {
 					/>
 				)}
 				<Button actionText="Buy a Ticket" link="#tickets" iconLeft={faTicket} />
-				{acceptingShirts && <Button actionText="Buy a Shirt" link="#shirts" iconLeft={faShirt} />}
+				{acceptingShirts && <Button actionText="Buy a Shirt" link="#event-shirt" iconLeft={faShirt} />}
 				{acceptingVolunteers && <Button actionText="Volunteer" link="/volunteer" iconLeft={faPerson} />}
 			</section>
 			<hr className={styles.divider} />
@@ -166,8 +167,8 @@ export default async function ASM2026() {
 				</form>
 			</section>
 			<hr className={styles.divider} />
-			{/* <section className={styles.content} id="shirts">
-				<h1>Shirts</h1>
+			<section className={styles.content} id="event-shirt">
+				<h1>Event Shirt</h1>
 				<form action={shirtStripeCheckoutAction} className={styles.form}>
 					<ShirtPurchase
 						canBuy={emailVerified}
@@ -175,7 +176,7 @@ export default async function ASM2026() {
 						eventAcceptingShirts={acceptingShirts}
 					/>
 				</form>
-			</section> */}
+			</section>
 			<section className={styles.content}>
 				<h3>Refund Policy</h3>
 				<p>

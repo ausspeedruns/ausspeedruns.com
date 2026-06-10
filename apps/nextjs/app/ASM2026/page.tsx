@@ -74,8 +74,7 @@ export default async function ASM2026() {
 	const acceptingBackups = acceptingTicketsQuery.data.event?.acceptingBackups ?? false;
 	const scheduleReleased = acceptingTicketsQuery.data.event?.scheduleReleased ?? false;
 	const acceptingVolunteers = acceptingTicketsQuery.data.event?.acceptingVolunteers ?? false;
-	// const acceptingShirts = acceptingTicketsQuery.data.event?.acceptingShirts ?? false;
-	const acceptingShirts = true;
+	const acceptingShirts = acceptingTicketsQuery.data.event?.acceptingShirts ?? false;
 
 	let emailVerified = false;
 	if (session) {
@@ -167,16 +166,18 @@ export default async function ASM2026() {
 				</form>
 			</section>
 			<hr className={styles.divider} />
-			<section className={styles.content} id="event-shirt">
-				<h1>Event Shirt</h1>
-				<form action={shirtStripeCheckoutAction} className={styles.form}>
-					<ShirtPurchase
-						canBuy={emailVerified}
-						userId={session?.user.id}
-						eventAcceptingShirts={acceptingShirts}
-					/>
-				</form>
-			</section>
+			{acceptingShirts && (
+				<section className={styles.content} id="event-shirt">
+					<h1>Event Shirt</h1>
+					<form action={shirtStripeCheckoutAction} className={styles.form}>
+						<ShirtPurchase
+							canBuy={emailVerified}
+							userId={session?.user.id}
+							eventAcceptingShirts={acceptingShirts}
+						/>
+					</form>
+				</section>
+			)}
 			<section className={styles.content}>
 				<h3>Refund Policy</h3>
 				<p>

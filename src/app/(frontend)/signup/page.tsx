@@ -7,6 +7,7 @@ import configPromise from "#payload-config";
 
 import { SignUpForm } from "./SignUpForm.tsx";
 import styles from "./signup.module.css";
+import { Card, Stack, Title } from "@mantine/core";
 
 export const metadata: Metadata = {
 	title: "Sign Up",
@@ -24,12 +25,14 @@ export default async function SignUpPage() {
 
 	return (
 		<main className={styles.page}>
-			<section className={styles.card}>
-				<p className={styles.kicker}>AusSpeedruns</p>
-				<h1 className={styles.title}>Create an account</h1>
-				<p className={styles.subtitle}>Join AusSpeedruns and be part of our speedrunning community.</p>
-				<SignUpForm />
-			</section>
+			<Card p="xl" w="100%" maw={420}>
+				<Stack gap="lg">
+					<Title order={1} ta="center">
+						Sign Up
+					</Title>
+					<SignUpForm />
+				</Stack>
+			</Card>
 		</main>
 	);
 }

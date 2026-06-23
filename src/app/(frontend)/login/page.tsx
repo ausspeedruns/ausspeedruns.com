@@ -7,6 +7,7 @@ import configPromise from "#payload-config";
 
 import { LoginForm } from "./LoginForm.tsx";
 import styles from "./login.module.css";
+import { Card, Stack, Title } from "@mantine/core";
 
 export const metadata: Metadata = {
 	title: "Login",
@@ -39,10 +40,14 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
 	return (
 		<main className={styles.page}>
-			<section className={styles.card}>
-				<p className={styles.kicker}>AusSpeedruns</p>
-				<LoginForm redirectPath={redirectPath} />
-			</section>
+			<Card p="xl" w="100%" maw={420}>
+				<Stack gap="lg">
+					<Title order={1} ta="center">
+						Log In
+					</Title>
+					<LoginForm redirectPath={redirectPath} />
+				</Stack>
+			</Card>
 		</main>
 	);
 }

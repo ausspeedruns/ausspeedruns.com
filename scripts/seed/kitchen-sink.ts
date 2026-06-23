@@ -9,7 +9,6 @@ import { buildKitchenSinkDonationTrackerSection } from "./kitchen-sink-sections/
 import { buildKitchenSinkEventHeroSection } from "./kitchen-sink-sections/eventHero.ts";
 import { buildKitchenSinkFaqSection } from "./kitchen-sink-sections/faq.ts";
 import { buildKitchenSinkFormSection } from "./kitchen-sink-sections/form.ts";
-import { buildKitchenSinkHero } from "./kitchen-sink-sections/hero.ts";
 import { buildKitchenSinkLiveStreamSection } from "./kitchen-sink-sections/liveStream.ts";
 import { buildKitchenSinkMediaSection } from "./kitchen-sink-sections/media.ts";
 import { buildKitchenSinkSponsorGridSection } from "./kitchen-sink-sections/sponsorGrid.ts";
@@ -55,7 +54,6 @@ export async function kitchenSinkPage(payload: BasePayload): Promise<RequiredDat
 		posts,
 	};
 
-	const hero = buildKitchenSinkHero(context) as RequiredDataFromCollectionSlug<"pages">["hero"];
 	const layout = [
 		...buildKitchenSinkContentSections(context),
 		buildKitchenSinkCtaSection(),
@@ -82,7 +80,6 @@ export async function kitchenSinkPage(payload: BasePayload): Promise<RequiredDat
 			image: img(0),
 			title: "Kitchen Sink — Every Block & Configuration",
 		},
-		hero,
 		layout,
 	};
 }

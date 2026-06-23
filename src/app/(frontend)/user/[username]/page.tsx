@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { Anchor, Badge, Box, Container, Group, Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
-import { AtSign, MessageCircle, PlayCircle, Trophy, Tv, Users } from "lucide-react";
-import type { Run } from "#/payload-types";
+import { Button, Card, Container, Group, Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { AtSign, Tv } from "lucide-react";
+import type { Run as RunType } from "#/payload-types";
+import { headers } from "next/headers";
+import config from "#payload-config";
 
 import configPromise from "#payload-config";
 import { getPayload } from "payload";
@@ -10,6 +12,9 @@ import { cache } from "react";
 
 import styles from "./page.module.css";
 import { UserNavigation } from "./user-navigation";
+import { Run } from "./run";
+import { getEventLabel } from "./getEventLabel";
+import { UpcomingRun } from "./upcoming-run";
 
 type Args = {
 	params: Promise<{
@@ -26,18 +31,22 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 		notFound();
 	}
 
-	const runs = (user.speedrunData?.runs?.docs ?? []).filter((run): run is Run => typeof run !== "number");
-	const historicalRuns = runs.slice(0, 4);
+	const payload = await getPayload({ config });
+	const userHeaders = await headers();
+	const auth = await payload.auth({ headers: userHeaders });
+
+	const currentTime = new Date();
+	const runs = (user.speedrunData?.runs?.docs ?? []).filter((run): run is RunType => typeof run !== "number");
+	const historicalRuns = runs.filter((run) => !run.scheduledTime || new Date(run.scheduledTime) < currentTime);
 	const upcomingRuns = runs
-		.filter((run) => Boolean(run.scheduledTime || run.estimate))
-		.slice(0, 3)
+		.filter((run) => run.scheduledTime && new Date(run.scheduledTime) >= currentTime)
 		.map((run, index) => ({
 			id: run.id,
 			date: run.scheduledTime ? formatDate(run.scheduledTime) : "Schedule TBD",
 			estimate: run.estimate,
 			game: run.game,
 			event: getEventLabel(run),
-			mode: run.isRace ? "Race" : run.isCoop ? "Co-op" : "Solo Showcase",
+			mode: run.isRace ? "Race" : run.isCoop ? "Co-op" : "",
 			isHighlighted: index === 1,
 		}));
 
@@ -51,11 +60,6 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 			label: "Bluesky",
 			href: user.socials?.Bluesky ? `https://bsky.app/profile/${user.socials.Bluesky}` : undefined,
 			icon: AtSign,
-		},
-		{
-			label: "Discord",
-			href: user.socials?.Discord ? `https://discord.com/users/${user.socials.Discord}` : undefined,
-			icon: MessageCircle,
 		},
 	].filter((item) => item.href);
 
@@ -71,25 +75,25 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 					</div>
 
 					<div className={styles.quickPanel}>
-						<Group className={styles.socialLinks} gap="sm">
+						<Group gap="sm">
 							{socialItems.map((item) => {
 								const Icon = item.icon;
 								return (
-									<Anchor
-										className={styles.socialPill}
-										href={item.href}
+									<Button
+										leftSection={<Icon size={16} />}
 										key={item.label}
-										rel="noreferrer"
+										component="a"
+										href={item.href}
 										target="_blank"
+										rel="noreferrer"
 									>
-										<Icon size={16} />
-										<Text>{item.label}</Text>
-									</Anchor>
+										{item.label}
+									</Button>
 								);
 							})}
 						</Group>
 
-						<UserNavigation />
+						{auth.user?.id === user.id && <UserNavigation />}
 					</div>
 				</section>
 
@@ -102,44 +106,13 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 						</div>
 
 						{historicalRuns.length === 0 ? (
-							<Paper className={styles.emptyState} withBorder>
-								<Text c="dimmed">No historical runs available yet.</Text>
-							</Paper>
+							<Card className={styles.emptyState}>
+								<Text c="dimmed">No runs.</Text>
+							</Card>
 						) : (
 							<SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
-								{historicalRuns.map((run, index) => (
-									<article className={styles.runCard} key={run.id}>
-										<Box className={styles.thumbWrap}>
-											<div className={styles.overlay}>
-												<PlayCircle className={styles.playIcon} size={58} />
-											</div>
-											<Badge className={styles.cardBadge}>{getEventLabel(run)}</Badge>
-										</Box>
-
-										<Stack className={styles.cardBody} gap="md">
-											<Group align="flex-start" justify="space-between" wrap="nowrap">
-												<div>
-													<Title className={styles.runTitle} order={3}>
-														{run.game}
-													</Title>
-													<Text
-														className={styles.runMeta}
-													>{`${run.category} · ${run.platform}`}</Text>
-												</div>
-												<div className={styles.timeBlock}>
-													<Text className={styles.finalTime}>{run.time || "TBD"}</Text>
-													<Text className={styles.timeLabel}>Final time</Text>
-												</div>
-											</Group>
-
-											<Group className={styles.cardFooter} gap="sm" wrap="nowrap">
-												<Box className={styles.trophyBox}>
-													{index % 2 === 0 ? <Trophy size={14} /> : <Users size={14} />}
-												</Box>
-												<Text className={styles.eventLine}>{getEventLabel(run)}</Text>
-											</Group>
-										</Stack>
-									</article>
+								{historicalRuns.map((run) => (
+									<Run key={run.id} run={run} />
 								))}
 							</SimpleGrid>
 						)}
@@ -153,37 +126,13 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 						</div>
 
 						{upcomingRuns.length === 0 ? (
-							<Paper className={styles.emptyState} withBorder>
-								<Text c="dimmed">No upcoming schedule published.</Text>
-							</Paper>
+							<Card className={styles.emptyState}>
+								<Text c="dimmed">No upcoming runs scheduled.</Text>
+							</Card>
 						) : (
 							<Stack gap="xs">
 								{upcomingRuns.map((run) => (
-									<article
-										className={`${styles.scheduleItem} ${run.isHighlighted ? styles.scheduleItemHighlight : ""}`}
-										key={run.id}
-									>
-										<div className={styles.scheduleRail} />
-										<Group justify="space-between" wrap="nowrap">
-											<Text className={styles.scheduleDate}>{run.date}</Text>
-											<Badge className={styles.scheduleEstimate} variant="outline">
-												EST: {run.estimate}
-											</Badge>
-										</Group>
-										<div>
-											<Title className={styles.scheduleTitle} order={4}>
-												{run.game}
-											</Title>
-											<Text className={styles.scheduleEvent}>{run.event}</Text>
-										</div>
-										<Group justify="space-between" wrap="nowrap">
-											<Group className={styles.avatarGroup} gap={0}>
-												<Box className={styles.avatarDot} />
-												<Box className={styles.avatarDotAlt} />
-											</Group>
-											<Text className={styles.scheduleMode}>{run.mode}</Text>
-										</Group>
-									</article>
+									<UpcomingRun key={run.id} run={run} />
 								))}
 							</Stack>
 						)}
@@ -236,14 +185,6 @@ const queryUserByUsername = cache(async (username: string) => {
 
 	return result.docs?.[0] || null;
 });
-
-function getEventLabel(run: Run): string {
-	if (!run.event || typeof run.event === "number") {
-		return "Event Pending";
-	}
-
-	return run.event.shortName || run.event.name || "Event Pending";
-}
 
 function formatDate(value: string): string {
 	const date = new Date(value);

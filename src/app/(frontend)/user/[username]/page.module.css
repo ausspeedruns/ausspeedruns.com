@@ -21,19 +21,13 @@
 }
 
 .heroSection {
-	margin-bottom: 4rem;
-}
-
-.titleBlock {
-	border-left: 4px solid var(--primary);
-	padding-left: 1.25rem;
-	margin-bottom: 1.8rem;
+	margin-bottom: 1rem;
 }
 
 .heroTitle {
 	position: relative;
 	display: inline-block;
-	font-family: "Jersey10", Geist, sans-serif;
+	font-family: "Jersey10", var(--mantine-font-family), sans-serif;
 	font-weight: normal;
 	font-size: clamp(2.4rem, 11vw, 7rem);
 	letter-spacing: 0.05em;
@@ -54,10 +48,6 @@
 }
 
 .pronouns {
-	margin-top: 0.6rem;
-	font-size: 0.88rem;
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
 	color: var(--on-surface-soft);
 }
 
@@ -65,72 +55,6 @@
 	border-top: 1px solid var(--outline-soft);
 	border-bottom: 1px solid var(--outline-soft);
 	padding: 1.4rem 0;
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
-}
-
-.socialLinks {
-	row-gap: 0.55rem;
-	column-gap: 0.55rem;
-}
-
-.socialPill {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.4rem;
-	font-family: "Space Grotesk", Geist, sans-serif;
-	font-size: 0.66rem;
-	font-weight: 700;
-	letter-spacing: 0.12em;
-	text-transform: uppercase;
-	text-decoration: none;
-	padding: 0.5rem 0.75rem;
-	background: var(--surface-low);
-	color: var(--on-surface);
-	transition: transform 0.18s ease, background-color 0.18s ease;
-}
-
-.socialPill:hover {
-	background: var(--surface-high);
-	transform: translateY(-1px);
-}
-
-.actionGrid {
-	width: 100%;
-}
-
-.primaryAction,
-.secondaryAction {
-	height: 2.65rem;
-	border-radius: 0;
-	font-family: "Space Grotesk", Geist, sans-serif;
-	font-size: 0.65rem;
-	font-weight: 800;
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
-	padding-inline: 0.8rem;
-}
-
-.primaryAction {
-	background: linear-gradient(140deg, var(--primary), var(--primary-strong));
-	color: #4d2700;
-	border: none;
-}
-
-.primaryAction:hover {
-	filter: brightness(1.06);
-}
-
-.secondaryAction {
-	background: var(--surface-high);
-	color: var(--on-surface);
-	border: 1px solid transparent;
-}
-
-.secondaryAction:hover {
-	background: var(--surface-bright);
-	border-color: color-mix(in srgb, var(--primary) 24%, transparent);
 }
 
 .contentGrid {
@@ -159,7 +83,6 @@
 .sectionTitleAlt {
 	position: relative;
 	display: inline-block;
-	font-family: "Space Grotesk", Geist, sans-serif;
 	font-size: clamp(1.85rem, 5vw, 2.05rem);
 	font-weight: 800;
 	text-transform: uppercase;
@@ -175,291 +98,9 @@
 	color: var(--on-surface);
 }
 
-/* .sectionTitle::after,
-.sectionTitleAlt::after {
-	content: attr(data-text);
-	position: absolute;
-	left: 2px;
-	top: 2px;
-	z-index: -1;
-	-webkit-text-stroke: 1px color-mix(in srgb, var(--on-surface) 30%, transparent);
-	color: transparent;
-	width: 100%;
-} */
-
-.sectionHint {
-	font-family: "Space Grotesk", Geist, sans-serif;
-	font-size: 0.58rem;
-	letter-spacing: 0.2em;
-	text-transform: uppercase;
-	opacity: 0.5;
-	white-space: nowrap;
-}
-
 .emptyState {
 	background: var(--surface-mid);
 	border-color: var(--outline-soft);
-	padding: 1.2rem;
-	border-radius: 0;
-}
-
-.runCard {
-	background: var(--surface-low);
-	padding: 0.3rem;
-	border: 1px solid transparent;
-	transition: border-color 0.18s ease;
-}
-
-.runCard:hover {
-	border-color: color-mix(in srgb, var(--primary) 22%, transparent);
-}
-
-.thumbWrap {
-	position: relative;
-	aspect-ratio: 16 / 9;
-	overflow: hidden;
-}
-
-.thumbnail {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	filter: grayscale(1);
-	transition: filter 0.6s ease, transform 0.6s ease;
-}
-
-.runCard:hover .thumbnail {
-	filter: grayscale(0);
-	transform: scale(1.03);
-}
-
-.overlay {
-	position: absolute;
-	inset: 0;
-	display: grid;
-	place-items: center;
-	background: rgb(0 0 0 / 38%);
-	transition: background-color 0.25s ease;
-}
-
-.runCard:hover .overlay {
-	background: rgb(0 0 0 / 10%);
-}
-
-.playIcon {
-	color: var(--primary);
-	opacity: 0;
-	transform: scale(0.7);
-	transition: opacity 0.25s ease, transform 0.25s ease;
-}
-
-.runCard:hover .playIcon {
-	opacity: 1;
-	transform: scale(1);
-}
-
-.cardBadge {
-	position: absolute;
-	left: 0.75rem;
-	top: 0.75rem;
-	border-radius: 0;
-	background: var(--primary);
-	color: #432100;
-	text-transform: uppercase;
-	font-size: 0.58rem;
-	letter-spacing: 0.08em;
-	font-family: "Space Grotesk", Geist, sans-serif;
-	font-weight: 800;
-	padding-inline: 0.55rem;
-	height: 1.2rem;
-}
-
-.cardBody {
-	padding: 1rem;
-	min-width: 0;
-}
-
-.runTitle {
-	font-family: "Space Grotesk", Geist, sans-serif;
-	font-size: 1.25rem;
-	font-weight: 700;
-	line-height: 1;
-	text-transform: uppercase;
-	letter-spacing: -0.02em;
-	margin: 0;
-}
-
-.runMeta {
-	font-family: "Space Grotesk", Geist, sans-serif;
-	font-size: 0.65rem;
-	letter-spacing: 0.13em;
-	text-transform: uppercase;
-	color: var(--on-surface-soft);
-	margin-top: 0.35rem;
-}
-
-.timeBlock {
-	text-align: right;
-	flex-shrink: 0;
-}
-
-.finalTime {
-	font-family: "Space Grotesk", Geist, sans-serif;
-	font-size: 1.45rem;
-	font-weight: 900;
-	line-height: 1;
-	letter-spacing: -0.03em;
-	color: var(--primary);
-}
-
-.timeLabel {
-	font-size: 0.56rem;
-	text-transform: uppercase;
-	letter-spacing: 0.16em;
-	opacity: 0.45;
-	margin-top: 0.2rem;
-}
-
-.cardFooter {
-	padding-top: 0.8rem;
-	border-top: 1px solid color-mix(in srgb, var(--outline) 30%, transparent);
-}
-
-.trophyBox {
-	width: 1.9rem;
-	height: 1.9rem;
-	background: var(--surface-bright);
-	display: grid;
-	place-items: center;
-	flex-shrink: 0;
-}
-
-.eventLine {
-	font-size: 0.58rem;
-	letter-spacing: 0.11em;
-	text-transform: uppercase;
-	color: color-mix(in srgb, var(--on-surface) 66%, transparent);
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.scheduleItem {
-	position: relative;
-	background: var(--surface-low);
-	padding: 1.3rem;
-	overflow: hidden;
-	display: flex;
-	flex-direction: column;
-	gap: 0.85rem;
-	transition: background-color 0.2s ease;
-}
-
-.scheduleItemHighlight {
-	background: var(--surface-high);
-}
-
-.scheduleItem:hover {
-	background: color-mix(in srgb, var(--surface-high) 88%, var(--surface-bright));
-}
-
-.scheduleRail {
-	position: absolute;
-	right: 0;
-	top: 0;
-	height: 100%;
-	width: 3px;
-	background: color-mix(in srgb, var(--primary) 26%, transparent);
-	transition: background-color 0.2s ease;
-}
-
-.scheduleItem:hover .scheduleRail {
-	background: var(--primary);
-}
-
-.scheduleDate {
-	font-family: "Space Grotesk", Geist, sans-serif;
-	font-size: 0.75rem;
-	font-weight: 700;
-	letter-spacing: 0.11em;
-	text-transform: uppercase;
-	color: var(--primary);
-	white-space: nowrap;
-}
-
-.scheduleEstimate {
-	border-radius: 0;
-	border-color: color-mix(in srgb, var(--tertiary) 32%, transparent);
-	color: var(--tertiary);
-	font-family: "Space Grotesk", Geist, sans-serif;
-	font-size: 0.56rem;
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
-	height: 1.2rem;
-	padding-inline: 0.45rem;
-	white-space: nowrap;
-	background: transparent;
-}
-
-.scheduleTitle {
-	font-family: "Space Grotesk", Geist, sans-serif;
-	font-size: 1.25rem;
-	font-weight: 900;
-	line-height: 1;
-	text-transform: uppercase;
-	margin: 0;
-}
-
-.scheduleEvent {
-	margin-top: 0.35rem;
-	font-size: 0.65rem;
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
-	opacity: 0.58;
-}
-
-.avatarGroup {
-	display: flex;
-	align-items: center;
-}
-
-.avatarDot,
-.avatarDotAlt {
-	width: 1.55rem;
-	height: 1.55rem;
-	border-radius: 999px;
-	border: 1px solid var(--surface-low);
-}
-
-.avatarDot {
-	background: var(--surface-bright);
-}
-
-.avatarDotAlt {
-	margin-left: -0.45rem;
-	background: color-mix(in srgb, var(--primary) 25%, transparent);
-}
-
-.scheduleMode {
-	font-size: 0.58rem;
-	letter-spacing: 0.16em;
-	text-transform: uppercase;
-	opacity: 0.48;
-	text-align: right;
-}
-
-@media (width >= 48em) {
-	.navLinks {
-		display: flex;
-	}
-
-	.iconSet {
-		display: flex;
-	}
-
-	.main {
-		padding-top: 3.3rem;
-	}
 }
 
 @media (width >= 75em) {
@@ -468,11 +109,7 @@
 	}
 }
 
-@media (max-width: 47.99em) {
-	.topNavInner {
-		padding-inline: 0.9rem;
-	}
-
+@media (max-width: 48em) {
 	.main {
 		padding-inline: 0.9rem;
 	}
@@ -481,21 +118,5 @@
 		align-items: flex-start;
 		flex-direction: column;
 	}
-
-	.sectionHint {
-		white-space: normal;
-	}
-
-	.scheduleDate {
-		font-size: 0.68rem;
-	}
-
-	.footerMeta {
-		margin-left: 0;
-		align-items: flex-start;
-	}
-
-	.footerLegal {
-		text-align: left;
-	}
 }
+

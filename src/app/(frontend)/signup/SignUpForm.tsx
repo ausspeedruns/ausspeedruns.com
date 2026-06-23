@@ -3,12 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Alert, Button, PasswordInput, TextInput, Tooltip } from "@mantine/core";
+import { Alert, Anchor, Button, PasswordInput, Stack, Text, TextInput, Tooltip } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 
 import styles from "./signup.module.css";
 import { useForm } from "@mantine/form";
 import { SignUp } from "./signup-action";
+import { Check, SquareAlert } from "pixelarticons/react";
 
 export interface SignUpFormData {
 	username: string;
@@ -101,8 +102,8 @@ export function SignUpForm() {
 	}
 
 	return (
-		<>
-			<div className={styles.form}>
+		<Stack gap="md">
+			<form className={styles.form} onSubmit={form.onSubmit(handleSubmit)}>
 				<TextInput
 					label="Username"
 					id="username"
@@ -141,7 +142,7 @@ export function SignUpForm() {
 						<span style={{ display: "flex", alignItems: "center", gap: 4 }}>
 							Date of Birth
 							<Tooltip
-								label="We collect your date of birth to verify you meet the minimum age requirement and to help us and events we partner with ensure a safe experience for all."
+								label="We collect your date of birth to verify you meet the minimum age requirements for our events and events we partner with."
 								multiline
 								w={250}
 							>
@@ -175,25 +176,29 @@ export function SignUpForm() {
 					{...form.getInputProps("dateOfBirth")}
 				/>
 
-				<Button className={styles.submit} onClick={handleSubmit} loading={isSubmitting}>
+				<Button className={styles.submit} type="submit" loading={isSubmitting} size="md" fullWidth>
 					{isSubmitting ? "Creating account..." : "Create account"}
 				</Button>
-			</div>
+			</form>
 
 			{status && (
 				<Alert
-					className={status.type === "error" ? styles.error : styles.success}
-					radius={0}
+					variant="light"
+					icon={status.type === "error" ? <SquareAlert /> : <Check />}
+					color={status.type === "error" ? "red" : "green"}
 					role="status"
-					aria-live="polite"
+					aria-live={status.type === "error" ? "assertive" : "polite"}
 				>
 					{status.message}
 				</Alert>
 			)}
 
-			<p className={styles.footerText}>
-				Already have an account? <Link href="/login">Sign in</Link>
-			</p>
-		</>
+			<Text c="dimmed" size="sm" ta="center">
+				Already have an account?{" "}
+				<Anchor component={Link} href="/login" fw={600}>
+					Log in
+				</Anchor>
+			</Text>
+		</Stack>
 	);
 }

@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Alert, Button, PasswordInput, TextInput } from "@mantine/core";
+import { Alert, Anchor, Button, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
+import { useForm } from "@mantine/form";
 
 import styles from "./login.module.css";
+import { Check, SquareAlert } from "pixelarticons/react";
 
 type LoginFormProps = {
 	redirectPath: string;
@@ -15,6 +17,11 @@ type FormStatus = {
 	type: "error" | "success";
 	message: string;
 } | null;
+
+type LoginFormValues = {
+	email: string;
+	password: string;
+};
 
 function getSafeRedirectPath(value: string | null | undefined): string {
 	if (!value) return "/";
@@ -28,24 +35,25 @@ export function LoginForm({ redirectPath }: LoginFormProps) {
 
 	const router = useRouter();
 	const searchParams = useSearchParams();
+	const form = useForm<LoginFormValues>({
+		mode: "uncontrolled",
+		initialValues: {
+			email: "",
+			password: "",
+		},
+		validate: {
+			email: (value) => {
+				const trimmedValue = value.trim();
+				if (!trimmedValue) return "Please enter your email.";
+				return /^\S+@\S+$/.test(trimmedValue) ? null : "Please enter a valid email address.";
+			},
+			password: (value) => (value ? null : "Please enter your password."),
+		},
+	});
 
-	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-		event.preventDefault();
+	const handleSubmit = form.onSubmit(async (values) => {
 		setIsSubmitting(true);
 		setStatus(null);
-
-		const formData = new FormData(event.currentTarget);
-		const email = formData.get("email");
-		const password = formData.get("password");
-
-		if (typeof email !== "string" || typeof password !== "string") {
-			setStatus({
-				type: "error",
-				message: "Please enter both your email and password.",
-			});
-			setIsSubmitting(false);
-			return;
-		}
 
 		try {
 			const response = await fetch("/api/users/login", {
@@ -54,7 +62,10 @@ export function LoginForm({ redirectPath }: LoginFormProps) {
 					"Content-Type": "application/json",
 				},
 				credentials: "include",
-				body: JSON.stringify({ email, password }),
+				body: JSON.stringify({
+					email: values.email.trim(),
+					password: values.password,
+				}),
 			});
 
 			if (!response.ok) {
@@ -81,7 +92,7 @@ export function LoginForm({ redirectPath }: LoginFormProps) {
 			});
 
 			const nextFromQuery = getSafeRedirectPath(searchParams.get("redirect") ?? searchParams.get("next"));
-			router.push(nextFromQuery || redirectPath);
+			router.push(nextFromQuery ?? redirectPath);
 			router.refresh();
 		} catch {
 			setStatus({
@@ -91,49 +102,55 @@ export function LoginForm({ redirectPath }: LoginFormProps) {
 		} finally {
 			setIsSubmitting(false);
 		}
-	}
+	});
 
 	return (
-		<>
+		<Stack gap="md">
 			<form className={styles.form} onSubmit={handleSubmit}>
 				<TextInput
 					label="Email"
 					id="email"
-					name="email"
+					key={form.key("email")}
 					type="email"
 					autoComplete="email"
-					required
 					placeholder="you@example.com"
+					size="md"
+					{...form.getInputProps("email")}
 				/>
 
 				<PasswordInput
 					label="Password"
 					id="password"
-					name="password"
+					key={form.key("password")}
 					autoComplete="current-password"
-					required
 					placeholder="Enter your password"
+					size="md"
+					{...form.getInputProps("password")}
 				/>
 
-				<Button className={styles.submit} type="submit" loading={isSubmitting}>
-					{isSubmitting ? "Signing in..." : "Sign in"}
+				<Button className={styles.submit} type="submit" loading={isSubmitting} size="md" fullWidth>
+					{isSubmitting ? "Logging in..." : "Log in"}
 				</Button>
 			</form>
 
 			{status && (
 				<Alert
-					className={status.type === "error" ? styles.error : styles.success}
-					radius={0}
+					variant="light"
+					icon={status.type === "error" ? <SquareAlert /> : <Check />}
+					color={status.type === "error" ? "red" : "green"}
 					role="status"
-					aria-live="polite"
+					aria-live={status.type === "error" ? "assertive" : "polite"}
 				>
 					{status.message}
 				</Alert>
 			)}
 
-			<p className={styles.footerText}>
-				Need to create an account? <Link href="/contact">Contact the team</Link>
-			</p>
-		</>
+			<Text c="dimmed" size="sm" ta="center">
+				Need to create an account?{" "}
+				<Anchor component={Link} href="/signup" fw={600}>
+					Sign up
+				</Anchor>
+			</Text>
+		</Stack>
 	);
 }

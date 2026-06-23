@@ -1,0 +1,85 @@
+.runCard {
+	display: flex;
+	flex-direction: column;
+}
+
+.runCard:hover {
+	border-color: color-mix(in srgb, var(--primary) 22%, transparent);
+}
+
+.thumbWrap {
+	position: relative;
+	aspect-ratio: 16 / 9;
+	overflow: hidden;
+}
+
+.thumbnail {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	filter: grayscale(1);
+	transition: filter 0.6s ease, transform 0.6s ease;
+}
+
+.runCard:hover .thumbnail {
+	filter: grayscale(0);
+	transform: scale(1.03);
+}
+
+.overlay {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	background: rgb(0 0 0 / 38%);
+	transition: background-color 0.25s ease;
+}
+
+.runCard:hover .overlay {
+	background: rgb(0 0 0 / 10%);
+}
+
+.runCard:hover .playIcon {
+	opacity: 1;
+	transform: scale(1);
+}
+
+.cardBadge {
+	position: absolute;
+	left: 0.75rem;
+	top: 0.75rem;
+}
+
+.cardBody {
+	padding: 1rem;
+	min-width: 0;
+	flex-grow: 1;
+}
+
+.runTitle {
+	margin: 0;
+}
+
+.runMeta {
+	color: var(--on-surface-soft);
+}
+
+.timeBlock {
+	text-align: right;
+	flex-shrink: 0;
+}
+
+.finalTime {
+	color: var(--primary);
+}
+
+.cardFooter {
+	border-top: 1px solid color-mix(in srgb, var(--outline) 30%, transparent);
+}
+
+.eventLine {
+	color: color-mix(in srgb, var(--on-surface) 66%, transparent);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}

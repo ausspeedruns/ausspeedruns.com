@@ -20,7 +20,6 @@ import { FAQBlockConfig } from "#blocks/FAQBlock/config.ts";
 import { ProductBlockConfig } from "#blocks/ProductBlock/product-block-config.ts";
 import { PostEventStatsBlockConfig } from "#blocks/PostEventStatsBlock/config.ts";
 
-import { hero } from "#heros/config.ts";
 import { populatePublishedAt } from "#hooks/populatePublishedAt.ts";
 import { generatePreviewPath } from "#utilities/generatePreviewPath.ts";
 import { revalidateDelete } from "./hooks/revalidatePage.ts";
@@ -76,10 +75,6 @@ export const Pages: CollectionConfig<"pages"> = {
 		{
 			type: "tabs",
 			tabs: [
-				{
-					fields: [hero],
-					label: "Hero",
-				},
 				{
 					fields: [
 						{

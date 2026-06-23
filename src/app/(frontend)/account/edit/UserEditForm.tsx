@@ -87,14 +87,6 @@ export function UserEditForm({ initialValues, username, isEmailVerified, onResen
 
 					<div className={styles.formGrid}>
 						<TextInput
-							id="discord"
-							key={form.key("discord")}
-							label="Discord"
-							placeholder="runnername"
-							{...form.getInputProps("discord")}
-						/>
-
-						<TextInput
 							id="twitch"
 							key={form.key("twitch")}
 							label="Twitch"
@@ -192,6 +184,14 @@ export function UserEditForm({ initialValues, username, isEmailVerified, onResen
 							label="Location"
 							placeholder="Prefer not to say"
 							{...form.getInputProps("state")}
+						/>
+
+						<TextInput
+							id="discord"
+							key={form.key("discord")}
+							label="Discord"
+							placeholder="runnername"
+							{...form.getInputProps("discord")}
 						/>
 					</div>
 				</Stack>

@@ -2,9 +2,10 @@ import config from "#payload-config";
 import { getPayload } from "payload";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Alert, Stack, Text, ThemeIcon, Title } from "@mantine/core";
+import { Alert, Anchor, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import { ReceiptText } from "lucide-react";
 import { Order } from "./order";
+import { WarningDiamond } from "pixelarticons/react";
 
 export default async function AccountOrdersPage() {
 	const payload = await getPayload({ config });
@@ -32,6 +33,9 @@ export default async function AccountOrdersPage() {
 	return (
 		<Stack gap="md">
 			<Title order={1}>My Orders</Title>
+			<Alert color="yellow" icon={<WarningDiamond />} variant="light">
+				<Text size="sm">This is not orders done through our <Anchor href="/merch">Merch store</Anchor>.</Text>
+			</Alert>
 			{orders.docs.length === 0 ? (
 				<Alert
 					color="gray"

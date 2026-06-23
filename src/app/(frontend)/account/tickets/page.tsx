@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Ticket } from "./ticket";
 import type { Event } from "#payload-types.ts";
+import { Stack, Title } from "@mantine/core";
 
 export default async function AccountTicketsPage() {
 	const payload = await getPayload({ config });
@@ -65,7 +66,8 @@ export default async function AccountTicketsPage() {
 	}
 
 	return (
-		<div>
+		<Stack gap="md">
+			<Title order={1}>Tickets</Title>
 			{orders.docs.map((order) =>
 				order.items?.map((item) => {
 					if (!item.product || typeof item.product !== "object") {
@@ -87,12 +89,12 @@ export default async function AccountTicketsPage() {
 								method: order.purchaseType === "bankTransfer" ? "bank" : "card",
 								taken: order.status === "collected",
 								priceInCents: item.unitPriceInCents,
-								event
+								event,
 							}}
 						/>
 					);
 				}),
 			)}
-		</div>
+		</Stack>
 	);
 }

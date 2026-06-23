@@ -21,7 +21,7 @@ function resolveProductName(item: NonNullable<Order["items"]>[number]) {
 
 function resolveProductImage(item: NonNullable<Order["items"]>[number]) {
 	if (!item.product || typeof item.product === "number") return null;
-	return item.product.image ?? null;
+	return item.product.images ?? null;
 }
 
 export function OrderItem(props: OrderItemProps) {
@@ -30,7 +30,7 @@ export function OrderItem(props: OrderItemProps) {
 	const unitPriceText = currencyFormatter.format(item.unitPriceInCents / 100);
 	const lineTotalText = currencyFormatter.format(lineTotalInCents / 100);
 	const productName = resolveProductName(item);
-	const productImage = resolveProductImage(item);
+	const productImage = resolveProductImage(item)?.[0] ?? null;
 
 	return (
 		<Paper withBorder radius="md" p="sm" className={styles.item}>
@@ -39,7 +39,7 @@ export function OrderItem(props: OrderItemProps) {
 					<div className={styles.imageWrap}>
 						{productImage ? (
 							<Media
-								resource={productImage}
+								resource={productImage.image}
 								alt={`${productName} image`}
 								imgClassName={styles.image}
 								fill

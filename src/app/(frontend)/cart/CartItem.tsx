@@ -35,7 +35,8 @@ export function CartItem({ item, onRemove, onUpdateQuantity }: CartItemProps) {
 	}, [item.id]);
 
 	const lineTotalInCents = item.priceInCents * item.quantity;
-	const productImage = product?.image && typeof product.image === "object" ? (product.image as MediaType) : null;
+	const productImage =
+		product?.images && typeof product.images[0] === "object" ? (product.images[0].image as MediaType) : null;
 	const productType = product?.type;
 
 	return (

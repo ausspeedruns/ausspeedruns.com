@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { getPayload } from "payload";
 import config from "#payload-config";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-03-25.dahlia" });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-05-27.dahlia" });
 
 export const metadata = {
 	title: "Order Cancelled",

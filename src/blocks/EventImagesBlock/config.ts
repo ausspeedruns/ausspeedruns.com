@@ -49,7 +49,10 @@ export const EventImagesBlockConfig: Block = {
 					admin: {
 						condition: (_, siblingData) => siblingData?.sourceType === "upload",
 					},
-					validate: (value, { siblingData }) => {
+					validate: (
+						value: unknown,
+						{ siblingData }: { siblingData?: { sourceType?: "upload" | "external" } },
+					) => {
 						if (siblingData?.sourceType === "upload" && !value) {
 							return "Please select an uploaded image.";
 						}
@@ -65,7 +68,10 @@ export const EventImagesBlockConfig: Block = {
 						condition: (_, siblingData) => siblingData?.sourceType === "external",
 						description: "Use for images hosted in offsite photo apps.",
 					},
-					validate: (value, { siblingData }) => {
+					validate: (
+						value: unknown,
+						{ siblingData }: { siblingData?: { sourceType?: "upload" | "external" } },
+					) => {
 						if (siblingData?.sourceType !== "external") {
 							return true;
 						}

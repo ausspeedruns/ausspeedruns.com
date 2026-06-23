@@ -5,10 +5,10 @@ import type { Header as HeaderType } from "#/payload-types";
 import { CMSLink } from "#/components/Link/CMSLink";
 import Link from "next/link";
 import { Button } from "#/components/ui/button";
-import type { AuthResult } from "node_modules/payload/dist/auth/operations/auth";
 import styles from "./Navigation.module.css";
 import { useCartStore } from "#stores/useCartStore.ts";
 import { ShoppingCart } from "pixelarticons/react";
+import type { AuthResult } from "#utilities/authResult.ts";
 // import { SearchIcon } from "lucide-react";
 
 interface HeaderNavProps {

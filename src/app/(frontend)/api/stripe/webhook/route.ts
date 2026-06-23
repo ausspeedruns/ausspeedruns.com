@@ -6,7 +6,7 @@ import type { Order } from "#payload-types.ts";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-03-25.dahlia" });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-05-27.dahlia" });
 
 async function findOrderForSession(session: Stripe.Checkout.Session): Promise<Order | null> {
 	const payload = await getPayload({ config });

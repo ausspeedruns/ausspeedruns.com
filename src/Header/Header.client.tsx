@@ -9,7 +9,7 @@ import type { Header } from "#/payload-types";
 import { Logo } from "#/components/Logo/Logo";
 import styles from "./Header.module.css";
 import { HeaderNav } from "./Nav/Navigation";
-import { type AuthResult } from "node_modules/payload/dist/auth/operations/auth";
+import type { AuthResult } from "#utilities/authResult.ts";
 
 interface HeaderClientProps {
 	data: Header;

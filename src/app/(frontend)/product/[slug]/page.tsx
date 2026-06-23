@@ -48,12 +48,11 @@ export default async function ProductPage({ params }: Props) {
 	const product = result.docs[0] as Product | undefined;
 	if (!product) notFound();
 
-	const image = typeof product.image === "object" ? (product.image as Media) : null;
+	const image = product.images ? (product.images[0].image as Media) : null;
 	const imageUrl = getMediaUrl(image?.url);
 
 	const now = new Date();
 	const isAvailable =
-		product.active !== false &&
 		(!product.availableFrom || new Date(product.availableFrom) <= now) &&
 		(!product.availableUntil || new Date(product.availableUntil) >= now);
 

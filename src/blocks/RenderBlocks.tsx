@@ -20,6 +20,7 @@ import { ProductBlock } from "./ProductBlock/ProductBlock";
 import { PostEventStatsBlock } from "./PostEventStatsBlock/PostEventStatsBlock";
 
 import styles from "./RenderBlocks.module.css";
+import { RandomRunBlock } from "./RandomRunBlock/RandomRunBlock";
 
 const blockComponents = {
 	archive: ArchiveBlock,
@@ -37,6 +38,7 @@ const blockComponents = {
 	faqBlock: FAQBlock,
 	productBlock: ProductBlock,
 	postEventStatsBlock: PostEventStatsBlock,
+	randomRunBlock: RandomRunBlock,
 };
 
 interface RenderBlocksProps {
@@ -50,7 +52,7 @@ export function RenderBlocks(props: RenderBlocksProps) {
 
 	if (hasBlocks) {
 		return (
-			<Fragment>
+			<>
 				{blocks.map((block, index) => {
 					const { blockType } = block;
 
@@ -67,7 +69,7 @@ export function RenderBlocks(props: RenderBlocksProps) {
 					}
 					return null;
 				})}
-			</Fragment>
+			</>
 		);
 	}
 

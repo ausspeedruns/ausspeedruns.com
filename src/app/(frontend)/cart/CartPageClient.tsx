@@ -98,7 +98,7 @@ export function CartPageClient() {
 					</Alert>
 				) : null}
 
-				<Grid align="start" gutter="xl">
+				<Grid align="start" gap="xl">
 					<Grid.Col span={{ base: 12, md: 7 }}>
 						<Stack gap="md">
 							{items.length === 0 ? (

@@ -83,7 +83,7 @@ export default async function AccountTicketsPage() {
 							key={order.id}
 							ticketData={{
 								paid: order.status === "completed",
-								ticketID: order.reference,
+								ticketID: order.reference ?? "Missing ID",
 								method: order.purchaseType === "bankTransfer" ? "bank" : "card",
 								taken: order.status === "collected",
 								priceInCents: item.unitPriceInCents,

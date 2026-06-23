@@ -10,7 +10,7 @@ export async function bankCheckout(
 ): Promise<CheckoutResult> {
 	const payload = await getPayload({ config });
 
-	if (items.some((item) => !item.product.allowBankTransfer)) {
+	if (items.some((item) => !item.variant.bankTransferDetails?.allowBankTransfer)) {
 		return { success: false, error: "Some products in your cart cannot be purchased via bank transfer." };
 	}
 

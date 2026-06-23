@@ -62,7 +62,10 @@ export const Products: CollectionConfig = {
 					required: true,
 					min: 0,
 					admin: { step: 1 },
-					validate: (value: number, { siblingData }: { siblingData: { stripePriceId?: string | null } }) => {
+					validate: (
+						value: number | null | undefined,
+						{ siblingData }: { siblingData: { stripePriceId?: string | null } },
+					) => {
 						if (siblingData.stripePriceId) {
 							return true; // If stripePriceId is set, we assume the price is managed in Stripe and skip validation
 						}

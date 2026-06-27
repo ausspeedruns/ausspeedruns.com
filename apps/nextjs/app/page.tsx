@@ -164,6 +164,19 @@ const ASM2026: AusSpeedrunsEvent = {
 	heroImage: "events/asm26/hero.jpg",
 };
 
+const ASAP2026: AusSpeedrunsEvent = {
+	fullName: "AusSpeedruns At PAX 2026",
+	preferredName: "ASAP2026",
+	shortName: "ASAP2026",
+	startDate: "9 October 2026 09:00:00 GMT+0100",
+	dates: "October 9 - 11, 2026",
+	charity: {
+		name: "Game On Cancer",
+	},
+	logo: "events/asap26/logo.png",
+	heroImage: "events/asap26/hero.png",
+};
+
 export const metadata: Metadata = {
 	description: "Home of the AusSpeedruns events",
 	openGraph: {
@@ -175,7 +188,13 @@ export const metadata: Metadata = {
 export default function Home() {
 	return (
 		<>
-			<HeroBlock event={ASM2026} tagLine="We're so back." schedule ticketLink="/ASM2026#tickets"/>
+			<HeroBlock event={ASM2026} tagLine="We're so back." schedule ticketLink="/ASM2026#tickets" />
+			<HeroBlock
+				event={ASAP2026}
+				tagLine="It's PAX time already!?!?!"
+				submitRuns
+				ticketLink="https://aus.paxsite.com/"
+			/>
 
 			{/* <EventLive event={"ASO2026"} /> */}
 

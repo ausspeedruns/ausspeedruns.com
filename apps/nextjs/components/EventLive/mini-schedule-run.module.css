@@ -1,0 +1,22 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	background: #419ADF;
+	padding: 8px;
+	text-wrap: nowrap;
+	justify-content: center;
+}
+
+.game {
+	font-weight: bold;
+	text-box: trim-both text;
+}
+
+.category {
+	font-style: italic;
+}
+
+.subtitle {
+	font-size: 80%;
+	font-weight: 300;
+}

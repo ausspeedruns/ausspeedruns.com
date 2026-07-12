@@ -51,8 +51,8 @@ export function War(props: WarProps) {
 									<div
 										className={styles.bar}
 										style={{
-											height: `${progress}%`,
-											width: `${progress}%`,
+											height: `${50}%`,
+											width: `100%`,
 											backgroundColor: isColor(option.name) ? option.name : undefined,
 										}}
 									/>

@@ -5,12 +5,13 @@
 .eventLive {
 	color: $light-text;
 	// background: $asm24-main-bg;
-	// background-image: url("./ASAP2025BG.png");
-	background-image: linear-gradient(180deg, #005bc4 0%, #18c9cc 50%, #81eefa 100%);
-	background-size: 100%;
+	background-image: url("./asm26-bg.jpg");
+	// background-image: linear-gradient(180deg, #005bc4 0%, #18c9cc 50%, #81eefa 100%);
+	background-size: 20%;
 	background-position-x: center;
-	background-repeat: repeat-y;
-	padding: 2rem;
+	background-repeat: repeat;
+	padding: 8px;
+	padding-bottom: 2rem;
 	position: relative;
 
 	h2 {
@@ -25,18 +26,8 @@
 	}
 
 	.logo {
-		margin: auto;
 		width: fit-content;
-		margin-bottom: 0.5rem;
-		@include breakpoint($sm-zero-only) {
-			padding: 1rem;
-		}
-	}
-
-	.logo3D {
-		margin: auto;
-		max-width: 700px;
-		margin-bottom: 0.5rem;
+		margin: 0.5rem auto;
 		@include breakpoint($sm-zero-only) {
 			padding: 1rem;
 		}
@@ -276,13 +267,14 @@
 		box-sizing: border-box;
 		display: flex;
 		justify-content: center;
-		color: $dark-text;
+		color: $light-text;
 
 		.liveContent {
 			padding: 1rem;
 			// backdrop-filter: blur(10px);
 			// background-color: #f7e2d5;
-			background-image: linear-gradient(#fffcd8, #efccaa);
+			// background-image: linear-gradient(#fffcd8, #efccaa);
+			background-color: #437C90;
 			border-radius: 22px;
 		}
 	}
@@ -296,12 +288,12 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: space-around;
-			border: 8px solid rgb(176 130 90);
+			outline: 8px dashed #DDFFD9;
+			outline-offset: -4px;
 			font-size: 1.2rem;
 			width: fit-content;
 			word-break: break-all;
 			min-width: 400px;
-			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 
 			@include breakpoint($sm-zero-only) {
 				width: 100%;
@@ -361,7 +353,8 @@
 			flex-direction: column;
 			height: 100%;
 			justify-content: space-around;
-			border: 8px solid rgb(176 130 90);
+			outline: 8px dashed #DDFFD9;
+			outline-offset: -4px;
 			// width: 50%;
 
 			@include breakpoint($sm-zero-only) {

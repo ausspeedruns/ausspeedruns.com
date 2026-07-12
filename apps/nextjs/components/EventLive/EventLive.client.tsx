@@ -9,19 +9,25 @@ import { format } from "date-fns";
 import TwitchChatEmbed from "../TwitchChatEmbed/TwitchChatEmbed";
 import TwitchVideoEmbed from "../TwitchVideoEmbed/TwitchVideoEmbed";
 
-import EventLogo from "../../styles/img/events/aso26/aso26-temp.svg";
+import EventLogo from "../../styles/img/events/asm26/ASM26_Logo.png";
 import { Incentive } from "../Incentives/Incentive";
 import Button from "../Button/Button";
 
 import Link from "next/link";
-import { faCalendar } from "@fortawesome/free-solid-svg-icons";
 
 import { QUERY_EVENT_RESULTS } from "./EventLive";
 
 import GameOnCancer from "../../styles/img/sponsors/GameOnCancer/logo-white.svg";
+import { MiniSchedule } from "./mini-schedule";
+
+import RetrotinkLogo from "./RT_FullLogo_Lockup_transparent 2 white.png";
+import UrbanClimbLogo from "./UrbanClimb_logoSingleLine_White.png";
 
 const aspectRatio = EventLogo.height / EventLogo.width;
 const gocAspectRatio = GameOnCancer.height / GameOnCancer.width;
+
+const retrotinkAspectRatio = RetrotinkLogo.height / RetrotinkLogo.width;
+const urbanClimbAspectRatio = UrbanClimbLogo.height / UrbanClimbLogo.width;
 
 interface EventProps {
 	eventData: QUERY_EVENT_RESULTS;
@@ -77,12 +83,20 @@ export function EventLiveClient(props: EventProps) {
 
 	return (
 		<div className={styles.eventLive}>
+			<MiniSchedule
+				runs={props.eventData?.event.runs.map((run) => ({
+					game: run.game,
+					runners: run.runners.map((runner) => runner.username),
+					category: run.category,
+					scheduledTime: run.scheduledTime,
+				}))}
+			/>
 			<div className={styles.logo}>
 				<Link href={`/${props.eventData.event.shortname}`} passHref legacyBehavior>
 					<Image
 						src={EventLogo}
-						width={200}
-						height={aspectRatio * 200}
+						width={400}
+						height={aspectRatio * 400}
 						alt="ASO2026 Logo"
 						style={{
 							maxWidth: "100%",
@@ -92,7 +106,7 @@ export function EventLiveClient(props: EventProps) {
 				</Link>
 			</div>
 			<div className={styles.eventInfo}>
-				<h2>January 24 - 25 | Sydney</h2>
+				<h2>July 14 - 19 | Adelaide</h2>
 				<div className={styles.link}>
 					<Button actionText="Donate!" link="/donate" colorScheme="primary" noMarginRight />
 				</div>
@@ -108,39 +122,19 @@ export function EventLiveClient(props: EventProps) {
 				/>
 			</div>
 
-			<div className={styles.schedule}>
-				<Button actionText="Schedule" link="/schedule" colorScheme="secondary lightHover" />
-			</div>
-
-			{/* <div className={styles.sponsors}>
-				<h2>Our Sponsors</h2>
+			<div className={styles.sponsors}>
+				{/* <h2>Our Sponsors</h2> */}
 				<div className={styles.images}>
-					<Link href="https://www.aorus.com/" target="_blank" rel="noreferrer">
+					<Link href="https://www.retrotink.com/" target="_blank" rel="noreferrer">
 						<Image
-							src={gigabyteLogo}
+							src={RetrotinkLogo}
 							width={300}
-							height={gigabyteAspectRatio * 300}
-							alt="AORUS - Gigabyte Logo"
-						/>
-					</Link>
-					<Link href="https://urbanclimb.com.au/" target="_blank" rel="noreferrer">
-						<Image
-							src={urbanClimbLogo}
-							width={300}
-							height={urbanClimbAspectRatio * 300}
-							alt="Urban Climb Logo"
-						/>
-					</Link>
-					<Link href="https://www.infiniteworlds.com.au/" target="_blank" rel="noreferrer">
-						<Image
-							src={InfiniteWorldsLogo}
-							width={125}
-							height={infiniteWorldsAspectRatio * 125}
-							alt="Infinite Worlds Logo"
+							height={retrotinkAspectRatio * 300}
+							alt="Retrotink Logo"
 						/>
 					</Link>
 				</div>
-			</div> */}
+			</div>
 
 			<div className={styles.onDeck}>
 				<div className={styles.columnLeft}>
@@ -173,51 +167,18 @@ export function EventLiveClient(props: EventProps) {
 				</div>
 			</div>
 
-			<div className={styles.dashboard}>
-				{(props.eventData?.event.runs?.length ?? 0) > nextRunIndex && (
-					<section className={styles.upcoming}>
-						<div className={styles.liveContent}>
-							<h2>Upcoming Run</h2>
-							<div className={styles.info}>
-								<span className={styles.game}>
-									{props.eventData?.event.runs?.[nextRunIndex]?.game ?? "Loading"}
-								</span>
-								<span className={styles.category}>
-									{props.eventData?.event.runs?.[nextRunIndex]?.category ?? "Loading"}
-								</span>
-								<span className={styles.subtitle}>Time</span>
-								<span>
-									{props.eventData?.event.runs?.[nextRunIndex]?.scheduledTime
-										? format(
-												new Date(props.eventData?.event.runs[nextRunIndex]?.scheduledTime),
-												"H:mm a",
-											)
-										: "Loading"}
-								</span>
-								<span className={styles.subtitle}>
-									{props.eventData?.event.runs?.[nextRunIndex]?.runners.length! > nextRunIndex
-										? "Runners"
-										: "Runner"}
-								</span>
-								<span>
-									{props.eventData?.event.runs?.[nextRunIndex]?.runners
-										.map((runner) => runner.username)
-										.join(", ") ?? "Loading"}
-								</span>
-							</div>
-							<div className={styles.link}>
-								<Button
-									actionText="Schedule"
-									link={`/${props.eventData.event.shortname}/schedule`}
-									colorScheme="secondary"
-									openInNewTab
-									iconRight={faCalendar}
-								/>
-							</div>
-						</div>
-					</section>
-				)}
+			<div style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
+				<Link href="https://urbanclimb.com.au/" target="_blank" rel="noreferrer">
+					<Image
+						src={UrbanClimbLogo}
+						width={300}
+						height={urbanClimbAspectRatio * 300}
+						alt="Urban Climb Logo"
+					/>
+				</Link>
+			</div>
 
+			<div className={styles.dashboard}>
 				{props.eventData?.event.donationIncentives.length! > 0 && (
 					<section className={styles.incentive}>
 						<div className={styles.liveContent}>
@@ -239,7 +200,7 @@ export function EventLiveClient(props: EventProps) {
 								<Button
 									actionText="Incentives"
 									link={`/${props.eventData.event.shortname}/incentives`}
-									colorScheme="secondary"
+									colorScheme="primary lightHover"
 									openInNewTab
 								/>
 							</div>

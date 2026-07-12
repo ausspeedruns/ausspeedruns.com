@@ -4,13 +4,15 @@
 
 .goal,
 .war {
-	background-image: linear-gradient(#fffcd8, #efccaa);
-	color: $dark-text;
+	// background: #CC3622;
+
+	color: $light-text;
 	padding: 1.5rem 2rem;
 	border-radius: 6px;
 	// box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.12);
 	// border: 1px solid rgba(0, 0, 0, 0.1);
 	text-align: center;
+	backdrop-filter: blur(10px);
 
 	@include breakpoint($sm-zero-only) {
 		padding: 1.25rem 1.5rem;
@@ -19,13 +21,11 @@
 
 	.gameinfo {
 		font-size: 1rem;
-		color: rgba(0, 0, 0, 0.75);
 		margin-bottom: 0.5rem;
 		letter-spacing: 0.01em;
 
 		.game {
 			font-weight: 700;
-			color: $dark-text;
 		}
 
 		.category {
@@ -48,7 +48,7 @@
 	.notes {
 		display: block;
 		font-size: 0.95rem;
-		color: rgba(0, 0, 0, 0.65);
+		color: rgba(255, 255, 255, 0.65);
 		margin-bottom: 1rem;
 		line-height: 1.5;
 	}
@@ -58,9 +58,9 @@
 	.current {
 		display: block;
 		font-size: 1.35rem;
-		font-weight: 600;
+		font-weight: 900;
 		margin: 0.75rem 0;
-		color: $color-teal;
+		color: $light-text;
 		letter-spacing: -0.01em;
 	}
 
@@ -75,7 +75,7 @@
 		position: relative;
 
 		.bar {
-			background: linear-gradient(90deg, $color-teal, darken($color-teal, 8%));
+			background: linear-gradient(90deg, $color-teal, lighten($color-teal, 8%));
 			height: 100%;
 			width: 0%;
 			border-radius: 4px;
@@ -107,13 +107,12 @@
 			display: flex;
 			align-items: stretch;
 			padding: 1rem 1.25rem;
-			background: rgba(255, 255, 255, 0.9);
+			background: #419ADF;
 			color: $dark-text;
 			font-size: 1.1rem;
 			border-radius: 5px;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 			border: 1px solid rgba(0, 0, 0, 0.08);
-			min-width: 140px;
 			transition:
 				transform 0.2s ease,
 				box-shadow 0.2s ease;
@@ -125,7 +124,6 @@
 
 			@include breakpoint($sm-zero-only) {
 				flex-direction: column;
-				min-width: 120px;
 				padding: 0.875rem 1rem;
 			}
 
@@ -139,14 +137,14 @@
 					white-space: nowrap;
 					font-weight: 700;
 					font-size: 1rem;
-					color: $dark-text;
+					color: $light-text;
 					margin-bottom: 0.125rem;
 				}
 
 				.total {
 					font-size: 1.1rem;
 					font-weight: 600;
-					color: $color-ochre;
+					color: $light-text;
 				}
 			}
 
@@ -194,7 +192,7 @@
 		font-size: 1.5rem;
 		font-style: italic;
 		text-align: center;
-		color: rgba(0, 0, 0, 0.5);
+		color: rgba(255, 255, 255, 0.5);
 		padding: 1.5rem 1rem;
 		margin-top: 0.5rem;
 
@@ -227,7 +225,7 @@
 		justify-content: center;
 
 		background: white;
-		color: black;
+		color: white;
 		padding: 32px;
 		border-radius: 8px;
 

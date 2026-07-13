@@ -28,7 +28,7 @@ export function Goal(props: GoalProps) {
 			</span>
 			<div className={styles.progress}>
 				{/* <div className={styles.bar} style={{ width: `${progress * 100}%` }} /> */}
-				<div className={styles.bar} style={{ width: `${50}%` }} />
+				<div className={styles.bar} style={{ width: `${progress * 100}%` }} />
 			</div>
 		</div>
 	);

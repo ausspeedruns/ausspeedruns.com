@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const currentEventData = {
 	id: "ASM2026",
-	donateLink: "https://donate.tiltify.com/5b8fd54d-735b-4970-89fc-523204308060/details",
+	donateLink: "https://donate.tiltify.com/952643d0-b2b0-4e18-a278-c29b6f80d169",
 };
 
 const socialMedias = [

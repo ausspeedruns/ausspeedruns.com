@@ -56,7 +56,7 @@ export default function Prizes() {
 				<Button actionText="Donate" link="/donate" openInNewTab iconRight={faChevronRight} />
 			</div>
 			<p className={styles.prizeToC}>
-				<a href="https://ausspeedruns.sharepoint.com/:w:/r/sites/Main/_layouts/15/doc2.aspx?sourcedoc=%7B08626A60-06F0-4FF8-8DF5-37B12B4B426E%7D&file=ASM%202026%20Prize%20Giveaway%20T%26Cs.docx&action=default&mobileredirect=true">
+				<a href="https://ausspeedruns.sharepoint.com/:w:/s/Main/IQBgamII8Ab4T431N7ErS0JuAZbNEUgLF5zBthrglleXByw">
 					Prizes Terms and Conditions
 				</a>
 			</p>

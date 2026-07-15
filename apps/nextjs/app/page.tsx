@@ -14,6 +14,9 @@ import { AusSpeedrunsEvent } from "../types/types";
 import { EventLive } from "../components/EventLive/EventLive";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // TODO: Move this stuff to keystone
 const ASM2023: AusSpeedrunsEvent = {
 	fullName: "Australian Speedrun Marathon 2023",

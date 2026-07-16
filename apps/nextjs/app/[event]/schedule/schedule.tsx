@@ -238,6 +238,13 @@ export function Schedule(props: ScheduleProps) {
 							run={runsWithOrder[currentRunIndex]}
 							eventTimezone={event.eventTimezone}
 							showLocalTime={settings.showLocalTime}
+							showcase
+							onClick={() => {
+								const runElement = document.querySelector(`#${runsWithOrder[currentRunIndex].id}`);
+								if (runElement != null) {
+									runElement.scrollIntoView({ behavior: "smooth", block: "center" });
+								}
+							}}
 						/>
 					</section>
 				)}

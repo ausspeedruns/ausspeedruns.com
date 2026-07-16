@@ -19,6 +19,8 @@ interface RunItemProps {
 	eventTimezone: string;
 	isLive?: boolean;
 	block?: Block;
+	showcase?: boolean;
+	onClick?: () => void;
 	style?: React.CSSProperties;
 }
 
@@ -92,9 +94,15 @@ export const RunElement: React.FC<RunItemProps> = (props: RunItemProps) => {
 		<div
 			className={runClassNames.join(" ")}
 			key={run.id}
-			style={{ background: props.block?.colour, color: props.block?.textColour, ...props.style }}
-			id={run.id}
+			style={{
+				background: props.block?.colour,
+				color: props.block?.textColour,
+				cursor: props.onClick ? "pointer" : "default",
+				...props.style,
+			}}
+			id={run.id + (props.showcase ? "-showcase" : "")}
 			run-odd={`${run.order !== undefined ? run.order % 2 != 0 : false}`}
+			onClick={props.onClick}
 		>
 			<span className={styles.time} style={props.block && { background: "white", color: "black" }}>
 				{convertedTimezone}

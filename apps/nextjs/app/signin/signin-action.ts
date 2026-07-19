@@ -5,8 +5,6 @@ import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 
 export async function signInAction(formData: FormData) {
-	let redirectUrl = "/";
-
 	const turnstileResponse = formData.get("cf-turnstile-response") as string;
 
 	if (!turnstileResponse) {
@@ -33,11 +31,9 @@ export async function signInAction(formData: FormData) {
 		console.log(error);
 
 		if (error instanceof AuthError) {
-			redirectUrl = `/signin?error=${error.type}`;
+			redirect(`/signin?error=${error.type}`);
 		}
 
 		throw error;
-	} finally {
-		redirect(redirectUrl);
 	}
 }

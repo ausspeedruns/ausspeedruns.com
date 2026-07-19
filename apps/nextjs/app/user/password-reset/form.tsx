@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 
 export function PasswordResetForm() {
 	const searchParams = useSearchParams();
+	const error = searchParams.get("error");
 
 	const [password, setPassword] = useState("");
 	const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -42,6 +43,28 @@ export function PasswordResetForm() {
 			<Button variant="contained" type="submit">
 				Submit
 			</Button>
+			{error && (
+				<p className="reset-password-error" role="alert">
+					{getErrorMessage(error)}
+				</p>
+			)}
 		</form>
 	);
+}
+
+function getErrorMessage(error: string) {
+	switch (error) {
+		case "MissingDetails":
+			return "This password reset link is incomplete. Request a new one and try again.";
+		case "PasswordsDoNotMatch":
+			return "The passwords do not match.";
+		case "TurnstileError":
+			return "Turnstile verification failed. Please try again.";
+		case "InvalidOrExpiredLink":
+			return "This password reset link has expired or has already been used. Request a new one.";
+		case "ResetFailed":
+			return "We could not reset your password. Please try again.";
+		default:
+			return "An unknown error occurred.";
+	}
 }

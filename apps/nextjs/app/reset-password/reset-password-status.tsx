@@ -30,6 +30,9 @@ export default function ResetPasswordStatus() {
 		case "EmailMissing":
 			readableError = "Please enter your email address.";
 			break;
+		case "RequestFailed":
+			readableError = "We could not request a password reset. Please try again.";
+			break;
 		default:
 			readableError = "An unknown error occurred.";
 			break;

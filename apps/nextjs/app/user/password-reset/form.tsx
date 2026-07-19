@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button, TextField } from "@mui/material";
 import { resetPassword } from "./reset-password-action";
 import { useSearchParams } from "next/navigation";
+import styles from "./User.PasswordReset.code.module.scss";
 
 export function PasswordResetForm() {
 	const searchParams = useSearchParams();
@@ -44,7 +45,7 @@ export function PasswordResetForm() {
 				Submit
 			</Button>
 			{error && (
-				<p className="reset-password-error" role="alert">
+				<p className={styles.errorMessage} role="alert">
 					{getErrorMessage(error)}
 				</p>
 			)}

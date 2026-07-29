@@ -32,9 +32,9 @@ export default async function AccountOrdersPage() {
 
 	return (
 		<Stack gap="md">
-			<Title order={1}>My Orders</Title>
+			<Title order={1}>Orders</Title>
 			<Alert color="yellow" icon={<WarningDiamond />} variant="light">
-				<Text size="sm">This is not orders done through our <Anchor href="/merch">Merch store</Anchor>.</Text>
+				<Text size="sm">Merch Orders are handled through the <Anchor href="/merch">Merch store</Anchor>.</Text>
 			</Alert>
 			{orders.docs.length === 0 ? (
 				<Alert

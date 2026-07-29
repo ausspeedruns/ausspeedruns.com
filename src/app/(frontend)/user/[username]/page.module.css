@@ -13,7 +13,7 @@
 	--tertiary: #7ad0ff;
 	color: var(--on-surface);
 	min-height: 100vh;
-	font-family: Geist, Inter, sans-serif;
+	font-family: var(--mantine-font-family), sans-serif;
 }
 
 .main {

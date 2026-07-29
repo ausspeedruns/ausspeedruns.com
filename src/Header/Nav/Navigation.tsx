@@ -46,7 +46,7 @@ export function HeaderNav({ data, auth }: HeaderNavProps) {
 
 			{auth?.user ? (
 				<Button asChild size="clear" variant="link">
-					<Link href={`/user/${auth.user.username}`} rel="noopener noreferrer" target="_blank">
+					<Link href={`/user/${auth.user.username}`}>
 						{auth.user.username}
 					</Link>
 				</Button>

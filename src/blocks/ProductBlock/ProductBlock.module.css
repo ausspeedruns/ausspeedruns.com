@@ -132,48 +132,6 @@
 	color: hsl(var(--foreground));
 }
 
-.buttonRow {
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 0.4rem;
-}
-
-.purchaseButton {
-	border: none;
-	border-radius: 0.55rem;
-	padding: 0.55rem 0.65rem;
-	font-weight: 600;
-	background-color: hsl(var(--primary));
-	color: hsl(var(--primary-foreground));
-	cursor: pointer;
-}
-
-.bankButton,
-.addToCartButton {
-	border: 1px solid var(--border);
-	border-radius: 0.55rem;
-	padding: 0.55rem 0.65rem;
-	font-weight: 600;
-	cursor: pointer;
-}
-
-.bankButton {
-	background-color: hsl(var(--secondary));
-	color: hsl(var(--secondary-foreground));
-}
-
-.addToCartButton {
-	background-color: hsl(var(--background));
-	color: hsl(var(--foreground));
-}
-
-.purchaseButton:disabled,
-.bankButton:disabled,
-.addToCartButton:disabled {
-	opacity: 0.55;
-	cursor: not-allowed;
-}
-
 .errorText,
 .infoText {
 	margin: 0;

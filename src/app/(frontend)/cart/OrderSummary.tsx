@@ -22,7 +22,7 @@ interface OrderSummaryProps {
 
 export function OrderSummary(props: OrderSummaryProps) {
 	return (
-		<Paper p="xl" radius="lg" shadow="xs" withBorder style={{ position: "sticky", top: "6rem" }}>
+		<Paper p="xl" shadow="xs" withBorder style={{ position: "sticky", top: "6rem" }}>
 			<Stack gap="md">
 				<div>
 					<Text c="dimmed" size="sm">

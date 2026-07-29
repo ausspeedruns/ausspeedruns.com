@@ -92,19 +92,19 @@ export function CartPageClient() {
 			<Stack gap="xl">
 				<Title order={1}>Your cart</Title>
 
-				{errorMessage ? (
-					<Alert color="red" icon={<AlertCircle size={16} />} radius="md" variant="light">
+				{errorMessage && (
+					<Alert color="red" icon={<AlertCircle size={16} />} variant="light">
 						{errorMessage}
 					</Alert>
-				) : null}
+				)}
 
 				<Grid align="start" gap="xl">
 					<Grid.Col span={{ base: 12, md: 7 }}>
 						<Stack gap="md">
 							{items.length === 0 ? (
-								<Paper p="xl" radius="lg" shadow="xs" withBorder>
+								<Paper p="xl" shadow="xs" withBorder>
 									<Stack align="center" gap="md" py="lg">
-										<ThemeIcon color="gray" radius="xl" size={56} variant="light">
+										<ThemeIcon color="gray" size={56} variant="light">
 											<ShoppingCart size={28} />
 										</ThemeIcon>
 										<Title order={3}>Your cart is empty</Title>
@@ -142,7 +142,7 @@ export function CartPageClient() {
 				onClose={closeBankModal}
 				title={
 					<Group gap="xs">
-						<ThemeIcon color="green" variant="light" radius="xl" size="lg">
+						<ThemeIcon color="green" variant="light" size="lg">
 							<CircleCheck size={20} />
 						</ThemeIcon>
 						<Title order={3}>Order placed</Title>
@@ -155,7 +155,7 @@ export function CartPageClient() {
 				<Stack gap="md">
 					<Text>Your order has been created. Please complete the bank transfer using the details below.</Text>
 
-					<Paper p="md" radius="md" withBorder bg="var(--mantine-color-blue-light)">
+					<Paper p="md" withBorder bg="var(--mantine-color-blue-light)">
 						<Group justify="space-between">
 							<Text fw={600}>Amount to transfer</Text>
 							<Title order={3}>
@@ -166,7 +166,7 @@ export function CartPageClient() {
 						</Group>
 					</Paper>
 
-					<Paper p="md" radius="md" withBorder>
+					<Paper p="md" withBorder>
 						<Stack gap="xs">
 							<Group justify="space-between">
 								<Text c="dimmed" size="sm">

@@ -6,21 +6,22 @@ import { useState } from "react";
 
 import styles from "./ProductBlock.module.css";
 import type { Product } from "#payload-types.ts";
+import { Button, Group } from "@mantine/core";
+import { ShoppingCart } from "pixelarticons/react";
 
 type ProductVariantActionsProps = {
 	productName: string;
-	variant: Product['variants'][number];
-	ctaLabel: string;
+	variant: Product["variants"][number];
 };
 
-export function ProductVariantActions({ productName, variant, ctaLabel }: ProductVariantActionsProps) {
+export function ProductVariantActions({ productName, variant }: ProductVariantActionsProps) {
 	const [quantity, setQuantity] = useState(1);
 	const [isLoading, setIsLoading] = useState<"stripe" | "bank" | null>(null);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [infoMessage, setInfoMessage] = useState<string | null>(null);
 	const addItem = useCartStore((store) => store.addItem);
 
-	const hasCheckoutPriceId = !!variant.stripePriceId;
+	const canBePurchasedViaAnyMethod = variant.stripePriceId || variant.bankTransferDetails?.allowBankTransfer;
 	const allowBankTransfer = variant.bankTransferDetails?.allowBankTransfer ?? true;
 	const variantLabel = variant.label || "Default";
 	const cartName = `${productName} - ${variantLabel}`;
@@ -97,32 +98,25 @@ export function ProductVariantActions({ productName, variant, ctaLabel }: Produc
 				/>
 			</div>
 
-			<div className={styles.buttonRow}>
-				<button
-					type="button"
-					className={styles.purchaseButton}
-					disabled={!hasCheckoutPriceId || isLoading !== null}
-					onClick={() => handleBuyNow("stripe")}
-				>
-					{isLoading === "stripe" ? "Starting checkout..." : ctaLabel}
-				</button>
-				<button
-					type="button"
-					className={styles.bankButton}
-					disabled={!hasCheckoutPriceId || !allowBankTransfer || isLoading !== null}
-					onClick={() => handleBuyNow("bank")}
-				>
-					{isLoading === "bank" ? "Creating order..." : "Buy with Bank"}
-				</button>
-				<button
-					type="button"
-					className={styles.addToCartButton}
-					disabled={!hasCheckoutPriceId || isLoading !== null}
+			<Group className={styles.buttonRow}>
+				{variant.stripePriceId && (
+					<Button disabled={isLoading !== null} onClick={() => handleBuyNow("stripe")}>
+						{isLoading === "stripe" ? "Starting checkout..." : "Buy Now via Stripe"}
+					</Button>
+				)}
+				{allowBankTransfer && (
+					<Button disabled={isLoading !== null} onClick={() => handleBuyNow("bank")}>
+						{isLoading === "bank" ? "Creating order..." : "Buy Now via Bank Transfer"}
+					</Button>
+				)}
+				<Button
+					disabled={!canBePurchasedViaAnyMethod || isLoading !== null}
 					onClick={handleAddToCart}
+					leftSection={<ShoppingCart />}
 				>
 					Add to cart
-				</button>
-			</div>
+				</Button>
+			</Group>
 
 			{errorMessage && <p className={styles.errorText}>{errorMessage}</p>}
 			{infoMessage && <p className={styles.infoText}>{infoMessage}</p>}

@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Heroblock.module.scss";
 import Image from "next/image";
-import { faCalendar, faChevronRight, faPersonRunning, faTicket } from "@fortawesome/free-solid-svg-icons";
+import { faCalendar, faChevronRight, faPersonRunning, faTicket, faPerson } from "@fortawesome/free-solid-svg-icons";
 import Button from "../Button/Button";
 import { AusSpeedrunsEvent } from "../../types/types";
 import { Countdown } from "./Countdown";
@@ -13,9 +13,10 @@ type HeroBlockProps = {
 	schedule?: boolean;
 	submitRuns?: boolean;
 	ticketLink?: string;
+	volunteer?: boolean;
 };
 
-const HeroBlock = ({ event, tagLine, darkText, schedule, submitRuns, ticketLink }: HeroBlockProps) => {
+const HeroBlock = ({ event, tagLine, darkText, schedule, submitRuns, ticketLink, volunteer }: HeroBlockProps) => {
 	return (
 		<section
 			className={styles.heroblock}
@@ -33,7 +34,7 @@ const HeroBlock = ({ event, tagLine, darkText, schedule, submitRuns, ticketLink 
 						<Countdown eventDate={event.startDate} />
 					</h3>
 					<br />
-					<p>{tagLine}</p>
+					<p style={{ textWrap: "balance" }}>{tagLine}</p>
 					<Button
 						actionText={event.preferredName}
 						link={`/${event.shortName}`}
@@ -61,6 +62,14 @@ const HeroBlock = ({ event, tagLine, darkText, schedule, submitRuns, ticketLink 
 							actionText="Submit a Run!"
 							link="/submit-game"
 							iconRight={faPersonRunning}
+							colorScheme={"secondary"}
+						/>
+					)}
+					{volunteer && (
+						<Button
+							actionText="Volunteer"
+							link="/volunteer"
+							iconRight={faPerson}
 							colorScheme={"secondary"}
 						/>
 					)}

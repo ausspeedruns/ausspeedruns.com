@@ -165,6 +165,7 @@ const ASM2026: AusSpeedrunsEvent = {
 	},
 	logo: "events/asm26/ASM26_Logo.png",
 	heroImage: "events/asm26/hero.jpg",
+	total: "35,000",
 };
 
 const ASAP2026: AusSpeedrunsEvent = {
@@ -191,15 +192,21 @@ export const metadata: Metadata = {
 export default function Home() {
 	return (
 		<>
-			<EventLive event={"ASM2026"} />
+			{/* <EventLive event={"ASM2026"} /> */}
 			{/* <HeroBlock event={ASM2026} tagLine="We're so back." schedule ticketLink="/ASM2026#tickets" /> */}
 			<HeroBlock
 				event={ASAP2026}
-				tagLine="It's PAX time already!?!?!"
-				submitRuns
+				tagLine="PAX Schedule is live!"
+				schedule
+				volunteer
 				ticketLink="https://aus.paxsite.com/"
 			/>
 
+			<LastEventBlock
+				tagLine="ASM 2026 is over already and we raised over $35,000?! See you all next year!"
+				event={ASM2026}
+				backgroundPos="center"
+			/>
 			<LastEventBlock
 				tagLine="The Inaugural AusSpeedruns Open was a huge success, raising over $10,000 for Game On Cancer!"
 				event={ASO2026}
@@ -208,11 +215,6 @@ export default function Home() {
 			<LastEventBlock
 				tagLine="PAX Aus 2025 was a blast, raising over $20,000 for Game On Cancer!"
 				event={ASAP2025}
-				backgroundPos="center"
-			/>
-			<LastEventBlock
-				tagLine="The best ASM ever, raising over $50,000 for Game On Cancer!!!!"
-				event={ASM2025}
 				backgroundPos="center"
 			/>
 			<section className={styles.archive}>

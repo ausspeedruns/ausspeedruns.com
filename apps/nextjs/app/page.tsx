@@ -172,7 +172,7 @@ const ASAP2026: AusSpeedrunsEvent = {
 	fullName: "AusSpeedruns At PAX 2026",
 	preferredName: "ASAP2026",
 	shortName: "ASAP2026",
-	startDate: "9 October 2026 09:00:00 GMT+0100",
+	startDate: "9 October 2026 09:00:00 GMT+1100",
 	dates: "October 9 - 11, 2026",
 	charity: {
 		name: "Game On Cancer",
@@ -192,15 +192,15 @@ export const metadata: Metadata = {
 export default function Home() {
 	return (
 		<>
-			{/* <EventLive event={"ASM2026"} /> */}
+			<EventLive event="ASAP2026" />
 			{/* <HeroBlock event={ASM2026} tagLine="We're so back." schedule ticketLink="/ASM2026#tickets" /> */}
-			<HeroBlock
+			{/* <HeroBlock
 				event={ASAP2026}
 				tagLine="PAX Schedule is live!"
 				schedule
 				volunteer
 				ticketLink="https://aus.paxsite.com/"
-			/>
+			/> */}
 
 			<LastEventBlock
 				tagLine="ASM 2026 is over already and we raised over $35,000?! See you all next year!"

@@ -67,7 +67,7 @@ export default async function ASAP2026() {
 					))}
 				</Marquee>
 				<div className={styles.heroContent}>
-					<Image className={styles.logo} src={Logo} alt="ASM 2026 Logo" />
+					<Image className={styles.logo} src={Logo} alt="ASAP2026 Logo" />
 					<h1>AusSpeedruns At PAX 2026</h1>
 				</div>
 			</section>
@@ -75,6 +75,7 @@ export default async function ASAP2026() {
 				{scheduleReleased && (
 					<Button actionText="View Schedule" link={`/${EVENT}/schedule`} iconLeft={faCalendar} />
 				)}
+				<Button actionText="Donation Incentives" link={`/${EVENT}/incentives`} />
 				{(acceptingSubmissions || acceptingBackups) && (
 					<Button
 						actionText={acceptingSubmissions ? "Submit a Run" : "Submit a Backup"}

@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import TwitchChatEmbed from "../TwitchChatEmbed/TwitchChatEmbed";
 import TwitchVideoEmbed from "../TwitchVideoEmbed/TwitchVideoEmbed";
 
-import EventLogo from "../../styles/img/events/asm26/ASM26_Logo.png";
+import EventLogo from "./ASAP26Logo.png";
 import { Incentive } from "../Incentives/Incentive";
 import Button from "../Button/Button";
 
@@ -20,14 +20,8 @@ import { QUERY_EVENT_RESULTS } from "./EventLive";
 import GameOnCancer from "../../styles/img/sponsors/GameOnCancer/logo-white.svg";
 import { MiniSchedule } from "./mini-schedule";
 
-import RetrotinkLogo from "./RT_FullLogo_Lockup_transparent 2 white.png";
-import UrbanClimbLogo from "./UrbanClimb_logoSingleLine_White.png";
-
 const aspectRatio = EventLogo.height / EventLogo.width;
 const gocAspectRatio = GameOnCancer.height / GameOnCancer.width;
-
-const retrotinkAspectRatio = RetrotinkLogo.height / RetrotinkLogo.width;
-const urbanClimbAspectRatio = UrbanClimbLogo.height / UrbanClimbLogo.width;
 
 interface EventProps {
 	eventData: QUERY_EVENT_RESULTS;
@@ -97,7 +91,7 @@ export function EventLiveClient(props: EventProps) {
 						src={EventLogo}
 						width={400}
 						height={aspectRatio * 400}
-						alt="ASO2026 Logo"
+						alt="ASAP2026 Logo"
 						style={{
 							maxWidth: "100%",
 							height: "auto",
@@ -106,7 +100,7 @@ export function EventLiveClient(props: EventProps) {
 				</Link>
 			</div>
 			<div className={styles.eventInfo}>
-				<h2>July 14 - 19 | Adelaide</h2>
+				<h2>October 9 - 11 | Melbourne</h2>
 				<div className={styles.link}>
 					<Button actionText="Donate!" link="/donate" colorScheme="primary" noMarginRight />
 				</div>
@@ -122,8 +116,7 @@ export function EventLiveClient(props: EventProps) {
 				/>
 			</div>
 
-			<div className={styles.sponsors}>
-				{/* <h2>Our Sponsors</h2> */}
+			{/* <div className={styles.sponsors}>
 				<div className={styles.images}>
 					<Link href="https://www.retrotink.com/" target="_blank" rel="noreferrer">
 						<Image
@@ -134,7 +127,7 @@ export function EventLiveClient(props: EventProps) {
 						/>
 					</Link>
 				</div>
-			</div>
+			</div> */}
 
 			<div className={styles.onDeck}>
 				<div className={styles.columnLeft}>
@@ -167,17 +160,6 @@ export function EventLiveClient(props: EventProps) {
 				</div>
 			</div>
 
-			<div style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
-				<Link href="https://urbanclimb.com.au/" target="_blank" rel="noreferrer">
-					<Image
-						src={UrbanClimbLogo}
-						width={300}
-						height={urbanClimbAspectRatio * 300}
-						alt="Urban Climb Logo"
-					/>
-				</Link>
-			</div>
-
 			<div className={styles.dashboard}>
 				{props.eventData?.event.donationIncentives.length! > 0 && (
 					<section className={styles.incentive}>
@@ -189,7 +171,7 @@ export function EventLiveClient(props: EventProps) {
 								to put the money towards this or another incentive
 							</span>
 							<div className={styles.divider} />
-							<div style={{ margin: "20px 0" }}>
+							<div style={{ margin: "20px 0", color: "black" }}>
 								{incentiveData.title !== "" ? (
 									<Incentive incentive={incentiveData as any} />
 								) : (

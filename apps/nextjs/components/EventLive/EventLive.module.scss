@@ -4,8 +4,8 @@
 
 .eventLive {
 	color: $light-text;
-	// background: $asm24-main-bg;
-	background-image: url("./asm26-bg.jpg");
+	background: $pax26;
+	// background-image: url("./asm26-bg.jpg");
 	// background-image: linear-gradient(180deg, #005bc4 0%, #18c9cc 50%, #81eefa 100%);
 	background-size: 20%;
 	background-position-x: center;
@@ -274,7 +274,8 @@
 			// backdrop-filter: blur(10px);
 			// background-color: #f7e2d5;
 			// background-image: linear-gradient(#fffcd8, #efccaa);
-			background-color: #437C90;
+			background-color: $pax26-2;
+			color: black;
 			border-radius: 22px;
 		}
 	}
@@ -288,12 +289,11 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: space-around;
-			outline: 8px dashed #DDFFD9;
-			outline-offset: -4px;
 			font-size: 1.2rem;
 			width: fit-content;
 			word-break: break-all;
 			min-width: 400px;
+			color: black;
 
 			@include breakpoint($sm-zero-only) {
 				width: 100%;
@@ -349,12 +349,14 @@
 
 	.incentive {
 		.liveContent {
+			--incentive-text-color: black;
+			--incentive-notes-color: black;
+
 			display: flex;
 			flex-direction: column;
 			height: 100%;
 			justify-content: space-around;
-			outline: 8px dashed #DDFFD9;
-			outline-offset: -4px;
+			color: black !important;
 			// width: 50%;
 
 			@include breakpoint($sm-zero-only) {

@@ -194,9 +194,6 @@ export async function upsertPostEventPage({
 			slug,
 			layout: layout as any,
 			publishedAt: new Date().toISOString(),
-			hero: {
-				type: "none",
-			},
 		},
 		draft: false,
 		req,

@@ -13,7 +13,7 @@ type FormStatus = {
 	type: "error" | "success";
 } | null;
 
-export function ResetPasswordForm() {
+export function ResetPasswordForm({ token }: { token: string }) {
 	const [isPending, startTransition] = useTransition();
 	const [status, setStatus] = useState<FormStatus>(null);
 
@@ -33,7 +33,7 @@ export function ResetPasswordForm() {
 		setStatus(null);
 
 		startTransition(async () => {
-			const result = await updatePassword(values);
+			const result = await updatePassword(token, values);
 
 			setStatus({
 				message: result.message,

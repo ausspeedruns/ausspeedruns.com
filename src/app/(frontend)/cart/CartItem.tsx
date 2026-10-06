@@ -27,12 +27,12 @@ export function CartItem({ item, onRemove, onUpdateQuantity }: CartItemProps) {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		fetch(`/api/products/${item.id}?depth=1`)
+		fetch(`/api/products/${item.productId}?depth=1`)
 			.then((res) => (res.ok ? res.json() : null))
 			.then((data: Product | null) => setProduct(data))
 			.catch(() => {})
 			.finally(() => setLoading(false));
-	}, [item.id]);
+	}, [item.productId]);
 
 	const lineTotalInCents = item.priceInCents * item.quantity;
 	const productImage =

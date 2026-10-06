@@ -9,6 +9,8 @@ import { create } from "zustand";
 
 export interface CartItem {
 	id: string;
+	productId: number;
+	variantId: string;
 	name: string;
 	priceInCents: number;
 	quantity: number;

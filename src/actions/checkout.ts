@@ -8,16 +8,45 @@ import { stripeCheckout } from "./checkout/stripe.ts";
 import { bankCheckout } from "./checkout/bank.ts";
 
 interface CheckoutItem {
-	priceId: string;
+	productId: number;
+	variantId: string;
 	quantity: number;
 }
 
+const MAX_CHECKOUT_QUANTITY = 10;
+
 export type CheckoutResult =
 	| { success: true; type: "stripe"; url: string }
-	| { success: true; type: "bank"; reference: string }
+	| { success: true; type: "bank"; reference: string; totalInCents: number }
 	| { success: false; error: string };
 
 export async function checkout(items: CheckoutItem[], method: "stripe" | "bank"): Promise<CheckoutResult> {
+	if (
+		!Array.isArray(items) ||
+		items.length === 0 ||
+		!items.every(
+			(item) =>
+				Number.isInteger(item.productId) &&
+				item.productId > 0 &&
+				typeof item.variantId === "string" &&
+				item.variantId.length > 0 &&
+				Number.isInteger(item.quantity) &&
+				item.quantity > 0 &&
+				item.quantity <= MAX_CHECKOUT_QUANTITY,
+		)
+	) {
+		return { success: false, error: "Your cart contains invalid items. Please refresh and try again." };
+	}
+
+	if (method !== "stripe" && method !== "bank") {
+		return { success: false, error: "Invalid checkout method." };
+	}
+
+	const itemKeys = items.map((item) => `${item.productId}:${item.variantId}`);
+	if (new Set(itemKeys).size !== itemKeys.length) {
+		return { success: false, error: "Your cart contains duplicate items. Please refresh and try again." };
+	}
+
 	// Verify they are logged in
 	const payload = await getPayload({ config });
 	const requestHeaders = await headers();
@@ -32,39 +61,27 @@ export async function checkout(items: CheckoutItem[], method: "stripe" | "bank")
 	const productInformation = await payload.find({
 		collection: "products",
 		where: {
-			"variants.stripePriceId": {
-				in: items.map((item) => item.priceId),
+			id: {
+				in: items.map((item) => item.productId),
 			},
 		},
 		pagination: false,
 	});
 
 	// Map the checkout items to include product and variant information
-	const allItemData: { priceId: string; quantity: number; product: Product; variant: Product["variants"][number] }[] =
-		items
-			.map((item) => {
-				console.log("Finding product for priceId:", item.priceId);
-				const product = productInformation.docs.find((doc) =>
-					doc.variants.some((variant) => variant.stripePriceId === item.priceId),
-				);
-				console.log("Found product:", product?.name);
-				const variant = product?.variants.find((v) => v.stripePriceId === item.priceId);
-				console.log("Found variant:", variant?.label);
-				if (product && variant) {
-					return { priceId: item.priceId, quantity: item.quantity, product, variant };
-				}
-				return null;
-			})
-			.filter(
-				(
-					item,
-				): item is {
-					priceId: string;
-					quantity: number;
-					product: Product;
-					variant: Product["variants"][number];
-				} => item !== null,
-			);
+	const allItemData: { quantity: number; product: Product; variant: Product["variants"][number] }[] = items
+		.map((item) => {
+			const product = productInformation.docs.find((doc) => doc.id === item.productId);
+			const variant = product?.variants.find((candidate) => candidate.id === item.variantId);
+			if (product && variant) {
+				return { quantity: item.quantity, product, variant };
+			}
+			return null;
+		})
+		.filter(
+			(item): item is { quantity: number; product: Product; variant: Product["variants"][number] } =>
+				item !== null,
+		);
 
 	// Check if all items were found
 	if (allItemData.length !== items.length) {
@@ -72,9 +89,13 @@ export async function checkout(items: CheckoutItem[], method: "stripe" | "bank")
 	}
 
 	// Check stock and availability
-	const itemsNotAvailable = allItemData.filter(
-		(item) => !item.product.availableUntil || new Date(item.product.availableUntil) < new Date(),
-	);
+	const now = new Date();
+	const itemsNotAvailable = allItemData.filter((item) => {
+		const availableFrom = item.product.availableFrom ? new Date(item.product.availableFrom) : null;
+		const availableUntil = item.product.availableUntil ? new Date(item.product.availableUntil) : null;
+
+		return (availableFrom && availableFrom > now) || (availableUntil && availableUntil < now);
+	});
 	if (itemsNotAvailable.length > 0) {
 		return { success: false, error: "Some products in your cart are no longer available." };
 	}

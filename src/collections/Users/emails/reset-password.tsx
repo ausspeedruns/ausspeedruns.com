@@ -1,4 +1,5 @@
 import { Body, Container, Head, Html, Img, Link, Preview, Section, Text } from "@react-email/components";
+import { getServerSideURL } from "#/utilities/getURL";
 
 const styles = {
 	body: {
@@ -71,12 +72,12 @@ const styles = {
 } as const;
 
 interface ResetPasswordEmailProps {
-	email: string;
 	token: string;
 }
 
-export function ResetPasswordEmail({ email, token }: ResetPasswordEmailProps) {
-	const resetUrl = `https://ausspeedruns.com/user/reset-password?token=${token}&email=${encodeURI(email)}`;
+export function ResetPasswordEmail({ token }: ResetPasswordEmailProps) {
+	const resetUrl = new URL("/reset-password", getServerSideURL());
+	resetUrl.searchParams.set("token", token);
 
 	return (
 		<Html>
@@ -99,7 +100,7 @@ export function ResetPasswordEmail({ email, token }: ResetPasswordEmailProps) {
 							Use the secure link below to set a new password for your account.
 						</Text>
 						<Section style={styles.buttonWrap}>
-							<Link href={resetUrl} style={styles.button}>
+							<Link href={resetUrl.toString()} style={styles.button}>
 								Reset password
 							</Link>
 						</Section>
@@ -107,13 +108,13 @@ export function ResetPasswordEmail({ email, token }: ResetPasswordEmailProps) {
 						<Section style={styles.footer}>
 							<Text style={styles.muted}>
 								If the button does not work, use this link:{" "}
-								<Link href={resetUrl} style={styles.link}>
-									{resetUrl}
+								<Link href={resetUrl.toString()} style={styles.link}>
+									{resetUrl.toString()}
 								</Link>
 							</Text>
 							<Text style={styles.muted}>
-								<Link href="https://ausspeedruns.com/" style={styles.link}>
-									ausspeedruns.com
+								<Link href={getServerSideURL()} style={styles.link}>
+									{getServerSideURL()}
 								</Link>
 							</Text>
 						</Section>

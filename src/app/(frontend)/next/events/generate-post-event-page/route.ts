@@ -2,6 +2,7 @@ import { createLocalReq, getPayload } from "payload";
 import { headers } from "next/headers";
 
 import config from "#payload-config";
+import { manageContent } from "#/access/manageContent";
 import { upsertPostEventPage } from "#/utilities/events/upsertPostEventPage.ts";
 
 interface GenerateEventPagePayload {
@@ -31,6 +32,11 @@ export async function POST(request: Request): Promise<Response> {
 
 	try {
 		const payloadReq = await createLocalReq({ user }, payload);
+
+		if (!(await manageContent({ req: payloadReq }))) {
+			return new Response("Action forbidden.", { status: 403 });
+		}
+
 		const result = await upsertPostEventPage({
 			eventId: requestBody.eventId,
 			payload,

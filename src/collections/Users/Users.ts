@@ -8,9 +8,8 @@ import { anyone } from "#access/anyone.ts";
 import { anyoneField } from "#access/field/anyoneField.ts";
 import { isAdminField } from "#access/field/isAdmin.ts";
 import { render } from "@react-email/components";
-
-// import { ResetPasswordEmail } from "./emails/reset-password.tsx";
-// import { VerificationEmail } from "./emails/verification.tsx";
+import { ResetPasswordEmail } from "./emails/reset-password.tsx";
+import { VerificationEmail } from "./emails/verification.tsx";
 
 const usernameRegex = /^[a-zA-Z0-9_-~][\w-]{2,24}$/;
 
@@ -29,23 +28,20 @@ export const Users: CollectionConfig = {
 	auth: {
 		verify: {
 			generateEmailSubject: () => "AusSpeedruns - Email Verification",
-			// generateEmailHTML: async ({ token }) => {
-			// 	return await render(VerificationEmail({ token: token }));
-			// },
+			generateEmailHTML: async ({ token }) => {
+				if (!token) throw new Error("Verification token was not provided.");
+				return await render(VerificationEmail({ token }));
+			},
 		},
 		forgotPassword: {
 			generateEmailSubject: () => "AusSpeedruns - Password Reset",
-			// generateEmailHTML: async (data) => {
-			// 	if (!data) {
-			// 		throw new Error("No data provided for forgot password email");
-			// 	}
+			generateEmailHTML: async (data) => {
+				if (!data?.token || !data.user?.email) {
+					throw new Error("Invalid data provided for forgot password email.");
+				}
 
-			// 	if (!data.user || !data.token) {
-			// 		throw new Error("Invalid data provided for forgot password email");
-			// 	}
-
-			// 	return await render(ResetPasswordEmail({ email: data.user.email, token: data.token }));
-			// },
+				return await render(ResetPasswordEmail({ token: data.token }));
+			},
 		},
 	},
 	timestamps: true,

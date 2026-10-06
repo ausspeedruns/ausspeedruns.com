@@ -1,4 +1,5 @@
 import { Body, Container, Head, Html, Img, Link, Preview, Section, Text } from "@react-email/components";
+import { getServerSideURL } from "#/utilities/getURL";
 
 const styles = {
 	body: {
@@ -75,7 +76,8 @@ interface VerificationEmailProps {
 }
 
 export function VerificationEmail({ token: code }: VerificationEmailProps) {
-	const verifyUrl = `https://ausspeedruns.com/user/verification/${code}`;
+	const verifyUrl = new URL("/verify", getServerSideURL());
+	verifyUrl.searchParams.set("token", code);
 
 	return (
 		<Html>
@@ -96,7 +98,7 @@ export function VerificationEmail({ token: code }: VerificationEmailProps) {
 						<Text style={styles.heading}>AusSpeedruns email verification</Text>
 						<Text style={styles.text}>Confirm your email address to finish setting up your account.</Text>
 						<Section style={styles.buttonWrap}>
-							<Link href={verifyUrl} style={styles.button}>
+							<Link href={verifyUrl.toString()} style={styles.button}>
 								Verify email
 							</Link>
 						</Section>
@@ -106,13 +108,13 @@ export function VerificationEmail({ token: code }: VerificationEmailProps) {
 						<Section style={styles.footer}>
 							<Text style={styles.muted}>
 								If the button does not work, use this link:{" "}
-								<Link href={verifyUrl} style={styles.link}>
-									{verifyUrl}
+								<Link href={verifyUrl.toString()} style={styles.link}>
+									{verifyUrl.toString()}
 								</Link>
 							</Text>
 							<Text style={styles.muted}>
-								<Link href="https://ausspeedruns.com/" style={styles.link}>
-									ausspeedruns.com
+								<Link href={getServerSideURL()} style={styles.link}>
+									{getServerSideURL()}
 								</Link>
 							</Text>
 						</Section>

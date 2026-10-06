@@ -61,6 +61,14 @@ async function markOrderAsComplete(session: Stripe.Checkout.Session): Promise<vo
 		return;
 	}
 
+	if (session.payment_status !== "paid") {
+		payload.logger.info(
+			{ orderId: order.id, sessionId: session.id, paymentStatus: session.payment_status },
+			"Ignoring Stripe session that has not been paid",
+		);
+		return;
+	}
+
 	const paymentIntentId =
 		typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id;
 

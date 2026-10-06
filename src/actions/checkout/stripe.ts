@@ -9,7 +9,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-05
 
 export async function stripeCheckout(
 	user: { id: string; email: string; stripeCustomerId?: string | null },
-	items: { priceId: string; quantity: number; product: Product; variant: Product["variants"][number] }[],
+	items: { quantity: number; product: Product; variant: Product["variants"][number] }[],
 ): Promise<CheckoutResult> {
 	const payload = await getPayload({ config });
 
@@ -39,6 +39,7 @@ export async function stripeCheckout(
 		// Create order first (pending)
 		const order = await payload.create({
 			collection: "orders",
+			overrideAccess: true,
 			data: {
 				user: user.id,
 				items: orderItems,
@@ -65,6 +66,7 @@ export async function stripeCheckout(
 			await payload.update({
 				collection: "users",
 				id: user.id,
+				overrideAccess: true,
 				data: { stripeCustomerId },
 			});
 		}
@@ -83,6 +85,7 @@ export async function stripeCheckout(
 		await payload.update({
 			collection: "orders",
 			id: order.id,
+			overrideAccess: true,
 			data: { stripe: { sessionId: session.id, paymentIntentId: session.payment_intent?.toString() } },
 		});
 

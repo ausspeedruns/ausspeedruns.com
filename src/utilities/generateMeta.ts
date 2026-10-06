@@ -24,7 +24,7 @@ export const generateMeta = async (args: { doc: Partial<Page> | Partial<Post> | 
 
 	const ogImage = getImageURL(doc?.meta?.image);
 
-	const title = doc?.meta?.title ? doc?.meta?.title + " | Payload Website Template" : "Payload Website Template";
+	const title = doc?.meta?.title ? doc?.meta?.title + " | AusSpeedruns" : "AusSpeedruns";
 
 	return {
 		description: doc?.meta?.description,

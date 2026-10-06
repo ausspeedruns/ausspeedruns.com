@@ -10,11 +10,12 @@ import { Button, Group } from "@mantine/core";
 import { ShoppingCart } from "pixelarticons/react";
 
 type ProductVariantActionsProps = {
+	productId: number;
 	productName: string;
 	variant: Product["variants"][number];
 };
 
-export function ProductVariantActions({ productName, variant }: ProductVariantActionsProps) {
+export function ProductVariantActions({ productId, productName, variant }: ProductVariantActionsProps) {
 	const [quantity, setQuantity] = useState(1);
 	const [isLoading, setIsLoading] = useState<"stripe" | "bank" | null>(null);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -33,14 +34,16 @@ export function ProductVariantActions({ productName, variant }: ProductVariantAc
 	}
 
 	function handleAddToCart() {
-		if (!variant.stripePriceId) {
-			setErrorMessage("This variant cannot be added to cart yet.");
+		if (!variant.id) {
+			setErrorMessage("This variant is missing its identifier.");
 			setInfoMessage(null);
 			return;
 		}
 
 		addItem({
-			id: variant.stripePriceId,
+			id: `${productId}:${variant.id}`,
+			productId,
+			variantId: variant.id,
 			name: cartName,
 			priceInCents: variant.priceInCents ?? 0,
 			quantity,
@@ -51,8 +54,8 @@ export function ProductVariantActions({ productName, variant }: ProductVariantAc
 	}
 
 	async function handleBuyNow(method: "stripe" | "bank") {
-		if (!variant.stripePriceId) {
-			setErrorMessage("This variant is missing a checkout price ID.");
+		if (!variant.id) {
+			setErrorMessage("This variant is missing its identifier.");
 			setInfoMessage(null);
 			return;
 		}
@@ -62,7 +65,7 @@ export function ProductVariantActions({ productName, variant }: ProductVariantAc
 		setInfoMessage(null);
 
 		try {
-			const result = await checkout([{ priceId: variant.stripePriceId, quantity }], method);
+			const result = await checkout([{ productId, variantId: variant.id, quantity }], method);
 			if (!result.success) {
 				setErrorMessage(result.error);
 				return;

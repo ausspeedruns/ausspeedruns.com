@@ -59,7 +59,11 @@ export function CartPageClient() {
 
 		try {
 			const result = await checkout(
-				items.map((item) => ({ priceId: item.id, quantity: item.quantity })),
+				items.map((item) => ({
+					productId: item.productId,
+					variantId: item.variantId,
+					quantity: item.quantity,
+				})),
 				type,
 			);
 
@@ -75,7 +79,7 @@ export function CartPageClient() {
 			}
 
 			if (result.type === "bank") {
-				setBankTotalInCents(totalInCents);
+				setBankTotalInCents(result.totalInCents);
 				clearCart();
 				setBankReference(result.reference);
 				openBankModal();

@@ -92,6 +92,7 @@ export async function ProductBlock(props: ProductBlockProps) {
 											<span>{formatCents(variant.priceInCents)}</span>
 										</div>
 										<ProductVariantActions
+											productId={product.id}
 											productName={product.name ?? "Product"}
 											variant={variant}
 										/>
@@ -102,6 +103,7 @@ export async function ProductBlock(props: ProductBlockProps) {
 
 						{!showVariants && !!product.variants?.[0] && (
 							<ProductVariantActions
+								productId={product.id}
 								productName={product.name ?? "Product"}
 								variant={product.variants[0]}
 							/>

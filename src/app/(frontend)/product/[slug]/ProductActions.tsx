@@ -24,7 +24,9 @@ export default function ProductActions({ product, available }: ProductActionsPro
 	const handleAddToCart = () => {
 		if (!selectedVariant) return;
 		addItem({
-			id: selectedVariant.stripePriceId ?? "what",
+			id: `${product.id}:${selectedVariant.id}`,
+			productId: product.id,
+			variantId: selectedVariant.id!,
 			name: product.variants.length > 1 ? `${product.name} — ${selectedVariant.label}` : product.name,
 			priceInCents: selectedVariant.priceInCents,
 			quantity,
@@ -51,7 +53,7 @@ export default function ProductActions({ product, available }: ProductActionsPro
 			)}
 			<NumberInput label="Quantity" min={1} max={10} value={quantity} onChange={(v) => setQuantity(Number(v))} />
 			<Button onClick={handleAddToCart} disabled={!selectedVariant}>
-				Add to cart ({selectedVariant?.stripePriceId})
+				Add to cart
 			</Button>
 		</div>
 	);

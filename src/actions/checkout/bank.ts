@@ -6,7 +6,7 @@ import type { CheckoutResult } from "#actions/checkout.ts";
 
 export async function bankCheckout(
 	userId: string,
-	items: { priceId: string; quantity: number; product: Product; variant: Product["variants"][number] }[],
+	items: { quantity: number; product: Product; variant: Product["variants"][number] }[],
 ): Promise<CheckoutResult> {
 	const payload = await getPayload({ config });
 
@@ -17,6 +17,7 @@ export async function bankCheckout(
 	try {
 		const order = await payload.create({
 			collection: "orders",
+			overrideAccess: true,
 			data: {
 				user: userId,
 				items: items.map((item) => ({
@@ -36,7 +37,7 @@ export async function bankCheckout(
 			return { success: false, error: "Error creating order. Please try again." };
 		}
 
-		return { success: true, type: "bank", reference: order.reference };
+		return { success: true, type: "bank", reference: order.reference, totalInCents: order.totalInCents };
 	} catch (error) {
 		payload.logger.error({ err: error, message: "Error creating order for bank transfer checkout" });
 		return { success: false, error: "An error occurred creating your order. Please try again." };

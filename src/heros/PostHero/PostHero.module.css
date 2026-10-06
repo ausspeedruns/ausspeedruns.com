@@ -1,0 +1,48 @@
+.hero {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 2rem;
+	align-items: center;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 4rem 1.5rem;
+}
+
+.content {
+	min-width: 0;
+}
+
+.kicker {
+	margin: 0 0 0.75rem;
+	font-size: 0.8rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--theme-elevation-600);
+}
+
+.title {
+	margin: 0;
+	font-size: clamp(2rem, 5vw, 4.5rem);
+	line-height: 1.05;
+}
+
+.imageWrapper {
+	position: relative;
+	aspect-ratio: 16 / 10;
+	min-height: 16rem;
+	overflow: hidden;
+	border-radius: 0.5rem;
+	background: var(--theme-elevation-100);
+}
+
+.image {
+	object-fit: cover;
+}
+
+@media (max-width: 768px) {
+	.hero {
+		grid-template-columns: 1fr;
+		padding: 2.5rem 1rem;
+	}
+}

@@ -25,6 +25,7 @@ import { Header } from "./Header/config.ts";
 import { plugins } from "./plugins/plugins.ts";
 import { defaultLexical } from "#fields/defaultLexical.ts";
 import { getServerSideURL } from "./utilities/getURL.ts";
+import { Games } from "#collections/Game.ts";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -87,6 +88,7 @@ export default buildConfig({
 		Runs,
 		Submissions,
 		Volunteers,
+		Games,
 	],
 	cors: [getServerSideURL()].filter(Boolean),
 	globals: [Header, Footer],

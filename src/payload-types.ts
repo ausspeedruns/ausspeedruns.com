@@ -80,6 +80,7 @@ export interface Config {
     runs: Run;
     submissions: Submission;
     volunteers: Volunteer;
+    games: Game;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -108,6 +109,9 @@ export interface Config {
       submissions: 'submissions';
       incentives: 'incentives';
     };
+    games: {
+      runs: 'runs';
+    };
     'payload-folders': {
       documentsAndFolders: 'payload-folders' | 'media';
     };
@@ -126,6 +130,7 @@ export interface Config {
     runs: RunsSelect<false> | RunsSelect<true>;
     submissions: SubmissionsSelect<false> | SubmissionsSelect<true>;
     volunteers: VolunteersSelect<false> | VolunteersSelect<true>;
+    games: GamesSelect<false> | GamesSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -534,7 +539,7 @@ export interface User {
  */
 export interface Run {
   id: number;
-  game: string;
+  game?: (number | null) | Game;
   category: string;
   platform: string;
   runners?: (string | User)[] | null;
@@ -567,6 +572,23 @@ export interface Run {
   submission?: (number | null) | Submission;
   donationIncentives?: (number | Incentive)[] | null;
   legacyKeystoneId?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "games".
+ */
+export interface Game {
+  id: number;
+  name: string;
+  year?: number | null;
+  streamDisplayName?: string | null;
+  runs?: {
+    docs?: (number | Run)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -1648,6 +1670,10 @@ export interface PayloadLockedDocument {
         value: number | Volunteer;
       } | null)
     | ({
+        relationTo: 'games';
+        value: number | Game;
+      } | null)
+    | ({
         relationTo: 'redirects';
         value: number | Redirect;
       } | null)
@@ -2421,6 +2447,18 @@ export interface VolunteersSelect<T extends boolean = true> {
   hostSpecificRunner?: T;
   hostOtherInformation?: T;
   techExperience?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "games_select".
+ */
+export interface GamesSelect<T extends boolean = true> {
+  name?: T;
+  year?: T;
+  streamDisplayName?: T;
+  runs?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -16,8 +16,8 @@ export const Runs: CollectionConfig = {
 	fields: [
 		{
 			name: "game",
-			type: "text",
-			required: true,
+			type: "relationship",
+			relationTo: "games",
 		},
 		{
 			name: "category",

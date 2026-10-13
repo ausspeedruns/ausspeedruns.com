@@ -7,20 +7,65 @@ import type { BasePayload } from "payload";
 import pg from "pg";
 import type { Volunteer } from "#/payload-types.ts";
 
+import readline from "node:readline/promises";
+
+import { KeystoneDump } from "./keystone-dump.ts";
 import { seed } from "./seed/seed.ts";
 
+// --- CLI flags ---
+// --dump <file>: plain-format `pg_dump -Fp` of the Keystone DB (or set KEYSTONE_DUMP_PATH)
+// --production: skip the test admin user and dev seed data
+// --yes: skip the confirmation prompt (non-production only)
+const argv = process.argv.slice(2);
+const args = new Set(argv);
+const dumpArgIndex = argv.indexOf("--dump");
+const dumpPath = dumpArgIndex !== -1 ? argv[dumpArgIndex + 1] : process.env.KEYSTONE_DUMP_PATH;
+const isProduction = args.has("--production");
+const skipConfirm = args.has("--yes") && !isProduction;
+
 // --- Concurrency helper ---
-const BATCH_SIZE = 10;
+const BATCH_SIZE = Number(process.env.MIGRATE_BATCH_SIZE) || 10;
 async function runInBatches<T>(items: T[], fn: (item: T) => Promise<void>, batchSize = BATCH_SIZE) {
 	for (let i = 0; i < items.length; i += batchSize) {
-		await Promise.allSettled(items.slice(i, i + batchSize).map(fn));
+		const results = await Promise.allSettled(items.slice(i, i + batchSize).map(fn));
+		for (const r of results) {
+			if (r.status === "rejected") {
+				failureCount++;
+				console.error("Unhandled error in batch:", r.reason);
+			}
+		}
 	}
 }
 
 // --- Lookup caches (legacyKeystoneId → Payload ID) ---
 const eventIdMap = new Map<string, number>();
+const eventInfoMap = new Map<string, { shortName: string; timezone?: string }>();
 const submissionIdMap = new Map<string, number>();
 const runIdMap = new Map<string, number>();
+const gameIdCache = new Map<string, Promise<number>>();
+
+let failureCount = 0;
+
+function describeDb(uri: string | undefined) {
+	if (!uri) return "(not set)";
+	try {
+		const url = new URL(uri);
+		return `${url.hostname}:${url.port || 5432}${url.pathname}`;
+	} catch {
+		return "(unparseable URI)";
+	}
+}
+
+async function confirm(message: string, expected: string) {
+	if (skipConfirm) return;
+	const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+	const answer = await rl.question(`${message}\nType "${expected}" to continue: `);
+	rl.close();
+	if (answer.trim() !== expected) {
+		console.log("Aborted.");
+		process.exit(1);
+	}
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,7 +77,15 @@ for (const envFile of [".env.local", ".env"]) {
 	if (fs.existsSync(full)) dotenv.config({ path: full, quiet: true });
 }
 
-if (process.argv.includes("--reset")) {
+if (!process.env.DATABASE_URI) {
+	console.error("DATABASE_URI is not set.");
+	process.exit(1);
+}
+
+if (args.has("--reset")) {
+	const target = describeDb(process.env.DATABASE_URI);
+	const dbName = new URL(process.env.DATABASE_URI).pathname.slice(1);
+	await confirm(`This will DROP ALL DATA in ${target}.`, dbName);
 	console.log("Resetting database...");
 	await resetDatabase();
 	console.log("Database reset. Exiting.");
@@ -41,7 +94,6 @@ if (process.argv.includes("--reset")) {
 
 async function resetDatabase() {
 	const client = new pg.Client({
-		// Replace with your actual connection details or use env vars
 		connectionString: process.env.DATABASE_URI,
 	});
 
@@ -67,21 +119,43 @@ async function migrate() {
 	const { getPayload } = await import("payload");
 	const { default: config } = await import("../src/payload.config.ts");
 
+	if (!dumpPath || !fs.existsSync(dumpPath)) {
+		console.error(`Keystone dump not found: ${dumpPath ?? "(not set)"}. Pass --dump <file> or set KEYSTONE_DUMP_PATH.`);
+		process.exit(1);
+	}
+
+	console.log(`Reading ${dumpPath}...`);
+	const source = await KeystoneDump.load(dumpPath);
+	console.log(`Loaded ${source.summary()}`);
+
+	await confirm(
+		`Migrating ${path.basename(dumpPath)} -> ${describeDb(process.env.DATABASE_URI)}${isProduction ? " (PRODUCTION)" : ""}.`,
+		"migrate",
+	);
+
 	const payload = await getPayload({ config });
-	const client = new pg.Client({
-		connectionString: "postgresql://payloadcms:testing@localhost:5433/keystone_staging",
-	});
-	await client.connect();
 
-	await migrateRoles(payload, client);
-	await migrateUsers(payload, client);
-	await migrateEvents(payload, client);
-	await migrateSubmissions(payload, client);
-	await migrateRuns(payload, client);
-	await migrateIncentives(payload, client);
-	await migrateVolunteers(payload, client);
-	await migrateOrders(payload, client);
+	await migrateRoles(payload, source);
+	await migrateUsers(payload, source);
+	await migrateEvents(payload, source);
+	await migrateSubmissions(payload, source);
+	await migrateRuns(payload, source);
+	await migrateIncentives(payload, source);
+	await migrateVolunteers(payload, source);
+	await migrateOrders(payload, source);
 
+	if (!isProduction) await createDevData(payload);
+
+	if (failureCount > 0) {
+		console.error(`Migration finished with ${failureCount} failure(s). Review the log above.`);
+		process.exit(1);
+	}
+
+	console.log("Migration finished with no failures.");
+	process.exit(0);
+}
+
+async function createDevData(payload: BasePayload) {
 	// Add default admin user
 	const adminRole = await payload.find({
 		collection: "roles",
@@ -100,6 +174,7 @@ async function migrate() {
 			await payload.create({
 				collection: "users",
 				draft: false,
+				disableVerificationEmail: true,
 				data: {
 					username: "DELETE_ME_POST_SEED",
 					email: "test@example.com",
@@ -115,19 +190,11 @@ async function migrate() {
 	}
 
 	await seed(payload);
-
-	await client.end();
-	process.exit(0);
 }
 
-migrate().catch((err) => {
-	console.error(err);
-	process.exit(1);
-});
-
-async function migrateRoles(payload: BasePayload, pgClient: pg.Client) {
+async function migrateRoles(payload: BasePayload, source: KeystoneDump) {
 	console.log("Migrating roles...");
-	const data = await pgClient.query('SELECT * FROM public."Role"');
+	const data = source.query("Role");
 
 	await runInBatches(data.rows, async (role) => {
 		const { name, admin, canManageContent, canManageUsers, colour, textColour } = role;
@@ -150,9 +217,9 @@ async function migrateRoles(payload: BasePayload, pgClient: pg.Client) {
 	});
 }
 
-async function migrateUsers(payload: BasePayload, pgClient: pg.Client) {
+async function migrateUsers(payload: BasePayload, source: KeystoneDump) {
 	console.log("Migrating users...");
-	const data = await pgClient.query('SELECT * FROM public."User"');
+	const data = source.query("User");
 
 	await runInBatches(data.rows, async (user) => {
 		const {
@@ -181,6 +248,7 @@ async function migrateUsers(payload: BasePayload, pgClient: pg.Client) {
 			await payload.create({
 				collection: "users",
 				draft: false,
+				disableVerificationEmail: true,
 				data: {
 					id,
 					_verified: verified,
@@ -204,9 +272,9 @@ async function migrateUsers(payload: BasePayload, pgClient: pg.Client) {
 	});
 }
 
-async function migrateEvents(payload: BasePayload, pgClient: pg.Client) {
+async function migrateEvents(payload: BasePayload, source: KeystoneDump) {
 	console.log("Migrating events...");
-	const data = await pgClient.query('SELECT * FROM public."Event"');
+	const data = source.query("Event");
 
 	// Events have media uploads so we keep them sequential to avoid file I/O contention
 	for (const event of data.rows) {
@@ -303,6 +371,7 @@ async function migrateEvents(payload: BasePayload, pgClient: pg.Client) {
 
 			// Cache the legacy → payload ID mapping
 			eventIdMap.set(id, created.id);
+			eventInfoMap.set(id, { shortName: shortname, timezone: eventTimezone ?? undefined });
 		} catch (e) {
 			handlePayloadCreateError(e, `event ${name}`);
 		}
@@ -348,9 +417,9 @@ async function getEventImage(eventShortname: string) {
 	return images;
 }
 
-async function migrateSubmissions(payload: BasePayload, pgClient: pg.Client) {
+async function migrateSubmissions(payload: BasePayload, source: KeystoneDump) {
 	console.log("Migrating submissions...");
-	const data = await pgClient.query('SELECT * FROM public."Submission"');
+	const data = source.query("Submission");
 
 	await runInBatches(data.rows, async (row) => {
 		const {
@@ -410,26 +479,38 @@ async function migrateSubmissions(payload: BasePayload, pgClient: pg.Client) {
 	});
 }
 
-async function migrateRuns(payload: BasePayload, pgClient: pg.Client) {
+async function migrateRuns(payload: BasePayload, source: KeystoneDump) {
 	console.log("Migrating runs...");
 
-	const eventTimezoneData = await payload
-		.find({
-			collection: "events",
-			pagination: false,
-		})
-		.then((res) => {
-			const map = new Map<string, string>();
-			res.docs.forEach((event) => {
-				if (event.legacyKeystoneId && event.timeSettings?.timezone) {
-					map.set(event.legacyKeystoneId, event.timeSettings.timezone);
-				}
+	// Cache the in-flight promise so concurrent runs of the same game don't create duplicates
+	function findOrCreateGame(gameName: string): Promise<number> {
+		const cached = gameIdCache.get(gameName);
+		if (cached) return cached;
+
+		const promise = (async () => {
+			const existing = await payload.find({
+				collection: "games",
+				where: { name: { equals: gameName } },
+				limit: 1,
+				depth: 0,
 			});
-			return map;
-		});
+			if (existing.docs.length > 0) return existing.docs[0].id;
+
+			const created = await payload.create({
+				collection: "games",
+				draft: false,
+				data: { name: gameName },
+			});
+			return created.id;
+		})();
+
+		gameIdCache.set(gameName, promise);
+		promise.catch(() => gameIdCache.delete(gameName));
+		return promise;
+	}
 
 	const runIdRunnersMap = new Map<string, string[]>();
-	const runRunnersData = await pgClient.query('SELECT * from public."_Run_runners"');
+	const runRunnersData = source.query("_Run_runners");
 
 	for (const row of runRunnersData.rows) {
 		const { A: runId, B: runnerId } = row;
@@ -439,7 +520,7 @@ async function migrateRuns(payload: BasePayload, pgClient: pg.Client) {
 		runIdRunnersMap.get(runId)!.push(runnerId);
 	}
 
-	const data = await pgClient.query('SELECT * FROM public."Run"');
+	const data = source.query("Run");
 
 	await runInBatches(data.rows, async (row) => {
 		const {
@@ -461,18 +542,18 @@ async function migrateRuns(payload: BasePayload, pgClient: pg.Client) {
 			originalSubmission,
 		} = row;
 		try {
-			// Correct the schedule time to be in the correct UTC time
-			// Currently all times are like double timezoned away from what they should be
-			const scheduledTimeInEventTZ = scheduledTime
-				? new Date(new Date(scheduledTime).getTime() - new Date(scheduledTime).getTimezoneOffset() * 60000)
-				: null;
+			if (!game) {
+				throw new Error(`Run ${id} has no game name`);
+			}
+
+			const gameId = await findOrCreateGame(game);
 
 			const created = await payload.create({
 				collection: "runs",
 				draft: false,
 				data: {
 					id,
-					game,
+					game: gameId,
 					category,
 					platform,
 					estimate,
@@ -483,8 +564,8 @@ async function migrateRuns(payload: BasePayload, pgClient: pg.Client) {
 					isRace: race,
 					isCoop: coop,
 					techPlatform,
-					scheduledTime: scheduledTimeInEventTZ?.toISOString(),
-					scheduledTime_tz: (eventTimezoneData.get(event) as "Australia/Melbourne") ?? "Australia/Melbourne", // Cheeky hack
+					scheduledTime: scheduledTime ? new Date(scheduledTime).toISOString() : undefined,
+					scheduledTime_tz: (eventInfoMap.get(event)?.timezone as "Australia/Melbourne") ?? "Australia/Melbourne", // Cheeky hack
 					otherRunners: racer,
 					legacyKeystoneId: id,
 					// Resolve relationships from cache instead of querying DB
@@ -504,9 +585,9 @@ async function migrateRuns(payload: BasePayload, pgClient: pg.Client) {
 	});
 }
 
-async function migrateIncentives(payload: BasePayload, pgClient: pg.Client) {
+async function migrateIncentives(payload: BasePayload, source: KeystoneDump) {
 	console.log("Migrating incentives...");
-	const data = await pgClient.query('SELECT * FROM public."Incentive"');
+	const data = source.query("Incentive");
 
 	await runInBatches(data.rows, async (row) => {
 		const { id, title, run, event, notes, active, data: incentiveData, type } = row;
@@ -532,9 +613,9 @@ async function migrateIncentives(payload: BasePayload, pgClient: pg.Client) {
 	});
 }
 
-async function migrateVolunteers(payload: BasePayload, pgClient: pg.Client) {
+async function migrateVolunteers(payload: BasePayload, source: KeystoneDump) {
 	console.log("Migrating volunteers...");
-	const data = await pgClient.query('SELECT * FROM public."Volunteer"');
+	const data = source.query("Volunteer");
 
 	await runInBatches(data.rows, async (row) => {
 		const {
@@ -609,12 +690,12 @@ async function migrateVolunteers(payload: BasePayload, pgClient: pg.Client) {
 	});
 }
 
-async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
+async function migrateOrders(payload: BasePayload, source: KeystoneDump) {
 	console.log("Migrating orders...");
 
 	console.log("\tCreating products");
-	const ticketData = await pgClient.query('SELECT * FROM public."Ticket"');
-	const shirtData = await pgClient.query('SELECT * FROM public."ShirtOrder"');
+	const ticketData = source.query("Ticket");
+	const shirtData = source.query("ShirtOrder");
 
 	// Go through all the tickets and create products for each unique item
 	const uniqueEvents = new Set<string>();
@@ -625,9 +706,7 @@ async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
 	let ticketMap: Record<string, number> = {};
 
 	for (const eventId of uniqueEvents) {
-		const eventName = await payload
-			.find({ collection: "events", where: { legacyKeystoneId: { equals: eventId } }, pagination: false })
-			.then((res) => (res.docs[0] ? res.docs[0].shortName : `Event ${eventId}`));
+		const eventName = eventInfoMap.get(eventId)?.shortName ?? `Event ${eventId}`;
 		try {
 			const product = await payload.create({
 				collection: "products",
@@ -756,7 +835,8 @@ async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
 		else if (size === "xl4") sizeConversion = "4 X-Large";
 
 		if (!productId) {
-			console.warn(`No product found for shirt order ${id} with event ${event}, skipping...`);
+			console.warn(`No product found for shirt order ${id} (created ${created}), skipping...`);
+			failureCount++;
 			return;
 		}
 
@@ -794,6 +874,12 @@ async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
 	await runInBatches(ticketData.rows, async (row) => {
 		const { id, user, event, taken, method, ticketID, paid, notes, numberOfTickets, stripeID, created } = row;
 
+		if (!ticketMap[event]) {
+			console.warn(`No ticket product for ticket order ${id} (event ${event}), skipping...`);
+			failureCount++;
+			return;
+		}
+
 		try {
 			await payload.create({
 				collection: "orders",
@@ -825,6 +911,7 @@ async function migrateOrders(payload: BasePayload, pgClient: pg.Client) {
 }
 
 function handlePayloadCreateError(e: unknown, context: string) {
+	failureCount++;
 	const errors = (e as any)?.data?.errors;
 
 	if (errors) {
@@ -836,3 +923,9 @@ function handlePayloadCreateError(e: unknown, context: string) {
 		console.error(`Failed to create ${context} due to an unexpected error:`, e);
 	}
 }
+
+// Awaited at the end of the module: `payload run` exits once the import resolves, and every const above must be initialised first
+await migrate().catch((err) => {
+	console.error(err);
+	process.exit(1);
+});

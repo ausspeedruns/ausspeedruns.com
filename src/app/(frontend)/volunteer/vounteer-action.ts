@@ -36,7 +36,7 @@ export async function submitVolunteer(submissionData: VolunteerSubmissionData) {
 		};
 	}
 
-	if (!user.socials?.Discord) {
+	if (!user.socials?.discord) {
 		return {
 			success: false,
 			error: "Discord account not linked",
@@ -46,9 +46,12 @@ export async function submitVolunteer(submissionData: VolunteerSubmissionData) {
 	try {
 		const submission = await payload.create({
 			collection: "volunteers",
+			overrideAccess: false,
+			user,
 			data: {
 				event: submissionData.event,
 				volunteer: user,
+				status: "pending",
 				role: submissionData.roles,
 				availability: submissionData.dayTimes.map((time) => ({ time })),
 				maximumTime: submissionData.maxTime,

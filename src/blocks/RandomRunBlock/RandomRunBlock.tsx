@@ -1,46 +1,49 @@
-import type { Event, RandomRunBlock as RandomRunBlockProps, Run } from "#/payload-types";
-import { getPayload } from "payload";
+import type { RandomRunBlock as RandomRunBlockProps, Run } from "#/payload-types";
+import { getPayload, type Where } from "payload";
 import config from "#payload-config";
 
+import { relationId } from "#access/helpers.ts";
+import { getYouTubeEmbedUrl } from "#utilities/runDisplay.ts";
+
+function pickRandom<T>(items: T[]): T | undefined {
+	return items[Math.floor(Math.random() * items.length)];
+}
+
 export async function RandomRunBlock(props: RandomRunBlockProps) {
-	let runToDisplay: string;
+	const specificRuns = (props.specificRuns ?? []).filter((run): run is Run => typeof run === "object" && run !== null);
 
-	const specificEventId = props.specificEvent as Event;
-	const specificRuns = (props.specificRuns ?? []) as Run[];
+	let candidates: string[];
 
-	// If we have specific runs, use those
 	if (specificRuns.length > 0) {
-		const possibleRuns = specificRuns.filter((run) => run.youtube).map((run) => run.youtube) as string[];
-		runToDisplay = possibleRuns[Math.floor(Math.random() * possibleRuns.length)];
-	} else if (specificEventId) {
-		// If we have a specific event, use runs from that event
-		const possibleRuns = (specificEventId.runs?.docs ?? [])
-			.filter((run): run is Run => typeof run !== "number" && Boolean(run.youtube))
-			.map((run) => run.youtube) as string[];
-		runToDisplay = possibleRuns[Math.floor(Math.random() * possibleRuns.length)];
+		candidates = specificRuns.map((run) => run.youtube).filter((url): url is string => Boolean(url));
 	} else {
-		// Otherwise, use random runs from the entire database
+		// Use runs from the selected event, or from the entire database if no event is selected
 		const payload = await getPayload({ config });
+		const eventId = relationId(props.specificEvent);
 
-		const allRuns = await payload.find({
+		const where: Where = { youtube: { exists: true } };
+		if (eventId !== null) where.event = { equals: eventId };
+
+		const runs = await payload.find({
 			collection: "runs",
-			limit: 1000, // Adjust this limit based on your needs and database size
+			depth: 0,
+			limit: 1000,
 			pagination: false,
-			where: {
-				youtube: {
-					exists: true,
-				},
-			},
+			select: { youtube: true },
+			where,
 		});
 
-		runToDisplay = allRuns.docs[Math.floor(Math.random() * allRuns.docs.length)].youtube as string;
+		candidates = runs.docs.map((run) => run.youtube).filter((url): url is string => Boolean(url));
 	}
+
+	const embedUrl = getYouTubeEmbedUrl(pickRandom(candidates));
+	if (!embedUrl) return null;
 
 	return (
 		<iframe
 			width="560"
 			height="315"
-			src={runToDisplay.replace("watch?v=", "embed/")}
+			src={embedUrl}
 			title="YouTube video player"
 			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 			referrerPolicy="strict-origin-when-cross-origin"

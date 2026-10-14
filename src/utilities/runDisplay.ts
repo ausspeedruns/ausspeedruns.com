@@ -1,0 +1,41 @@
+import type { Game } from "#/payload-types";
+
+/** Returns the game's display name from a (possibly unpopulated) game relationship. */
+export function getGameName(game: number | Game | null | undefined): string {
+	if (game && typeof game === "object") return game.name;
+	return "Unknown game";
+}
+
+/**
+ * Converts a YouTube URL (watch, youtu.be, shorts, live or embed) or bare video ID into an embeddable URL.
+ * Returns null if no video ID could be found.
+ */
+export function getYouTubeEmbedUrl(value: string | null | undefined): string | null {
+	if (!value) return null;
+	const trimmed = value.trim();
+
+	if (/^[\w-]{11}$/.test(trimmed)) {
+		return `https://www.youtube.com/embed/${trimmed}`;
+	}
+
+	try {
+		const url = new URL(trimmed);
+		const host = url.hostname.replace(/^www\.|^m\./, "");
+		let id: string | null = null;
+		let start = url.searchParams.get("t") ?? url.searchParams.get("start");
+
+		if (host === "youtu.be") {
+			id = url.pathname.slice(1).split("/")[0] || null;
+		} else if (host === "youtube.com" || host === "youtube-nocookie.com") {
+			id = url.searchParams.get("v");
+			const match = /^\/(?:embed|shorts|live|v)\/([\w-]+)/.exec(url.pathname);
+			if (!id && match) id = match[1];
+		}
+
+		if (!id) return null;
+		start = start?.replace(/s$/, "") ?? null;
+		return `https://www.youtube.com/embed/${id}${start && /^\d+$/.test(start) ? `?start=${start}` : ""}`;
+	} catch {
+		return null;
+	}
+}

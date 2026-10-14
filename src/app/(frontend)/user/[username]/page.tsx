@@ -15,6 +15,7 @@ import { UserNavigation } from "./user-navigation";
 import { Run } from "./run";
 import { getEventLabel } from "./getEventLabel";
 import { UpcomingRun } from "./upcoming-run";
+import { getGameName } from "#utilities/runDisplay.ts";
 
 type Args = {
 	params: Promise<{
@@ -44,7 +45,7 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 			id: run.id,
 			date: run.scheduledTime ? formatDate(run.scheduledTime) : "Schedule TBD",
 			estimate: run.estimate,
-			game: run.game,
+			game: getGameName(run.game),
 			event: getEventLabel(run),
 			mode: run.isRace ? "Race" : run.isCoop ? "Co-op" : "",
 			isHighlighted: index === 1,
@@ -53,12 +54,12 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 	const socialItems = [
 		{
 			label: "Twitch",
-			href: user.socials?.Twitch ? `https://twitch.tv/${user.socials.Twitch}` : undefined,
+			href: user.socials?.twitch ? `https://twitch.tv/${user.socials.twitch}` : undefined,
 			icon: Tv,
 		},
 		{
 			label: "Bluesky",
-			href: user.socials?.Bluesky ? `https://bsky.app/profile/${user.socials.Bluesky}` : undefined,
+			href: user.socials?.bluesky ? `https://bsky.app/profile/${user.socials.bluesky}` : undefined,
 			icon: AtSign,
 		},
 	].filter((item) => item.href);
@@ -179,7 +180,10 @@ const queryUserByUsername = cache(async (username: string) => {
 			pronouns: true,
 			state: true,
 			socials: true,
-			speedrunData: true,
+			speedrunData: { runs: true },
+		},
+		joins: {
+			"speedrunData.runs": { limit: 0 },
 		},
 	});
 

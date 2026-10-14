@@ -26,8 +26,8 @@ function resolveProductImage(item: NonNullable<Order["items"]>[number]) {
 
 export function OrderItem(props: OrderItemProps) {
 	const { item } = props;
-	const lineTotalInCents = item.quantity * item.unitPriceInCents;
-	const unitPriceText = currencyFormatter.format(item.unitPriceInCents / 100);
+	const lineTotalInCents = item.quantity * (item.unitPriceInCents ?? 0);
+	const unitPriceText = currencyFormatter.format((item.unitPriceInCents ?? 0) / 100);
 	const lineTotalText = currencyFormatter.format(lineTotalInCents / 100);
 	const productName = resolveProductName(item);
 	const productImage = resolveProductImage(item)?.[0] ?? null;

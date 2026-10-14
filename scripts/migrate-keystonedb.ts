@@ -46,6 +46,38 @@ const gameIdCache = new Map<string, Promise<number>>();
 
 let failureCount = 0;
 
+/** Normalises legacy durations ("25", "00:60:00", "1:30") into HH:MM:SS. */
+function normaliseDuration<T extends string | null | undefined>(value: T): T {
+	if (!value) return value;
+	const parts = value.trim().split(":").map((part) => Number(part));
+	if (parts.length === 0 || parts.some((part) => !Number.isFinite(part))) return value;
+
+	// A bare number is treated as minutes, "H:MM" as hours and minutes
+	const [hours, minutes, seconds] =
+		parts.length === 1 ? [0, parts[0], 0] : parts.length === 2 ? [parts[0], parts[1], 0] : parts;
+	const total = hours * 3600 + minutes * 60 + seconds;
+	const pad = (n: number) => String(n).padStart(2, "0");
+	return `${pad(Math.floor(total / 3600))}:${pad(Math.floor((total % 3600) / 60))}:${pad(total % 60)}` as T;
+}
+
+/** Splits legacy free-text "video" values into a valid URL, or a note to keep with the submission. */
+function normaliseVideo(value: string | null | undefined): { url: string | null; note: string | null } {
+	const trimmed = value?.trim();
+	if (!trimmed) return { url: null, note: null };
+
+	const candidate = /^https?:\/\//i.test(trimmed) ? trimmed : /^[\w-]+(\.[\w-]+)+(\/\S*)?$/.test(trimmed) ? `https://${trimmed}` : null;
+	if (candidate) {
+		try {
+			new URL(candidate);
+			return { url: candidate, note: null };
+		} catch {
+			// fall through
+		}
+	}
+
+	return { url: null, note: `Video (from legacy submission): ${trimmed}` };
+}
+
 function describeDb(uri: string | undefined) {
 	if (!uri) return "(not set)";
 	try {
@@ -249,6 +281,7 @@ async function migrateUsers(payload: BasePayload, source: KeystoneDump) {
 				collection: "users",
 				draft: false,
 				disableVerificationEmail: true,
+				context: { isMigration: true },
 				data: {
 					id,
 					_verified: verified,
@@ -256,13 +289,14 @@ async function migrateUsers(payload: BasePayload, source: KeystoneDump) {
 					username,
 					email,
 					password,
-					dateOfBirth: dateOfBirth ? new Date(dateOfBirth).toISOString() : new Date().toISOString(),
+					// Unknown DOBs use the epoch so the account still passes the minimum age check
+					dateOfBirth: new Date(dateOfBirth ?? 0).toISOString(),
 					pronouns,
 					state: newState,
 					socials: {
-						Discord: discord,
-						Twitch: twitch,
-						Bluesky: bluesky,
+						discord: discord,
+						twitch: twitch,
+						bluesky: bluesky,
 					},
 				},
 			});
@@ -443,6 +477,15 @@ async function migrateSubmissions(payload: BasePayload, source: KeystoneDump) {
 			willingBackup,
 		} = row;
 
+		const eventId = event ? eventIdMap.get(event) : undefined;
+		if (!eventId) {
+			console.warn(`Skipping submission ${id}: event ${event} was not migrated`);
+			failureCount++;
+			return;
+		}
+
+		const { url: videoUrl, note: videoNote } = normaliseVideo(video);
+
 		try {
 			const created = await payload.create({
 				collection: "submissions",
@@ -450,24 +493,23 @@ async function migrateSubmissions(payload: BasePayload, source: KeystoneDump) {
 				data: {
 					id,
 					runner,
+					event: eventId,
 					game,
 					category,
 					platform,
 					techPlatform,
 					ageRating: ageRating === "ra18" ? "r18" : ageRating,
-					estimate,
-					possibleEstimate,
+					estimate: normaliseDuration(estimate),
+					possibleEstimate: normaliseDuration(possibleEstimate),
 					possibleEstimateReason,
-					specialRequirements: specialReqs,
+					specialRequirements: [specialReqs, videoNote].filter(Boolean).join("\n\n") || null,
 					raceType: race === "no" ? "noRace" : race === "solo" ? "solo" : race === "only" ? "only" : "noRace",
 					racer,
 					isCoop: coop,
-					video,
+					video: videoUrl,
 					status: status === "submitted" ? "pending" : status,
 					canBackup: willingBackup,
 					legacyKeystoneId: id,
-					// Resolve event from cache instead of querying DB
-					...(event && eventIdMap.has(event) ? { event: eventIdMap.get(event) } : {}),
 				},
 			});
 
@@ -556,7 +598,7 @@ async function migrateRuns(payload: BasePayload, source: KeystoneDump) {
 					game: gameId,
 					category,
 					platform,
-					estimate,
+					estimate: normaliseDuration(estimate),
 					time: finalTime,
 					youtube: youtubeVOD,
 					twitch: twitchVOD,
@@ -666,6 +708,12 @@ async function migrateVolunteers(payload: BasePayload, source: KeystoneDump) {
 			}
 		}
 
+		const eventId = event ? eventIdMap.get(event) : undefined;
+		if (!eventId) {
+			console.warn(`Skipping volunteer application ${id}: event ${event} was not migrated`);
+			return;
+		}
+
 		try {
 			await payload.create({
 				collection: "volunteers",
@@ -673,6 +721,8 @@ async function migrateVolunteers(payload: BasePayload, source: KeystoneDump) {
 				data: {
 					id,
 					volunteer: userId,
+					event: eventId,
+					status: "pending",
 					role,
 					availability,
 					maximumTime: eventHostTime,
@@ -680,8 +730,6 @@ async function migrateVolunteers(payload: BasePayload, source: KeystoneDump) {
 					hostSpecificGame: specificGame,
 					hostSpecificRunner: specificRunner,
 					hostOtherInformation: additionalInfo,
-					// Resolve event from cache instead of querying DB
-					...(event && eventIdMap.has(event) ? { event: eventIdMap.get(event) } : {}),
 				},
 			});
 		} catch (e) {
@@ -844,6 +892,7 @@ async function migrateOrders(payload: BasePayload, source: KeystoneDump) {
 			await payload.create({
 				collection: "orders",
 				draft: false,
+				context: { skipStockAdjustment: true },
 				data: {
 					id,
 					reference: "ORD-" + shirtID, // You can customize this reference format as needed
@@ -855,7 +904,6 @@ async function migrateOrders(payload: BasePayload, source: KeystoneDump) {
 							product: productId,
 							variantLabel: `${shirtColour ? `${shirtColour} ` : ""}${sizeConversion}`,
 							quantity: 1,
-							unitPriceInCents: 0, // Price is determined by the product variant, so we can set this to 0
 						},
 					],
 					notes,
@@ -884,6 +932,7 @@ async function migrateOrders(payload: BasePayload, source: KeystoneDump) {
 			await payload.create({
 				collection: "orders",
 				draft: false,
+				context: { skipStockAdjustment: true },
 				data: {
 					id,
 					user,
@@ -893,9 +942,9 @@ async function migrateOrders(payload: BasePayload, source: KeystoneDump) {
 					items: [
 						{
 							product: ticketMap[event], // This is a placeholder. You may want to create actual product entries for each ticket type.
-							variantLabel: ticketID,
+							variantLabel: "General Admission",
 							quantity: numberOfTickets || 1,
-							unitPriceInCents: 0,
+							// unitPriceInCents is filled from the product variant by the Orders hook
 						},
 					],
 					notes,

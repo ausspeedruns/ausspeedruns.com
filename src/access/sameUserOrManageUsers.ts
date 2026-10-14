@@ -1,16 +1,15 @@
 import type { Access } from "payload";
 
-import { resolveUserRoles } from "./helpers.ts";
+import { isUserManager } from "./helpers.ts";
 
-export const sameUserOrManageUsers: Access = async ({ req: { user } }) => {
-	if (!user) return false;
+export const sameUserOrManageUsers: Access = async ({ req }) => {
+	if (!req.user) return false;
 
-	const roles = await resolveUserRoles(user);
-	if (roles.some((role) => role.canManageUsers)) {
+	if (await isUserManager(req)) {
 		return true;
 	}
 
 	return {
-		id: { equals: user.id },
+		id: { equals: req.user.id },
 	};
 };

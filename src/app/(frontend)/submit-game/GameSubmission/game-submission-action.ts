@@ -24,7 +24,7 @@ export async function createSubmission(submissionData: GameSubmissionResults) {
 		};
 	}
 
-	if (!user.socials?.Discord) {
+	if (!user.socials?.discord) {
 		return {
 			success: false,
 			error: "Discord account not linked",
@@ -34,9 +34,12 @@ export async function createSubmission(submissionData: GameSubmissionResults) {
 	try {
 		const submission = await payload.create({
 			collection: "submissions",
+			overrideAccess: false,
+			user,
 			data: {
 				event: submissionData.event,
 				runner: user,
+				status: "pending",
 				canBackup: submissionData.backup,
 
 				game: submissionData.game,

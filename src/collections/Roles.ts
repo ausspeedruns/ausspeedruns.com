@@ -2,12 +2,11 @@ import type { CollectionConfig } from "payload";
 
 import { authenticated } from "#access/authenticated.ts";
 import { isAdmin } from "#access/isAdmin.ts";
-import { staff } from "#access/staff.ts";
+import { validateColour } from "#fields/validators.ts";
 
-export const Roles: CollectionConfig = {
+export const Roles: CollectionConfig<"roles"> = {
 	slug: "roles",
 	access: {
-		admin: staff,
 		create: isAdmin,
 		delete: isAdmin,
 		read: authenticated,
@@ -15,6 +14,16 @@ export const Roles: CollectionConfig = {
 	},
 	admin: {
 		useAsTitle: "name",
+		defaultColumns: ["name", "admin", "canManageContent", "canManageUsers"],
+		group: "Users",
+	},
+	defaultPopulate: {
+		name: true,
+		colour: true,
+		textColour: true,
+		admin: true,
+		canManageContent: true,
+		canManageUsers: true,
 	},
 	fields: [
 		{
@@ -24,33 +33,51 @@ export const Roles: CollectionConfig = {
 			unique: true,
 		},
 		{
+			type: "row",
+			fields: [
+				{
+					name: "admin",
+					type: "checkbox",
+					defaultValue: false,
+					admin: { description: "Full access, including managing roles." },
+				},
+				{
+					name: "canManageContent",
+					type: "checkbox",
+					defaultValue: false,
+					admin: { description: "Pages, posts, events, runs, submissions, volunteers and products." },
+				},
+				{
+					name: "canManageUsers",
+					type: "checkbox",
+					defaultValue: false,
+					admin: { description: "Users, orders and payment settings." },
+				},
+			],
+		},
+		{
+			type: "row",
+			fields: [
+				{
+					name: "colour",
+					type: "text",
+					validate: validateColour,
+					admin: { description: "Badge background colour, e.g. #CC7722." },
+				},
+				{
+					name: "textColour",
+					type: "text",
+					validate: validateColour,
+					admin: { description: "Badge text colour, e.g. white." },
+				},
+			],
+		},
+		{
 			name: "users",
 			type: "join",
 			collection: "users",
 			on: "roles",
-		},
-		{
-			name: "admin",
-			type: "checkbox",
-			defaultValue: false,
-		},
-		{
-			name: "canManageContent",
-			type: "checkbox",
-			defaultValue: false,
-		},
-		{
-			name: "canManageUsers",
-			type: "checkbox",
-			defaultValue: false,
-		},
-		{
-			name: "colour",
-			type: "text",
-		},
-		{
-			name: "textColour",
-			type: "text",
+			admin: { defaultColumns: ["username", "name"] },
 		},
 	],
 };

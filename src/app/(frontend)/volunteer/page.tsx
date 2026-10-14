@@ -35,7 +35,7 @@ export default async function VolunteerPage() {
 		);
 	}
 
-	if (!user.socials?.Discord) {
+	if (!user.socials?.discord) {
 		return (
 			<div className={styles.noEvents}>
 				<h2>We require a Discord username to accept volunteer submissions.</h2>
@@ -74,7 +74,7 @@ export default async function VolunteerPage() {
 		user: {
 			verified: true, // PayloadCMS auth: true handles email; adjust if you add email verification
 			dateOfBirth: user.dateOfBirth,
-			discord: user.socials?.Discord ?? "",
+			discord: user.socials?.discord ?? "",
 			submissions: submissions.map((sub) => ({
 				game: sub.game,
 				platform: sub.platform,

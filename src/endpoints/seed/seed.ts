@@ -12,7 +12,7 @@ import { post3 } from "./post-3";
 
 const collections: CollectionSlug[] = ["categories", "media", "pages", "posts", "forms", "form-submissions", "search"];
 
-const globals: GlobalSlug[] = ["header", "footer"];
+const globals = ["header", "footer"] as const satisfies GlobalSlug[];
 
 const categories = ["Technology", "News", "Finance", "Design", "Software", "Engineering"];
 

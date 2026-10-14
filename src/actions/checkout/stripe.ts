@@ -29,6 +29,8 @@ export async function stripeCheckout(
 
 		orderItems.push({
 			product: item.product.id,
+			productName: item.product.name,
+			variantId: item.variant.id,
 			variantLabel: item.variant.label,
 			quantity: item.quantity,
 			unitPriceInCents: item.variant.priceInCents,

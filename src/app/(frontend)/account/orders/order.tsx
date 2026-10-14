@@ -43,7 +43,7 @@ export function Order(props: OrderProps) {
 	const items = order.items ?? [];
 
 	const totalInCents = items.reduce((total, item) => {
-		return total + item.quantity * item.unitPriceInCents;
+		return total + item.quantity * (item.unitPriceInCents ?? 0);
 	}, 0);
 
 	const totalQuantity = items.reduce((total, item) => total + item.quantity, 0);

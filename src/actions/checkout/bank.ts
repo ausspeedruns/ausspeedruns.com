@@ -10,11 +10,13 @@ export async function bankCheckout(
 ): Promise<CheckoutResult> {
 	const payload = await getPayload({ config });
 
-	if (items.some((item) => !item.variant.bankTransferDetails?.allowBankTransfer)) {
+	if (items.some((item) => !item.product.payment?.allowBankTransfer)) {
 		return { success: false, error: "Some products in your cart cannot be purchased via bank transfer." };
 	}
 
 	try {
+		const { bankTransfer } = await payload.findGlobal({ slug: "paymentSettings", depth: 0 });
+
 		const order = await payload.create({
 			collection: "orders",
 			overrideAccess: true,
@@ -22,6 +24,8 @@ export async function bankCheckout(
 				user: userId,
 				items: items.map((item) => ({
 					product: item.product.id,
+					productName: item.product.name,
+					variantId: item.variant.id,
 					variantLabel: item.variant.label,
 					quantity: item.quantity,
 					unitPriceInCents: item.variant.priceInCents,
@@ -37,7 +41,18 @@ export async function bankCheckout(
 			return { success: false, error: "Error creating order. Please try again." };
 		}
 
-		return { success: true, type: "bank", reference: order.reference, totalInCents: order.totalInCents };
+		return {
+			success: true,
+			type: "bank",
+			reference: order.reference,
+			totalInCents: order.totalInCents,
+			bankDetails: {
+				accountName: bankTransfer?.accountName ?? "",
+				bsb: bankTransfer?.bsb ?? "",
+				accountNumber: bankTransfer?.accountNumber ?? "",
+				instructions: bankTransfer?.instructions ?? null,
+			},
+		};
 	} catch (error) {
 		payload.logger.error({ err: error, message: "Error creating order for bank transfer checkout" });
 		return { success: false, error: "An error occurred creating your order. Please try again." };

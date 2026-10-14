@@ -70,6 +70,8 @@ export async function updateSubmission(submissionId: number, values: UpdateSubmi
 	try {
 		const existingSubmission = await payload.findByID({
 			collection: "submissions",
+			overrideAccess: false,
+			user,
 			id: submissionId,
 			depth: 0,
 		});
@@ -91,6 +93,8 @@ export async function updateSubmission(submissionId: number, values: UpdateSubmi
 
 		await payload.update({
 			collection: "submissions",
+			overrideAccess: false,
+			user,
 			id: submissionId,
 			data: {
 				game: trimString(values.game),

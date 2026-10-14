@@ -36,9 +36,9 @@ export default async function EditUserPage() {
 					pronouns: user.pronouns ?? "",
 					dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth) : null,
 					state: user.state ?? "",
-					discord: user.socials?.Discord ?? "",
-					twitch: user.socials?.Twitch ?? "",
-					bluesky: user.socials?.Bluesky ?? "",
+					discord: user.socials?.discord ?? "",
+					twitch: user.socials?.twitch ?? "",
+					bluesky: user.socials?.bluesky ?? "",
 				}}
 				isEmailVerified={Boolean(user._verified)}
 				username={user.username}

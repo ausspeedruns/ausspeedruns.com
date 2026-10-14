@@ -22,6 +22,7 @@ import { Volunteers } from "./collections/Volunteers.ts";
 
 import { Footer } from "./Footer/config.ts";
 import { Header } from "./Header/config.ts";
+import { PaymentSettings } from "./globals/PaymentSettings.ts";
 import { plugins } from "./plugins/plugins.ts";
 import { defaultLexical } from "#fields/defaultLexical.ts";
 import { getServerSideURL } from "./utilities/getURL.ts";
@@ -91,7 +92,7 @@ export default buildConfig({
 		Games,
 	],
 	cors: [getServerSideURL()].filter(Boolean),
-	globals: [Header, Footer],
+	globals: [Header, Footer, PaymentSettings],
 	plugins: [
 		...plugins,
 		// storage-adapter-placeholder

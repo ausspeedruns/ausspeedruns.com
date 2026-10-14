@@ -6,6 +6,7 @@ import { Schedule } from "./schedule";
 import type { Metadata } from "next";
 import { getPayload } from "payload";
 import dayjs from "dayjs";
+import { getGameName } from "#utilities/runDisplay.ts";
 
 export type Block = {
 	name: string;
@@ -105,6 +106,9 @@ export default async function EventSchedule({ params }: URLProps) {
 				equals: event.id,
 			},
 		},
+		joins: {
+			incentives: { limit: 0 },
+		},
 		populate: {
 			users: {
 				username: true,
@@ -137,7 +141,7 @@ export default async function EventSchedule({ params }: URLProps) {
 
 						return {
 							id: run.id,
-							game: run.game,
+							game: getGameName(run.game),
 							estimate: run.estimate,
 							scheduledTime: run.scheduledTime,
 							platform: run.platform,
@@ -149,7 +153,7 @@ export default async function EventSchedule({ params }: URLProps) {
 							coop: run.isCoop ?? false,
 							race: run.isRace ?? false,
 							donationIncentives:
-								run.donationIncentives?.filter((incentive) => typeof incentive === "object") ?? [],
+								run.incentives?.docs?.filter((incentive) => typeof incentive === "object") ?? [],
 							displayIndex: i,
 						};
 					}) ?? []

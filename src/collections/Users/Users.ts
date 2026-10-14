@@ -1,19 +1,51 @@
-import type { CollectionConfig } from "payload";
+import type { CollectionBeforeValidateHook, CollectionConfig } from "payload";
+import { APIError } from "payload";
 import { randomUUID } from "node:crypto";
 
 import { staff } from "#access/staff.ts";
 import { manageUsers } from "#access/manageUsers.ts";
 import { sameUserOrManageUsers } from "#access/sameUserOrManageUsers.ts";
 import { anyone } from "#access/anyone.ts";
-import { anyoneField } from "#access/field/anyoneField.ts";
 import { isAdminField } from "#access/field/isAdmin.ts";
 import { render } from "@react-email/components";
 import { ResetPasswordEmail } from "./emails/reset-password.tsx";
 import { VerificationEmail } from "./emails/verification.tsx";
 
-const usernameRegex = /^[a-zA-Z0-9_-~][\w-]{2,24}$/;
+const usernameRegex = /^[\w~-]{3,25}$/;
 
-export const Users: CollectionConfig = {
+/**
+ * Usernames are used in public URLs (/user/<username>), so prevent new accounts that only differ by case.
+ * The Keystone migration contains a few historical collisions, so it can opt out via `req.context.isMigration`.
+ */
+const preventCaseInsensitiveDuplicateUsernames: CollectionBeforeValidateHook = async ({
+	data,
+	req,
+	originalDoc,
+}) => {
+	const username = data?.username;
+	if (req.context?.isMigration || typeof username !== "string" || username === originalDoc?.username) return data;
+
+	const matches = await req.payload.find({
+		collection: "users",
+		where: { username: { like: username } },
+		depth: 0,
+		limit: 50,
+		overrideAccess: true,
+		select: { username: true },
+		req,
+	});
+
+	const taken = matches.docs.some(
+		(user) => user.id !== originalDoc?.id && user.username.toLowerCase() === username.toLowerCase(),
+	);
+	if (taken) {
+		throw new APIError("That username is already taken.", 400, undefined, true);
+	}
+
+	return data;
+};
+
+export const Users: CollectionConfig<"users"> = {
 	slug: "users",
 	access: {
 		admin: staff,
@@ -24,6 +56,19 @@ export const Users: CollectionConfig = {
 	},
 	admin: {
 		useAsTitle: "username",
+		defaultColumns: ["username", "name", "email", "roles", "createdAt"],
+		listSearchableFields: ["username", "name", "email"],
+		group: "Users",
+	},
+	// Only public profile fields are included when users are populated through relationships
+	defaultPopulate: {
+		username: true,
+		name: true,
+		pronouns: true,
+		socials: true,
+	},
+	hooks: {
+		beforeValidate: [preventCaseInsensitiveDuplicateUsernames],
 	},
 	auth: {
 		verify: {
@@ -53,9 +98,8 @@ export const Users: CollectionConfig = {
 			required: true,
 			defaultValue: randomUUID,
 			admin: {
-				components: {
-					Field: undefined,
-				},
+				readOnly: true,
+				position: "sidebar",
 			},
 		},
 		{
@@ -85,6 +129,9 @@ export const Users: CollectionConfig = {
 					return "Date of birth must be a valid date string.";
 				}
 				const date = new Date(value);
+				if (Number.isNaN(date.getTime())) {
+					return "Date of birth must be a valid date.";
+				}
 				const today = new Date();
 				let age = today.getFullYear() - date.getFullYear();
 				const monthDiff = today.getMonth() - date.getMonth();
@@ -96,9 +143,6 @@ export const Users: CollectionConfig = {
 					return "You must be at least 13 years old to create an account.";
 				}
 				return true;
-			},
-			access: {
-				read: anyoneField,
 			},
 		},
 		{
@@ -151,9 +195,6 @@ export const Users: CollectionConfig = {
 					value: "international",
 				},
 			],
-			access: {
-				read: anyoneField,
-			},
 		},
 		{
 			name: "speedrunData",
@@ -164,9 +205,7 @@ export const Users: CollectionConfig = {
 					type: "join",
 					collection: "runs",
 					on: "runners",
-					access: {
-						read: anyoneField,
-					},
+					defaultSort: "-scheduledTime",
 				},
 				{
 					name: "submissions",
@@ -194,7 +233,6 @@ export const Users: CollectionConfig = {
 			relationTo: "roles",
 			hasMany: true,
 			access: {
-				read: anyoneField,
 				update: isAdminField,
 				create: isAdminField,
 			},
@@ -204,27 +242,24 @@ export const Users: CollectionConfig = {
 			type: "group",
 			fields: [
 				{
-					name: "Discord",
+					name: "discord",
 					type: "text",
 				},
 				{
-					name: "Twitch",
+					name: "twitch",
 					type: "text",
 				},
 				{
-					name: "Bluesky",
+					name: "bluesky",
 					type: "text",
 				},
 			],
-			access: {
-				read: anyoneField,
-			},
 		},
 		{
 			name: "stripeCustomerId",
 			type: "text",
 			admin: { readOnly: true, position: "sidebar" },
-			access: { update: () => false }, // only set programmatically
+			access: { create: () => false, update: () => false }, // only set programmatically
 		},
 	],
 };

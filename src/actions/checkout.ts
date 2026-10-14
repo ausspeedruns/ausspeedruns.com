@@ -15,9 +15,22 @@ interface CheckoutItem {
 
 const MAX_CHECKOUT_QUANTITY = 10;
 
+export interface BankDetails {
+	accountName: string;
+	bsb: string;
+	accountNumber: string;
+	instructions: string | null;
+}
+
 export type CheckoutResult =
 	| { success: true; type: "stripe"; url: string }
-	| { success: true; type: "bank"; reference: string; totalInCents: number }
+	| {
+			success: true;
+			type: "bank";
+			reference: string;
+			totalInCents: number;
+			bankDetails: BankDetails;
+	  }
 	| { success: false; error: string };
 
 export async function checkout(items: CheckoutItem[], method: "stripe" | "bank"): Promise<CheckoutResult> {
@@ -110,6 +123,10 @@ export async function checkout(items: CheckoutItem[], method: "stripe" | "bank")
 
 	if (itemsNotInStock.length > 0) {
 		return { success: false, error: "Insufficient stock for some items in your cart." };
+	}
+
+	if (method === "stripe" && allItemData.some((item) => item.product.payment?.allowStripe === false)) {
+		return { success: false, error: "Some products in your cart cannot be purchased by card." };
 	}
 
 	if (method === "bank") {

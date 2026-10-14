@@ -88,7 +88,7 @@ export default async function AccountTicketsPage() {
 								ticketID: order.reference ?? "Missing ID",
 								method: order.purchaseType === "bankTransfer" ? "bank" : "card",
 								taken: order.status === "collected",
-								priceInCents: item.unitPriceInCents,
+								priceInCents: item.unitPriceInCents ?? 0,
 								event,
 							}}
 						/>

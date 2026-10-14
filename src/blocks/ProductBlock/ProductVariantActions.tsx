@@ -13,17 +13,19 @@ type ProductVariantActionsProps = {
 	productId: number;
 	productName: string;
 	variant: Product["variants"][number];
+	payment: Product["payment"];
 };
 
-export function ProductVariantActions({ productId, productName, variant }: ProductVariantActionsProps) {
+export function ProductVariantActions({ productId, productName, variant, payment }: ProductVariantActionsProps) {
 	const [quantity, setQuantity] = useState(1);
 	const [isLoading, setIsLoading] = useState<"stripe" | "bank" | null>(null);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [infoMessage, setInfoMessage] = useState<string | null>(null);
 	const addItem = useCartStore((store) => store.addItem);
 
-	const canBePurchasedViaAnyMethod = variant.stripePriceId || variant.bankTransferDetails?.allowBankTransfer;
-	const allowBankTransfer = variant.bankTransferDetails?.allowBankTransfer ?? true;
+	const allowStripe = payment?.allowStripe ?? true;
+	const allowBankTransfer = payment?.allowBankTransfer ?? false;
+	const canBePurchasedViaAnyMethod = allowStripe || allowBankTransfer;
 	const variantLabel = variant.label || "Default";
 	const cartName = `${productName} - ${variantLabel}`;
 
@@ -102,7 +104,7 @@ export function ProductVariantActions({ productId, productName, variant }: Produ
 			</div>
 
 			<Group className={styles.buttonRow}>
-				{variant.stripePriceId && (
+				{allowStripe && (
 					<Button disabled={isLoading !== null} onClick={() => handleBuyNow("stripe")}>
 						{isLoading === "stripe" ? "Starting checkout..." : "Buy Now via Stripe"}
 					</Button>

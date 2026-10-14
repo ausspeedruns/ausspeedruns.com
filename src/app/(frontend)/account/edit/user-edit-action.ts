@@ -64,9 +64,9 @@ export async function updateUserProfile(values: UserEditFormValues) {
 				pronouns: emptyStringToNull(values.pronouns),
 				state: isStringAValidState(values.state) ? values.state : null,
 				socials: {
-					Discord: emptyStringToNull(values.discord),
-					Twitch: emptyStringToNull(values.twitch),
-					Bluesky: emptyStringToNull(values.bluesky),
+					discord: emptyStringToNull(values.discord),
+					twitch: emptyStringToNull(values.twitch),
+					bluesky: emptyStringToNull(values.bluesky),
 				},
 			},
 		});

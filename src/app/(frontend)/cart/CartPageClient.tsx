@@ -22,7 +22,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { AlertCircle, Check, CircleCheck, Copy, Landmark, ShoppingCart } from "lucide-react";
 import { useState } from "react";
-import { checkout } from "#actions/checkout.ts";
+import { checkout, type BankDetails } from "#actions/checkout.ts";
 import Link from "next/link";
 
 export function CartPageClient() {
@@ -32,6 +32,7 @@ export function CartPageClient() {
 	const [bankModalOpened, { open: openBankModal, close: closeBankModal }] = useDisclosure(false);
 	const [bankReference, setBankReference] = useState<string | null>(null);
 	const [bankTotalInCents, setBankTotalInCents] = useState(0);
+	const [bankDetails, setBankDetails] = useState<BankDetails | null>(null);
 
 	const totalInCents = items.reduce((sum, item) => sum + item.priceInCents * item.quantity, 0);
 	const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -80,6 +81,7 @@ export function CartPageClient() {
 
 			if (result.type === "bank") {
 				setBankTotalInCents(result.totalInCents);
+				setBankDetails(result.bankDetails);
 				clearCart();
 				setBankReference(result.reference);
 				openBankModal();
@@ -176,22 +178,24 @@ export function CartPageClient() {
 								<Text c="dimmed" size="sm">
 									Account name
 								</Text>
-								<Text fw={600}>AusSpeedruns Ltd</Text>
+								<Text fw={600}>{bankDetails?.accountName}</Text>
 							</Group>
 							<Group justify="space-between">
 								<Text c="dimmed" size="sm">
 									BSB
 								</Text>
-								<Text fw={600}>085-005</Text>
+								<Text fw={600}>{bankDetails?.bsb}</Text>
 							</Group>
 							<Group justify="space-between">
 								<Text c="dimmed" size="sm">
 									Account number
 								</Text>
-								<Text fw={600}>29-602-3097</Text>
+								<Text fw={600}>{bankDetails?.accountNumber}</Text>
 							</Group>
 						</Stack>
 					</Paper>
+
+					{bankDetails?.instructions && <Text size="sm">{bankDetails.instructions}</Text>}
 
 					<Divider />
 

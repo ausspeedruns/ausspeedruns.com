@@ -1,11 +1,15 @@
+import { slugField, type CollectionConfig } from "payload";
+
 import { anyone } from "#access/anyone.ts";
 import { manageContent } from "#access/manageContent.ts";
-import type { CollectionConfig } from "payload";
+import { validateDateAfter } from "#fields/validators.ts";
 
-export const Products: CollectionConfig = {
+export const Products: CollectionConfig<"products"> = {
 	slug: "products",
 	admin: {
 		useAsTitle: "name",
+		defaultColumns: ["name", "type", "availableFrom", "availableUntil"],
+		group: "Shop",
 	},
 	access: {
 		create: manageContent,
@@ -19,11 +23,15 @@ export const Products: CollectionConfig = {
 			type: "text",
 			required: true,
 		},
+		slugField({ useAsSlug: "name" }),
 		{
-			name: "slug",
-			type: "text",
+			name: "type",
+			type: "select",
 			required: true,
-			unique: true,
+			options: [
+				{ label: "Ticket", value: "ticket" },
+				{ label: "Merchandise", value: "merchandise" },
+			],
 		},
 		{
 			name: "description",
@@ -37,16 +45,8 @@ export const Products: CollectionConfig = {
 					name: "image",
 					type: "upload",
 					relationTo: "media",
+					required: true,
 				},
-			],
-		},
-		{
-			name: "type",
-			type: "select",
-			required: true,
-			options: [
-				{ label: "Ticket", value: "ticket" },
-				{ label: "Merchandise", value: "merchandise" },
 			],
 		},
 		{
@@ -54,61 +54,76 @@ export const Products: CollectionConfig = {
 			type: "array",
 			required: true,
 			minRows: 1,
+			admin: {
+				components: {
+					RowLabel: "./components/Products/VariantRowLabel#VariantRowLabel",
+				},
+			},
 			fields: [
-				{ name: "label", type: "text", required: true },
 				{
-					name: "priceInCents",
-					type: "number",
-					required: true,
-					min: 0,
-					admin: { step: 1 },
-					validate: (
-						value: number | null | undefined,
-						{ siblingData }: { siblingData: { stripePriceId?: string | null } },
-					) => {
-						if (siblingData.stripePriceId) {
-							return true; // If stripePriceId is set, we assume the price is managed in Stripe and skip validation
-						}
-						if (value === undefined || value === null) {
-							return "Price is required if no Stripe Price ID is provided.";
-						}
-						if (value < 0) {
-							return "Price cannot be negative.";
-						}
-						if (!Number.isInteger(value)) {
-							return "Price must be an integer representing cents.";
-						}
-
-						return true;
-					},
-				},
-				{ name: "stock", type: "number" },
-				{
-					name: "stripePriceId",
-					type: "text",
-					admin: { description: "Optional — auto-created if blank" },
-				},
-				{
-					name: "bankTransferDetails",
-					type: "group",
+					type: "row",
 					fields: [
-						{ name: "allowBankTransfer", type: "checkbox" },
-						{ name: "accountName", type: "text", defaultValue: "AusSpeedruns" },
-						{ name: "bsb", type: "text", defaultValue: "085-005" },
-						{ name: "accountNumber", type: "text", defaultValue: "30-192-8208" },
+						{ name: "label", type: "text", required: true },
+						{
+							name: "priceInCents",
+							label: "Price (cents)",
+							type: "number",
+							required: true,
+							min: 0,
+							admin: { step: 1, description: "e.g. 3000 = $30.00" },
+							validate: (value: number | null | undefined) => {
+								if (value === undefined || value === null) return "Price is required.";
+								if (value < 0) return "Price cannot be negative.";
+								if (!Number.isInteger(value)) return "Price must be a whole number of cents.";
+								return true;
+							},
+						},
+						{
+							name: "stock",
+							type: "number",
+							min: 0,
+							admin: {
+								step: 1,
+								description: "Leave blank for unlimited. Decremented automatically when orders complete.",
+							},
+						},
 					],
 				},
 			],
 		},
 		{
-			name: "availableFrom",
-			type: "date",
-			admin: { date: { pickerAppearance: "dayAndTime" } },
+			name: "payment",
+			type: "group",
+			fields: [
+				{
+					type: "row",
+					fields: [
+						{ name: "allowStripe", label: "Allow card payments (Stripe)", type: "checkbox", defaultValue: true },
+						{
+							name: "allowBankTransfer",
+							label: "Allow bank transfer",
+							type: "checkbox",
+							defaultValue: false,
+						},
+					],
+				},
+			],
 		},
 		{
-			name: "availableUntil",
-			type: "date",
-			admin: { date: { pickerAppearance: "dayAndTime" } },
+			type: "row",
+			fields: [
+				{
+					name: "availableFrom",
+					type: "date",
+					admin: { date: { pickerAppearance: "dayAndTime" } },
+				},
+				{
+					name: "availableUntil",
+					type: "date",
+					validate: validateDateAfter("availableFrom", "Available From"),
+					admin: { date: { pickerAppearance: "dayAndTime" } },
+				},
+			],
 		},
 	],
 };

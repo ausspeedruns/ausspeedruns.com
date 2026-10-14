@@ -58,6 +58,8 @@ export async function updateVolunteer(volunteerId: number, values: UpdateVolunte
 	try {
 		const existingVolunteer = await payload.findByID({
 			collection: "volunteers",
+			overrideAccess: false,
+			user,
 			id: volunteerId,
 			depth: 0,
 		});
@@ -79,6 +81,8 @@ export async function updateVolunteer(volunteerId: number, values: UpdateVolunte
 
 		await payload.update({
 			collection: "volunteers",
+			overrideAccess: false,
+			user,
 			id: volunteerId,
 			data: {
 				role: values.role,

@@ -1,10 +1,11 @@
 import type { CollectionConfig } from "payload";
-import { DefaultTimeZone } from "./Fields/TimezoneSelect.ts";
 
-import { manageContentOrPublished } from "#access/manageContentOrPublished.ts";
 import { manageContent } from "#access/manageContent.ts";
+import { manageContentOrPublished } from "#access/manageContentOrPublished.ts";
+import { validateDateAfter, validateColour, validateUrl, validateUrlSafe } from "#fields/validators.ts";
+import { DefaultTimeZone, TimeZoneOptions } from "./Fields/TimezoneSelect.ts";
 
-export const Events: CollectionConfig = {
+export const Events: CollectionConfig<"events"> = {
 	slug: "events",
 	access: {
 		create: manageContent,
@@ -14,6 +15,8 @@ export const Events: CollectionConfig = {
 	},
 	admin: {
 		useAsTitle: "name",
+		defaultColumns: ["name", "shortName", "timeSettings.startTime", "_status"],
+		group: "Event Management",
 	},
 	versions: {
 		drafts: {
@@ -22,97 +25,274 @@ export const Events: CollectionConfig = {
 	},
 	fields: [
 		{
-			name: "name",
-			type: "text",
-			required: true,
-		},
-		{
-			name: "shortName",
-			type: "text",
-			required: true,
-			unique: true,
-			index: true,
-		},
-		{
-			name: "settings",
-			type: "group",
+			type: "row",
 			fields: [
 				{
-					name: "isAcceptingSubmissions",
-					type: "checkbox",
-				},
-				{
-					name: "isAcceptingBackups",
-					type: "checkbox",
-				},
-				{
-					name: "isAcceptingVolunteers",
-					type: "checkbox",
-				},
-			],
-		},
-		{
-			name: "timeSettings",
-			type: "group",
-			fields: [
-				{
-					name: "timezone",
+					name: "name",
 					type: "text",
-					// options: AllTimeZones,
-					defaultValue: DefaultTimeZone,
+					required: true,
 				},
 				{
-					name: "startTime",
-					type: "date",
+					name: "shortName",
+					type: "text",
+					required: true,
+					unique: true,
+					index: true,
+					validate: validateUrlSafe,
 					admin: {
-						date: {
-							pickerAppearance: "dayAndTime",
-							timeIntervals: 5,
-						},
-					},
-				},
-				{
-					name: "endTime",
-					type: "date",
-					admin: {
-						date: {
-							pickerAppearance: "dayAndTime",
-							timeIntervals: 5,
-						},
+						description: "Used in URLs, e.g. /schedule/ASM2026.",
 					},
 				},
 			],
 		},
 		{
-			name: "submittedItems",
-			type: "group",
-			fields: [
+			type: "tabs",
+			tabs: [
 				{
-					name: "runs",
-					type: "join",
-					collection: "runs",
-					on: "event",
+					label: "General",
+					fields: [
+						{
+							name: "settings",
+							type: "group",
+							fields: [
+								{
+									type: "row",
+									fields: [
+										{
+											name: "isAcceptingSubmissions",
+											type: "checkbox",
+										},
+										{
+											name: "isAcceptingBackups",
+											type: "checkbox",
+											admin: {
+												description: "Allow backup-only submissions while main submissions are closed.",
+											},
+										},
+										{
+											name: "isAcceptingVolunteers",
+											type: "checkbox",
+										},
+									],
+								},
+							],
+						},
+						{
+							name: "timeSettings",
+							type: "group",
+							fields: [
+								{
+									name: "timezone",
+									type: "select",
+									options: TimeZoneOptions,
+									defaultValue: DefaultTimeZone,
+									required: true,
+								},
+								{
+									type: "row",
+									fields: [
+										{
+											name: "startTime",
+											type: "date",
+											admin: {
+												date: {
+													pickerAppearance: "dayAndTime",
+													timeIntervals: 5,
+												},
+											},
+										},
+										{
+											name: "endTime",
+											type: "date",
+											validate: validateDateAfter("startTime", "the start time"),
+											admin: {
+												date: {
+													pickerAppearance: "dayAndTime",
+													timeIntervals: 5,
+												},
+											},
+										},
+									],
+								},
+							],
+						},
+						{
+							name: "eventPage",
+							type: "richText",
+						},
+						{
+							name: "submissionInstructions",
+							type: "richText",
+						},
+					],
 				},
 				{
-					name: "volunteers",
-					type: "join",
-					collection: "volunteers",
-					on: "event",
-					hasMany: true,
+					label: "Schedule",
+					fields: [
+						{
+							name: "scheduleMetadata",
+							type: "group",
+							fields: [
+								{
+									name: "published",
+									type: "checkbox",
+									admin: { description: "Make the schedule page publicly visible." },
+								},
+								{
+									type: "row",
+									fields: [
+										{
+											name: "horaro",
+											type: "text",
+											validate: validateUrl,
+										},
+										{
+											name: "oengus",
+											type: "text",
+											validate: validateUrl,
+										},
+									],
+								},
+								{
+									name: "scheduleBlocks",
+									type: "array",
+									label: "Schedule Blocks (for schedule visualiser)",
+									fields: [
+										{
+											type: "row",
+											fields: [
+												{
+													name: "name",
+													type: "text",
+													required: true,
+												},
+												{
+													name: "colour",
+													type: "text",
+													validate: validateColour,
+												},
+												{
+													name: "textColour",
+													type: "text",
+													validate: validateColour,
+												},
+											],
+										},
+									],
+								},
+							],
+						},
+					],
 				},
-			],
-		},
-		{
-			name: "postEvent",
-			type: "group",
-			fields: [
 				{
-					name: "raised",
-					type: "number",
+					label: "Media",
+					fields: [
+						{
+							name: "media",
+							type: "group",
+							fields: [
+								{
+									type: "row",
+									fields: [
+										{
+											name: "logo",
+											type: "upload",
+											relationTo: "media",
+											label: "Logo (Light Mode / Default)",
+										},
+										{
+											name: "logoDarkMode",
+											type: "upload",
+											relationTo: "media",
+											label: "Logo (Dark Mode)",
+										},
+									],
+								},
+								{
+									type: "row",
+									fields: [
+										{
+											name: "hero",
+											type: "upload",
+											relationTo: "media",
+										},
+										{
+											name: "embed",
+											type: "upload",
+											relationTo: "media",
+										},
+									],
+								},
+							],
+						},
+					],
 				},
 				{
-					name: "postEventPage",
-					type: "richText",
+					label: "Shop",
+					fields: [
+						{
+							name: "products",
+							type: "relationship",
+							relationTo: "products",
+							hasMany: true,
+						},
+					],
+				},
+				{
+					label: "Post Event",
+					fields: [
+						{
+							name: "postEvent",
+							type: "group",
+							fields: [
+								{
+									name: "raised",
+									type: "number",
+									min: 0,
+									admin: { description: "Total raised for charity (AUD)." },
+								},
+								{
+									name: "postEventPage",
+									type: "richText",
+								},
+							],
+						},
+					],
+				},
+				{
+					label: "Related",
+					description: "Everything linked to this event.",
+					fields: [
+						{
+							name: "submissions",
+							type: "join",
+							collection: "submissions",
+							on: "event",
+							admin: { defaultColumns: ["game", "category", "runner", "status"] },
+						},
+						{
+							name: "runs",
+							type: "join",
+							collection: "runs",
+							on: "event",
+							defaultSort: "scheduledTime",
+							admin: { defaultColumns: ["title", "scheduledTime", "estimate"] },
+						},
+						{
+							name: "incentives",
+							type: "join",
+							collection: "incentives",
+							on: "event",
+							admin: { defaultColumns: ["title", "type", "run", "isActive"] },
+						},
+						{
+							name: "volunteers",
+							type: "join",
+							collection: "volunteers",
+							on: "event",
+							admin: { defaultColumns: ["title", "role", "status"] },
+						},
+					],
 				},
 			],
 		},
@@ -136,123 +316,12 @@ export const Events: CollectionConfig = {
 				},
 			},
 		},
-		{
-			name: "media",
-			type: "group",
-			fields: [
-				{
-					name: "logo",
-					type: "upload",
-					relationTo: "media",
-					label: "Logo (Light Mode / Default)",
-				},
-				{
-					name: "logoDarkMode",
-					type: "upload",
-					relationTo: "media",
-					label: "Logo (Dark Mode)",
-				},
-				{
-					name: "hero",
-					type: "upload",
-					relationTo: "media",
-				},
-				{
-					name: "embed",
-					type: "upload",
-					relationTo: "media",
-				},
-			],
-		},
-		{
-			name: "submissions",
-			type: "join",
-			collection: "submissions",
-			on: "event",
-			hasMany: true,
-		},
-		{
-			name: "runs",
-			type: "join",
-			collection: "runs",
-			on: "event",
-			hasMany: true,
-		},
-		{
-			name: "incentives",
-			type: "join",
-			collection: "incentives",
-			on: "event",
-			hasMany: true,
-		},
-		{
-			name: "submissionInstructions",
-			type: "richText",
-		},
-		{
-			name: "eventPage",
-			type: "richText",
-		},
-		{
-			name: "scheduleMetadata",
-			type: "group",
-			fields: [
-				{
-					name: "published",
-					type: "checkbox",
-				},
-				{
-					name: "horaro",
-					type: "text",
-				},
-				{
-					name: "oengus",
-					type: "text",
-				},
-				{
-					name: "scheduleBlocks",
-					type: "array",
-					fields: [
-						{
-							name: "name",
-							type: "text",
-						},
-						{
-							name: "colour",
-							type: "text",
-						},
-						{
-							name: "textColour",
-							type: "text",
-						},
-						// {
-						// 	name: "startRun",
-						// 	type: "join",
-						// 	collection: "runs",
-						// 	on: "event",
-						// },
-						// {
-						// 	name: "endRun",
-						// 	type: "join",
-						// 	collection: "runs",
-						// 	on: "event",
-						// },
-					],
-					label: "Schedule Blocks (for schedule visualiser)",
-				},
-			],
-		},
-		{
-			name: "products",
-			type: "relationship",
-			relationTo: "products",
-			hasMany: true,
-		},
 		// TODO: Remove this field after migration is complete
 		{
 			name: "legacyKeystoneId",
 			type: "text",
 			unique: true,
+			admin: { readOnly: true, position: "sidebar" },
 		},
 	],
 };

@@ -103,11 +103,16 @@ export interface Config {
       users: 'users';
     };
     events: {
-      'submittedItems.runs': 'runs';
-      runs: 'runs';
-      'submittedItems.volunteers': 'volunteers';
       submissions: 'submissions';
+      runs: 'runs';
       incentives: 'incentives';
+      volunteers: 'volunteers';
+    };
+    runs: {
+      incentives: 'incentives';
+    };
+    submissions: {
+      runs: 'runs';
     };
     games: {
       runs: 'runs';
@@ -149,10 +154,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    paymentSettings: PaymentSetting;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    paymentSettings: PaymentSettingsSelect<false> | PaymentSettingsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -335,7 +342,10 @@ export interface Post {
  */
 export interface Media {
   id: number;
-  alt?: string | null;
+  /**
+   * Describes the image for screen readers.
+   */
+  alt: string;
   caption?: {
     root: {
       type: string;
@@ -507,9 +517,9 @@ export interface User {
   };
   roles?: (number | Role)[] | null;
   socials?: {
-    Discord?: string | null;
-    Twitch?: string | null;
-    Bluesky?: string | null;
+    discord?: string | null;
+    twitch?: string | null;
+    bluesky?: string | null;
   };
   stripeCustomerId?: string | null;
   updatedAt: string;
@@ -539,19 +549,25 @@ export interface User {
  */
 export interface Run {
   id: number;
-  game?: (number | null) | Game;
+  /**
+   * Generated from the game and category.
+   */
+  title?: string | null;
+  game: number | Game;
+  event?: (number | null) | Event;
   category: string;
   platform: string;
-  runners?: (string | User)[] | null;
-  estimate: string;
-  time?: string | null;
-  event?: (number | null) | Event;
-  youtube?: string | null;
-  twitch?: string | null;
-  specialRequirements?: string | null;
-  isRace?: boolean | null;
-  isCoop?: boolean | null;
   techPlatform?: string | null;
+  runners?: (string | User)[] | null;
+  /**
+   * Comma-separated list of other runners who do not have a user account in the system.
+   */
+  otherRunners?: string | null;
+  estimate: string;
+  /**
+   * Final time achieved at the event.
+   */
+  time?: string | null;
   scheduledTime?: string | null;
   scheduledTime_tz?:
     | (
@@ -565,12 +581,17 @@ export interface Run {
         | 'Pacific/Auckland'
       )
     | null;
-  /**
-   * Comma-separated list of other runners who do not have a user account in the system.
-   */
-  otherRunners?: string | null;
+  isRace?: boolean | null;
+  isCoop?: boolean | null;
+  specialRequirements?: string | null;
+  youtube?: string | null;
+  twitch?: string | null;
   submission?: (number | null) | Submission;
-  donationIncentives?: (number | Incentive)[] | null;
+  incentives?: {
+    docs?: (number | Incentive)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   legacyKeystoneId?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -582,8 +603,19 @@ export interface Run {
 export interface Game {
   id: number;
   name: string;
+  /**
+   * Release year.
+   */
   year?: number | null;
-  streamDisplayName?: string | null;
+  platform?: string[] | null;
+  techPlatform?: string[] | null;
+  stream?: {
+    /**
+     * Name shown on stream layouts, if different (supports line breaks).
+     */
+    displayName?: string | null;
+    aspectRatio?: string | null;
+  };
   runs?: {
     docs?: (number | Run)[];
     hasNextPage?: boolean;
@@ -599,30 +631,663 @@ export interface Game {
 export interface Event {
   id: number;
   name: string;
+  /**
+   * Used in URLs, e.g. /schedule/ASM2026.
+   */
   shortName: string;
   settings?: {
     isAcceptingSubmissions?: boolean | null;
+    /**
+     * Allow backup-only submissions while main submissions are closed.
+     */
     isAcceptingBackups?: boolean | null;
     isAcceptingVolunteers?: boolean | null;
   };
-  timeSettings?: {
-    timezone?: string | null;
+  timeSettings: {
+    timezone:
+      | 'Australia/Melbourne'
+      | 'Australia/Adelaide'
+      | 'Australia/Sydney'
+      | 'Australia/Perth'
+      | 'Australia/Brisbane'
+      | 'Australia/Darwin'
+      | 'Australia/Hobart'
+      | 'Australia/Canberra'
+      | 'Australia/ACT'
+      | 'Australia/Broken_Hill'
+      | 'Australia/Currie'
+      | 'Australia/Eucla'
+      | 'Australia/LHI'
+      | 'Australia/Lindeman'
+      | 'Australia/Lord_Howe'
+      | 'Australia/North'
+      | 'Australia/NSW'
+      | 'Australia/Queensland'
+      | 'Australia/South'
+      | 'Australia/Tasmania'
+      | 'Australia/Victoria'
+      | 'Australia/West'
+      | 'Australia/Yancowinna'
+      | 'Africa/Abidjan'
+      | 'Africa/Accra'
+      | 'Africa/Addis_Ababa'
+      | 'Africa/Algiers'
+      | 'Africa/Asmara'
+      | 'Africa/Asmera'
+      | 'Africa/Bamako'
+      | 'Africa/Bangui'
+      | 'Africa/Banjul'
+      | 'Africa/Bissau'
+      | 'Africa/Blantyre'
+      | 'Africa/Brazzaville'
+      | 'Africa/Bujumbura'
+      | 'Africa/Cairo'
+      | 'Africa/Casablanca'
+      | 'Africa/Ceuta'
+      | 'Africa/Conakry'
+      | 'Africa/Dakar'
+      | 'Africa/Dar_es_Salaam'
+      | 'Africa/Djibouti'
+      | 'Africa/Douala'
+      | 'Africa/El_Aaiun'
+      | 'Africa/Freetown'
+      | 'Africa/Gaborone'
+      | 'Africa/Harare'
+      | 'Africa/Johannesburg'
+      | 'Africa/Juba'
+      | 'Africa/Kampala'
+      | 'Africa/Khartoum'
+      | 'Africa/Kigali'
+      | 'Africa/Kinshasa'
+      | 'Africa/Lagos'
+      | 'Africa/Libreville'
+      | 'Africa/Lome'
+      | 'Africa/Luanda'
+      | 'Africa/Lubumbashi'
+      | 'Africa/Lusaka'
+      | 'Africa/Malabo'
+      | 'Africa/Maputo'
+      | 'Africa/Maseru'
+      | 'Africa/Mbabane'
+      | 'Africa/Mogadishu'
+      | 'Africa/Monrovia'
+      | 'Africa/Nairobi'
+      | 'Africa/Ndjamena'
+      | 'Africa/Niamey'
+      | 'Africa/Nouakchott'
+      | 'Africa/Ouagadougou'
+      | 'Africa/Porto-Novo'
+      | 'Africa/Sao_Tome'
+      | 'Africa/Timbuktu'
+      | 'Africa/Tripoli'
+      | 'Africa/Tunis'
+      | 'Africa/Windhoek'
+      | 'America/Adak'
+      | 'America/Anchorage'
+      | 'America/Anguilla'
+      | 'America/Antigua'
+      | 'America/Araguaina'
+      | 'America/Argentina/Buenos_Aires'
+      | 'America/Argentina/Catamarca'
+      | 'America/Argentina/ComodRivadavia'
+      | 'America/Argentina/Cordoba'
+      | 'America/Argentina/Jujuy'
+      | 'America/Argentina/La_Rioja'
+      | 'America/Argentina/Mendoza'
+      | 'America/Argentina/Rio_Gallegos'
+      | 'America/Argentina/Salta'
+      | 'America/Argentina/San_Juan'
+      | 'America/Argentina/San_Luis'
+      | 'America/Argentina/Tucuman'
+      | 'America/Argentina/Ushuaia'
+      | 'America/Aruba'
+      | 'America/Asuncion'
+      | 'America/Atikokan'
+      | 'America/Atka'
+      | 'America/Bahia'
+      | 'America/Bahia_Banderas'
+      | 'America/Barbados'
+      | 'America/Belem'
+      | 'America/Belize'
+      | 'America/Blanc-Sablon'
+      | 'America/Boa_Vista'
+      | 'America/Bogota'
+      | 'America/Boise'
+      | 'America/Buenos_Aires'
+      | 'America/Cambridge_Bay'
+      | 'America/Campo_Grande'
+      | 'America/Cancun'
+      | 'America/Caracas'
+      | 'America/Catamarca'
+      | 'America/Cayenne'
+      | 'America/Cayman'
+      | 'America/Chicago'
+      | 'America/Chihuahua'
+      | 'America/Ciudad_Juarez'
+      | 'America/Coral_Harbour'
+      | 'America/Cordoba'
+      | 'America/Costa_Rica'
+      | 'America/Coyhaique'
+      | 'America/Creston'
+      | 'America/Cuiaba'
+      | 'America/Curacao'
+      | 'America/Danmarkshavn'
+      | 'America/Dawson'
+      | 'America/Dawson_Creek'
+      | 'America/Denver'
+      | 'America/Detroit'
+      | 'America/Dominica'
+      | 'America/Edmonton'
+      | 'America/Eirunepe'
+      | 'America/El_Salvador'
+      | 'America/Ensenada'
+      | 'America/Fort_Nelson'
+      | 'America/Fort_Wayne'
+      | 'America/Fortaleza'
+      | 'America/Glace_Bay'
+      | 'America/Godthab'
+      | 'America/Goose_Bay'
+      | 'America/Grand_Turk'
+      | 'America/Grenada'
+      | 'America/Guadeloupe'
+      | 'America/Guatemala'
+      | 'America/Guayaquil'
+      | 'America/Guyana'
+      | 'America/Halifax'
+      | 'America/Havana'
+      | 'America/Hermosillo'
+      | 'America/Indiana/Indianapolis'
+      | 'America/Indiana/Knox'
+      | 'America/Indiana/Marengo'
+      | 'America/Indiana/Petersburg'
+      | 'America/Indiana/Tell_City'
+      | 'America/Indiana/Vevay'
+      | 'America/Indiana/Vincennes'
+      | 'America/Indiana/Winamac'
+      | 'America/Indianapolis'
+      | 'America/Inuvik'
+      | 'America/Iqaluit'
+      | 'America/Jamaica'
+      | 'America/Jujuy'
+      | 'America/Juneau'
+      | 'America/Kentucky/Louisville'
+      | 'America/Kentucky/Monticello'
+      | 'America/Knox_IN'
+      | 'America/Kralendijk'
+      | 'America/La_Paz'
+      | 'America/Lima'
+      | 'America/Los_Angeles'
+      | 'America/Louisville'
+      | 'America/Lower_Princes'
+      | 'America/Maceio'
+      | 'America/Managua'
+      | 'America/Manaus'
+      | 'America/Marigot'
+      | 'America/Martinique'
+      | 'America/Matamoros'
+      | 'America/Mazatlan'
+      | 'America/Mendoza'
+      | 'America/Menominee'
+      | 'America/Merida'
+      | 'America/Metlakatla'
+      | 'America/Mexico_City'
+      | 'America/Miquelon'
+      | 'America/Moncton'
+      | 'America/Monterrey'
+      | 'America/Montevideo'
+      | 'America/Montreal'
+      | 'America/Montserrat'
+      | 'America/Nassau'
+      | 'America/New_York'
+      | 'America/Nipigon'
+      | 'America/Nome'
+      | 'America/Noronha'
+      | 'America/North_Dakota/Beulah'
+      | 'America/North_Dakota/Center'
+      | 'America/North_Dakota/New_Salem'
+      | 'America/Nuuk'
+      | 'America/Ojinaga'
+      | 'America/Panama'
+      | 'America/Pangnirtung'
+      | 'America/Paramaribo'
+      | 'America/Phoenix'
+      | 'America/Port-au-Prince'
+      | 'America/Port_of_Spain'
+      | 'America/Porto_Acre'
+      | 'America/Porto_Velho'
+      | 'America/Puerto_Rico'
+      | 'America/Punta_Arenas'
+      | 'America/Rainy_River'
+      | 'America/Rankin_Inlet'
+      | 'America/Recife'
+      | 'America/Regina'
+      | 'America/Resolute'
+      | 'America/Rio_Branco'
+      | 'America/Rosario'
+      | 'America/Santa_Isabel'
+      | 'America/Santarem'
+      | 'America/Santiago'
+      | 'America/Santo_Domingo'
+      | 'America/Sao_Paulo'
+      | 'America/Scoresbysund'
+      | 'America/Shiprock'
+      | 'America/Sitka'
+      | 'America/St_Barthelemy'
+      | 'America/St_Johns'
+      | 'America/St_Kitts'
+      | 'America/St_Lucia'
+      | 'America/St_Thomas'
+      | 'America/St_Vincent'
+      | 'America/Swift_Current'
+      | 'America/Tegucigalpa'
+      | 'America/Thule'
+      | 'America/Thunder_Bay'
+      | 'America/Tijuana'
+      | 'America/Toronto'
+      | 'America/Tortola'
+      | 'America/Vancouver'
+      | 'America/Virgin'
+      | 'America/Whitehorse'
+      | 'America/Winnipeg'
+      | 'America/Yakutat'
+      | 'America/Yellowknife'
+      | 'Antarctica/Casey'
+      | 'Antarctica/Davis'
+      | 'Antarctica/DumontDUrville'
+      | 'Antarctica/Macquarie'
+      | 'Antarctica/Mawson'
+      | 'Antarctica/McMurdo'
+      | 'Antarctica/Palmer'
+      | 'Antarctica/Rothera'
+      | 'Antarctica/South_Pole'
+      | 'Antarctica/Syowa'
+      | 'Antarctica/Troll'
+      | 'Antarctica/Vostok'
+      | 'Arctic/Longyearbyen'
+      | 'Asia/Aden'
+      | 'Asia/Almaty'
+      | 'Asia/Amman'
+      | 'Asia/Anadyr'
+      | 'Asia/Aqtau'
+      | 'Asia/Aqtobe'
+      | 'Asia/Ashgabat'
+      | 'Asia/Ashkhabad'
+      | 'Asia/Atyrau'
+      | 'Asia/Baghdad'
+      | 'Asia/Bahrain'
+      | 'Asia/Baku'
+      | 'Asia/Bangkok'
+      | 'Asia/Barnaul'
+      | 'Asia/Beirut'
+      | 'Asia/Bishkek'
+      | 'Asia/Brunei'
+      | 'Asia/Calcutta'
+      | 'Asia/Chita'
+      | 'Asia/Choibalsan'
+      | 'Asia/Chongqing'
+      | 'Asia/Chungking'
+      | 'Asia/Colombo'
+      | 'Asia/Dacca'
+      | 'Asia/Damascus'
+      | 'Asia/Dhaka'
+      | 'Asia/Dili'
+      | 'Asia/Dubai'
+      | 'Asia/Dushanbe'
+      | 'Asia/Famagusta'
+      | 'Asia/Gaza'
+      | 'Asia/Harbin'
+      | 'Asia/Hebron'
+      | 'Asia/Ho_Chi_Minh'
+      | 'Asia/Hong_Kong'
+      | 'Asia/Hovd'
+      | 'Asia/Irkutsk'
+      | 'Asia/Istanbul'
+      | 'Asia/Jakarta'
+      | 'Asia/Jayapura'
+      | 'Asia/Jerusalem'
+      | 'Asia/Kabul'
+      | 'Asia/Kamchatka'
+      | 'Asia/Karachi'
+      | 'Asia/Kashgar'
+      | 'Asia/Kathmandu'
+      | 'Asia/Katmandu'
+      | 'Asia/Khandyga'
+      | 'Asia/Kolkata'
+      | 'Asia/Krasnoyarsk'
+      | 'Asia/Kuala_Lumpur'
+      | 'Asia/Kuching'
+      | 'Asia/Kuwait'
+      | 'Asia/Macao'
+      | 'Asia/Macau'
+      | 'Asia/Magadan'
+      | 'Asia/Makassar'
+      | 'Asia/Manila'
+      | 'Asia/Muscat'
+      | 'Asia/Nicosia'
+      | 'Asia/Novokuznetsk'
+      | 'Asia/Novosibirsk'
+      | 'Asia/Omsk'
+      | 'Asia/Oral'
+      | 'Asia/Phnom_Penh'
+      | 'Asia/Pontianak'
+      | 'Asia/Pyongyang'
+      | 'Asia/Qatar'
+      | 'Asia/Qostanay'
+      | 'Asia/Qyzylorda'
+      | 'Asia/Rangoon'
+      | 'Asia/Riyadh'
+      | 'Asia/Saigon'
+      | 'Asia/Sakhalin'
+      | 'Asia/Samarkand'
+      | 'Asia/Seoul'
+      | 'Asia/Shanghai'
+      | 'Asia/Singapore'
+      | 'Asia/Srednekolymsk'
+      | 'Asia/Taipei'
+      | 'Asia/Tashkent'
+      | 'Asia/Tbilisi'
+      | 'Asia/Tehran'
+      | 'Asia/Tel_Aviv'
+      | 'Asia/Thimbu'
+      | 'Asia/Thimphu'
+      | 'Asia/Tokyo'
+      | 'Asia/Tomsk'
+      | 'Asia/Ujung_Pandang'
+      | 'Asia/Ulaanbaatar'
+      | 'Asia/Ulan_Bator'
+      | 'Asia/Urumqi'
+      | 'Asia/Ust-Nera'
+      | 'Asia/Vientiane'
+      | 'Asia/Vladivostok'
+      | 'Asia/Yakutsk'
+      | 'Asia/Yangon'
+      | 'Asia/Yekaterinburg'
+      | 'Asia/Yerevan'
+      | 'Atlantic/Azores'
+      | 'Atlantic/Bermuda'
+      | 'Atlantic/Canary'
+      | 'Atlantic/Cape_Verde'
+      | 'Atlantic/Faeroe'
+      | 'Atlantic/Faroe'
+      | 'Atlantic/Jan_Mayen'
+      | 'Atlantic/Madeira'
+      | 'Atlantic/Reykjavik'
+      | 'Atlantic/South_Georgia'
+      | 'Atlantic/St_Helena'
+      | 'Atlantic/Stanley'
+      | 'Brazil/Acre'
+      | 'Brazil/DeNoronha'
+      | 'Brazil/East'
+      | 'Brazil/West'
+      | 'Canada/Atlantic'
+      | 'Canada/Central'
+      | 'Canada/Eastern'
+      | 'Canada/Mountain'
+      | 'Canada/Newfoundland'
+      | 'Canada/Pacific'
+      | 'Canada/Saskatchewan'
+      | 'Canada/Yukon'
+      | 'CET'
+      | 'Chile/Continental'
+      | 'Chile/EasterIsland'
+      | 'CST6CDT'
+      | 'Cuba'
+      | 'Egypt'
+      | 'Eire'
+      | 'EST'
+      | 'EST5EDT'
+      | 'Etc/GMT'
+      | 'Etc/GMT-0'
+      | 'Etc/GMT-1'
+      | 'Etc/GMT-10'
+      | 'Etc/GMT-11'
+      | 'Etc/GMT-12'
+      | 'Etc/GMT-13'
+      | 'Etc/GMT-14'
+      | 'Etc/GMT-2'
+      | 'Etc/GMT-3'
+      | 'Etc/GMT-4'
+      | 'Etc/GMT-5'
+      | 'Etc/GMT-6'
+      | 'Etc/GMT-7'
+      | 'Etc/GMT-8'
+      | 'Etc/GMT-9'
+      | 'Etc/GMT0'
+      | 'Etc/Greenwich'
+      | 'Etc/UCT'
+      | 'Etc/Universal'
+      | 'Etc/UTC'
+      | 'Etc/Zulu'
+      | 'Europe/Amsterdam'
+      | 'Europe/Andorra'
+      | 'Europe/Astrakhan'
+      | 'Europe/Athens'
+      | 'Europe/Belfast'
+      | 'Europe/Belgrade'
+      | 'Europe/Berlin'
+      | 'Europe/Bratislava'
+      | 'Europe/Brussels'
+      | 'Europe/Bucharest'
+      | 'Europe/Budapest'
+      | 'Europe/Busingen'
+      | 'Europe/Chisinau'
+      | 'Europe/Copenhagen'
+      | 'Europe/Dublin'
+      | 'Europe/Gibraltar'
+      | 'Europe/Guernsey'
+      | 'Europe/Helsinki'
+      | 'Europe/Isle_of_Man'
+      | 'Europe/Istanbul'
+      | 'Europe/Jersey'
+      | 'Europe/Kaliningrad'
+      | 'Europe/Kiev'
+      | 'Europe/Kirov'
+      | 'Europe/Kyiv'
+      | 'Europe/Lisbon'
+      | 'Europe/Ljubljana'
+      | 'Europe/London'
+      | 'Europe/Luxembourg'
+      | 'Europe/Madrid'
+      | 'Europe/Malta'
+      | 'Europe/Mariehamn'
+      | 'Europe/Minsk'
+      | 'Europe/Monaco'
+      | 'Europe/Moscow'
+      | 'Europe/Nicosia'
+      | 'Europe/Oslo'
+      | 'Europe/Paris'
+      | 'Europe/Podgorica'
+      | 'Europe/Prague'
+      | 'Europe/Riga'
+      | 'Europe/Rome'
+      | 'Europe/Samara'
+      | 'Europe/San_Marino'
+      | 'Europe/Sarajevo'
+      | 'Europe/Saratov'
+      | 'Europe/Simferopol'
+      | 'Europe/Skopje'
+      | 'Europe/Sofia'
+      | 'Europe/Stockholm'
+      | 'Europe/Tallinn'
+      | 'Europe/Tirane'
+      | 'Europe/Tiraspol'
+      | 'Europe/Ulyanovsk'
+      | 'Europe/Uzhgorod'
+      | 'Europe/Vaduz'
+      | 'Europe/Vatican'
+      | 'Europe/Vienna'
+      | 'Europe/Vilnius'
+      | 'Europe/Volgograd'
+      | 'Europe/Warsaw'
+      | 'Europe/Zagreb'
+      | 'Europe/Zaporozhye'
+      | 'Europe/Zurich'
+      | 'Factory'
+      | 'GB'
+      | 'GB-Eire'
+      | 'GMT'
+      | 'GMT-0'
+      | 'GMT0'
+      | 'Greenwich'
+      | 'Hongkong'
+      | 'HST'
+      | 'Iceland'
+      | 'Indian/Antananarivo'
+      | 'Indian/Chagos'
+      | 'Indian/Christmas'
+      | 'Indian/Cocos'
+      | 'Indian/Comoro'
+      | 'Indian/Kerguelen'
+      | 'Indian/Mahe'
+      | 'Indian/Maldives'
+      | 'Indian/Mauritius'
+      | 'Indian/Mayotte'
+      | 'Indian/Reunion'
+      | 'Iran'
+      | 'Israel'
+      | 'Jamaica'
+      | 'Japan'
+      | 'Kwajalein'
+      | 'Libya'
+      | 'MET'
+      | 'Mexico/BajaNorte'
+      | 'Mexico/BajaSur'
+      | 'Mexico/General'
+      | 'MST'
+      | 'MST7MDT'
+      | 'Navajo'
+      | 'NZ'
+      | 'NZ-CHAT'
+      | 'Pacific/Apia'
+      | 'Pacific/Auckland'
+      | 'Pacific/Bougainville'
+      | 'Pacific/Chatham'
+      | 'Pacific/Chuuk'
+      | 'Pacific/Easter'
+      | 'Pacific/Efate'
+      | 'Pacific/Enderbury'
+      | 'Pacific/Fakaofo'
+      | 'Pacific/Fiji'
+      | 'Pacific/Funafuti'
+      | 'Pacific/Galapagos'
+      | 'Pacific/Gambier'
+      | 'Pacific/Guadalcanal'
+      | 'Pacific/Guam'
+      | 'Pacific/Honolulu'
+      | 'Pacific/Johnston'
+      | 'Pacific/Kanton'
+      | 'Pacific/Kiritimati'
+      | 'Pacific/Kosrae'
+      | 'Pacific/Kwajalein'
+      | 'Pacific/Majuro'
+      | 'Pacific/Marquesas'
+      | 'Pacific/Midway'
+      | 'Pacific/Nauru'
+      | 'Pacific/Niue'
+      | 'Pacific/Norfolk'
+      | 'Pacific/Noumea'
+      | 'Pacific/Pago_Pago'
+      | 'Pacific/Palau'
+      | 'Pacific/Pitcairn'
+      | 'Pacific/Pohnpei'
+      | 'Pacific/Ponape'
+      | 'Pacific/Port_Moresby'
+      | 'Pacific/Rarotonga'
+      | 'Pacific/Saipan'
+      | 'Pacific/Samoa'
+      | 'Pacific/Tahiti'
+      | 'Pacific/Tarawa'
+      | 'Pacific/Tongatapu'
+      | 'Pacific/Truk'
+      | 'Pacific/Wake'
+      | 'Pacific/Wallis'
+      | 'Pacific/Yap'
+      | 'Poland'
+      | 'Portugal'
+      | 'PRC'
+      | 'PST8PDT'
+      | 'ROC'
+      | 'ROK'
+      | 'Singapore'
+      | 'Turkey'
+      | 'UCT'
+      | 'Universal'
+      | 'US/Alaska'
+      | 'US/Aleutian'
+      | 'US/Arizona'
+      | 'US/Central'
+      | 'US/East-Indiana'
+      | 'US/Eastern'
+      | 'US/Hawaii'
+      | 'US/Indiana-Starke'
+      | 'US/Michigan'
+      | 'US/Mountain'
+      | 'US/Pacific'
+      | 'US/Samoa'
+      | 'UTC'
+      | 'W-SU'
+      | 'WET'
+      | 'Zulu';
     startTime?: string | null;
     endTime?: string | null;
   };
-  submittedItems?: {
-    runs?: {
-      docs?: (number | Run)[];
-      hasNextPage?: boolean;
-      totalDocs?: number;
+  eventPage?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
     };
-    volunteers?: {
-      docs?: (number | Volunteer)[];
-      hasNextPage?: boolean;
-      totalDocs?: number;
+    [k: string]: unknown;
+  } | null;
+  submissionInstructions?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
     };
+    [k: string]: unknown;
+  } | null;
+  scheduleMetadata?: {
+    /**
+     * Make the schedule page publicly visible.
+     */
+    published?: boolean | null;
+    horaro?: string | null;
+    oengus?: string | null;
+    scheduleBlocks?:
+      | {
+          name: string;
+          colour?: string | null;
+          textColour?: string | null;
+          id?: string | null;
+        }[]
+      | null;
   };
+  media?: {
+    logo?: (number | null) | Media;
+    logoDarkMode?: (number | null) | Media;
+    hero?: (number | null) | Media;
+    embed?: (number | null) | Media;
+  };
+  products?: (number | Product)[] | null;
   postEvent?: {
+    /**
+     * Total raised for charity (AUD).
+     */
     raised?: number | null;
     postEventPage?: {
       root: {
@@ -640,16 +1305,6 @@ export interface Event {
       [k: string]: unknown;
     } | null;
   };
-  /**
-   * System-managed page generated from this event.
-   */
-  generatedPostEventPage?: (number | null) | Page;
-  media?: {
-    logo?: (number | null) | Media;
-    logoDarkMode?: (number | null) | Media;
-    hero?: (number | null) | Media;
-    embed?: (number | null) | Media;
-  };
   submissions?: {
     docs?: (number | Submission)[];
     hasNextPage?: boolean;
@@ -665,50 +1320,15 @@ export interface Event {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
-  submissionInstructions?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  eventPage?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  scheduleMetadata?: {
-    published?: boolean | null;
-    horaro?: string | null;
-    oengus?: string | null;
-    scheduleBlocks?:
-      | {
-          name?: string | null;
-          colour?: string | null;
-          textColour?: string | null;
-          id?: string | null;
-        }[]
-      | null;
+  volunteers?: {
+    docs?: (number | Volunteer)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
   };
-  products?: (number | Product)[] | null;
+  /**
+   * System-managed page generated from this event.
+   */
+  generatedPostEventPage?: (number | null) | Page;
   legacyKeystoneId?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -716,25 +1336,56 @@ export interface Event {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "volunteers".
+ * via the `definition` "products".
  */
-export interface Volunteer {
+export interface Product {
   id: number;
-  volunteer?: (string | null) | User;
-  event?: (number | null) | Event;
-  role: ('frontDesk' | 'host' | 'tech' | 'stageHand')[];
-  availability?:
+  name: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  type: 'ticket' | 'merchandise';
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  images?:
     | {
-        time?: string | null;
+        image: number | Media;
         id?: string | null;
       }[]
     | null;
-  maximumTime?: number | null;
-  maxDailyHostTime?: number | null;
-  hostSpecificGame?: string | null;
-  hostSpecificRunner?: string | null;
-  hostOtherInformation?: string | null;
-  techExperience?: string | null;
+  variants: {
+    label: string;
+    /**
+     * e.g. 3000 = $30.00
+     */
+    priceInCents: number;
+    /**
+     * Leave blank for unlimited. Decremented automatically when orders complete.
+     */
+    stock?: number | null;
+    id?: string | null;
+  }[];
+  payment?: {
+    allowStripe?: boolean | null;
+    allowBankTransfer?: boolean | null;
+  };
+  availableFrom?: string | null;
+  availableUntil?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -745,15 +1396,30 @@ export interface Volunteer {
 export interface Submission {
   id: number;
   runner: string | User;
+  event: number | Event;
+  status: 'pending' | 'accepted' | 'rejected' | 'backup';
+  /**
+   * Scheduled run(s) created from this submission.
+   */
+  runs?: {
+    docs?: (number | Run)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   game: string;
   ageRating?: ('m_or_lower' | 'ma15' | 'r18') | null;
   category: string;
   platform: string;
+  /**
+   * The platform the game will actually run on, if different (e.g. emulator, PC).
+   */
   techPlatform?: string | null;
   estimate: string;
+  /**
+   * A lower estimate the runner could do.
+   */
   possibleEstimate?: string | null;
   possibleEstimateReason?: string | null;
-  event?: (number | null) | Event;
   specialRequirements?: string | null;
   donationIncentives?:
     | {
@@ -768,7 +1434,6 @@ export interface Submission {
   racer?: string | null;
   isCoop?: boolean | null;
   video?: string | null;
-  status?: ('pending' | 'accepted' | 'rejected' | 'backup') | null;
   availability?:
     | {
         [k: string]: unknown;
@@ -791,11 +1456,20 @@ export interface Incentive {
   id: number;
   title: string;
   run?: (number | null) | Run;
+  /**
+   * Filled in from the run if left blank.
+   */
   event?: (number | null) | Event;
   type: 'goal' | 'war';
   description?: string | null;
+  /**
+   * Internal notes (public via the API — do not store anything sensitive).
+   */
   notes?: string | null;
   isActive?: boolean | null;
+  /**
+   * Goal: {"goal": 500, "current": 0}. War: {"options": [{"name": "Option A", "total": 0}]}
+   */
   data?:
     | {
         [k: string]: unknown;
@@ -810,52 +1484,33 @@ export interface Incentive {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "products".
+ * via the `definition` "volunteers".
  */
-export interface Product {
+export interface Volunteer {
   id: number;
-  name: string;
-  slug: string;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  images?:
+  title?: string | null;
+  volunteer: string | User;
+  event: number | Event;
+  status: 'pending' | 'accepted' | 'rejected';
+  role: ('frontDesk' | 'host' | 'tech' | 'stageHand')[];
+  availability?:
     | {
-        image?: (number | null) | Media;
+        time?: string | null;
         id?: string | null;
       }[]
     | null;
-  type: 'ticket' | 'merchandise';
-  variants: {
-    label: string;
-    priceInCents: number;
-    stock?: number | null;
-    /**
-     * Optional — auto-created if blank
-     */
-    stripePriceId?: string | null;
-    bankTransferDetails?: {
-      allowBankTransfer?: boolean | null;
-      accountName?: string | null;
-      bsb?: string | null;
-      accountNumber?: string | null;
-    };
-    id?: string | null;
-  }[];
-  availableFrom?: string | null;
-  availableUntil?: string | null;
+  /**
+   * Maximum total hours the volunteer is willing to work across the event.
+   */
+  maximumTime?: number | null;
+  /**
+   * Maximum hours per day.
+   */
+  maxDailyHostTime?: number | null;
+  hostSpecificGame?: string | null;
+  hostSpecificRunner?: string | null;
+  hostOtherInformation?: string | null;
+  techExperience?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -871,10 +1526,17 @@ export interface Order {
     product: number | Product;
     productName?: string | null;
     variantLabel?: string | null;
+    variantId?: string | null;
     quantity: number;
-    unitPriceInCents: number;
+    /**
+     * Filled in from the product if left blank.
+     */
+    unitPriceInCents?: number | null;
     id?: string | null;
   }[];
+  /**
+   * Calculated from the items.
+   */
   totalInCents: number;
   status: 'pending' | 'completed' | 'collected' | 'cancelled';
   purchaseType: 'bankTransfer' | 'stripe' | 'other';
@@ -893,16 +1555,31 @@ export interface Order {
 export interface Role {
   id: number;
   name: string;
+  /**
+   * Full access, including managing roles.
+   */
+  admin?: boolean | null;
+  /**
+   * Pages, posts, events, runs, submissions, volunteers and products.
+   */
+  canManageContent?: boolean | null;
+  /**
+   * Users, orders and payment settings.
+   */
+  canManageUsers?: boolean | null;
+  /**
+   * Badge background colour, e.g. #CC7722.
+   */
+  colour?: string | null;
+  /**
+   * Badge text colour, e.g. white.
+   */
+  textColour?: string | null;
   users?: {
     docs?: (string | User)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
-  admin?: boolean | null;
-  canManageContent?: boolean | null;
-  canManageUsers?: boolean | null;
-  colour?: string | null;
-  textColour?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -2182,9 +2859,9 @@ export interface UsersSelect<T extends boolean = true> {
   socials?:
     | T
     | {
-        Discord?: T;
-        Twitch?: T;
-        Bluesky?: T;
+        discord?: T;
+        twitch?: T;
+        bluesky?: T;
       };
   stripeCustomerId?: T;
   updatedAt?: T;
@@ -2212,12 +2889,12 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface RolesSelect<T extends boolean = true> {
   name?: T;
-  users?: T;
   admin?: T;
   canManageContent?: T;
   canManageUsers?: T;
   colour?: T;
   textColour?: T;
+  users?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2242,32 +2919,8 @@ export interface EventsSelect<T extends boolean = true> {
         startTime?: T;
         endTime?: T;
       };
-  submittedItems?:
-    | T
-    | {
-        runs?: T;
-        volunteers?: T;
-      };
-  postEvent?:
-    | T
-    | {
-        raised?: T;
-        postEventPage?: T;
-      };
-  generatedPostEventPage?: T;
-  media?:
-    | T
-    | {
-        logo?: T;
-        logoDarkMode?: T;
-        hero?: T;
-        embed?: T;
-      };
-  submissions?: T;
-  runs?: T;
-  incentives?: T;
-  submissionInstructions?: T;
   eventPage?: T;
+  submissionInstructions?: T;
   scheduleMetadata?:
     | T
     | {
@@ -2283,7 +2936,26 @@ export interface EventsSelect<T extends boolean = true> {
               id?: T;
             };
       };
+  media?:
+    | T
+    | {
+        logo?: T;
+        logoDarkMode?: T;
+        hero?: T;
+        embed?: T;
+      };
   products?: T;
+  postEvent?:
+    | T
+    | {
+        raised?: T;
+        postEventPage?: T;
+      };
+  submissions?: T;
+  runs?: T;
+  incentives?: T;
+  volunteers?: T;
+  generatedPostEventPage?: T;
   legacyKeystoneId?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -2311,7 +2983,9 @@ export interface IncentivesSelect<T extends boolean = true> {
  */
 export interface ProductsSelect<T extends boolean = true> {
   name?: T;
+  generateSlug?: T;
   slug?: T;
+  type?: T;
   description?: T;
   images?:
     | T
@@ -2319,23 +2993,19 @@ export interface ProductsSelect<T extends boolean = true> {
         image?: T;
         id?: T;
       };
-  type?: T;
   variants?:
     | T
     | {
         label?: T;
         priceInCents?: T;
         stock?: T;
-        stripePriceId?: T;
-        bankTransferDetails?:
-          | T
-          | {
-              allowBankTransfer?: T;
-              accountName?: T;
-              bsb?: T;
-              accountNumber?: T;
-            };
         id?: T;
+      };
+  payment?:
+    | T
+    | {
+        allowStripe?: T;
+        allowBankTransfer?: T;
       };
   availableFrom?: T;
   availableUntil?: T;
@@ -2355,6 +3025,7 @@ export interface OrdersSelect<T extends boolean = true> {
         product?: T;
         productName?: T;
         variantLabel?: T;
+        variantId?: T;
         quantity?: T;
         unitPriceInCents?: T;
         id?: T;
@@ -2377,24 +3048,25 @@ export interface OrdersSelect<T extends boolean = true> {
  * via the `definition` "runs_select".
  */
 export interface RunsSelect<T extends boolean = true> {
+  title?: T;
   game?: T;
+  event?: T;
   category?: T;
   platform?: T;
+  techPlatform?: T;
   runners?: T;
+  otherRunners?: T;
   estimate?: T;
   time?: T;
-  event?: T;
-  youtube?: T;
-  twitch?: T;
-  specialRequirements?: T;
-  isRace?: T;
-  isCoop?: T;
-  techPlatform?: T;
   scheduledTime?: T;
   scheduledTime_tz?: T;
-  otherRunners?: T;
+  isRace?: T;
+  isCoop?: T;
+  specialRequirements?: T;
+  youtube?: T;
+  twitch?: T;
   submission?: T;
-  donationIncentives?: T;
+  incentives?: T;
   legacyKeystoneId?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -2405,6 +3077,9 @@ export interface RunsSelect<T extends boolean = true> {
  */
 export interface SubmissionsSelect<T extends boolean = true> {
   runner?: T;
+  event?: T;
+  status?: T;
+  runs?: T;
   game?: T;
   ageRating?: T;
   category?: T;
@@ -2413,14 +3088,12 @@ export interface SubmissionsSelect<T extends boolean = true> {
   estimate?: T;
   possibleEstimate?: T;
   possibleEstimateReason?: T;
-  event?: T;
   specialRequirements?: T;
   donationIncentives?: T;
   raceType?: T;
   racer?: T;
   isCoop?: T;
   video?: T;
-  status?: T;
   availability?: T;
   canBackup?: T;
   legacyKeystoneId?: T;
@@ -2432,8 +3105,10 @@ export interface SubmissionsSelect<T extends boolean = true> {
  * via the `definition` "volunteers_select".
  */
 export interface VolunteersSelect<T extends boolean = true> {
+  title?: T;
   volunteer?: T;
   event?: T;
+  status?: T;
   role?: T;
   availability?:
     | T
@@ -2457,7 +3132,14 @@ export interface VolunteersSelect<T extends boolean = true> {
 export interface GamesSelect<T extends boolean = true> {
   name?: T;
   year?: T;
-  streamDisplayName?: T;
+  platform?: T;
+  techPlatform?: T;
+  stream?:
+    | T
+    | {
+        displayName?: T;
+        aspectRatio?: T;
+      };
   runs?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -2797,6 +3479,27 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "paymentSettings".
+ */
+export interface PaymentSetting {
+  id: number;
+  /**
+   * Shown to customers after they place a bank transfer order.
+   */
+  bankTransfer: {
+    accountName: string;
+    bsb: string;
+    accountNumber: string;
+    /**
+     * Optional extra instructions, e.g. how long until the order is confirmed.
+     */
+    instructions?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -2836,6 +3539,23 @@ export interface FooterSelect<T extends boolean = true> {
               label?: T;
             };
         id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "paymentSettings_select".
+ */
+export interface PaymentSettingsSelect<T extends boolean = true> {
+  bankTransfer?:
+    | T
+    | {
+        accountName?: T;
+        bsb?: T;
+        accountNumber?: T;
+        instructions?: T;
       };
   updatedAt?: T;
   createdAt?: T;

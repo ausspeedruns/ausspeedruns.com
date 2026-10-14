@@ -64,7 +64,7 @@ export default async function SubmitGamePage() {
 		user: {
 			verified: true, // PayloadCMS auth: true handles email; adjust if you add email verification
 			dateOfBirth: user.dateOfBirth,
-			discord: user.socials?.Discord ?? "",
+			discord: user.socials?.discord ?? "",
 			submissions: submissions.map((sub) => ({
 				game: sub.game,
 				platform: sub.platform,

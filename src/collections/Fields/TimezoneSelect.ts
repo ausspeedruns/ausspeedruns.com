@@ -604,3 +604,8 @@ export const AllTimeZones = [
 ] as const satisfies Option[];
 
 export const DefaultTimeZone: (typeof AllTimeZones)[number]["value"] = "Australia/Melbourne";
+
+/** `AllTimeZones` with duplicate values removed (required for Postgres enums). */
+export const TimeZoneOptions: Option[] = AllTimeZones.filter(
+	(option, index, list) => list.findIndex((candidate) => candidate.value === option.value) === index,
+).map((option) => ({ label: option.label, value: option.value }));

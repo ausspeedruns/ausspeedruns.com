@@ -95,6 +95,7 @@ export async function ProductBlock(props: ProductBlockProps) {
 											productId={product.id}
 											productName={product.name ?? "Product"}
 											variant={variant}
+											payment={product.payment}
 										/>
 									</li>
 								))}
@@ -106,6 +107,7 @@ export async function ProductBlock(props: ProductBlockProps) {
 								productId={product.id}
 								productName={product.name ?? "Product"}
 								variant={product.variants[0]}
+								payment={product.payment}
 							/>
 						)}
 					</div>

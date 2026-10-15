@@ -16,6 +16,7 @@ public/media/
 public/robots.txt
 public/sitemap*.xml
 
+*.tsbuildinfo
 
 # Playwright
 node_modules/

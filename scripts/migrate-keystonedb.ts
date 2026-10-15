@@ -43,6 +43,15 @@ const eventInfoMap = new Map<string, { shortName: string; timezone?: string }>()
 const submissionIdMap = new Map<string, number>();
 const runIdMap = new Map<string, number>();
 const gameIdCache = new Map<string, Promise<number>>();
+const migratedUserIds = new Set<string>();
+
+/** Warns and counts a failure when a record references a user that wasn't migrated. */
+function userMissing(userId: string | null | undefined, context: string) {
+	if (userId && migratedUserIds.has(userId)) return false;
+	console.warn(`Skipping ${context}: user ${userId} was not migrated`);
+	failureCount++;
+	return true;
+}
 
 let failureCount = 0;
 
@@ -253,6 +262,27 @@ async function migrateUsers(payload: BasePayload, source: KeystoneDump) {
 	console.log("Migrating users...");
 	const data = source.query("User");
 
+	// Payload emails are unique case-insensitively; Keystone's weren't. The oldest account keeps the real
+	// email and later ones get a "+dup-<id>" placeholder so their submissions/runs/orders still migrate.
+	const emailOwner = new Map<string, string>();
+	const placeholderEmails = new Map<string, string>();
+	const byCreated = [...data.rows].sort(
+		(a, b) => (a.accountCreated?.getTime() ?? 0) - (b.accountCreated?.getTime() ?? 0),
+	);
+	for (const user of byCreated) {
+		const key = user.email?.trim().toLowerCase();
+		if (!key) continue;
+		const owner = emailOwner.get(key);
+		if (!owner) {
+			emailOwner.set(key, user.username);
+			continue;
+		}
+		const [local, domain] = user.email.trim().split("@");
+		const placeholder = `${local}+dup-${user.id}@${domain}`;
+		placeholderEmails.set(user.id, placeholder);
+		console.warn(`User ${user.username} shares an email with ${owner}; using placeholder ${placeholder}`);
+	}
+
 	await runInBatches(data.rows, async (user) => {
 		const {
 			id,
@@ -287,7 +317,7 @@ async function migrateUsers(payload: BasePayload, source: KeystoneDump) {
 					_verified: verified,
 					name,
 					username,
-					email,
+					email: placeholderEmails.get(id) ?? email,
 					password,
 					// Unknown DOBs use the epoch so the account still passes the minimum age check
 					dateOfBirth: new Date(dateOfBirth ?? 0).toISOString(),
@@ -300,6 +330,7 @@ async function migrateUsers(payload: BasePayload, source: KeystoneDump) {
 					},
 				},
 			});
+			migratedUserIds.add(id);
 		} catch (e) {
 			handlePayloadCreateError(e, `user ${username}`);
 		}
@@ -330,12 +361,8 @@ async function migrateEvents(payload: BasePayload, source: KeystoneDump) {
 			scheduleBlocks,
 		} = event;
 
-		const images = await getEventImage(shortname);
-
-		if (!images) {
-			console.warn("MISSING IMAGES for event", shortname);
-			continue;
-		}
+		// Media is optional, so events without assets are still created (everything else references them)
+		const images = (await getEventImage(shortname)) ?? { embed: null, hero: null, logoLight: null, logoDark: null };
 
 		if (!images.logoLight && !images.logoDark) {
 			console.warn("MISSING LOGO VARIANT for event", shortname);
@@ -483,6 +510,7 @@ async function migrateSubmissions(payload: BasePayload, source: KeystoneDump) {
 			failureCount++;
 			return;
 		}
+		if (userMissing(runner, `submission ${id}`)) return;
 
 		const { url: videoUrl, note: videoNote } = normaliseVideo(video);
 
@@ -590,6 +618,13 @@ async function migrateRuns(payload: BasePayload, source: KeystoneDump) {
 
 			const gameId = await findOrCreateGame(game);
 
+			const runners = (runIdRunnersMap.get(id) ?? []).filter((runnerId) => {
+				if (migratedUserIds.has(runnerId)) return true;
+				console.warn(`Run ${id}: dropping runner ${runnerId} (user was not migrated)`);
+				failureCount++;
+				return false;
+			});
+
 			const created = await payload.create({
 				collection: "runs",
 				draft: false,
@@ -615,7 +650,7 @@ async function migrateRuns(payload: BasePayload, source: KeystoneDump) {
 						? { submission: submissionIdMap.get(originalSubmission) }
 						: {}),
 					...(event && eventIdMap.has(event) ? { event: eventIdMap.get(event) } : {}),
-					runners: runIdRunnersMap.has(id) ? runIdRunnersMap.get(id) : [],
+					runners,
 				},
 			});
 
@@ -664,6 +699,7 @@ async function migrateVolunteers(payload: BasePayload, source: KeystoneDump) {
 			id,
 			volunteer: userId,
 			event,
+			jobType,
 			roles,
 			dayTimes,
 			eventHostTime,
@@ -671,31 +707,27 @@ async function migrateVolunteers(payload: BasePayload, source: KeystoneDump) {
 			specificGame,
 			specificRunner,
 			additionalInfo,
+			techExperience,
 		} = row;
 
-		// Roles in Keystone was a multiselect, in Payload it's a single select. We'll just take the first one or default to 'host'
-		let role: Volunteer["role"] = ["host"];
-		if (roles) {
-			try {
-				if (Array.isArray(roles)) {
-					role = roles.map((role) => {
-						switch (role) {
-							case "runMgmt":
-								return "frontDesk";
-							case "social":
-								return "stageHand";
-							case "tech":
-								return "tech";
-							case "host":
-							default:
-								return "host";
-						}
-					});
-				}
-			} catch (e) {
-				console.warn(`Error processing roles for volunteer ${id}, defaulting to 'host'. Error:`, e);
-			}
-		}
+		// Older applications only have the single `jobType`; newer ones use the multi-select `roles`
+		const legacyRoles: string[] = Array.isArray(roles) && roles.length > 0 ? roles : jobType ? [jobType] : ["host"];
+		const role: Volunteer["role"] = [
+			...new Set(
+				legacyRoles.map((legacyRole): Volunteer["role"][number] => {
+					switch (legacyRole) {
+						case "runMgmt":
+							return "frontDesk";
+						case "social":
+							return "stageHand";
+						case "tech":
+							return "tech";
+						default:
+							return "host";
+					}
+				}),
+			),
+		];
 
 		let availability: Volunteer["availability"] = [];
 		if (dayTimes) {
@@ -711,8 +743,10 @@ async function migrateVolunteers(payload: BasePayload, source: KeystoneDump) {
 		const eventId = event ? eventIdMap.get(event) : undefined;
 		if (!eventId) {
 			console.warn(`Skipping volunteer application ${id}: event ${event} was not migrated`);
+			failureCount++;
 			return;
 		}
+		if (userMissing(userId, `volunteer application ${id}`)) return;
 
 		try {
 			await payload.create({
@@ -730,6 +764,7 @@ async function migrateVolunteers(payload: BasePayload, source: KeystoneDump) {
 					hostSpecificGame: specificGame,
 					hostSpecificRunner: specificRunner,
 					hostOtherInformation: additionalInfo,
+					techExperience,
 				},
 			});
 		} catch (e) {
@@ -857,6 +892,24 @@ async function migrateOrders(payload: BasePayload, source: KeystoneDump) {
 		},
 	});
 
+	const shirt2026 = await payload.create({
+		collection: "products",
+		data: {
+			name: `ASM2026 Shirt`,
+			slug: `shirt-asm2026`,
+			type: "merchandise",
+			variants: [
+				{ label: "Small", priceInCents: 3000 },
+				{ label: "Medium", priceInCents: 3000 },
+				{ label: "Large", priceInCents: 3000 },
+				{ label: "X-Large", priceInCents: 3000 },
+				{ label: "2 X-Large", priceInCents: 3000 },
+				{ label: "3 X-Large", priceInCents: 3000 },
+				{ label: "4 X-Large", priceInCents: 3000 },
+			],
+		},
+	});
+
 	console.log("\tConverting shirt orders...");
 
 	await runInBatches(shirtData.rows, async (row) => {
@@ -871,6 +924,7 @@ async function migrateOrders(payload: BasePayload, source: KeystoneDump) {
 		} else if (createdYear === 2023) productId = shirt2023.id;
 		else if (createdYear === 2024) productId = shirt2024.id;
 		else if (createdYear === 2025) productId = shirt2025.id;
+		else if (createdYear === 2026) productId = shirt2026.id;
 
 		let sizeConversion = size;
 		if (size === "xs") sizeConversion = "X-Small";
@@ -887,6 +941,7 @@ async function migrateOrders(payload: BasePayload, source: KeystoneDump) {
 			failureCount++;
 			return;
 		}
+		if (userMissing(user, `shirt order ${id}`)) return;
 
 		try {
 			await payload.create({
@@ -927,6 +982,7 @@ async function migrateOrders(payload: BasePayload, source: KeystoneDump) {
 			failureCount++;
 			return;
 		}
+		if (userMissing(user, `ticket order ${id}`)) return;
 
 		try {
 			await payload.create({
@@ -966,7 +1022,7 @@ function handlePayloadCreateError(e: unknown, context: string) {
 	if (errors) {
 		console.error(`Failed to create ${context} due to the following validation errors:`);
 		for (const error of errors) {
-			console.error(`- ${error.message} (field: ${error.field})`);
+			console.error(`- ${error.message} (field: ${error.path ?? error.field})`);
 		}
 	} else {
 		console.error(`Failed to create ${context} due to an unexpected error:`, e);

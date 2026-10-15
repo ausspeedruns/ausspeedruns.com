@@ -8,8 +8,6 @@ import { sameUserOrManageUsers } from "#access/sameUserOrManageUsers.ts";
 import { anyone } from "#access/anyone.ts";
 import { isAdminField } from "#access/field/isAdmin.ts";
 import { render } from "@react-email/components";
-import { ResetPasswordEmail } from "./emails/reset-password.tsx";
-import { VerificationEmail } from "./emails/verification.tsx";
 
 const usernameRegex = /^[\w~-]{3,25}$/;
 
@@ -75,6 +73,8 @@ export const Users: CollectionConfig<"users"> = {
 			generateEmailSubject: () => "AusSpeedruns - Email Verification",
 			generateEmailHTML: async ({ token }) => {
 				if (!token) throw new Error("Verification token was not provided.");
+				// Lazy-loaded so the config can be imported by plain `node` scripts (no JSX support)
+				const { VerificationEmail } = await import("./emails/verification.tsx");
 				return await render(VerificationEmail({ token }));
 			},
 		},
@@ -85,6 +85,7 @@ export const Users: CollectionConfig<"users"> = {
 					throw new Error("Invalid data provided for forgot password email.");
 				}
 
+				const { ResetPasswordEmail } = await import("./emails/reset-password.tsx");
 				return await render(ResetPasswordEmail({ token: data.token }));
 			},
 		},

@@ -19,7 +19,6 @@
 		"ii": "pnpm --ignore-workspace install",
 		"lint": "oxlint",
 		"lint:fix": "oxlint --fix",
-		"migrate:keystone": "payload run scripts/migrate-keystonedb.ts --",
 		"payload": "payload",
 		"reinstall": "rm -rf node_modules && rm pnpm-lock.yaml && pnpm --ignore-workspace install",
 		"start": "next start",

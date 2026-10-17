@@ -21,6 +21,7 @@ import { PostEventStatsBlock } from "./PostEventStatsBlock/PostEventStatsBlock";
 
 import styles from "./RenderBlocks.module.css";
 import { RandomRunBlock } from "./RandomRunBlock/RandomRunBlock";
+import { VodHighlightsBlock } from "./VodHighlightsBlock/VodHighlightsBlock";
 
 const blockComponents = {
 	archive: ArchiveBlock,
@@ -39,6 +40,7 @@ const blockComponents = {
 	productBlock: ProductBlock,
 	postEventStatsBlock: PostEventStatsBlock,
 	randomRunBlock: RandomRunBlock,
+	vodHighlightsBlock: VodHighlightsBlock,
 };
 
 interface RenderBlocksProps {

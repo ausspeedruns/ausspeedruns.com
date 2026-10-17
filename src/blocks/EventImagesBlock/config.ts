@@ -11,6 +11,7 @@ export const EventImagesBlockConfig: Block = {
 	slug: "eventImagesBlock",
 	interfaceName: "EventImagesBlock",
 	fields: [
+		{ name: "title", type: "text", label: "Title" },
 		{
 			name: "richText",
 			type: "richText",
@@ -31,7 +32,7 @@ export const EventImagesBlockConfig: Block = {
 			name: "images",
 			type: "array",
 			label: "Images",
-			minRows: 1,
+			minRows: 0,
 			fields: [
 				{
 					name: "sourceType",
@@ -94,6 +95,18 @@ export const EventImagesBlockConfig: Block = {
 					label: "Caption",
 				},
 			],
+		},
+		{
+			name: "galleryUrl",
+			type: "text",
+			label: "Full gallery URL",
+			admin: { description: "Link to the full photo album (e.g. Google Photos, Flickr)." },
+		},
+		{
+			name: "galleryLabel",
+			type: "text",
+			label: "Gallery button label",
+			defaultValue: "View the full photo gallery",
 		},
 	],
 	labels: {

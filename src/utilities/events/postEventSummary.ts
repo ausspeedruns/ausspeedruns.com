@@ -88,6 +88,33 @@ export function formatSecondsAsDuration(totalSeconds: number): string {
 	return `${minutes}m ${seconds}s`;
 }
 
+/** Compact hours/minutes label, e.g. "52h 14m". */
+export function formatSecondsAsHours(totalSeconds: number): string {
+	const safeTotal = Number.isFinite(totalSeconds) ? Math.max(0, Math.round(totalSeconds)) : 0;
+	const hours = Math.floor(safeTotal / 3600);
+	const minutes = Math.floor((safeTotal % 3600) / 60);
+
+	return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+}
+
+/** Display names of everyone running a run, including runners without accounts. */
+export function getRunnerNames(run: Run): string[] {
+	const names: string[] = [];
+
+	for (const runner of run.runners ?? []) {
+		if (runner && typeof runner === "object") {
+			names.push(runner.username || "Unknown runner");
+		}
+	}
+
+	for (const name of (run.otherRunners ?? "").split(/[\n,;]+/)) {
+		const trimmed = name.trim();
+		if (trimmed) names.push(trimmed);
+	}
+
+	return names;
+}
+
 export function buildPostEventSummary(runs: Run[]): PostEventSummary {
 	const runnerIds = new Set<string>();
 	let totalRunSeconds = 0;

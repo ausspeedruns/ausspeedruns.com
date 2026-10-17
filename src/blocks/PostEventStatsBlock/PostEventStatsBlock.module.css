@@ -1,42 +1,24 @@
-.wrapper {
-	padding: 2rem 1rem;
-	max-width: 1080px;
-	margin: 0 auto;
-}
-
-.heading {
-	margin: 0 0 1rem;
-	font-size: 1.75rem;
-}
-
-.grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-	gap: 1rem;
-}
-
 .card {
-	background-color: hsl(var(--card));
-	border: 1px solid var(--border);
-	border-radius: 10px;
-	padding: 1rem;
-}
-
-.label {
-	font-size: 0.9rem;
-	color: hsl(var(--muted-foreground));
+	background: var(--mantine-color-default);
+	border-left: 3px solid var(--mantine-primary-color-filled);
 }
 
 .value {
-	font-size: 1.35rem;
-	font-weight: 700;
-	margin-top: 0.35rem;
+	margin-top: 0.3rem;
+	font-size: 1.6rem;
+	font-variant-numeric: tabular-nums;
+	line-height: 1.1;
 }
 
-.scheduleLink {
-	display: inline-flex;
-	margin-top: 1rem;
-	color: hsl(var(--primary));
-	font-weight: 600;
-	text-decoration: underline;
+.runListContent {
+	padding: 0;
+}
+
+.runListPanel {
+	border-top: 1px solid var(--mantine-color-default-border);
+}
+
+.numeric {
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
 }

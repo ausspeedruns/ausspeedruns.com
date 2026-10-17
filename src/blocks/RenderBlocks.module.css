@@ -2,3 +2,8 @@
 	margin-top: 4rem;
 	margin-bottom: 4rem;
 }
+
+/* Full-bleed hero blocks sit flush under the header when they open the page. */
+.blockWrapper:first-child:has(> [data-flush-top]) {
+	margin-top: -4rem;
+}

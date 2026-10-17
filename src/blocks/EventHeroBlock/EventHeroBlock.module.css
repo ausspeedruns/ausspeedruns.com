@@ -1,21 +1,79 @@
 .container {
-	text-align: center;
-	padding: 4rem 1rem;
-	background-color: hsl(var(--muted));
+	position: relative;
+	overflow: hidden;
+	isolation: isolate;
+	padding: clamp(3rem, 8vw, 6rem) 0;
+	background:
+		radial-gradient(ellipse at top, var(--mantine-primary-color-light), transparent 60%),
+		linear-gradient(180deg, var(--mantine-color-default) 0%, var(--mantine-color-body) 100%);
+}
+
+.backdrop {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg, rgb(0 0 0 / 55%) 0%, var(--mantine-color-body) 100%);
+	}
+}
+
+.fillPicture {
+	position: absolute;
+	inset: 0;
+}
+
+.backdropImage {
+	object-fit: cover;
 }
 
 .logoWrap {
-	margin: 0 auto 1.25rem;
-	max-width: 280px;
+	display: flex;
+	justify-content: center;
+	margin-bottom: var(--mantine-spacing-xs);
 }
 
 .logo {
-	width: 100%;
+	display: block;
+	width: auto;
+	height: auto;
+	max-width: min(30rem, 80vw);
+	max-height: clamp(5rem, 16vw, 9rem);
+	object-fit: contain;
 }
 
-.buttonGroup {
-	margin-top: 2rem;
-	display: flex;
-	gap: 1rem;
-	justify-content: center;
+.heading {
+	font-size: clamp(1.75rem, 4vw, 2.75rem);
+	line-height: 1.1;
+	text-wrap: balance;
+}
+
+.dates {
+	letter-spacing: 0.1em;
+}
+
+.stat,
+.statFeatured {
+	text-align: center;
+	background: color-mix(in srgb, var(--mantine-color-default) 80%, transparent);
+	backdrop-filter: blur(6px);
+}
+
+.statFeatured {
+	border-color: var(--mantine-primary-color-filled);
+	background: var(--mantine-primary-color-light);
+}
+
+.statLabel {
+	letter-spacing: 0.08em;
+}
+
+.statValue {
+	margin-top: 0.25rem;
+	font-size: clamp(1.5rem, 3vw, 2.1rem);
+	font-variant-numeric: tabular-nums;
+	line-height: 1.1;
 }

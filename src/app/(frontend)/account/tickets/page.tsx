@@ -4,7 +4,8 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Ticket } from "./ticket";
 import type { Event } from "#payload-types.ts";
-import { Stack, Title } from "@mantine/core";
+import { Alert, Stack, ThemeIcon, Text, Title } from "@mantine/core";
+import { MemoryStick } from "lucide-react";
 
 export default async function AccountTicketsPage() {
 	const payload = await getPayload({ config });
@@ -15,7 +16,7 @@ export default async function AccountTicketsPage() {
 		redirect(`/login?redirect=${encodeURIComponent(`/account/tickets`)}`);
 	}
 
-	const orders = await payload.find({
+	const tickets = await payload.find({
 		collection: "orders",
 		where: {
 			and: [
@@ -34,7 +35,7 @@ export default async function AccountTicketsPage() {
 	});
 
 	const ticketProductIds = new Set<number>();
-	orders.docs.forEach((order) => {
+	tickets.docs.forEach((order) => {
 		order.items?.forEach((item) => {
 			if (item.product && typeof item.product === "object" && item.product.type === "ticket") {
 				ticketProductIds.add(item.product.id);
@@ -68,32 +69,46 @@ export default async function AccountTicketsPage() {
 	return (
 		<Stack gap="md">
 			<Title order={1}>Tickets</Title>
-			{orders.docs.map((order) =>
-				order.items?.map((item) => {
-					if (!item.product || typeof item.product !== "object") {
-						return null;
+			{tickets.docs.length === 0 ? (
+				<Alert
+					color="gray"
+					icon={
+						<ThemeIcon color="gray" radius="xl" size="sm" variant="light">
+							<MemoryStick size={14} />
+						</ThemeIcon>
 					}
+					variant="light"
+				>
+					<Text size="sm">You have not bought any tickets yet.</Text>
+				</Alert>
+			) : (
+				tickets.docs.map((order) =>
+					order.items?.map((item) => {
+						if (!item.product || typeof item.product !== "object") {
+							return null;
+						}
 
-					const event = eventsByProductId[item.product.id];
+						const event = eventsByProductId[item.product.id];
 
-					if (!event) {
-						return null;
-					}
+						if (!event) {
+							return null;
+						}
 
-					return (
-						<Ticket
-							key={order.id}
-							ticketData={{
-								paid: order.status === "completed",
-								ticketID: order.reference ?? "Missing ID",
-								method: order.purchaseType === "bankTransfer" ? "bank" : "card",
-								taken: order.status === "collected",
-								priceInCents: item.unitPriceInCents ?? 0,
-								event,
-							}}
-						/>
-					);
-				}),
+						return (
+							<Ticket
+								key={order.id}
+								ticketData={{
+									paid: order.status === "completed",
+									ticketID: order.reference ?? "Missing ID",
+									method: order.purchaseType === "bankTransfer" ? "bank" : "card",
+									taken: order.status === "collected",
+									priceInCents: item.unitPriceInCents ?? 0,
+									event,
+								}}
+							/>
+						);
+					}),
+				)
 			)}
 		</Stack>
 	);

@@ -44,23 +44,43 @@ function buildDefaultScheduleUrl(event: Event): string | null {
 function buildLayout(event: Event, runs: Run[]) {
 	const summary = buildPostEventSummary(runs);
 	const scheduleUrl = buildDefaultScheduleUrl(event);
+	const hasVods = runs.some((run) => Boolean(run.youtube));
 
-	const placeholderImageUrl = "https://placehold.co/1600x900/png?text=Add+Event+Photos";
+	const heroLinks: { label: string; url: string }[] = [];
+	if (scheduleUrl) heroLinks.push({ label: "Schedule", url: scheduleUrl });
+	if (event.shortName) heroLinks.push({ label: "Incentives", url: `/incentives/${event.shortName}` });
 
 	return [
 		{
 			blockType: "eventHeroBlock",
 			event: event.id,
 			heading: `${event.name} Recap`,
+			showDates: true,
+			showRecapStats: true,
+			links: heroLinks,
 		},
 		{
 			blockType: "donationTrackerBlock",
 			event: event.id,
-			title: "How much was raised",
+			title: "Incentive results",
+			displayMode: "results",
 		},
+		...(hasVods
+			? [
+					{
+						blockType: "vodHighlightsBlock",
+						event: event.id,
+						title: "Watch the runs",
+						limit: 6,
+					},
+				]
+			: []),
 		{
 			blockType: "postEventStatsBlock",
-			title: "Quick stats",
+			title: "The runs",
+			event: event.id,
+			showStats: false,
+			showRunList: true,
 			totalRuns: summary.totalRuns,
 			uniqueRunners: summary.uniqueRunnerCount,
 			totalRunDuration: summary.totalRunDurationLabel,
@@ -68,22 +88,53 @@ function buildLayout(event: Event, runs: Run[]) {
 			scheduleLabel: "View schedule",
 		},
 		{
-			blockType: "sponsorGridBlock",
-			title: "Sponsors",
-			sponsors: [],
+			blockType: "eventImagesBlock",
+			title: "Photos",
+			richText: null,
+			images: [],
+			galleryUrl: null,
+			galleryLabel: "View the full photo gallery",
 		},
 		{
-			blockType: "eventImagesBlock",
-			richText: null,
-			images: [
-				{
-					sourceType: "external",
-					externalUrl: placeholderImageUrl,
-					caption: "Replace this placeholder with event photos",
-				},
-			],
+			blockType: "sponsorGridBlock",
+			title: "Thank you to our sponsors",
+			sponsors: [],
 		},
 	];
+}
+
+type GeneratedBlock = ReturnType<typeof buildLayout>[number];
+
+// Blocks that editors fill in by hand (photos, sponsors) are kept when the page is regenerated.
+const EDITOR_BLOCK_TYPES = new Set(["eventImagesBlock", "sponsorGridBlock"]);
+
+function isLegacyPlaceholderGallery(block: { blockType?: string; images?: unknown }): boolean {
+	if (block.blockType !== "eventImagesBlock" || !Array.isArray(block.images) || block.images.length === 0) return false;
+	return block.images.every(
+		(image) => typeof image?.externalUrl === "string" && image.externalUrl.includes("placehold.co"),
+	);
+}
+
+async function preserveEditorBlocks(
+	payload: Payload,
+	req: PayloadRequest,
+	pageID: number | string,
+	layout: GeneratedBlock[],
+): Promise<unknown[]> {
+	let existingLayout: { blockType?: string }[] = [];
+
+	try {
+		const page = await payload.findByID({ collection: "pages", id: pageID, depth: 0, req });
+		existingLayout = (page?.layout ?? []) as { blockType?: string }[];
+	} catch {
+		return layout;
+	}
+
+	return layout.map((block) => {
+		if (!EDITOR_BLOCK_TYPES.has(block.blockType)) return block;
+		const existing = existingLayout.find((candidate) => candidate.blockType === block.blockType);
+		return existing && !isLegacyPlaceholderGallery(existing) ? existing : block;
+	});
 }
 
 export async function upsertPostEventPage({
@@ -127,21 +178,20 @@ export async function upsertPostEventPage({
 			: eventDoc.generatedPostEventPage;
 
 	if (linkedPageID) {
+		// Keep any title/slug the editors have since changed; only the layout is regenerated.
 		const updatedPage = (await payload.update({
 			collection: "pages",
 			id: linkedPageID,
 			data: {
-				title,
-				slug,
-				layout: layout as any,
+				layout: (await preserveEditorBlocks(payload, req, linkedPageID, layout)) as any,
 			},
 			req,
-		})) as { id: number | string };
+		})) as { id: number | string; slug?: string | null };
 
 		return {
 			action: "updated",
 			pageID: updatedPage.id,
-			slug,
+			slug: updatedPage.slug || slug,
 		};
 	}
 
@@ -175,7 +225,7 @@ export async function upsertPostEventPage({
 			data: {
 				title,
 				slug,
-				layout: layout as any,
+				layout: (await preserveEditorBlocks(payload, req, existingPage.id, layout)) as any,
 			},
 			req,
 		})) as { id: number | string };

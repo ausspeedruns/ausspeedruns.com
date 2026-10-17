@@ -13,7 +13,7 @@ export const SponsorGridBlockConfig: Block = {
 				{ name: "name", type: "text", required: true },
 				{ name: "logo", type: "upload", relationTo: "media", required: true },
 				{ name: "link", type: "text" },
-			]
-		}
-	]
+			],
+		},
+	],
 };

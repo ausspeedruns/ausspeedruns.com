@@ -219,6 +219,7 @@ export interface Page {
     | ProductBlock
     | PostEventStatsBlock
     | RandomRunBlock
+    | VodHighlightsBlock
   )[];
   meta?: {
     title?: string | null;
@@ -1939,6 +1940,7 @@ export interface ImageCarouselBlock {
  * via the `definition` "EventImagesBlock".
  */
 export interface EventImagesBlock {
+  title?: string | null;
   richText?: {
     root: {
       type: string;
@@ -1966,6 +1968,11 @@ export interface EventImagesBlock {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Link to the full photo album (e.g. Google Photos, Flickr).
+   */
+  galleryUrl?: string | null;
+  galleryLabel?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'eventImagesBlock';
@@ -1977,6 +1984,19 @@ export interface EventImagesBlock {
 export interface EventHeroBlock {
   event: number | Event;
   heading?: string | null;
+  subheading?: string | null;
+  showDates?: boolean | null;
+  /**
+   * Shows total raised, runs, runners and hours of content, calculated from the event.
+   */
+  showRecapStats?: boolean | null;
+  links?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'eventHeroBlock';
@@ -1999,6 +2019,7 @@ export interface LiveStreamBlock {
 export interface DonationTrackerBlock {
   event: number | Event;
   title?: string | null;
+  displayMode?: ('live' | 'results') | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'donationTrackerBlock';
@@ -2084,9 +2105,15 @@ export interface ProductBlock {
  */
 export interface PostEventStatsBlock {
   title?: string | null;
-  totalRuns: number;
-  uniqueRunners: number;
-  totalRunDuration: string;
+  /**
+   * When set, stats and the run list are calculated from the event's runs.
+   */
+  event?: (number | null) | Event;
+  showStats?: boolean | null;
+  showRunList?: boolean | null;
+  totalRuns?: number | null;
+  uniqueRunners?: number | null;
+  totalRunDuration?: string | null;
   scheduleUrl?: string | null;
   scheduleLabel?: string | null;
   id?: string | null;
@@ -2103,6 +2130,26 @@ export interface RandomRunBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'randomRunBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VodHighlightsBlock".
+ */
+export interface VodHighlightsBlock {
+  title?: string | null;
+  event: number | Event;
+  /**
+   * Optional. Pick runs to feature; otherwise runs with a YouTube VOD are shown in schedule order.
+   */
+  specificRuns?: (number | Run)[] | null;
+  limit?: number | null;
+  /**
+   * Shown as a 'view all' link.
+   */
+  playlistUrl?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vodHighlightsBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2437,6 +2484,7 @@ export interface PagesSelect<T extends boolean = true> {
         productBlock?: T | ProductBlockSelect<T>;
         postEventStatsBlock?: T | PostEventStatsBlockSelect<T>;
         randomRunBlock?: T | RandomRunBlockSelect<T>;
+        vodHighlightsBlock?: T | VodHighlightsBlockSelect<T>;
       };
   meta?:
     | T
@@ -2567,6 +2615,7 @@ export interface ImageCarouselBlockSelect<T extends boolean = true> {
  * via the `definition` "EventImagesBlock_select".
  */
 export interface EventImagesBlockSelect<T extends boolean = true> {
+  title?: T;
   richText?: T;
   images?:
     | T
@@ -2577,6 +2626,8 @@ export interface EventImagesBlockSelect<T extends boolean = true> {
         caption?: T;
         id?: T;
       };
+  galleryUrl?: T;
+  galleryLabel?: T;
   id?: T;
   blockName?: T;
 }
@@ -2587,6 +2638,16 @@ export interface EventImagesBlockSelect<T extends boolean = true> {
 export interface EventHeroBlockSelect<T extends boolean = true> {
   event?: T;
   heading?: T;
+  subheading?: T;
+  showDates?: T;
+  showRecapStats?: T;
+  links?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -2607,6 +2668,7 @@ export interface LiveStreamBlockSelect<T extends boolean = true> {
 export interface DonationTrackerBlockSelect<T extends boolean = true> {
   event?: T;
   title?: T;
+  displayMode?: T;
   id?: T;
   blockName?: T;
 }
@@ -2673,6 +2735,9 @@ export interface ProductBlockSelect<T extends boolean = true> {
  */
 export interface PostEventStatsBlockSelect<T extends boolean = true> {
   title?: T;
+  event?: T;
+  showStats?: T;
+  showRunList?: T;
   totalRuns?: T;
   uniqueRunners?: T;
   totalRunDuration?: T;
@@ -2688,6 +2753,19 @@ export interface PostEventStatsBlockSelect<T extends boolean = true> {
 export interface RandomRunBlockSelect<T extends boolean = true> {
   specificEvent?: T;
   specificRuns?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VodHighlightsBlock_select".
+ */
+export interface VodHighlightsBlockSelect<T extends boolean = true> {
+  title?: T;
+  event?: T;
+  specificRuns?: T;
+  limit?: T;
+  playlistUrl?: T;
   id?: T;
   blockName?: T;
 }

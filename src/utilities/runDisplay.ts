@@ -6,6 +6,12 @@ export function getGameName(game: number | Game | null | undefined): string {
 	return "Unknown game";
 }
 
+/** Extracts the YouTube video ID from any URL supported by getYouTubeEmbedUrl. */
+export function getYouTubeVideoId(value: string | null | undefined): string | null {
+	const embedUrl = getYouTubeEmbedUrl(value);
+	return embedUrl ? (/\/embed\/([\w-]+)/.exec(embedUrl)?.[1] ?? null) : null;
+}
+
 /**
  * Converts a YouTube URL (watch, youtu.be, shorts, live or embed) or bare video ID into an embeddable URL.
  * Returns null if no video ID could be found.

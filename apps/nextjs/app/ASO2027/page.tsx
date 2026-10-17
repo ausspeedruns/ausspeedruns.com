@@ -19,7 +19,7 @@ import Image6 from "./images/edbb0a38f58b9e6919c0a55a7d31.JPG";
 
 import HeroImage from "../../styles/img/events/aso26/sydney.jpg";
 
-import Logo from "../../styles/img/events/aso26/aso26-temp.svg";
+import Logo from "../../styles/img/events/aso27/logo.svg";
 import { Metadata } from "next";
 
 const images: { src: StaticImageData; alt: string }[] = [
@@ -99,13 +99,11 @@ export default async function ASO2027() {
 				</div>
 			</section>
 			<section className={styles.quickActions}>
-				{(acceptingSubmissions || acceptingBackups) && (
-					<Button
-						actionText={acceptingSubmissions ? "Submit a Run" : "Submit a Backup"}
-						link="/submit-game"
-						iconLeft={faPersonRunning}
-					/>
-				)}
+				<Button
+					actionText="Submit a Run"
+					link="/submit-game"
+					iconLeft={faPersonRunning}
+				/>
 			</section>
 			<hr className={styles.divider} />
 			<section className={styles.content}>

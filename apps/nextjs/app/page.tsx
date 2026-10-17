@@ -179,6 +179,20 @@ const ASAP2026: AusSpeedrunsEvent = {
 	},
 	logo: "events/asap26/logo.png",
 	heroImage: "events/asap26/hero.png",
+	total: "12,000",
+};
+
+const ASO2027: AusSpeedrunsEvent = {
+	fullName: "AusSpeedruns Open 2027",
+	preferredName: "ASO2027",
+	shortName: "ASO2027",
+	startDate: "23 January 2027 09:00:00 GMT+1100",
+	dates: "January 23 - 24, 2027",
+	charity: {
+		name: "Game On Cancer",
+	},
+	logo: "events/aso27/logo.svg",
+	heroImage: "events/aso27/hero.jpg",
 };
 
 export const metadata: Metadata = {
@@ -192,8 +206,8 @@ export const metadata: Metadata = {
 export default function Home() {
 	return (
 		<>
-			<EventLive event="ASAP2026" />
-			{/* <HeroBlock event={ASM2026} tagLine="We're so back." schedule ticketLink="/ASM2026#tickets" /> */}
+			{/* <EventLive event="ASAP2026" /> */}
+			<HeroBlock event={ASO2027} tagLine="The AusSpeedruns Open returns to Sydney from January 23rd to 24th, 2027!" />
 			{/* <HeroBlock
 				event={ASAP2026}
 				tagLine="PAX Schedule is live!"
@@ -203,6 +217,11 @@ export default function Home() {
 			/> */}
 
 			<LastEventBlock
+				tagLine="Can't believe PAX Aus 2026 is already over!"
+				event={ASAP2026}
+				backgroundPos="center"
+			/>
+			<LastEventBlock
 				tagLine="ASM 2026 is over already and we raised over $35,000?! See you all next year!"
 				event={ASM2026}
 				backgroundPos="center"
@@ -210,11 +229,6 @@ export default function Home() {
 			<LastEventBlock
 				tagLine="The Inaugural AusSpeedruns Open was a huge success, raising over $10,000 for Game On Cancer!"
 				event={ASO2026}
-				backgroundPos="center"
-			/>
-			<LastEventBlock
-				tagLine="PAX Aus 2025 was a blast, raising over $20,000 for Game On Cancer!"
-				event={ASAP2025}
 				backgroundPos="center"
 			/>
 			<section className={styles.archive}>

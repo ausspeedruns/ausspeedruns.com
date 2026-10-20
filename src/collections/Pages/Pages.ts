@@ -33,6 +33,9 @@ import {
 } from "@payloadcms/plugin-seo/fields";
 import { RandomRunBlockConfig } from "#blocks/RandomRunBlock/random-run-block-config.ts";
 import { VodHighlightsBlockConfig } from "#blocks/VodHighlightsBlock/config.ts";
+import { EventFeatureBlockConfig } from "#blocks/EventFeatureBlock/config.ts";
+import { StatsBlockConfig } from "#blocks/StatsBlock/config.ts";
+import { SocialBannerBlockConfig } from "#blocks/SocialBannerBlock/config.ts";
 
 export const Pages: CollectionConfig<"pages"> = {
 	slug: "pages",
@@ -100,6 +103,9 @@ export const Pages: CollectionConfig<"pages"> = {
 								PostEventStatsBlockConfig,
 								RandomRunBlockConfig,
 								VodHighlightsBlockConfig,
+								EventFeatureBlockConfig,
+								StatsBlockConfig,
+								SocialBannerBlockConfig,
 							],
 							required: true,
 							admin: {

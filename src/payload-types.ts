@@ -222,6 +222,9 @@ export interface Page {
     | PostEventStatsBlock
     | RandomRunBlock
     | VodHighlightsBlock
+    | EventFeatureBlock
+    | StatsBlock
+    | SocialBannerBlock
   )[];
   meta?: {
     title?: string | null;
@@ -2165,6 +2168,86 @@ export interface VodHighlightsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EventFeatureBlock".
+ */
+export interface EventFeatureBlock {
+  event: number | Event;
+  /**
+   * Optional short text shown under the event name.
+   */
+  description?: string | null;
+  showDates?: boolean | null;
+  /**
+   * Counts down to the event start. Hidden once the event starts.
+   */
+  showCountdown?: boolean | null;
+  /**
+   * Only shown when the event has a raised amount.
+   */
+  showRaised?: boolean | null;
+  /**
+   * Defaults to the event short name.
+   */
+  buttonLabel?: string | null;
+  /**
+   * Defaults to /{event short name}.
+   */
+  buttonUrl?: string | null;
+  extraLinks?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'eventFeatureBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBlock".
+ */
+export interface StatsBlock {
+  title?: string | null;
+  description?: string | null;
+  showRaised?: boolean | null;
+  showEvents?: boolean | null;
+  showRuns?: boolean | null;
+  /**
+   * Manually entered stats, e.g. 'Charities supported'.
+   */
+  extraStats?:
+    | {
+        label: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'statsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SocialBannerBlock".
+ */
+export interface SocialBannerBlock {
+  heading: string;
+  text?: string | null;
+  buttonLabel: string;
+  url: string;
+  /**
+   * Sets the banner accent colour.
+   */
+  platform?: ('youtube' | 'twitch' | 'other') | null;
+  backgroundImage?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'socialBannerBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "schedule-drafts".
  */
 export interface ScheduleDraft {
@@ -2555,6 +2638,9 @@ export interface PagesSelect<T extends boolean = true> {
         postEventStatsBlock?: T | PostEventStatsBlockSelect<T>;
         randomRunBlock?: T | RandomRunBlockSelect<T>;
         vodHighlightsBlock?: T | VodHighlightsBlockSelect<T>;
+        eventFeatureBlock?: T | EventFeatureBlockSelect<T>;
+        statsBlock?: T | StatsBlockSelect<T>;
+        socialBannerBlock?: T | SocialBannerBlockSelect<T>;
       };
   meta?:
     | T
@@ -2836,6 +2922,62 @@ export interface VodHighlightsBlockSelect<T extends boolean = true> {
   specificRuns?: T;
   limit?: T;
   playlistUrl?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EventFeatureBlock_select".
+ */
+export interface EventFeatureBlockSelect<T extends boolean = true> {
+  event?: T;
+  description?: T;
+  showDates?: T;
+  showCountdown?: T;
+  showRaised?: T;
+  buttonLabel?: T;
+  buttonUrl?: T;
+  extraLinks?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBlock_select".
+ */
+export interface StatsBlockSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  showRaised?: T;
+  showEvents?: T;
+  showRuns?: T;
+  extraStats?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SocialBannerBlock_select".
+ */
+export interface SocialBannerBlockSelect<T extends boolean = true> {
+  heading?: T;
+  text?: T;
+  buttonLabel?: T;
+  url?: T;
+  platform?: T;
+  backgroundImage?: T;
   id?: T;
   blockName?: T;
 }

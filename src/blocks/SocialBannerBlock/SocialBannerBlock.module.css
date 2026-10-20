@@ -1,0 +1,57 @@
+.container {
+	--banner-accent: var(--mantine-primary-color-filled);
+
+	position: relative;
+	overflow: hidden;
+	isolation: isolate;
+	padding: clamp(3rem, 7vw, 5rem) 0;
+	color: var(--mantine-color-white);
+	background: linear-gradient(135deg, var(--banner-accent), var(--mantine-color-dark-8));
+
+	&[data-platform="youtube"] {
+		--banner-accent: #c4302b;
+	}
+
+	&[data-platform="twitch"] {
+		--banner-accent: #6441a5;
+	}
+}
+
+.backdrop {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			135deg,
+			color-mix(in srgb, var(--banner-accent) 70%, transparent),
+			rgb(0 0 0 / 75%)
+		);
+	}
+}
+
+.fillPicture {
+	position: absolute;
+	inset: 0;
+}
+
+.backdropImage {
+	object-fit: cover;
+}
+
+.heading {
+	font-size: clamp(1.75rem, 4vw, 2.5rem);
+	line-height: 1.1;
+}
+
+.text {
+	white-space: pre-line;
+}
+
+.button {
+	margin-top: var(--mantine-spacing-md);
+}

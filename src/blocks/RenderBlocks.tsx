@@ -22,6 +22,9 @@ import { PostEventStatsBlock } from "./PostEventStatsBlock/PostEventStatsBlock";
 import styles from "./RenderBlocks.module.css";
 import { RandomRunBlock } from "./RandomRunBlock/RandomRunBlock";
 import { VodHighlightsBlock } from "./VodHighlightsBlock/VodHighlightsBlock";
+import { EventFeatureBlock } from "./EventFeatureBlock/EventFeatureBlock";
+import { StatsBlock } from "./StatsBlock/StatsBlock";
+import { SocialBannerBlock } from "./SocialBannerBlock/SocialBannerBlock";
 
 const blockComponents = {
 	archive: ArchiveBlock,
@@ -41,6 +44,9 @@ const blockComponents = {
 	postEventStatsBlock: PostEventStatsBlock,
 	randomRunBlock: RandomRunBlock,
 	vodHighlightsBlock: VodHighlightsBlock,
+	eventFeatureBlock: EventFeatureBlock,
+	statsBlock: StatsBlock,
+	socialBannerBlock: SocialBannerBlock,
 };
 
 interface RenderBlocksProps {

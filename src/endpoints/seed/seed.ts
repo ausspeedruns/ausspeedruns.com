@@ -192,7 +192,7 @@ export const seed = async ({ payload, req }: { payload: Payload; req: PayloadReq
 		payload.create({
 			collection: "pages",
 			depth: 0,
-			data: home({ heroImage: imageHomeDoc, metaImage: image2Doc }),
+			data: home({ metaImage: imageHomeDoc }),
 		}),
 		payload.create({
 			collection: "pages",

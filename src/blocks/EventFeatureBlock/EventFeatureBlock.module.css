@@ -1,0 +1,91 @@
+.container {
+	position: relative;
+	overflow: hidden;
+	isolation: isolate;
+	padding: clamp(3rem, 7vw, 5rem) 0;
+	color: var(--mantine-color-white);
+	/* Fallback for events without a hero image */
+	background: linear-gradient(
+		135deg,
+		color-mix(in srgb, var(--mantine-primary-color-filled) 35%, var(--mantine-color-dark-8)),
+		var(--mantine-color-dark-8)
+	);
+}
+
+.backdrop {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background: rgb(0 0 0 / 65%);
+	}
+}
+
+.fillPicture {
+	position: absolute;
+	inset: 0;
+}
+
+.backdropImage {
+	object-fit: cover;
+}
+
+.inner {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+	align-items: center;
+	gap: var(--mantine-spacing-xl);
+
+	@media (max-width: 48em) {
+		grid-template-columns: 1fr;
+
+		.visual {
+			order: -1;
+		}
+	}
+}
+
+.heading {
+	font-size: clamp(1.75rem, 4vw, 2.5rem);
+	line-height: 1.1;
+}
+
+.dates {
+	font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+}
+
+.countdown {
+	margin: 0;
+	font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 0.05em;
+}
+
+.description {
+	white-space: pre-line;
+}
+
+.logoWrap {
+	display: flex;
+	justify-content: center;
+}
+
+.logo {
+	display: block;
+	width: auto;
+	height: auto;
+	max-width: min(28rem, 80vw);
+	max-height: clamp(6rem, 18vw, 12rem);
+	object-fit: contain;
+}
+
+.raised {
+	font-size: clamp(2rem, 5vw, 3.25rem);
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+	line-height: 1;
+}

@@ -9,6 +9,7 @@ import { buildKitchenSinkDonationTrackerSection } from "./kitchen-sink-sections/
 import { buildKitchenSinkEventHeroSection } from "./kitchen-sink-sections/eventHero.ts";
 import { buildKitchenSinkFaqSection } from "./kitchen-sink-sections/faq.ts";
 import { buildKitchenSinkFormSection } from "./kitchen-sink-sections/form.ts";
+import { buildKitchenSinkHomeSections } from "./kitchen-sink-sections/homeBlocks.ts";
 import { buildKitchenSinkLiveStreamSection } from "./kitchen-sink-sections/liveStream.ts";
 import { buildKitchenSinkMediaSection } from "./kitchen-sink-sections/media.ts";
 import { buildKitchenSinkSponsorGridSection } from "./kitchen-sink-sections/sponsorGrid.ts";
@@ -61,6 +62,7 @@ export async function kitchenSinkPage(payload: BasePayload): Promise<RequiredDat
 		...buildKitchenSinkArchiveSections(context),
 		...buildKitchenSinkCarouselSection(context),
 		buildKitchenSinkEventHeroSection(context),
+		...buildKitchenSinkHomeSections(context),
 		buildKitchenSinkLiveStreamSection(),
 		buildKitchenSinkDonationTrackerSection(context),
 		buildKitchenSinkSponsorGridSection(context),

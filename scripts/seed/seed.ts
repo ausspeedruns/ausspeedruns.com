@@ -1,5 +1,6 @@
 import type { BasePayload } from "payload";
 import { kitchenSinkPage } from "./kitchen-sink.ts";
+import { homePage } from "./home.ts";
 
 export async function seed(payload: BasePayload) {
 	await createPages(payload);
@@ -8,6 +9,12 @@ export async function seed(payload: BasePayload) {
 }
 
 async function createPages(payload: BasePayload) {
+	await payload.create({
+		collection: "pages",
+		depth: 0,
+		data: await homePage(payload),
+	});
+
 	await payload.create({
 		collection: "pages",
 		depth: 0,

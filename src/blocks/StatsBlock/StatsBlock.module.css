@@ -1,0 +1,20 @@
+.stat,
+.statFeatured {
+	text-align: center;
+}
+
+.statFeatured {
+	border-color: var(--mantine-primary-color-filled);
+	background: var(--mantine-primary-color-light);
+}
+
+.value {
+	font-size: clamp(1.75rem, 4vw, 2.5rem);
+	font-variant-numeric: tabular-nums;
+	line-height: 1.1;
+}
+
+.label {
+	margin-top: 0.25rem;
+	letter-spacing: 0.08em;
+}

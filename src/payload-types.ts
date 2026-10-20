@@ -213,7 +213,7 @@ export interface Page {
     | ImageCarouselBlock
     | EventImagesBlock
     | EventHeroBlock
-    | LiveStreamBlock
+    | EventLiveBlock
     | DonationTrackerBlock
     | SponsorGridBlock
     | CountdownBlock
@@ -2026,14 +2026,63 @@ export interface EventHeroBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "LiveStreamBlock".
+ * via the `definition` "EventLiveBlock".
  */
-export interface LiveStreamBlock {
-  title?: string | null;
-  twitchChannel: string;
+export interface EventLiveBlock {
+  /**
+   * Logo, dates, hero image, schedule and incentives are taken from this event.
+   */
+  event: number | Event;
+  /**
+   * Shown next to the dates, e.g. 'Melbourne'.
+   */
+  location?: string | null;
+  /**
+   * Link for the Donate button. The button is hidden if empty.
+   */
+  donateUrl?: string | null;
+  /**
+   * Runs behind the whole block. Falls back to the event's hero image, then to a patterned brand-colour background.
+   */
+  background?: {
+    image?: (number | null) | Media;
+    mode?: ('cover' | 'tile') | null;
+    /**
+     * Tile width in px. Leave blank to use the image's own size.
+     */
+    tileSize?: number | null;
+  };
+  /**
+   * Shown large in the header, next to the event info.
+   */
+  majorSponsors?:
+    | {
+        logo: number | Media;
+        /**
+         * Used as alt text. Defaults to the image alt.
+         */
+        name?: string | null;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Shown in a sponsor strip at the bottom of the block.
+   */
+  minorSponsors?:
+    | {
+        logo: number | Media;
+        /**
+         * Used as alt text. Defaults to the image alt.
+         */
+        name?: string | null;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'liveStreamBlock';
+  blockType: 'eventLiveBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2637,7 +2686,7 @@ export interface PagesSelect<T extends boolean = true> {
         imageCarousel?: T | ImageCarouselBlockSelect<T>;
         eventImagesBlock?: T | EventImagesBlockSelect<T>;
         eventHeroBlock?: T | EventHeroBlockSelect<T>;
-        liveStreamBlock?: T | LiveStreamBlockSelect<T>;
+        eventLiveBlock?: T | EventLiveBlockSelect<T>;
         donationTrackerBlock?: T | DonationTrackerBlockSelect<T>;
         sponsorGridBlock?: T | SponsorGridBlockSelect<T>;
         countdownBlock?: T | CountdownBlockSelect<T>;
@@ -2817,11 +2866,35 @@ export interface EventHeroBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "LiveStreamBlock_select".
+ * via the `definition` "EventLiveBlock_select".
  */
-export interface LiveStreamBlockSelect<T extends boolean = true> {
-  title?: T;
-  twitchChannel?: T;
+export interface EventLiveBlockSelect<T extends boolean = true> {
+  event?: T;
+  location?: T;
+  donateUrl?: T;
+  background?:
+    | T
+    | {
+        image?: T;
+        mode?: T;
+        tileSize?: T;
+      };
+  majorSponsors?:
+    | T
+    | {
+        logo?: T;
+        name?: T;
+        url?: T;
+        id?: T;
+      };
+  minorSponsors?:
+    | T
+    | {
+        logo?: T;
+        name?: T;
+        url?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }

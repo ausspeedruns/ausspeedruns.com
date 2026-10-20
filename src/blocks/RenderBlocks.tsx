@@ -11,7 +11,7 @@ import { ImageCarouselBlock } from "./ImageCarousel/ImageCarousel";
 import { EventImagesBlock } from "./EventImagesBlock/EventImagesBlock";
 
 import { EventHeroBlock } from "./EventHeroBlock/EventHeroBlock";
-import { LiveStreamBlock } from "./LiveStreamBlock/LiveStreamBlock";
+import { EventLiveBlock } from "./EventLiveBlock/EventLiveBlock";
 import { DonationTrackerBlock } from "./DonationTrackerBlock/DonationTrackerBlock";
 import { SponsorGridBlock } from "./SponsorGridBlock/SponsorGridBlock";
 import { CountdownBlock } from "./CountdownBlock/CountdownBlock";
@@ -35,7 +35,7 @@ const blockComponents = {
 	imageCarousel: ImageCarouselBlock,
 	eventImagesBlock: EventImagesBlock,
 	eventHeroBlock: EventHeroBlock,
-	liveStreamBlock: LiveStreamBlock,
+	eventLiveBlock: EventLiveBlock,
 	donationTrackerBlock: DonationTrackerBlock,
 	sponsorGridBlock: SponsorGridBlock,
 	countdownBlock: CountdownBlock,

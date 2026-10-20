@@ -12,7 +12,7 @@ import { ImageCarousel } from "#blocks/ImageCarousel/ImageCarousel-config.ts";
 import { EventImagesBlockConfig } from "#blocks/EventImagesBlock/config.ts";
 
 import { EventHeroBlockConfig } from "#blocks/EventHeroBlock/config.ts";
-import { LiveStreamBlockConfig } from "#blocks/LiveStreamBlock/config.ts";
+import { EventLiveBlockConfig } from "#blocks/EventLiveBlock/config.ts";
 import { DonationTrackerBlockConfig } from "#blocks/DonationTrackerBlock/config.ts";
 import { SponsorGridBlockConfig } from "#blocks/SponsorGridBlock/config.ts";
 import { CountdownBlockConfig } from "#blocks/CountdownBlock/config.ts";
@@ -94,7 +94,7 @@ export const Pages: CollectionConfig<"pages"> = {
 								ImageCarousel,
 								EventImagesBlockConfig,
 								EventHeroBlockConfig,
-								LiveStreamBlockConfig,
+								EventLiveBlockConfig,
 								DonationTrackerBlockConfig,
 								SponsorGridBlockConfig,
 								CountdownBlockConfig,

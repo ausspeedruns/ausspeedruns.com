@@ -1,24 +1,6 @@
-.card {
-	background: var(--mantine-color-default);
-
-	&[data-met="true"] {
-		border-color: var(--mantine-color-lime-light-color);
-	}
-}
-
 .groupHeader {
 	padding-bottom: var(--mantine-spacing-xs);
 	border-bottom: 1px solid var(--mantine-color-default-border);
-}
-
-.optionName {
-	min-width: 0;
-	overflow-wrap: anywhere;
-}
-
-.numeric {
-	flex-shrink: 0;
-	font-variant-numeric: tabular-nums;
 }
 
 .totalRaised {

@@ -128,7 +128,7 @@ function PairingCard({ timedRow, index }: { timedRow: TimedRow<DraftRow>; index:
 						#{index + 1} {row.gameName} — {row.category}
 					</Title>
 					<Text size="sm" c="dimmed">
-						{formatInTz(start, tz, "ddd D MMM, h:mm A")} · {row.estimate}
+						{formatInTz(start, tz, "EEE d MMM, h:mm a")} · {row.estimate}
 					</Text>
 				</Group>
 

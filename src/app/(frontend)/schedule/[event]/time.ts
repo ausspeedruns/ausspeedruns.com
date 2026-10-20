@@ -1,40 +1,38 @@
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
+import { tz } from "@date-fns/tz";
+import { format } from "date-fns";
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(customParseFormat);
-
-const SQL_TIMESTAMP_FORMAT = "YYYY-MM-DD HH:mm:ss";
 const HAS_TIMEZONE_SUFFIX = /(?:Z|[+-]\d{2}:?\d{2})$/i;
+const SQL_TIMESTAMP = /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}$/;
+const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 
-function parseScheduleTimeUtc(value: string) {
+/** Parses a schedule time as an instant. Values without a timezone are treated as UTC. */
+export function scheduleTimeToDate(value: string): Date {
 	const trimmed = value.trim();
 	const normalized = trimmed.includes(" ") ? trimmed.replace(" ", "T") : trimmed;
 
-	if (HAS_TIMEZONE_SUFFIX.test(normalized)) {
-		return dayjs(normalized).utc();
+	if (HAS_TIMEZONE_SUFFIX.test(normalized) || DATE_ONLY.test(normalized)) {
+		return new Date(normalized);
 	}
 
-	const parsedSql = dayjs.utc(trimmed, SQL_TIMESTAMP_FORMAT, true);
-	if (parsedSql.isValid()) {
-		return parsedSql;
+	if (SQL_TIMESTAMP.test(trimmed)) {
+		return new Date(`${normalized}Z`);
 	}
 
-	return dayjs.utc(normalized);
+	const asUtc = new Date(`${normalized}Z`);
+	return Number.isNaN(asUtc.getTime()) ? new Date(normalized) : asUtc;
 }
 
-export function scheduleTimeToDisplayZone(value: string, eventTimezone: string, showEventTime: boolean) {
-	const runTimeUtc = parseScheduleTimeUtc(value);
-	return showEventTime ? runTimeUtc.tz(eventTimezone) : runTimeUtc.local();
+/** date-fns options for working in the event timezone, or the viewer's local timezone. */
+export function displayZoneOptions(eventTimezone: string, showEventTime: boolean) {
+	return showEventTime ? { in: tz(eventTimezone) } : {};
 }
 
-export function scheduleTimeToLocalDate(value: string) {
-	return parseScheduleTimeUtc(value).local();
-}
-
-export function scheduleTimeToEventDate(value: string, eventTimezone: string) {
-	return parseScheduleTimeUtc(value).tz(eventTimezone);
+/** Formats a schedule time using date-fns tokens in the event or local timezone. */
+export function formatScheduleTime(
+	value: string,
+	eventTimezone: string,
+	showEventTime: boolean,
+	formatString: string,
+) {
+	return format(scheduleTimeToDate(value), formatString, displayZoneOptions(eventTimezone, showEventTime));
 }

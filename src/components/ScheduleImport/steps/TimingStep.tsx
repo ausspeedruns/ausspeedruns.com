@@ -112,7 +112,7 @@ function ScheduleRow({ timedRow, index, issues, onEdit, onInsert, onDelete }: Ro
 					</Text>
 				)}
 			</Table.Td>
-			<Table.Td style={{ whiteSpace: "nowrap" }}>{formatInTz(start, data.event.timezone, "h:mm A")}</Table.Td>
+			<Table.Td style={{ whiteSpace: "nowrap" }}>{formatInTz(start, data.event.timezone, "h:mm a")}</Table.Td>
 			<Table.Td>
 				{isRun ? (
 					<Text fw={600} size="sm" c={row.gameName ? undefined : "red"} lineClamp={1}>
@@ -266,7 +266,7 @@ export function TimingStep() {
 		<Stack>
 			<Text size="sm" c="dimmed">
 				Drag rows to reorder. Times flow from the event start (
-				{formatInTz(data.event.startTime, tz, "ddd D MMM, h:mm A")} {tz}) using each row&apos;s estimate plus
+				{formatInTz(data.event.startTime, tz, "EEE d MMM, h:mm a")} {tz}) using each row&apos;s estimate plus
 				the setup after it. Runs use the default setup unless overridden; buffers, sleep and other blocks
 				default to no setup. Hover ⚠ to see a row&apos;s warnings.
 			</Text>
@@ -330,7 +330,7 @@ export function TimingStep() {
 												<Table.Tr bg="var(--mantine-color-default-border)">
 													<Table.Td colSpan={COLUMN_COUNT}>
 														<Text fw={700}>
-															{formatInTz(timedRow.start, tz, "dddd D MMMM")}
+															{formatInTz(timedRow.start, tz, "EEEE d MMMM")}
 														</Text>
 													</Table.Td>
 												</Table.Tr>

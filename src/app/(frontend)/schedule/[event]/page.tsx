@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { Schedule } from "./schedule";
 import type { Metadata } from "next";
 import { getPayload } from "payload";
-import dayjs from "dayjs";
+import { format } from "date-fns";
 import { getGameName, isGameRun } from "#utilities/runDisplay.ts";
 
 export type Block = {
@@ -48,8 +48,8 @@ export async function generateMetadata({ params }: URLProps): Promise<Metadata> 
 		};
 	}
 
-	const start = dayjs(event.timeSettings?.startTime).format("D MMMM YYYY");
-	const end = dayjs(event.timeSettings?.endTime).format("D MMMM YYYY");
+	const start = format(event.timeSettings?.startTime ?? new Date(), "d MMMM yyyy");
+	const end = format(event.timeSettings?.endTime ?? new Date(), "d MMMM yyyy");
 	const duration = `${start} – ${end}`;
 	const title = `${event.shortName} Schedule`;
 	const description = `Schedule for ${event.shortName} running from ${duration}`;

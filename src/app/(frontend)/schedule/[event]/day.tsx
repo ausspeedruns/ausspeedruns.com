@@ -3,7 +3,7 @@ import styles from "./day.module.css";
 import { DateDivider } from "./date-divider";
 import { DayVisualiser } from "./day-visualiser/day-summary-bar";
 import { RunElement } from "./run";
-import { scheduleTimeToDisplayZone } from "./time";
+import { formatScheduleTime } from "./time";
 
 import type { Block, Run, Settings } from "./schedule-types";
 
@@ -48,10 +48,10 @@ function runsToDays(runs: Run[], eventTimezone: string, showLocalTime: boolean) 
 				run.scheduledTime,
 				eventTimezone,
 				showLocalTime,
-				scheduleTimeToDisplayZone(run.scheduledTime, eventTimezone, showLocalTime).format(),
+				formatScheduleTime(run.scheduledTime, eventTimezone, showLocalTime, "yyyy-MM-dd'T'HH:mm:ssxxx"),
 			);
 		}
-		const runDate = scheduleTimeToDisplayZone(run.scheduledTime, eventTimezone, showLocalTime).format("YYYY-MM-DD");
+		const runDate = formatScheduleTime(run.scheduledTime, eventTimezone, showLocalTime, "yyyy-MM-dd");
 
 		if (runDate in days) {
 			days[runDate].push(run);

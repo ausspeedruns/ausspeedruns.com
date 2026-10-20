@@ -6,7 +6,7 @@ import RunnerIcon from "./icons/runner.svg";
 import EstimateIcon from "./icons/stopwatch.svg";
 // import PaidIcon from "@mui/icons-material/Paid";
 import { Runners } from "./runners";
-import { scheduleTimeToDisplayZone } from "./time";
+import { formatScheduleTime } from "./time";
 
 interface RunItemProps {
 	run: Run;
@@ -20,11 +20,12 @@ interface RunItemProps {
 export function RunElement(props: RunItemProps) {
 	const { run } = props;
 
-	const convertedTimezone = scheduleTimeToDisplayZone(
+	const convertedTimezone = formatScheduleTime(
 		run.scheduledTime,
 		props.eventTimezone,
 		props.showLocalTime,
-	).format("h:mm A");
+		"h:mm a",
+	);
 
 	if (run.type === "setupBuffer") {
 		return (

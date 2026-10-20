@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Checkbox, Input } from "@mantine/core";
-import dayjs from "dayjs";
+import { addDays, differenceInDays } from "date-fns";
 import styles from "../GameSubmission.module.css";
 import { type GameSubmissionResults } from "../submissionTypes";
 import type { UseFormReturnType } from "@mantine/form";
@@ -16,7 +16,7 @@ interface AvailabilityProps {
 
 export function Availability(props: AvailabilityProps) {
 	const eventLength = useMemo(
-		() => dayjs(props.event.endDate).diff(dayjs(props.event.startDate), "day") + 1,
+		() => differenceInDays(props.event.endDate, props.event.startDate) + 1,
 		[props.event],
 	);
 
@@ -33,7 +33,7 @@ export function Availability(props: AvailabilityProps) {
 
 	let dateCheckboxes = [];
 	for (let i = 0; i < eventLength; i++) {
-		const date = dayjs(props.event.startDate).add(i, "day").toDate();
+		const date = addDays(props.event.startDate, i);
 		dateCheckboxes.push(
 			<Checkbox
 				key={i}

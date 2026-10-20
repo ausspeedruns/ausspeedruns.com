@@ -1,15 +1,11 @@
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
+import { tz } from "@date-fns/tz";
+import { addDays, differenceInCalendarDays, format, startOfDay } from "date-fns";
 import { nanoid } from "nanoid";
 import Papa from "papaparse";
 
 import { DEFAULT_SETUP_MINUTES, type RunType } from "./constants.ts";
 import { estimateToMs, normaliseEstimate } from "./timing.ts";
 import type { DraftIncentive, DraftRow, DraftState, EventSummary, SubmissionSummary } from "./types.ts";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 export function normaliseName(value: string | null | undefined): string {
 	return (value ?? "").trim().replace(/\s+/g, " ").toLowerCase();
@@ -22,10 +18,14 @@ function isTruthy(value: string | undefined): boolean {
 /** Column headers for the per-day availability columns, e.g. "Sat 05 Jul". */
 export function availabilityColumns(event: Pick<EventSummary, "startTime" | "endTime" | "timezone">): string[] {
 	if (!event.startTime) return [];
-	const start = dayjs(event.startTime).tz(event.timezone).startOf("day");
-	const end = event.endTime ? dayjs(event.endTime).tz(event.timezone).startOf("day") : start;
-	const days = Math.max(1, Math.round(end.diff(start, "hour") / 24) + 1);
-	return Array.from({ length: days }, (_, i) => `Available ${start.add(i, "day").format("ddd DD MMM")}`);
+	const options = { in: tz(event.timezone) };
+	const start = startOfDay(event.startTime, options);
+	const end = event.endTime ? startOfDay(event.endTime, options) : start;
+	const days = Math.max(1, differenceInCalendarDays(end, start, options) + 1);
+	return Array.from(
+		{ length: days },
+		(_, i) => `Available ${format(addDays(start, i, options), "EEE dd MMM", options)}`,
+	);
 }
 
 /** Columns the importer understands. Everything else in the CSV is ignored. */

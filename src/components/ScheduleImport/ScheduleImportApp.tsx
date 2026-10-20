@@ -248,7 +248,7 @@ export function ScheduleImportApp({ events, initialEventId, apiBase, links = {} 
 										? formatInTz(
 												contextValue.data.event.startTime,
 												contextValue.data.event.timezone,
-												"ddd D MMM, h:mm A",
+												"EEE d MMM, h:mm a",
 											)
 										: "Not set"
 								}
@@ -256,7 +256,7 @@ export function ScheduleImportApp({ events, initialEventId, apiBase, links = {} 
 							<Stat
 								label="End"
 								value={
-									end ? formatInTz(end, contextValue.data.event.timezone, "ddd D MMM, h:mm A") : "—"
+									end ? formatInTz(end, contextValue.data.event.timezone, "EEE d MMM, h:mm a") : "—"
 								}
 							/>
 							<Stat

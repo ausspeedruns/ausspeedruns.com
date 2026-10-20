@@ -1548,6 +1548,10 @@ export interface Order {
      * Filled in from the product if left blank.
      */
     unitPriceInCents?: number | null;
+    /**
+     * How many have been handed over at the pickup desk. Ignored when the order status is Collected.
+     */
+    collectedQuantity?: number | null;
     id?: string | null;
   }[];
   /**
@@ -1583,6 +1587,10 @@ export interface Role {
    * Users, orders and payment settings.
    */
   canManageUsers?: boolean | null;
+  /**
+   * Ticket pickup desk only: look up tickets and mark tickets/merch as collected.
+   */
+  canPickupTickets?: boolean | null;
   /**
    * Badge background colour, e.g. #CC7722.
    */
@@ -3182,6 +3190,7 @@ export interface RolesSelect<T extends boolean = true> {
   admin?: T;
   canManageContent?: T;
   canManageUsers?: T;
+  canPickupTickets?: T;
   colour?: T;
   textColour?: T;
   users?: T;
@@ -3318,6 +3327,7 @@ export interface OrdersSelect<T extends boolean = true> {
         variantId?: T;
         quantity?: T;
         unitPriceInCents?: T;
+        collectedQuantity?: T;
         id?: T;
       };
   totalInCents?: T;

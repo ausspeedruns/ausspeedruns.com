@@ -2,7 +2,7 @@ import type { PayloadRequest } from "payload";
 
 import type { Role, User } from "#/payload-types";
 
-type RoleFlag = "admin" | "canManageContent" | "canManageUsers";
+type RoleFlag = "admin" | "canManageContent" | "canManageUsers" | "canPickupTickets";
 
 const ROLES_CONTEXT_KEY = "__resolvedUserRoles";
 
@@ -44,7 +44,7 @@ export async function resolveUserRoles(req: PayloadRequest, user: User | null | 
 }
 
 export function isStaffRole(role: Role): boolean {
-	return Boolean(role.admin || role.canManageContent || role.canManageUsers);
+	return Boolean(role.admin || role.canManageContent || role.canManageUsers || role.canPickupTickets);
 }
 
 export async function userHasRoleFlag(req: PayloadRequest, flag: RoleFlag): Promise<boolean> {
@@ -56,6 +56,15 @@ export async function userHasRoleFlag(req: PayloadRequest, flag: RoleFlag): Prom
 export const isContentManager = (req: PayloadRequest) => userHasRoleFlag(req, "canManageContent");
 export const isUserManager = (req: PayloadRequest) => userHasRoleFlag(req, "canManageUsers");
 export const isAdminUser = (req: PayloadRequest) => userHasRoleFlag(req, "admin");
+
+/** The ticket pickup desk is available to the dedicated pickup role, user managers and admins. */
+export const roleCanUseTicketPickup = (role: Role) => Boolean(role.admin || role.canManageUsers || role.canPickupTickets);
+
+export async function canUseTicketPickup(req: PayloadRequest): Promise<boolean> {
+	if (!req.user) return false;
+	const roles = await resolveUserRoles(req);
+	return roles.some(roleCanUseTicketPickup);
+}
 
 /** Extracts an ID from a relationship value that may be populated or not. */
 export function relationId<T extends string | number>(value: T | { id: T } | null | undefined): T | null {

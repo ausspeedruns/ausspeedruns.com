@@ -1,5 +1,5 @@
 import { Box } from "@mantine/core";
-import dayjs from "dayjs";
+import { format } from "date-fns";
 
 import styles from "./ticket.module.css";
 import { Media } from "#components/Media/Media.tsx";
@@ -45,8 +45,8 @@ export function Ticket(props: TicketProps) {
 					<div>
 						<h3>{event.name} Ticket</h3>
 						<p>
-							{dayjs(event.timeSettings?.startTime).format("dddd DD/MM/YYYY")} -{" "}
-							{dayjs(event.timeSettings?.endTime).format("dddd DD/MM/YYYY")}
+							{format(event.timeSettings?.startTime ?? new Date(), "EEEE dd/MM/yyyy")} -{" "}
+							{format(event.timeSettings?.endTime ?? new Date(), "EEEE dd/MM/yyyy")}
 						</p>
 					</div>
 					<span className={styles.statusBadge} data-status={status.toLowerCase().replace(" ", "-")}>

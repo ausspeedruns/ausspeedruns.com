@@ -41,8 +41,16 @@ export default buildConfig({
 			// The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
 			// Feel free to delete this at any time. Simply remove the line below.
 			beforeDashboard: ["./components/BeforeDashboard/BeforeDashboard"],
-			afterNavLinks: ["./components/ScheduleImportView/ScheduleImportLink"],
+			afterNavLinks: [
+				"./components/ScheduleImportView/ScheduleImportLink",
+				"./components/TicketPickupView/TicketPickupLink",
+			],
 			views: {
+				// Accessible at /admin/ticket-pickup
+				ticketPickup: {
+					Component: "./components/TicketPickupView/TicketPickupView",
+					path: "/ticket-pickup",
+				},
 				// Accessible at /admin/schedule-import
 				scheduleImport: {
 					Component: "./components/ScheduleImportView/ScheduleImportView",

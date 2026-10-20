@@ -1,7 +1,7 @@
 import styles from "./Availability.module.css";
 import { useEffect, useMemo, useState } from "react";
 import { Checkbox } from "@mantine/core";
-import dayjs from "dayjs";
+import { addDays, differenceInDays } from "date-fns";
 
 type AvailabilityProps = {
 	event: {
@@ -16,7 +16,7 @@ type AvailabilityProps = {
 export default function Availability(props: AvailabilityProps) {
 	const [dates, setDates] = useState<boolean[]>(props.value ?? []);
 	const eventLength = useMemo(
-		() => dayjs(props.event.endDate).diff(dayjs(props.event.startDate), "day") + 1,
+		() => differenceInDays(props.event.endDate, props.event.startDate) + 1,
 		[props.event],
 	);
 
@@ -26,7 +26,7 @@ export default function Availability(props: AvailabilityProps) {
 
 	let dateCheckboxes = [];
 	for (let i = 0; i < eventLength; i++) {
-		const date = dayjs(props.event.startDate).add(i, "day").toDate();
+		const date = addDays(props.event.startDate, i);
 		dateCheckboxes.push(
 			<Checkbox
 				key={i}

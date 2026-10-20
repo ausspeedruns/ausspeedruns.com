@@ -212,7 +212,7 @@ export function IncentivesStep() {
 	}, [state]);
 
 	const header = (row: DraftRow, start: Date) =>
-		`${formatInTz(start, data.event.timezone, "ddd h:mm A")} — ${row.gameName} (${row.category}) by ${runnerNames(row, users).join(", ") || "?"}`;
+		`${formatInTz(start, data.event.timezone, "EEE h:mm a")} — ${row.gameName} (${row.category}) by ${runnerNames(row, users).join(", ") || "?"}`;
 
 	const groups = runRows
 		.map((entry) => ({

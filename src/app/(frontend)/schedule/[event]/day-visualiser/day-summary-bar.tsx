@@ -1,14 +1,9 @@
 import styles from "./day-summary-bar.module.css";
 
 import type { Run, Block } from "../schedule-types";
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
+import { addDays, addSeconds, isAfter, startOfDay } from "date-fns";
 import { RunVisualBlock } from "./run";
-import { scheduleTimeToDisplayZone, scheduleTimeToLocalDate } from "../time";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import { displayZoneOptions, scheduleTimeToDate } from "../time";
 
 function runEstimateToSeconds(estimate: string) {
 	return estimate.split(":").reduce((acc, time) => 60 * acc + parseInt(time), 0);
@@ -34,11 +29,12 @@ export function DayVisualiser(props: DayVisualiserProps) {
 		yesterdaysFinalRun = props.runDays[props.currentDayIndex - 1].runs.at(-1);
 
 		if (yesterdaysFinalRun) {
-			const endOfYesterdayRun = scheduleTimeToLocalDate(yesterdaysFinalRun.scheduledTime)
-				.add(runEstimateToSeconds(yesterdaysFinalRun.estimate), "second")
-				.toDate();
+			const endOfYesterdayRun = addSeconds(
+				scheduleTimeToDate(yesterdaysFinalRun.scheduledTime),
+				runEstimateToSeconds(yesterdaysFinalRun.estimate),
+			);
 
-			const startOfFirstRun = scheduleTimeToLocalDate(props.runs[0].scheduledTime).toDate();
+			const startOfFirstRun = scheduleTimeToDate(props.runs[0].scheduledTime);
 
 			const timeBetweenRuns = new Date(startOfFirstRun.getTime() - endOfYesterdayRun.getTime());
 			const timeBetweenRunsSeconds = timeBetweenRuns.getTime() / (1000 * 60);
@@ -74,16 +70,13 @@ export function DayVisualiser(props: DayVisualiserProps) {
 
 				if (i === props.runs.length - 1) {
 					// If the run goes to the next day in the selected display timezone, subtract the overlap.
-					const runScheduledMoment = scheduleTimeToDisplayZone(
-						run.scheduledTime,
-						props.eventTimezone,
-						props.showLocalTime,
-					);
-					const finalRunEndMoment = runScheduledMoment.add(runEstimateToSeconds(run.estimate), "second");
-					const nextDayMoment = runScheduledMoment.startOf("day").add(1, "day");
+					const zone = displayZoneOptions(props.eventTimezone, props.showLocalTime);
+					const runStart = scheduleTimeToDate(run.scheduledTime);
+					const finalRunEnd = addSeconds(runStart, runEstimateToSeconds(run.estimate));
+					const nextDayStart = addDays(startOfDay(runStart, zone), 1, zone);
 
-					if (finalRunEndMoment.isAfter(nextDayMoment)) {
-						const overlapSeconds = finalRunEndMoment.diff(nextDayMoment, "second", true);
+					if (isAfter(finalRunEnd, nextDayStart)) {
+						const overlapSeconds = (finalRunEnd.getTime() - nextDayStart.getTime()) / 1000;
 						width = ((runEstimateToSeconds(run.estimate) - overlapSeconds) / totalSeconds) * 100;
 					}
 				}

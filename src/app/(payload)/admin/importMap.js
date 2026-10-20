@@ -39,8 +39,10 @@ import { FolderTypeField as FolderTypeField_2b8867833a34864a02ddf429b0728a40 } f
 import { RowLabel as RowLabel_dfeab9ccffd9e511a60f7c6172f4d48d } from '../../../Header/RowLabel'
 import { RowLabel as RowLabel_4a12a496e01d21e4d90acac0374e2f65 } from '../../../Footer/RowLabel'
 import { default as default_c865e9c0d8c118585f842599ba771503 } from '../../../components/ScheduleImportView/ScheduleImportLink'
+import { default as default_00955cd27da065e02c43c7dfcea4164a } from '../../../components/TicketPickupView/TicketPickupLink'
 import { default as default_0047e5c59b5a711a53270d136a70347f } from '../../../components/BeforeDashboard/BeforeDashboard'
 import { default as default_2661584faf098456f8e256e0a0b2c31c } from '../../../components/BeforeLogin/BeforeLogin'
+import { default as default_75b5bfd161b84d1dd7f35c9830e3181b } from '../../../components/TicketPickupView/TicketPickupView'
 import { default as default_fa95fab07ec167e4037319435236039d } from '../../../components/ScheduleImportView/ScheduleImportView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
@@ -87,8 +89,10 @@ export const importMap = {
   "./Header/RowLabel#RowLabel": RowLabel_dfeab9ccffd9e511a60f7c6172f4d48d,
   "./Footer/RowLabel#RowLabel": RowLabel_4a12a496e01d21e4d90acac0374e2f65,
   "./components/ScheduleImportView/ScheduleImportLink#default": default_c865e9c0d8c118585f842599ba771503,
+  "./components/TicketPickupView/TicketPickupLink#default": default_00955cd27da065e02c43c7dfcea4164a,
   "./components/BeforeDashboard/BeforeDashboard#default": default_0047e5c59b5a711a53270d136a70347f,
   "./components/BeforeLogin/BeforeLogin#default": default_2661584faf098456f8e256e0a0b2c31c,
+  "./components/TicketPickupView/TicketPickupView#default": default_75b5bfd161b84d1dd7f35c9830e3181b,
   "./components/ScheduleImportView/ScheduleImportView#default": default_fa95fab07ec167e4037319435236039d,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

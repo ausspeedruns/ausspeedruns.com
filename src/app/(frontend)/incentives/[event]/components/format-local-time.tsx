@@ -1,11 +1,11 @@
 "use client";
 
-import dayjs from "dayjs";
+import { format } from "date-fns";
 
 interface Props {
 	date: Date;
 }
 
 export function FormatLocalTime({ date }: Props) {
-	return dayjs(date).format("dddd h:mm A");
+	return format(date, "EEEE h:mm a");
 }

@@ -11,6 +11,7 @@ import { manageUsersField } from "#access/field/manageUsersField.ts";
 import { relationId } from "#access/helpers.ts";
 import { manageUsers } from "#access/manageUsers.ts";
 import { ownDocOrManageUsers } from "#access/ownDocOrManageUsers.ts";
+import { ticketPickupEndpoints } from "#utilities/ticketPickup/endpoints.ts";
 
 type OrderItem = NonNullable<Order["items"]>[number];
 
@@ -146,6 +147,7 @@ export const Orders: CollectionConfig<"orders"> = {
 		beforeValidate: [prepareOrder],
 		afterChange: [syncStock],
 	},
+	endpoints: ticketPickupEndpoints,
 	fields: [
 		{
 			name: "reference",
@@ -185,6 +187,17 @@ export const Orders: CollectionConfig<"orders"> = {
 							type: "number",
 							min: 0,
 							admin: { description: "Filled in from the product if left blank." },
+						},
+						{
+							name: "collectedQuantity",
+							type: "number",
+							min: 0,
+							defaultValue: 0,
+							admin: {
+								step: 1,
+								description:
+									"How many have been handed over at the pickup desk. Ignored when the order status is Collected.",
+							},
 						},
 					],
 				},

@@ -24,6 +24,7 @@ export const Roles: CollectionConfig<"roles"> = {
 		admin: true,
 		canManageContent: true,
 		canManageUsers: true,
+		canPickupTickets: true,
 	},
 	fields: [
 		{
@@ -52,6 +53,12 @@ export const Roles: CollectionConfig<"roles"> = {
 					type: "checkbox",
 					defaultValue: false,
 					admin: { description: "Users, orders and payment settings." },
+				},
+				{
+					name: "canPickupTickets",
+					type: "checkbox",
+					defaultValue: false,
+					admin: { description: "Ticket pickup desk only: look up tickets and mark tickets/merch as collected." },
 				},
 			],
 		},

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import styles from "./schedule.module.css";
-import dayjs from "dayjs";
+import { format } from "date-fns";
 
 import type { Block, Run, Settings } from "./schedule-types";
 
@@ -12,7 +12,7 @@ import { Filters } from "./filters";
 import type { Event, Media as MediaType } from "#payload-types.ts";
 import { Media } from "#components/Media/Media.tsx";
 import { Button, Checkbox } from "@mantine/core";
-import { scheduleTimeToDisplayZone, scheduleTimeToLocalDate } from "./time";
+import { formatScheduleTime } from "./time";
 import { Open } from "pixelarticons/react";
 
 const DEFAULT_SETTINGS: Settings = {
@@ -61,11 +61,11 @@ export function Schedule(props: ScheduleProps) {
 	// }, []);
 
 	// useEffect(() => {
-	// 	if (dayjs(currentTime).isAfter(dayjs(props.time.start)) && dayjs(currentTime).isBefore(dayjs(props.time.end))) {
+	// 	if (isAfter(currentTime, props.time.start) && isBefore(currentTime, props.time.end)) {
 	// 		let i = 0;
 	// 		for (; i < props.runs.length; i++) {
 	// 			const run = props.runs[i];
-	// 			if (scheduleTimeToLocalDate(run.scheduledTime).isAfter(dayjs(currentTime))) break;
+	// 			if (isAfter(scheduleTimeToDate(run.scheduledTime), currentTime)) break;
 	// 		}
 
 	// 		if (props.runs[i - 1]) {
@@ -90,7 +90,7 @@ export function Schedule(props: ScheduleProps) {
 
 				<p className={styles.eventLabel}>{props.shortName} Schedule</p>
 				<p className={styles.eventTimeFrame}>
-					{dayjs(props.time.start).format("DD MMMM")} – {dayjs(props.time.end).format("DD MMMM")}
+					{format(props.time.start, "dd MMMM")} – {format(props.time.end, "dd MMMM")}
 				</p>
 			</header>
 			<Checkbox
@@ -157,9 +157,9 @@ export function Schedule(props: ScheduleProps) {
 									}}
 									key={day}
 								>
-									{dayjs(date).format("dddd")}
+									{format(date, "EEEE")}
 									<br />
-									{dayjs(date).format("MMM D")}
+									{format(date, "MMM d")}
 								</Button>
 							);
 						})}
@@ -214,9 +214,7 @@ function getAllDays(runs: Run[], eventTimezone: string, showLocalTime: boolean) 
 	let days: string[] = [];
 
 	for (let i = 0; i < runs.length; i++) {
-		const runDate = scheduleTimeToDisplayZone(runs[i].scheduledTime, eventTimezone, showLocalTime).format(
-			"YYYY-MM-DD",
-		);
+		const runDate = formatScheduleTime(runs[i].scheduledTime, eventTimezone, showLocalTime, "yyyy-MM-dd");
 
 		if (!days.includes(runDate)) {
 			days.push(runDate);

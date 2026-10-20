@@ -4,7 +4,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import styles from "./Volunteer.module.css";
 import { Button, Checkbox, NumberInput, Select, Group, Textarea, TextInput, Tooltip } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import dayjs from "dayjs";
+import { addDays, differenceInDays } from "date-fns";
 import type { Volunteer } from "#/payload-types";
 
 import { submitVolunteer, type VolunteerSubmissionData } from "./vounteer-action";
@@ -111,7 +111,7 @@ export function VolunteerForm(props: VolunteerFormProps) {
 
 	let eventLength = 0;
 	if (currentEvent) {
-		eventLength = dayjs(currentEvent.endDate).diff(dayjs(currentEvent.startDate), "day") + 1;
+		eventLength = differenceInDays(currentEvent.endDate, currentEvent.startDate) + 1;
 	}
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -126,7 +126,7 @@ export function VolunteerForm(props: VolunteerFormProps) {
 	const eventDatesAvailability = [];
 	if (currentEvent) {
 		for (let i = 0; i < eventLength; i++) {
-			const date = dayjs(currentEvent.startDate).add(i, "day").toDate();
+			const date = addDays(currentEvent.startDate, i);
 			eventDatesAvailability.push(
 				<TextInput
 					key={i}

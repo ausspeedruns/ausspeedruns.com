@@ -1,12 +1,8 @@
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
+import { tz } from "@date-fns/tz";
+import { format } from "date-fns";
 
 import { runTypeLabel, type RunType } from "./constants.ts";
 import { estimateToMs } from "./timing.ts";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 // Horaro rejects cells longer than this
 const HORARO_CELL_LIMIT = 512;
@@ -82,7 +78,9 @@ export function buildHoraroSchedule(
 			name: "Main Schedule",
 			slug: event.shortName.toLowerCase(),
 			timezone: event.timezone,
-			start: sorted[0] ? dayjs(sorted[0].scheduledTime).tz(event.timezone).format() : "",
+			start: sorted[0]
+				? format(sorted[0].scheduledTime, "yyyy-MM-dd'T'HH:mm:ssxxx", { in: tz(event.timezone) })
+				: "",
 			website: "https://ausspeedruns.com/",
 			twitch: "ausspeedruns",
 			setup: secondsToIsoDuration(setupSeconds),

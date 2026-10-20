@@ -1,11 +1,7 @@
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
+import { tz as tzContext } from "@date-fns/tz";
+import { differenceInCalendarDays, format, startOfDay } from "date-fns";
 
 import type { DraftRow } from "./types.ts";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const ESTIMATE_REGEX = /^(\d{1,3}):([0-5]?\d)(?::([0-5]?\d))?$/;
 
@@ -70,15 +66,15 @@ export function scheduleEnd<T>(timed: TimedRow<T>[]): Date | null {
 
 /** 0-based day of the event the date falls on, in the event timezone. */
 export function eventDayIndex(date: Date, eventStart: string | Date, tz: string): number {
-	const startDay = dayjs(eventStart).tz(tz).startOf("day");
-	const day = dayjs(date).tz(tz).startOf("day");
-	return Math.round(day.diff(startDay, "hour") / 24);
+	const options = { in: tzContext(tz) };
+	return differenceInCalendarDays(startOfDay(date, options), startOfDay(eventStart, options), options);
 }
 
-export function formatInTz(date: Date | string, tz: string, format: string): string {
-	return dayjs(date).tz(tz).format(format);
+/** Formats using date-fns tokens (e.g. "EEE d MMM, h:mm a") in the given timezone. */
+export function formatInTz(date: Date | string, tz: string, formatString: string): string {
+	return format(date, formatString, { in: tzContext(tz) });
 }
 
 export function eventDayKey(date: Date, tz: string): string {
-	return dayjs(date).tz(tz).format("YYYY-MM-DD");
+	return formatInTz(date, tz, "yyyy-MM-dd");
 }

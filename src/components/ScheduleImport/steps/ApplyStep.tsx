@@ -145,7 +145,7 @@ export function ApplyStep() {
 				{applied && (
 					<Alert color="green">
 						Applied{" "}
-						{data.draft.appliedAt ? formatInTz(data.draft.appliedAt, tz, "ddd D MMM YYYY, h:mm A") : ""} (
+						{data.draft.appliedAt ? formatInTz(data.draft.appliedAt, tz, "EEE d MMM yyyy, h:mm a") : ""} (
 						{data.draft.appliedRunCount} rows).
 						{runsLink && (
 							<>
@@ -216,7 +216,7 @@ export function ApplyStep() {
 							)}
 							{result.endTime && (
 								<Text size="sm">
-									Event end time set to {formatInTz(result.endTime, tz, "ddd D MMM, h:mm A")}.
+									Event end time set to {formatInTz(result.endTime, tz, "EEE d MMM, h:mm a")}.
 								</Text>
 							)}
 						</Stack>
@@ -231,7 +231,7 @@ export function ApplyStep() {
 					<strong>accepted</strong>, applies the backup rule below, and rejects the rest. Uses the live runs,
 					so apply first.
 					{data.draft.finalisedAt
-						? ` Last finalised ${formatInTz(data.draft.finalisedAt, tz, "ddd D MMM, h:mm A")}.`
+						? ` Last finalised ${formatInTz(data.draft.finalisedAt, tz, "EEE d MMM, h:mm a")}.`
 						: ""}
 				</Text>
 				<Radio.Group

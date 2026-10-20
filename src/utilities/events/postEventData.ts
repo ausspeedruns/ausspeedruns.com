@@ -2,6 +2,7 @@ import { getPayload } from "payload";
 import config from "#payload-config";
 
 import type { Event, Run } from "#/payload-types";
+import { isGameRun } from "#/utilities/runDisplay";
 
 export async function getEventRuns(eventId: number | string): Promise<Run[]> {
 	const payload = await getPayload({ config });
@@ -15,7 +16,7 @@ export async function getEventRuns(eventId: number | string): Promise<Run[]> {
 		pagination: false,
 	});
 
-	return runs.docs as Run[];
+	return (runs.docs as Run[]).filter(isGameRun);
 }
 
 export async function resolveEvent(event: number | Event | null | undefined): Promise<Event | null> {

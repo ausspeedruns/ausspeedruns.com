@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Button, Card, Container, Group, Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Button, Card, Container, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { AtSign, Tv } from "lucide-react";
 import type { Run as RunType } from "#/payload-types";
 import { headers } from "next/headers";
@@ -37,7 +37,7 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 	const auth = await payload.auth({ headers: userHeaders });
 
 	const currentTime = new Date();
-	const runs = (user.speedrunData?.runs?.docs ?? []).filter((run): run is RunType => typeof run !== "number");
+	const runs = await queryRunsByUser(user.id);
 	const historicalRuns = runs.filter((run) => !run.scheduledTime || new Date(run.scheduledTime) < currentTime);
 	const upcomingRuns = runs
 		.filter((run) => run.scheduledTime && new Date(run.scheduledTime) >= currentTime)
@@ -180,14 +180,33 @@ const queryUserByUsername = cache(async (username: string) => {
 			pronouns: true,
 			state: true,
 			socials: true,
-			speedrunData: { runs: true },
-		},
-		joins: {
-			"speedrunData.runs": { limit: 0 },
 		},
 	});
 
 	return result.docs?.[0] || null;
+});
+
+const queryRunsByUser = cache(async (userId: string): Promise<RunType[]> => {
+	const payload = await getPayload({ config: configPromise });
+
+	const result = await payload.find({
+		collection: "runs",
+		pagination: false,
+		overrideAccess: true,
+		depth: 1,
+		sort: "-scheduledTime",
+		where: {
+			runners: {
+				contains: userId,
+			},
+		},
+		populate: {
+			games: { name: true },
+			events: { name: true, shortName: true },
+		},
+	});
+
+	return result.docs as RunType[];
 });
 
 function formatDate(value: string): string {

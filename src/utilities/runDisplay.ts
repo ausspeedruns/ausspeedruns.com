@@ -1,4 +1,9 @@
-import type { Game } from "#/payload-types";
+import type { Game, Run } from "#/payload-types";
+
+/** True for actual game runs, false for setup buffers, sleep blocks and other schedule entries. */
+export function isGameRun(run: Pick<Run, "type">): boolean {
+	return (run.type ?? "run") === "run";
+}
 
 /** Returns the game's display name from a (possibly unpopulated) game relationship. */
 export function getGameName(game: number | Game | null | undefined): string {

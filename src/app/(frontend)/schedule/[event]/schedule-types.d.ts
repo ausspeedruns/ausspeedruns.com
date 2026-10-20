@@ -4,6 +4,7 @@ export type Runner = {
 
 export type Run = {
 	id: number;
+	type: "run" | "setupBuffer" | "sleep" | "other";
 	runners: string[];
 	game: string;
 	category: string;

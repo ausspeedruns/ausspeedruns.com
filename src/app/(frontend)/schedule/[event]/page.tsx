@@ -6,7 +6,7 @@ import { Schedule } from "./schedule";
 import type { Metadata } from "next";
 import { getPayload } from "payload";
 import dayjs from "dayjs";
-import { getGameName } from "#utilities/runDisplay.ts";
+import { getGameName, isGameRun } from "#utilities/runDisplay.ts";
 
 export type Block = {
 	name: string;
@@ -141,11 +141,12 @@ export default async function EventSchedule({ params }: URLProps) {
 
 						return {
 							id: run.id,
-							game: getGameName(run.game),
+							type: run.type ?? "run",
+							game: isGameRun(run) ? getGameName(run.game) : (run.title ?? ""),
 							estimate: run.estimate,
 							scheduledTime: run.scheduledTime,
-							platform: run.platform,
-							category: run.category,
+							platform: run.platform ?? "",
+							category: run.category ?? "",
 							runners:
 								run.runners
 									?.filter((runner) => typeof runner === "object")

@@ -129,7 +129,7 @@ export const Submissions: CollectionConfig<"submissions"> = {
 			name: "runs",
 			type: "join",
 			collection: "runs",
-			on: "submission",
+			on: "submissions",
 			admin: {
 				description: "Scheduled run(s) created from this submission.",
 			},

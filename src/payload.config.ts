@@ -16,6 +16,7 @@ import { Orders } from "./collections/Orders.ts";
 import { Products } from "./collections/Products.ts";
 import { Roles } from "./collections/Roles.ts";
 import { Runs } from "./collections/Runs.ts";
+import { ScheduleDrafts } from "./collections/ScheduleDrafts.ts";
 import { Submissions } from "./collections/Submissions.ts";
 import { Users } from "./collections/Users/Users.ts";
 import { Volunteers } from "./collections/Volunteers.ts";
@@ -40,6 +41,14 @@ export default buildConfig({
 			// The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
 			// Feel free to delete this at any time. Simply remove the line below.
 			beforeDashboard: ["./components/BeforeDashboard/BeforeDashboard"],
+			afterNavLinks: ["./components/ScheduleImportView/ScheduleImportLink"],
+			views: {
+				// Accessible at /admin/schedule-import
+				scheduleImport: {
+					Component: "./components/ScheduleImportView/ScheduleImportView",
+					path: "/schedule-import",
+				},
+			},
 		},
 		importMap: {
 			baseDir: path.resolve(dirname),
@@ -90,6 +99,7 @@ export default buildConfig({
 		Submissions,
 		Volunteers,
 		Games,
+		ScheduleDrafts,
 	],
 	cors: [getServerSideURL()].filter(Boolean),
 	globals: [Header, Footer, PaymentSettings],

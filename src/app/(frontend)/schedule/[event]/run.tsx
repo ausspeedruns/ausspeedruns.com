@@ -26,10 +26,18 @@ export function RunElement(props: RunItemProps) {
 		props.showLocalTime,
 	).format("h:mm A");
 
-	if (run.game === "Setup Buffer") {
+	if (run.type === "setupBuffer") {
 		return (
 			<div className={styles.setupBuffer} key={run.id}>
-				{run.estimate.split(":")[1]} min Setup Buffer
+				{parseInt(run.estimate.split(":")[1] ?? "0", 10)} min Setup Buffer
+			</div>
+		);
+	}
+
+	if (run.type === "sleep" || run.type === "other") {
+		return (
+			<div className={styles.setupBuffer} key={run.id}>
+				{convertedTimezone} — {run.category || (run.type === "sleep" ? "Overnight break" : run.game)}
 			</div>
 		);
 	}

@@ -81,6 +81,7 @@ export interface Config {
     submissions: Submission;
     volunteers: Volunteer;
     games: Game;
+    'schedule-drafts': ScheduleDraft;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -136,6 +137,7 @@ export interface Config {
     submissions: SubmissionsSelect<false> | SubmissionsSelect<true>;
     volunteers: VolunteersSelect<false> | VolunteersSelect<true>;
     games: GamesSelect<false> | GamesSelect<true>;
+    'schedule-drafts': ScheduleDraftsSelect<false> | ScheduleDraftsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -554,10 +556,17 @@ export interface Run {
    * Generated from the game and category.
    */
   title?: string | null;
-  game: number | Game;
+  /**
+   * Non-run entries (setup buffers, sleep, etc.) are shown as blocks on the schedule.
+   */
+  type?: ('run' | 'setupBuffer' | 'sleep' | 'other') | null;
+  game?: (number | null) | Game;
   event?: (number | null) | Event;
-  category: string;
-  platform: string;
+  /**
+   * For non-run entries this is used as the label (e.g. 'Overnight break').
+   */
+  category?: string | null;
+  platform?: string | null;
   techPlatform?: string | null;
   runners?: (string | User)[] | null;
   /**
@@ -587,7 +596,10 @@ export interface Run {
   specialRequirements?: string | null;
   youtube?: string | null;
   twitch?: string | null;
-  submission?: (number | null) | Submission;
+  /**
+   * Submission(s) this run was scheduled from. Races/co-ops link every runner's submission.
+   */
+  submissions?: (number | Submission)[] | null;
   incentives?: {
     docs?: (number | Incentive)[];
     hasNextPage?: boolean;
@@ -2153,6 +2165,60 @@ export interface VodHighlightsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "schedule-drafts".
+ */
+export interface ScheduleDraft {
+  id: number;
+  event: number | Event;
+  defaultSetupMinutes?: number | null;
+  status: 'draft' | 'applied';
+  rows?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  incentives?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Maps draft rows/incentives to the runs/incentives created from them.
+   */
+  appliedMap?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  lastImportReport?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  appliedAt?: string | null;
+  appliedBy?: (string | null) | User;
+  finalisedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -2396,6 +2462,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'games';
         value: number | Game;
+      } | null)
+    | ({
+        relationTo: 'schedule-drafts';
+        value: number | ScheduleDraft;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -3127,6 +3197,7 @@ export interface OrdersSelect<T extends boolean = true> {
  */
 export interface RunsSelect<T extends boolean = true> {
   title?: T;
+  type?: T;
   game?: T;
   event?: T;
   category?: T;
@@ -3143,7 +3214,7 @@ export interface RunsSelect<T extends boolean = true> {
   specialRequirements?: T;
   youtube?: T;
   twitch?: T;
-  submission?: T;
+  submissions?: T;
   incentives?: T;
   legacyKeystoneId?: T;
   updatedAt?: T;
@@ -3219,6 +3290,24 @@ export interface GamesSelect<T extends boolean = true> {
         aspectRatio?: T;
       };
   runs?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "schedule-drafts_select".
+ */
+export interface ScheduleDraftsSelect<T extends boolean = true> {
+  event?: T;
+  defaultSetupMinutes?: T;
+  status?: T;
+  rows?: T;
+  incentives?: T;
+  appliedMap?: T;
+  lastImportReport?: T;
+  appliedAt?: T;
+  appliedBy?: T;
+  finalisedAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }

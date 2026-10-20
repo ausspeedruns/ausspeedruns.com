@@ -616,7 +616,9 @@ async function migrateRuns(payload: BasePayload, source: KeystoneDump) {
 				throw new Error(`Run ${id} has no game name`);
 			}
 
-			const gameId = await findOrCreateGame(game);
+			// Keystone represented setup buffers as a run with the game "Setup Buffer"
+			const isSetupBuffer = String(game).trim().toLowerCase() === "setup buffer";
+			const gameId = isSetupBuffer ? undefined : await findOrCreateGame(game);
 
 			const runners = (runIdRunnersMap.get(id) ?? []).filter((runnerId) => {
 				if (migratedUserIds.has(runnerId)) return true;
@@ -630,9 +632,10 @@ async function migrateRuns(payload: BasePayload, source: KeystoneDump) {
 				draft: false,
 				data: {
 					id,
+					type: isSetupBuffer ? "setupBuffer" : "run",
 					game: gameId,
-					category,
-					platform,
+					category: isSetupBuffer ? undefined : category,
+					platform: isSetupBuffer ? undefined : platform,
 					estimate: normaliseDuration(estimate),
 					time: finalTime,
 					youtube: youtubeVOD,
@@ -647,7 +650,7 @@ async function migrateRuns(payload: BasePayload, source: KeystoneDump) {
 					legacyKeystoneId: id,
 					// Resolve relationships from cache instead of querying DB
 					...(originalSubmission && submissionIdMap.has(originalSubmission)
-						? { submission: submissionIdMap.get(originalSubmission) }
+						? { submissions: [submissionIdMap.get(originalSubmission)!] }
 						: {}),
 					...(event && eventIdMap.has(event) ? { event: eventIdMap.get(event) } : {}),
 					runners,

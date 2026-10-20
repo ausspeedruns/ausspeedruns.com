@@ -20,6 +20,8 @@ export interface HoraroRunInput {
 	runners: { username: string; twitch?: string | null; bluesky?: string | null }[];
 	otherRunners: string;
 	incentives: string[];
+	/** Games in a medley, in order */
+	children?: { game: string; category: string; runners: string[] }[];
 }
 
 export interface HoraroSchedule {
@@ -90,7 +92,19 @@ export function buildHoraroSchedule(
 			items: sorted.map((run, i) => {
 				const lengthSeconds = Math.round((estimateToMs(run.estimate) ?? 0) / 1000) + Math.max(0, (gaps[i] ?? setupSeconds) - setupSeconds);
 
-				if (run.type !== "run") {
+				if (run.type === "segment") {
+					const presenters = [
+						...run.runners.map((runner) => runner.username),
+						...run.otherRunners.split(",").map((name) => name.trim()).filter(Boolean),
+					];
+					return {
+						length: secondsToIsoDuration(lengthSeconds),
+						length_t: lengthSeconds,
+						data: [cell(run.title || run.category), null, cell(presenters.join(", ")), null, cell(run.incentives.join(" | ")), null],
+					};
+				}
+
+				if (run.type !== "run" && run.type !== "medley") {
 					return {
 						length: secondsToIsoDuration(lengthSeconds),
 						length_t: lengthSeconds,
@@ -112,8 +126,14 @@ export function buildHoraroSchedule(
 					length: secondsToIsoDuration(lengthSeconds),
 					length_t: lengthSeconds,
 					data: [
-						cell(run.game),
-						cell(run.category),
+						cell(run.type === "medley" ? run.category || run.title : run.game),
+						cell(
+							run.type === "medley"
+								? (run.children ?? [])
+										.map((child) => `${child.game} (${child.category}${child.runners.length > 0 ? ` – ${child.runners.join(", ")}` : ""})`)
+										.join(" / ") || "Medley"
+								: run.category,
+						),
 						cell(joinRunners(runnerNames, run.isRace, run.isCoop)),
 						cell(run.platform),
 						cell(run.incentives.join(" | ")),

@@ -15,7 +15,7 @@ import { UserNavigation } from "./user-navigation";
 import { Run } from "./run";
 import { getEventLabel } from "./getEventLabel";
 import { UpcomingRun } from "./upcoming-run";
-import { getGameName } from "#utilities/runDisplay.ts";
+import { countedRunsWhere, getRunDisplayName } from "#utilities/runDisplay.ts";
 
 type Args = {
 	params: Promise<{
@@ -45,7 +45,7 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 			id: run.id,
 			date: run.scheduledTime ? formatDate(run.scheduledTime) : "Schedule TBD",
 			estimate: run.estimate,
-			game: getGameName(run.game),
+			game: getRunDisplayName(run),
 			event: getEventLabel(run),
 			mode: run.isRace ? "Race" : run.isCoop ? "Co-op" : "",
 			isHighlighted: index === 1,
@@ -196,9 +196,7 @@ const queryRunsByUser = cache(async (userId: string): Promise<RunType[]> => {
 		depth: 1,
 		sort: "-scheduledTime",
 		where: {
-			runners: {
-				contains: userId,
-			},
+			and: [{ runners: { contains: userId } }, countedRunsWhere],
 		},
 		populate: {
 			games: { name: true },

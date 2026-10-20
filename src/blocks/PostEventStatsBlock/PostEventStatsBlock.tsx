@@ -24,7 +24,7 @@ import {
 
 import type { PostEventStatsBlock as PostEventStatsBlockProps, Run } from "#/payload-types";
 import { relationId } from "#access/helpers.ts";
-import { getGameName } from "#/utilities/runDisplay";
+import { getRunCategoryLabel, getRunDisplayName } from "#/utilities/runDisplay";
 import { getEventRuns } from "#/utilities/events/postEventData";
 import { buildPostEventSummary, formatSecondsAsHours, getRunnerNames } from "#/utilities/events/postEventSummary";
 
@@ -54,8 +54,8 @@ function RunTable({ runs }: { runs: Run[] }) {
 						const time = run.time?.trim();
 						return (
 							<TableTr key={run.id}>
-								<TableTd fw={600}>{getGameName(run.game)}</TableTd>
-								<TableTd>{run.category}</TableTd>
+								<TableTd fw={600}>{getRunDisplayName(run)}</TableTd>
+								<TableTd>{getRunCategoryLabel(run)}</TableTd>
 								<TableTd>{getRunnerNames(run).join(", ") || "—"}</TableTd>
 								<TableTd ta="right" className={styles.numeric}>
 									{time || (

@@ -200,7 +200,10 @@ export function IncentivesStep() {
 	const [filter, setFilter] = useState<Filter>("all");
 	const [customRow, setCustomRow] = useState<string | null>(null);
 
-	const runRows = useMemo(() => timed.filter((entry) => entry.row.type === "run"), [timed]);
+	const runRows = useMemo(
+		() => timed.filter((entry) => entry.row.type === "run" || entry.row.type === "medley"),
+		[timed],
+	);
 	const counts = useMemo(() => {
 		const rowKeys = new Set(state.rows.map((row) => row.key));
 		const relevant = state.incentives.filter((incentive) => rowKeys.has(incentive.rowKey));
@@ -211,8 +214,13 @@ export function IncentivesStep() {
 		};
 	}, [state]);
 
-	const header = (row: DraftRow, start: Date) =>
-		`${formatInTz(start, data.event.timezone, "EEE h:mm a")} — ${row.gameName} (${row.category}) by ${runnerNames(row, users).join(", ") || "?"}`;
+	const header = (row: DraftRow, start: Date) => {
+		const time = formatInTz(start, data.event.timezone, "EEE h:mm a");
+		if (row.type === "medley") return `${time} — Medley: ${row.category || "Untitled medley"} (whole medley)`;
+		const medley = row.parentKey ? state.rows.find((candidate) => candidate.key === row.parentKey) : undefined;
+		const prefix = medley ? `~${time} — ${medley.category || "Medley"} › ` : `${time} — `;
+		return `${prefix}${row.gameName} (${row.category}) by ${runnerNames(row, users).join(", ") || "?"}`;
+	};
 
 	const groups = runRows
 		.map((entry) => ({

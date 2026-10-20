@@ -2,7 +2,7 @@ import React from "react";
 import type { DonationTrackerBlock as DonationTrackerBlockProps, Incentive, Run } from "#/payload-types";
 import { getPayload } from "payload";
 import configPromise from "#payload-config";
-import { getGameName } from "#/utilities/runDisplay";
+import { getRunCategoryLabel, getRunDisplayName } from "#/utilities/runDisplay";
 import { formatCurrency, resolveEvent } from "#/utilities/events/postEventData";
 import { parseIncentiveResult, type IncentiveResult } from "#/utilities/events/incentiveResults";
 import { IncentiveResultCard } from "#/components/Incentives/IncentiveResultCard";
@@ -13,7 +13,7 @@ type ParsedEntry = { incentive: Incentive; result: IncentiveResult };
 
 function runLabel(run: Incentive["run"]): string | null {
 	if (!run || typeof run !== "object") return null;
-	return `${getGameName(run.game)} – ${run.category}`;
+	return `${getRunDisplayName(run)} – ${getRunCategoryLabel(run)}`;
 }
 
 function GroupHeader({ title, children }: { title: string; children: React.ReactNode }) {

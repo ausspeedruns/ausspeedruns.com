@@ -1,6 +1,6 @@
 import { validateIncentiveData } from "./incentives.ts";
 import { findDuplicateSubmissionLinks } from "./pairing.ts";
-import { computeSchedule, eventDayIndex, estimateToMs, scheduleEnd } from "./timing.ts";
+import { computeSchedule, eventDayIndex, estimateToMs, msToEstimate, scheduleEnd } from "./timing.ts";
 import type { DraftState, EventSummary, SubmissionSummary } from "./types.ts";
 
 export type IssueLevel = "error" | "warning";
@@ -32,8 +32,16 @@ export function validateDraft(
 
 	const timed = event.startTime ? computeSchedule(draft.rows, event.startTime, draft.defaultSetupMinutes) : [];
 
+	const rowsByKey = new Map(draft.rows.map((row) => [row.key, row]));
+	const topLevelRows = draft.rows.filter((row) => !row.parentKey);
+
 	draft.rows.forEach((row, index) => {
-		const label = row.type === "run" ? `${row.gameName || "Untitled"} (row ${index + 1})` : `Row ${index + 1}`;
+		const label =
+			row.type === "run"
+				? `${row.gameName || "Untitled"} (row ${index + 1})`
+				: row.type === "medley"
+					? `${row.category || "Untitled medley"} (row ${index + 1})`
+					: `Row ${index + 1}`;
 
 		if (estimateToMs(row.estimate) === null) {
 			issues.push({
@@ -42,6 +50,42 @@ export function validateDraft(
 				rowKey: row.key,
 				message: `${label}: estimate "${row.estimate}" is not HH:MM:SS.`,
 			});
+		}
+
+		if (row.parentKey) {
+			const parent = rowsByKey.get(row.parentKey);
+			if (row.type !== "run" || parent?.type !== "medley" || parent.parentKey) {
+				issues.push({
+					level: "error",
+					step: "timing",
+					rowKey: row.key,
+					message: `${label}: only game runs can be inside a medley.`,
+				});
+			}
+		}
+
+		if (row.type === "segment" && !row.segmentTypeId) {
+			issues.push({ level: "error", step: "timing", rowKey: row.key, message: `${label}: choose a segment type.` });
+		}
+
+		if (row.type === "medley") {
+			if (!row.category.trim()) {
+				issues.push({ level: "error", step: "timing", rowKey: row.key, message: `${label}: missing medley name.` });
+			}
+			const children = draft.rows.filter((candidate) => candidate.parentKey === row.key);
+			if (children.length === 0) {
+				issues.push({ level: "warning", step: "timing", rowKey: row.key, message: `${label}: has no games.` });
+			}
+			const slotMs = estimateToMs(row.estimate);
+			const childrenMs = children.reduce((total, child) => total + (estimateToMs(child.estimate) ?? 0), 0);
+			if (slotMs !== null && childrenMs > slotMs) {
+				issues.push({
+					level: "warning",
+					step: "timing",
+					rowKey: row.key,
+					message: `${label}: its games' estimates (${msToEstimate(childrenMs)}) are longer than the medley (${msToEstimate(slotMs)}).`,
+				});
+			}
 		}
 
 		if (row.type !== "run") return;
@@ -93,10 +137,12 @@ export function validateDraft(
 			}
 		}
 
-		// Same runner in consecutive runs
-		const previous = draft.rows.slice(0, index).reverse().find((candidate) => candidate.type === "run");
-		const repeated = previous?.runnerIds.filter((id) => row.runnerIds.includes(id)) ?? [];
-		if (previous && repeated.length > 0 && draft.rows.indexOf(previous) === index - 1) {
+		// Same runner in consecutive runs (medley games share a slot, so they're skipped)
+		if (row.parentKey) return;
+		const topIndex = topLevelRows.indexOf(row);
+		const previous = topIndex > 0 ? topLevelRows[topIndex - 1] : undefined;
+		const repeated = previous?.type === "run" ? previous.runnerIds.filter((id) => row.runnerIds.includes(id)) : [];
+		if (previous && repeated.length > 0) {
 			issues.push({
 				level: "warning",
 				step: "timing",

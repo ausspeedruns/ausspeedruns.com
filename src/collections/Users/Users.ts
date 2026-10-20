@@ -69,6 +69,8 @@ export const Users: CollectionConfig<"users"> = {
 		beforeValidate: [preventCaseInsensitiveDuplicateUsernames],
 	},
 	auth: {
+		// Lets service accounts (e.g. the stream graphics) authenticate with `Authorization: users API-Key <key>`
+		useAPIKey: true,
 		verify: {
 			generateEmailSubject: () => "AusSpeedruns - Email Verification",
 			generateEmailHTML: async ({ token }) => {

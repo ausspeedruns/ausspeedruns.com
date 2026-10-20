@@ -15,7 +15,7 @@ import {
 } from "@mantine/core";
 
 import { RUN_TYPES } from "#/utilities/schedule/constants.ts";
-import { estimateToMs } from "#/utilities/schedule/timing.ts";
+import { estimateToMs, msToEstimate } from "#/utilities/schedule/timing.ts";
 import type { DraftRow } from "#/utilities/schedule/types.ts";
 import { useSchedule } from "../context.tsx";
 import { updateRow } from "../draftOps.ts";
@@ -31,49 +31,115 @@ export function RowEditor({ rowKey, onClose }: RowEditorProps) {
 	const { state, update, data, submissionsById } = useSchedule();
 	const row = state.rows.find((candidate) => candidate.key === rowKey);
 	const isRun = row?.type === "run";
+	const isChild = Boolean(row?.parentKey);
+	const parent = isChild ? state.rows.find((candidate) => candidate.key === row?.parentKey) : undefined;
+	const children = row?.type === "medley" ? state.rows.filter((candidate) => candidate.parentKey === row.key) : [];
 
 	const patch = (changes: Partial<DraftRow>) => {
 		if (row) update((previous) => updateRow(previous, row.key, changes));
 	};
 
+	const title = !row
+		? ""
+		: isRun
+			? row.gameName || "Untitled run"
+			: row.type === "medley"
+				? row.category || "Untitled medley"
+				: row.type === "segment"
+					? "Edit segment"
+					: "Edit block";
+
 	return (
-		<Drawer
-			opened={Boolean(row)}
-			onClose={onClose}
-			position="right"
-			size="lg"
-			title={row ? (isRun ? row.gameName || "Untitled run" : "Edit block") : ""}
-		>
+		<Drawer opened={Boolean(row)} onClose={onClose} position="right" size="lg" title={title}>
 			{row && (
 				<Stack>
+					{parent && (
+						<Text size="sm" c="dimmed">
+							Part of the medley <strong>{parent.category || "Untitled medley"}</strong>. Its time is
+							informational, laid out within the medley&apos;s slot.
+						</Text>
+					)}
 					<SimpleGrid cols={{ base: 1, sm: 3 }}>
 						<Select
 							label="Type"
 							allowDeselect={false}
+							disabled={isChild}
 							data={RUN_TYPES.map((type) => ({ value: type.value, label: type.label }))}
 							value={row.type}
 							onChange={(value) => value && patch({ type: value as DraftRow["type"] })}
 						/>
 						<TextInput
-							label="Estimate / length"
+							label={row.type === "medley" ? "Slot length" : "Estimate / length"}
 							description="HH:MM:SS"
 							value={row.estimate}
 							error={estimateToMs(row.estimate) === null ? "Invalid" : undefined}
 							onChange={(event) => patch({ estimate: event.currentTarget.value })}
 						/>
-						<NumberInput
-							label="Setup after"
-							description="Minutes"
-							min={0}
-							placeholder={isRun ? `${state.defaultSetupMinutes} (default)` : "0"}
-							value={row.setupMinutesOverride ?? ""}
-							onChange={(value) =>
-								patch({ setupMinutesOverride: value === "" ? null : Math.max(0, Number(value)) })
-							}
-						/>
+						{!isChild && (
+							<NumberInput
+								label="Setup after"
+								description="Minutes"
+								min={0}
+								placeholder={
+									isRun || row.type === "medley" ? `${state.defaultSetupMinutes} (default)` : "0"
+								}
+								value={row.setupMinutesOverride ?? ""}
+								onChange={(value) =>
+									patch({ setupMinutesOverride: value === "" ? null : Math.max(0, Number(value)) })
+								}
+							/>
+						)}
 					</SimpleGrid>
 
-					{isRun ? (
+					{row.type === "medley" && (
+						<>
+							<TextInput
+								label="Medley name"
+								description="Shown on the schedule, e.g. '5 Minute Games Showcase'"
+								value={row.category}
+								onChange={(event) => patch({ category: event.currentTarget.value })}
+							/>
+							<TextInput
+								label="Platform"
+								description="Optional. Defaults to the games' platforms"
+								value={row.platform}
+								onChange={(event) => patch({ platform: event.currentTarget.value })}
+							/>
+							<Text size="sm" c="dimmed">
+								{children.length} {children.length === 1 ? "game" : "games"} totalling{" "}
+								{msToEstimate(children.reduce((total, child) => total + (estimateToMs(child.estimate) ?? 0), 0))}.
+								Runners are taken from the games. Add games with the + menu on the medley row.
+							</Text>
+						</>
+					)}
+
+					{row.type === "segment" && (
+						<>
+							<Select
+								label="Segment type"
+								description="Manage these in the Segment Types collection"
+								data={data.segmentTypes.map((type) => ({ value: String(type.id), label: type.name }))}
+								value={row.segmentTypeId ? String(row.segmentTypeId) : null}
+								error={row.segmentTypeId ? undefined : "Required"}
+								onChange={(value) => patch({ segmentTypeId: value ? Number(value) : null })}
+							/>
+							<TextInput
+								label="Title"
+								description="e.g. 'The AusSpeedruns Report'"
+								value={row.category}
+								onChange={(event) => patch({ category: event.currentTarget.value })}
+							/>
+							<RunnerPicker runnerIds={row.runnerIds} onChange={(runnerIds) => patch({ runnerIds })} />
+							<TextInput
+								label="Other presenters without accounts"
+								description="Comma separated"
+								value={row.otherRunners}
+								onChange={(event) => patch({ otherRunners: event.currentTarget.value })}
+							/>
+						</>
+					)}
+
+					{row.type === "medley" || row.type === "segment" ? null : isRun ? (
 						<>
 							<SimpleGrid cols={{ base: 1, sm: 2 }}>
 								<Autocomplete
@@ -158,7 +224,7 @@ export function RowEditor({ rowKey, onClose }: RowEditorProps) {
 						onChange={(event) => patch({ specialRequirements: event.currentTarget.value })}
 					/>
 
-					{isRun && (
+					{(isRun || row.type === "medley") && (
 						<SimpleGrid cols={{ base: 1, sm: 3 }}>
 							<TextInput
 								label="YouTube VOD"

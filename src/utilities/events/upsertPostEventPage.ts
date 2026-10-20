@@ -1,7 +1,7 @@
 import type { Payload, PayloadRequest } from "payload";
 import type { Event, Run } from "#/payload-types";
 
-import { isGameRun } from "#/utilities/runDisplay.ts";
+import { isCountedRun } from "#/utilities/runDisplay.ts";
 import { buildPostEventSummary } from "./postEventSummary.ts";
 
 interface UpsertPostEventPageOptions {
@@ -166,7 +166,7 @@ export async function upsertPostEventPage({
 		req,
 	});
 
-	const runs = (runsResult.docs as Run[]).filter(isGameRun);
+	const runs = (runsResult.docs as Run[]).filter(isCountedRun);
 	const layout = buildLayout(eventDoc, runs);
 
 	const slugBase = slugify(eventDoc.shortName || eventDoc.name || `event-${eventDoc.id}`) || `event-${eventDoc.id}`;

@@ -5,7 +5,15 @@ import Papa from "papaparse";
 
 import { DEFAULT_SETUP_MINUTES, type RunType } from "./constants.ts";
 import { estimateToMs, normaliseEstimate } from "./timing.ts";
-import type { DraftIncentive, DraftRow, DraftState, EventSummary, SubmissionSummary } from "./types.ts";
+import { normaliseRows } from "./medley.ts";
+import type {
+	DraftIncentive,
+	DraftRow,
+	DraftState,
+	EventSummary,
+	SegmentTypeSummary,
+	SubmissionSummary,
+} from "./types.ts";
 
 export function normaliseName(value: string | null | undefined): string {
 	return (value ?? "").trim().replace(/\s+/g, " ").toLowerCase();
@@ -30,7 +38,9 @@ export function availabilityColumns(event: Pick<EventSummary, "startTime" | "end
 
 /** Columns the importer understands. Everything else in the CSV is ignored. */
 export const IMPORT_COLUMNS = {
-	type: "Optional. run, setupBuffer, sleep or other. Rows with the game 'Setup Buffer' or 'Sleep' are detected automatically.",
+	type: "Optional. run, medley, segment, setupBuffer, sleep or other (a segment type name/slug such as 'news' also works). Rows with the game 'Setup Buffer' or 'Sleep' are detected automatically.",
+	medley: "Optional. For game runs inside a medley: the name of the medley row (its game/category) this game belongs to.",
+	segmentType: "Optional. Segment type name or slug for segment rows, e.g. 'news'.",
 	id: "Submission ID. Links the row to a submission (keep it from the export).",
 	game: "Game name, or the label for non-run rows.",
 	category: "Category, or a label for non-run rows (e.g. 'Overnight break').",
@@ -62,6 +72,8 @@ export function submissionsToCsv(event: EventSummary, submissions: SubmissionSum
 			category: submission.category,
 			estimate: submission.estimate,
 			setup: "",
+			medley: "",
+			segmentType: "",
 			runner: submission.runnerUsername,
 			runnerId: submission.runnerId ?? "",
 			platform: submission.platform,
@@ -86,6 +98,8 @@ export function submissionsToCsv(event: EventSummary, submissions: SubmissionSum
 			"category",
 			"estimate",
 			"setup",
+			"medley",
+			"segmentType",
 			"runner",
 			"runnerId",
 			"platform",
@@ -124,6 +138,8 @@ const TYPE_ALIASES: Record<string, RunType> = {
 	"sleep block": "sleep",
 	other: "other",
 	break: "other",
+	medley: "medley",
+	segment: "segment",
 };
 
 export function detectRowType(row: CsvRow): RunType {
@@ -166,12 +182,15 @@ export interface ImportReport {
 	newGames: string[];
 	invalidEstimates: { line: number; game: string; estimate: string }[];
 	invalidIncentiveJson: number[];
+	unknownSegmentTypes: string[];
+	unknownMedleys: string[];
 }
 
 export interface ImportContext {
 	submissions: SubmissionSummary[];
 	users: { id: string; username: string }[];
 	games: { id: number; name: string }[];
+	segmentTypes?: SegmentTypeSummary[];
 	defaultSetupMinutes?: number;
 	/** Injectable for deterministic tests */
 	makeKey?: () => string;
@@ -214,7 +233,19 @@ export function csvRowsToDraft(csvRows: CsvRow[], context: ImportContext): Draft
 		newGames: [],
 		invalidEstimates: [],
 		invalidIncentiveJson: [],
+		unknownSegmentTypes: [],
+		unknownMedleys: [],
 	};
+	const segmentTypes = context.segmentTypes ?? [];
+	const findSegmentType = (value: string | undefined) =>
+		value?.trim()
+			? segmentTypes.find(
+					(segmentType) =>
+						normaliseName(segmentType.slug) === normaliseName(value) ||
+						normaliseName(segmentType.name) === normaliseName(value),
+				)
+			: undefined;
+	const medleyKeys = new Map<string, string>();
 	const seenSubmissions = new Set<number>();
 	const newGames = new Set<string>();
 
@@ -226,7 +257,8 @@ export function csvRowsToDraft(csvRows: CsvRow[], context: ImportContext): Draft
 		if (Object.values(csv).every((value) => !value?.trim())) return;
 		report.rowCount++;
 
-		const type = detectRowType(csv);
+		const typeSegment = TYPE_ALIASES[normaliseName(csv.type)] ? undefined : findSegmentType(csv.type);
+		const type = typeSegment ? "segment" : detectRowType(csv);
 		const rawId = csv.id?.trim() ?? "";
 		const submissionId = rawId && /^\d+$/.test(rawId) ? Number(rawId) : null;
 		const submission = submissionId !== null ? submissionsById.get(submissionId) : undefined;
@@ -253,12 +285,25 @@ export function csvRowsToDraft(csvRows: CsvRow[], context: ImportContext): Draft
 
 		if (type !== "run") {
 			const isMarker = TYPE_ALIASES[normaliseName(gameName)] !== undefined;
+			const category = pick("category", isMarker ? "" : gameName);
+			let segmentTypeId: number | null = null;
+			if (type === "segment") {
+				const segmentType = typeSegment ?? findSegmentType(csv.segmentType);
+				segmentTypeId = segmentType?.id ?? null;
+				if (!segmentType) report.unknownSegmentTypes.push(csv.segmentType?.trim() || `line ${line}`);
+			}
+			if (type === "medley") {
+				medleyKeys.set(normaliseName(category), key);
+				if (gameName && !isMarker) medleyKeys.set(normaliseName(gameName), key);
+			}
 			rows.push({
 				key,
 				type,
+				parentKey: null,
+				segmentTypeId,
 				submissionIds: [],
 				gameName: "",
-				category: pick("category", isMarker ? "" : gameName),
+				category,
 				platform: "",
 				techPlatform: "",
 				estimate,
@@ -298,9 +343,15 @@ export function csvRowsToDraft(csvRows: CsvRow[], context: ImportContext): Draft
 		const isRace = raceType === "solo" || raceType === "only";
 		const isCoop = isRace && (csv.coop !== undefined && csv.coop.trim() ? isTruthy(csv.coop) : Boolean(submission?.isCoop));
 
+		const medleyName = csv.medley?.trim();
+		const parentKey = medleyName ? (medleyKeys.get(normaliseName(medleyName)) ?? null) : null;
+		if (medleyName && !parentKey) report.unknownMedleys.push(medleyName);
+
 		rows.push({
 			key,
 			type,
+			parentKey,
+			segmentTypeId: null,
 			submissionIds: submission ? [submission.id] : [],
 			gameName,
 			category: pick("category", submission?.category),
@@ -336,7 +387,7 @@ export function csvRowsToDraft(csvRows: CsvRow[], context: ImportContext): Draft
 
 	return {
 		defaultSetupMinutes: context.defaultSetupMinutes ?? DEFAULT_SETUP_MINUTES,
-		rows,
+		rows: normaliseRows(rows),
 		incentives,
 		report,
 	};

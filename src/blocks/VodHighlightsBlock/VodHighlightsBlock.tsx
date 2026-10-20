@@ -3,7 +3,7 @@ import { Anchor, Badge, Card, CardSection, Container, Group, SimpleGrid, Stack, 
 
 import type { Run, VodHighlightsBlock as VodHighlightsBlockProps } from "#/payload-types";
 import { relationId } from "#access/helpers.ts";
-import { getGameName, getYouTubeVideoId } from "#/utilities/runDisplay";
+import { getRunCategoryLabel, getRunDisplayName, getYouTubeVideoId } from "#/utilities/runDisplay";
 import { getEventRuns } from "#/utilities/events/postEventData";
 import { getRunnerNames } from "#/utilities/events/postEventSummary";
 
@@ -63,10 +63,10 @@ export async function VodHighlightsBlock(props: VodHighlightsBlockProps) {
 									) : null}
 								</CardSection>
 								<Text fw={700} mt="sm" lh={1.3}>
-									{getGameName(run.game)}
+									{getRunDisplayName(run)}
 								</Text>
 								<Text size="sm" c="dimmed">
-									{run.category}
+									{getRunCategoryLabel(run)}
 									{runners ? ` · ${runners}` : ""}
 								</Text>
 							</Card>

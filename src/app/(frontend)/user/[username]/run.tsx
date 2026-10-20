@@ -2,7 +2,7 @@ import { Box, Card, Group, Stack, Text, Title } from "@mantine/core";
 import styles from "./run.module.css";
 import { getEventLabel } from "./getEventLabel";
 import type { Run as RunData } from "#payload-types.ts";
-import { getGameName, getYouTubeEmbedUrl } from "#utilities/runDisplay.ts";
+import { getRunCategoryLabel, getRunDisplayName, getYouTubeEmbedUrl } from "#utilities/runDisplay.ts";
 
 interface RunProps {
 	run: RunData;
@@ -30,9 +30,9 @@ export function Run(props: RunProps) {
 				<Group align="flex-start" justify="space-between" wrap="nowrap">
 					<div>
 						<Title className={styles.runTitle} order={3} textWrap="balance" mb="xs">
-							{getGameName(props.run.game)}
+							{getRunDisplayName(props.run)}
 						</Title>
-						<Text className={styles.runMeta}>{`${props.run.category} · ${props.run.platform}`}</Text>
+						<Text className={styles.runMeta}>{[getRunCategoryLabel(props.run), props.run.platform].filter(Boolean).join(" · ")}</Text>
 					</div>
 					<div className={styles.timeBlock}>
 						<Text className={styles.finalTime}>{props.run.time ?? "??:??:??"}</Text>

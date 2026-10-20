@@ -2,7 +2,7 @@ import type { PayloadRequest } from "payload";
 
 import type { Role, User } from "#/payload-types";
 
-type RoleFlag = "admin" | "canManageContent" | "canManageUsers" | "canPickupTickets";
+type RoleFlag = "admin" | "canManageContent" | "canManageUsers" | "canPickupTickets" | "canAccessTechSchedule";
 
 const ROLES_CONTEXT_KEY = "__resolvedUserRoles";
 
@@ -59,6 +59,13 @@ export const isAdminUser = (req: PayloadRequest) => userHasRoleFlag(req, "admin"
 
 /** The ticket pickup desk is available to the dedicated pickup role, user managers and admins. */
 export const roleCanUseTicketPickup = (role: Role) => Boolean(role.admin || role.canManageUsers || role.canPickupTickets);
+
+/** The tech/graphics schedule API is available to content managers, admins and the dedicated tech role. */
+export async function canAccessTechSchedule(req: PayloadRequest): Promise<boolean> {
+	if (!req.user) return false;
+	const roles = await resolveUserRoles(req);
+	return roles.some((role) => Boolean(role.admin || role.canManageContent || role.canAccessTechSchedule));
+}
 
 export async function canUseTicketPickup(req: PayloadRequest): Promise<boolean> {
 	if (!req.user) return false;

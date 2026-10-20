@@ -28,9 +28,14 @@ export function msToEstimate(ms: number): string {
 	return [hours, minutes, seconds].map((part) => part.toString().padStart(2, "0")).join(":");
 }
 
-export function setupMinutesFor(row: Pick<DraftRow, "type" | "setupMinutesOverride">, defaultSetup: number): number {
+export function setupMinutesFor(
+	row: Pick<DraftRow, "type" | "setupMinutesOverride" | "parentKey">,
+	defaultSetup: number,
+): number {
+	// Games in a medley share the medley's slot; setup is part of the medley estimate
+	if (row.parentKey) return 0;
 	if (row.setupMinutesOverride !== null && row.setupMinutesOverride !== undefined) return row.setupMinutesOverride;
-	return row.type === "run" ? defaultSetup : 0;
+	return row.type === "run" || row.type === "medley" ? defaultSetup : 0;
 }
 
 export interface TimedRow<T> {
@@ -42,26 +47,39 @@ export interface TimedRow<T> {
 	estimateValid: boolean;
 }
 
-/** Flows rows one after another from the start time: start(n+1) = start(n) + estimate(n) + setup(n). */
-export function computeSchedule<T extends Pick<DraftRow, "type" | "estimate" | "setupMinutesOverride">>(
-	rows: T[],
-	startTime: string | Date,
-	defaultSetupMinutes: number,
-): TimedRow<T>[] {
+/**
+ * Flows rows one after another from the start time: start(n+1) = start(n) + estimate(n) + setup(n).
+ * Games in a medley don't move the schedule on; they're laid out inside their medley's slot instead.
+ */
+export function computeSchedule<
+	T extends Pick<DraftRow, "type" | "estimate" | "setupMinutesOverride"> & Partial<Pick<DraftRow, "key" | "parentKey">>,
+>(rows: T[], startTime: string | Date, defaultSetupMinutes: number): TimedRow<T>[] {
 	let cursor = new Date(startTime).getTime();
+	const childCursors = new Map<string, number>();
 
 	return rows.map((row) => {
 		const estimateMs = estimateToMs(row.estimate);
+		const childCursor = row.parentKey ? childCursors.get(row.parentKey) : undefined;
+
+		if (childCursor !== undefined && row.parentKey) {
+			const start = new Date(childCursor);
+			const end = new Date(childCursor + (estimateMs ?? 0));
+			childCursors.set(row.parentKey, end.getTime());
+			return { row, start, end, next: end, estimateValid: estimateMs !== null };
+		}
+
 		const start = new Date(cursor);
 		const end = new Date(cursor + (estimateMs ?? 0));
-		cursor = end.getTime() + setupMinutesFor(row, defaultSetupMinutes) * 60 * 1000;
+		if (row.key && row.type === "medley") childCursors.set(row.key, cursor);
+		cursor = end.getTime() + setupMinutesFor({ ...row, parentKey: null }, defaultSetupMinutes) * 60 * 1000;
 		return { row, start, end, next: new Date(cursor), estimateValid: estimateMs !== null };
 	});
 }
 
-/** End time of the last row (excluding trailing setup), or null if there are no rows. */
+/** End time of the last top-level row (excluding trailing setup), or null if there are no rows. */
 export function scheduleEnd<T>(timed: TimedRow<T>[]): Date | null {
-	return timed.length > 0 ? timed[timed.length - 1].end : null;
+	const topLevel = timed.filter((entry) => !(entry.row as { parentKey?: string | null }).parentKey);
+	return topLevel.length > 0 ? topLevel[topLevel.length - 1].end : null;
 }
 
 /** 0-based day of the event the date falls on, in the event timezone. */

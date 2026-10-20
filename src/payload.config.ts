@@ -17,6 +17,7 @@ import { Products } from "./collections/Products.ts";
 import { Roles } from "./collections/Roles.ts";
 import { Runs } from "./collections/Runs.ts";
 import { ScheduleDrafts } from "./collections/ScheduleDrafts.ts";
+import { SegmentTypes } from "./collections/SegmentTypes.ts";
 import { Submissions } from "./collections/Submissions.ts";
 import { Users } from "./collections/Users/Users.ts";
 import { Volunteers } from "./collections/Volunteers.ts";
@@ -104,6 +105,7 @@ export default buildConfig({
 		Products,
 		Orders,
 		Runs,
+		SegmentTypes,
 		Submissions,
 		Volunteers,
 		Games,

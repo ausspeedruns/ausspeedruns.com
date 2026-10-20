@@ -32,26 +32,48 @@ import {
 import { Fragment, useMemo, useState } from "react";
 
 import { RUN_TYPES, runTypeLabel } from "#/utilities/schedule/constants.ts";
-import { eventDayKey, estimateToMs, formatInTz, setupMinutesFor, type TimedRow } from "#/utilities/schedule/timing.ts";
+import {
+	eventDayKey,
+	estimateToMs,
+	formatInTz,
+	msToEstimate,
+	setupMinutesFor,
+	type TimedRow,
+} from "#/utilities/schedule/timing.ts";
 import type { DraftRow, DraftRowType } from "#/utilities/schedule/types.ts";
 import type { ScheduleIssue } from "#/utilities/schedule/validation.ts";
 import { ConfirmModal } from "../components/feedback.tsx";
 import { RowEditor } from "../components/RowEditor.tsx";
 import { runnerNames, useSchedule } from "../context.tsx";
-import { deleteRow, insertRow, moveRow, newRow, updateRow } from "../draftOps.ts";
+import {
+	addRowToMedley,
+	deleteRow,
+	insertRowAfterKey,
+	moveRow,
+	newRow,
+	removeRowFromMedley,
+	updateRow,
+} from "../draftOps.ts";
 
 const COLUMN_COUNT = 9;
 
 interface RowProps {
 	timedRow: TimedRow<DraftRow>;
-	index: number;
+	label: string;
 	issues: ScheduleIssue[];
+	medleys: DraftRow[];
 	onEdit: (key: string) => void;
-	onInsert: (index: number, type: DraftRowType) => void;
+	onInsert: (afterKey: string, type: DraftRowType, parentKey?: string | null) => void;
 	onDelete: (row: DraftRow) => void;
 }
 
-function ScheduleRow({ timedRow, index, issues, onEdit, onInsert, onDelete }: RowProps) {
+function rowTitle(row: DraftRow, segmentTypes: { id: number; name: string }[]): string {
+	if (row.type === "medley") return row.category || "Untitled medley";
+	if (row.type === "segment") return segmentTypes.find((type) => type.id === row.segmentTypeId)?.name ?? "Segment";
+	return runTypeLabel(row.type);
+}
+
+function ScheduleRow({ timedRow, label, issues, medleys, onEdit, onInsert, onDelete }: RowProps) {
 	const { row, start } = timedRow;
 	const { data, state, update, users } = useSchedule();
 	const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({
@@ -59,8 +81,15 @@ function ScheduleRow({ timedRow, index, issues, onEdit, onInsert, onDelete }: Ro
 	});
 
 	const level = issues.some((issue) => issue.level === "error") ? "red" : issues.length > 0 ? "yellow" : null;
-	const names = runnerNames(row, users);
 	const isRun = row.type === "run";
+	const isChild = Boolean(row.parentKey);
+	const isMedley = row.type === "medley";
+	const children = isMedley ? state.rows.filter((candidate) => candidate.parentKey === row.key) : [];
+	const names = isMedley
+		? [...new Set(children.flatMap((child) => runnerNames(child, users)))]
+		: runnerNames(row, users);
+	const childrenMs = children.reduce((total, child) => total + (estimateToMs(child.estimate) ?? 0), 0);
+	const isBlock = !isRun && !isMedley;
 
 	return (
 		<Table.Tr
@@ -73,11 +102,15 @@ function ScheduleRow({ timedRow, index, issues, onEdit, onInsert, onDelete }: Ro
 				opacity: isDragging ? 0.85 : undefined,
 				background: isDragging
 					? "var(--mantine-color-body)"
-					: isRun
-						? undefined
-						: "var(--mantine-color-default-hover)",
+					: isMedley
+						? "var(--mantine-color-grape-light)"
+						: isChild
+							? "color-mix(in srgb, var(--mantine-color-grape-light) 40%, transparent)"
+							: isBlock
+								? "var(--mantine-color-default-hover)"
+								: undefined,
 				boxShadow: level ? `inset 4px 0 0 var(--mantine-color-${level}-6)` : undefined,
-				fontStyle: isRun ? undefined : "italic",
+				fontStyle: isBlock ? "italic" : undefined,
 			}}
 		>
 			<Table.Td>
@@ -103,24 +136,33 @@ function ScheduleRow({ timedRow, index, issues, onEdit, onInsert, onDelete }: Ro
 						position="top-start"
 					>
 						<Text size="sm" fw={700} c={level} style={{ cursor: "help" }}>
-							{index + 1} ⚠
+							{label} ⚠
 						</Text>
 					</Tooltip>
 				) : (
 					<Text size="sm" c="dimmed">
-						{index + 1}
+						{label}
 					</Text>
 				)}
 			</Table.Td>
-			<Table.Td style={{ whiteSpace: "nowrap" }}>{formatInTz(start, data.event.timezone, "h:mm a")}</Table.Td>
-			<Table.Td>
+			<Table.Td style={{ whiteSpace: "nowrap" }}>
+				{isChild ? (
+					<Text size="sm" c="dimmed">
+						~{formatInTz(start, data.event.timezone, "h:mm a")}
+					</Text>
+				) : (
+					formatInTz(start, data.event.timezone, "h:mm a")
+				)}
+			</Table.Td>
+			<Table.Td style={{ paddingLeft: isChild ? 28 : undefined }}>
 				{isRun ? (
 					<Text fw={600} size="sm" c={row.gameName ? undefined : "red"} lineClamp={1}>
+						{isChild && "↳ "}
 						{row.gameName || "Missing game"}
 					</Text>
 				) : (
 					<Text fw={600} size="sm">
-						{runTypeLabel(row.type)}
+						{isMedley ? `Medley: ${rowTitle(row, data.segmentTypes)}` : rowTitle(row, data.segmentTypes)}
 					</Text>
 				)}
 				{isRun && (
@@ -128,22 +170,29 @@ function ScheduleRow({ timedRow, index, issues, onEdit, onInsert, onDelete }: Ro
 						{[row.platform, row.isRace ? (row.isCoop ? "Co-op" : "Race") : ""].filter(Boolean).join(" · ")}
 					</Text>
 				)}
+				{isMedley && (
+					<Text size="xs" c={childrenMs > (estimateToMs(row.estimate) ?? 0) ? "orange" : "dimmed"}>
+						{children.length} {children.length === 1 ? "game" : "games"} · {msToEstimate(childrenMs)} of games
+					</Text>
+				)}
 			</Table.Td>
 			<Table.Td>
 				<Text size="sm" lineClamp={1}>
-					{row.category || "—"}
+					{isMedley ? "—" : row.category || "—"}
 				</Text>
 			</Table.Td>
 			<Table.Td>
-				{isRun &&
+				{(isRun || isMedley || row.type === "segment") &&
 					(names.length > 0 ? (
 						<Text size="sm" lineClamp={1} title={names.join(", ")}>
 							{names.join(row.isRace && !row.isCoop ? " vs. " : ", ")}
 						</Text>
 					) : (
-						<Text size="sm" c="red" fw={600}>
-							No runners
-						</Text>
+						isRun && (
+							<Text size="sm" c="red" fw={600}>
+								No runners
+							</Text>
+						)
 					))}
 			</Table.Td>
 			<Table.Td>
@@ -160,6 +209,11 @@ function ScheduleRow({ timedRow, index, issues, onEdit, onInsert, onDelete }: Ro
 				/>
 			</Table.Td>
 			<Table.Td>
+				{isChild ? (
+					<Text size="sm" c="dimmed" title="Games in a medley share the medley's slot">
+						—
+					</Text>
+				) : (
 				<NumberInput
 					size="xs"
 					w={70}
@@ -178,6 +232,7 @@ function ScheduleRow({ timedRow, index, issues, onEdit, onInsert, onDelete }: Ro
 						)
 					}
 				/>
+				)}
 			</Table.Td>
 			<Table.Td>
 				<Group gap={4} wrap="nowrap" justify="flex-end">
@@ -191,12 +246,41 @@ function ScheduleRow({ timedRow, index, issues, onEdit, onInsert, onDelete }: Ro
 							</ActionIcon>
 						</Menu.Target>
 						<Menu.Dropdown>
-							<Menu.Label>Insert after this row</Menu.Label>
+							{isMedley && (
+								<>
+									<Menu.Label>This medley</Menu.Label>
+									<Menu.Item onClick={() => onInsert(row.key, "run", row.key)}>Add a game</Menu.Item>
+									<Menu.Divider />
+								</>
+							)}
+							<Menu.Label>{isChild ? "Insert after (runs join the medley)" : "Insert after this row"}</Menu.Label>
 							{RUN_TYPES.map((type) => (
-								<Menu.Item key={type.value} onClick={() => onInsert(index + 1, type.value)}>
+								<Menu.Item key={type.value} onClick={() => onInsert(row.key, type.value)}>
 									{type.label}
 								</Menu.Item>
 							))}
+							{isRun && !isChild && medleys.length > 0 && (
+								<>
+									<Menu.Divider />
+									<Menu.Label>Move into medley</Menu.Label>
+									{medleys.map((medley) => (
+										<Menu.Item
+											key={medley.key}
+											onClick={() => update((previous) => addRowToMedley(previous, row.key, medley.key))}
+										>
+											{medley.category || "Untitled medley"}
+										</Menu.Item>
+									))}
+								</>
+							)}
+							{isChild && (
+								<>
+									<Menu.Divider />
+									<Menu.Item onClick={() => update((previous) => removeRowFromMedley(previous, row.key))}>
+										Move out of medley
+									</Menu.Item>
+								</>
+							)}
 						</Menu.Dropdown>
 					</Menu>
 					<ActionIcon
@@ -233,11 +317,24 @@ export function TimingStep() {
 		return map;
 	}, [issues]);
 
-	const insert = (index: number, type: DraftRowType) => {
-		const row = newRow(type);
-		update((previous) => insertRow(previous, index, row));
-		if (type === "run" || type === "other") setEditingKey(row.key);
+	const insert = (afterKey: string | null, type: DraftRowType, parentKey: string | null = null) => {
+		const row = newRow(type, parentKey);
+		update((previous) => insertRowAfterKey(previous, afterKey, row));
+		if (type !== "setupBuffer" && type !== "sleep") setEditingKey(row.key);
 	};
+
+	const medleys = state.rows.filter((row) => row.type === "medley" && !row.parentKey);
+
+	// "3" for top-level rows, "3.1" for games inside a medley
+	const labels = useMemo(() => {
+		let top = 0;
+		let child = 0;
+		return state.rows.map((row) => {
+			if (row.parentKey) return `${top}.${++child}`;
+			child = 0;
+			return String(++top);
+		});
+	}, [state.rows]);
 
 	const onDragEnd = ({ active, over }: DragEndEvent) => {
 		if (!over || active.id === over.id) return;
@@ -267,8 +364,10 @@ export function TimingStep() {
 			<Text size="sm" c="dimmed">
 				Drag rows to reorder. Times flow from the event start (
 				{formatInTz(data.event.startTime, tz, "EEE d MMM, h:mm a")} {tz}) using each row&apos;s estimate plus
-				the setup after it. Runs use the default setup unless overridden; buffers, sleep and other blocks
-				default to no setup. Hover ⚠ to see a row&apos;s warnings.
+				the setup after it. Runs and medleys use the default setup unless overridden; segments, buffers,
+				sleep and other blocks default to no setup. Games inside a medley share the medley&apos;s slot: drag a
+				run onto a medley&apos;s game (or down onto the medley) to add it, or use the + menu. Hover ⚠ to see a
+				row&apos;s warnings.
 			</Text>
 
 			<Group align="flex-end">
@@ -283,7 +382,7 @@ export function TimingStep() {
 					}
 				/>
 				{RUN_TYPES.map((type) => (
-					<Button key={type.value} variant="default" onClick={() => insert(state.rows.length, type.value)}>
+					<Button key={type.value} variant="default" onClick={() => insert(null, type.value)}>
 						+ {type.label}
 					</Button>
 				))}
@@ -321,7 +420,7 @@ export function TimingStep() {
 									</Table.Tr>
 								)}
 								{timed.map((timedRow, index) => {
-									const day = eventDayKey(timedRow.start, tz);
+									const day = timedRow.row.parentKey ? previousDay : eventDayKey(timedRow.start, tz);
 									const showDivider = day !== previousDay;
 									previousDay = day;
 									return (
@@ -337,7 +436,8 @@ export function TimingStep() {
 											)}
 											<ScheduleRow
 												timedRow={timedRow}
-												index={index}
+												label={labels[index] ?? String(index + 1)}
+												medleys={medleys}
 												issues={issuesByRow.get(timedRow.row.key) ?? []}
 												onEdit={setEditingKey}
 												onInsert={insert}
@@ -365,9 +465,16 @@ export function TimingStep() {
 				<Text>
 					Remove{" "}
 					<strong>
-						{deleting?.type === "run" ? deleting.gameName || "this run" : runTypeLabel(deleting?.type)}
+						{deleting?.type === "run"
+							? deleting.gameName || "this run"
+							: deleting?.type === "medley"
+								? deleting.category || "this medley"
+								: runTypeLabel(deleting?.type)}
 					</strong>{" "}
-					from the schedule? Its incentives will be removed too.
+					from the schedule?{" "}
+					{deleting?.type === "medley"
+						? "Its games and all of their incentives will be removed too."
+						: "Its incentives will be removed too."}
 				</Text>
 			</ConfirmModal>
 		</Stack>

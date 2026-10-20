@@ -30,6 +30,17 @@ export interface DraftRow {
 	youtube?: string;
 	twitch?: string;
 	time?: string;
+	/** Key of the medley row this game belongs to. Children always directly follow their medley. */
+	parentKey?: string | null;
+	/** Segment type ID for `segment` rows */
+	segmentTypeId?: number | null;
+}
+
+export interface SegmentTypeSummary {
+	id: number;
+	name: string;
+	slug: string;
+	colour: string | null;
 }
 
 export type IncentiveStatus = "pending" | "configured" | "skipped";
@@ -106,6 +117,7 @@ export interface DraftResponse {
 	submissions: SubmissionSummary[];
 	users: { id: string; username: string }[];
 	games: { id: number; name: string }[];
+	segmentTypes: SegmentTypeSummary[];
 }
 
 export interface ApplyResult {

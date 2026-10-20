@@ -9,6 +9,57 @@
 	/* border-bottom: 2px solid $secondary; */
 }
 
+.segment {
+	display: grid;
+	grid-template-columns: auto auto 1fr auto;
+	align-items: center;
+	gap: 12px;
+	padding: 0.5rem 1rem;
+	margin-top: 4px;
+	border-radius: 16px;
+	font-size: 1.1rem;
+	background: color-mix(in srgb, var(--ausspeedruns-blue) 35%, transparent);
+
+	@media (max-width: 48em) {
+		grid-template-columns: 1fr;
+		text-align: center;
+		gap: 4px;
+	}
+
+	a {
+		color: inherit;
+	}
+}
+
+.segmentTime {
+	font-weight: bold;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.segmentType {
+	font-weight: bold;
+	font-size: 85%;
+	text-transform: uppercase;
+	padding: 0 8px;
+	border: 2px solid currentColor;
+	border-radius: 8px;
+	justify-self: start;
+
+	@media (max-width: 48em) {
+		justify-self: center;
+	}
+}
+
+.segmentTitle {
+	font-weight: bold;
+	text-wrap: balance;
+}
+
+.segmentPeople {
+	font-style: italic;
+}
+
 .liveRun {
 	background: var(--ausspeedruns-orange) !important;
 
@@ -181,6 +232,68 @@
 	.donationIncentive {
 		font-style: italic;
 		font-weight: bold;
+	}
+
+	.medleyGames {
+		width: 100%;
+		margin-top: 1rem;
+		color: var(--colour-accent);
+
+		summary {
+			cursor: pointer;
+			font-weight: bold;
+			text-align: center;
+		}
+
+		ol {
+			list-style: none;
+			padding: 0;
+			margin: 0.5rem 0 0;
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+		}
+
+		a {
+			color: var(--colour-accent);
+		}
+	}
+
+	.medleyGame {
+		display: grid;
+		grid-template-columns: 90px 1fr 1fr;
+		gap: 12px;
+		align-items: center;
+		padding: 6px 12px;
+		border: 2px solid var(--colour-accent);
+		border-radius: 8px;
+
+		@media (max-width: 48em) {
+			grid-template-columns: 1fr;
+			text-align: center;
+			gap: 2px;
+		}
+	}
+
+	.medleyGameTime {
+		font-weight: bold;
+		white-space: nowrap;
+		font-size: 90%;
+	}
+
+	.medleyGameName,
+	.medleyGameMeta {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.medleyGameMeta {
+		align-items: flex-end;
+		font-size: 90%;
+
+		@media (max-width: 48em) {
+			align-items: center;
+		}
 	}
 
 	.blockName {

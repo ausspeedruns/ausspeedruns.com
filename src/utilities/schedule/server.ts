@@ -4,7 +4,8 @@ import { nanoid } from "nanoid";
 import type { Event, Incentive, Run, ScheduleDraft, Submission, User } from "#/payload-types";
 import type { Goal, War } from "./incentives.ts";
 import { relationId } from "#access/helpers.ts";
-import { DEFAULT_SETUP_MINUTES, type RunType } from "./constants.ts";
+import { SKIP_MEDLEY_SYNC, sortChildren, syncMedley } from "#utilities/runs/medley.ts";
+import { DEFAULT_SETUP_MINUTES, isPerformanceType, type RunType } from "./constants.ts";
 import { csvRowsToDraft, normaliseName, submissionsToCsv, type CsvRow, type ImportReport } from "./csv.ts";
 import { planSubmissionStatuses, type FinalisePlan } from "./finalise.ts";
 import { buildHoraroSchedule, type HoraroSchedule } from "./horaro.ts";
@@ -18,8 +19,10 @@ import type {
 	DraftState,
 	EventSummary,
 	FinaliseOptions,
+	SegmentTypeSummary,
 	SubmissionSummary,
 } from "./types.ts";
+import { normaliseRows } from "./medley.ts";
 import { validateDraft, type ScheduleIssue } from "./validation.ts";
 
 /** Thrown by schedule operations; converted to an HTTP response by the endpoints. */
@@ -158,7 +161,7 @@ async function findDraft(req: PayloadRequest, eventId: number): Promise<Schedule
 function draftState(draft: ScheduleDraft | null): DraftState {
 	return {
 		defaultSetupMinutes: draft?.defaultSetupMinutes ?? DEFAULT_SETUP_MINUTES,
-		rows: (Array.isArray(draft?.rows) ? draft.rows : []) as unknown as DraftRow[],
+		rows: normaliseRows((Array.isArray(draft?.rows) ? draft.rows : []) as unknown as DraftRow[]),
 		incentives: (Array.isArray(draft?.incentives) ? draft.incentives : []) as unknown as DraftIncentive[],
 	};
 }
@@ -194,12 +197,26 @@ async function loadGames(req: PayloadRequest): Promise<{ id: number; name: strin
 	return result.docs.map((game) => ({ id: game.id, name: game.name }));
 }
 
+export async function loadSegmentTypes(req: PayloadRequest): Promise<SegmentTypeSummary[]> {
+	const result = await req.payload.find({
+		collection: "segment-types",
+		depth: 0,
+		pagination: false,
+		overrideAccess: true,
+		sort: "name",
+		select: { name: true, slug: true, colour: true },
+		req,
+	});
+	return result.docs.map((type) => ({ id: type.id, name: type.name, slug: type.slug, colour: type.colour ?? null }));
+}
+
 export async function loadDraftResponse(req: PayloadRequest, eventId: number): Promise<DraftResponse> {
 	const event = await loadEvent(req, eventId);
-	const [submissions, draft, games] = await Promise.all([
+	const [submissions, draft, games, segmentTypes] = await Promise.all([
 		loadSubmissions(req, eventId),
 		findDraft(req, eventId),
 		loadGames(req),
+		loadSegmentTypes(req),
 	]);
 	const state = draftState(draft);
 	const map = asAppliedMap(draft?.appliedMap);
@@ -236,6 +253,7 @@ export async function loadDraftResponse(req: PayloadRequest, eventId: number): P
 		submissions,
 		users,
 		games,
+		segmentTypes,
 	};
 }
 
@@ -289,7 +307,7 @@ export async function saveDraft(
 		eventId,
 		{
 			defaultSetupMinutes: state.defaultSetupMinutes,
-			rows: state.rows as unknown as ScheduleDraft["rows"],
+			rows: normaliseRows(state.rows) as unknown as ScheduleDraft["rows"],
 			incentives: state.incentives as unknown as ScheduleDraft["incentives"],
 		},
 		expectedUpdatedAt,
@@ -304,10 +322,11 @@ export async function importCsv(
 	defaultSetupMinutes: number | undefined,
 ): Promise<ImportReport> {
 	await loadEvent(req, eventId);
-	const [submissions, games, existing] = await Promise.all([
+	const [submissions, games, existing, segmentTypes] = await Promise.all([
 		loadSubmissions(req, eventId),
 		loadGames(req),
 		findDraft(req, eventId),
+		loadSegmentTypes(req),
 	]);
 
 	// Only look up the users the CSV actually mentions
@@ -322,6 +341,7 @@ export async function importCsv(
 		submissions,
 		users,
 		games,
+		segmentTypes,
 		defaultSetupMinutes: defaultSetupMinutes ?? existing?.defaultSetupMinutes ?? DEFAULT_SETUP_MINUTES,
 	});
 
@@ -438,11 +458,19 @@ export async function applyDraft(
 		endTime: null,
 	};
 
-	for (const { row, start } of timed) {
+	// Hooks would re-sync medleys after every write; do it once at the end instead
+	const context = { [SKIP_MEDLEY_SYNC]: true };
+	const medleyIds: number[] = [];
+
+	for (const [order, { row, start }] of timed.entries()) {
 		const isRun = row.type === "run";
+		const parentId = row.parentKey ? (newMap.runs[row.parentKey] ?? null) : null;
 		const data = {
 			type: row.type,
 			event: eventId,
+			parent: parentId,
+			order: parentId !== null ? order : null,
+			segmentType: row.type === "segment" ? (row.segmentTypeId ?? null) : null,
 			game: isRun ? (gameIds.get(normaliseName(row.gameName)) ?? null) : null,
 			category: row.category,
 			platform: isRun ? row.platform : row.platform || null,
@@ -470,14 +498,27 @@ export async function applyDraft(
 				: null;
 
 		if (existing) {
-			await req.payload.update({ collection: "runs", id: existing.id, data, depth: 0, overrideAccess: true, req });
+			// A medley turning into something else must lose its games first, which happens as they're re-applied
+			if (existing.type === "medley" && row.type !== "medley") {
+				await req.payload.update({
+					collection: "runs",
+					where: { parent: { equals: existing.id } },
+					data: { parent: null },
+					depth: 0,
+					overrideAccess: true,
+					context,
+					req,
+				});
+			}
+			await req.payload.update({ collection: "runs", id: existing.id, data, depth: 0, overrideAccess: true, context, req });
 			newMap.runs[row.key] = existing.id;
 			result.updated++;
 		} else {
-			const created = await req.payload.create({ collection: "runs", data, depth: 0, overrideAccess: true, req });
+			const created = await req.payload.create({ collection: "runs", data, depth: 0, overrideAccess: true, context, req });
 			newMap.runs[row.key] = created.id;
 			result.created++;
 		}
+		if (row.type === "medley") medleyIds.push(newMap.runs[row.key]);
 	}
 
 	// Incentives
@@ -552,6 +593,8 @@ export async function applyDraft(
 	}
 	result.deleted = await deleteByIds(req, "runs", staleRunIds);
 
+	for (const medleyId of medleyIds) await syncMedley(req, medleyId);
+
 	// Event end time
 	const end = scheduleEnd(timed);
 	if (end) {
@@ -597,6 +640,7 @@ async function deleteByIds(req: PayloadRequest, collection: "runs" | "incentives
 		where: { id: { in: ids } },
 		depth: 0,
 		overrideAccess: true,
+		context: { [SKIP_MEDLEY_SYNC]: true },
 		req,
 	});
 	return result.docs.length;
@@ -674,7 +718,7 @@ export async function rebuildDraftFromRuns(req: PayloadRequest, eventId: number)
 	const existing = await findDraft(req, eventId);
 	const defaultSetupMinutes = existing?.defaultSetupMinutes ?? DEFAULT_SETUP_MINUTES;
 
-	const runs = (
+	const allRuns = (
 		await req.payload.find({
 			collection: "runs",
 			where: { event: { equals: eventId } },
@@ -682,12 +726,21 @@ export async function rebuildDraftFromRuns(req: PayloadRequest, eventId: number)
 			depth: 1,
 			pagination: false,
 			overrideAccess: true,
-			populate: { games: { name: true }, users: { username: true } },
+			populate: { games: { name: true }, users: { username: true }, runs: { type: true } },
+			joins: false,
 			req,
 		})
-	).docs.filter((run) => run.scheduledTime);
+	).docs;
+	const topLevel = allRuns.filter((run) => run.scheduledTime && relationId(run.parent) === null);
 
-	if (runs.length === 0) throw new ScheduleError("This event has no scheduled runs to rebuild from.");
+	if (topLevel.length === 0) throw new ScheduleError("This event has no scheduled runs to rebuild from.");
+
+	// Medley games directly follow their medley
+	const runs = topLevel.flatMap((run) => [
+		run,
+		...sortChildren(allRuns.filter((child) => relationId(child.parent) === run.id)),
+	]);
+	const keyByRunId = new Map<number, string>();
 
 	const incentives = (
 		await req.payload.find({
@@ -701,26 +754,35 @@ export async function rebuildDraftFromRuns(req: PayloadRequest, eventId: number)
 	).docs;
 
 	const map = emptyMap();
-	const rows: DraftRow[] = runs.map((run, i) => {
+	const rows: DraftRow[] = runs.map((run) => {
 		const key = nanoid();
 		map.runs[key] = run.id;
+		keyByRunId.set(run.id, key);
 
-		const next = runs[i + 1];
-		const end = new Date(run.scheduledTime as string).getTime() + (estimateToMs(run.estimate) ?? 0);
-		const gapMinutes = next ? Math.round((new Date(next.scheduledTime as string).getTime() - end) / 60000) : null;
+		const parentId = relationId(run.parent);
 		const type = (run.type ?? "run") as RunType;
-		const naturalSetup = type === "run" ? defaultSetupMinutes : 0;
+		let setupMinutesOverride: number | null = null;
+
+		if (parentId === null) {
+			const next = topLevel[topLevel.indexOf(run) + 1];
+			const end = new Date(run.scheduledTime as string).getTime() + (estimateToMs(run.estimate) ?? 0);
+			const gapMinutes = next ? Math.round((new Date(next.scheduledTime as string).getTime() - end) / 60000) : null;
+			const naturalSetup = isPerformanceType(type) ? defaultSetupMinutes : 0;
+			setupMinutesOverride = gapMinutes !== null && gapMinutes !== naturalSetup ? Math.max(0, gapMinutes) : null;
+		}
 
 		return {
 			key,
 			type,
+			parentKey: parentId !== null ? (keyByRunId.get(parentId) ?? null) : null,
+			segmentTypeId: relationId(run.segmentType),
 			submissionIds: (run.submissions ?? []).map((submission) => relationId(submission) as number),
 			gameName: typeof run.game === "object" && run.game ? run.game.name : "",
 			category: run.category ?? "",
 			platform: run.platform ?? "",
 			techPlatform: run.techPlatform ?? "",
 			estimate: normaliseEstimate(run.estimate),
-			setupMinutesOverride: gapMinutes !== null && gapMinutes !== naturalSetup ? Math.max(0, gapMinutes) : null,
+			setupMinutesOverride,
 			runnerIds: (run.runners ?? []).map((runner) => relationId(runner) as string),
 			otherRunners: run.otherRunners ?? "",
 			isRace: Boolean(run.isRace),
@@ -758,7 +820,7 @@ export async function rebuildDraftFromRuns(req: PayloadRequest, eventId: number)
 	});
 
 	// The first run's time becomes the event start so times don't shift
-	const firstStart = runs[0].scheduledTime as string;
+	const firstStart = topLevel[0].scheduledTime as string;
 	if (event.timeSettings?.startTime !== firstStart) {
 		rows.unshift({
 			key: nanoid(),
@@ -863,7 +925,7 @@ export async function finaliseSubmissions(
 
 export async function exportHoraro(req: PayloadRequest, eventId: number): Promise<HoraroSchedule> {
 	const event = await loadEvent(req, eventId);
-	const runs = (
+	const allRuns = (
 		await req.payload.find({
 			collection: "runs",
 			where: { event: { equals: eventId } },
@@ -871,32 +933,48 @@ export async function exportHoraro(req: PayloadRequest, eventId: number): Promis
 			depth: 1,
 			pagination: false,
 			overrideAccess: true,
-			populate: { games: { name: true }, users: { username: true, socials: true } },
+			populate: { games: { name: true }, users: { username: true, socials: true }, runs: { type: true } },
 			joins: false,
 			req,
 		})
-	).docs.filter((run) => run.scheduledTime);
+	).docs;
+	const runs = allRuns.filter((run) => run.scheduledTime && relationId(run.parent) === null);
+	const childrenOf = (parentId: number) =>
+		sortChildren(allRuns.filter((run) => relationId(run.parent) === parentId));
 
 	if (runs.length === 0) throw new ScheduleError("This event has no scheduled runs to export.");
 
 	const incentives = await req.payload.find({
 		collection: "incentives",
-		where: { run: { in: runs.map((run) => run.id) } },
+		where: { run: { in: allRuns.map((run) => run.id) } },
 		depth: 0,
 		pagination: false,
 		overrideAccess: true,
 		select: { title: true, run: true },
 		req,
 	});
+	const incentivesFor = (runId: number) =>
+		incentives.docs.filter((incentive) => relationId(incentive.run) === runId).map((incentive) => incentive.title);
+	const gameName = (run: Run) => (typeof run.game === "object" && run.game ? run.game.name : "");
 
 	return buildHoraroSchedule(
 		{ name: event.name, shortName: event.shortName, timezone: toEventSummary(event).timezone },
 		runs.map((run) => ({
+			children: childrenOf(run.id).map((child) => ({
+				game: gameName(child),
+				category: child.category ?? "",
+				runners: [
+					...(child.runners ?? []).filter((runner): runner is User => typeof runner === "object").map((runner) => runner.username),
+					...(child.otherRunners ?? "").split(",").map((name) => name.trim()).filter(Boolean),
+				],
+			})),
 			type: (run.type ?? "run") as RunType,
 			title: run.title ?? "",
-			game: typeof run.game === "object" && run.game ? run.game.name : "",
+			game: gameName(run),
 			category: run.category ?? "",
-			platform: run.platform ?? "",
+			platform:
+				run.platform ||
+				[...new Set(childrenOf(run.id).map((child) => child.platform).filter(Boolean))].join(", "),
 			estimate: run.estimate,
 			scheduledTime: run.scheduledTime as string,
 			isRace: Boolean(run.isRace),
@@ -909,9 +987,10 @@ export async function exportHoraro(req: PayloadRequest, eventId: number): Promis
 					bluesky: runner.socials?.bluesky,
 				})),
 			otherRunners: run.otherRunners ?? "",
-			incentives: incentives.docs
-				.filter((incentive) => relationId(incentive.run) === run.id)
-				.map((incentive) => incentive.title),
+			incentives: [
+				...incentivesFor(run.id),
+				...childrenOf(run.id).flatMap((child) => incentivesFor(child.id).map((title) => `${gameName(child)}: ${title}`)),
+			],
 		})),
 	);
 }

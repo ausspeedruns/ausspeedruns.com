@@ -78,6 +78,7 @@ export interface Config {
     products: Product;
     orders: Order;
     runs: Run;
+    'segment-types': SegmentType;
     submissions: Submission;
     volunteers: Volunteer;
     games: Game;
@@ -111,6 +112,7 @@ export interface Config {
     };
     runs: {
       incentives: 'incentives';
+      children: 'runs';
     };
     submissions: {
       runs: 'runs';
@@ -134,6 +136,7 @@ export interface Config {
     products: ProductsSelect<false> | ProductsSelect<true>;
     orders: OrdersSelect<false> | OrdersSelect<true>;
     runs: RunsSelect<false> | RunsSelect<true>;
+    'segment-types': SegmentTypesSelect<false> | SegmentTypesSelect<true>;
     submissions: SubmissionsSelect<false> | SubmissionsSelect<true>;
     volunteers: VolunteersSelect<false> | VolunteersSelect<true>;
     games: GamesSelect<false> | GamesSelect<true>;
@@ -530,6 +533,9 @@ export interface User {
   stripeCustomerId?: string | null;
   updatedAt: string;
   createdAt: string;
+  enableAPIKey?: boolean | null;
+  apiKey?: string | null;
+  apiKeyIndex?: string | null;
   email: string;
   resetPasswordToken?: string | null;
   resetPasswordExpiration?: string | null;
@@ -560,17 +566,29 @@ export interface Run {
    */
   title?: string | null;
   /**
-   * Non-run entries (setup buffers, sleep, etc.) are shown as blocks on the schedule.
+   * Medleys are a single schedule slot containing several game runs. Segments are speeches, news, ceremonies etc. Setup buffers and sleep are shown as blocks on the schedule.
    */
-  type?: ('run' | 'setupBuffer' | 'sleep' | 'other') | null;
+  type?: ('run' | 'medley' | 'segment' | 'setupBuffer' | 'sleep' | 'other') | null;
+  segmentType?: (number | null) | SegmentType;
   game?: (number | null) | Game;
+  /**
+   * Set to make this game part of a medley. Its event and scheduled time are taken from the medley.
+   */
+  parent?: (number | null) | Run;
+  /**
+   * Position within the medley (lowest first).
+   */
+  order?: number | null;
   event?: (number | null) | Event;
   /**
-   * For non-run entries this is used as the label (e.g. 'Overnight break').
+   * For medleys this is the medley name (e.g. '5 Minute Games Showcase'). For other entries it is the label (e.g. 'Overnight break').
    */
   category?: string | null;
   platform?: string | null;
   techPlatform?: string | null;
+  /**
+   * Presenters for segments. For medleys with games this is kept in sync with the games' runners automatically.
+   */
   runners?: (string | User)[] | null;
   /**
    * Comma-separated list of other runners who do not have a user account in the system.
@@ -608,7 +626,32 @@ export interface Run {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
+  children?: {
+    docs?: (number | Run)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   legacyKeystoneId?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "segment-types".
+ */
+export interface SegmentType {
+  id: number;
+  name: string;
+  /**
+   * Stable identifier for graphics/tech, e.g. 'news'.
+   */
+  slug: string;
+  /**
+   * Background colour on the schedule, e.g. #CC7722.
+   */
+  colour?: string | null;
+  textColour?: string | null;
+  description?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1591,6 +1634,10 @@ export interface Role {
    * Ticket pickup desk only: look up tickets and mark tickets/merch as collected.
    */
   canPickupTickets?: boolean | null;
+  /**
+   * Read the full tech/graphics schedule API (incl. unpublished schedules). Give this to an API-key user for the graphics bundle.
+   */
+  canAccessTechSchedule?: boolean | null;
   /**
    * Badge background colour, e.g. #CC7722.
    */
@@ -2592,6 +2639,10 @@ export interface PayloadLockedDocument {
         value: number | Run;
       } | null)
     | ({
+        relationTo: 'segment-types';
+        value: number | SegmentType;
+      } | null)
+    | ({
         relationTo: 'submissions';
         value: number | Submission;
       } | null)
@@ -3237,6 +3288,9 @@ export interface UsersSelect<T extends boolean = true> {
   stripeCustomerId?: T;
   updatedAt?: T;
   createdAt?: T;
+  enableAPIKey?: T;
+  apiKey?: T;
+  apiKeyIndex?: T;
   email?: T;
   resetPasswordToken?: T;
   resetPasswordExpiration?: T;
@@ -3264,6 +3318,7 @@ export interface RolesSelect<T extends boolean = true> {
   canManageContent?: T;
   canManageUsers?: T;
   canPickupTickets?: T;
+  canAccessTechSchedule?: T;
   colour?: T;
   textColour?: T;
   users?: T;
@@ -3423,7 +3478,10 @@ export interface OrdersSelect<T extends boolean = true> {
 export interface RunsSelect<T extends boolean = true> {
   title?: T;
   type?: T;
+  segmentType?: T;
   game?: T;
+  parent?: T;
+  order?: T;
   event?: T;
   category?: T;
   platform?: T;
@@ -3441,7 +3499,21 @@ export interface RunsSelect<T extends boolean = true> {
   twitch?: T;
   submissions?: T;
   incentives?: T;
+  children?: T;
   legacyKeystoneId?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "segment-types_select".
+ */
+export interface SegmentTypesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  colour?: T;
+  textColour?: T;
+  description?: T;
   updatedAt?: T;
   createdAt?: T;
 }

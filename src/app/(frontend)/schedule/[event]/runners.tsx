@@ -1,19 +1,22 @@
 type RunnersProps = {
 	runners: string[];
+	/** Names without accounts, shown without a profile link */
+	others?: string[];
 };
 
-export function Runners({ runners }: RunnersProps) {
-	if (runners.length === 0) {
+export function Runners({ runners, others = [] }: RunnersProps) {
+	if (runners.length === 0 && others.length === 0) {
 		return <span>???</span>;
 	}
 
-	const runnerLinks = runners.map((username) => {
-		return (
+	const runnerLinks = [
+		...runners.map((username) => (
 			<a key={username} href={`/user/${username}`} target="_blank" rel="noreferrer">
 				{username}
 			</a>
-		);
-	});
+		)),
+		...others.map((name) => <span key={`other-${name}`}>{name}</span>),
+	];
 
 	const lastRunner = runnerLinks.pop();
 

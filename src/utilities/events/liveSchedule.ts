@@ -1,5 +1,7 @@
 import type { Incentive, Run, User } from "#/payload-types";
-import { getGameName } from "#/utilities/runDisplay";
+import { relationId } from "#/access/helpers";
+import { getGameName, getRunDisplayName } from "#/utilities/runDisplay";
+import { sortChildren } from "#/utilities/runs/medley";
 import { estimateToMs } from "#/utilities/schedule/timing";
 import { parseIncentiveResult, type IncentiveResult } from "./incentiveResults";
 
@@ -60,7 +62,7 @@ function runEnd(runs: LiveRun[], index: number): number {
 
 function nextGameRun(runs: LiveRun[], fromIndex: number): number | null {
 	for (let index = fromIndex; index < runs.length; index++) {
-		if (runs[index].type === "run") return index;
+		if (runs[index].type === "run" || runs[index].type === "medley") return index;
 	}
 	return null;
 }
@@ -117,23 +119,54 @@ function runnersFor(run: Run): LiveRunner[] {
 	return [...users, ...others];
 }
 
-/** Serialises a populated run, keeping only public fields. */
-export function toLiveRun(run: Run): LiveRun | null {
+const HAS_PEOPLE: NonNullable<Run["type"]>[] = ["run", "medley", "segment"];
+
+/** Serialises a populated run, keeping only public fields. Medleys list their games as the category. */
+export function toLiveRun(run: Run, children: Run[] = []): LiveRun | null {
 	if (!run.scheduledTime) return null;
 	const type = run.type ?? "run";
+
+	let title: string;
+	let category: string | null = null;
+	if (type === "run") {
+		title = getGameName(run.game);
+		category = run.category ?? null;
+	} else if (type === "medley") {
+		title = getRunDisplayName(run);
+		category = children.length > 0 ? children.map((child) => getGameName(child.game)).join(", ") : "Medley";
+	} else if (type === "segment") {
+		title = run.title || run.category || "Segment";
+	} else {
+		title = run.category || "Intermission";
+	}
 
 	return {
 		id: run.id,
 		type,
-		title: type === "run" ? getGameName(run.game) : run.category || "Intermission",
-		category: type === "run" ? (run.category ?? null) : null,
+		title,
+		category,
 		platform: run.platform ?? null,
-		runners: type === "run" ? runnersFor(run) : [],
+		runners: HAS_PEOPLE.includes(type) ? runnersFor(run) : [],
 		isRace: Boolean(run.isRace),
 		isCoop: Boolean(run.isCoop),
 		scheduledTime: run.scheduledTime,
 		estimateMs: estimateToMs(run.estimate),
 	};
+}
+
+/** Serialises the main schedule; medley games are folded into their medley. */
+export function toLiveRuns(runs: Run[]): LiveRun[] {
+	const childrenByParent = new Map<number, Run[]>();
+	for (const run of runs) {
+		const parentId = relationId(run.parent);
+		if (parentId === null) continue;
+		childrenByParent.set(parentId, [...(childrenByParent.get(parentId) ?? []), run]);
+	}
+
+	return runs
+		.filter((run) => relationId(run.parent) === null)
+		.map((run) => toLiveRun(run, sortChildren(childrenByParent.get(run.id) ?? [])))
+		.filter((run): run is LiveRun => run !== null);
 }
 
 export function toLiveIncentive(incentive: Incentive): LiveIncentive | null {
@@ -147,7 +180,7 @@ export function toLiveIncentive(incentive: Incentive): LiveIncentive | null {
 	return {
 		id: incentive.id,
 		title: incentive.title,
-		runLabel: run ? [getGameName(run.game), run.category].filter(Boolean).join(" – ") : null,
+		runLabel: run ? [getRunDisplayName(run), run.type === "medley" ? null : run.category].filter(Boolean).join(" – ") : null,
 		scheduledTime,
 		endTime:
 			scheduledTime && estimateMs !== null

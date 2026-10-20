@@ -1,12 +1,35 @@
-import type { CollectionConfig } from "payload";
+import type { CollectionConfig, Endpoint } from "payload";
 
+import { canAccessTechSchedule } from "#access/helpers.ts";
 import { manageContent } from "#access/manageContent.ts";
+import { loadTechSchedule } from "#utilities/schedule/techSchedule.ts";
 import { manageContentOrPublished } from "#access/manageContentOrPublished.ts";
 import { validateDateAfter, validateColour, validateUrl, validateUrlSafe } from "#fields/validators.ts";
 import { DefaultTimeZone, TimeZoneOptions } from "./Fields/TimezoneSelect.ts";
 
+/**
+ * Full schedule for tech and stream graphics, with medley games nested under their medley.
+ * GET /api/events/:shortName/tech-schedule — authenticate with `Authorization: users API-Key <key>`.
+ */
+const techScheduleEndpoint: Endpoint = {
+	path: "/:shortName/tech-schedule",
+	method: "get",
+	handler: async (req) => {
+		if (!(await canAccessTechSchedule(req))) {
+			return Response.json({ error: "You need tech schedule access to use this endpoint." }, { status: 403 });
+		}
+
+		const shortName = String(req.routeParams?.shortName ?? "");
+		const schedule = await loadTechSchedule(req, shortName);
+		if (!schedule) return Response.json({ error: "Event not found." }, { status: 404 });
+
+		return Response.json(schedule, { headers: { "Cache-Control": "no-store" } });
+	},
+};
+
 export const Events: CollectionConfig<"events"> = {
 	slug: "events",
+	endpoints: [techScheduleEndpoint],
 	access: {
 		create: manageContent,
 		delete: manageContent,

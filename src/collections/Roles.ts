@@ -25,6 +25,7 @@ export const Roles: CollectionConfig<"roles"> = {
 		canManageContent: true,
 		canManageUsers: true,
 		canPickupTickets: true,
+		canAccessTechSchedule: true,
 	},
 	fields: [
 		{
@@ -59,6 +60,15 @@ export const Roles: CollectionConfig<"roles"> = {
 					type: "checkbox",
 					defaultValue: false,
 					admin: { description: "Ticket pickup desk only: look up tickets and mark tickets/merch as collected." },
+				},
+				{
+					name: "canAccessTechSchedule",
+					type: "checkbox",
+					defaultValue: false,
+					admin: {
+						description:
+							"Read the full tech/graphics schedule API (incl. unpublished schedules). Give this to an API-key user for the graphics bundle.",
+					},
 				},
 			],
 		},

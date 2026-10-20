@@ -1,6 +1,13 @@
 import { nanoid } from "nanoid";
 
 import { incentivesFromSubmission, normaliseName } from "#/utilities/schedule/csv.ts";
+import {
+	addToMedley,
+	insertRowAfter,
+	moveRowInTree,
+	normaliseRows,
+	removeFromMedley,
+} from "#/utilities/schedule/medley.ts";
 import { mergeSpecialRequirements } from "#/utilities/schedule/pairing.ts";
 import type {
 	DraftIncentive,
@@ -10,16 +17,28 @@ import type {
 	SubmissionSummary,
 } from "#/utilities/schedule/types.ts";
 
-export function newRow(type: DraftRowType): DraftRow {
+export function newRow(type: DraftRowType, parentKey: string | null = null): DraftRow {
+	const estimate =
+		type === "sleep"
+			? "08:00:00"
+			: type === "setupBuffer"
+				? "00:15:00"
+				: type === "medley"
+					? "01:00:00"
+					: type === "segment"
+						? "00:10:00"
+						: "00:30:00";
 	return {
 		key: nanoid(),
 		type,
+		parentKey: type === "run" ? parentKey : null,
+		segmentTypeId: null,
 		submissionIds: [],
 		gameName: "",
 		category: type === "sleep" ? "Overnight break" : "",
 		platform: "",
 		techPlatform: "",
-		estimate: type === "sleep" ? "08:00:00" : type === "setupBuffer" ? "00:15:00" : "00:30:00",
+		estimate: parentKey && type === "run" ? "00:05:00" : estimate,
 		setupMinutesOverride: null,
 		runnerIds: [],
 		otherRunners: "",
@@ -46,27 +65,41 @@ export function newIncentive(rowKey: string): DraftIncentive {
 }
 
 export function updateRow(state: DraftState, key: string, patch: Partial<DraftRow>): DraftState {
-	return { ...state, rows: state.rows.map((row) => (row.key === key ? { ...row, ...patch } : row)) };
+	const rows = state.rows.map((row) => (row.key === key ? { ...row, ...patch } : row));
+	// Changing a medley's type or a child's type can break the medley structure
+	return { ...state, rows: patch.type || patch.parentKey !== undefined ? normaliseRows(rows) : rows };
 }
 
 export function moveRow(state: DraftState, from: number, to: number): DraftState {
-	const rows = [...state.rows];
-	const [moved] = rows.splice(from, 1);
-	rows.splice(to, 0, moved);
-	return { ...state, rows };
+	return { ...state, rows: moveRowInTree(state.rows, from, to) };
 }
 
 export function insertRow(state: DraftState, index: number, row: DraftRow): DraftState {
 	const rows = [...state.rows];
 	rows.splice(index, 0, row);
-	return { ...state, rows };
+	return { ...state, rows: normaliseRows(rows) };
 }
 
+/** Inserts after the given row (or at the end). Game runs inserted after a medley game join that medley. */
+export function insertRowAfterKey(state: DraftState, afterKey: string | null, row: DraftRow): DraftState {
+	return { ...state, rows: insertRowAfter(state.rows, afterKey, row) };
+}
+
+export function addRowToMedley(state: DraftState, key: string, medleyKey: string): DraftState {
+	return { ...state, rows: addToMedley(state.rows, key, medleyKey) };
+}
+
+export function removeRowFromMedley(state: DraftState, key: string): DraftState {
+	return { ...state, rows: removeFromMedley(state.rows, key) };
+}
+
+/** Removes a row. Removing a medley removes its games too. */
 export function deleteRow(state: DraftState, key: string): DraftState {
+	const removed = new Set([key, ...state.rows.filter((row) => row.parentKey === key).map((row) => row.key)]);
 	return {
 		...state,
-		rows: state.rows.filter((row) => row.key !== key),
-		incentives: state.incentives.filter((incentive) => incentive.rowKey !== key),
+		rows: state.rows.filter((row) => !removed.has(row.key)),
+		incentives: state.incentives.filter((incentive) => !removed.has(incentive.rowKey)),
 	};
 }
 

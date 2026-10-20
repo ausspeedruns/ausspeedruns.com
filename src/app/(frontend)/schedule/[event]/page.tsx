@@ -6,7 +6,74 @@ import { Schedule } from "./schedule";
 import type { Metadata } from "next";
 import { getPayload } from "payload";
 import { format } from "date-fns";
-import { getGameName, isGameRun } from "#utilities/runDisplay.ts";
+import type { Incentive, Run as RunDoc } from "#/payload-types";
+import { relationId } from "#access/helpers.ts";
+import { getGameName, getRunDisplayName } from "#utilities/runDisplay.ts";
+import { sortChildren } from "#utilities/runs/medley.ts";
+import type { MedleyGame, Run } from "./schedule-types";
+
+function usernames(run: RunDoc): string[] {
+	return run.runners?.filter((runner) => typeof runner === "object").map((runner) => runner.username) ?? [];
+}
+
+function otherRunners(run: RunDoc): string[] {
+	return (run.otherRunners ?? "")
+		.split(",")
+		.map((name) => name.trim())
+		.filter(Boolean);
+}
+
+function incentivesOf(run: RunDoc) {
+	return (run.incentives?.docs ?? []).filter((incentive): incentive is Incentive => typeof incentive === "object");
+}
+
+/** Builds the public schedule: top-level entries in time order, with medley games nested under their medley. */
+function toScheduleRuns(docs: RunDoc[]): Run[] {
+	const childrenByParent = new Map<number, RunDoc[]>();
+	for (const run of docs) {
+		const parentId = relationId(run.parent);
+		if (parentId !== null) childrenByParent.set(parentId, [...(childrenByParent.get(parentId) ?? []), run]);
+	}
+
+	return docs
+		.filter((run) => relationId(run.parent) === null && run.scheduledTime)
+		.map((run, i) => {
+			const children: MedleyGame[] = sortChildren(childrenByParent.get(run.id) ?? []).map((child) => ({
+				id: child.id,
+				game: getGameName(child.game),
+				category: child.category ?? "",
+				platform: child.platform ?? "",
+				estimate: child.estimate,
+				scheduledTime: child.scheduledTime ?? null,
+				runners: usernames(child),
+				otherRunners: otherRunners(child),
+				race: child.isRace ?? false,
+				coop: child.isCoop ?? false,
+				donationIncentives: incentivesOf(child),
+			}));
+			const segmentType = run.segmentType && typeof run.segmentType === "object" ? run.segmentType : null;
+
+			return {
+				id: run.id,
+				type: run.type ?? "run",
+				game: getRunDisplayName(run),
+				estimate: run.estimate,
+				scheduledTime: run.scheduledTime as string,
+				platform: run.platform || [...new Set(children.map((child) => child.platform).filter(Boolean))].join(", "),
+				category: run.category ?? "",
+				runners: usernames(run),
+				otherRunners: otherRunners(run),
+				coop: run.isCoop ?? false,
+				race: run.isRace ?? false,
+				donationIncentives: incentivesOf(run),
+				displayIndex: i,
+				...(run.type === "medley" ? { children } : {}),
+				...(segmentType
+					? { segmentType: { name: segmentType.name, colour: segmentType.colour, textColour: segmentType.textColour } }
+					: {}),
+			};
+		});
+}
 
 export type Block = {
 	name: string;
@@ -108,6 +175,7 @@ export default async function EventSchedule({ params }: URLProps) {
 		},
 		joins: {
 			incentives: { limit: 0 },
+			children: false,
 		},
 		populate: {
 			users: {
@@ -116,6 +184,14 @@ export default async function EventSchedule({ params }: URLProps) {
 			incentives: {
 				title: true,
 				data: true,
+			},
+			"segment-types": {
+				name: true,
+				colour: true,
+				textColour: true,
+			},
+			runs: {
+				type: true,
 			},
 		},
 	});
@@ -134,31 +210,7 @@ export default async function EventSchedule({ params }: URLProps) {
 				oengus={event.scheduleMetadata?.oengus || ""}
 				scheduleBlocks={event.scheduleMetadata?.scheduleBlocks ?? []}
 				shortName={event.shortName}
-				runs={
-					runsRequest.docs.flatMap((run, i) => {
-						if (typeof run === "number") return [];
-						if (!run.scheduledTime) return [];
-
-						return {
-							id: run.id,
-							type: run.type ?? "run",
-							game: isGameRun(run) ? getGameName(run.game) : (run.title ?? ""),
-							estimate: run.estimate,
-							scheduledTime: run.scheduledTime,
-							platform: run.platform ?? "",
-							category: run.category ?? "",
-							runners:
-								run.runners
-									?.filter((runner) => typeof runner === "object")
-									.map((runner) => runner.username) || [],
-							coop: run.isCoop ?? false,
-							race: run.isRace ?? false,
-							donationIncentives:
-								run.incentives?.docs?.filter((incentive) => typeof incentive === "object") ?? [],
-							displayIndex: i,
-						};
-					}) ?? []
-				}
+				runs={toScheduleRuns(runsRequest.docs)}
 			/>
 		</main>
 	);

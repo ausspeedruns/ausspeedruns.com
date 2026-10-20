@@ -53,8 +53,14 @@ export const Filters = (props: FiltersProps) => {
 		});
 	}
 
-	const consoleFilters = [...new Set(props.runs.map((run) => run.platform))]
-		.filter((platform) => platform !== "?")
+	const consoleFilters = [
+		...new Set(
+			props.runs.flatMap((run) =>
+				run.children && run.children.length > 0 ? run.children.map((child) => child.platform) : [run.platform],
+			),
+		),
+	]
+		.filter((platform) => platform && platform !== "?")
 		.sort()
 		.map((platform) => ({ label: platform, value: platform.toLowerCase() }));
 

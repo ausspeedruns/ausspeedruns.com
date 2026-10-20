@@ -2,6 +2,7 @@ import { getPayload } from "payload";
 import config from "#payload-config";
 
 import type { Event } from "#/payload-types";
+import { countedRunsWhere } from "#/utilities/runDisplay";
 
 export interface AllTimeStats {
 	totalRaised: number;
@@ -44,10 +45,7 @@ export async function getAllTimeStats(now: Date = new Date()): Promise<AllTimeSt
 		const runs = await payload.count({
 			collection: "runs",
 			where: {
-				and: [
-					{ event: { in: startedEventIds } },
-					{ or: [{ type: { equals: "run" } }, { type: { exists: false } }] },
-				],
+				and: [{ event: { in: startedEventIds } }, countedRunsWhere],
 			},
 		});
 		runCount = runs.totalDocs;

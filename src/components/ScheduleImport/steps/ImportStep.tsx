@@ -61,6 +61,8 @@ export function ImportStep() {
 			report.unmatchedRunners.length > 0 ||
 			report.invalidEstimates.length > 0 ||
 			report.invalidIncentiveJson.length > 0 ||
+			(report.unknownSegmentTypes?.length ?? 0) > 0 ||
+			(report.unknownMedleys?.length ?? 0) > 0 ||
 			report.newGames.length > 0);
 
 	return (
@@ -122,6 +124,14 @@ export function ImportStep() {
 									<ReportItem
 										title="Invalid donationIncentives JSON on lines:"
 										items={report.invalidIncentiveJson.map(String)}
+									/>
+									<ReportItem
+										title="Unknown segment types (add them under Segment Types, then set them in Timing):"
+										items={report.unknownSegmentTypes ?? []}
+									/>
+									<ReportItem
+										title="Medleys not found (a 'medley' row with this name must come earlier in the file):"
+										items={report.unknownMedleys ?? []}
 									/>
 									<ReportItem
 										title="New games that will be created on apply (fix spelling in Timing if they should match an existing game):"

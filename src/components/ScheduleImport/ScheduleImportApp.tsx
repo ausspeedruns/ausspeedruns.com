@@ -159,7 +159,8 @@ export function ScheduleImportApp({ events, initialEventId, apiBase, links = {} 
 			: null;
 
 	const end = scheduleEnd(timed);
-	const runCount = timed.filter((entry) => entry.row.type === "run").length;
+	const runCount = timed.filter((entry) => entry.row.type === "run" && !entry.row.parentKey).length +
+		timed.filter((entry) => entry.row.type === "medley").length;
 	const eventLink = data ? fillLink(links.event, { id: data.event.id, eventId: data.event.id }) : null;
 	const saveBadge = SAVE_STATUS[saveStatus];
 

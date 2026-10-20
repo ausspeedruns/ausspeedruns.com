@@ -47,6 +47,8 @@ const draftRowSchema = z.object({
 	youtube: z.string().optional(),
 	twitch: z.string().optional(),
 	time: z.string().optional(),
+	parentKey: z.string().nullable().optional(),
+	segmentTypeId: z.number().int().nullable().optional(),
 });
 
 const draftIncentiveSchema = z.object({

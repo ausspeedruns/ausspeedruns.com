@@ -2,7 +2,7 @@ import { getPayload } from "payload";
 import config from "#payload-config";
 
 import type { Incentive, Run } from "#/payload-types";
-import { toLiveIncentive, toLiveRun, type LiveData, type LiveIncentive, type LiveRun } from "./liveSchedule";
+import { toLiveIncentive, toLiveRuns, type LiveData, type LiveIncentive } from "./liveSchedule";
 
 /** Loads the public schedule and active incentives used by the Event Live block. */
 export async function getEventLiveData(eventId: number): Promise<LiveData> {
@@ -27,10 +27,14 @@ export async function getEventLiveData(eventId: number): Promise<LiveData> {
 				isCoop: true,
 				scheduledTime: true,
 				estimate: true,
+				title: true,
+				parent: true,
+				order: true,
 			},
 			populate: {
 				games: { name: true },
 				users: { username: true },
+				runs: { type: true },
 			},
 		}),
 		payload.find({
@@ -41,14 +45,14 @@ export async function getEventLiveData(eventId: number): Promise<LiveData> {
 			pagination: false,
 			select: { title: true, type: true, data: true, run: true },
 			populate: {
-				runs: { game: true, category: true, scheduledTime: true, estimate: true },
+				runs: { type: true, title: true, game: true, category: true, scheduledTime: true, estimate: true },
 				games: { name: true },
 			},
 		}),
 	]);
 
 	return {
-		runs: (runs.docs as Run[]).map(toLiveRun).filter((run): run is LiveRun => run !== null),
+		runs: toLiveRuns(runs.docs as Run[]),
 		incentives: (incentives.docs as Incentive[])
 			.map(toLiveIncentive)
 			.filter((incentive): incentive is LiveIncentive => incentive !== null),

@@ -1,8 +1,10 @@
 import type { BasePayload } from "payload";
 import { kitchenSinkPage } from "./kitchen-sink.ts";
 import { homePage } from "./home.ts";
+import { seedSegmentTypes } from "./segment-types.ts";
 
 export async function seed(payload: BasePayload) {
+	await seedSegmentTypes(payload);
 	await createPages(payload);
 
 	await setupHeader(payload, -1);

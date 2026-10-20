@@ -7,16 +7,24 @@ import { formatScheduleTime } from "./time";
 
 import type { Block, Run, Settings } from "./schedule-types";
 
-function isStringInRunData(run: Run, searchString: string) {
+type Searchable = Pick<Run, "category" | "game" | "runners" | "otherRunners" | "donationIncentives">;
+
+function isStringInRunData(run: Searchable & { children?: Searchable[] }, searchString: string): boolean {
 	const lowerCaseSearchString = searchString.toLowerCase();
 	return (
 		run.category.toLowerCase().includes(lowerCaseSearchString) ||
 		run.game.toLowerCase().includes(lowerCaseSearchString) ||
-		run.runners.find((runner) => runner.toLowerCase().includes(lowerCaseSearchString)) !== undefined ||
+		[...run.runners, ...(run.otherRunners ?? [])].find((runner) =>
+			runner.toLowerCase().includes(lowerCaseSearchString),
+		) !== undefined ||
 		run.donationIncentives?.find((incentive) => incentive.title.toLowerCase().includes(lowerCaseSearchString)) !==
-			undefined
+			undefined ||
+		(run.children ?? []).some((child) => isStringInRunData(child, searchString))
 	);
 }
+
+const platformsOf = (run: Run) =>
+	[run.platform, ...(run.children ?? []).map((child) => child.platform)].map((platform) => platform.toLowerCase());
 
 interface Filters {
 	race: boolean;
@@ -29,11 +37,18 @@ interface Filters {
 function FilterRuns(runs: Run[], filters: Filters) {
 	// Jesus ChatGPT this is based
 	return runs.filter((run) => {
-		if (filters.race && !run.race) return false;
-		if (filters.coop && !run.coop) return false;
-		if (filters.donationIncentive && run.donationIncentives && run.donationIncentives.length === 0) return false;
+		const children = run.children ?? [];
+		if (filters.race && !run.race && !children.some((child) => child.race)) return false;
+		if (filters.coop && !run.coop && !children.some((child) => child.coop)) return false;
+		if (
+			filters.donationIncentive &&
+			run.donationIncentives.length === 0 &&
+			!children.some((child) => child.donationIncentives.length > 0)
+		)
+			return false;
 		if (filters.search && !isStringInRunData(run, filters.search)) return false;
-		if (filters.console.length > 0 && !filters.console.includes(run.platform.toLowerCase())) return false;
+		if (filters.console.length > 0 && !platformsOf(run).some((platform) => filters.console.includes(platform)))
+			return false;
 		return true;
 	});
 }

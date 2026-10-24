@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Button, Card, Container, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
-import { AtSign, Tv } from "lucide-react";
+import { Bluesky, Video } from "pixelarticons/react";
 import type { Run as RunType } from "#/payload-types";
 import { headers } from "next/headers";
 import config from "#payload-config";
@@ -55,12 +55,12 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 		{
 			label: "Twitch",
 			href: user.socials?.twitch ? `https://twitch.tv/${user.socials.twitch}` : undefined,
-			icon: Tv,
+			icon: Video,
 		},
 		{
 			label: "Bluesky",
 			href: user.socials?.bluesky ? `https://bsky.app/profile/${user.socials.bluesky}` : undefined,
-			icon: AtSign,
+			icon: Bluesky,
 		},
 	].filter((item) => item.href);
 

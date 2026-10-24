@@ -4,7 +4,7 @@ import type { Media as MediaType, Product } from "#/payload-types";
 import type { CartItem as CartItemType } from "#stores/useCartStore.ts";
 import { Media } from "#components/Media/Media.tsx";
 import { ActionIcon, Badge, Card, Divider, Group, Paper, Skeleton, Stack, Text } from "@mantine/core";
-import { Minus, Package, Plus, Ticket, Trash2 } from "lucide-react";
+import { Minus, Package, Plus, MemoryStick, Trash } from "pixelarticons/react";
 import { useEffect, useState } from "react";
 
 const currencyFormatter = new Intl.NumberFormat("en-AU", {
@@ -74,7 +74,11 @@ export function CartItem({ item, onRemove, onUpdateQuantity }: CartItemProps) {
 											size="sm"
 											variant="light"
 											leftSection={
-												productType === "ticket" ? <Ticket size={10} /> : <Package size={10} />
+												productType === "ticket" ? (
+													<MemoryStick width={10} height={10} />
+												) : (
+													<Package width={10} height={10} />
+												)
 											}
 										>
 											{productType === "ticket" ? "Ticket" : "Merchandise"}
@@ -92,7 +96,7 @@ export function CartItem({ item, onRemove, onUpdateQuantity }: CartItemProps) {
 						variant="subtle"
 						onClick={() => onRemove(item.id)}
 					>
-						<Trash2 size={16} />
+						<Trash width={16} height={16} />
 					</ActionIcon>
 				</Group>
 
@@ -113,7 +117,7 @@ export function CartItem({ item, onRemove, onUpdateQuantity }: CartItemProps) {
 							variant="default"
 							onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
 						>
-							<Minus size={16} />
+							<Minus width={16} height={16} />
 						</ActionIcon>
 						<Paper px="md" py="xs" radius="md" withBorder>
 							<Text fw={600} ta="center">
@@ -125,7 +129,7 @@ export function CartItem({ item, onRemove, onUpdateQuantity }: CartItemProps) {
 							variant="default"
 							onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
 						>
-							<Plus size={16} />
+							<Plus width={16} height={16} />
 						</ActionIcon>
 					</Group>
 

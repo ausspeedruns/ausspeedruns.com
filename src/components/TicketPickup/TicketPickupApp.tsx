@@ -18,8 +18,8 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { differenceInCalendarDays, format } from "date-fns";
-import { LogOut, Maximize, Minimize, Search, X } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { Logout, ArrowUp, ArrowDown, Search, Close } from "pixelarticons/react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { PickupItem, PickupLookup, PickupOrder, PickupSaveRequest } from "#/utilities/ticketPickup/types.ts";
 import styles from "./TicketPickup.module.css";
@@ -274,7 +274,7 @@ export function TicketPickupApp({ apiUrl, exitHref }: TicketPickupAppProps) {
 		return () => clearTimeout(timer);
 	}, [reference, isDirty, runSearch]);
 
-	function submit(event: FormEvent) {
+	function submit(event: React.SubmitEvent<HTMLFormElement>) {
 		event.preventDefault();
 		if (!reference.trim()) return focusInput();
 		if (isDirty && !window.confirm("You have unsaved changes for the current ticket. Discard them?")) return;
@@ -342,7 +342,7 @@ export function TicketPickupApp({ apiUrl, exitHref }: TicketPickupAppProps) {
 							onClick={toggleFullscreen}
 							aria-label="Toggle full screen"
 						>
-							{isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
+							{isFullscreen ? <ArrowDown /> : <ArrowUp />}
 						</ActionIcon>
 					</Tooltip>
 					<Tooltip label="Leave pickup desk">
@@ -357,7 +357,7 @@ export function TicketPickupApp({ apiUrl, exitHref }: TicketPickupAppProps) {
 								if (!window.confirm("Leave the ticket pickup desk?")) event.preventDefault();
 							}}
 						>
-							<LogOut size={18} />
+							<Logout />
 						</ActionIcon>
 					</Tooltip>
 				</Group>
@@ -400,7 +400,7 @@ export function TicketPickupApp({ apiUrl, exitHref }: TicketPickupAppProps) {
 											onClick={clear}
 											aria-label="Clear"
 										>
-											<X size={28} />
+											<Close />
 										</ActionIcon>
 									) : null
 								}
@@ -413,7 +413,7 @@ export function TicketPickupApp({ apiUrl, exitHref }: TicketPickupAppProps) {
 								aria-label="Search"
 								title="Search"
 							>
-								<Search size={36} />
+								<Search width={36} height={36} />
 							</Button>
 						</Group>
 						<Text size="sm" c={isDirty ? "yellow" : "dimmed"} ta="center">

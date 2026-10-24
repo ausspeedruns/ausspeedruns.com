@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@mantine/core";
-import { CalendarDays, HeartHandshake } from "lucide-react";
+import { Calendar2, Heart } from "pixelarticons/react";
 import styles from "./EventLiveBlock.module.css";
 
 interface HeroActionsProps {
@@ -23,7 +23,7 @@ export function HeroActions({ donateUrl, scheduleHref }: HeroActionsProps) {
 					{...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
 					size="xl"
 					className={styles.donateButton}
-					leftSection={<HeartHandshake size={26} />}
+					leftSection={<Heart />}
 				>
 					Donate
 				</Button>
@@ -35,7 +35,7 @@ export function HeroActions({ donateUrl, scheduleHref }: HeroActionsProps) {
 				variant="white"
 				color="dark"
 				className={styles.scheduleButton}
-				leftSection={<CalendarDays size={20} />}
+				leftSection={<Calendar2 />}
 			>
 				Schedule
 			</Button>

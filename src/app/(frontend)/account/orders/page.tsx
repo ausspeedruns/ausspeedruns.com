@@ -3,9 +3,8 @@ import { getPayload } from "payload";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Alert, Anchor, Stack, Text, ThemeIcon, Title } from "@mantine/core";
-import { ReceiptText } from "lucide-react";
 import { Order } from "./order";
-import { WarningDiamond } from "pixelarticons/react";
+import { WarningDiamond, Box } from "pixelarticons/react";
 
 export default async function AccountOrdersPage() {
 	const payload = await getPayload({ config });
@@ -41,7 +40,7 @@ export default async function AccountOrdersPage() {
 					color="gray"
 					icon={
 						<ThemeIcon color="gray" radius="xl" size="sm" variant="light">
-							<ReceiptText size={14} />
+							<Box width={14} height={14} />
 						</ThemeIcon>
 					}
 					variant="light"

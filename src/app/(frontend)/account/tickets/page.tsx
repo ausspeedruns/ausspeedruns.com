@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { Ticket } from "./ticket";
 import type { Event } from "#payload-types.ts";
 import { Alert, Stack, ThemeIcon, Text, Title } from "@mantine/core";
-import { MemoryStick } from "lucide-react";
+import { MemoryStick } from "pixelarticons/react";
 
 export default async function AccountTicketsPage() {
 	const payload = await getPayload({ config });
@@ -74,7 +74,7 @@ export default async function AccountTicketsPage() {
 					color="gray"
 					icon={
 						<ThemeIcon color="gray" radius="xl" size="sm" variant="light">
-							<MemoryStick size={14} />
+							<MemoryStick width={14} height={14} />
 						</ThemeIcon>
 					}
 					variant="light"

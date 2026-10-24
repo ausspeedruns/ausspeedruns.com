@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button, useComputedColorScheme } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { MessageSquare } from "lucide-react";
+import { Comment } from "pixelarticons/react";
 import styles from "./EventLiveBlock.module.css";
 
 export const TWITCH_CHANNEL = "ausspeedruns";
@@ -26,9 +26,10 @@ export function TwitchEmbed() {
 	const playerSrc = hostname
 		? `https://player.twitch.tv/?${new URLSearchParams({ channel: TWITCH_CHANNEL, parent: hostname, autoplay: "true", muted: "false" })}`
 		: null;
-	const chatSrc = hostname && showChat
-		? `https://www.twitch.tv/embed/${TWITCH_CHANNEL}/chat?${new URLSearchParams({ parent: hostname, ...(colorScheme === "dark" ? { darkpopout: "" } : {}) })}`
-		: null;
+	const chatSrc =
+		hostname && showChat
+			? `https://www.twitch.tv/embed/${TWITCH_CHANNEL}/chat?${new URLSearchParams({ parent: hostname, ...(colorScheme === "dark" ? { darkpopout: "" } : {}) })}`
+			: null;
 
 	return (
 		<div className={styles.stream} data-chat-open={chatOpen ? "true" : undefined}>
@@ -47,7 +48,7 @@ export function TwitchEmbed() {
 				className={styles.chatToggle}
 				variant="default"
 				fullWidth
-				leftSection={<MessageSquare size={16} />}
+				leftSection={<Comment />}
 				onClick={() => setChatOpen((open) => !open)}
 				aria-expanded={chatOpen}
 			>

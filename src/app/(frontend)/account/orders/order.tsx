@@ -1,6 +1,6 @@
 import type { Order as OrderType } from "#payload-types.ts";
 import { Badge, Divider, Group, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from "@mantine/core";
-import { CalendarClock, CircleDollarSign, CreditCard, Landmark, PackageCheck } from "lucide-react";
+import { Box, Building, Calendar, CreditCard, Dollar } from "pixelarticons/react";
 import { OrderItem } from "./order-item";
 
 interface OrderProps {
@@ -48,7 +48,7 @@ export function Order(props: OrderProps) {
 
 	const totalQuantity = items.reduce((total, item) => total + item.quantity, 0);
 	const purchaseType = formatPurchaseType(order.purchaseType);
-	const PurchaseIcon = order.purchaseType === "bankTransfer" ? Landmark : CreditCard;
+	const PurchaseIcon = order.purchaseType === "bankTransfer" ? Building : CreditCard;
 
 	return (
 		<Paper mt="md" p="md" radius="md" shadow="xs" withBorder>
@@ -57,7 +57,7 @@ export function Order(props: OrderProps) {
 					<div>
 						<Title order={3}>{order.reference}</Title>
 						<Group gap={6} mt={4}>
-							<CalendarClock size={14} />
+							<Calendar width={14} height={14} />
 							<Text size="sm" c="dimmed">
 								Placed on {dateFormatter.format(new Date(order.createdAt))}
 							</Text>
@@ -71,7 +71,7 @@ export function Order(props: OrderProps) {
 				<SimpleGrid cols={{ base: 1, sm: 3 }} spacing="sm">
 					<Group gap="xs" wrap="nowrap">
 						<ThemeIcon color="grape" size="md" variant="light">
-							<PurchaseIcon size={16} />
+							<PurchaseIcon width={16} height={16} />
 						</ThemeIcon>
 						<div>
 							<Text size="xs" c="dimmed" tt="uppercase" fw={700}>
@@ -82,7 +82,7 @@ export function Order(props: OrderProps) {
 					</Group>
 					<Group gap="xs" wrap="nowrap">
 						<ThemeIcon color="indigo" size="md" variant="light">
-							<PackageCheck size={16} />
+							<Box width={16} height={16} />
 						</ThemeIcon>
 						<div>
 							<Text size="xs" c="dimmed" tt="uppercase" fw={700}>
@@ -93,7 +93,7 @@ export function Order(props: OrderProps) {
 					</Group>
 					<Group gap="xs" wrap="nowrap">
 						<ThemeIcon color="teal" size="md" variant="light">
-							<CircleDollarSign size={16} />
+							<Dollar width={16} height={16} />
 						</ThemeIcon>
 						<div>
 							<Text size="xs" c="dimmed" tt="uppercase" fw={700}>

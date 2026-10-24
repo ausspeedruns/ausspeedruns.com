@@ -6,7 +6,7 @@ import RichText from "#/components/RichText/RichText";
 import { Media } from "#/components/Media/Media";
 
 import { ActionIcon, Button, Container, Stack, Text, Title, UnstyledButton } from "@mantine/core";
-import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink } from "pixelarticons/react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 

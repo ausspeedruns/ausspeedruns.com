@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ActionIcon, Anchor, Group, Text, Title } from "@mantine/core";
-import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar2, ChevronLeft, ChevronRight } from "pixelarticons/react";
 import type { LiveRun } from "#/utilities/events/liveSchedule";
 import { formatRelative, formatStartTime } from "./time";
 import styles from "./EventLiveBlock.module.css";
@@ -55,13 +55,13 @@ export function MiniSchedule({ runs, focusRunId, allPast, now, scheduleHref }: M
 				</Title>
 				<Group gap="xs">
 					<ActionIcon variant="default" onClick={() => scrollBy(-1)} aria-label="Scroll schedule back">
-						<ChevronLeft size={16} />
+						<ChevronLeft />
 					</ActionIcon>
 					<ActionIcon variant="default" onClick={() => scrollBy(1)} aria-label="Scroll schedule forward">
-						<ChevronRight size={16} />
+						<ChevronRight />
 					</ActionIcon>
 					<Anchor component={Link} href={scheduleHref} size="sm" className={styles.iconLink}>
-						<CalendarDays size={16} /> Full schedule
+						<Calendar2 /> Full schedule
 					</Anchor>
 				</Group>
 			</Group>

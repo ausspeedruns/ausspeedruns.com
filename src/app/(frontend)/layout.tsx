@@ -31,6 +31,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 				<link href="/favicon.ico" rel="icon" sizes="32x32" />
 				<link href="/favicon.svg" rel="icon" type="image/svg+xml" />
 				<link href="/fonts/Jersey10/Jersey10.css" rel="stylesheet" />
+				<link href="/fonts/Poppins/Poppins.css" rel="stylesheet" />
 			</head>
 			<body>
 				<Providers>

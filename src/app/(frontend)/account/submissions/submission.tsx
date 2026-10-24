@@ -14,7 +14,7 @@ import {
 	ThemeIcon,
 	Title,
 } from "@mantine/core";
-import { CalendarClock, Clock3, Link as LinkIcon, Monitor } from "lucide-react";
+import { Calendar, Clock, Monitor, Link as LinkIcon } from "pixelarticons/react";
 
 import { EditSubmissionModal } from "./edit-submission";
 
@@ -94,7 +94,7 @@ export function Submission(props: SubmissionProps) {
 						<SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="sm">
 							<Group gap="xs" wrap="nowrap" align="flex-start">
 								<ThemeIcon color="violet" variant="light">
-									<Clock3 size={16} />
+									<Clock width={16} height={16} />
 								</ThemeIcon>
 								<div>
 									<Text size="xs" c="dimmed" tt="uppercase" fw={700}>
@@ -108,7 +108,7 @@ export function Submission(props: SubmissionProps) {
 							</Group>
 							<Group gap="xs" wrap="nowrap" align="flex-start">
 								<ThemeIcon color="indigo" variant="light">
-									<Monitor size={16} />
+									<Monitor width={16} height={16} />
 								</ThemeIcon>
 								<div>
 									<Text size="xs" c="dimmed" tt="uppercase" fw={700}>
@@ -122,7 +122,7 @@ export function Submission(props: SubmissionProps) {
 							</Group>
 							<Group gap="xs" wrap="nowrap" align="flex-start">
 								<ThemeIcon color="green" variant="light">
-									<CalendarClock size={16} />
+									<Calendar width={16} height={16} />
 								</ThemeIcon>
 								<div>
 									<Text size="xs" c="dimmed" tt="uppercase" fw={700}>
@@ -145,37 +145,37 @@ export function Submission(props: SubmissionProps) {
 								</Text>
 								<Text>
 									<Text span fw={600}>
-										Game:
+										Game
 									</Text>{" "}
 									{renderValue(submission.game)}
 								</Text>
 								<Text>
 									<Text span fw={600}>
-										Category:
+										Category
 									</Text>{" "}
 									{renderValue(submission.category)}
 								</Text>
 								<Text>
 									<Text span fw={600}>
-										Age rating:
+										Age rating
 									</Text>{" "}
 									{formatEnumLabel(submission.ageRating)}
 								</Text>
 								<Text>
 									<Text span fw={600}>
-										Race type:
+										Race type
 									</Text>{" "}
 									{formatEnumLabel(submission.raceType)}
 								</Text>
 								<Text>
 									<Text span fw={600}>
-										Co-op:
+										Co-op
 									</Text>{" "}
 									{submission.isCoop ? "Yes" : "No"}
 								</Text>
 								<Text>
 									<Text span fw={600}>
-										Racer:
+										Racer
 									</Text>{" "}
 									{renderValue(submission.racer)}
 								</Text>
@@ -187,25 +187,25 @@ export function Submission(props: SubmissionProps) {
 								</Text>
 								<Text>
 									<Text span fw={600}>
-										Special requirements:
+										Special requirements
 									</Text>{" "}
 									{renderValue(submission.specialRequirements)}
 								</Text>
 								<Text>
 									<Text span fw={600}>
-										Donation incentives:
+										Donation incentives
 									</Text>{" "}
 									{renderValue(submission.donationIncentives)}
 								</Text>
 								<Text>
 									<Text span fw={600}>
-										Availability:
+										Availability
 									</Text>{" "}
 									{renderValue(submission.availability)}
 								</Text>
 								{submission.video ? (
 									<Group gap={6} mt={4} wrap="wrap">
-										<LinkIcon size={14} />
+										<LinkIcon width={14} height={14} />
 										<Anchor href={submission.video} target="_blank" rel="noreferrer">
 											Watch submitted video
 										</Anchor>

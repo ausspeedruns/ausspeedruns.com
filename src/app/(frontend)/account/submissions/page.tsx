@@ -3,7 +3,7 @@ import { getPayload } from "payload";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Accordion, Alert, Stack, Text, ThemeIcon, Title } from "@mantine/core";
-import { ReceiptText } from "lucide-react";
+import { ListBox } from "pixelarticons/react";
 import { Submission } from "./submission";
 
 import type { Submission as SubmissionType } from "#payload-types.ts";
@@ -89,7 +89,7 @@ export default async function AccountSubmissionsPage() {
 						color="gray"
 						icon={
 							<ThemeIcon color="gray" radius="xl" size="sm" variant="light">
-								<ReceiptText size={14} />
+								<ListBox width={14} height={14} />
 							</ThemeIcon>
 						}
 						variant="light"

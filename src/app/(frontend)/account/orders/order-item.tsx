@@ -1,6 +1,6 @@
 import type { Order } from "#payload-types.ts";
-import { Group, Paper, Text, ThemeIcon } from "@mantine/core";
-import { Boxes, ReceiptText, Tag } from "lucide-react";
+import { Group, Paper, Text } from "@mantine/core";
+import { Box } from "pixelarticons/react";
 import { Media } from "#components/Media/Media.tsx";
 import styles from "./order-item.module.css";
 
@@ -46,22 +46,16 @@ export function OrderItem(props: OrderItemProps) {
 							/>
 						) : (
 							<div className={styles.imageFallback}>
-								<Boxes size={16} />
+								<Box width={16} height={16} />
 							</div>
 						)}
 					</div>
 					<div>
 						<Group gap={6}>
-							<ThemeIcon color="blue" size="sm" variant="light">
-								<Boxes size={14} />
-							</ThemeIcon>
 							<Text fw={600}>{productName}</Text>
 						</Group>
 						{item.variantLabel ? (
 							<Group gap={6} mt={4}>
-								<ThemeIcon color="grape" size="sm" variant="light">
-									<Tag size={12} />
-								</ThemeIcon>
 								<Text size="sm" c="dimmed">
 									{item.variantLabel}
 								</Text>
@@ -72,9 +66,6 @@ export function OrderItem(props: OrderItemProps) {
 
 				<div className={styles.pricingBlock}>
 					<Group gap={6} justify="flex-end">
-						<ThemeIcon color="teal" size="sm" variant="light">
-							<ReceiptText size={12} />
-						</ThemeIcon>
 						<Text size="sm" c="dimmed">
 							{item.quantity} x {unitPriceText}
 						</Text>

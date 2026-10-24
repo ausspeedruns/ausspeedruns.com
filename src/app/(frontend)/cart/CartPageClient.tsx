@@ -20,19 +20,19 @@ import {
 	Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { AlertCircle, Check, CircleCheck, Copy, Landmark, ShoppingCart } from "lucide-react";
+import { Box, Check, CheckboxOn, Copy, ShoppingCart, SquareAlert } from "pixelarticons/react";
 import { useState } from "react";
 import { checkout, type BankDetails } from "#actions/checkout.ts";
 import Link from "next/link";
 
 export function CartPageClient() {
 	const { items, removeItem: removeItemStore, updateItemQuantity, clearCart } = useCartStore();
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
+	const [errorMessage, setErrorMessage] = useState<string>();
 	const [checkingOut, setCheckingOut] = useState(false);
 	const [bankModalOpened, { open: openBankModal, close: closeBankModal }] = useDisclosure(false);
-	const [bankReference, setBankReference] = useState<string | null>(null);
+	const [bankReference, setBankReference] = useState<string>();
 	const [bankTotalInCents, setBankTotalInCents] = useState(0);
-	const [bankDetails, setBankDetails] = useState<BankDetails | null>(null);
+	const [bankDetails, setBankDetails] = useState<BankDetails>();
 
 	const totalInCents = items.reduce((sum, item) => sum + item.priceInCents * item.quantity, 0);
 	const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -46,16 +46,16 @@ export function CartPageClient() {
 				updateItemQuantity(itemId, nextQuantity);
 			}
 		}
-		setErrorMessage(null);
+		setErrorMessage(undefined);
 	}
 
 	function removeItem(itemId: string) {
 		removeItemStore(itemId);
-		setErrorMessage(null);
+		setErrorMessage(undefined);
 	}
 
 	async function handleCheckout(type: "stripe" | "bank") {
-		setErrorMessage(null);
+		setErrorMessage(undefined);
 		setCheckingOut(true);
 
 		try {
@@ -99,7 +99,7 @@ export function CartPageClient() {
 				<Title order={1}>Your cart</Title>
 
 				{errorMessage && (
-					<Alert color="red" icon={<AlertCircle size={16} />} variant="light">
+					<Alert color="red" icon={<SquareAlert width={16} height={16} />} variant="light">
 						{errorMessage}
 					</Alert>
 				)}
@@ -111,7 +111,7 @@ export function CartPageClient() {
 								<Paper p="xl" shadow="xs" withBorder>
 									<Stack align="center" gap="md" py="lg">
 										<ThemeIcon color="gray" size={56} variant="light">
-											<ShoppingCart size={28} />
+											<ShoppingCart width={28} height={28} />
 										</ThemeIcon>
 										<Title order={3}>Your cart is empty</Title>
 									</Stack>
@@ -149,7 +149,7 @@ export function CartPageClient() {
 				title={
 					<Group gap="xs">
 						<ThemeIcon color="green" variant="light" size="lg">
-							<CircleCheck size={20} />
+							<CheckboxOn width={20} height={20} />
 						</ThemeIcon>
 						<Title order={3}>Order placed</Title>
 					</Group>
@@ -216,7 +216,9 @@ export function CartPageClient() {
 										variant="light"
 										color={copied ? "green" : "blue"}
 										onClick={copy}
-										leftSection={copied ? <Check size={16} /> : <Copy size={16} />}
+										leftSection={
+											copied ? <Check width={16} height={16} /> : <Copy width={16} height={16} />
+										}
 										size="sm"
 									>
 										{copied ? "Copied" : "Copy"}
@@ -228,7 +230,12 @@ export function CartPageClient() {
 
 					<Divider />
 
-					<Button component={Link} href="/account/orders" fullWidth leftSection={<Landmark size={16} />}>
+					<Button
+						component={Link}
+						href="/account/orders"
+						fullWidth
+						leftSection={<Box width={16} height={16} />}
+					>
 						View your orders
 					</Button>
 					<Button variant="light" onClick={closeBankModal} fullWidth>

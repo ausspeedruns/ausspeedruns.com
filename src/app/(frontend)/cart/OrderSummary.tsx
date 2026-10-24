@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Divider, Group, Paper, Stack, Text, Title } from "@mantine/core";
-import { CreditCard, Landmark } from "lucide-react";
+import { CreditCard, Building } from "pixelarticons/react";
 
 const currencyFormatter = new Intl.NumberFormat("en-AU", {
 	style: "currency",
@@ -42,7 +42,7 @@ export function OrderSummary(props: OrderSummaryProps) {
 
 				<Button
 					fullWidth
-					leftSection={<CreditCard size={16} />}
+					leftSection={<CreditCard width={16} height={16} />}
 					size="md"
 					disabled={props.disabled}
 					loading={props.loading}
@@ -53,7 +53,7 @@ export function OrderSummary(props: OrderSummaryProps) {
 
 				<Button
 					fullWidth
-					leftSection={<Landmark size={16} />}
+					leftSection={<Building width={16} height={16} />}
 					size="md"
 					variant="light"
 					disabled={props.disabled}

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useCallback, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import RichText from "#/components/RichText/RichText";
-import { Button } from "#/components/ui/button";
+import { Button } from "@mantine/core";
 import type { DefaultTypedEditorState } from "@payloadcms/richtext-lexical";
 
 import { fields } from "./fields";
@@ -153,7 +153,7 @@ export function FormBlock(props: FormBlockProps) {
 									})}
 							</div>
 
-							<Button form={formID} type="submit" variant="default">
+							<Button form={formID} type="submit">
 								{submitButtonLabel}
 							</Button>
 						</form>

@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "#/components/ui/button";
+import { Button } from "@mantine/core";
 import { CopyIcon } from "@payloadcms/ui/icons/Copy";
 import { useState } from "react";
 
@@ -20,15 +20,14 @@ export function CopyButton({ code }: { code: string }) {
 	return (
 		<div className={styles.container}>
 			<Button
-				className={styles.button}
-				variant={"secondary"}
+				variant="default"
+				rightSection={<CopyIcon />}
 				onClick={async () => {
 					await navigator.clipboard.writeText(code);
 					updateCopyStatus();
 				}}
 			>
-				<p>{text}</p>
-				<CopyIcon />
+				{text}
 			</Button>
 		</div>
 	);

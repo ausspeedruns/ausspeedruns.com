@@ -1,11 +1,12 @@
-import { Button, type ButtonProps } from "#/components/ui/button";
 import { cn } from "#/utilities/ui";
 import Link from "next/link";
+import type { ButtonProps } from "@mantine/core";
 
 import type { Page, Post } from "#/payload-types";
+import { ButtonLink } from "./ButtonLink";
 
 type CMSLinkType = {
-	appearance?: "inline" | ButtonProps["variant"];
+	appearance?: "inline" | "link" | "default" | "outline" | null;
 	children?: React.ReactNode;
 	className?: string;
 	label?: string | null;
@@ -20,17 +21,7 @@ type CMSLinkType = {
 };
 
 export function CMSLink(props: CMSLinkType) {
-	const {
-		type,
-		appearance = "inline",
-		children,
-		className,
-		label,
-		newTab,
-		reference,
-		size: sizeFromProps,
-		url,
-	} = props;
+	const { type, appearance = "inline", children, className, label, newTab, reference, size, url } = props;
 
 	const href =
 		type === "reference" && typeof reference?.value === "object" && reference.value.slug
@@ -39,13 +30,12 @@ export function CMSLink(props: CMSLinkType) {
 
 	if (!href) return null;
 
-	const size = appearance === "link" ? "clear" : sizeFromProps;
 	const newTabProps = newTab ? { rel: "noopener noreferrer", target: "_blank" } : {};
 
 	/* Ensure we don't break any styles set by richText */
-	if (appearance === "inline") {
+	if (appearance === "inline" || appearance === "link") {
 		return (
-			<Link className={cn(className)} href={href || url || ""} {...newTabProps}>
+			<Link className={cn(className)} href={href} {...newTabProps}>
 				{label}
 				{children}
 			</Link>
@@ -53,11 +43,15 @@ export function CMSLink(props: CMSLinkType) {
 	}
 
 	return (
-		<Button asChild className={className} size={size} variant={appearance}>
-			<Link className={cn(className)} href={href || url || ""} {...newTabProps}>
-				{label}
-				{children}
-			</Link>
-		</Button>
+		<ButtonLink
+			className={className}
+			href={href}
+			newTab={newTab}
+			size={size ?? undefined}
+			variant={appearance === "outline" ? "outline" : "filled"}
+		>
+			{label}
+			{children}
+		</ButtonLink>
 	);
 }

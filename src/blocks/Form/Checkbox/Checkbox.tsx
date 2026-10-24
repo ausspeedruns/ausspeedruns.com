@@ -1,12 +1,9 @@
 import type { CheckboxField } from "@payloadcms/plugin-form-builder/types";
 import type { FieldErrorsImpl, FieldValues, UseFormRegister } from "react-hook-form";
 
-import { useFormContext } from "react-hook-form";
+import { Checkbox as MantineCheckbox } from "@mantine/core";
 
-import { Checkbox as CheckboxUi } from "#/components/ui/checkbox";
-import { Label } from "#/components/ui/label";
-
-import { Error } from "../Error/Error";
+import { getFieldError } from "../Error/Error";
 import { Width } from "../Width/Width";
 
 import styles from "./Checkbox.module.css";
@@ -17,30 +14,25 @@ interface CheckboxProps extends CheckboxField {
 }
 
 export function Checkbox({ name, defaultValue, errors, label, register, required, width }: CheckboxProps) {
-	const props = register(name, { required: required });
-	const { setValue } = useFormContext();
-
 	return (
 		<Width width={width}>
-			<div className={styles.container}>
-				<CheckboxUi
-					defaultChecked={defaultValue}
-					id={name}
-					{...props}
-					onCheckedChange={(checked) => {
-						setValue(props.name, checked);
-					}}
-				/>
-				<Label htmlFor={name}>
-					{required && (
-						<span className={styles.required}>
-							* <span className={styles.srOnly}>(required)</span>
-						</span>
-					)}
-					{label}
-				</Label>
-			</div>
-			{errors[name] && <Error name={name} />}
+			<MantineCheckbox
+				aria-required={required}
+				defaultChecked={defaultValue}
+				error={getFieldError(errors, name)}
+				id={name}
+				label={
+					<>
+						{required && (
+							<span className={styles.required}>
+								* <span className={styles.srOnly}>(required)</span>
+							</span>
+						)}
+						{label}
+					</>
+				}
+				{...register(name, { required })}
+			/>
 		</Width>
 	);
 }

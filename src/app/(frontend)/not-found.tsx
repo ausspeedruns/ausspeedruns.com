@@ -1,6 +1,4 @@
-import Link from "next/link";
-
-import { Button } from "#/components/ui/button";
+import { ButtonLink } from "#/components/Link/ButtonLink";
 import styles from "./not-found.module.css";
 
 const responses = [
@@ -17,9 +15,7 @@ export default function NotFound() {
 				{responses[Math.floor(Math.random() * responses.length)]}
 				<p className={styles.description}>This page could not be found.</p>
 			</div>
-			<Button asChild variant="default">
-				<Link href="/">Go home</Link>
-			</Button>
+			<ButtonLink href="/">Go home</ButtonLink>
 		</div>
 	);
 }

@@ -1,17 +1,6 @@
-"use client";
+import type { FieldErrorsImpl } from "react-hook-form";
 
-import * as React from "react";
-import { useFormContext } from "react-hook-form";
-
-import styles from "./Error.module.css";
-
-interface ErrorProps {
-	name: string;
-}
-
-export function Error({ name }: ErrorProps) {
-	const {
-		formState: { errors },
-	} = useFormContext();
-	return <div className={styles.error}>{(errors[name]?.message as string) || "This field is required"}</div>;
+export function getFieldError(errors: Partial<FieldErrorsImpl>, name: string): string | undefined {
+	if (!errors[name]) return undefined;
+	return (errors[name]?.message as string) || "This field is required";
 }

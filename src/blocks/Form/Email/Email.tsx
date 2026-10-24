@@ -1,13 +1,10 @@
 import type { EmailField } from "@payloadcms/plugin-form-builder/types";
 import type { FieldErrorsImpl, FieldValues, UseFormRegister } from "react-hook-form";
 
-import { Input } from "#/components/ui/input";
-import { Label } from "#/components/ui/label";
+import { TextInput } from "@mantine/core";
 
-import { Error } from "../Error/Error";
+import { getFieldError } from "../Error/Error";
 import { Width } from "../Width/Width";
-
-import styles from "./Email.module.css";
 
 interface EmailFieldProps extends EmailField {
 	errors: Partial<FieldErrorsImpl>;
@@ -17,23 +14,16 @@ interface EmailFieldProps extends EmailField {
 export function Email({ name, defaultValue, errors, label, register, required, width }: EmailFieldProps) {
 	return (
 		<Width width={width}>
-			<Label htmlFor={name}>
-				{label}
-
-				{required && (
-					<span className={styles.required}>
-						* <span className={styles.srOnly}>(required)</span>
-					</span>
-				)}
-			</Label>
-			<Input
+			<TextInput
+				aria-required={required}
 				defaultValue={defaultValue}
+				error={getFieldError(errors, name)}
 				id={name}
+				label={label}
 				type="text"
+				withAsterisk={required}
 				{...register(name, { pattern: /^\S[^\s@]*@\S+$/, required })}
 			/>
-
-			{errors[name] && <Error name={name} />}
 		</Width>
 	);
 }

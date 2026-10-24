@@ -1,12 +1,10 @@
 import type { TextField } from "@payloadcms/plugin-form-builder/types";
 import type { FieldErrorsImpl, FieldValues, UseFormRegister } from "react-hook-form";
 
-import { Label } from "#/components/ui/label";
-import { Textarea as TextAreaComponent } from "#/components/ui/textarea";
+import { Textarea as MantineTextarea } from "@mantine/core";
 
-import { Error } from "../Error/Error";
+import { getFieldError } from "../Error/Error";
 import { Width } from "../Width/Width";
-import styles from "./Textarea.module.css";
 
 interface TextareaProps extends TextField {
 	errors: Partial<FieldErrorsImpl>;
@@ -17,24 +15,16 @@ interface TextareaProps extends TextField {
 export function Textarea({ name, defaultValue, errors, label, register, required, rows = 3, width }: TextareaProps) {
 	return (
 		<Width width={width}>
-			<Label htmlFor={name}>
-				{label}
-
-				{required && (
-					<span className={styles.required}>
-						* <span className={styles.srOnly}>(required)</span>
-					</span>
-				)}
-			</Label>
-
-			<TextAreaComponent
+			<MantineTextarea
+				aria-required={required}
 				defaultValue={defaultValue}
+				error={getFieldError(errors, name)}
 				id={name}
+				label={label}
 				rows={rows}
-				{...register(name, { required: required })}
+				withAsterisk={required}
+				{...register(name, { required })}
 			/>
-
-			{errors[name] && <Error name={name} />}
 		</Width>
 	);
 }

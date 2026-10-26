@@ -11,7 +11,6 @@ import { RenderBlocks } from "#/blocks/RenderBlocks";
 import { generateMeta } from "#/utilities/generateMeta";
 import PageClient from "./page.client";
 import { LivePreviewListener } from "#/components/LivePreviewListener/LivePreviewListener";
-import styles from "./page.module.css";
 
 export async function generateStaticParams() {
 	const payload = await getPayload({ config: configPromise });
@@ -67,7 +66,7 @@ export default async function Page({ params: paramsPromise }: Args) {
 	const { layout } = page;
 
 	return (
-		<article className={styles.article}>
+		<article>
 			<PageClient />
 			{/* Allows redirects for valid pages too */}
 			<PayloadRedirects disableNotFound url={url} />

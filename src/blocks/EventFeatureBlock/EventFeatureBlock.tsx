@@ -25,7 +25,7 @@ export async function EventFeatureBlock(props: EventFeatureBlockProps) {
 	];
 
 	return (
-		<section className={styles.container} data-flush-top data-stack>
+		<section className={styles.container} data-full-bleed>
 			{hero ? (
 				<Media
 					className={styles.backdrop}

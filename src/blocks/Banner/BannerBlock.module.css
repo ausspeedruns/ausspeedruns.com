@@ -18,21 +18,21 @@
 }
 
 .info {
-	border-color: var(--border);
-	background-color: var(--card);
+	border-color: hsl(var(--border));
+	background-color: hsl(var(--card));
 }
 
 .error {
-	border-color: var(--error);
-	background-color: rgba(var(--error-rgb), 0.3);
+	border-color: hsl(var(--error));
+	background-color: hsl(var(--error) / 0.3);
 }
 
 .success {
-	border-color: var(--success);
-	background-color: rgba(var(--success-rgb), 0.3);
+	border-color: hsl(var(--success));
+	background-color: hsl(var(--success) / 0.3);
 }
 
 .warning {
-	border-color: var(--warning);
-	background-color: rgba(var(--warning-rgb), 0.3);
+	border-color: hsl(var(--warning));
+	background-color: hsl(var(--warning) / 0.3);
 }

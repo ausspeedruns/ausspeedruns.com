@@ -35,7 +35,8 @@ body {
 	--background: 0 0% 100%;
 	--foreground: 222.2 84% 4.9%;
 
-	--card: 240 5% 96%;
+	/* Kept in sync with the Mantine `gray` palette in providers/MantineTheme.tsx */
+	--card: 0 0% 100%;
 	--card-foreground: 222.2 84% 4.9%;
 
 	--popover: 0 0% 100%;
@@ -44,20 +45,20 @@ body {
 	--primary: 222.2 47.4% 11.2%;
 	--primary-foreground: 210 40% 98%;
 
-	--secondary: 210 40% 96.1%;
+	--secondary: 210 28.6% 94.5%;
 	--secondary-foreground: 222.2 47.4% 11.2%;
 
-	--muted: 210 40% 96.1%;
-	--muted-foreground: 215.4 16.3% 46.9%;
+	--muted: 210 28.6% 94.5%;
+	--muted-foreground: 214.3 12.8% 42.7%;
 
-	--accent: 210 40% 96.1%;
+	--accent: 210 28.6% 94.5%;
 	--accent-foreground: 222.2 47.4% 11.2%;
 
 	--destructive: 0 84.2% 60.2%;
 	--destructive-foreground: 210 40% 98%;
 
-	--border: 240 6% 80%;
-	--input: 214.3 31.8% 91.4%;
+	--border: 211.8 23.9% 86.1%;
+	--input: 214.8 14.8% 59%;
 	--ring: 222.2 84% 4.9%;
 
 	--radius: 0.2rem;
@@ -76,43 +77,49 @@ body {
  */
 html:root[data-mantine-color-scheme="light"] {
 	--mantine-color-body: #eef1f3;
-
-	--card-background: hsl(205, 100%, 92%);
 }
 
 html:root[data-mantine-color-scheme="dark"] {
-	--mantine-color-body: #0b1220;
-
-	--card-background: #090b11;
+	--mantine-color-body: #03070f;
 }
 
+/* Inputs get stronger borders (>= 3:1 against their surface) than cards/dividers. */
+:root[data-mantine-color-scheme="light"] .mantine-Input-wrapper[data-variant="default"]:not([data-error]) {
+	--input-bd: #8794a6;
+}
+
+:root[data-mantine-color-scheme="dark"] .mantine-Input-wrapper[data-variant="default"]:not([data-error]) {
+	--input-bd: #64728c;
+}
+
+/* Kept in sync with the Mantine `dark` palette in providers/MantineTheme.tsx */
 [data-mantine-color-scheme="dark"] {
 	--background: 218 100% 3%;
 	--foreground: 210 40% 98%;
 
-	--card: 0 0% 4%;
+	--card: 222.4 41.5% 16.1%;
 	--card-foreground: 210 40% 98%;
 
-	--popover: 222.2 84% 4.9%;
+	--popover: 222.4 41.5% 16.1%;
 	--popover-foreground: 210 40% 98%;
 
 	--primary: 210 40% 98%;
 	--primary-foreground: 222.2 47.4% 11.2%;
 
-	--secondary: 217.2 32.6% 17.5%;
+	--secondary: 218.9 33.9% 21.4%;
 	--secondary-foreground: 210 40% 98%;
 
-	--muted: 217.2 32.6% 17.5%;
-	--muted-foreground: 215 20.2% 65.1%;
+	--muted: 218.9 33.9% 21.4%;
+	--muted-foreground: 217.5 15.8% 60.4%;
 
-	--accent: 217.2 32.6% 17.5%;
+	--accent: 218.9 33.9% 21.4%;
 	--accent-foreground: 210 40% 98%;
 
 	--destructive: 0 62.8% 30.6%;
 	--destructive-foreground: 210 40% 98%;
 
-	--border: 0 0% 15%;
-	--input: 217.2 32.6% 17.5%;
+	--border: 217.9 27.1% 27.5%;
+	--input: 219 16.7% 47.1%;
 	--ring: 212.7 26.8% 83.9%;
 
 	--success: 196 100% 14%;

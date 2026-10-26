@@ -107,7 +107,7 @@ export function EventLiveClient({
 	const isLive = state.status === "live" || state.status === "between";
 
 	return (
-		<section className={styles.root} data-flush-top data-backdrop={backdrop ? "image" : "pattern"}>
+		<section className={styles.root} data-full-bleed data-backdrop={backdrop ? "image" : "pattern"}>
 			{backdrop}
 			<div className={styles.hero}>
 				<Container size="xl" className={styles.heroInner}>

@@ -1,8 +1,6 @@
 .carousel {
 	height: 80vh;
 	width: 100%;
-	top: 0;
-	margin-top: -8rem;
 
 	* {
 		height: 100%;

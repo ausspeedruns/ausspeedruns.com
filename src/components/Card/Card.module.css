@@ -1,8 +1,8 @@
 .card {
-	border: 1px solid var(--border);
+	border: 1px solid hsl(var(--border));
 	border-radius: var(--radius);
 	overflow: hidden;
-	background-color: var(--card);
+	background-color: hsl(var(--card));
 	cursor: pointer;
 }
 
@@ -24,7 +24,7 @@
 
 .titleWrapper {
 	/* Replicating prose h3 styles */
-	color: var(--foreground);
+	color: hsl(var(--card-foreground));
 	max-width: 65ch;
 }
 

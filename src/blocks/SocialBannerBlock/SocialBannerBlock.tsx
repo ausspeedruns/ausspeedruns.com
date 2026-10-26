@@ -10,7 +10,7 @@ export function SocialBannerBlock(props: SocialBannerBlockProps) {
 	if (!url) return null;
 
 	return (
-		<section className={styles.container} data-platform={platform ?? "other"} data-stack>
+		<section className={styles.container} data-platform={platform ?? "other"} data-full-bleed>
 			{backgroundImage && typeof backgroundImage === "object" ? (
 				<Media
 					className={styles.backdrop}

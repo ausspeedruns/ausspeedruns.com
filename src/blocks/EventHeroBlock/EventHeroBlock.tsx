@@ -34,7 +34,7 @@ export async function EventHeroBlock(props: EventHeroBlockProps) {
 	}
 
 	return (
-		<section className={styles.container} data-flush-top>
+		<section className={styles.container} data-full-bleed>
 			{hero ? (
 				<Media
 					className={styles.backdrop}

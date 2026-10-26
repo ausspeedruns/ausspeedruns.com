@@ -72,6 +72,7 @@ export function ContentBlock(props: ContentBlockProps) {
 				paddingClasses[settings?.padding ?? "default"],
 			)}
 			style={wrapperStyle}
+			data-full-bleed={fullBleed || undefined}
 		>
 			{hasBgImage && typeof bgImage === "object" && (
 				<>

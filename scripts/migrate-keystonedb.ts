@@ -184,6 +184,13 @@ async function resetDatabase() {
 }
 
 async function migrate() {
+	if (isProduction) {
+		// Create the schema from src/migrations (prodMigrations) rather than dev `push`, so the server's
+		// startup migrations don't later try to recreate the same tables
+		Object.assign(process.env, { NODE_ENV: "production" });
+	}
+	process.env.DISABLE_JOBS_AUTORUN = "true";
+
 	const { getPayload } = await import("payload");
 	const { default: config } = await import("../src/payload.config.ts");
 

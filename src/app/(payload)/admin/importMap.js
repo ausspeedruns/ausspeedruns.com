@@ -47,6 +47,7 @@ import { default as default_2661584faf098456f8e256e0a0b2c31c } from '../../../co
 import { default as default_75b5bfd161b84d1dd7f35c9830e3181b } from '../../../components/TicketPickupView/TicketPickupView'
 import { default as default_fa95fab07ec167e4037319435236039d } from '../../../components/ScheduleImportView/ScheduleImportView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
+import { AzureClientUploadHandler as AzureClientUploadHandler_635fb302eaf52f6baca4f9f8ad9ce104 } from '@payloadcms/storage-azure/client'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
@@ -98,5 +99,6 @@ export const importMap = {
   "./components/BeforeLogin/BeforeLogin#default": default_2661584faf098456f8e256e0a0b2c31c,
   "./components/TicketPickupView/TicketPickupView#default": default_75b5bfd161b84d1dd7f35c9830e3181b,
   "./components/ScheduleImportView/ScheduleImportView#default": default_fa95fab07ec167e4037319435236039d,
-  "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
+  "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
+  "@payloadcms/storage-azure/client#AzureClientUploadHandler": AzureClientUploadHandler_635fb302eaf52f6baca4f9f8ad9ce104
 }

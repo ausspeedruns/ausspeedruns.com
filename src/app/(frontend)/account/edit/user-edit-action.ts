@@ -122,6 +122,6 @@ export async function resendVerificationEmail() {
 	await payload.sendEmail({
 		to: user.email,
 		subject: "AusSpeedruns - Email Verification",
-		html: render(VerificationEmail({ token: newToken })),
+		html: await render(VerificationEmail({ token: newToken })),
 	});
 }

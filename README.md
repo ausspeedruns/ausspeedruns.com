@@ -148,7 +148,7 @@ If you are migrating an existing site or moving content to a new URL, you can us
 
 We have configured [Scheduled Publish](https://payloadcms.com/docs/versions/drafts#scheduled-publish) which uses the [jobs queue](https://payloadcms.com/docs/jobs-queue/jobs) in order to publish or unpublish your content on a scheduled time. The tasks are run on a cron schedule and can also be run as a separate instance if needed.
 
-> Note: When deployed on Vercel, depending on the plan tier, you may be limited to daily cron only.
+Queued jobs are processed in-process every minute via `jobs.autoRun` in `src/payload.config.ts`, since the site runs on a long-lived server. Set `DISABLE_JOBS_AUTORUN=true` to turn this off, e.g. for one-off scripts or a dedicated worker. An external scheduler can instead call `/api/payload-jobs/run` with `Authorization: Bearer <CRON_SECRET>`.
 
 ## Website
 
@@ -174,7 +174,13 @@ Core features:
 
 ### Cache
 
-Although Next.js includes a robust set of caching strategies out of the box, Payload Cloud proxies and caches all files through Cloudflare using the [Official Cloud Plugin](https://www.npmjs.com/package/@payloadcms/payload-cloud). This means that Next.js caching is not needed and is disabled by default. If you are hosting your app outside of Payload Cloud, you can easily reenable the Next.js caching mechanisms by removing the `no-store` directive from all fetch requests in `./src/app/_api` and then removing all instances of `export const dynamic = 'force-dynamic'` from pages files, such as `./src/app/(pages)/[slug]/page.tsx`. For more details, see the official [Next.js Caching Docs](https://nextjs.org/docs/app/building-your-application/caching).
+Public pages (`/`, `/[slug]`, `/posts`, `/events`) are statically rendered and cached. The logged-in user is loaded in the browser from `/next/me`, so no personal data ends up in cached HTML.
+
+- Pages and posts are revalidated on publish by their `afterChange` hooks.
+- Header, footer and redirects are revalidated by cache tag.
+- `/`, `/[slug]` and `/events` also regenerate at most 60 seconds after going stale (`export const revalidate = 60`). Blocks such as the donation tracker, products and event hero read live data that changes without the page being republished.
+
+If you add a page or block that reads data from another collection, give it a `revalidate` too, or it will show whatever data existed when it was last rendered. See the [Next.js Caching Docs](https://nextjs.org/docs/app/building-your-application/caching) for details.
 
 ## Development
 
@@ -194,23 +200,24 @@ If your database is pointed to production you will want to set `push: false` oth
 
 #### Migrations
 
-[Migrations](https://payloadcms.com/docs/database/migrations) are essentially SQL code versions that keeps track of your schema. When deploy with Postgres you will need to make sure you create and then run your migrations.
+[Migrations](https://payloadcms.com/docs/database/migrations) are SQL versions of the schema, stored in `src/migrations`. Production never uses `push`, so **every schema change (collections, fields, plugins) needs a migration** committed alongside it.
 
-Locally create a migration
-
-```bash
-pnpm payload migrate:create
-```
-
-This creates the migration files you will need to push alongside with your new configuration.
-
-On the server after building and before running `pnpm start` you will want to run your migrations
+Create a migration locally after changing the schema:
 
 ```bash
-pnpm payload migrate
+pnpm payload migrate:create <name>
 ```
 
-This command will check for any migrations that have not yet been run and try to run them and it will keep a record of migrations that have been run in the database.
+Then fix up the generated file so it works with Node's type stripping:
+
+- Change its import to `import { type MigrateUpArgs, type MigrateDownArgs, sql } from '@payloadcms/db-postgres'`.
+- Add the `.ts` extension to its import in `src/migrations/index.ts`.
+
+Migrations are passed to the Postgres adapter as `prodMigrations`. Pending migrations therefore run automatically when the production server starts, since the standalone Docker image doesn't include the Payload CLI. You can also run them manually with `pnpm payload migrate`.
+
+Migrations are skipped during `next build`. If the database was ever dev-pushed (for example, running `pnpm dev:prod` against your local dev database), Payload will prompt on startup and wait for an answer. Set `DISABLE_PROD_MIGRATIONS=true` to skip migrations in that case.
+
+> Don't point a dev (`push: true`) server at the production database. A pushed schema isn't recorded as a migration, so the startup migrations would then fail. The Keystone import (`scripts/migrate-keystonedb.ts --production`) runs with `NODE_ENV=production`, so it builds the schema from the migrations.
 
 ### Docker
 
@@ -224,7 +231,7 @@ That's it! The Docker instance will help you get up and running quickly while al
 
 ### Seed
 
-To seed the database with a few pages, posts, and projects you can click the 'seed database' link from the admin panel.
+To seed the database with a few pages, posts, and projects you can click the 'seed database' link from the admin panel. Seeding is disabled when `NODE_ENV=production`.
 
 The seed script will also create a demo user for demonstration purposes only:
 
@@ -242,61 +249,87 @@ To run Payload in production, you need to build and start the Admin panel. To do
 1. Finally run `pnpm start` or `npm run start` to run Node in production and serve Payload from the `.build` directory.
 1. When you're ready to go live, see Deployment below for more details.
 
-### Deploying to Vercel
+### Deploying to Azure
 
-This template can also be deployed to Vercel for free. You can get started by choosing the Vercel DB adapter during the setup of the template or by manually installing and configuring it:
+Production runs as a Docker container on an Azure VM, with Azure Database for PostgreSQL and Azure Blob Storage for media. The setup follows Payload's [deployment](https://payloadcms.com/docs/production/deployment), [preventing abuse](https://payloadcms.com/docs/production/preventing-abuse) and [performance](https://payloadcms.com/docs/performance/overview) guides.
+
+#### Azure resources
+
+- **PostgreSQL** (Azure Database for PostgreSQL flexible server)
+  - Put it in the same region as the VM (e.g. Australia East) to keep latency low.
+  - TLS is required, so add `?sslmode=require` to `DATABASE_URI`.
+  - Let the VM through the server firewall, or use private networking.
+  - `DATABASE_POOL_MAX` (default 10) sets the size of the connection pool.
+- **Blob Storage**
+  - Create a container (default name `media`) with **anonymous read access for blobs**. Media is public, so it's served straight from Blob (`disablePayloadAccessControl`) rather than proxied through Node.
+  - Set `AZURE_STORAGE_ACCOUNT_BASEURL` to the account URL (`https://<account>.blob.core.windows.net`), or to a CDN / Front Door endpoint in front of it.
+  - If `AZURE_STORAGE_CONNECTION_STRING` isn't set, uploads fall back to `public/media` on local disk.
+- **Email**
+  - Any SMTP provider works via `SMTP_*`, e.g. Azure Communication Services (`smtp.azurecomm.net:587`).
+  - Without `SMTP_HOST`, verification and password reset emails are only logged, so users can't verify their accounts.
+
+To move existing uploads, copy the contents of `public/media` into the container, e.g. `azcopy copy "public/media/*" "https://<account>.blob.core.windows.net/media?<SAS>"`.
+
+#### Build
+
+`NEXT_PUBLIC_*` variables and the media origin are inlined at build time. The build also reads the database for `generateStaticParams`, so pass `DATABASE_URI` as a build secret; it's never stored in an image layer:
 
 ```bash
-pnpm add @payloadcms/db-vercel-postgres
+docker build \
+  --build-arg NEXT_PUBLIC_SERVER_URL=https://ausspeedruns.com \
+  --build-arg AZURE_STORAGE_ACCOUNT_BASEURL=https://<account>.blob.core.windows.net \
+  --secret id=DATABASE_URI,env=DATABASE_URI \
+  -t ausspeedruns-web .
 ```
 
-```ts
-// payload.config.ts
-import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
+#### Run
 
-export default buildConfig({
-  // ...
-  db: vercelPostgresAdapter({
-    pool: {
-      connectionString: process.env.POSTGRES_URL || '',
-    },
-  }),
-  // ...
-```
-
-We also support Vercel's blob storage:
+Pass the runtime environment with an env file (see `.env.example`):
 
 ```bash
-pnpm add @payloadcms/storage-vercel-blob
+docker run -d --restart unless-stopped --env-file /etc/ausspeedruns/web.env -p 127.0.0.1:3000:3000 ausspeedruns-web
 ```
 
-```ts
-// payload.config.ts
-import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+At minimum, set:
 
-export default buildConfig({
-  // ...
-  plugins: [
-    vercelBlobStorage({
-      collections: {
-        [Media.slug]: true,
-      },
-      token: process.env.BLOB_READ_WRITE_TOKEN || '',
-    }),
-  ],
-  // ...
-```
+- `DATABASE_URI`
+- `PAYLOAD_SECRET` (a long random string, e.g. `openssl rand -hex 32`)
+- `NEXT_PUBLIC_SERVER_URL`
+- `PREVIEW_SECRET` and `CRON_SECRET`
+- The Stripe keys
+- `SMTP_*` and `EMAIL_FROM_*`
+- `AZURE_STORAGE_*`
 
-There is also a simplified [one click deploy](https://github.com/payloadcms/payload/tree/templates/with-vercel-postgres) to Vercel should you need it.
+Pending migrations run on startup.
 
-### Self-hosting
+#### Reverse proxy, TLS and rate limiting
 
-Before deploying your app, you need to:
+Bind the container to localhost and put a reverse proxy (Caddy or nginx) in front of it, or put Azure Front Door / Application Gateway in front of the VM. The proxy should:
 
-1. Ensure your app builds and serves in production. See [Production](#production) for more details.
-2. You can then deploy Payload as you would any other Node.js or Next.js application either directly on a VPS, DigitalOcean's Apps Platform, via Coolify or more. More guides coming soon.
+- Terminate HTTPS and redirect HTTP to HTTPS. Auth cookies are marked `Secure` whenever `NEXT_PUBLIC_SERVER_URL` starts with `https://`.
+- Redirect the alternate hostname (e.g. `www.`) to the one in `NEXT_PUBLIC_SERVER_URL`, so everyone shares one cookie and one set of absolute URLs.
+- Forward `Host`, `X-Forwarded-For` and `X-Forwarded-Proto`.
+- Rate limit the endpoints that are open to abuse:
+  - `/api/users/login`
+  - `/api/users/forgot-password`
+  - `/api/users` (sign up)
+  - `/api/form-submissions`
+  - The `/signup`, `/volunteer` and `/submit-game` server actions
+- Keep per-IP limits generous. Everyone on the venue Wi-Fi at an event, and many mobile users (carrier-grade NAT), share one IP address. Ticket pickup staff and attendees shouldn't trip a limit meant for bots.
+- Cache `/_next/static/*` (immutable) at the proxy or CDN.
 
-You can also deploy your app manually, check out the [deployment documentation](https://payloadcms.com/docs/production/deployment) for full details.
+#### Built-in protections
+
+- **CSRF:** the auth cookie is `SameSite=Lax`, so browsers don't send it with cross-site POST/fetch requests. Next.js also checks the origin of server actions, and CORS is limited to the same origin.
+  - Payload's own CSRF check (enabled by setting `serverURL` or `csrf`) is deliberately left off. It ignores the cookie whenever a visit starts on another site, which logs people out when they return from Stripe or follow an email or Discord link. It also affects every page on Safari before 16.4.
+- **Logins:** accounts lock for 10 minutes after 5 failed logins, and email verification is required. Resetting the password unlocks the account straight away.
+- **GraphQL:** disabled. Integrations such as the stream graphics use REST with API keys.
+- **Query depth:** `maxDepth` is 3.
+- **Uploads:** only content managers can upload media.
+
+### Self-hosting elsewhere
+
+Payload can be deployed anywhere Next.js runs. See the [deployment documentation](https://payloadcms.com/docs/production/deployment) for details.
 
 ## Questions
 

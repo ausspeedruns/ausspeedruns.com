@@ -1,7 +1,4 @@
 import type { Metadata } from "next";
-import { getPayload } from "payload";
-
-import configPromise from "#payload-config";
 
 import { ResetPasswordForm } from "./ResetPasswordForm";
 import styles from "./page.module.css";
@@ -13,53 +10,26 @@ export const metadata: Metadata = {
 };
 
 type ResetPasswordPageProps = {
-	params: Promise<{
-		token: string;
+	// The reset email links to /reset-password?token=<token>
+	searchParams: Promise<{
+		token?: string;
 	}>;
 };
 
-export default async function ResetPasswordPage({ params }: ResetPasswordPageProps) {
-	const { token } = await params;
+export default async function ResetPasswordPage({ searchParams }: ResetPasswordPageProps) {
+	const { token } = await searchParams;
 
+	// The token is checked (and used up) when the new password is submitted; an invalid or expired token is reported then
 	if (!token) {
 		return (
 			<main className={styles.page}>
 				<section className={styles.shell}>
 					<div className={styles.header}>
 						<p className={styles.kicker}>Account Security</p>
-						<h1 className={styles.title}>No token provided</h1>
-					</div>
-				</section>
-			</main>
-		);
-	}
-
-	const payload = await getPayload({ config: configPromise });
-
-	let result = false;
-	let error = null;
-	try {
-		result = await payload.verifyEmail({
-			collection: "users",
-			token,
-		});
-	} catch (err) {
-		error = err;
-	}
-
-	if (!result || error) {
-		if (error) {
-			console.error("Error verifying token:", error);
-		}
-
-		return (
-			<main className={styles.page}>
-				<section className={styles.shell}>
-					<div className={styles.header}>
-						<p className={styles.kicker}>Account Security</p>
-						<h1 className={styles.title}>Invalid or expired token</h1>
+						<h1 className={styles.title}>Invalid password reset link</h1>
 						<p className={styles.subtitle}>
-							The password reset link you used is invalid or has expired. Please request a new one.
+							This link is missing its reset code. Please use the link from your most recent password
+							reset email, or request a new one.
 						</p>
 						<Button component="a" href="/forgot-password" mt="md">
 							Request new password reset link

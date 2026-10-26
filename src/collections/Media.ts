@@ -38,6 +38,20 @@ export const Media: CollectionConfig = {
 				},
 			}),
 		},
+		{
+			// Storage key used by the Azure Blob adapter. Declared here too so the DB schema (and migrations)
+			// are the same whether or not Azure storage is enabled; the adapter replaces this definition when active.
+			name: "_objectKey",
+			type: "text",
+			admin: {
+				disableBulkEdit: true,
+				disableGroupBy: true,
+				disableListColumn: true,
+				disableListFilter: true,
+				hidden: true,
+				readOnly: true,
+			},
+		},
 	],
 	upload: {
 		// Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload

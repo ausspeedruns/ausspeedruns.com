@@ -12,6 +12,10 @@ import { generateMeta } from "#/utilities/generateMeta";
 import PageClient from "./page.client";
 import { LivePreviewListener } from "#/components/LivePreviewListener/LivePreviewListener";
 
+// Blocks pull live data (donation totals, product availability, event settings, latest posts) that changes without
+// the page being republished, so regenerate the cached page at most a minute after it goes stale
+export const revalidate = 60;
+
 export async function generateStaticParams() {
 	const payload = await getPayload({ config: configPromise });
 	const pages = await payload.find({

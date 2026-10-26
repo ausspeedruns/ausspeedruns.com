@@ -1,5 +1,6 @@
-// storage-adapter-import-placeholder
 import { postgresAdapter } from "@payloadcms/db-postgres";
+import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
+import { azureStorage } from "@payloadcms/storage-azure";
 
 import sharp from "sharp"; // sharp-import
 import path from "node:path";
@@ -29,11 +30,37 @@ import { plugins } from "./plugins/plugins.ts";
 import { defaultLexical } from "#fields/defaultLexical.ts";
 import { getServerSideURL } from "./utilities/getURL.ts";
 import { Games } from "#collections/Game.ts";
+import { migrations } from "./migrations/index.ts";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
+const serverURL = getServerSideURL();
+
+// `next build` also runs with NODE_ENV=production; migrations must only run when the server starts,
+// not once per build worker (same check as Payload's internal isNextBuild)
+const isNextBuild = process.env.NEXT_PHASE === "phase-production-build" || process.env.npm_lifecycle_event === "build";
+const runProdMigrations = !isNextBuild && process.env.DISABLE_PROD_MIGRATIONS !== "true";
+
+// Without SMTP settings Payload falls back to logging emails to the console (fine for local dev only)
+const email = process.env.SMTP_HOST
+	? nodemailerAdapter({
+			defaultFromAddress: process.env.EMAIL_FROM_ADDRESS || "noreply@ausspeedruns.com",
+			defaultFromName: process.env.EMAIL_FROM_NAME || "AusSpeedruns",
+			transportOptions: {
+				host: process.env.SMTP_HOST,
+				port: Number(process.env.SMTP_PORT || 587),
+				// `true` for implicit TLS (port 465); otherwise STARTTLS is negotiated
+				secure: process.env.SMTP_SECURE === "true",
+				auth: process.env.SMTP_USER ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS } : undefined,
+			},
+		})
+	: undefined;
+
 export default buildConfig({
+	// `serverURL` is deliberately not set: it would enable Payload's CSRF check, which rejects the auth cookie on
+	// any visit that starts on another site (Stripe redirects, email/Discord links) and on Safari < 16.4.
+	// The auth cookie is `SameSite=Lax`, so browsers already refuse to send it with cross-site POST/fetch requests.
 	admin: {
 		components: {
 			// The `BeforeLogin` component renders a message that you see while logging into your admin panel.
@@ -90,9 +117,15 @@ export default buildConfig({
 	editor: defaultLexical,
 	db: postgresAdapter({
 		pool: {
+			// Azure Database for PostgreSQL requires TLS: append `?sslmode=require` to the connection string
 			connectionString: process.env.DATABASE_URI || "",
+			max: Number(process.env.DATABASE_POOL_MAX || 10),
 		},
+		migrationDir: path.resolve(dirname, "migrations"),
+		// Pending migrations run automatically on startup when NODE_ENV=production (the standalone image has no Payload CLI)
+		prodMigrations: runProdMigrations ? migrations : undefined,
 	}),
+	email,
 	collections: [
 		Pages,
 		Posts,
@@ -111,11 +144,29 @@ export default buildConfig({
 		Games,
 		ScheduleDrafts,
 	],
-	cors: [getServerSideURL()].filter(Boolean),
+	cors: [serverURL].filter(Boolean),
+	// Nothing uses GraphQL (integrations use REST + API keys), so don't expose it
+	graphQL: {
+		disable: true,
+	},
+	// The deepest populate used by the site is 2
+	maxDepth: 3,
 	globals: [Header, Footer, PaymentSettings],
 	plugins: [
 		...plugins,
-		// storage-adapter-placeholder
+		azureStorage({
+			// Uploads stay on local disk (public/media) unless Azure Blob is configured
+			enabled: Boolean(process.env.AZURE_STORAGE_CONNECTION_STRING),
+			collections: {
+				// Media is public, so serve files straight from Blob/CDN instead of proxying through Node
+				media: { disablePayloadAccessControl: true },
+			},
+			allowContainerCreate: process.env.AZURE_STORAGE_ALLOW_CONTAINER_CREATE === "true",
+			containerAccess: "blob",
+			baseURL: process.env.AZURE_STORAGE_ACCOUNT_BASEURL || "",
+			connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING || "",
+			containerName: process.env.AZURE_STORAGE_CONTAINER_NAME || "media",
+		}),
 	],
 	secret: process.env.PAYLOAD_SECRET,
 	sharp,
@@ -128,13 +179,15 @@ export default buildConfig({
 				// Allow logged in users to execute this endpoint (default)
 				if (req.user) return true;
 
-				// If there is no logged in user, then check
-				// for the Vercel Cron secret to be present as an
-				// Authorization header:
+				// Otherwise allow external schedulers that send the CRON_SECRET
+				// as an Authorization header:
 				const authHeader = req.headers.get("authorization");
 				return authHeader === `Bearer ${process.env.CRON_SECRET}`;
 			},
 		},
+		// The site runs on a long-lived server, so process queued jobs (e.g. scheduled publish) in-process every minute
+		autoRun: [{ cron: "* * * * *", queue: "default", limit: 10 }],
+		shouldAutoRun: () => process.env.DISABLE_JOBS_AUTORUN !== "true",
 		tasks: [],
 	},
 });

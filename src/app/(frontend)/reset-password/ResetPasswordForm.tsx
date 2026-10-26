@@ -6,14 +6,17 @@ import { useForm } from "@mantine/form";
 
 import { updatePassword, type ResetPasswordFormValues } from "./reset-password-action";
 import styles from "./page.module.css";
-import { redirect } from "next/navigation";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type FormStatus = {
 	message: string;
 	type: "error" | "success";
+	expired?: boolean;
 } | null;
 
 export function ResetPasswordForm({ token }: { token: string }) {
+	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 	const [status, setStatus] = useState<FormStatus>(null);
 
@@ -38,10 +41,11 @@ export function ResetPasswordForm({ token }: { token: string }) {
 			setStatus({
 				message: result.message,
 				type: result.success ? "success" : "error",
+				expired: "expired" in result && result.expired,
 			});
 
 			if (result.success) {
-				redirect("/login");
+				router.push("/login");
 			}
 		});
 	});
@@ -76,6 +80,12 @@ export function ResetPasswordForm({ token }: { token: string }) {
 					{status && (
 						<Alert color={status.type === "success" ? "green" : "red"} variant="light">
 							{status.message}
+							{status.expired && (
+								<>
+									{" "}
+									<Link href="/forgot-password">Request a new link</Link>
+								</>
+							)}
 						</Alert>
 					)}
 

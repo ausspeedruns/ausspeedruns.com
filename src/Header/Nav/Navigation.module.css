@@ -19,4 +19,8 @@
 		background-color: black;
 		padding: 0.25rem 0.5rem;
 	}
+
+	&.pending {
+		visibility: hidden;
+	}
 }

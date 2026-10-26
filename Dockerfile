@@ -28,6 +28,15 @@ ARG PAYLOAD_SECRET=build-only-payload-secret
 ENV PAYLOAD_SECRET=${PAYLOAD_SECRET}
 ENV SKIP_BUILD_DB=1
 ENV NODE_ENV=production
+# NEXT_PUBLIC_* values are inlined into the build (client and server code), so they must be set here:
+#   docker build --build-arg NEXT_PUBLIC_SERVER_URL=https://ausspeedruns.com ...
+ARG NEXT_PUBLIC_SERVER_URL
+ARG NEXT_PUBLIC_URL=${NEXT_PUBLIC_SERVER_URL}
+ENV NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
+ENV NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL}
+# Azure Blob (or CDN) origin that media is served from; next.config.js allows it for next/image at build time
+ARG AZURE_STORAGE_ACCOUNT_BASEURL
+ENV AZURE_STORAGE_ACCOUNT_BASEURL=${AZURE_STORAGE_ACCOUNT_BASEURL}
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
@@ -63,7 +72,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Payload media uploads are written to public/media (mount a volume here to persist them)
+# Without Azure Blob storage configured, media uploads are written to public/media (mount a volume here to persist them)
 RUN install -d -o nextjs -g nodejs /app/.next /app/public/media
 
 USER nextjs

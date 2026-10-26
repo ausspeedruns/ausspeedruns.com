@@ -7,6 +7,11 @@ import { isAdmin } from "#/access/isAdmin";
 export const maxDuration = 60; // This function can run for a maximum of 60 seconds
 
 export async function POST(): Promise<Response> {
+	// Seeding deletes and replaces content, so never allow it against production
+	if (process.env.NODE_ENV === "production") {
+		return new Response("Not found.", { status: 404 });
+	}
+
 	const payload = await getPayload({ config });
 	const requestHeaders = await headers();
 

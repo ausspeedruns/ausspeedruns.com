@@ -13,14 +13,17 @@ export default function BeforeDashboard() {
 			</Banner>
 			Here&apos;s what to do next:
 			<ul className={`${baseClass}__instructions`}>
-				<li>
-					<SeedButton />
-					{" with a few pages, posts, and projects to jump-start your new site, then "}
-					<a href="/" target="_blank">
-						visit your website
-					</a>
-					{" to see the results."}
-				</li>
+				{/* Seeding replaces site content, so it's only offered outside production (the route is disabled too) */}
+				{process.env.NODE_ENV !== "production" && (
+					<li>
+						<SeedButton />
+						{" with a few pages, posts, and projects to jump-start your new site, then "}
+						<a href="/" target="_blank">
+							visit your website
+						</a>
+						{" to see the results."}
+					</li>
+				)}
 				<li>
 					{"Modify your "}
 					<a

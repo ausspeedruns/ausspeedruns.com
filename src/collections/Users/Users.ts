@@ -9,6 +9,7 @@ import { anyone } from "#access/anyone.ts";
 import { isAdminField } from "#access/field/isAdmin.ts";
 import { render } from "@react-email/components";
 import { clearLegacyPasswordOnChange, upgradeLegacyPassword } from "./hooks/legacyPassword.ts";
+import { getServerSideURL } from "#utilities/getURL.ts";
 
 const usernameRegex = /^[\w~-]{3,25}$/;
 
@@ -74,6 +75,14 @@ export const Users: CollectionConfig<"users"> = {
 		beforeChange: [clearLegacyPasswordOnChange],
 	},
 	auth: {
+		// When served over HTTPS (production), never send the auth cookie over plain HTTP
+		cookies: {
+			secure: getServerSideURL().startsWith("https://"),
+			sameSite: "Lax",
+		},
+		// Lock an account for 10 minutes after 5 failed logins
+		maxLoginAttempts: 5,
+		lockTime: 10 * 60 * 1000,
 		// Lets service accounts (e.g. the stream graphics) authenticate with `Authorization: users API-Key <key>`
 		useAPIKey: true,
 		verify: {

@@ -7,17 +7,25 @@ import Link from "next/link";
 import styles from "./Navigation.module.css";
 import { useCartStore } from "#stores/useCartStore.ts";
 import { ShoppingCart, Smile } from "pixelarticons/react";
-import type { AuthResult } from "#utilities/authResult.ts";
+import { useSessionStore } from "#stores/useSessionStore.ts";
 import clsx from "clsx";
+import { useEffect } from "react";
 
 interface HeaderNavProps {
 	data: HeaderType;
-	auth?: AuthResult;
 }
 
-export function HeaderNav({ data, auth }: HeaderNavProps) {
+export function HeaderNav({ data }: HeaderNavProps) {
 	const cartCount = useCartStore((state) => state.items.reduce((sum, item) => sum + item.quantity, 0));
+	const user = useSessionStore((state) => state.user);
+	const canAccessAdmin = useSessionStore((state) => state.canAccessAdmin);
+	const sessionLoaded = useSessionStore((state) => state.loaded);
+	const refreshSession = useSessionStore((state) => state.refresh);
 	const navItems = data?.navItems ?? [];
+
+	useEffect(() => {
+		void refreshSession();
+	}, [refreshSession]);
 
 	return (
 		<nav className={styles.nav}>
@@ -25,7 +33,7 @@ export function HeaderNav({ data, auth }: HeaderNavProps) {
 				return <CMSLink key={i} {...link} appearance="link" className={styles.link} />;
 			})}
 
-			{auth?.permissions.canAccessAdmin && (
+			{canAccessAdmin && (
 				<Link
 					href="/admin"
 					rel="noopener noreferrer"
@@ -46,16 +54,17 @@ export function HeaderNav({ data, auth }: HeaderNavProps) {
 				</Link>
 			)}
 
-			{auth?.user ? (
-				<Link href={`/user/${auth.user.username}`} className={styles.link}>
-					<Smile /> {auth.user.username}
+			{user ? (
+				<Link href={`/user/${user.username}`} className={styles.link}>
+					<Smile /> {user.username}
 				</Link>
 			) : (
+				// Hidden (but still taking up space) until we know whether the visitor is logged in
 				<>
-					<Link href="/login" className={styles.link}>
+					<Link href="/login" className={clsx(styles.link, !sessionLoaded && styles.pending)}>
 						Log in
 					</Link>
-					<Link href="/signup" className={styles.link}>
+					<Link href="/signup" className={clsx(styles.link, !sessionLoaded && styles.pending)}>
 						Sign up
 					</Link>
 				</>

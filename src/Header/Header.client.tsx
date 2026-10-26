@@ -9,14 +9,12 @@ import type { Header } from "#/payload-types";
 import { Logo } from "#/components/Logo/Logo";
 import styles from "./Header.module.css";
 import { HeaderNav } from "./Nav/Navigation";
-import type { AuthResult } from "#utilities/authResult.ts";
 
 interface HeaderClientProps {
 	data: Header;
-	auth?: AuthResult;
 }
 
-export function HeaderClient({ data, auth }: HeaderClientProps) {
+export function HeaderClient({ data }: HeaderClientProps) {
 	/* Storing the value in a useState to avoid hydration errors */
 	const [theme, setTheme] = useState<string | null>(null);
 	const { headerTheme, setHeaderTheme } = useHeaderTheme();
@@ -38,7 +36,7 @@ export function HeaderClient({ data, auth }: HeaderClientProps) {
 				<Link href="/">
 					<Logo className={styles.logo} />
 				</Link>
-				<HeaderNav data={data} auth={auth} />
+				<HeaderNav data={data} />
 			</div>
 		</header>
 	);

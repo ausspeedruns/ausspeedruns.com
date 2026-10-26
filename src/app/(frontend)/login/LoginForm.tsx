@@ -8,6 +8,7 @@ import { useForm } from "@mantine/form";
 
 import styles from "./login.module.css";
 import { Check, SquareAlert } from "pixelarticons/react";
+import { useSessionStore } from "#stores/useSessionStore.ts";
 
 type LoginFormProps = {
 	redirectPath: string;
@@ -74,10 +75,14 @@ export function LoginForm({ redirectPath }: LoginFormProps) {
 					message?: string;
 				} | null;
 
-				const errorMessage =
+				const rawMessage =
 					payload?.errors?.[0]?.message ??
 					payload?.message ??
 					"That email/password combination was not accepted.";
+				// Payload's lockout message doesn't say how to recover (see auth.lockTime in the Users collection)
+				const errorMessage = /locked/i.test(rawMessage)
+					? "Too many failed login attempts. Try again in 10 minutes, or reset your password to unlock your account now."
+					: rawMessage;
 
 				setStatus({
 					type: "error",
@@ -90,6 +95,9 @@ export function LoginForm({ redirectPath }: LoginFormProps) {
 				type: "success",
 				message: "Signed in successfully. Redirecting...",
 			});
+
+			// Update the header, which loads the session client-side
+			void useSessionStore.getState().refresh();
 
 			const nextFromQuery = getSafeRedirectPath(searchParams.get("redirect") ?? searchParams.get("next"));
 			router.push(nextFromQuery ?? redirectPath);
@@ -144,6 +152,12 @@ export function LoginForm({ redirectPath }: LoginFormProps) {
 					{status.message}
 				</Alert>
 			)}
+
+			<Text c="dimmed" size="sm" ta="center">
+				<Anchor component={Link} href="/forgot-password" fw={600}>
+					Forgot your password?
+				</Anchor>
+			</Text>
 
 			<Text c="dimmed" size="sm" ta="center">
 				Need to create an account?{" "}

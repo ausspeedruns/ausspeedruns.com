@@ -24,7 +24,7 @@ export function fillLink(template: string | undefined, params: Record<string, st
 	return template.replace(/\{(\w+)\}/g, (_, key: string) => encodeURIComponent(String(params[key] ?? "")));
 }
 
-export type StepId = "export" | "import" | "timing" | "incentives" | "pairing" | "apply";
+export type StepId = "export" | "import" | "timing" | "incentives" | "blocks" | "pairing" | "apply";
 
 export interface ScheduleContextValue {
 	api: ScheduleApi;

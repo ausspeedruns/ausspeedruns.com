@@ -6,7 +6,8 @@ export const revalidateFooter: GlobalAfterChangeHook = ({ doc, req: { payload, c
 	if (!context.disableRevalidate) {
 		payload.logger.info(`Revalidating footer`);
 
-		revalidateTag("global_footer", "max");
+		// "max" is stale-while-revalidate (next visitor still sees old data); expire: 0 refreshes immediately
+		revalidateTag("global_footer", { expire: 0 });
 	}
 
 	return doc;

@@ -42,7 +42,7 @@ export type Run = {
 	displayIndex: number;
 };
 
-export type Block = NonNullable<Event["scheduleMetadata"]>["scheduleBlocks"][number];
+export type Block = import("#utilities/schedule/blocks.ts").ScheduleBlock;
 
 export type Settings = {
 	showLocalTime: boolean;
@@ -52,6 +52,8 @@ export type Settings = {
 		donationIncentive: boolean;
 		search: string;
 		console: string[];
+		/** Names of blocks to show (empty = all) */
+		blocks: string[];
 	};
 	liveRunId: number;
 };

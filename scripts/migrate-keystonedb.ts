@@ -43,6 +43,32 @@ const eventInfoMap = new Map<string, { shortName: string; timezone?: string }>()
 const submissionIdMap = new Map<string, number>();
 const runIdMap = new Map<string, number>();
 const gameIdCache = new Map<string, Promise<number>>();
+
+interface LegacyBlock {
+	name: string;
+	colour: string;
+	textColour?: string;
+	startRunId: string;
+	endRunId?: string;
+}
+const legacyBlocksByEvent = new Map<string, LegacyBlock[]>();
+
+/** Keystone stored blocks as a JSON string inside a JSON column, so it may need unwrapping more than once. */
+function parseLegacyBlocks(value: unknown): LegacyBlock[] {
+	let parsed = value;
+	for (let i = 0; i < 3 && typeof parsed === "string"; i++) {
+		try {
+			parsed = JSON.parse(parsed);
+		} catch {
+			return [];
+		}
+	}
+	if (!Array.isArray(parsed)) return [];
+	return parsed.filter(
+		(block): block is LegacyBlock =>
+			typeof block === "object" && block !== null && typeof block.name === "string" && typeof block.startRunId === "string",
+	);
+}
 const migratedUserIds = new Set<string>();
 
 /** Warns and counts a failure when a record references a user that wasn't migrated. */
@@ -181,6 +207,7 @@ async function migrate() {
 	await migrateEvents(payload, source);
 	await migrateSubmissions(payload, source);
 	await migrateRuns(payload, source);
+	await migrateScheduleBlocks(payload);
 	await migrateIncentives(payload, source);
 	await migrateVolunteers(payload, source);
 	await migrateOrders(payload, source);
@@ -418,7 +445,7 @@ async function migrateEvents(payload: BasePayload, source: KeystoneDump) {
 						published: scheduleReleased,
 						horaro,
 						oengus,
-						// scheduleBlocks: scheduleBlocks ? JSON.parse(scheduleBlocks) : undefined,
+						// Blocks reference runs, so they're added by migrateScheduleBlocks once runs exist
 					},
 					legacyKeystoneId: id, // Store the old Keystone ID for reference (to be removed later)
 					media: {
@@ -432,6 +459,8 @@ async function migrateEvents(payload: BasePayload, source: KeystoneDump) {
 
 			// Cache the legacy → payload ID mapping
 			eventIdMap.set(id, created.id);
+			const legacyBlocks = parseLegacyBlocks(scheduleBlocks);
+			if (legacyBlocks.length > 0) legacyBlocksByEvent.set(id, legacyBlocks);
 			eventInfoMap.set(id, { shortName: shortname, timezone: eventTimezone ?? undefined });
 		} catch (e) {
 			handlePayloadCreateError(e, `event ${name}`);
@@ -663,6 +692,71 @@ async function migrateRuns(payload: BasePayload, source: KeystoneDump) {
 			handlePayloadCreateError(e, `run ${id}`);
 		}
 	});
+}
+
+async function migrateScheduleBlocks(payload: BasePayload) {
+	console.log("Migrating schedule blocks...");
+	const { findBlockProblems, describeBlockProblem } = await import("../src/utilities/schedule/blocks.ts");
+
+	for (const [legacyEventId, legacyBlocks] of legacyBlocksByEvent) {
+		const eventId = eventIdMap.get(legacyEventId);
+		if (!eventId) continue;
+
+		const mapped = legacyBlocks.flatMap((block) => {
+			const startRun = runIdMap.get(block.startRunId);
+			if (!startRun) {
+				console.warn(`Skipping schedule block "${block.name}" for event ${legacyEventId}: start run was not migrated`);
+				return [];
+			}
+			const endRun = block.endRunId ? (runIdMap.get(block.endRunId) ?? null) : null;
+			if (block.endRunId && !endRun) {
+				console.warn(`Schedule block "${block.name}": end run was not migrated, treating it as a single run`);
+			}
+			return [
+				{
+					name: block.name,
+					colour: block.colour || "#437c90",
+					textColour: block.textColour || null,
+					startRun,
+					endRun: endRun === startRun ? null : endRun,
+				},
+			];
+		});
+
+		// Drop anything the event's block validation would reject (overlaps, reversed ranges)
+		const order = (
+			await payload.find({
+				collection: "runs",
+				where: { and: [{ event: { equals: eventId } }, { parent: { exists: false } }] },
+				sort: "scheduledTime",
+				depth: 0,
+				pagination: false,
+				select: { scheduledTime: true },
+			})
+		).docs.map((run) => run.id);
+		const problems = findBlockProblems(
+			mapped.map((block) => ({ name: block.name, start: block.startRun, end: block.endRun })),
+			order,
+		);
+		const rejected = new Set(problems.map((problem) => problem.block));
+		for (const problem of problems) {
+			console.warn(`Skipping schedule block: ${describeBlockProblem(problem, mapped.map((block) => block.name))}`);
+		}
+		const scheduleBlocks = mapped.filter((_, i) => !rejected.has(i));
+		if (scheduleBlocks.length === 0) continue;
+
+		try {
+			const event = await payload.findByID({ collection: "events", id: eventId, depth: 0, draft: true });
+			await payload.update({
+				collection: "events",
+				id: eventId,
+				data: { scheduleMetadata: { ...event.scheduleMetadata, scheduleBlocks } },
+				depth: 0,
+			});
+		} catch (e) {
+			handlePayloadCreateError(e, `schedule blocks for event ${legacyEventId}`);
+		}
+	}
 }
 
 async function migrateIncentives(payload: BasePayload, source: KeystoneDump) {

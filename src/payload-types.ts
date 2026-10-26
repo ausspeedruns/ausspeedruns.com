@@ -1327,11 +1327,22 @@ export interface Event {
     published?: boolean | null;
     horaro?: string | null;
     oengus?: string | null;
+    /**
+     * Themed groups of consecutive runs, called out on the public schedule. Blocks can also be managed in the Schedule Import tool (applying a draft replaces these).
+     */
     scheduleBlocks?:
       | {
           name: string;
-          colour?: string | null;
+          colour: string;
+          /**
+           * Leave empty for black or white, whichever is easier to read.
+           */
           textColour?: string | null;
+          startRun: number | Run;
+          /**
+           * Leave empty for a single-run block.
+           */
+          endRun?: (number | null) | Run;
           id?: string | null;
         }[]
       | null;
@@ -2377,6 +2388,15 @@ export interface ScheduleDraft {
     | number
     | boolean
     | null;
+  blocks?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   /**
    * Maps draft rows/incentives to the runs/incentives created from them.
    */
@@ -3360,6 +3380,8 @@ export interface EventsSelect<T extends boolean = true> {
               name?: T;
               colour?: T;
               textColour?: T;
+              startRun?: T;
+              endRun?: T;
               id?: T;
             };
       };
@@ -3600,6 +3622,7 @@ export interface ScheduleDraftsSelect<T extends boolean = true> {
   status?: T;
   rows?: T;
   incentives?: T;
+  blocks?: T;
   appliedMap?: T;
   lastImportReport?: T;
   appliedAt?: T;

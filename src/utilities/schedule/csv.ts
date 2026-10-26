@@ -389,6 +389,7 @@ export function csvRowsToDraft(csvRows: CsvRow[], context: ImportContext): Draft
 		defaultSetupMinutes: context.defaultSetupMinutes ?? DEFAULT_SETUP_MINUTES,
 		rows: normaliseRows(rows),
 		incentives,
+		blocks: [],
 		report,
 	};
 }

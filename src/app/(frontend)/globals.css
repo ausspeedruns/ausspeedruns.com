@@ -8,7 +8,7 @@
 
 body {
 	margin: 0;
-	background-color: hsl(var(--background));
+	background-color: var(--mantine-color-body);
 	color: hsl(var(--foreground));
 	min-height: 100vh;
 	display: flex;
@@ -65,6 +65,21 @@ body {
 	--success: 196 52% 74%;
 	--warning: 34 89% 85%;
 	--error: 10 100% 86%;
+}
+
+/* Mantine emits equally specific color-scheme rules after these global styles. */
+/*
+ * Background options (uncomment one per scheme).
+ * Orange + blue is already a colour-blind-safe pair, so backgrounds stay near-neutral
+ * or lean slightly blue. Avoid brown/olive/green tints: they collapse into the orange
+ * for protan/deutan vision. Ratios are WCAG contrast of orange / blue against the bg.
+ */
+html:root[data-mantine-color-scheme="light"] {
+	--mantine-color-body: #eef1f3;
+}
+
+html:root[data-mantine-color-scheme="dark"] {
+	--mantine-color-body: #0b1220;
 }
 
 [data-mantine-color-scheme="dark"] {

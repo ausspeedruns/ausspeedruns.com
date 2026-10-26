@@ -16,7 +16,11 @@ type RunHoverProps = {
 };
 
 const RunHover = ({ label, children, odd, block, ...props }: RunHoverProps) => {
-	const backgroundColor = block?.colour ? `${block.colour}a6` : odd ? "#cc7722a6" : "#437c90a6";
+	const backgroundColor = block?.colour
+		? `color-mix(in srgb, ${block.colour} 65%, transparent)`
+		: odd
+			? "#cc7722a6"
+			: "#437c90a6";
 	const color = block?.textColour ? block.textColour : "#fff";
 	const borderColor = block?.colour ? block.colour : odd ? "#cc7722" : "#437c90";
 
@@ -74,7 +78,7 @@ export function RunVisualBlock({ run, proportion, block }: RunProps) {
 					background: (block && block.colour) || undefined,
 				}}
 				onClick={() => {
-					const runElement = document.querySelector(`#${run.id}`);
+					const runElement = document.getElementById(run.id.toString());
 					if (runElement != null) {
 						runElement.scrollIntoView({ behavior: "smooth", block: "center" });
 					}

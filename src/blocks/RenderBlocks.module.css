@@ -11,8 +11,4 @@
 /* Consecutive full-bleed rows (e.g. event features) butt up against each other. */
 .blockWrapper:has(> [data-stack]) + .blockWrapper:has(> [data-stack]) {
 	margin-top: -4rem;
-
-	& > [data-stack] {
-		border-top: 1px solid rgb(255 255 255 / 10%);
-	}
 }

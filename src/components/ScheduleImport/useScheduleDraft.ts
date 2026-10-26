@@ -37,6 +37,7 @@ export function useScheduleDraft(api: ScheduleApi | null) {
 				defaultSetupMinutes: response.draft.defaultSetupMinutes,
 				rows: response.draft.rows,
 				incentives: response.draft.incentives,
+				blocks: response.draft.blocks ?? [],
 			};
 			setData(response);
 			setState(nextState);

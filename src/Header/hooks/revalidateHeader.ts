@@ -6,7 +6,8 @@ export const revalidateHeader: GlobalAfterChangeHook = ({ doc, req: { payload, c
 	if (!context.disableRevalidate) {
 		payload.logger.info(`Revalidating header`);
 
-		revalidateTag("global_header", "max");
+		// "max" is stale-while-revalidate (next visitor still sees old data); expire: 0 refreshes immediately
+		revalidateTag("global_header", { expire: 0 });
 	}
 
 	return doc;

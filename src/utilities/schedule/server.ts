@@ -13,6 +13,7 @@ import { computeSchedule, estimateToMs, msToEstimate, normaliseEstimate, schedul
 import type {
 	ApplyResult,
 	AppliedMap,
+	DraftBlock,
 	DraftIncentive,
 	DraftResponse,
 	DraftRow,
@@ -23,6 +24,13 @@ import type {
 	SubmissionSummary,
 } from "./types.ts";
 import { normaliseRows } from "./medley.ts";
+import {
+	blocksSignature,
+	draftBlocksToEvent,
+	eventBlocksToDraft,
+	normaliseDraftBlocks,
+	type EventBlockData,
+} from "./blocks.ts";
 import { validateDraft, type ScheduleIssue } from "./validation.ts";
 
 /** Thrown by schedule operations; converted to an HTTP response by the endpoints. */
@@ -59,8 +67,14 @@ const emptyMap = (): AppliedMap => ({ runs: {}, incentives: {} });
 function asAppliedMap(value: unknown): AppliedMap {
 	if (!value || typeof value !== "object") return emptyMap();
 	const map = value as Partial<AppliedMap>;
-	return { runs: { ...map.runs }, incentives: { ...map.incentives } };
+	return {
+		runs: { ...map.runs },
+		incentives: { ...map.incentives },
+		...(typeof map.blocksSignature === "string" ? { blocksSignature: map.blocksSignature } : {}),
+	};
 }
+
+const eventBlocks = (event: Event) => (event.scheduleMetadata?.scheduleBlocks ?? []) as EventBlockData[];
 
 // ---------------------------------------------------------------------------
 // Loading
@@ -159,10 +173,12 @@ async function findDraft(req: PayloadRequest, eventId: number): Promise<Schedule
 }
 
 function draftState(draft: ScheduleDraft | null): DraftState {
+	const rows = normaliseRows((Array.isArray(draft?.rows) ? draft.rows : []) as unknown as DraftRow[]);
 	return {
 		defaultSetupMinutes: draft?.defaultSetupMinutes ?? DEFAULT_SETUP_MINUTES,
-		rows: normaliseRows((Array.isArray(draft?.rows) ? draft.rows : []) as unknown as DraftRow[]),
+		rows,
 		incentives: (Array.isArray(draft?.incentives) ? draft.incentives : []) as unknown as DraftIncentive[],
+		blocks: normaliseDraftBlocks((Array.isArray(draft?.blocks) ? draft.blocks : []) as unknown as DraftBlock[], rows),
 	};
 }
 
@@ -237,6 +253,10 @@ export async function loadDraftResponse(req: PayloadRequest, eventId: number): P
 		});
 		liveRunsChanged = changed.totalDocs > 0;
 	}
+	const eventBlocksChanged =
+		draft?.status === "applied" &&
+		map.blocksSignature !== undefined &&
+		map.blocksSignature !== blocksSignature(eventBlocks(event));
 
 	return {
 		event: toEventSummary(event),
@@ -247,6 +267,7 @@ export async function loadDraftResponse(req: PayloadRequest, eventId: number): P
 			finalisedAt: draft?.finalisedAt ?? null,
 			updatedAt: draft?.updatedAt ?? null,
 			liveRunsChanged,
+			eventBlocksChanged,
 			appliedRunCount: Object.keys(map.runs).length,
 			...state,
 		},
@@ -302,13 +323,17 @@ export async function saveDraft(
 	expectedUpdatedAt: string | null | undefined,
 ): Promise<{ updatedAt: string }> {
 	await loadEvent(req, eventId);
+	const rows = normaliseRows(state.rows);
 	const saved = await upsertDraft(
 		req,
 		eventId,
 		{
 			defaultSetupMinutes: state.defaultSetupMinutes,
-			rows: normaliseRows(state.rows) as unknown as ScheduleDraft["rows"],
+			rows: rows as unknown as ScheduleDraft["rows"],
 			incentives: state.incentives as unknown as ScheduleDraft["incentives"],
+			...(state.blocks
+				? { blocks: normaliseDraftBlocks(state.blocks, rows) as unknown as ScheduleDraft["blocks"] }
+				: {}),
 		},
 		expectedUpdatedAt,
 	);
@@ -349,6 +374,8 @@ export async function importCsv(
 		defaultSetupMinutes: state.defaultSetupMinutes,
 		rows: state.rows as unknown as ScheduleDraft["rows"],
 		incentives: state.incentives as unknown as ScheduleDraft["incentives"],
+		// Re-imported rows get new keys, so existing blocks keep their name/colour but lose their runs
+		blocks: normaliseDraftBlocks(draftState(existing).blocks, state.rows) as unknown as ScheduleDraft["blocks"],
 		lastImportReport: report as unknown as ScheduleDraft["lastImportReport"],
 	});
 
@@ -456,6 +483,7 @@ export async function applyDraft(
 		incentives: { created: 0, updated: 0, deleted: 0 },
 		gamesCreated,
 		endTime: null,
+		blocks: { applied: 0, skipped: [] },
 	};
 
 	// Hooks would re-sync medleys after every write; do it once at the end instead
@@ -595,26 +623,39 @@ export async function applyDraft(
 
 	for (const medleyId of medleyIds) await syncMedley(req, medleyId);
 
-	// Event end time
+	// Event end time and schedule blocks
 	const end = scheduleEnd(timed);
-	if (end) {
-		const published = await req.payload.findByID({
-			collection: "events",
-			id: eventId,
-			depth: 0,
-			overrideAccess: true,
-			req,
-		});
-		await req.payload.update({
-			collection: "events",
-			id: eventId,
-			data: { timeSettings: { ...published.timeSettings, timezone: eventSummary.timezone as never, endTime: end.toISOString() } },
-			depth: 0,
-			overrideAccess: true,
-			req,
-		});
-		result.endTime = end.toISOString();
-	}
+	const appliedBlocks = draftBlocksToEvent(state.blocks ?? [], newMap.runs);
+	result.blocks = { applied: appliedBlocks.blocks.length, skipped: appliedBlocks.skipped };
+	newMap.blocksSignature = blocksSignature(appliedBlocks.blocks);
+
+	const published = await req.payload.findByID({
+		collection: "events",
+		id: eventId,
+		depth: 0,
+		overrideAccess: true,
+		req,
+	});
+	await req.payload.update({
+		collection: "events",
+		id: eventId,
+		data: {
+			...(end
+				? {
+						timeSettings: {
+							...published.timeSettings,
+							timezone: eventSummary.timezone as never,
+							endTime: end.toISOString(),
+						},
+					}
+				: {}),
+			scheduleMetadata: { ...published.scheduleMetadata, scheduleBlocks: appliedBlocks.blocks },
+		},
+		depth: 0,
+		overrideAccess: true,
+		req,
+	});
+	if (end) result.endTime = end.toISOString();
 
 	await req.payload.update({
 		collection: "schedule-drafts",
@@ -678,6 +719,19 @@ export async function resetSchedule(
 
 	const incentives = await deleteByIds(req, "incentives", incentiveIds);
 	const runs = await deleteByIds(req, "runs", runIds);
+
+	// Blocks point at the deleted runs; the draft keeps its blocks for the next apply
+	const event = await req.payload.findByID({ collection: "events", id: eventId, depth: 0, overrideAccess: true, req });
+	if ((event.scheduleMetadata?.scheduleBlocks ?? []).length > 0) {
+		await req.payload.update({
+			collection: "events",
+			id: eventId,
+			data: { scheduleMetadata: { ...event.scheduleMetadata, scheduleBlocks: [] } },
+			depth: 0,
+			overrideAccess: true,
+			req,
+		});
+	}
 
 	let submissions = 0;
 	if (options.resetSubmissions) {
@@ -843,10 +897,14 @@ export async function rebuildDraftFromRuns(req: PayloadRequest, eventId: number)
 		if (rows[0].estimate === "00:00:00") rows.shift();
 	}
 
+	const blocks = eventBlocksToDraft(eventBlocks(event), keyByRunId, nanoid);
+	map.blocksSignature = blocksSignature(eventBlocks(event));
+
 	await upsertDraft(req, eventId, {
 		defaultSetupMinutes,
 		rows: rows as unknown as ScheduleDraft["rows"],
 		incentives: draftIncentives as unknown as ScheduleDraft["incentives"],
+		blocks: normaliseDraftBlocks(blocks, rows) as unknown as ScheduleDraft["blocks"],
 		status: "applied",
 		appliedAt: new Date().toISOString(),
 		appliedBy: req.user?.id ?? null,

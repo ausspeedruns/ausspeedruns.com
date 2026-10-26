@@ -19,5 +19,8 @@ export const theme = createTheme({
 	},
 	primaryColor: "ausSpeedrunsOrange",
 	defaultRadius: "xs",
+	radius: {
+		xs: "0",
+	},
 	fontFamily: "Poppins, sans-serif",
 });

@@ -1,0 +1,37 @@
+.field :global(.field-type__wrap) {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	align-items: stretch;
+	column-gap: calc(var(--base) * 0.5);
+
+	& > :not(input):not(.swatch) {
+		grid-column: 1 / -1;
+	}
+}
+
+.swatch {
+	position: relative;
+	flex: 0 0 auto;
+	width: calc(var(--base) * 2);
+	min-height: calc(var(--base) * 2);
+	border-radius: var(--style-radius-s);
+	border: 1px solid var(--theme-elevation-150);
+	cursor: pointer;
+	overflow: hidden;
+
+	&[data-empty="true"] {
+		background: repeating-conic-gradient(var(--theme-elevation-100) 0 25%, var(--theme-elevation-0) 0 50%) 50% / 12px
+			12px;
+	}
+}
+
+.picker {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+	border: 0;
+	padding: 0;
+}

@@ -32,6 +32,6 @@ export const Header: GlobalConfig = {
 		},
 	],
 	hooks: {
-		// afterChange: [revalidateHeader],
+		afterChange: [revalidateHeader],
 	},
 };

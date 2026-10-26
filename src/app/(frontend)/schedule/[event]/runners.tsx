@@ -1,3 +1,5 @@
+import { Anchor } from "@mantine/core";
+
 type RunnersProps = {
 	runners: string[];
 	/** Names without accounts, shown without a profile link */
@@ -11,9 +13,17 @@ export function Runners({ runners, others = [] }: RunnersProps) {
 
 	const runnerLinks = [
 		...runners.map((username) => (
-			<a key={username} href={`/user/${username}`} target="_blank" rel="noreferrer">
+			<Anchor
+				key={username}
+				href={`/user/${username}`}
+				target="_blank"
+				rel="noreferrer"
+				c="inherit"
+				inherit
+				underline="always"
+			>
 				{username}
-			</a>
+			</Anchor>
 		)),
 		...others.map((name) => <span key={`other-${name}`}>{name}</span>),
 	];

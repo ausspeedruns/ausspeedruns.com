@@ -1,3 +1,5 @@
+import { validateColour } from "#fields/validators.ts";
+import { describeBlockProblem, findBlockProblems } from "./blocks.ts";
 import { validateIncentiveData } from "./incentives.ts";
 import { findDuplicateSubmissionLinks } from "./pairing.ts";
 import { computeSchedule, eventDayIndex, estimateToMs, msToEstimate, scheduleEnd } from "./timing.ts";
@@ -10,7 +12,8 @@ export interface ScheduleIssue {
 	message: string;
 	rowKey?: string;
 	incentiveKey?: string;
-	step: "import" | "timing" | "incentives" | "pairing" | "apply";
+	blockKey?: string;
+	step: "import" | "timing" | "incentives" | "blocks" | "pairing" | "apply";
 }
 
 /** Errors block applying the schedule; warnings are shown but can be ignored. */
@@ -191,6 +194,45 @@ export function validateDraft(
 				});
 			}
 		}
+	}
+
+	const topLevelKeys = topLevelRows.map((row) => row.key);
+	const blockNames = (draft.blocks ?? []).map((block) => block.name.trim() || "Untitled block");
+	(draft.blocks ?? []).forEach((block, i) => {
+		if (!block.name.trim()) {
+			issues.push({ level: "error", step: "blocks", blockKey: block.key, message: "A schedule block is missing a name." });
+		}
+		if (validateColour(block.colour) !== true || !block.colour.trim()) {
+			issues.push({
+				level: "error",
+				step: "blocks",
+				blockKey: block.key,
+				message: `Block "${blockNames[i]}": colour must be a CSS colour, e.g. #08a256.`,
+			});
+		}
+		if (block.textColour && validateColour(block.textColour) !== true) {
+			issues.push({
+				level: "error",
+				step: "blocks",
+				blockKey: block.key,
+				message: `Block "${blockNames[i]}": text colour must be a CSS colour.`,
+			});
+		}
+	});
+	for (const problem of findBlockProblems(
+		(draft.blocks ?? []).map((block) => ({ name: block.name, start: block.startRowKey, end: block.endRowKey })),
+		topLevelKeys,
+	)) {
+		issues.push({
+			// Unassigned blocks are skipped on apply rather than blocking it
+			level: problem.type === "missingStart" ? "warning" : "error",
+			step: "blocks",
+			blockKey: (draft.blocks ?? [])[problem.block].key,
+			message:
+				problem.type === "missingStart"
+					? `Block "${blockNames[problem.block]}" has no start run, so it won't be shown.`
+					: describeBlockProblem(problem, blockNames),
+		});
 	}
 
 	const end = scheduleEnd(timed);

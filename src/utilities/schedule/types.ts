@@ -61,12 +61,28 @@ export interface DraftIncentive {
 export interface AppliedMap {
 	runs: Record<string, number>;
 	incentives: Record<string, number>;
+	/** Signature of the event's blocks as last applied, to detect direct edits */
+	blocksSignature?: string;
+}
+
+/** A themed span of top-level rows, applied to the event's schedule blocks. */
+export interface DraftBlock {
+	key: string;
+	name: string;
+	colour: string;
+	/** Empty to pick black/white automatically */
+	textColour: string;
+	startRowKey: string | null;
+	/** Null for a single-row block */
+	endRowKey: string | null;
 }
 
 export interface DraftState {
 	defaultSetupMinutes: number;
 	rows: DraftRow[];
 	incentives: DraftIncentive[];
+	/** Missing in drafts saved before blocks existed */
+	blocks?: DraftBlock[];
 }
 
 export type SubmissionStatus = "pending" | "accepted" | "rejected" | "backup";
@@ -108,6 +124,8 @@ export interface DraftMeta {
 	updatedAt: string | null;
 	/** True if live runs were modified after the last apply */
 	liveRunsChanged: boolean;
+	/** True if the event's schedule blocks were edited directly since the last apply */
+	eventBlocksChanged: boolean;
 	appliedRunCount: number;
 }
 
@@ -127,6 +145,7 @@ export interface ApplyResult {
 	incentives: { created: number; updated: number; deleted: number };
 	gamesCreated: string[];
 	endTime: string | null;
+	blocks: { applied: number; skipped: string[] };
 }
 
 export type BackupRule = "all" | "acceptedRunnersOnly" | "none";

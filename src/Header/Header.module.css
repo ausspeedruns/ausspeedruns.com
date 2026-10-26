@@ -25,11 +25,3 @@
 	display: flex;
 	justify-content: space-between;
 }
-
-.logo {
-	filter: invert(100%);
-}
-
-:global([data-mantine-color-scheme="dark"]) .logo {
-	filter: invert(0);
-}

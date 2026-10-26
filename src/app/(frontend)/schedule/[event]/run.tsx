@@ -1,5 +1,7 @@
+import { Badge, Box, Group, Stack, Text, Title } from "@mantine/core";
 import type { Block, Run } from "./schedule-types";
 import styles from "./run.module.css";
+import clsx from "clsx";
 
 import ConsoleIcon from "./icons/console.svg";
 import RunnerIcon from "./icons/runner.svg";
@@ -14,7 +16,22 @@ interface RunItemProps {
 	eventTimezone: string;
 	isLive?: boolean;
 	block?: Block;
+	/** Rendered inside a BlockGroup, which shows the block name once */
+	inBlockGroup?: boolean;
 	style?: React.CSSProperties;
+}
+
+function CategoryBadge({ label, block }: { label: string; block?: Block }) {
+	return (
+		<Badge
+			size="lg"
+			radius="md"
+			color={block?.colour ?? "var(--colour-accent)"}
+			style={block && { border: "3px solid #fff" }}
+		>
+			{label}
+		</Badge>
+	);
 }
 
 export function RunElement(props: RunItemProps) {
@@ -27,74 +44,81 @@ export function RunElement(props: RunItemProps) {
 		"h:mm a",
 	);
 
+	const minorStyle = props.block
+		? { background: `color-mix(in srgb, ${props.block.colour} 30%, transparent)` }
+		: undefined;
+
 	if (run.type === "setupBuffer") {
 		return (
-			<div className={styles.setupBuffer} key={run.id}>
+			<Text
+				className={styles.setupBuffer}
+				key={run.id}
+				ta="center"
+				fs="italic"
+				fz="xl"
+				p="xs"
+				mt={4}
+				style={minorStyle}
+			>
 				{parseInt(run.estimate.split(":")[1] ?? "0", 10)} min Setup Buffer
-			</div>
+			</Text>
 		);
 	}
 
 	if (run.type === "segment") {
 		const hasPeople = run.runners.length > 0 || (run.otherRunners?.length ?? 0) > 0;
 		return (
-			<div
-				className={[styles.segment, props.isLive ? styles.liveRun : ""].join(" ")}
+			<Box
+				className={clsx(styles.segment, props.isLive && styles.liveRun)}
 				key={run.id}
 				id={run.id.toString()}
+				px="md"
+				py="xs"
+				mt={4}
+				fz="lg"
 				style={{
 					background: run.segmentType?.colour ?? undefined,
 					color: run.segmentType?.textColour ?? undefined,
 				}}
 			>
-				<span className={styles.segmentTime}>{convertedTimezone}</span>
-				<span className={styles.segmentType}>{run.segmentType?.name ?? "Segment"}</span>
-				<span className={styles.segmentTitle}>{run.category || run.segmentType?.name}</span>
+				<Text span inherit fw={700} tt="uppercase" className={styles.noWrap}>
+					{convertedTimezone}
+				</Text>
+				<Badge variant="outline" color="currentColor" size="lg" radius="md" className={styles.segmentType}>
+					{run.segmentType?.name ?? "Segment"}
+				</Badge>
+				<Text span inherit fw={700} className={styles.balance}>
+					{run.category || run.segmentType?.name}
+				</Text>
 				{hasPeople && (
-					<span className={styles.segmentPeople}>
+					<Text span inherit fs="italic">
 						<Runners runners={run.runners} others={run.otherRunners} />
-					</span>
+					</Text>
 				)}
-			</div>
+			</Box>
 		);
 	}
 
 	if (run.type === "sleep" || run.type === "other") {
 		return (
-			<div className={styles.setupBuffer} key={run.id}>
+			<Text
+				className={styles.setupBuffer}
+				key={run.id}
+				ta="center"
+				fs="italic"
+				fz="xl"
+				p="xs"
+				mt={4}
+				style={minorStyle}
+			>
 				{convertedTimezone} — {run.category || (run.type === "sleep" ? "Overnight break" : run.game)}
-			</div>
+			</Text>
 		);
 	}
 
-	let categoryExtras = <></>;
-	if (run.race)
-		categoryExtras = (
-			<span
-				className={styles.categoryExtras}
-				style={{
-					background: props.block && props.block.colour,
-					border: props.block && "3px solid #fff",
-				}}
-			>
-				RACE
-			</span>
-		);
-	if (run.coop)
-		categoryExtras = (
-			<span
-				className={styles.categoryExtras}
-				style={{
-					background: props.block && props.block.colour,
-					border: props.block && "3px solid #fff",
-				}}
-			>
-				CO-OP
-			</span>
-		);
-
-	const runClassNames = [styles.run];
-	if (props.isLive) runClassNames.push(styles.liveRun);
+	let categoryExtras: React.ReactNode = null;
+	if (run.race) categoryExtras = <CategoryBadge label="RACE" block={props.block} />;
+	if (run.coop) categoryExtras = <CategoryBadge label="CO-OP" block={props.block} />;
 
 	const estimateSplit = run.estimate.split(":");
 	const hours = parseInt(estimateSplit[0]);
@@ -103,88 +127,145 @@ export function RunElement(props: RunItemProps) {
 	const formattedMinutes = minutes.toString().padStart(2, "0");
 	const estimateText = `${formattedHours}:${formattedMinutes}:00`;
 
+	const isOdd = run.displayIndex % 2 != 0;
+	// Alternate shades inside a block so neighbouring runs are still distinguishable
+	const blockBackground = props.block
+		? props.inBlockGroup && isOdd
+			? `color-mix(in srgb, ${props.block.colour} 82%, black)`
+			: props.block.colour
+		: undefined;
+
 	return (
-		<div
-			className={runClassNames.join(" ")}
+		<Stack
+			className={clsx(styles.run, props.isLive && styles.liveRun)}
 			key={run.id}
-			style={{ background: props.block?.colour, color: props.block?.textColour, ...props.style }}
+			align="center"
+			gap={0}
+			mt={4}
+			fz="lg"
+			style={
+				{
+					background: blockBackground,
+					color: props.block?.textColour,
+					...(props.block ? { "--colour-accent": props.block.textColour } : {}),
+					...props.style,
+				} as React.CSSProperties
+			}
 			id={run.id.toString()}
 			run-odd={`${run.displayIndex % 2 != 0}`}
 		>
-			<span className={styles.time} style={props.block && { background: "white", color: "black" }}>
+			<Text
+				span
+				fz="xl"
+				fw={700}
+				tt="uppercase"
+				p="xs"
+				className={styles.time}
+				style={props.block && { background: "white", color: "black" }}
+			>
 				{convertedTimezone}
-			</span>
-			{props.block?.name && <span className={styles.blockName}>{props.block?.name}</span>}
-			<h3 className={styles.game}>{run.game}</h3>
-			<span className={styles.category} style={{ color: props.block?.textColour }}>
+			</Text>
+			{props.block?.name && !props.inBlockGroup && (
+				<Text span fz="xl" fw={700} p="xs" className={styles.blockName}>
+					{props.block?.name}
+				</Text>
+			)}
+			<Title
+				order={3}
+				className={styles.game}
+				ff="Jersey10, sans-serif"
+				fz="200%"
+				fw="normal"
+				lh={1}
+				ta="center"
+				textWrap="balance"
+			>
+				{run.game}
+			</Title>
+			<Group
+				className={styles.category}
+				gap="sm"
+				justify="center"
+				fz="xl"
+				fw={700}
+				p={4}
+				mt={2}
+				mb="xs"
+				style={{ color: props.block?.textColour }}
+			>
 				{run.type === "medley" ? (
 					<>
-						<span
-							className={styles.categoryExtras}
-							style={{ background: props.block && props.block.colour, border: props.block && "3px solid #fff" }}
-						>
-							MEDLEY
+						<CategoryBadge label="MEDLEY" block={props.block} />
+						<span>
+							{run.children?.length ?? 0} {run.children?.length === 1 ? "game" : "games"}
 						</span>
-						{run.children?.length ?? 0} {run.children?.length === 1 ? "game" : "games"}
 					</>
 				) : (
 					<>
 						{categoryExtras}
-						{run.category}
+						<span>{run.category}</span>
 					</>
 				)}
-			</span>
+			</Group>
 			<div className={styles.metaData} style={{ color: props.block?.textColour }}>
-				<span className={styles.runners}>
+				<Group gap="xs" wrap="nowrap" justify="flex-end" ta="center" className={styles.balance}>
 					<RunnerIcon />
 					<Runners runners={run.runners} others={run.otherRunners} />
-				</span>
-				<span className={styles.estimate}>
+				</Group>
+				<Group gap="xs" wrap="nowrap">
 					<EstimateIcon />
 					{estimateText}
-				</span>
-				<span className={styles.platform}>
+				</Group>
+				<Group gap="xs" wrap="nowrap">
 					<ConsoleIcon />
 					{run.platform}
-				</span>
+				</Group>
 			</div>
 			{run.donationIncentives && run.donationIncentives.length > 0 && (
-				<div
+				<Stack
 					className={styles.donationIncentives}
+					align="center"
+					gap={0}
+					mt="md"
+					p="xs"
 					style={{ color: props.block?.textColour, borderColor: props.block && "white" }}
 				>
-					<span className={styles.title}>{/* <PaidIcon /> Incentives */}</span>
+					{/* <PaidIcon /> Incentives */}
 					{run.donationIncentives?.map((incentive) => (
-						<span
-							className={styles.donationIncentive}
-							style={{ color: props.block?.textColour }}
-							key={incentive.id}
-						>
+						<Text span inherit fs="italic" fw={700} key={incentive.id}>
 							{incentive.title}
-						</span>
+						</Text>
 					))}
-				</div>
+				</Stack>
 			)}
 			{run.type === "medley" && run.children && run.children.length > 0 && (
-				<details className={styles.medleyGames} style={{ color: props.block?.textColour }}>
-					<summary>Show games</summary>
-					<ol>
+				<Box
+					component="details"
+					className={styles.medleyGames}
+					w="100%"
+					mt="md"
+					style={{ color: props.block?.textColour }}
+				>
+					<Text component="summary" inherit fw={700} ta="center">
+						Show games
+					</Text>
+					<Stack component="ol" gap={4} p={0} m={0} mt="xs">
 						{run.children.map((child) => (
-							<li key={child.id} className={styles.medleyGame}>
-								<span className={styles.medleyGameTime}>
+							<Box component="li" key={child.id} className={styles.medleyGame} px="sm" py={6}>
+								<Text span fz="md" fw={700} className={styles.noWrap}>
 									{child.scheduledTime
 										? `~${formatScheduleTime(child.scheduledTime, props.eventTimezone, props.showLocalTime, "h:mm a")}`
 										: ""}
-								</span>
-								<span className={styles.medleyGameName}>
+								</Text>
+								<Stack gap={0}>
 									<strong>{child.game}</strong>
 									<span>
 										{child.race && "RACE · "}
 										{child.coop && "CO-OP · "}
 										{child.category}
 									</span>
-								</span>
-								<span className={styles.medleyGameMeta}>
+								</Stack>
+								<Stack gap={0} fz="md" className={styles.medleyGameMeta}>
 									<Runners runners={child.runners} others={child.otherRunners} />
 									<span>
 										{formatEstimate(child.estimate)} · {child.platform}
@@ -192,13 +273,13 @@ export function RunElement(props: RunItemProps) {
 									{child.donationIncentives.map((incentive) => (
 										<em key={incentive.id}>{incentive.title}</em>
 									))}
-								</span>
-							</li>
+								</Stack>
+							</Box>
 						))}
-					</ol>
-				</details>
+					</Stack>
+				</Box>
 			)}
-		</div>
+		</Stack>
 	);
 }
 

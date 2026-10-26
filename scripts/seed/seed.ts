@@ -28,6 +28,8 @@ async function setupHeader(payload: BasePayload, aboutUsPageId: number) {
 	// Create Nav Links
 	await payload.updateGlobal({
 		slug: "header",
+		// Runs outside Next.js, where revalidateTag would throw
+		context: { disableRevalidate: true },
 		data: {
 			navItems: [
 				// Merch Link

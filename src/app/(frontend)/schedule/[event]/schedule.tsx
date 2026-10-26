@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import styles from "./schedule.module.css";
 import { format } from "date-fns";
 
@@ -9,7 +9,9 @@ import type { Block, Run, Settings } from "./schedule-types";
 import { RunElement } from "./run";
 import { Day } from "./day";
 import { Filters } from "./filters";
-import type { Event, Media as MediaType } from "#payload-types.ts";
+import type { Media as MediaType } from "#payload-types.ts";
+import { resolveBlockRuns } from "#utilities/schedule/blocks.ts";
+import { BlockLegend } from "./block-legend";
 import { Media } from "#components/Media/Media.tsx";
 import { Button, Checkbox } from "@mantine/core";
 import { formatScheduleTime } from "./time";
@@ -23,6 +25,7 @@ const DEFAULT_SETTINGS: Settings = {
 		donationIncentive: false,
 		search: "",
 		console: [] as string[],
+		blocks: [] as string[],
 	},
 	liveRunId: -1,
 };
@@ -36,7 +39,7 @@ interface ScheduleProps {
 		timezone: string;
 	};
 	logo?: number | MediaType | null;
-	scheduleBlocks: NonNullable<Event["scheduleMetadata"]>["scheduleBlocks"];
+	scheduleBlocks: Block[];
 	oengus: string;
 	horaro: string;
 	runs: Run[];
@@ -50,7 +53,10 @@ export function Schedule(props: ScheduleProps) {
 	// const [currentTime] = useState(TEST_CURRENT_TIME);
 	const [currentRunIndex, setCurrentRunIndex] = useState(-1);
 
-	const scheduleBlocks = generateSubmissionBlockMap(props.scheduleBlocks ?? [], props.runs);
+	const scheduleBlocks = useMemo(
+		() => generateBlockRunMap(props.scheduleBlocks, props.runs),
+		[props.scheduleBlocks, props.runs],
+	);
 
 	// Update the current time every 10 seconds
 	// useEffect(() => {
@@ -129,6 +135,15 @@ export function Schedule(props: ScheduleProps) {
 					</Button>
 				)}
 			</div>
+			<BlockLegend
+				blocks={props.scheduleBlocks}
+				runs={runsWithOrder}
+				blockMap={scheduleBlocks}
+				eventTimezone={props.time.timezone}
+				showLocalTime={settings.showLocalTime}
+				selected={settings.filter.blocks}
+				onChange={(blocks) => setSettings({ ...settings, filter: { ...settings.filter, blocks } })}
+			/>
 			<Filters currentSettings={settings} setSettings={setSettings} runs={props.runs} />
 			<div className={styles.scheduleContainer}>
 				{currentRunIndex > -1 && (
@@ -176,38 +191,13 @@ export function Schedule(props: ScheduleProps) {
 	);
 }
 
-function generateSubmissionBlockMap(blocks: Block[], allRuns: Run[]) {
-	// Runs can only be paired to one or no blocks so we can 1-to-1 pair them on a map
-	const blockRunMap = new Map<number, Block>();
-
-	blocks.forEach((block) => {
-		const firstRunIndex = allRuns.findIndex((run) => run.id === block.startRunId);
-
-		if (firstRunIndex === -1) {
-			console.log(`${block.name} doesn't have a start run!`);
-			return;
-		}
-
-		if (block.endRunId) {
-			// Find each run in the block
-			const endRunIndex = allRuns.findIndex((run) => run.id === block.endRunId);
-
-			if (endRunIndex === -1) {
-				console.log(`${block.name} has a run end but we couldn't find it in the runs??? What the fuck?`);
-				return;
-			}
-
-			for (let runIndex = firstRunIndex; runIndex <= endRunIndex; runIndex++) {
-				const run = allRuns[runIndex];
-				blockRunMap.set(run.id, block);
-			}
-		} else {
-			// One run for the block
-			blockRunMap.set(allRuns[firstRunIndex].id, block);
-		}
-	});
-
-	return blockRunMap;
+/** Runs can be in at most one block, so they pair 1-to-1 on a map */
+function generateBlockRunMap(blocks: Block[], allRuns: Run[]) {
+	const withRanges = blocks.map((block) => ({ ...block, start: block.startRunId, end: block.endRunId }));
+	return resolveBlockRuns(
+		withRanges,
+		allRuns.map((run) => run.id),
+	) as Map<number, Block>;
 }
 
 function getAllDays(runs: Run[], eventTimezone: string, showLocalTime: boolean) {

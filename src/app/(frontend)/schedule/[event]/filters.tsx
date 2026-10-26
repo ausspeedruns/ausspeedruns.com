@@ -18,6 +18,7 @@ export const Filters = (props: FiltersProps) => {
 			donationIncentive: false,
 			search: props.currentSettings.filter.search,
 			console: props.currentSettings.filter.console,
+			blocks: props.currentSettings.filter.blocks,
 		};
 
 		newFilter.forEach((filter) => {

@@ -1,5 +1,3 @@
-import React, { Fragment } from "react";
-
 import type { Page } from "#/payload-types";
 
 import { ArchiveBlock } from "#/blocks/ArchiveBlock/ArchiveBlock";

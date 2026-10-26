@@ -22,6 +22,7 @@ import { scheduleApi } from "./api.ts";
 import { errorMessage, notify } from "./components/feedback.tsx";
 import { fillLink, ScheduleProvider, type ScheduleContextValue, type ScheduleLinks, type StepId } from "./context.tsx";
 import { ApplyStep } from "./steps/ApplyStep.tsx";
+import { BlocksStep } from "./steps/BlocksStep.tsx";
 import { ExportStep } from "./steps/ExportStep.tsx";
 import { ImportStep } from "./steps/ImportStep.tsx";
 import { IncentivesStep } from "./steps/IncentivesStep.tsx";
@@ -48,6 +49,7 @@ const STEPS: { id: StepId; label: string }[] = [
 	{ id: "import", label: "Import schedule" },
 	{ id: "timing", label: "Timing" },
 	{ id: "incentives", label: "Incentives" },
+	{ id: "blocks", label: "Blocks" },
 	{ id: "pairing", label: "Races & co-ops" },
 	{ id: "apply", label: "Apply & finalise" },
 ];
@@ -227,6 +229,14 @@ export function ScheduleImportApp({ events, initialEventId, apiBase, links = {} 
 				</Alert>
 			)}
 
+			{data?.draft.eventBlocksChanged && (
+				<Alert color="blue">
+					The event&apos;s schedule blocks were edited directly after the schedule was last applied. Re-applying
+					will replace them with the blocks in this draft — use &quot;Rebuild draft from live runs&quot; to bring
+					them into the draft first.
+				</Alert>
+			)}
+
 			{contextValue && (
 				<ScheduleProvider value={contextValue}>
 					<Paper withBorder p="md">
@@ -312,6 +322,9 @@ export function ScheduleImportApp({ events, initialEventId, apiBase, links = {} 
 						</Tabs.Panel>
 						<Tabs.Panel value="incentives" pt="md">
 							<IncentivesStep />
+						</Tabs.Panel>
+						<Tabs.Panel value="blocks" pt="md">
+							<BlocksStep />
 						</Tabs.Panel>
 						<Tabs.Panel value="pairing" pt="md">
 							<PairingStep />

@@ -3,9 +3,10 @@ import { createLocalReq, getPayload, type Payload, type PayloadRequest } from "p
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { ScheduleDrafts } from "#/collections/ScheduleDrafts";
-import { linkSubmission, updateIncentive, updateRow } from "#/components/ScheduleImport/draftOps";
+import { addBlock, linkSubmission, newBlock, updateIncentive, updateRow } from "#/components/ScheduleImport/draftOps";
 import config from "#/payload.config";
 import type { Event, Submission, User } from "#/payload-types";
+import type { DraftState } from "#/utilities/schedule/types";
 import {
 	applyDraft,
 	finaliseSubmissions,
@@ -231,6 +232,64 @@ describe("Schedule importer", () => {
 		await expect(saveDraft(staffReq, event.id, draft.draft, draft.draft.updatedAt)).rejects.toThrow(/Someone else/);
 	});
 
+	it("applies schedule blocks to the event", async () => {
+		const draft = await getDraft();
+		const [first, second, third] = draft.draft.rows;
+		let state: DraftState = { defaultSetupMinutes: 10, rows: draft.draft.rows, incentives: draft.draft.incentives, blocks: [] };
+		state = addBlock(state, { ...newBlock(state, first.key, second.key), name: "Opening block" });
+		state = addBlock(state, { ...newBlock(state, third.key), name: "Sleepy block", textColour: "#ffffff" });
+		state = addBlock(state, { ...newBlock(state), name: "Unassigned" });
+		await saveDraft(staffReq, event.id, state, draft.draft.updatedAt);
+
+		const result = await applyDraft(staffReq, event.id);
+		expect(result.blocks).toEqual({ applied: 2, skipped: ["Unassigned"] });
+
+		const runs = await payload.find({
+			collection: "runs",
+			where: { event: { equals: event.id } },
+			sort: "scheduledTime",
+			depth: 0,
+		});
+		const updatedEvent = await payload.findByID({ collection: "events", id: event.id, depth: 0 });
+		expect(updatedEvent.scheduleMetadata?.scheduleBlocks).toMatchObject([
+			{ name: "Opening block", startRun: runs.docs[0].id, endRun: runs.docs[1].id, textColour: null },
+			{ name: "Sleepy block", startRun: runs.docs[2].id, endRun: null, textColour: "#ffffff" },
+		]);
+		expect((await getDraft()).draft.eventBlocksChanged).toBe(false);
+
+		// Overlapping blocks are rejected by the event's own validation
+		await expect(
+			payload.update({
+				collection: "events",
+				id: event.id,
+				data: {
+					scheduleMetadata: {
+						...updatedEvent.scheduleMetadata,
+						scheduleBlocks: [
+							{ name: "A", colour: "#000000", startRun: runs.docs[0].id, endRun: runs.docs[2].id },
+							{ name: "B", colour: "#000000", startRun: runs.docs[1].id },
+						],
+					},
+				},
+			}),
+		).rejects.toMatchObject({
+			data: { errors: [expect.objectContaining({ message: expect.stringMatching(/"B" overlaps "A"/) })] },
+		});
+
+		// Editing blocks directly on the event is detected
+		await payload.update({
+			collection: "events",
+			id: event.id,
+			data: {
+				scheduleMetadata: {
+					...updatedEvent.scheduleMetadata,
+					scheduleBlocks: [{ name: "Edited", colour: "#123456", startRun: runs.docs[1].id }],
+				},
+			},
+		});
+		expect((await getDraft()).draft.eventBlocksChanged).toBe(true);
+	});
+
 	it("finalises submissions with the accepted-runners backup rule", async () => {
 		const preview = await finaliseSubmissions(staffReq, event.id, {
 			backupRule: "acceptedRunnersOnly",
@@ -267,6 +326,11 @@ describe("Schedule importer", () => {
 		const draft = await getDraft();
 		expect(draft.draft.status).toBe("applied");
 		expect(draft.draft.incentives.every((incentive) => incentive.status === "configured")).toBe(true);
+		// Blocks edited on the event come back into the draft
+		expect(draft.draft.eventBlocksChanged).toBe(false);
+		expect(draft.draft.blocks).toMatchObject([
+			{ name: "Edited", colour: "#123456", startRowKey: draft.draft.rows[1].key, endRowKey: null },
+		]);
 
 		// Re-applying the rebuilt draft must not duplicate anything
 		const applied = await applyDraft(staffReq, event.id);
@@ -289,5 +353,8 @@ describe("Schedule importer", () => {
 		const draft = await getDraft();
 		expect(draft.draft.status).toBe("draft");
 		expect(draft.draft.rows).toHaveLength(3);
+		expect(draft.draft.blocks).toHaveLength(1);
+		const resetEvent = await payload.findByID({ collection: "events", id: event.id, depth: 0 });
+		expect(resetEvent.scheduleMetadata?.scheduleBlocks).toEqual([]);
 	});
 });

@@ -4,7 +4,8 @@ import { canAccessTechSchedule } from "#access/helpers.ts";
 import { manageContent } from "#access/manageContent.ts";
 import { loadTechSchedule } from "#utilities/schedule/techSchedule.ts";
 import { manageContentOrPublished } from "#access/manageContentOrPublished.ts";
-import { validateDateAfter, validateColour, validateUrl, validateUrlSafe } from "#fields/validators.ts";
+import { validateDateAfter, validateUrl, validateUrlSafe } from "#fields/validators.ts";
+import { scheduleBlocksField } from "./Fields/ScheduleBlocks.ts";
 import { DefaultTimeZone, TimeZoneOptions } from "./Fields/TimezoneSelect.ts";
 
 /**
@@ -176,33 +177,7 @@ export const Events: CollectionConfig<"events"> = {
 										},
 									],
 								},
-								{
-									name: "scheduleBlocks",
-									type: "array",
-									label: "Schedule Blocks (for schedule visualiser)",
-									fields: [
-										{
-											type: "row",
-											fields: [
-												{
-													name: "name",
-													type: "text",
-													required: true,
-												},
-												{
-													name: "colour",
-													type: "text",
-													validate: validateColour,
-												},
-												{
-													name: "textColour",
-													type: "text",
-													validate: validateColour,
-												},
-											],
-										},
-									],
-								},
+								scheduleBlocksField,
 							],
 						},
 					],

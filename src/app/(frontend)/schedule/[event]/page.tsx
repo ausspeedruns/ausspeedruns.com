@@ -10,6 +10,7 @@ import type { Incentive, Run as RunDoc } from "#/payload-types";
 import { relationId } from "#access/helpers.ts";
 import { getGameName, getRunDisplayName } from "#utilities/runDisplay.ts";
 import { sortChildren } from "#utilities/runs/medley.ts";
+import { toScheduleBlocks, type EventBlockData } from "#utilities/schedule/blocks.ts";
 import type { MedleyGame, Run } from "./schedule-types";
 
 function usernames(run: RunDoc): string[] {
@@ -74,14 +75,6 @@ function toScheduleRuns(docs: RunDoc[]): Run[] {
 			};
 		});
 }
-
-export type Block = {
-	name: string;
-	colour: string;
-	textColour: string;
-	startRunId: string;
-	endRunId?: string;
-};
 
 interface URLProps {
 	params: Promise<{
@@ -154,6 +147,8 @@ export default async function EventSchedule({ params }: URLProps) {
 				equals: eventShortName,
 			},
 		},
+		// Blocks only need run IDs
+		populate: { runs: { title: true } },
 	});
 
 	const event = eventRequest.docs[0];
@@ -208,7 +203,7 @@ export default async function EventSchedule({ params }: URLProps) {
 				logo={event.media?.logo}
 				horaro={event.scheduleMetadata?.horaro || ""}
 				oengus={event.scheduleMetadata?.oengus || ""}
-				scheduleBlocks={event.scheduleMetadata?.scheduleBlocks ?? []}
+				scheduleBlocks={toScheduleBlocks(event.scheduleMetadata?.scheduleBlocks as EventBlockData[] | undefined)}
 				shortName={event.shortName}
 				runs={toScheduleRuns(runsRequest.docs)}
 			/>

@@ -1,5 +1,6 @@
 import styles from "./day.module.css";
 
+import { BlockGroup, groupByBlock } from "./block-group";
 import { DateDivider } from "./date-divider";
 import { DayVisualiser } from "./day-visualiser/day-summary-bar";
 import { RunElement } from "./run";
@@ -26,17 +27,10 @@ function isStringInRunData(run: Searchable & { children?: Searchable[] }, search
 const platformsOf = (run: Run) =>
 	[run.platform, ...(run.children ?? []).map((child) => child.platform)].map((platform) => platform.toLowerCase());
 
-interface Filters {
-	race: boolean;
-	coop: boolean;
-	donationIncentive: boolean;
-	search: string;
-	console: string[];
-}
-
-function FilterRuns(runs: Run[], filters: Filters) {
+function FilterRuns(runs: Run[], filters: Settings["filter"], blocks: Map<number, Block>) {
 	// Jesus ChatGPT this is based
 	return runs.filter((run) => {
+		if (filters.blocks.length > 0 && !filters.blocks.includes(blocks.get(run.id)?.name ?? "")) return false;
 		const children = run.children ?? [];
 		if (filters.race && !run.race && !children.some((child) => child.race)) return false;
 		if (filters.coop && !run.coop && !children.some((child) => child.coop)) return false;
@@ -93,7 +87,10 @@ type DayProps = {
 };
 
 export function Day(props: DayProps) {
-	const filteredRuns = FilterRuns(props.sortedRuns, props.settings.filter);
+	const filteredRuns = FilterRuns(props.sortedRuns, props.settings.filter, props.blocks);
+	const runById = new Map(props.sortedRuns.map((run) => [run.id, run]));
+	const dayOf = (run: Run | undefined) =>
+		run ? formatScheduleTime(run.scheduledTime, props.eventTimezone, props.settings.showLocalTime, "yyyy-MM-dd") : null;
 	const runDays = runsToDays(filteredRuns, props.eventTimezone, props.settings.showLocalTime);
 
 	return (
@@ -114,16 +111,37 @@ export function Day(props: DayProps) {
 								currentDayIndex={i}
 							/>
 							<div className={styles.runs}>
-								{runs.map((run) => (
-									<RunElement
-										key={run.id}
-										run={run}
-										showLocalTime={props.settings.showLocalTime}
-										eventTimezone={props.eventTimezone}
-										isLive={props.settings.liveRunId === run.id}
-										block={props.blocks.get(run.id)}
-									/>
-								))}
+								{groupByBlock(runs, props.blocks).map((group) => {
+									const elements = group.runs.map((run) => (
+										<RunElement
+											key={run.id}
+											run={run}
+											showLocalTime={props.settings.showLocalTime}
+											eventTimezone={props.eventTimezone}
+											isLive={props.settings.liveRunId === run.id}
+											block={group.block}
+											inBlockGroup={Boolean(group.block)}
+										/>
+									));
+									if (!group.block) return elements;
+
+									const startRun = runById.get(group.block.startRunId);
+									const endRun = runById.get(group.block.endRunId ?? group.block.startRunId);
+									return (
+										<BlockGroup
+											key={`block-${group.runs[0].id}`}
+											block={group.block}
+											startRun={startRun}
+											endRun={endRun}
+											continuesFromPreviousDay={(dayOf(startRun) ?? day) < day}
+											continuesNextDay={(dayOf(endRun) ?? day) > day}
+											eventTimezone={props.eventTimezone}
+											showLocalTime={props.settings.showLocalTime}
+										>
+											{elements}
+										</BlockGroup>
+									);
+								})}
 							</div>
 						</div>
 					</div>

@@ -17,7 +17,7 @@ interface HeaderNavProps {
 
 export function HeaderNav({ data, auth }: HeaderNavProps) {
 	const cart = useCartStore((state) => state.items);
-	const navItems = data?.navItems || [];
+	const navItems = data?.navItems ?? [];
 
 	return (
 		<nav className={styles.nav}>

@@ -66,11 +66,21 @@ const draftIncentiveSchema = z.object({
 	]),
 });
 
+const draftBlockSchema = z.object({
+	key: z.string().min(1),
+	name: z.string().max(1000),
+	colour: z.string().max(100),
+	textColour: z.string().max(100),
+	startRowKey: z.string().nullable(),
+	endRowKey: z.string().nullable(),
+});
+
 const saveSchema = z.object({
 	expectedUpdatedAt: z.string().nullable().optional(),
 	defaultSetupMinutes: z.number().min(0).max(240),
 	rows: z.array(draftRowSchema),
 	incentives: z.array(draftIncentiveSchema),
+	blocks: z.array(draftBlockSchema).max(500).optional(),
 });
 
 const importSchema = z.object({
@@ -262,6 +272,7 @@ export const ScheduleDrafts: CollectionConfig<"schedule-drafts"> = {
 		},
 		{ name: "rows", type: "json" },
 		{ name: "incentives", type: "json" },
+		{ name: "blocks", type: "json" },
 		{
 			name: "appliedMap",
 			type: "json",

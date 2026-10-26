@@ -30,6 +30,7 @@ const STEP_LABELS: Record<ScheduleIssue["step"], string> = {
 	import: "Import",
 	timing: "Timing",
 	incentives: "Incentives",
+	blocks: "Blocks",
 	pairing: "Pairing",
 	apply: "Apply",
 };

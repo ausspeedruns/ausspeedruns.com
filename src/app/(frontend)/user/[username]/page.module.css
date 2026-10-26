@@ -1,15 +1,15 @@
 .page {
-	--bg: #19120c;
-	--surface-low: #221a14;
-	--surface-mid: #261e18;
-	--surface-high: #312822;
-	--surface-bright: #413730;
-	--outline: #544437;
-	--outline-soft: color-mix(in srgb, #544437 30%, transparent);
+	--bg: light-dark(#eef1f3, #19120c);
+	--surface-low: light-dark(#ffffff, #221a14);
+	--surface-mid: light-dark(#ffffff, #261e18);
+	--surface-high: light-dark(#e6eaee, #312822);
+	--surface-bright: light-dark(#d6dce2, #413730);
+	--outline: light-dark(#5c6670, #544437);
+	--outline-soft: color-mix(in srgb, var(--outline) 30%, transparent);
 	--primary: #cc7722;
 	--primary-strong: #d27c27;
-	--on-surface: #f0dfd5;
-	--on-surface-soft: #dac2b2;
+	--on-surface: light-dark(#1a1410, #f0dfd5);
+	--on-surface-soft: light-dark(#4a3f37, #dac2b2);
 	--tertiary: #7ad0ff;
 	color: var(--on-surface);
 	min-height: 100vh;

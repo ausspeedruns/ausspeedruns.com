@@ -31,6 +31,8 @@ import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 }
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
 import { FolderTableCell as FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { FolderField as FolderField_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
+import { ColourField as ColourField_0b284eca6d82bd20e2b3416062dcc98a } from '../../../components/ColourField/ColourField'
+import { ScheduleBlockRowLabel as ScheduleBlockRowLabel_775f531502d07592d9d9e15b26331df1 } from '../../../components/Events/ScheduleBlocks/ScheduleBlockRowLabel'
 import { default as default_237ae50077d3a842307b2cebcf11a311 } from '../../../components/Events/GeneratePostEventPageButton'
 import { VariantRowLabel as VariantRowLabel_e60160cc2db6dd36c1f25f1a08ccec06 } from '../../../components/Products/VariantRowLabel'
 import { LinkToDoc as LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634 } from '@payloadcms/plugin-search/client'
@@ -81,6 +83,8 @@ export const importMap = {
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
   "@payloadcms/next/rsc#FolderTableCell": FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/next/rsc#FolderField": FolderField_f9c02e79a4aed9a3924487c0cd4cafb1,
+  "./components/ColourField/ColourField#ColourField": ColourField_0b284eca6d82bd20e2b3416062dcc98a,
+  "./components/Events/ScheduleBlocks/ScheduleBlockRowLabel#ScheduleBlockRowLabel": ScheduleBlockRowLabel_775f531502d07592d9d9e15b26331df1,
   "./components/Events/GeneratePostEventPageButton#default": default_237ae50077d3a842307b2cebcf11a311,
   "./components/Products/VariantRowLabel#VariantRowLabel": VariantRowLabel_e60160cc2db6dd36c1f25f1a08ccec06,
   "@payloadcms/plugin-search/client#LinkToDoc": LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634,

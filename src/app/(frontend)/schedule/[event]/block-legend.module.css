@@ -1,0 +1,34 @@
+.legend {
+	margin: var(--mantine-spacing-md) 0 0;
+	width: 100%;
+}
+
+.chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--mantine-spacing-xs);
+}
+
+.entry {
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+	max-width: 100%;
+	min-width: 0;
+}
+
+.swatch {
+	display: inline-block;
+	width: 0.8em;
+	height: 0.8em;
+	border-radius: 50%;
+	margin-right: 6px;
+	vertical-align: -0.05em;
+	border: 1px solid color-mix(in srgb, currentColor 40%, transparent);
+}
+
+.time {
+	margin-left: 6px;
+	opacity: 0.75;
+	font-size: 0.85em;
+}

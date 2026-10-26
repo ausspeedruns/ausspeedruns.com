@@ -5,7 +5,16 @@ node_modules
 .env*
 test.env
 *.log
+*.tsbuildinfo
 coverage
 playwright-report
 test-results
+blob-report
+.vscode
+Dockerfile
+.dockerignore
+test-server-compose.yml
+README.md
 scripts/assets
+scripts/*.sql
+public/media

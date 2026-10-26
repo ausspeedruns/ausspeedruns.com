@@ -1,74 +1,74 @@
-# To use this Dockerfile, you have to set `output: 'standalone'` in your next.config.js file.
-# From https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
+# syntax=docker/dockerfile:1
+# check=skip=SecretsUsedInArgOrEnv
+# Requires `output: 'standalone'` in next.config.js.
+# Based on https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
 
-FROM node:22.17.0-alpine AS base
+ARG NODE_VERSION=26.12.1
+ARG ALPINE_VERSION=3.24
+ARG PNPM_VERSION=12.15.0
+
+FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS base
+
+# Corepack is no longer bundled with Node.js 25+, so install pnpm directly
+FROM base AS pnpm
+ARG PNPM_VERSION
+RUN npm install --global --no-audit --no-fund pnpm@${PNPM_VERSION}
+WORKDIR /app
 
 # Install dependencies only when needed
-FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
-WORKDIR /app
-
-# Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && corepack install --global pnpm@10.28.2 && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
-
+FROM pnpm AS deps
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+  pnpm install --frozen-lockfile --store-dir=/pnpm/store
 
 # Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
+FROM pnpm AS builder
+# Placeholder secret so Payload can initialise during `next build`; not used at runtime
 ARG PAYLOAD_SECRET=build-only-payload-secret
 ENV PAYLOAD_SECRET=${PAYLOAD_SECRET}
 ENV SKIP_BUILD_DB=1
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-
+ENV NODE_ENV=production
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+# ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && corepack install --global pnpm@10.28.2 && pnpm run build; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Pages using generateStaticParams query Postgres at build time. Provide the connection
+# string as a build secret so it is never stored in an image layer:
+#   docker build --secret id=DATABASE_URI,env=DATABASE_URI .
+RUN --mount=type=cache,id=next-cache,target=/app/.next/cache \
+  --mount=type=secret,id=DATABASE_URI,env=DATABASE_URI \
+  pnpm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 # Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED 1
+# ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN addgroup --system --gid 1001 nodejs \
+  && adduser --system --uid 1001 --ingroup nodejs nextjs
 
-# Remove this line if you do not have this folder
-COPY --from=builder /app/public ./public
-
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 # Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
+# https://nextjs.org/docs/app/api-reference/config/next-config-js/output
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Payload media uploads are written to public/media (mount a volume here to persist them)
+RUN install -d -o nextjs -g nodejs /app/.next /app/public/media
 
 USER nextjs
 
 EXPOSE 3000
 
-ENV PORT=3000
-
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD HOSTNAME="0.0.0.0" node server.js
+# Exec form so node receives SIGTERM directly for graceful shutdown
+CMD ["node", "server.js"]

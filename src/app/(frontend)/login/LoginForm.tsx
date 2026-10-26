@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Alert, Anchor, Button, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
-import styles from "./login.module.css";
+import styles from "./page.module.css";
 import { Check, SquareAlert } from "pixelarticons/react";
 import { useSessionStore } from "#stores/useSessionStore.ts";
 

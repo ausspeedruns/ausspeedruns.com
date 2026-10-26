@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { Button, Group } from "@mantine/core";
 import { User, ArrowLeft, Box, MemoryStick, Joystick, HumanArmsUp } from "pixelarticons/react";
 
-import classes from "./account-sidenav.module.css";
+import classes from "./AccountSideNav.module.css";
 
 const navItems = [
 	{ label: "Edit", href: "/account/edit", icon: User },

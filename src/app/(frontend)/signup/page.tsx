@@ -6,7 +6,7 @@ import { getPayload } from "payload";
 import configPromise from "#payload-config";
 
 import { SignUpForm } from "./SignUpForm.tsx";
-import styles from "./signup.module.css";
+import styles from "./page.module.css";
 import { Card, Stack, Title } from "@mantine/core";
 
 export const metadata: Metadata = {

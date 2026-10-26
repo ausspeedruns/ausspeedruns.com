@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Anchor, Badge, Container, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { IncentiveResultCard } from "#/components/Incentives/IncentiveResultCard";
 import { getLiveState, selectUpcomingIncentives, type LiveData } from "#/utilities/events/liveSchedule";
-import { useNow } from "#/utilities/useNow";
+import { useNow } from "#/utilities/react/useNow";
 import { HeroActions } from "./HeroActions";
 import { MiniSchedule } from "./MiniSchedule";
 import { NowPlaying } from "./NowPlaying";

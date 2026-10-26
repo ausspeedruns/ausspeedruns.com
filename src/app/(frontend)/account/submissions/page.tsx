@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Accordion, Alert, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import { ListBox } from "pixelarticons/react";
-import { Submission } from "./submission";
+import { Submission } from "./Submission";
 
 import type { Submission as SubmissionType } from "#payload-types.ts";
 

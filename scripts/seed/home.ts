@@ -1,5 +1,5 @@
 import type { BasePayload, RequiredDataFromCollectionSlug } from "payload";
-import { buildHomeLayout, homeMeta } from "../../src/endpoints/seed/home-layout.ts";
+import { buildHomeLayout, homeMeta } from "../../src/collections/Pages/defaults/homeLayout.ts";
 
 const MS_PER_YEAR = 365 * 24 * 60 * 60 * 1000;
 

@@ -15,6 +15,6 @@ Dockerfile
 .dockerignore
 test-server-compose.yml
 README.md
-scripts/assets
-scripts/*.sql
+scripts/keystone-migration/assets
+scripts/keystone-migration/*.sql
 public/media

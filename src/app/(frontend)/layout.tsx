@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 
 import { ColorSchemeScript } from "@mantine/core";
 import { AdminBar } from "#/components/AdminBar/AdminBar";
-import { Footer } from "#Footer/Footer.tsx";
-import { Header } from "#Header/Header.tsx";
+import { Footer } from "#globals/Footer/Footer.tsx";
+import { Header } from "#globals/Header/Header.tsx";
 import { Providers } from "#/providers/Providers";
 import { mergeOpenGraph } from "#/utilities/mergeOpenGraph";
 import { draftMode } from "next/headers";

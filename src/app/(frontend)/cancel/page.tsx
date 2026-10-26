@@ -7,7 +7,7 @@ import { Group, Stack, Text, Title } from "@mantine/core";
 import { ButtonLink } from "#components/Link/ButtonLink.tsx";
 import { getStripe } from "#utilities/payments/stripe.ts";
 
-import styles from "../success/success.module.css";
+import styles from "../success/page.module.css";
 
 export const metadata: Metadata = {
 	title: "Payment cancelled",

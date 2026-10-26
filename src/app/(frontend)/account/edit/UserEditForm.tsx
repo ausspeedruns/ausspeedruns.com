@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Alert, Badge, Button, Group, Paper, Select, Stack, Text, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
-import { updateUserProfile, type UserEditFormValues } from "./user-edit-action";
+import { updateUserProfile, type UserEditFormValues } from "./userEditAction";
 import styles from "./page.module.css";
 import { DatePickerInput } from "@mantine/dates";
 

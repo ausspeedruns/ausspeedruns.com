@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { Alert, Button, Paper, Stack, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
-import { requestPasswordReset, type ForgotPasswordFormValues } from "./forgot-password-action";
+import { requestPasswordReset, type ForgotPasswordFormValues } from "./forgotPasswordAction";
 import styles from "./page.module.css";
 
 type FormStatus = {

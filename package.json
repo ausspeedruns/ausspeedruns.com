@@ -1,7 +1,7 @@
 {
 	"name": "ausspeedruns-v2",
 	"version": "1.0.0",
-	"description": "Website template for Payload",
+	"description": "AusSpeedruns website and event platform, built with Payload CMS and Next.js",
 	"license": "MIT",
 	"type": "module",
 	"imports": {
@@ -13,7 +13,7 @@
 		"postbuild": "next-sitemap --config next-sitemap.config.cjs",
 		"dev": "next dev",
 		"dev:prod": "rm -rf .next && pnpm build && pnpm start",
-		"email:dev": "email dev",
+		"email:dev": "email dev --dir src/emails",
 		"generate:importmap": "payload generate:importmap",
 		"generate:types": "payload generate:types",
 		"ii": "pnpm --ignore-workspace install",

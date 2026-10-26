@@ -23,8 +23,8 @@ import { Submissions } from "./collections/Submissions.ts";
 import { Users } from "./collections/Users/Users.ts";
 import { Volunteers } from "./collections/Volunteers.ts";
 
-import { Footer } from "./Footer/config.ts";
-import { Header } from "./Header/config.ts";
+import { Footer } from "./globals/Footer/config.ts";
+import { Header } from "./globals/Header/config.ts";
 import { PaymentSettings } from "./globals/PaymentSettings.ts";
 import { plugins } from "./plugins/plugins.ts";
 import { defaultLexical } from "#fields/defaultLexical.ts";
@@ -65,23 +65,20 @@ export default buildConfig({
 		components: {
 			// The `BeforeLogin` component renders a message that you see while logging into your admin panel.
 			// Feel free to delete this at any time. Simply remove the line below.
-			beforeLogin: ["./components/BeforeLogin/BeforeLogin"],
-			// The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
-			// Feel free to delete this at any time. Simply remove the line below.
-			beforeDashboard: ["./components/BeforeDashboard/BeforeDashboard"],
+			beforeLogin: ["./components/admin/BeforeLogin/BeforeLogin"],
 			afterNavLinks: [
-				"./components/ScheduleImportView/ScheduleImportLink",
-				"./components/TicketPickupView/TicketPickupLink",
+				"./components/admin/ScheduleImport/ScheduleImportLink",
+				"./components/admin/TicketPickup/TicketPickupLink",
 			],
 			views: {
 				// Accessible at /admin/ticket-pickup
 				ticketPickup: {
-					Component: "./components/TicketPickupView/TicketPickupView",
+					Component: "./components/admin/TicketPickup/TicketPickupView",
 					path: "/ticket-pickup",
 				},
 				// Accessible at /admin/schedule-import
 				scheduleImport: {
-					Component: "./components/ScheduleImportView/ScheduleImportView",
+					Component: "./components/admin/ScheduleImport/ScheduleImportView",
 					path: "/schedule-import",
 				},
 			},

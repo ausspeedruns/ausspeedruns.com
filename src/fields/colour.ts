@@ -15,7 +15,7 @@ export function colourField({ admin, ...options }: ColourFieldOptions): TextFiel
 			...admin,
 			components: {
 				...admin?.components,
-				Field: "./components/ColourField/ColourField#ColourField",
+				Field: "./components/admin/ColourField/ColourField#ColourField",
 			},
 		},
 	} as TextField;

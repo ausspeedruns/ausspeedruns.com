@@ -2,7 +2,7 @@
 
 import React from "react";
 import type { CountdownBlock as CountdownBlockProps } from "#/payload-types";
-import { useCountdown } from "#/utilities/useCountdown";
+import { useCountdown } from "#/utilities/react/useCountdown";
 import styles from "./CountdownBlock.module.css";
 
 export function CountdownBlock(props: CountdownBlockProps) {

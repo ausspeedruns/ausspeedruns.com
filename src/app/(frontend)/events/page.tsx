@@ -7,7 +7,7 @@ import { getPayload } from "payload";
 
 import type { Event, Media } from "#/payload-types";
 import { getMediaUrl } from "#/utilities/getMediaUrl";
-import styles from "./events.module.css";
+import styles from "./page.module.css";
 
 // Nothing revalidates this page when events change, so regenerate it at most a minute after it goes stale
 export const revalidate = 60;

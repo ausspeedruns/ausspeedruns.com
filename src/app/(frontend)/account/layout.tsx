@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import { AccountSideNav } from "./AccountSideNav.tsx";
-import classes from "./account-layout.module.css";
+import classes from "./layout.module.css";
 import { headers } from "next/headers";
 import { getPayload } from "payload";
 import { redirect } from "next/navigation";

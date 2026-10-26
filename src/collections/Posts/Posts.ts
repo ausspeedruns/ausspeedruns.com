@@ -11,8 +11,8 @@ import {
 
 import { manageContent } from "#access/manageContent.ts";
 import { manageContentOrPublished } from "#access/manageContentOrPublished.ts";
-import { Banner } from "#blocks/Banner/config.ts";
-import { Code } from "#blocks/Code/config.ts";
+import { Banner } from "#blocks/BannerBlock/config.ts";
+import { Code } from "#blocks/CodeBlock/config.ts";
 import { MediaBlock } from "#blocks/MediaBlock/config.ts";
 import { generatePreviewPath } from "#utilities/generatePreviewPath.ts";
 import { populateAuthors } from "./hooks/populateAuthors.ts";

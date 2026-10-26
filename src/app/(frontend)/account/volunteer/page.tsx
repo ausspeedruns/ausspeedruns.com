@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Accordion, Alert, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import { ListBox } from "pixelarticons/react";
-import { Volunteer } from "./volunteer";
+import { Volunteer } from "./Volunteer";
 
 import type { Volunteer as VolunteerType } from "#payload-types.ts";
 

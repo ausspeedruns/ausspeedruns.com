@@ -56,7 +56,7 @@ export const Products: CollectionConfig<"products"> = {
 			minRows: 1,
 			admin: {
 				components: {
-					RowLabel: "./components/Products/VariantRowLabel#VariantRowLabel",
+					RowLabel: "./components/admin/VariantRowLabel/VariantRowLabel#VariantRowLabel",
 				},
 			},
 			fields: [

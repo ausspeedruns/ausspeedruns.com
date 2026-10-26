@@ -3,7 +3,7 @@ import type { Metadata } from "next/types";
 import { CollectionArchive } from "#/components/CollectionArchive/CollectionArchive";
 import configPromise from "#payload-config";
 import { getPayload } from "payload";
-import { Search } from "#/search/Search";
+import { Search } from "#/components/Search/Search";
 import PageClient from "./page.client";
 import type { CardPostData } from "#/components/Card/Card";
 

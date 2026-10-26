@@ -13,7 +13,7 @@ import { relationId } from "#access/helpers.ts";
 import { manageUsers } from "#access/manageUsers.ts";
 import { ownDocOrManageUsers } from "#access/ownDocOrManageUsers.ts";
 import { lockRows } from "#utilities/payments/transactions.ts";
-import { ticketPickupEndpoints } from "#utilities/ticketPickup/endpoints.ts";
+import { ticketPickupEndpoints } from "#endpoints/ticketPickup.ts";
 
 type OrderItem = NonNullable<Order["items"]>[number];
 

@@ -1,11 +1,11 @@
 import type { Page } from "#/payload-types";
 
 import { ArchiveBlock } from "#/blocks/ArchiveBlock/ArchiveBlock";
-import { CallToActionBlock } from "#/blocks/CallToAction/CallToActionBlock";
-import { ContentBlock } from "#/blocks/Content/ContentBlock";
-import { FormBlock } from "#/blocks/Form/FormBlock";
+import { CallToActionBlock } from "#/blocks/CallToActionBlock/CallToActionBlock";
+import { ContentBlock } from "#/blocks/ContentBlock/ContentBlock";
+import { FormBlock } from "#/blocks/FormBlock/FormBlock";
 import { MediaBlock } from "#/blocks/MediaBlock/MediaBlock";
-import { ImageCarouselBlock } from "./ImageCarousel/ImageCarousel";
+import { ImageCarouselBlock } from "./ImageCarouselBlock/ImageCarouselBlock";
 import { EventImagesBlock } from "./EventImagesBlock/EventImagesBlock";
 
 import { EventHeroBlock } from "./EventHeroBlock/EventHeroBlock";

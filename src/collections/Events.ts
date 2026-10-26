@@ -6,8 +6,8 @@ import { loadTechSchedule } from "#utilities/schedule/techSchedule.ts";
 import { manageContentOrPublished } from "#access/manageContentOrPublished.ts";
 import { preventCaseInsensitiveDuplicate } from "#hooks/preventCaseInsensitiveDuplicate.ts";
 import { validateDateAfter, validateUrl, validateUrlSafe } from "#fields/validators.ts";
-import { scheduleBlocksField } from "./Fields/ScheduleBlocks.ts";
-import { DefaultTimeZone, TimeZoneOptions } from "./Fields/TimezoneSelect.ts";
+import { scheduleBlocksField } from "../fields/scheduleBlocks.ts";
+import { DefaultTimeZone, TimeZoneOptions } from "../fields/timezoneSelect.ts";
 
 /**
  * Full schedule for tech and stream graphics, with medley games nested under their medley.
@@ -315,7 +315,7 @@ export const Events: CollectionConfig<"events"> = {
 			admin: {
 				position: "sidebar",
 				components: {
-					Field: "./components/Events/GeneratePostEventPageButton",
+					Field: "./components/admin/GeneratePostEventPageButton/GeneratePostEventPageButton",
 				},
 			},
 		},

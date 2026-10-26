@@ -7,7 +7,7 @@ import { draftMode } from "next/headers";
 import { permanentRedirect } from "next/navigation";
 import { findCanonicalCase } from "#utilities/caseInsensitive.ts";
 import React, { cache } from "react";
-import { homeStatic } from "#/endpoints/seed/home-static";
+import { homeStatic } from "#/collections/Pages/defaults/homeStatic";
 
 import { RenderBlocks } from "#/blocks/RenderBlocks";
 import { generateMeta } from "#/utilities/generateMeta";

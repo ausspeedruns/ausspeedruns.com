@@ -3,7 +3,7 @@ import { getPayload } from "payload";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Anchor, Stack, Text, Title } from "@mantine/core";
-import { Order } from "./order";
+import { Order } from "./Order";
 
 export default async function AccountOrdersPage() {
 	const payload = await getPayload({ config });

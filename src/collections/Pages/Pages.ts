@@ -4,11 +4,11 @@ import type { CollectionConfig } from "payload";
 import { manageContent } from "#access/manageContent.ts";
 import { manageContentOrPublished } from "#access/manageContentOrPublished.ts";
 import { Archive } from "#blocks/ArchiveBlock/config.ts";
-import { CallToAction } from "#blocks/CallToAction/config.ts";
-import { Content } from "#blocks/Content/config.ts";
-import { FormBlock } from "#blocks/Form/config.ts";
+import { CallToAction } from "#blocks/CallToActionBlock/config.ts";
+import { Content } from "#blocks/ContentBlock/config.ts";
+import { FormBlock } from "#blocks/FormBlock/config.ts";
 import { MediaBlock } from "#blocks/MediaBlock/config.ts";
-import { ImageCarousel } from "#blocks/ImageCarousel/ImageCarousel-config.ts";
+import { ImageCarousel } from "#blocks/ImageCarouselBlock/config.ts";
 import { EventImagesBlockConfig } from "#blocks/EventImagesBlock/config.ts";
 
 import { EventHeroBlockConfig } from "#blocks/EventHeroBlock/config.ts";
@@ -17,7 +17,7 @@ import { DonationTrackerBlockConfig } from "#blocks/DonationTrackerBlock/config.
 import { SponsorGridBlockConfig } from "#blocks/SponsorGridBlock/config.ts";
 import { CountdownBlockConfig } from "#blocks/CountdownBlock/config.ts";
 import { FAQBlockConfig } from "#blocks/FAQBlock/config.ts";
-import { ProductBlockConfig } from "#blocks/ProductBlock/product-block-config.ts";
+import { ProductBlockConfig } from "#blocks/ProductBlock/config.ts";
 import { PostEventStatsBlockConfig } from "#blocks/PostEventStatsBlock/config.ts";
 
 import { populatePublishedAt } from "#hooks/populatePublishedAt.ts";
@@ -31,7 +31,7 @@ import {
 	OverviewField,
 	PreviewField,
 } from "@payloadcms/plugin-seo/fields";
-import { RandomRunBlockConfig } from "#blocks/RandomRunBlock/random-run-block-config.ts";
+import { RandomRunBlockConfig } from "#blocks/RandomRunBlock/config.ts";
 import { VodHighlightsBlockConfig } from "#blocks/VodHighlightsBlock/config.ts";
 import { EventFeatureBlockConfig } from "#blocks/EventFeatureBlock/config.ts";
 import { StatsBlockConfig } from "#blocks/StatsBlock/config.ts";

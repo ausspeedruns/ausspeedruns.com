@@ -11,10 +11,10 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { cache } from "react";
 
 import styles from "./page.module.css";
-import { UserNavigation } from "./user-navigation";
-import { Run } from "./run";
+import { UserNavigation } from "./UserNavigation";
+import { Run } from "./Run";
 import { getEventLabel } from "./getEventLabel";
-import { UpcomingRun } from "./upcoming-run";
+import { UpcomingRun } from "./UpcomingRun";
 import { countedRunsWhere, getRunDisplayName } from "#utilities/runDisplay.ts";
 import { findCanonicalCase } from "#utilities/caseInsensitive.ts";
 

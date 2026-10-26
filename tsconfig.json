@@ -39,7 +39,6 @@
     "allowImportingTsExtensions": true
   },
   "include": [
-    "svgr.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",

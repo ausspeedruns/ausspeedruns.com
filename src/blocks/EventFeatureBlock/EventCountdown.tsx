@@ -1,7 +1,7 @@
 "use client";
 
 import { Text } from "@mantine/core";
-import { useCountdown } from "#/utilities/useCountdown";
+import { useCountdown } from "#/utilities/react/useCountdown";
 import styles from "./EventFeatureBlock.module.css";
 
 const pad = (value: number) => value.toString().padStart(2, "0");

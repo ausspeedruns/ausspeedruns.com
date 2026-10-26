@@ -3,7 +3,7 @@ import { createLocalReq, getPayload, type Payload, type PayloadRequest } from "p
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { ScheduleDrafts } from "#/collections/ScheduleDrafts";
-import { addBlock, linkSubmission, newBlock, updateIncentive, updateRow } from "#/components/ScheduleImport/draftOps";
+import { addBlock, linkSubmission, newBlock, updateIncentive, updateRow } from "#/components/admin/ScheduleImport/draftOps";
 import config from "#/payload.config";
 import type { Event, Submission, User } from "#/payload-types";
 import type { DraftState } from "#/utilities/schedule/types";

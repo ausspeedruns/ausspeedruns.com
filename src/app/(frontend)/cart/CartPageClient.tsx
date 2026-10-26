@@ -12,7 +12,7 @@ import { CartItem } from "./CartItem";
 import { OrderSummary } from "./OrderSummary";
 import { buildCartLines, linesBlockingMethod, type PaymentMethod } from "./cartLines";
 
-import styles from "./cart.module.css";
+import styles from "./CartPageClient.module.css";
 
 interface CartPageClientProps {
 	isLoggedIn: boolean;

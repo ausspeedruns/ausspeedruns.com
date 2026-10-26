@@ -31,21 +31,20 @@ import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 }
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
 import { FolderTableCell as FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { FolderField as FolderField_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
-import { ColourField as ColourField_0b284eca6d82bd20e2b3416062dcc98a } from '../../../components/ColourField/ColourField'
-import { ScheduleBlockRowLabel as ScheduleBlockRowLabel_775f531502d07592d9d9e15b26331df1 } from '../../../components/Events/ScheduleBlocks/ScheduleBlockRowLabel'
-import { default as default_237ae50077d3a842307b2cebcf11a311 } from '../../../components/Events/GeneratePostEventPageButton'
-import { VariantRowLabel as VariantRowLabel_e60160cc2db6dd36c1f25f1a08ccec06 } from '../../../components/Products/VariantRowLabel'
+import { ColourField as ColourField_e46f3853aafa8216830b7c09cbd1aa15 } from '../../../components/admin/ColourField/ColourField'
+import { ScheduleBlockRowLabel as ScheduleBlockRowLabel_eb75ab84fbaee63c817f7b0df38b71d2 } from '../../../components/admin/ScheduleBlockRowLabel/ScheduleBlockRowLabel'
+import { default as default_433c32deb61e0dccc882202f7b69f8a0 } from '../../../components/admin/GeneratePostEventPageButton/GeneratePostEventPageButton'
+import { VariantRowLabel as VariantRowLabel_c5f267c2e2d21e881941dff86bee3c82 } from '../../../components/admin/VariantRowLabel/VariantRowLabel'
 import { LinkToDoc as LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634 } from '@payloadcms/plugin-search/client'
 import { ReindexButton as ReindexButton_aead06e4cbf6b2620c5c51c9ab283634 } from '@payloadcms/plugin-search/client'
 import { FolderTypeField as FolderTypeField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
-import { RowLabel as RowLabel_dfeab9ccffd9e511a60f7c6172f4d48d } from '../../../Header/RowLabel'
-import { RowLabel as RowLabel_4a12a496e01d21e4d90acac0374e2f65 } from '../../../Footer/RowLabel'
-import { default as default_c865e9c0d8c118585f842599ba771503 } from '../../../components/ScheduleImportView/ScheduleImportLink'
-import { default as default_00955cd27da065e02c43c7dfcea4164a } from '../../../components/TicketPickupView/TicketPickupLink'
-import { default as default_0047e5c59b5a711a53270d136a70347f } from '../../../components/BeforeDashboard/BeforeDashboard'
-import { default as default_2661584faf098456f8e256e0a0b2c31c } from '../../../components/BeforeLogin/BeforeLogin'
-import { default as default_75b5bfd161b84d1dd7f35c9830e3181b } from '../../../components/TicketPickupView/TicketPickupView'
-import { default as default_fa95fab07ec167e4037319435236039d } from '../../../components/ScheduleImportView/ScheduleImportView'
+import { RowLabel as RowLabel_689361cb89963429ff76ba842d2ca776 } from '../../../globals/Header/RowLabel'
+import { RowLabel as RowLabel_780d4bbdd6c6ab1c57122c0bb1231145 } from '../../../globals/Footer/RowLabel'
+import { default as default_0f15fbb99be42bdb1f1121cb6113d799 } from '../../../components/admin/ScheduleImport/ScheduleImportLink'
+import { default as default_3310e26d6542e09ac50515e245b24c18 } from '../../../components/admin/TicketPickup/TicketPickupLink'
+import { default as default_ea874b39f3522aa06bb8ab07825509ff } from '../../../components/admin/BeforeLogin/BeforeLogin'
+import { default as default_e4c9f27256b04333dff9e0ea12f9f077 } from '../../../components/admin/TicketPickup/TicketPickupView'
+import { default as default_64945893f885448c0ae0d86046751d88 } from '../../../components/admin/ScheduleImport/ScheduleImportView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { AzureClientUploadHandler as AzureClientUploadHandler_635fb302eaf52f6baca4f9f8ad9ce104 } from '@payloadcms/storage-azure/client'
 
@@ -84,21 +83,20 @@ export const importMap = {
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
   "@payloadcms/next/rsc#FolderTableCell": FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/next/rsc#FolderField": FolderField_f9c02e79a4aed9a3924487c0cd4cafb1,
-  "./components/ColourField/ColourField#ColourField": ColourField_0b284eca6d82bd20e2b3416062dcc98a,
-  "./components/Events/ScheduleBlocks/ScheduleBlockRowLabel#ScheduleBlockRowLabel": ScheduleBlockRowLabel_775f531502d07592d9d9e15b26331df1,
-  "./components/Events/GeneratePostEventPageButton#default": default_237ae50077d3a842307b2cebcf11a311,
-  "./components/Products/VariantRowLabel#VariantRowLabel": VariantRowLabel_e60160cc2db6dd36c1f25f1a08ccec06,
+  "./components/admin/ColourField/ColourField#ColourField": ColourField_e46f3853aafa8216830b7c09cbd1aa15,
+  "./components/admin/ScheduleBlockRowLabel/ScheduleBlockRowLabel#ScheduleBlockRowLabel": ScheduleBlockRowLabel_eb75ab84fbaee63c817f7b0df38b71d2,
+  "./components/admin/GeneratePostEventPageButton/GeneratePostEventPageButton#default": default_433c32deb61e0dccc882202f7b69f8a0,
+  "./components/admin/VariantRowLabel/VariantRowLabel#VariantRowLabel": VariantRowLabel_c5f267c2e2d21e881941dff86bee3c82,
   "@payloadcms/plugin-search/client#LinkToDoc": LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634,
   "@payloadcms/plugin-search/client#ReindexButton": ReindexButton_aead06e4cbf6b2620c5c51c9ab283634,
   "@payloadcms/next/client#FolderTypeField": FolderTypeField_2b8867833a34864a02ddf429b0728a40,
-  "./Header/RowLabel#RowLabel": RowLabel_dfeab9ccffd9e511a60f7c6172f4d48d,
-  "./Footer/RowLabel#RowLabel": RowLabel_4a12a496e01d21e4d90acac0374e2f65,
-  "./components/ScheduleImportView/ScheduleImportLink#default": default_c865e9c0d8c118585f842599ba771503,
-  "./components/TicketPickupView/TicketPickupLink#default": default_00955cd27da065e02c43c7dfcea4164a,
-  "./components/BeforeDashboard/BeforeDashboard#default": default_0047e5c59b5a711a53270d136a70347f,
-  "./components/BeforeLogin/BeforeLogin#default": default_2661584faf098456f8e256e0a0b2c31c,
-  "./components/TicketPickupView/TicketPickupView#default": default_75b5bfd161b84d1dd7f35c9830e3181b,
-  "./components/ScheduleImportView/ScheduleImportView#default": default_fa95fab07ec167e4037319435236039d,
+  "./globals/Header/RowLabel#RowLabel": RowLabel_689361cb89963429ff76ba842d2ca776,
+  "./globals/Footer/RowLabel#RowLabel": RowLabel_780d4bbdd6c6ab1c57122c0bb1231145,
+  "./components/admin/ScheduleImport/ScheduleImportLink#default": default_0f15fbb99be42bdb1f1121cb6113d799,
+  "./components/admin/TicketPickup/TicketPickupLink#default": default_3310e26d6542e09ac50515e245b24c18,
+  "./components/admin/BeforeLogin/BeforeLogin#default": default_ea874b39f3522aa06bb8ab07825509ff,
+  "./components/admin/TicketPickup/TicketPickupView#default": default_e4c9f27256b04333dff9e0ea12f9f077,
+  "./components/admin/ScheduleImport/ScheduleImportView#default": default_64945893f885448c0ae0d86046751d88,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/storage-azure/client#AzureClientUploadHandler": AzureClientUploadHandler_635fb302eaf52f6baca4f9f8ad9ce104
 }

@@ -2,7 +2,7 @@ import payloadConfig from "#payload-config";
 
 import styles from "./page.module.css";
 import { notFound, permanentRedirect } from "next/navigation";
-import { Schedule } from "./schedule";
+import { Schedule } from "./Schedule";
 import type { Metadata } from "next";
 import { getPayload } from "payload";
 import { format } from "date-fns";
@@ -12,7 +12,7 @@ import { getGameName, getRunDisplayName } from "#utilities/runDisplay.ts";
 import { sortChildren } from "#utilities/runs/medley.ts";
 import { toScheduleBlocks, type EventBlockData } from "#utilities/schedule/blocks.ts";
 import { findCanonicalCase } from "#utilities/caseInsensitive.ts";
-import type { MedleyGame, Run } from "./schedule-types";
+import type { MedleyGame, Run } from "./scheduleTypes";
 
 function usernames(run: RunDoc): string[] {
 	return run.runners?.filter((runner) => typeof runner === "object").map((runner) => runner.username) ?? [];

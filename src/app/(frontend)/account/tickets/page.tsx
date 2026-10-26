@@ -2,7 +2,7 @@ import config from "#payload-config";
 import { getPayload } from "payload";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Ticket } from "./ticket";
+import { Ticket } from "./Ticket";
 import type { Event } from "#payload-types.ts";
 import { Stack, Text, Title } from "@mantine/core";
 

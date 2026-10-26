@@ -7,7 +7,7 @@ import config from "#payload-config";
 
 import { UserEditForm } from "./UserEditForm";
 import styles from "./page.module.css";
-import { resendVerificationEmail } from "./user-edit-action";
+import { resendVerificationEmail } from "./userEditAction";
 
 export const metadata: Metadata = {
 	title: "Edit Profile",

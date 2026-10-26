@@ -4,7 +4,7 @@ import configPromise from "#payload-config";
 import { Button } from "@mantine/core";
 import { ArrowRight, Files, Home, Login } from "pixelarticons/react";
 
-import styles from "./SubmitGame.module.css";
+import styles from "./page.module.css";
 import GameSubmissions from "./GameSubmission/GameSubmission";
 
 import type { Metadata } from "next";

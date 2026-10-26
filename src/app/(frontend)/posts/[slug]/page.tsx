@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { RelatedPosts } from "#/blocks/RelatedPosts/RelatedPosts";
+import { RelatedPosts } from "#/components/RelatedPosts/RelatedPosts";
 import { PayloadRedirects } from "#/components/PayloadRedirects/PayloadRedirects";
 import configPromise from "#payload-config";
 import { getPayload } from "payload";
@@ -10,7 +10,7 @@ import { findCanonicalCase } from "#utilities/caseInsensitive.ts";
 import React, { cache } from "react";
 import RichText from "#/components/RichText/RichText";
 
-import { PostHero } from "#/heros/PostHero/PostHero";
+import { PostHero } from "#/components/PostHero/PostHero";
 import { generateMeta } from "#/utilities/generateMeta";
 import PageClient from "./page.client";
 import { LivePreviewListener } from "#/components/LivePreviewListener/LivePreviewListener";

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Anchor, Badge, Group, Paper, Progress, Stack, Text, Title } from "@mantine/core";
 import type { LiveRun, LiveState } from "#/utilities/events/liveSchedule";
 import { formatCurrency } from "#/utilities/formatCurrency";
-import { useNow } from "#/utilities/useNow";
+import { useNow } from "#/utilities/react/useNow";
 import { formatDuration, formatRelative, formatStartTime } from "./time";
 import styles from "./EventLiveBlock.module.css";
 

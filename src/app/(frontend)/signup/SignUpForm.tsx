@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 import { Alert, Anchor, Button, PasswordInput, Stack, Text, TextInput, Tooltip } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 
-import styles from "./signup.module.css";
+import styles from "./page.module.css";
 import { useForm } from "@mantine/form";
-import { SignUp } from "./signup-action";
+import { SignUp } from "./signupAction";
 import { Check, SquareAlert } from "pixelarticons/react";
 
 export interface SignUpFormData {

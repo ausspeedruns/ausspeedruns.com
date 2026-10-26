@@ -4,8 +4,8 @@ import configPromise from "#payload-config";
 import { Button } from "@mantine/core";
 import { ArrowRight, Home, Login } from "pixelarticons/react";
 
-import styles from "./Volunteer.module.css";
-import { VolunteerForm } from "./form";
+import styles from "./page.module.css";
+import { VolunteerForm } from "./VolunteerForm";
 
 import type { Metadata } from "next";
 

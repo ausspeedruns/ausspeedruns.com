@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { Alert, Button, Paper, PasswordInput, Stack, Text, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
-import { updatePassword, type ResetPasswordFormValues } from "./reset-password-action";
+import { updatePassword, type ResetPasswordFormValues } from "./resetPasswordAction";
 import styles from "./page.module.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

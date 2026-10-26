@@ -57,7 +57,7 @@ export const Users: CollectionConfig<"users"> = {
 			generateEmailHTML: async ({ token }) => {
 				if (!token) throw new Error("Verification token was not provided.");
 				// Lazy-loaded so the config can be imported by plain `node` scripts (no JSX support)
-				const { VerificationEmail } = await import("./emails/verification.tsx");
+				const { VerificationEmail } = await import("#emails/VerificationEmail.tsx");
 				return await render(VerificationEmail({ token }));
 			},
 		},
@@ -68,7 +68,7 @@ export const Users: CollectionConfig<"users"> = {
 					throw new Error("Invalid data provided for forgot password email.");
 				}
 
-				const { ResetPasswordEmail } = await import("./emails/reset-password.tsx");
+				const { ResetPasswordEmail } = await import("#emails/ResetPasswordEmail.tsx");
 				return await render(ResetPasswordEmail({ token: data.token }));
 			},
 		},

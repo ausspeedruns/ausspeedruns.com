@@ -6,7 +6,7 @@ import { Group, Stack, Text, Title } from "@mantine/core";
 import { ButtonLink } from "#components/Link/ButtonLink.tsx";
 import { ClearCart } from "./ClearCart";
 
-import styles from "./success.module.css";
+import styles from "./page.module.css";
 
 export const metadata: Metadata = {
 	title: "Order received",

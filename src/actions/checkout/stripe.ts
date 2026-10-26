@@ -1,70 +1,38 @@
 import "server-only";
-import Stripe from "stripe";
-import { getPayload } from "payload";
-import config from "#payload-config";
-import type { Product } from "#payload-types.ts";
+import type Stripe from "stripe";
+import type { Payload } from "payload";
 import type { CheckoutResult } from "#actions/checkout.ts";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-09-30.endive" });
+import { createReservedOrder, type ReservationItem } from "#utilities/payments/reservations.ts";
+import { getStripe, STRIPE_CURRENCY, STRIPE_SESSION_TTL_SECONDS } from "#utilities/payments/stripe.ts";
 
 export async function stripeCheckout(
+	payload: Payload,
 	user: { id: string; email: string; stripeCustomerId?: string | null },
-	items: { quantity: number; product: Product; variant: Product["variants"][number] }[],
+	items: ReservationItem[],
 ): Promise<CheckoutResult> {
-	const payload = await getPayload({ config });
+	const stripe = getStripe();
 
-	// Create line items
-	const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
-	const orderItems: any[] = [];
+	const reservation = await createReservedOrder(payload, { userId: user.id, purchaseType: "stripe", items }).catch(
+		(error: unknown) => {
+			payload.logger.error({ err: error, message: "Error creating order for Stripe checkout" });
+			return { success: false as const, error: "Error creating order. Please try again." };
+		},
+	);
+	if (!reservation.success) return reservation;
 
-	for (const item of items) {
-		lineItems.push({
-			price_data: {
-				currency: "aud",
-				product_data: { name: `${item.product.name} — ${item.variant.label}` },
-				unit_amount: item.variant.priceInCents,
-			},
-			quantity: item.quantity,
-		});
-
-		orderItems.push({
-			product: item.product.id,
-			productName: item.product.name,
-			variantId: item.variant.id,
-			variantLabel: item.variant.label,
-			quantity: item.quantity,
-			unitPriceInCents: item.variant.priceInCents,
-		});
-	}
+	const { order } = reservation;
+	let session: Stripe.Checkout.Session | null = null;
 
 	try {
-		// Create order first (pending)
-		const order = await payload.create({
-			collection: "orders",
-			overrideAccess: true,
-			data: {
-				user: user.id,
-				items: orderItems,
-				purchaseType: "stripe",
-				totalInCents: -1, // Will be updated by webhook
-				status: "pending",
-			},
-		});
-
-		if (!order.reference) {
-			payload.logger.error({ orderId: order.id, message: "Order created without reference" });
-			return { success: false, error: "Error creating order. Please try again." };
-		}
-
 		// Get stripe customer ID, create if doesn't exist
 		let stripeCustomerId = user.stripeCustomerId;
 		if (!stripeCustomerId) {
-			const customer = await stripe.customers.create({
-				email: user.email,
-			});
+			const customer = await stripe.customers.create(
+				{ email: user.email, metadata: { userId: user.id } },
+				{ idempotencyKey: `customer-${user.id}-${user.email}` },
+			);
 			stripeCustomerId = customer.id;
 
-			// Update user with stripe customer ID
 			await payload.update({
 				collection: "users",
 				id: user.id,
@@ -73,31 +41,67 @@ export async function stripeCheckout(
 			});
 		}
 
-		const session = await stripe.checkout.sessions.create({
-			mode: "payment",
-			line_items: lineItems,
-			client_reference_id: order.reference,
-			success_url: `${process.env.NEXT_PUBLIC_URL}/success?sessionId={CHECKOUT_SESSION_ID}`,
-			cancel_url: `${process.env.NEXT_PUBLIC_URL}/cancel?sessionId={CHECKOUT_SESSION_ID}`,
-			metadata: { orderId: order.id, reference: order.reference },
-			customer: stripeCustomerId,
-		});
+		// Line items come from the order snapshot so the Stripe total always matches the order total.
+		const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = (order.items ?? []).map((item) => ({
+			price_data: {
+				currency: STRIPE_CURRENCY,
+				product_data: { name: `${item.productName} — ${item.variantLabel}` },
+				unit_amount: item.unitPriceInCents ?? 0,
+			},
+			quantity: item.quantity,
+		}));
 
-		// Store session ID
+		const metadata = { orderId: String(order.id), reference: order.reference! };
+		session = await stripe.checkout.sessions.create(
+			{
+				mode: "payment",
+				line_items: lineItems,
+				client_reference_id: order.reference!,
+				success_url: `${process.env.NEXT_PUBLIC_URL}/success?sessionId={CHECKOUT_SESSION_ID}`,
+				cancel_url: `${process.env.NEXT_PUBLIC_URL}/cancel?sessionId={CHECKOUT_SESSION_ID}`,
+				expires_at: Math.floor(Date.now() / 1000) + STRIPE_SESSION_TTL_SECONDS,
+				metadata,
+				payment_intent_data: { metadata },
+				customer: stripeCustomerId,
+			},
+			{ idempotencyKey: `checkout-session-${order.id}` },
+		);
+
+		if (!session.url) {
+			throw new Error(`Stripe session ${session.id} has no URL`);
+		}
+
 		await payload.update({
 			collection: "orders",
 			id: order.id,
 			overrideAccess: true,
-			data: { stripe: { sessionId: session.id, paymentIntentId: session.payment_intent?.toString() } },
+			data: { stripe: { sessionId: session.id } },
 		});
-
-		if (!session.url) {
-			return { success: false, error: "Failed to create payment session. Please try again." };
-		}
 
 		return { success: true, type: "stripe", url: session.url };
 	} catch (error) {
-		payload.logger.error({ err: error, message: "Error during Stripe checkout" });
+		payload.logger.error({ err: error, orderId: order.id, message: "Error during Stripe checkout" });
+
+		// Don't leave a payable session or an unpayable "Awaiting payment" order behind.
+		if (session?.status === "open") {
+			await stripe.checkout.sessions.expire(session.id).catch((expireError: unknown) => {
+				payload.logger.error({
+					err: expireError,
+					sessionId: session?.id,
+					message: "Could not expire Stripe session",
+				});
+			});
+		}
+		await payload
+			.delete({ collection: "orders", id: order.id, overrideAccess: true })
+			.catch((deleteError: unknown) => {
+				payload.logger.error({
+					err: deleteError,
+					orderId: order.id,
+					message: "Could not remove failed Stripe order",
+				});
+			});
+
 		return { success: false, error: "An error occurred during checkout. Please try again." };
 	}
 }

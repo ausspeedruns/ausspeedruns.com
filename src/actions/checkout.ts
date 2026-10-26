@@ -6,7 +6,7 @@ import type { Product } from "#payload-types.ts";
 
 import { stripeCheckout } from "./checkout/stripe.ts";
 import { bankCheckout } from "./checkout/bank.ts";
-import { MAX_ITEM_QUANTITY } from "#utilities/cartLimits.ts";
+import { MAX_CART_LINES, MAX_ITEM_QUANTITY } from "#utilities/cartLimits.ts";
 
 interface CheckoutItem {
 	productId: number;
@@ -36,6 +36,7 @@ export async function checkout(items: CheckoutItem[], method: "stripe" | "bank")
 	if (
 		!Array.isArray(items) ||
 		items.length === 0 ||
+		items.length > MAX_CART_LINES ||
 		!items.every(
 			(item) =>
 				Number.isInteger(item.productId) &&
@@ -112,25 +113,22 @@ export async function checkout(items: CheckoutItem[], method: "stripe" | "bank")
 		return { success: false, error: "Some products in your cart are no longer available." };
 	}
 
-	const itemsNotInStock = allItemData.filter((item) => {
-		if (item.variant.stock === undefined || item.variant.stock === null) {
-			return false; // If stock is not defined then we do not have a limit
-		}
-
-		return !item.variant || item.variant.stock < item.quantity;
-	});
-
-	if (itemsNotInStock.length > 0) {
-		return { success: false, error: "Insufficient stock for some items in your cart." };
-	}
-
 	if (method === "stripe" && allItemData.some((item) => item.product.payment?.allowStripe === false)) {
 		return { success: false, error: "Some products in your cart cannot be purchased by card." };
 	}
 
+	if (method === "bank" && allItemData.some((item) => !item.product.payment?.allowBankTransfer)) {
+		return { success: false, error: "Some products in your cart cannot be purchased via bank transfer." };
+	}
+
+	// Stock (including stock held by other pending orders) is checked when the order is created.
 	if (method === "bank") {
-		return bankCheckout(user.id, allItemData);
+		return bankCheckout(payload, user.id, items);
 	} else {
-		return stripeCheckout({ id: user.id, email: user.email, stripeCustomerId: user.stripeCustomerId }, allItemData);
+		return stripeCheckout(
+			payload,
+			{ id: user.id, email: user.email, stripeCustomerId: user.stripeCustomerId },
+			items,
+		);
 	}
 }

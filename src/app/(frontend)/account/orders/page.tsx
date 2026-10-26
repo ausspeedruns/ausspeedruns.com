@@ -20,6 +20,8 @@ export default async function AccountOrdersPage() {
 			where: { user: { equals: user.id } },
 			sort: "-createdAt",
 			pagination: false,
+			overrideAccess: false,
+			user,
 		}),
 		payload.findGlobal({ slug: "paymentSettings", depth: 0 }),
 	]);

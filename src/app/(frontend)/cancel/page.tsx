@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import Stripe from "stripe";
 import { getPayload } from "payload";
 import config from "#payload-config";
 import { Group, Stack, Text, Title } from "@mantine/core";
 import { ButtonLink } from "#components/Link/ButtonLink.tsx";
+import { getStripe } from "#utilities/payments/stripe.ts";
 
 import styles from "../success/success.module.css";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-09-30.endive" });
 
 export const metadata: Metadata = {
 	title: "Payment cancelled",
@@ -28,25 +26,35 @@ export default async function CancelPage({ searchParams }: { searchParams: Promi
 
 	if (user) {
 		try {
-			const session = await stripe.checkout.sessions.retrieve(sessionId);
+			// Only act on the user's own pending order for this session.
+			const { docs } = await payload.find({
+				collection: "orders",
+				where: {
+					and: [
+						{ "stripe.sessionId": { equals: sessionId } },
+						{ user: { equals: user.id } },
+						{ status: { equals: "pending" } },
+					],
+				},
+				depth: 0,
+				limit: 1,
+				overrideAccess: true,
+			});
+			const order = docs[0];
 
-			if (session.payment_status === "unpaid") {
-				// Stop the abandoned session from being paid later, then remove its pending order.
-				if (session.status === "open") {
-					await stripe.checkout.sessions.expire(sessionId);
+			if (order) {
+				const stripe = getStripe();
+				const session = await stripe.checkout.sessions.retrieve(sessionId);
+				const belongsToOrder = session.metadata?.orderId === String(order.id);
+
+				// A "complete" session may still be waiting on a delayed payment, so leave that to the webhook.
+				if (belongsToOrder && (session.status === "open" || session.status === "expired")) {
+					// Stop the abandoned session from being paid later, then remove its pending order.
+					if (session.status === "open") {
+						await stripe.checkout.sessions.expire(sessionId);
+					}
+					await payload.delete({ collection: "orders", id: order.id, overrideAccess: true });
 				}
-
-				await payload.delete({
-					collection: "orders",
-					overrideAccess: true,
-					where: {
-						and: [
-							{ "stripe.sessionId": { equals: sessionId } },
-							{ user: { equals: user.id } },
-							{ status: { equals: "pending" } },
-						],
-					},
-				});
 			}
 		} catch (error) {
 			payload.logger.warn({ err: error, sessionId, message: "Could not clean up cancelled Stripe checkout" });

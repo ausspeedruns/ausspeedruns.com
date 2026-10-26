@@ -1,5 +1,6 @@
 import type {
 	CollectionAfterChangeHook,
+	CollectionBeforeChangeHook,
 	CollectionBeforeValidateHook,
 	CollectionConfig,
 	PayloadRequest,
@@ -11,11 +12,12 @@ import { manageUsersField } from "#access/field/manageUsersField.ts";
 import { relationId } from "#access/helpers.ts";
 import { manageUsers } from "#access/manageUsers.ts";
 import { ownDocOrManageUsers } from "#access/ownDocOrManageUsers.ts";
+import { lockRows } from "#utilities/payments/transactions.ts";
 import { ticketPickupEndpoints } from "#utilities/ticketPickup/endpoints.ts";
 
 type OrderItem = NonNullable<Order["items"]>[number];
 
-const PAID_STATUSES: Order["status"][] = ["completed", "collected"];
+export const PAID_STATUSES: Order["status"][] = ["completed", "collected"];
 
 const nanoid = customAlphabet("23456789ABCDEFGHJKMNPQRSTUVWXYZ", 10);
 export function createOrderReference() {
@@ -84,17 +86,44 @@ const prepareOrder: CollectionBeforeValidateHook<Order> = async ({ data, operati
 };
 
 async function adjustStock(req: PayloadRequest, items: OrderItem[], direction: -1 | 1) {
-	for (const item of items) {
-		const productId = relationId(item.product);
-		if (productId === null) continue;
+	const productIds = [...new Set(items.map((item) => relationId(item.product)).filter((id) => id !== null))];
+	if (productIds.length === 0) return;
 
-		const product = await req.payload
-			.findByID({ collection: "products", id: productId, depth: 0, overrideAccess: true, req })
-			.catch(() => null);
-		if (!product) continue;
+	// Usually already locked by lockStockRows; re-locking in the same transaction is a no-op.
+	await lockRows(req, "products", productIds);
 
-		const variant = findVariant(product, item);
-		if (!variant || variant.stock === null || variant.stock === undefined) continue;
+	const products = await req.payload.find({
+		collection: "products",
+		where: { id: { in: productIds } },
+		depth: 0,
+		pagination: false,
+		overrideAccess: true,
+		req,
+	});
+
+	for (const product of products.docs) {
+		const changes = new Map<string, number>();
+		for (const item of items) {
+			if (relationId(item.product) !== product.id) continue;
+			const variant = findVariant(product, item);
+			if (!variant?.id || variant.stock === null || variant.stock === undefined) continue;
+			changes.set(variant.id, (changes.get(variant.id) ?? 0) + direction * item.quantity);
+		}
+		if (changes.size === 0) continue;
+
+		const variants = product.variants.map((candidate) => {
+			const change = candidate.id ? changes.get(candidate.id) : undefined;
+			if (change === undefined) return candidate;
+
+			const stock = (candidate.stock ?? 0) + change;
+			if (stock < 0) {
+				req.payload.logger.warn(
+					{ productId: product.id, variantId: candidate.id, stock },
+					"Product variant oversold; stock clamped to 0",
+				);
+			}
+			return { ...candidate, stock: Math.max(0, stock) };
+		});
 
 		await req.payload.update({
 			collection: "products",
@@ -102,28 +131,48 @@ async function adjustStock(req: PayloadRequest, items: OrderItem[], direction: -
 			depth: 0,
 			overrideAccess: true,
 			req,
-			data: {
-				variants: product.variants.map((candidate) =>
-					candidate.id === variant.id
-						? { ...candidate, stock: Math.max(0, (candidate.stock ?? 0) + direction * item.quantity) }
-						: candidate,
-				),
-			},
+			data: { variants },
 		});
 	}
 }
+
+/** -1 when an order becomes paid, +1 when a paid order is cancelled, otherwise 0. */
+function stockDirection(previousStatus: Order["status"] | undefined, status: Order["status"]): -1 | 0 | 1 {
+	const wasPaid = previousStatus !== undefined && PAID_STATUSES.includes(previousStatus);
+	const isPaid = PAID_STATUSES.includes(status);
+
+	if (isPaid && !wasPaid) return -1;
+	if (wasPaid && status === "cancelled") return 1;
+	return 0;
+}
+
+/**
+ * Locks the order's product rows before the order itself is written when its stock is about to change.
+ * Writing the order takes foreign-key locks on those products, so locking them afterwards (in `syncStock`)
+ * could deadlock with another order completing at the same time.
+ */
+const lockStockRows: CollectionBeforeChangeHook<Order> = async ({ data, originalDoc, operation, req }) => {
+	if (req.context?.skipStockAdjustment) return data;
+
+	const status = (data.status ?? originalDoc?.status) as Order["status"] | undefined;
+	if (!status || stockDirection(operation === "update" ? originalDoc?.status : undefined, status) === 0) return data;
+
+	const items = data.items ?? originalDoc?.items ?? [];
+	await lockRows(
+		req,
+		"products",
+		items.map((item) => relationId(item.product)).filter((id) => id !== null),
+	);
+	return data;
+};
 
 /** Decrements stock when an order becomes paid and restores it if a paid order is cancelled. */
 const syncStock: CollectionAfterChangeHook<Order> = async ({ doc, previousDoc, operation, req }) => {
 	if (req.context?.skipStockAdjustment) return doc;
 
-	const wasPaid = operation === "update" && PAID_STATUSES.includes(previousDoc?.status);
-	const isPaid = PAID_STATUSES.includes(doc.status);
-
-	if (isPaid && !wasPaid) {
-		await adjustStock(req, doc.items ?? [], -1);
-	} else if (wasPaid && doc.status === "cancelled") {
-		await adjustStock(req, doc.items ?? [], 1);
+	const direction = stockDirection(operation === "update" ? previousDoc?.status : undefined, doc.status);
+	if (direction !== 0) {
+		await adjustStock(req, doc.items ?? [], direction);
 	}
 
 	return doc;
@@ -145,6 +194,7 @@ export const Orders: CollectionConfig<"orders"> = {
 	},
 	hooks: {
 		beforeValidate: [prepareOrder],
+		beforeChange: [lockStockRows],
 		afterChange: [syncStock],
 	},
 	endpoints: ticketPickupEndpoints,

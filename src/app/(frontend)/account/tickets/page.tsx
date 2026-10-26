@@ -33,6 +33,8 @@ export default async function AccountTicketsPage() {
 				},
 			],
 		},
+		overrideAccess: false,
+		user,
 	});
 
 	const ticketProductIds = new Set<number>();

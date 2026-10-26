@@ -1,50 +1,25 @@
 import "server-only";
-import { getPayload } from "payload";
-import config from "#payload-config";
-import type { Product } from "#payload-types.ts";
+import type { Payload } from "payload";
 import type { CheckoutResult } from "#actions/checkout.ts";
+import { createReservedOrder, type ReservationItem } from "#utilities/payments/reservations.ts";
 
 export async function bankCheckout(
+	payload: Payload,
 	userId: string,
-	items: { quantity: number; product: Product; variant: Product["variants"][number] }[],
+	items: ReservationItem[],
 ): Promise<CheckoutResult> {
-	const payload = await getPayload({ config });
-
-	if (items.some((item) => !item.product.payment?.allowBankTransfer)) {
-		return { success: false, error: "Some products in your cart cannot be purchased via bank transfer." };
-	}
-
 	try {
+		// Load the bank details first so a failure here doesn't leave an order behind.
 		const { bankTransfer } = await payload.findGlobal({ slug: "paymentSettings", depth: 0 });
 
-		const order = await payload.create({
-			collection: "orders",
-			overrideAccess: true,
-			data: {
-				user: userId,
-				items: items.map((item) => ({
-					product: item.product.id,
-					productName: item.product.name,
-					variantId: item.variant.id,
-					variantLabel: item.variant.label,
-					quantity: item.quantity,
-					unitPriceInCents: item.variant.priceInCents,
-				})),
-				purchaseType: "bankTransfer",
-				totalInCents: -1, // Will be calculated by hook
-				status: "pending",
-			},
-		});
+		const result = await createReservedOrder(payload, { userId, purchaseType: "bankTransfer", items });
+		if (!result.success) return result;
 
-		if (!order.reference) {
-			payload.logger.error({ orderId: order.id, message: "Order created without reference" });
-			return { success: false, error: "Error creating order. Please try again." };
-		}
-
+		const { order } = result;
 		return {
 			success: true,
 			type: "bank",
-			reference: order.reference,
+			reference: order.reference!,
 			totalInCents: order.totalInCents,
 			bankDetails: {
 				accountName: bankTransfer?.accountName ?? "",

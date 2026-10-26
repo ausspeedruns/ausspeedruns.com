@@ -5,6 +5,8 @@ import { PayloadRedirects } from "#/components/PayloadRedirects/PayloadRedirects
 import configPromise from "#payload-config";
 import { getPayload } from "payload";
 import { draftMode } from "next/headers";
+import { permanentRedirect } from "next/navigation";
+import { findCanonicalCase } from "#utilities/caseInsensitive.ts";
 import React, { cache } from "react";
 import RichText from "#/components/RichText/RichText";
 
@@ -49,7 +51,19 @@ export default async function Post({ params: paramsPromise }: Args) {
 	const url = "/posts/" + decodedSlug;
 	const post = await queryPostBySlug({ slug: decodedSlug });
 
-	if (!post) return <PayloadRedirects url={url} />;
+	if (!post) {
+		const canonical = await findCanonicalCase({
+			payload: await getPayload({ config: configPromise }),
+			collection: "posts",
+			field: "slug",
+			value: decodedSlug,
+			draft,
+			overrideAccess: draft,
+		});
+		if (canonical) permanentRedirect(`/posts/${encodeURIComponent(canonical)}`);
+
+		return <PayloadRedirects url={url} />;
+	}
 
 	return (
 		<article className={styles.article}>

@@ -1,33 +1,47 @@
-import { CODE_FORMAT, headingNode, paragraphNode, richText, textNode } from "../richTextHelpers.ts";
-import type { KitchenSinkLayoutBlock, KitchenSinkSectionContext } from "./types";
+import { createLorem } from "../lorem.ts";
+import { buildPlaceholder } from "./placeholder.ts";
+import type { KitchenSinkLayoutBlock, KitchenSinkSectionContext } from "./types.ts";
 
-export function buildKitchenSinkEventHeroSection({ eventId }: KitchenSinkSectionContext): KitchenSinkLayoutBlock {
-	if (eventId) {
-		return {
-			blockName: "Event Hero Block",
+export function buildKitchenSinkEventHeroSections({
+	upcomingEventId,
+	pastEventId,
+}: KitchenSinkSectionContext): KitchenSinkLayoutBlock[] {
+	if (!upcomingEventId || !pastEventId) return [buildPlaceholder("Event Hero", "events", "eventHeroBlock")];
+
+	const lorem = createLorem(1001);
+
+	return [
+		{
+			blockName: "Event Hero: Upcoming, Heading + Subheading + Buttons",
+			demo: "An upcoming event with a heading override, a subheading, the event dates and two buttons.",
 			blockType: "eventHeroBlock",
-			event: eventId,
-			heading: "AusSpeedruns Marathon 2026",
-		};
-	}
-
-	return {
-		blockName: "Event Hero Block (placeholder — no events found)",
-		blockType: "content",
-		columns: [
-			{
-				size: "full",
-				richText: richText(
-					headingNode("Event Hero Block", "h3"),
-					paragraphNode([
-						textNode("The "),
-						textNode("eventHeroBlock", CODE_FORMAT),
-						textNode(
-							" requires an Event relationship. Create an Event in the admin dashboard, then add this block to a page and select it. It displays event-specific hero content with an optional heading override.",
-						),
-					]),
-				),
-			},
-		],
-	};
+			event: upcomingEventId,
+			heading: lorem.title(3),
+			subheading: lorem.sentence(8),
+			showDates: true,
+			showRecapStats: false,
+			links: [
+				{ label: lorem.title(2), url: "/events" },
+				{ label: lorem.title(2), url: "https://example.com" },
+			],
+		},
+		{
+			blockName: "Event Hero: Past, Recap Stats",
+			demo: "A past event with recap stats turned on (total raised, runs, runners and hours).",
+			blockType: "eventHeroBlock",
+			event: pastEventId,
+			subheading: lorem.sentence(6),
+			showDates: true,
+			showRecapStats: true,
+			links: [{ label: lorem.title(2), url: "/events" }],
+		},
+		{
+			blockName: "Event Hero: Minimal (no dates, no overrides)",
+			demo: "Dates hidden and no overrides, so only the event's own name and artwork show.",
+			blockType: "eventHeroBlock",
+			event: pastEventId,
+			showDates: false,
+			showRecapStats: false,
+		},
+	];
 }

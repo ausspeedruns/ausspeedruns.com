@@ -1,7 +1,7 @@
 import payloadConfig from "#payload-config";
 
 import styles from "./page.module.css";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Schedule } from "./schedule";
 import type { Metadata } from "next";
 import { getPayload } from "payload";
@@ -11,6 +11,7 @@ import { relationId } from "#access/helpers.ts";
 import { getGameName, getRunDisplayName } from "#utilities/runDisplay.ts";
 import { sortChildren } from "#utilities/runs/medley.ts";
 import { toScheduleBlocks, type EventBlockData } from "#utilities/schedule/blocks.ts";
+import { findCanonicalCase } from "#utilities/caseInsensitive.ts";
 import type { MedleyGame, Run } from "./schedule-types";
 
 function usernames(run: RunDoc): string[] {
@@ -152,6 +153,16 @@ export default async function EventSchedule({ params }: URLProps) {
 	});
 
 	const event = eventRequest.docs[0];
+
+	if (!event && eventShortName) {
+		const canonical = await findCanonicalCase({
+			payload,
+			collection: "events",
+			field: "shortName",
+			value: eventShortName,
+		});
+		if (canonical) permanentRedirect(`/schedule/${encodeURIComponent(canonical)}`);
+	}
 
 	if (!event || !event.scheduleMetadata?.published) {
 		return notFound();

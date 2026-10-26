@@ -1,38 +1,54 @@
-import { CODE_FORMAT, headingNode, paragraphNode, richText, textNode } from "../richTextHelpers.ts";
-import type { KitchenSinkLayoutBlock, KitchenSinkSectionContext } from "./types";
+import { createLorem } from "../lorem.ts";
+import { buildPlaceholder } from "./placeholder.ts";
+import type { KitchenSinkLayoutBlock, KitchenSinkSectionContext } from "./types.ts";
 
-export function buildKitchenSinkEventLiveSection({ eventId, img }: KitchenSinkSectionContext): KitchenSinkLayoutBlock {
-	if (eventId) {
-		const majorLogo = img(1);
-		const minorLogo = img(2);
-		return {
-			blockName: "Event Live Block",
+export function buildKitchenSinkEventLiveSections({
+	upcomingEventId,
+	mediaItems,
+	img,
+}: KitchenSinkSectionContext): KitchenSinkLayoutBlock[] {
+	if (!upcomingEventId) return [buildPlaceholder("Event Live", "events", "eventLiveBlock")];
+
+	const lorem = createLorem(1201);
+	const sponsors = (count: number, offset: number, withLinks: boolean) =>
+		mediaItems.length === 0
+			? []
+			: Array.from({ length: count }, (_, index) => ({
+					logo: img(offset + index),
+					name: lorem.title(2),
+					...(withLinks ? { url: `https://example.com/${lorem.words(1)}` } : {}),
+				}));
+
+	return [
+		{
+			blockName: "Event Live: Cover Background, Major + Minor Sponsors",
+			demo: "A cover background image, location, a donate button, two major sponsors in the header and five minor sponsors in the bottom strip, all linked.",
 			blockType: "eventLiveBlock",
-			event: eventId,
-			location: "Melbourne",
+			event: upcomingEventId,
+			location: lorem.title(1),
 			donateUrl: "/donate",
-			majorSponsors: majorLogo ? [{ logo: majorLogo, name: "Major sponsor" }] : [],
-			minorSponsors: minorLogo ? [{ logo: minorLogo, name: "Minor sponsor" }] : [],
-		};
-	}
-
-	return {
-		blockName: "Event Live (placeholder — no events found)",
-		blockType: "content",
-		columns: [
-			{
-				size: "full",
-				richText: richText(
-					headingNode("Event Live Block", "h3"),
-					paragraphNode([
-						textNode("The "),
-						textNode("eventLiveBlock", CODE_FORMAT),
-						textNode(
-							" requires an Event relationship. It shows the Twitch stream and chat, the current run, the upcoming schedule and incentives for the selected event.",
-						),
-					]),
-				),
-			},
-		],
-	};
+			background: { image: img(0), mode: "cover" },
+			majorSponsors: sponsors(2, 1, true),
+			minorSponsors: sponsors(5, 3, true),
+		},
+		{
+			blockName: "Event Live: Tiled Background (96px), Unlinked Sponsors",
+			demo: "A repeating tiled background at 96px, an external donate URL and sponsor logos without links.",
+			blockType: "eventLiveBlock",
+			event: upcomingEventId,
+			location: lorem.title(2),
+			donateUrl: "https://example.com/donate",
+			background: { image: img(2), mode: "tile", tileSize: 96 },
+			majorSponsors: sponsors(1, 4, false),
+			minorSponsors: sponsors(3, 5, false),
+		},
+		{
+			blockName: "Event Live: Fallback Background, No Donate, No Sponsors",
+			demo: "No background image, donate URL or sponsors. Falls back to the event's hero image, then to the brand pattern.",
+			blockType: "eventLiveBlock",
+			event: upcomingEventId,
+			majorSponsors: [],
+			minorSponsors: [],
+		},
+	];
 }

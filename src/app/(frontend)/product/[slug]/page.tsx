@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
+import { findCanonicalCase } from "#utilities/caseInsensitive.ts";
 import { Text } from "@mantine/core";
 
 import configPromise from "#payload-config";
@@ -47,7 +48,17 @@ export default async function ProductPage({ params }: Props) {
 	});
 
 	const product = result.docs[0] as Product | undefined;
-	if (!product) notFound();
+	if (!product) {
+		const canonical = await findCanonicalCase({
+			payload,
+			collection: "products",
+			field: "slug",
+			value: slug,
+			overrideAccess: false,
+		});
+		if (canonical) permanentRedirect(`/product/${encodeURIComponent(canonical)}`);
+		notFound();
+	}
 
 	const firstImage = product.images?.[0]?.image;
 	const image = firstImage && typeof firstImage === "object" ? (firstImage as Media) : null;

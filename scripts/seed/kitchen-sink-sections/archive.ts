@@ -1,44 +1,59 @@
+import { createLorem } from "../lorem.ts";
 import { headingNode, paragraphNode, richText, textNode } from "../richTextHelpers.ts";
 import type { KitchenSinkLayoutBlock, KitchenSinkSectionContext } from "./types.ts";
 
-export function buildKitchenSinkArchiveSections({ posts }: KitchenSinkSectionContext): KitchenSinkLayoutBlock[] {
+export function buildKitchenSinkArchiveSections({
+	posts,
+	categoryIds,
+}: KitchenSinkSectionContext): KitchenSinkLayoutBlock[] {
+	const lorem = createLorem(700);
+	const intro = (tag: "h2" | "h3" = "h3") =>
+		richText(headingNode(lorem.title(3), tag), paragraphNode([textNode(lorem.sentence())]));
+
 	const layout: KitchenSinkLayoutBlock[] = [
 		{
-			blockName: "Archive: Auto-populated from Posts Collection",
+			blockName: "Archive: All Posts (collection, limit 6)",
+			demo: "Populate by: Collection. Shows the latest 6 posts, with intro text.",
 			blockType: "archive",
-			categories: [],
 			populateBy: "collection",
 			relationTo: "posts",
+			categories: [],
 			limit: 6,
-			introContent: richText(
-				headingNode("Archive Block — Collection Mode", "h3"),
-				paragraphNode([
-					textNode(
-						"This Archive block auto-populates from the Posts collection. It displays up to 6 posts with pagination. You can also filter by category.",
-					),
-				]),
-			),
+			introContent: intro("h2"),
 		},
 	];
 
-	if (posts.length > 0) {
+	if (categoryIds.length > 0) {
 		layout.push({
-			blockName: "Archive: Hand-picked Posts",
+			blockName: "Archive: Filtered by Category (collection, limit 3)",
+			demo: "Populate by: Collection, filtered to one category and limited to 3 posts.",
 			blockType: "archive",
-			populateBy: "selection",
-			selectedDocs: posts.map((post) => ({
-				relationTo: "posts" as const,
-				value: post.id,
-			})),
-			introContent: richText(
-				headingNode("Archive Block — Selection Mode", "h3"),
-				paragraphNode([
-					textNode(
-						"Instead of auto-populating, you can hand-pick specific posts to display. This is useful for curated collections or featured content sections.",
-					),
-				]),
-			),
+			populateBy: "collection",
+			relationTo: "posts",
+			categories: [categoryIds[0]],
+			limit: 3,
+			introContent: intro(),
 		});
+	}
+
+	if (posts.length > 0) {
+		layout.push(
+			{
+				blockName: "Archive: Hand-picked Posts (selection)",
+				demo: "Populate by: Individual Selection. Three hand-picked posts.",
+				blockType: "archive",
+				populateBy: "selection",
+				selectedDocs: posts.slice(0, 3).map((post) => ({ relationTo: "posts" as const, value: post.id })),
+				introContent: intro(),
+			},
+			{
+				blockName: "Archive: Single Post, No Intro (selection)",
+				demo: "Individual Selection of a single post, with no intro text.",
+				blockType: "archive",
+				populateBy: "selection",
+				selectedDocs: [{ relationTo: "posts" as const, value: posts[posts.length - 1].id }],
+			},
+		);
 	}
 
 	return layout;

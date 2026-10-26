@@ -1,5 +1,4 @@
-import type { CollectionBeforeValidateHook, CollectionConfig } from "payload";
-import { APIError } from "payload";
+import type { CollectionConfig } from "payload";
 import { randomUUID } from "node:crypto";
 
 import { staff } from "#access/staff.ts";
@@ -10,42 +9,9 @@ import { isAdminField } from "#access/field/isAdmin.ts";
 import { render } from "@react-email/components";
 import { clearLegacyPasswordOnChange, upgradeLegacyPassword } from "./hooks/legacyPassword.ts";
 import { getServerSideURL } from "#utilities/getURL.ts";
+import { preventCaseInsensitiveDuplicate } from "#hooks/preventCaseInsensitiveDuplicate.ts";
 
 const usernameRegex = /^[\w~-]{3,25}$/;
-
-/**
- * Usernames are used in public URLs (/user/<username>), so prevent new accounts that only differ by case.
- * The Keystone migration contains a few historical collisions, so it can opt out via `req.context.isMigration`.
- */
-const preventCaseInsensitiveDuplicateUsernames: CollectionBeforeValidateHook = async ({
-	data,
-	req,
-	originalDoc,
-}) => {
-	const username = data?.username;
-	if (req.context?.isMigration || typeof username !== "string" || username === originalDoc?.username) return data;
-
-	const matches = await req.payload.find({
-		collection: "users",
-		where: { username: { like: username } },
-		depth: 0,
-		limit: 50,
-		overrideAccess: true,
-		select: { username: true },
-		req,
-	});
-
-	// resetPassword runs this hook with the full user as `data` and no `originalDoc`
-	const selfId = originalDoc?.id ?? data?.id;
-	const taken = matches.docs.some(
-		(user) => user.id !== selfId && user.username.toLowerCase() === username.toLowerCase(),
-	);
-	if (taken) {
-		throw new APIError("That username is already taken.", 400, undefined, true);
-	}
-
-	return data;
-};
 
 export const Users: CollectionConfig<"users"> = {
 	slug: "users",
@@ -71,7 +37,8 @@ export const Users: CollectionConfig<"users"> = {
 	},
 	hooks: {
 		beforeOperation: [upgradeLegacyPassword],
-		beforeValidate: [preventCaseInsensitiveDuplicateUsernames],
+		// Usernames are used in public URLs (/user/<username>), which are matched case-insensitively
+		beforeValidate: [preventCaseInsensitiveDuplicate("username", "That username is already taken.")],
 		beforeChange: [clearLegacyPasswordOnChange],
 	},
 	auth: {

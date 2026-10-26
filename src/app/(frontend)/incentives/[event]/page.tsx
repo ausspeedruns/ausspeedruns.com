@@ -10,6 +10,8 @@ import styles from "./page.module.css";
 import type z from "zod";
 import type { Media } from "#/payload-types";
 import { getMediaUrl } from "#/utilities/getMediaUrl";
+import { findCanonicalCase } from "#utilities/caseInsensitive.ts";
+import { permanentRedirect } from "next/navigation";
 
 interface URLProps {
 	params: Promise<{
@@ -98,6 +100,14 @@ export default async function EventSchedule({ params }: URLProps) {
 		.then((res) => res.docs[0]);
 
 	if (!event) {
+		const canonical = await findCanonicalCase({
+			payload,
+			collection: "events",
+			field: "shortName",
+			value: eventShortName,
+		});
+		if (canonical) permanentRedirect(`/incentives/${encodeURIComponent(canonical)}`);
+
 		return (
 			<div>
 				<h1>Event not found</h1>

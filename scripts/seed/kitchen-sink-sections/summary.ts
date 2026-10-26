@@ -1,3 +1,4 @@
+import { createLorem } from "../lorem.ts";
 import {
 	BOLD,
 	BOLD_ITALIC,
@@ -8,89 +9,45 @@ import {
 	richText,
 	textNode,
 } from "../richTextHelpers.ts";
-import type { KitchenSinkLayoutBlock } from "./types";
+import type { KitchenSinkLayoutBlock } from "./types.ts";
 
+/** Closing full-bleed section mixing full-width and one-third columns in a single block. */
 export function buildKitchenSinkSummarySection(): KitchenSinkLayoutBlock {
+	const lorem = createLorem(2400);
+	const listColumn = () => ({
+		size: "oneThird",
+		richText: richText(headingNode(lorem.title(1), "h4"), listNode("bullet", lorem.items(lorem.int(5, 7)))),
+	});
+
 	return {
-		blockName: "Content: Why Content Is Enough",
+		blockName: "Content: Closing Summary (full-bleed muted, mixed columns)",
+		demo: "A full-bleed Muted block mixing full-width and one-third columns in a single block.",
 		blockType: "content",
-		settings: {
-			background: "muted",
-			textColor: "auto",
-			padding: "large",
-			fullBleed: true,
-		},
+		settings: { background: "muted", textColor: "auto", padding: "large", fullBleed: true },
 		columns: [
 			{
 				size: "full",
 				richText: richText(
-					headingNode("Before You Create a New Block…", "h2"),
-					quoteNode(
-						"If you're thinking about creating a custom block, first ask: could a Content block do this?",
-					),
+					headingNode(lorem.title(4), "h2"),
+					quoteNode(lorem.sentence(14)),
 					paragraphNode([
-						textNode("The Content block supports "),
-						textNode("all of the following", BOLD),
-						textNode(" without any custom development:"),
+						textNode(`${lorem.phrase(4)} `),
+						textNode(lorem.words(3), BOLD),
+						textNode(` ${lorem.words(4)}:`),
 					]),
 				),
 			},
-			{
-				size: "oneThird",
-				richText: richText(
-					headingNode("Layouts", "h4"),
-					listNode("bullet", [
-						"Full-width sections",
-						"Two-column (50/50) layouts",
-						"Three-column (33/33/33) layouts",
-						"Asymmetric (66/33 or 33/66) layouts",
-						"Card grids (wrapping columns)",
-						"Mixed-width columns",
-						"Stacked full-width sections in one block",
-					]),
-				),
-			},
-			{
-				size: "oneThird",
-				richText: richText(
-					headingNode("Rich Text Features", "h4"),
-					listNode("bullet", [
-						"Headings (h1–h4)",
-						"Paragraphs with inline formatting",
-						"Bold, italic, underline, strikethrough, code",
-						"Internal and external links",
-						"Ordered and unordered lists",
-						"Blockquotes",
-						"CTA links on columns",
-					]),
-				),
-			},
-			{
-				size: "oneThird",
-				richText: richText(
-					headingNode("Styling & Media", "h4"),
-					listNode("bullet", [
-						"Inline images via Upload in rich text",
-						"Block-level media via Media blocks in rich text",
-						"Background: theme, brand, or custom colour",
-						"Text colour: auto, light, or dark",
-						"Padding: none, small, default, large",
-						"Full-bleed or contained backgrounds",
-					]),
-				),
-			},
+			listColumn(),
+			listColumn(),
+			listColumn(),
 			{
 				size: "full",
 				richText: richText(
 					paragraphNode([
-						textNode("Only reach for a custom block when you need "),
-						textNode("interactive behaviour", BOLD),
-						textNode(" (countdown timers, live streams, forms), "),
-						textNode("external data", BOLD),
-						textNode(" (donation trackers, event data), or "),
-						textNode("specialised UI", BOLD),
-						textNode(" (image carousels, sponsor grids). For everything else — "),
-						textNode("Content is king.", BOLD_ITALIC),
+						textNode(`${lorem.sentence()} `),
+						textNode(lorem.words(2), BOLD),
+						textNode(` ${lorem.sentence()} `),
+						textNode(lorem.words(3), BOLD_ITALIC),
 					]),
 				),
 			},

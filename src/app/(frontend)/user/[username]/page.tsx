@@ -7,7 +7,7 @@ import config from "#payload-config";
 
 import configPromise from "#payload-config";
 import { getPayload } from "payload";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { cache } from "react";
 
 import styles from "./page.module.css";
@@ -16,6 +16,7 @@ import { Run } from "./run";
 import { getEventLabel } from "./getEventLabel";
 import { UpcomingRun } from "./upcoming-run";
 import { countedRunsWhere, getRunDisplayName } from "#utilities/runDisplay.ts";
+import { findCanonicalCase } from "#utilities/caseInsensitive.ts";
 
 type Args = {
 	params: Promise<{
@@ -27,12 +28,20 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 	const { username } = await paramsPromise;
 	const decodedUsername = decodeURIComponent(username);
 	const user = await queryUserByUsername(decodedUsername);
+	const payload = await getPayload({ config });
 
 	if (!user) {
+		const canonical = await findCanonicalCase({
+			payload,
+			collection: "users",
+			field: "username",
+			value: decodedUsername,
+			overrideAccess: true,
+		});
+		if (canonical) permanentRedirect(`/user/${encodeURIComponent(canonical)}`);
 		notFound();
 	}
 
-	const payload = await getPayload({ config });
 	const userHeaders = await headers();
 	const auth = await payload.auth({ headers: userHeaders });
 

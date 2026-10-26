@@ -4,6 +4,7 @@ import { canAccessTechSchedule } from "#access/helpers.ts";
 import { manageContent } from "#access/manageContent.ts";
 import { loadTechSchedule } from "#utilities/schedule/techSchedule.ts";
 import { manageContentOrPublished } from "#access/manageContentOrPublished.ts";
+import { preventCaseInsensitiveDuplicate } from "#hooks/preventCaseInsensitiveDuplicate.ts";
 import { validateDateAfter, validateUrl, validateUrlSafe } from "#fields/validators.ts";
 import { scheduleBlocksField } from "./Fields/ScheduleBlocks.ts";
 import { DefaultTimeZone, TimeZoneOptions } from "./Fields/TimezoneSelect.ts";
@@ -46,6 +47,10 @@ export const Events: CollectionConfig<"events"> = {
 		drafts: {
 			schedulePublish: true,
 		},
+	},
+	hooks: {
+		// Event URLs (/schedule/<shortName>) are matched case-insensitively
+		beforeValidate: [preventCaseInsensitiveDuplicate("shortName", "An event with that short name already exists.")],
 	},
 	fields: [
 		{

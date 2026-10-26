@@ -4,6 +4,8 @@ import { PayloadRedirects } from "#/components/PayloadRedirects/PayloadRedirects
 import configPromise from "#payload-config";
 import { getPayload, type RequiredDataFromCollectionSlug } from "payload";
 import { draftMode } from "next/headers";
+import { permanentRedirect } from "next/navigation";
+import { findCanonicalCase } from "#utilities/caseInsensitive.ts";
 import React, { cache } from "react";
 import { homeStatic } from "#/endpoints/seed/home-static";
 
@@ -64,6 +66,16 @@ export default async function Page({ params: paramsPromise }: Args) {
 	}
 
 	if (!page) {
+		const canonical = await findCanonicalCase({
+			payload: await getPayload({ config: configPromise }),
+			collection: "pages",
+			field: "slug",
+			value: decodedSlug,
+			draft,
+			overrideAccess: draft,
+		});
+		if (canonical) permanentRedirect(canonical === "home" ? "/" : `/${encodeURIComponent(canonical)}`);
+
 		return <PayloadRedirects url={url} />;
 	}
 

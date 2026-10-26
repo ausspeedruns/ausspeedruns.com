@@ -1,6 +1,8 @@
 .grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+	/* auto-fit collapses empty tracks so a small number of products stays centred. */
+	grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 24rem));
+	justify-content: center;
 	gap: 1.5rem;
 }
 

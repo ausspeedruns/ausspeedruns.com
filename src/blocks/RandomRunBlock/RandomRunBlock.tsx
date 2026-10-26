@@ -5,9 +5,7 @@ import config from "#payload-config";
 import { relationId } from "#access/helpers.ts";
 import { getYouTubeEmbedUrl } from "#utilities/runDisplay.ts";
 
-function pickRandom<T>(items: T[]): T | undefined {
-	return items[Math.floor(Math.random() * items.length)];
-}
+import { RandomRunPlayer } from "./RandomRunPlayer";
 
 export async function RandomRunBlock(props: RandomRunBlockProps) {
 	const specificRuns = (props.specificRuns ?? []).filter((run): run is Run => typeof run === "object" && run !== null);
@@ -36,18 +34,10 @@ export async function RandomRunBlock(props: RandomRunBlockProps) {
 		candidates = runs.docs.map((run) => run.youtube).filter((url): url is string => Boolean(url));
 	}
 
-	const embedUrl = getYouTubeEmbedUrl(pickRandom(candidates));
-	if (!embedUrl) return null;
+	const embedUrls = [
+		...new Set(candidates.map((url) => getYouTubeEmbedUrl(url)).filter((url): url is string => Boolean(url))),
+	];
+	if (embedUrls.length === 0) return null;
 
-	return (
-		<iframe
-			width="560"
-			height="315"
-			src={embedUrl}
-			title="YouTube video player"
-			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-			referrerPolicy="strict-origin-when-cross-origin"
-			allowFullScreen
-		/>
-	);
+	return <RandomRunPlayer embedUrls={embedUrls} />;
 }

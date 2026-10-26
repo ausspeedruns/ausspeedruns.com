@@ -62,7 +62,7 @@ export async function ProductBlock(props: ProductBlockProps) {
 	return (
 		<section className="container">
 			{title && (
-				<Title order={2} mb="lg">
+				<Title order={2} mb="lg" ta="center">
 					{title}
 				</Title>
 			)}

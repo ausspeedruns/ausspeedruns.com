@@ -8,6 +8,7 @@ import { sameUserOrManageUsers } from "#access/sameUserOrManageUsers.ts";
 import { anyone } from "#access/anyone.ts";
 import { isAdminField } from "#access/field/isAdmin.ts";
 import { render } from "@react-email/components";
+import { clearLegacyPasswordOnChange, upgradeLegacyPassword } from "./hooks/legacyPassword.ts";
 
 const usernameRegex = /^[\w~-]{3,25}$/;
 
@@ -33,8 +34,10 @@ const preventCaseInsensitiveDuplicateUsernames: CollectionBeforeValidateHook = a
 		req,
 	});
 
+	// resetPassword runs this hook with the full user as `data` and no `originalDoc`
+	const selfId = originalDoc?.id ?? data?.id;
 	const taken = matches.docs.some(
-		(user) => user.id !== originalDoc?.id && user.username.toLowerCase() === username.toLowerCase(),
+		(user) => user.id !== selfId && user.username.toLowerCase() === username.toLowerCase(),
 	);
 	if (taken) {
 		throw new APIError("That username is already taken.", 400, undefined, true);
@@ -66,7 +69,9 @@ export const Users: CollectionConfig<"users"> = {
 		socials: true,
 	},
 	hooks: {
+		beforeOperation: [upgradeLegacyPassword],
 		beforeValidate: [preventCaseInsensitiveDuplicateUsernames],
+		beforeChange: [clearLegacyPasswordOnChange],
 	},
 	auth: {
 		// Lets service accounts (e.g. the stream graphics) authenticate with `Authorization: users API-Key <key>`
@@ -263,6 +268,13 @@ export const Users: CollectionConfig<"users"> = {
 			type: "text",
 			admin: { readOnly: true, position: "sidebar" },
 			access: { create: () => false, update: () => false }, // only set programmatically
+		},
+		{
+			// Keystone bcrypt hash for users who haven't logged in since the migration (see hooks/legacyPassword.ts)
+			name: "legacyPasswordHash",
+			type: "text",
+			hidden: true,
+			access: { read: () => false, create: () => false, update: () => false },
 		},
 	],
 };

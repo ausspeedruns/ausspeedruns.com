@@ -79,7 +79,7 @@ export default async function ResetPasswordPage({ params }: ResetPasswordPagePro
 					<p className={styles.subtitle}>Choose a new password for your account.</p>
 				</div>
 
-				<ResetPasswordForm />
+				<ResetPasswordForm token={token} />
 			</section>
 		</main>
 	);

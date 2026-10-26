@@ -5,7 +5,7 @@ import config from "#payload-config";
 import type { Product } from "#payload-types.ts";
 import type { CheckoutResult } from "#actions/checkout.ts";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-05-27.dahlia" });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-09-30.endive" });
 
 export async function stripeCheckout(
 	user: { id: string; email: string; stripeCustomerId?: string | null },

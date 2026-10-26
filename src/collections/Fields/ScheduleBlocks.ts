@@ -32,6 +32,8 @@ type BlockRow = { name?: string | null; startRun?: RelationValue; endRun?: Relat
 export const scheduleBlocksField: ArrayField = {
 	name: "scheduleBlocks",
 	type: "array",
+	// The default (`_events_v_version_schedule_metadata_schedule_blocks`) pushes its index/FK names past Postgres's 63-char limit.
+	dbName: "events_schedule_blocks",
 	label: "Schedule Blocks",
 	labels: { singular: "Block", plural: "Blocks" },
 	admin: {

@@ -81,7 +81,7 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 								const Icon = item.icon;
 								return (
 									<Button
-										leftSection={<Icon size={16} />}
+										leftSection={<Icon width={16} height={16} />}
 										key={item.label}
 										component="a"
 										href={item.href}

@@ -1,5 +1,6 @@
 import type { User } from "#payload-types.ts";
 import * as dotenv from "dotenv";
+import { randomBytes } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -326,6 +327,13 @@ async function migrateUsers(payload: BasePayload, source: KeystoneDump) {
 			bluesky,
 		} = user;
 
+		// Payload can't verify Keystone's bcrypt hashes, so keep them for the login upgrade hook and give the
+		// account an unguessable Payload password until then (see src/collections/Users/hooks/legacyPassword.ts)
+		const legacyPasswordHash = typeof password === "string" && /^\$2[aby]\$\d{2}\$/.test(password) ? password : null;
+		if (!legacyPasswordHash) {
+			console.warn(`User ${username} has no bcrypt password hash; they will need to reset their password`);
+		}
+
 		let newState: User["state"] = state;
 		if (state === "none") {
 			newState = undefined;
@@ -345,7 +353,8 @@ async function migrateUsers(payload: BasePayload, source: KeystoneDump) {
 					name,
 					username,
 					email: placeholderEmails.get(id) ?? email,
-					password,
+					password: randomBytes(32).toString("base64url"),
+					legacyPasswordHash,
 					// Unknown DOBs use the epoch so the account still passes the minimum age check
 					dateOfBirth: new Date(dateOfBirth ?? 0).toISOString(),
 					pronouns,

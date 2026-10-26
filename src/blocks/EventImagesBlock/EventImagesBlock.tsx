@@ -53,7 +53,7 @@ export function EventImagesBlock({ title, richText, images, galleryUrl, galleryL
 									onClick={onClick}
 									aria-label={label}
 								>
-									<ChevronLeft size={22} />
+									<ChevronLeft width={22} height={22} />
 								</ActionIcon>
 							) : null
 						}
@@ -68,7 +68,7 @@ export function EventImagesBlock({ title, richText, images, galleryUrl, galleryL
 									onClick={onClick}
 									aria-label={label}
 								>
-									<ChevronRight size={22} />
+									<ChevronRight width={22} height={22} />
 								</ActionIcon>
 							) : null
 						}
@@ -134,7 +134,7 @@ export function EventImagesBlock({ title, richText, images, galleryUrl, galleryL
 						rel="noopener noreferrer"
 						variant="outline"
 						size="md"
-						rightSection={<ExternalLink size={16} />}
+						rightSection={<ExternalLink width={16} height={16} />}
 					>
 						{galleryLabel || "View the full photo gallery"}
 					</Button>

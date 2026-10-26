@@ -4,8 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Ticket } from "./ticket";
 import type { Event } from "#payload-types.ts";
-import { Alert, Stack, ThemeIcon, Text, Title } from "@mantine/core";
-import { MemoryStick } from "pixelarticons/react";
+import { Stack, Text, Title } from "@mantine/core";
 
 export default async function AccountTicketsPage() {
 	const payload = await getPayload({ config });
@@ -15,6 +14,8 @@ export default async function AccountTicketsPage() {
 	if (!user) {
 		redirect(`/login?redirect=${encodeURIComponent(`/account/tickets`)}`);
 	}
+
+	const paymentSettings = await payload.findGlobal({ slug: "paymentSettings", depth: 0 });
 
 	const tickets = await payload.find({
 		collection: "orders",
@@ -70,17 +71,7 @@ export default async function AccountTicketsPage() {
 		<Stack gap="md">
 			<Title order={1}>Tickets</Title>
 			{tickets.docs.length === 0 ? (
-				<Alert
-					color="gray"
-					icon={
-						<ThemeIcon color="gray" radius="xl" size="sm" variant="light">
-							<MemoryStick width={14} height={14} />
-						</ThemeIcon>
-					}
-					variant="light"
-				>
-					<Text size="sm">You have not bought any tickets yet.</Text>
-				</Alert>
+				<Text c="dimmed">You haven&apos;t bought any tickets yet.</Text>
 			) : (
 				tickets.docs.map((order) =>
 					order.items?.map((item) => {
@@ -96,15 +87,17 @@ export default async function AccountTicketsPage() {
 
 						return (
 							<Ticket
-								key={order.id}
+								key={`${order.id}-${item.id ?? item.product.id}`}
 								ticketData={{
-									paid: order.status === "completed",
+									paid: order.status === "completed" || order.status === "collected",
 									ticketID: order.reference ?? "Missing ID",
 									method: order.purchaseType === "bankTransfer" ? "bank" : "card",
 									taken: order.status === "collected",
 									priceInCents: item.unitPriceInCents ?? 0,
+									amountOwedInCents: order.totalInCents,
 									event,
 								}}
+								bankTransfer={paymentSettings.bankTransfer}
 							/>
 						);
 					}),

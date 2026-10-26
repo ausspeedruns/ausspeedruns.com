@@ -1,0 +1,33 @@
+.list {
+	margin: 0;
+	border: 1px solid var(--mantine-color-default-border);
+}
+
+.row {
+	display: grid;
+	grid-template-columns: 8.5rem 1fr auto;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.375rem 0.5rem 0.375rem 0.75rem;
+
+	& + & {
+		border-top: 1px solid var(--mantine-color-default-border);
+	}
+
+	dt {
+		font-size: var(--mantine-font-size-sm);
+		color: var(--mantine-color-dimmed);
+	}
+
+	dd {
+		margin: 0;
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+		overflow-wrap: anywhere;
+	}
+
+	&[data-emphasise] dd {
+		font-family: var(--mantine-font-family-monospace);
+		font-size: var(--mantine-font-size-lg);
+	}
+}

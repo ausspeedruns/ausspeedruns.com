@@ -13,9 +13,23 @@ const ausSpeedrunsOrange: MantineColorsTuple = [
 	"#98550e",
 ];
 
+const ausSpeedrunsBlue: MantineColorsTuple = [
+  '#ebf8fc',
+  '#dfebf0',
+  '#bed5dd',
+  '#9bbecb',
+  '#7eabbb',
+  '#6a9fb2',
+  '#5f99ae',
+  '#4d8599',
+  '#437c90',
+  '#2c677a'
+];
+
 export const theme = createTheme({
 	colors: {
 		ausSpeedrunsOrange,
+		ausSpeedrunsBlue,
 	},
 	primaryColor: "ausSpeedrunsOrange",
 	defaultRadius: "xs",
@@ -23,4 +37,13 @@ export const theme = createTheme({
 		xs: "0",
 	},
 	fontFamily: "Poppins, sans-serif",
+	components: {
+		Card: {
+			styles: {
+				root: {
+					backgroundColor: "var(--card-background)"
+				}
+			}
+		}
+	},
 });

@@ -6,14 +6,13 @@ import type { Product } from "#payload-types.ts";
 
 import { stripeCheckout } from "./checkout/stripe.ts";
 import { bankCheckout } from "./checkout/bank.ts";
+import { MAX_ITEM_QUANTITY } from "#utilities/cartLimits.ts";
 
 interface CheckoutItem {
 	productId: number;
 	variantId: string;
 	quantity: number;
 }
-
-const MAX_CHECKOUT_QUANTITY = 10;
 
 export interface BankDetails {
 	accountName: string;
@@ -45,7 +44,7 @@ export async function checkout(items: CheckoutItem[], method: "stripe" | "bank")
 				item.variantId.length > 0 &&
 				Number.isInteger(item.quantity) &&
 				item.quantity > 0 &&
-				item.quantity <= MAX_CHECKOUT_QUANTITY,
+				item.quantity <= MAX_ITEM_QUANTITY,
 		)
 	) {
 		return { success: false, error: "Your cart contains invalid items. Please refresh and try again." };

@@ -1,62 +1,93 @@
 "use client";
 
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { Alert, Anchor, Button, Grid, Modal, Skeleton, Stack, Text, Title } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { checkout, type BankDetails } from "#actions/checkout.ts";
+import { getCartProducts, type CartProduct } from "#actions/cartProducts.ts";
+import { BankTransferDetails } from "#components/BankTransferDetails/BankTransferDetails.tsx";
+import { useCartStore } from "#stores/useCartStore.ts";
 import { CartItem } from "./CartItem";
 import { OrderSummary } from "./OrderSummary";
+import { buildCartLines, linesBlockingMethod, type PaymentMethod } from "./cartLines";
+
 import styles from "./cart.module.css";
-import { useCartStore } from "#stores/useCartStore.ts";
-import {
-	Alert,
-	Button,
-	Code,
-	CopyButton,
-	Divider,
-	Grid,
-	Group,
-	Modal,
-	Paper,
-	Stack,
-	Text,
-	ThemeIcon,
-	Title,
-} from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { Box, Check, CheckboxOn, Copy, ShoppingCart, SquareAlert } from "pixelarticons/react";
-import { useState } from "react";
-import { checkout, type BankDetails } from "#actions/checkout.ts";
-import Link from "next/link";
 
-export function CartPageClient() {
-	const { items, removeItem: removeItemStore, updateItemQuantity, clearCart } = useCartStore();
+interface CartPageClientProps {
+	isLoggedIn: boolean;
+}
+
+interface BankOrder {
+	reference: string;
+	totalInCents: number;
+	bankDetails: BankDetails;
+}
+
+export function CartPageClient({ isLoggedIn }: CartPageClientProps) {
+	const items = useCartStore((state) => state.items);
+	const hasHydrated = useCartStore((state) => state.hasHydrated);
+	const removeItem = useCartStore((state) => state.removeItem);
+	const updateItemQuantity = useCartStore((state) => state.updateItemQuantity);
+	const clearCart = useCartStore((state) => state.clearCart);
+
+	const [products, setProducts] = useState<Map<number, CartProduct> | null>(null);
+	const [productsFailed, setProductsFailed] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string>();
-	const [checkingOut, setCheckingOut] = useState(false);
-	const [bankModalOpened, { open: openBankModal, close: closeBankModal }] = useDisclosure(false);
-	const [bankReference, setBankReference] = useState<string>();
-	const [bankTotalInCents, setBankTotalInCents] = useState(0);
-	const [bankDetails, setBankDetails] = useState<BankDetails>();
+	const [checkingOut, setCheckingOut] = useState<PaymentMethod | null>(null);
+	const [bankOrder, setBankOrder] = useState<BankOrder>();
+	const [bankModalOpened, bankModal] = useDisclosure(false);
 
-	const totalInCents = items.reduce((sum, item) => sum + item.priceInCents * item.quantity, 0);
-	const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+	const productIdsKey = [...new Set(items.map((item) => item.productId))].sort((a, b) => a - b).join(",");
 
-	function updateQuantity(itemId: string, nextQuantity: number) {
-		if (nextQuantity < 1) {
-			removeItemStore(itemId);
-		} else {
-			const item = items.find((item) => item.id === itemId);
-			if (item) {
-				updateItemQuantity(itemId, nextQuantity);
-			}
+	useEffect(() => {
+		if (!hasHydrated) return;
+		const ids = productIdsKey ? productIdsKey.split(",").map(Number) : [];
+		if (ids.length === 0) {
+			setProducts(new Map());
+			return;
 		}
+
+		let cancelled = false;
+		getCartProducts(ids)
+			.then((result) => {
+				if (cancelled) return;
+				setProducts(new Map(result.map((product) => [product.id, product])));
+				setProductsFailed(false);
+			})
+			.catch(() => {
+				if (!cancelled) setProductsFailed(true);
+			});
+		return () => {
+			cancelled = true;
+		};
+	}, [hasHydrated, productIdsKey]);
+
+	const lines = useMemo(() => buildCartLines(items, products), [items, products]);
+	const blockedBy = useMemo(
+		() => ({ stripe: linesBlockingMethod(lines, "stripe"), bank: linesBlockingMethod(lines, "bank") }),
+		[lines],
+	);
+
+	const countedLines = lines.filter((line) => !line.missing);
+	const totalInCents = countedLines.reduce((sum, line) => sum + line.priceInCents * line.item.quantity, 0);
+	const itemCount = countedLines.reduce((sum, line) => sum + line.item.quantity, 0);
+	const loadingProducts = products === null && !productsFailed;
+
+	function handleRemove(itemId: string) {
+		removeItem(itemId);
 		setErrorMessage(undefined);
 	}
 
-	function removeItem(itemId: string) {
-		removeItemStore(itemId);
+	function handleUpdateQuantity(itemId: string, quantity: number) {
+		if (quantity < 1) removeItem(itemId);
+		else updateItemQuantity(itemId, quantity);
 		setErrorMessage(undefined);
 	}
 
-	async function handleCheckout(type: "stripe" | "bank") {
+	async function handleCheckout(method: PaymentMethod) {
 		setErrorMessage(undefined);
-		setCheckingOut(true);
+		setCheckingOut(method);
 
 		try {
 			const result = await checkout(
@@ -65,184 +96,121 @@ export function CartPageClient() {
 					variantId: item.variantId,
 					quantity: item.quantity,
 				})),
-				type,
+				method,
 			);
 
 			if (!result.success) {
 				setErrorMessage(result.error);
+				setCheckingOut(null);
 				return;
 			}
 
 			if (result.type === "stripe") {
-				clearCart();
+				// The cart is cleared on /success, so it survives if the payment is cancelled.
 				window.location.href = result.url;
 				return;
 			}
 
-			if (result.type === "bank") {
-				setBankTotalInCents(result.totalInCents);
-				setBankDetails(result.bankDetails);
-				clearCart();
-				setBankReference(result.reference);
-				openBankModal();
-			}
+			setBankOrder({
+				reference: result.reference,
+				totalInCents: result.totalInCents,
+				bankDetails: result.bankDetails,
+			});
+			clearCart();
+			bankModal.open();
+			setCheckingOut(null);
 		} catch {
-			setErrorMessage("An unexpected error occurred. Please try again.");
-		} finally {
-			setCheckingOut(false);
+			setErrorMessage("Something went wrong starting checkout. Please try again.");
+			setCheckingOut(null);
 		}
 	}
 
 	return (
-		<div className={styles.pageShell}>
-			<Stack gap="xl">
-				<Title order={1}>Your cart</Title>
+		<main className={`container ${styles.page}`}>
+			<Stack gap="lg">
+				<Title order={1}>Cart</Title>
 
 				{errorMessage && (
-					<Alert color="red" icon={<SquareAlert width={16} height={16} />} variant="light">
+					<Alert color="red" variant="light">
 						{errorMessage}
 					</Alert>
 				)}
 
-				<Grid align="start" gap="xl">
-					<Grid.Col span={{ base: 12, md: 7 }}>
-						<Stack gap="md">
-							{items.length === 0 ? (
-								<Paper p="xl" shadow="xs" withBorder>
-									<Stack align="center" gap="md" py="lg">
-										<ThemeIcon color="gray" size={56} variant="light">
-											<ShoppingCart width={28} height={28} />
-										</ThemeIcon>
-										<Title order={3}>Your cart is empty</Title>
-									</Stack>
-								</Paper>
+				{hasHydrated && items.length === 0 ? (
+					<Stack gap="xs" align="flex-start">
+						<Text>Your cart is empty.</Text>
+						<Anchor component={Link} href="/">
+							Continue browsing
+						</Anchor>
+					</Stack>
+				) : (
+					<Grid gap="xl" align="flex-start">
+						<Grid.Col span={{ base: 12, md: 8 }}>
+							{!hasHydrated ? (
+								<Stack gap="md">
+									<Skeleton height={72} />
+									<Skeleton height={72} />
+								</Stack>
 							) : (
-								items.map((item) => {
-									return (
+								<ul className={styles.list}>
+									{lines.map((line) => (
 										<CartItem
-											key={item.id}
-											item={item}
-											onRemove={removeItem}
-											onUpdateQuantity={updateQuantity}
+											key={line.item.id}
+											line={line}
+											loading={loadingProducts}
+											onRemove={handleRemove}
+											onUpdateQuantity={handleUpdateQuantity}
 										/>
-									);
-								})
+									))}
+								</ul>
 							)}
-						</Stack>
-					</Grid.Col>
+						</Grid.Col>
 
-					<Grid.Col span={{ base: 12, md: 5 }}>
-						<OrderSummary
-							itemCount={itemCount}
-							totalInCents={totalInCents}
-							disabled={items.length === 0}
-							loading={checkingOut}
-							onCheckout={handleCheckout}
-						/>
-					</Grid.Col>
-				</Grid>
+						<Grid.Col span={{ base: 12, md: 4 }}>
+							<OrderSummary
+								className={styles.summary}
+								ready={hasHydrated && !loadingProducts}
+								itemCount={itemCount}
+								lineCount={lines.length}
+								totalInCents={totalInCents}
+								isLoggedIn={isLoggedIn}
+								hasProblems={lines.some((line) => line.problem)}
+								blockedBy={blockedBy}
+								checkingOut={checkingOut}
+								onCheckout={handleCheckout}
+							/>
+						</Grid.Col>
+					</Grid>
+				)}
 			</Stack>
 
 			<Modal
 				opened={bankModalOpened}
-				onClose={closeBankModal}
-				title={
-					<Group gap="xs">
-						<ThemeIcon color="green" variant="light" size="lg">
-							<CheckboxOn width={20} height={20} />
-						</ThemeIcon>
-						<Title order={3}>Order placed</Title>
-					</Group>
-				}
+				onClose={bankModal.close}
+				title={<Text fw={700}>Order placed: transfer to finish</Text>}
 				centered
-				size="md"
 				closeOnClickOutside={false}
 			>
-				<Stack gap="md">
-					<Text>Your order has been created. Please complete the bank transfer using the details below.</Text>
-
-					<Paper p="md" withBorder bg="var(--mantine-color-blue-light)">
-						<Group justify="space-between">
-							<Text fw={600}>Amount to transfer</Text>
-							<Title order={3}>
-								{new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD" }).format(
-									bankTotalInCents / 100,
-								)}
-							</Title>
-						</Group>
-					</Paper>
-
-					<Paper p="md" withBorder>
-						<Stack gap="xs">
-							<Group justify="space-between">
-								<Text c="dimmed" size="sm">
-									Account name
-								</Text>
-								<Text fw={600}>{bankDetails?.accountName}</Text>
-							</Group>
-							<Group justify="space-between">
-								<Text c="dimmed" size="sm">
-									BSB
-								</Text>
-								<Text fw={600}>{bankDetails?.bsb}</Text>
-							</Group>
-							<Group justify="space-between">
-								<Text c="dimmed" size="sm">
-									Account number
-								</Text>
-								<Text fw={600}>{bankDetails?.accountNumber}</Text>
-							</Group>
-						</Stack>
-					</Paper>
-
-					{bankDetails?.instructions && <Text size="sm">{bankDetails.instructions}</Text>}
-
-					<Divider />
-
-					<Stack gap={4}>
-						<Text size="sm" fw={600}>
-							Transfer description / reference
+				{bankOrder && (
+					<Stack gap="lg">
+						<Text size="sm">
+							Your order has been created. Transfer the amount below to complete it. These details are
+							also on your orders page.
 						</Text>
-						<Text size="sm" c="dimmed">
-							You must include this reference in your bank transfer so we can match your payment.
-						</Text>
-						<Group gap="xs">
-							<Code block style={{ flex: 1, fontSize: "1.1rem", textAlign: "center" }}>
-								{bankReference}
-							</Code>
-							<CopyButton value={bankReference ?? ""}>
-								{({ copied, copy }) => (
-									<Button
-										variant="light"
-										color={copied ? "green" : "blue"}
-										onClick={copy}
-										leftSection={
-											copied ? <Check width={16} height={16} /> : <Copy width={16} height={16} />
-										}
-										size="sm"
-									>
-										{copied ? "Copied" : "Copy"}
-									</Button>
-								)}
-							</CopyButton>
-						</Group>
+						<BankTransferDetails
+							amountInCents={bankOrder.totalInCents}
+							reference={bankOrder.reference}
+							accountName={bankOrder.bankDetails.accountName}
+							bsb={bankOrder.bankDetails.bsb}
+							accountNumber={bankOrder.bankDetails.accountNumber}
+							instructions={bankOrder.bankDetails.instructions}
+						/>
+						<Button component={Link} href="/account/orders" fullWidth>
+							Go to my orders
+						</Button>
 					</Stack>
-
-					<Divider />
-
-					<Button
-						component={Link}
-						href="/account/orders"
-						fullWidth
-						leftSection={<Box width={16} height={16} />}
-					>
-						View your orders
-					</Button>
-					<Button variant="light" onClick={closeBankModal} fullWidth>
-						Close
-					</Button>
-				</Stack>
+				)}
 			</Modal>
-		</div>
+		</main>
 	);
 }

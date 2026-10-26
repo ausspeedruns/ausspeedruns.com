@@ -16,7 +16,7 @@ interface HeaderNavProps {
 }
 
 export function HeaderNav({ data, auth }: HeaderNavProps) {
-	const cart = useCartStore((state) => state.items);
+	const cartCount = useCartStore((state) => state.items.reduce((sum, item) => sum + item.quantity, 0));
 	const navItems = data?.navItems ?? [];
 
 	return (
@@ -36,9 +36,13 @@ export function HeaderNav({ data, auth }: HeaderNavProps) {
 				</Link>
 			)}
 
-			{cart.length > 0 && (
-				<Link href="/cart" className={styles.link}>
-					<ShoppingCart />({cart.reduce((sum, item) => sum + item.quantity, 0)})
+			{cartCount > 0 && (
+				<Link
+					href="/cart"
+					className={styles.link}
+					aria-label={`Cart, ${cartCount} ${cartCount === 1 ? "item" : "items"}`}
+				>
+					<ShoppingCart aria-hidden />({cartCount})
 				</Link>
 			)}
 

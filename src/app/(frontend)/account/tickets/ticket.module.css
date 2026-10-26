@@ -2,7 +2,6 @@
 	display: flex;
 	align-items: stretch;
 	border: 5px solid var(--ausspeedruns-orange);
-	border-radius: 10px;
 	overflow: hidden;
 	background-color: var(--mantine-color-body);
 
@@ -53,7 +52,6 @@
 			.statusBadge {
 				display: inline-block;
 				padding: 0.5rem 1rem;
-				border-radius: 6px;
 				font-weight: 600;
 				font-size: 0.875rem;
 
@@ -63,8 +61,8 @@
 				}
 
 				&[data-status="paid"] {
-					background-color: var(--mantine-color-yellow-light);
-					color: var(--mantine-color-yellow-light-color);
+					background-color: var(--mantine-color-ausSpeedrunsBlue-light);
+					color: var(--mantine-color-ausSpeedrunsBlue-light-color);
 				}
 
 				&[data-status="picked-up"] {
@@ -107,40 +105,6 @@
 				font-size: 1rem;
 				text-transform: uppercase;
 				letter-spacing: 0.5px;
-			}
-
-			.bankGrid {
-				display: grid;
-				grid-template-columns: 1fr 1fr;
-				gap: 1rem 0.5rem;
-				margin-bottom: 1rem;
-
-				span:nth-child(odd) {
-					font-size: 0.875rem;
-					color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
-					text-transform: uppercase;
-					letter-spacing: 0.5px;
-				}
-
-				.value {
-					font-weight: 600;
-				}
-			}
-
-			.warning,
-			.note {
-				margin: 0;
-				font-size: 0.95rem;
-				line-height: 1.5;
-			}
-
-			.warning {
-				color: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-2));
-			}
-
-			.note {
-				color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
-				font-size: 0.875rem;
 			}
 		}
 	}

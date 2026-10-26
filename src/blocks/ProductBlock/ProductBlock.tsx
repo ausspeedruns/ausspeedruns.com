@@ -1,24 +1,25 @@
+import Link from "next/link";
 import configPromise from "#payload-config";
+import { getPayload } from "payload";
+import { Card, Text, Title } from "@mantine/core";
 import { Media } from "#/components/Media/Media";
 import RichText from "#/components/RichText/RichText";
+import { ClientCarousel } from "#components/ClientCarousel/ClientCarousel.tsx";
+import { AddToCart } from "#components/AddToCart/AddToCart.tsx";
 import type { Product, ProductBlock as ProductBlockProps } from "#/payload-types";
-import { getPayload } from "payload";
-import { ProductVariantActions } from "./ProductVariantActions.tsx";
+import { formatCents } from "#utilities/formatCents.ts";
 
 import styles from "./ProductBlock.module.css";
-import { ClientCarousel } from "#components/ClientCarousel/ClientCarousel.tsx";
-import { Card } from "@mantine/core";
 
-function formatCents(priceInCents?: number | null): string {
-	if (typeof priceInCents !== "number") return "$0.00";
-	return new Intl.NumberFormat("en-AU", {
-		style: "currency",
-		currency: "AUD",
-	}).format(priceInCents / 100);
+function priceLabel(variants: Product["variants"]) {
+	const prices = variants.map((variant) => variant.priceInCents);
+	if (prices.length === 0) return null;
+	const lowest = Math.min(...prices);
+	return prices.some((price) => price !== lowest) ? `From ${formatCents(lowest)}` : formatCents(lowest);
 }
 
 export async function ProductBlock(props: ProductBlockProps) {
-	const { products, showDescription = true, showVariants = true } = props;
+	const { title, products, showDescription = true, showVariants = true } = props;
 
 	if (!products?.length) return null;
 
@@ -48,71 +49,83 @@ export async function ProductBlock(props: ProductBlockProps) {
 		fetchedProducts = result.docs as Product[];
 	}
 
-	const currentTime = new Date().getTime();
+	const now = Date.now();
 
-	const productsToRender = [...selectedProducts, ...fetchedProducts].filter((product) =>
-		product.availableUntil ? new Date(product.availableUntil).getTime() > currentTime : true,
+	const productsToRender = [...selectedProducts, ...fetchedProducts].filter(
+		(product) =>
+			(!product.availableFrom || new Date(product.availableFrom).getTime() <= now) &&
+			(!product.availableUntil || new Date(product.availableUntil).getTime() > now),
 	);
 
 	if (productsToRender.length === 0) return null;
 
 	return (
-		<Card>
-			{productsToRender.map((product) => (
-				<article key={product.id} className={styles.card}>
-					{product.images && (
-						<ClientCarousel>
-							{product.images.map((image, index) => (
-								<Media
-									key={index}
-									resource={image.image}
-									className={styles.media}
-									imgClassName={styles.image}
-									size="(max-width: 768px) 100vw, 50vw"
-								/>
-							))}
-						</ClientCarousel>
-					)}
-					<div className={styles.content}>
-						<div className={styles.headerRow}>
-							<h3 className={styles.productName}>{product.name}</h3>
-							{product.type && <span className={styles.typeTag}>{product.type}</span>}
-						</div>
+		<section className="container">
+			{title && (
+				<Title order={2} mb="lg">
+					{title}
+				</Title>
+			)}
+			<div className={styles.grid}>
+				{productsToRender.map((product) => {
+					const variants = showVariants ? product.variants : product.variants.slice(0, 1);
+					const href = product.slug ? `/product/${product.slug}` : null;
 
-						{showDescription && product.description && (
-							<RichText data={product.description} className={styles.description} enableGutter={false} />
-						)}
+					return (
+						<Card key={product.id} component="article" withBorder padding="lg" className={styles.card}>
+							{!!product.images?.length && (
+								<div className={styles.media}>
+									<ClientCarousel>
+										{product.images.map((image, index) => (
+											<Media
+												key={image.id ?? index}
+												resource={image.image}
+												imgClassName={styles.image}
+												size="(max-width: 768px) 100vw, 33vw"
+											/>
+										))}
+									</ClientCarousel>
+								</div>
+							)}
 
-						{showVariants && !!product.variants?.length && (
-							<ul className={styles.variantList}>
-								{product.variants.map((variant, index) => (
-									<li key={variant.id ?? `${product.id}-${index}`} className={styles.variantRow}>
-										<div className={styles.variantMeta}>
-											<span>{variant.label || "Default"}</span>
-											<span>{formatCents(variant.priceInCents)}</span>
-										</div>
-										<ProductVariantActions
-											productId={product.id}
-											productName={product.name ?? "Product"}
-											variant={variant}
-											payment={product.payment}
-										/>
-									</li>
-								))}
-							</ul>
-						)}
+							<div className={styles.content}>
+								<div>
+									<Text size="xs" c="dimmed" tt="uppercase" fw={600}>
+										{product.type === "ticket" ? "Ticket" : "Merch"}
+									</Text>
+									<Title order={3} size="h4">
+										{href ? (
+											<Link href={href} className={styles.nameLink}>
+												{product.name}
+											</Link>
+										) : (
+											product.name
+										)}
+									</Title>
+									<Text fw={600} mt={4}>
+										{priceLabel(variants)}
+									</Text>
+								</div>
 
-						{!showVariants && !!product.variants?.[0] && (
-							<ProductVariantActions
-								productId={product.id}
-								productName={product.name ?? "Product"}
-								variant={product.variants[0]}
-								payment={product.payment}
-							/>
-						)}
-					</div>
-				</article>
-			))}
-		</Card>
+								{showDescription && product.description && (
+									<RichText
+										data={product.description}
+										className={styles.description}
+										enableGutter={false}
+									/>
+								)}
+
+								<div className={styles.actions}>
+									<AddToCart
+										product={{ id: product.id, name: product.name, payment: product.payment }}
+										variants={variants}
+									/>
+								</div>
+							</div>
+						</Card>
+					);
+				})}
+			</div>
+		</section>
 	);
 }

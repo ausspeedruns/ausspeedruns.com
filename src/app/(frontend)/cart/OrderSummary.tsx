@@ -1,67 +1,109 @@
 "use client";
 
-import { Button, Divider, Group, Paper, Stack, Text, Title } from "@mantine/core";
-import { CreditCard, Building } from "pixelarticons/react";
-
-const currencyFormatter = new Intl.NumberFormat("en-AU", {
-	style: "currency",
-	currency: "AUD",
-});
-
-function formatCurrency(amountInCents: number) {
-	return currencyFormatter.format(amountInCents / 100);
-}
+import Link from "next/link";
+import { Button, Divider, Group, Paper, Skeleton, Stack, Text, Title } from "@mantine/core";
+import { formatCents } from "#utilities/formatCents.ts";
+import type { PaymentMethod } from "./cartLines";
 
 interface OrderSummaryProps {
+	ready: boolean;
 	itemCount: number;
+	lineCount: number;
 	totalInCents: number;
-	disabled: boolean;
-	loading: boolean;
-	onCheckout: (type: "stripe" | "bank") => void;
+	isLoggedIn: boolean;
+	hasProblems: boolean;
+	/** For each payment method, the items that can't be bought with it. */
+	blockedBy: Record<PaymentMethod, string[]>;
+	checkingOut: PaymentMethod | null;
+	onCheckout: (method: PaymentMethod) => void;
+	className?: string;
 }
 
+const METHODS: { method: PaymentMethod; label: string; unavailableLabel: string }[] = [
+	{ method: "stripe", label: "Pay by card", unavailableLabel: "Card payment" },
+	{ method: "bank", label: "Pay by bank transfer", unavailableLabel: "Bank transfer" },
+];
+
 export function OrderSummary(props: OrderSummaryProps) {
+	const empty = props.itemCount === 0;
+	const firstAvailable = METHODS.find(({ method }) => props.blockedBy[method].length === 0)?.method;
+
 	return (
-		<Paper p="xl" shadow="xs" withBorder style={{ position: "sticky", top: "6rem" }}>
+		<Paper p="lg" withBorder className={props.className}>
 			<Stack gap="md">
-				<div>
-					<Text c="dimmed" size="sm">
-						Order summary
+				<Title order={2} size="h4">
+					Summary
+				</Title>
+
+				<Group justify="space-between" align="baseline">
+					<Text>
+						Total{" "}
+						{props.ready && !empty && (
+							<Text span c="dimmed" size="sm">
+								({props.itemCount} {props.itemCount === 1 ? "item" : "items"})
+							</Text>
+						)}
 					</Text>
-					<Title order={2} mt={4}>
-						{props.itemCount} {props.itemCount === 1 ? "item" : "items"}
-					</Title>
-				</div>
+					{props.ready ? (
+						<Text fw={700} size="xl">
+							{formatCents(props.totalInCents)}
+						</Text>
+					) : (
+						<Skeleton height={28} width={96} />
+					)}
+				</Group>
 
 				<Divider />
 
-				<Group justify="space-between">
-					<Text fw={700}>Total</Text>
-					<Title order={3}>{formatCurrency(props.totalInCents)}</Title>
-				</Group>
-
-				<Button
-					fullWidth
-					leftSection={<CreditCard width={16} height={16} />}
-					size="md"
-					disabled={props.disabled}
-					loading={props.loading}
-					onClick={() => props.onCheckout("stripe")}
-				>
-					Pay with card
-				</Button>
-
-				<Button
-					fullWidth
-					leftSection={<Building width={16} height={16} />}
-					size="md"
-					variant="light"
-					disabled={props.disabled}
-					loading={props.loading}
-					onClick={() => props.onCheckout("bank")}
-				>
-					Bank Transfer
-				</Button>
+				{!props.isLoggedIn ? (
+					<Stack gap="xs">
+						<Button component={Link} href="/login?redirect=/cart" fullWidth disabled={empty}>
+							Log in to checkout
+						</Button>
+						<Text size="sm" c="dimmed">
+							Orders and tickets are attached to your account. Your cart will still be here after you log
+							in.
+						</Text>
+					</Stack>
+				) : (
+					<Stack gap="sm">
+						{props.hasProblems && (
+							<Text size="sm" c="red">
+								Some items in your cart need attention before you can check out.
+							</Text>
+						)}
+						{METHODS.map(({ method, label, unavailableLabel }) => {
+							const blockedBy = props.blockedBy[method];
+							const blocked = blockedBy.length > 0;
+							return (
+								<Stack gap={4} key={method}>
+									<Button
+										fullWidth
+										variant={method === firstAvailable ? "filled" : "default"}
+										disabled={
+											!props.ready ||
+											empty ||
+											blocked ||
+											props.hasProblems ||
+											props.checkingOut !== null
+										}
+										loading={props.checkingOut === method}
+										onClick={() => props.onCheckout(method)}
+									>
+										{label}
+									</Button>
+									{blocked && (
+										<Text size="xs" c="dimmed">
+											{blockedBy.length === props.lineCount
+												? `${unavailableLabel} isn't available for ${props.lineCount === 1 ? "this item" : "these items"}.`
+												: `${unavailableLabel} isn't available for: ${blockedBy.join(", ")}`}
+										</Text>
+									)}
+								</Stack>
+							);
+						})}
+					</Stack>
+				)}
 			</Stack>
 		</Paper>
 	);

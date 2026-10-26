@@ -9,8 +9,6 @@ import type { Header } from "#/payload-types";
 export async function Header() {
 	const headerData: Header = await getCachedGlobal("header", 1)();
 
-	console.log(headerData); 
-
 	const payload = await getPayload({ config });
 	const userHeaders = await headers();
 	const auth = await payload.auth({ headers: userHeaders });

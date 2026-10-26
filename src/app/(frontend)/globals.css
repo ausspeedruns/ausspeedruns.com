@@ -76,10 +76,14 @@ body {
  */
 html:root[data-mantine-color-scheme="light"] {
 	--mantine-color-body: #eef1f3;
+
+	--card-background: hsl(205, 100%, 92%);
 }
 
 html:root[data-mantine-color-scheme="dark"] {
 	--mantine-color-body: #0b1220;
+
+	--card-background: #090b11;
 }
 
 [data-mantine-color-scheme="dark"] {

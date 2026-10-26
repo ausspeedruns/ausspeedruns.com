@@ -1,126 +1,92 @@
-import type { Order as OrderType } from "#payload-types.ts";
-import { Badge, Divider, Group, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from "@mantine/core";
-import { Box, Building, Calendar, CreditCard, Dollar } from "pixelarticons/react";
+import type { Order as OrderType, PaymentSetting } from "#payload-types.ts";
+import { Badge, Divider, Group, Paper, Stack, Text, Title } from "@mantine/core";
+import { BankTransferDetails } from "#components/BankTransferDetails/BankTransferDetails.tsx";
+import { formatCents } from "#utilities/formatCents.ts";
 import { OrderItem } from "./order-item";
 
 interface OrderProps {
 	order: OrderType;
+	bankTransfer?: PaymentSetting["bankTransfer"];
 }
-
-const currencyFormatter = new Intl.NumberFormat("en-AU", {
-	style: "currency",
-	currency: "AUD",
-});
 
 const dateFormatter = new Intl.DateTimeFormat("en-AU", {
 	dateStyle: "medium",
 	timeStyle: "short",
 });
 
-function formatOrderStatus(status: OrderType["status"]) {
-	if (status === "completed") return "Completed";
-	if (status === "collected") return "Collected";
-	if (status === "cancelled") return "Cancelled";
-	return "Pending";
-}
+const STATUS: Record<OrderType["status"], { label: string; color: string }> = {
+	pending: { label: "Awaiting payment", color: "yellow" },
+	completed: { label: "Paid", color: "ausSpeedrunsBlue" },
+	collected: { label: "Collected", color: "green" },
+	cancelled: { label: "Cancelled", color: "gray" },
+};
 
 function formatPurchaseType(purchaseType: OrderType["purchaseType"]) {
 	if (purchaseType === "bankTransfer") return "Bank transfer";
 	if (purchaseType === "stripe") return "Card";
-	if (purchaseType === "other") return "Other";
-	return "Unknown";
+	return "Other";
 }
 
-function getStatusColor(status: OrderType["status"]) {
-	if (status === "completed") return "blue";
-	if (status === "collected") return "green";
-	if (status === "cancelled") return "red";
-	return "yellow";
-}
-
-export function Order(props: OrderProps) {
-	const { order } = props;
+export function Order({ order, bankTransfer }: OrderProps) {
 	const items = order.items ?? [];
-
-	const totalInCents = items.reduce((total, item) => {
-		return total + item.quantity * (item.unitPriceInCents ?? 0);
-	}, 0);
-
+	const totalInCents =
+		order.totalInCents >= 0
+			? order.totalInCents
+			: items.reduce((sum, item) => sum + item.quantity * (item.unitPriceInCents ?? 0), 0);
 	const totalQuantity = items.reduce((total, item) => total + item.quantity, 0);
-	const purchaseType = formatPurchaseType(order.purchaseType);
-	const PurchaseIcon = order.purchaseType === "bankTransfer" ? Building : CreditCard;
+	const status = STATUS[order.status] ?? STATUS.pending;
+	const awaitingTransfer = order.status === "pending" && order.purchaseType === "bankTransfer" && !!order.reference;
 
 	return (
-		<Paper mt="md" p="md" radius="md" shadow="xs" withBorder>
-			<Stack gap="md">
-				<Group justify="space-between" align="flex-start" wrap="nowrap">
-					<div>
-						<Title order={3}>{order.reference}</Title>
-						<Group gap={6} mt={4}>
-							<Calendar width={14} height={14} />
-							<Text size="sm" c="dimmed">
-								Placed on {dateFormatter.format(new Date(order.createdAt))}
-							</Text>
-						</Group>
-					</div>
-					<Badge color={getStatusColor(order.status)} variant="light">
-						{formatOrderStatus(order.status)}
-					</Badge>
-				</Group>
-
-				<SimpleGrid cols={{ base: 1, sm: 3 }} spacing="sm">
-					<Group gap="xs" wrap="nowrap">
-						<ThemeIcon color="grape" size="md" variant="light">
-							<PurchaseIcon width={16} height={16} />
-						</ThemeIcon>
-						<div>
-							<Text size="xs" c="dimmed" tt="uppercase" fw={700}>
-								Purchase method
-							</Text>
-							<Text fw={600}>{purchaseType}</Text>
-						</div>
-					</Group>
-					<Group gap="xs" wrap="nowrap">
-						<ThemeIcon color="indigo" size="md" variant="light">
-							<Box width={16} height={16} />
-						</ThemeIcon>
-						<div>
-							<Text size="xs" c="dimmed" tt="uppercase" fw={700}>
-								Items
-							</Text>
-							<Text fw={600}>{totalQuantity}</Text>
-						</div>
-					</Group>
-					<Group gap="xs" wrap="nowrap">
-						<ThemeIcon color="teal" size="md" variant="light">
-							<Dollar width={16} height={16} />
-						</ThemeIcon>
-						<div>
-							<Text size="xs" c="dimmed" tt="uppercase" fw={700}>
-								Order total
-							</Text>
-							<Text fw={700}>{currencyFormatter.format(totalInCents / 100)}</Text>
-						</div>
-					</Group>
-				</SimpleGrid>
-
-				<Divider />
-
-				{items.length === 0 ? (
-					<Text size="sm" c="dimmed">
-						No line items were found for this order.
+		<Paper p="lg" withBorder>
+			<Group justify="space-between" align="flex-start" wrap="nowrap">
+				<div>
+					<Text ff="monospace" fw={700} size="lg">
+						{order.reference}
 					</Text>
-				) : (
-					<Stack gap="xs">
-						{items.map((item) => (
-							<OrderItem
-								key={item.id ?? `${String(item.product)}-${item.variantLabel ?? "default"}`}
-								item={item}
-							/>
-						))}
-					</Stack>
-				)}
-			</Stack>
+					<Text size="sm" c="dimmed">
+						{dateFormatter.format(new Date(order.createdAt))} · {formatPurchaseType(order.purchaseType)} ·{" "}
+						{totalQuantity} {totalQuantity === 1 ? "item" : "items"}
+					</Text>
+				</div>
+				<Stack gap={4} align="flex-end">
+					<Badge color={status.color} variant="light">
+						{status.label}
+					</Badge>
+					<Text fw={700}>{formatCents(totalInCents)}</Text>
+				</Stack>
+			</Group>
+
+			<Divider my="md" />
+
+			{items.length === 0 ? (
+				<Text size="sm" c="dimmed">
+					No items were found for this order.
+				</Text>
+			) : (
+				<Stack gap={0}>
+					{items.map((item, index) => (
+						<OrderItem key={item.id ?? index} item={item} />
+					))}
+				</Stack>
+			)}
+
+			{awaitingTransfer && (
+				<>
+					<Divider my="md" />
+					<Title order={3} size="h5" mb="sm">
+						Waiting for your bank transfer
+					</Title>
+					<BankTransferDetails
+						amountInCents={totalInCents}
+						reference={order.reference!}
+						accountName={bankTransfer?.accountName}
+						bsb={bankTransfer?.bsb}
+						accountNumber={bankTransfer?.accountNumber}
+						instructions={bankTransfer?.instructions}
+					/>
+				</>
+			)}
 		</Paper>
 	);
 }

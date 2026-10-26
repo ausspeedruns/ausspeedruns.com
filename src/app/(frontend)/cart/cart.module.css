@@ -1,11 +1,16 @@
-.pageShell {
-	width: min(100%, 1520px);
-	margin-inline: auto;
-	padding: 1.5rem 1rem 3rem;
+.page {
+	padding-top: 2.5rem;
+	padding-bottom: 4rem;
 }
 
-@media (min-width: 48rem) {
-	.pageShell {
-		padding: 3rem 2rem;
-	}
+.list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border-top: 1px solid var(--mantine-color-default-border);
+}
+
+.summary {
+	position: sticky;
+	top: 6rem;
 }

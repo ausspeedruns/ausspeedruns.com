@@ -1,146 +1,93 @@
 "use client";
 
-import type { Media as MediaType, Product } from "#/payload-types";
-import type { CartItem as CartItemType } from "#stores/useCartStore.ts";
+import Link from "next/link";
+import { ActionIcon, Button, Skeleton, Text } from "@mantine/core";
+import { Minus, Plus } from "pixelarticons/react";
 import { Media } from "#components/Media/Media.tsx";
-import { ActionIcon, Badge, Card, Divider, Group, Paper, Skeleton, Stack, Text } from "@mantine/core";
-import { Minus, Package, Plus, MemoryStick, Trash } from "pixelarticons/react";
-import { useEffect, useState } from "react";
+import { formatCents } from "#utilities/formatCents.ts";
+import type { CartLine } from "./cartLines";
 
-const currencyFormatter = new Intl.NumberFormat("en-AU", {
-	style: "currency",
-	currency: "AUD",
-});
-
-function formatCurrency(amountInCents: number) {
-	return currencyFormatter.format(amountInCents / 100);
-}
+import styles from "./CartItem.module.css";
 
 interface CartItemProps {
-	item: CartItemType;
+	line: CartLine;
+	loading: boolean;
 	onRemove: (id: string) => void;
 	onUpdateQuantity: (id: string, quantity: number) => void;
 }
 
-export function CartItem({ item, onRemove, onUpdateQuantity }: CartItemProps) {
-	const [product, setProduct] = useState<Product | null>(null);
-	const [loading, setLoading] = useState(true);
-
-	useEffect(() => {
-		fetch(`/api/products/${item.productId}?depth=1`)
-			.then((res) => (res.ok ? res.json() : null))
-			.then((data: Product | null) => setProduct(data))
-			.catch(() => {})
-			.finally(() => setLoading(false));
-	}, [item.productId]);
-
-	const lineTotalInCents = item.priceInCents * item.quantity;
-	const productImage =
-		product?.images && typeof product.images[0] === "object" ? (product.images[0].image as MediaType) : null;
-	const productType = product?.type;
+export function CartItem({ line, loading, onRemove, onUpdateQuantity }: CartItemProps) {
+	const { item, product, variantLabel, priceInCents, maxQuantity, missing, problem } = line;
+	const href = product?.slug ? `/product/${product.slug}` : null;
 
 	return (
-		<Card padding="lg" radius="lg" shadow="xs" withBorder>
-			<Stack gap="md">
-				<Group justify="space-between" align="flex-start" wrap="nowrap">
-					<Group gap="sm" align="flex-start" style={{ flex: 1 }}>
-						{loading ? (
-							<Skeleton radius="md" style={{ width: 72, height: 72, flexShrink: 0 }} />
-						) : productImage ? (
-							<div
-								style={{
-									position: "relative",
-									width: 72,
-									height: 72,
-									borderRadius: 8,
-									overflow: "hidden",
-									flexShrink: 0,
-								}}
-							>
-								<Media fill resource={productImage} imgClassName="object-cover" />
-							</div>
-						) : null}
+		<li className={styles.row} data-problem={problem ? true : undefined}>
+			<div className={styles.thumb}>
+				{loading ? (
+					<Skeleton width="100%" height="100%" radius={0} />
+				) : product?.image ? (
+					<Media fill resource={product.image} size="72px" />
+				) : null}
+			</div>
 
-						<Stack gap={4} style={{ flex: 1 }}>
-							{loading ? (
-								<>
-									<Skeleton height={16} width={64} radius="sm" />
-									<Skeleton height={20} width={140} radius="sm" />
-								</>
-							) : (
-								<>
-									{productType && (
-										<Badge
-											size="sm"
-											variant="light"
-											leftSection={
-												productType === "ticket" ? (
-													<MemoryStick width={10} height={10} />
-												) : (
-													<Package width={10} height={10} />
-												)
-											}
-										>
-											{productType === "ticket" ? "Ticket" : "Merchandise"}
-										</Badge>
-									)}
-									<Text fw={600}>{item.name}</Text>
-								</>
-							)}
-						</Stack>
-					</Group>
+			<div className={styles.details}>
+				{href ? (
+					<Link href={href} className={styles.name}>
+						{line.name}
+					</Link>
+				) : (
+					<span className={styles.name}>{line.name}</span>
+				)}
+				{!missing && (
+					<Text size="sm" c="dimmed">
+						{variantLabel ? `${variantLabel} · ` : ""}
+						{formatCents(priceInCents)} each
+					</Text>
+				)}
+				{problem && (
+					<Text size="sm" c="red">
+						{problem}
+					</Text>
+				)}
+				<Button
+					variant="subtle"
+					color="gray"
+					size="compact-xs"
+					ml={-8}
+					onClick={() => onRemove(item.id)}
+					aria-label={`Remove ${line.name} from cart`}
+				>
+					Remove
+				</Button>
+			</div>
 
-					<ActionIcon
-						aria-label={`Remove ${item.name} from cart`}
-						color="red"
-						variant="subtle"
-						onClick={() => onRemove(item.id)}
-					>
-						<Trash width={16} height={16} />
-					</ActionIcon>
-				</Group>
-
-				<Divider />
-
-				<Group justify="space-between" align="end" wrap="wrap">
-					<Stack gap={6}>
-						<Text c="dimmed" size="sm">
-							Unit price
-						</Text>
-						<Text fw={700}>{formatCurrency(item.priceInCents)}</Text>
-					</Stack>
-
-					<Group gap="sm">
+			{!missing && (
+				<>
+					<div className={styles.stepper}>
 						<ActionIcon
-							aria-label={`Decrease quantity for ${item.name}`}
+							aria-label={`Decrease quantity of ${line.name}`}
 							disabled={item.quantity <= 1}
 							variant="default"
 							onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
 						>
-							<Minus width={16} height={16} />
+							<Minus width={14} height={14} />
 						</ActionIcon>
-						<Paper px="md" py="xs" radius="md" withBorder>
-							<Text fw={600} ta="center">
-								{item.quantity}
-							</Text>
-						</Paper>
+						<span className={styles.quantity} aria-live="polite">
+							{item.quantity}
+						</span>
 						<ActionIcon
-							aria-label={`Increase quantity for ${item.name}`}
+							aria-label={`Increase quantity of ${line.name}`}
+							disabled={item.quantity >= maxQuantity}
 							variant="default"
 							onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
 						>
-							<Plus width={16} height={16} />
+							<Plus width={14} height={14} />
 						</ActionIcon>
-					</Group>
+					</div>
 
-					<Stack gap={6} align="flex-end">
-						<Text c="dimmed" size="sm">
-							Line total
-						</Text>
-						<Text fw={700}>{formatCurrency(lineTotalInCents)}</Text>
-					</Stack>
-				</Group>
-			</Stack>
-		</Card>
+					<div className={styles.total}>{formatCents(priceInCents * item.quantity)}</div>
+				</>
+			)}
+		</li>
 	);
 }

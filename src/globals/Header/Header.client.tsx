@@ -33,7 +33,7 @@ export function HeaderClient({ data }: HeaderClientProps) {
 	return (
 		<header className={styles.header} {...(theme ? { "data-mantine-color-scheme": theme } : {})}>
 			<div className={styles.headerContent}>
-				<Link href="/">
+				<Link href="/" className={styles.logoLink} aria-label="AusSpeedruns home">
 					<Logo className={styles.logo} />
 				</Link>
 				<HeaderNav data={data} />

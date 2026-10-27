@@ -5,14 +5,6 @@
 	color: #fff;
 }
 
-.show {
-	display: block;
-}
-
-.hide {
-	display: none;
-}
-
 .container {
 	width: 100%;
 	margin-right: auto;

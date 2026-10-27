@@ -16,13 +16,13 @@ export async function Footer() {
 	return (
 		<footer className={styles.footer}>
 			<div className={`container ${styles.innerContainer}`}>
-				<Link href="/">
+				<Link href="/" className={styles.logoLink} aria-label="AusSpeedruns home">
 					<Logo className={styles.logo} />
 				</Link>
 
 				<div className={styles.navWrapper}>
 					<ThemeSelector />
-					<nav className={styles.nav}>
+					<nav className={styles.nav} aria-label="Footer">
 						{navItems.map(({ link }, i) => {
 							return <CMSLink className={styles.link} key={i} {...link} />;
 						})}

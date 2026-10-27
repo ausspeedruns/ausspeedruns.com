@@ -1,16 +1,16 @@
 "use client";
 
-import type { PayloadAdminBarProps, PayloadMeUser } from "@payloadcms/admin-bar";
+import type { PayloadAdminBarProps } from "@payloadcms/admin-bar";
 
 import { cn } from "#/utilities/ui";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { PayloadAdminBar } from "@payloadcms/admin-bar";
-import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import styles from "./AdminBar.module.css";
 
 import { getClientSideURL } from "#/utilities/getURL";
+import { useSessionStore } from "#stores/useSessionStore.ts";
 
 const baseClass = "admin-bar";
 
@@ -36,23 +36,17 @@ function Title() {
 export function AdminBar(props: { adminBarProps?: PayloadAdminBarProps }) {
 	const { adminBarProps } = props || {};
 	const segments = useSelectedLayoutSegments();
-	const [show, setShow] = useState(false);
+	// Only staff (anyone allowed into the admin panel) get the bar; the session is loaded by the header
+	const canAccessAdmin = useSessionStore((state) => state.canAccessAdmin);
 	const collection = (
 		collectionLabels[segments?.[1] as keyof typeof collectionLabels] ? segments[1] : "pages"
 	) as keyof typeof collectionLabels;
 	const router = useRouter();
 
-	const onAuthChange = React.useCallback((user: PayloadMeUser) => {
-		setShow(Boolean(user?.id));
-	}, []);
+	if (!canAccessAdmin) return null;
 
 	return (
-		<div
-			className={cn(baseClass, styles.adminBar, {
-				[styles.show]: show,
-				[styles.hide]: !show,
-			})}
-		>
+		<div className={cn(baseClass, styles.adminBar)}>
 			<div className={styles.container}>
 				<PayloadAdminBar
 					{...adminBarProps}
@@ -69,7 +63,6 @@ export function AdminBar(props: { adminBarProps?: PayloadAdminBarProps }) {
 						singular: collectionLabels[collection]?.singular || "Page",
 					}}
 					logo={<Title />}
-					onAuthChange={onAuthChange}
 					onPreviewExit={() => {
 						fetch("/next/exit-preview").then(() => {
 							router.push("/");

@@ -21,7 +21,24 @@
 }
 
 .headerContent {
-	padding: 2rem 0;
+	padding: 1rem 0;
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+
+	@media (min-width: 48em) {
+		padding: 2rem 0;
+	}
+}
+
+.logoLink {
+	display: flex;
+	min-width: 0;
+	flex-shrink: 1;
+}
+
+.logo {
+	height: 1.5rem;
+	max-width: 100%;
 }

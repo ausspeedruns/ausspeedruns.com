@@ -5,6 +5,9 @@ import styles from "./CurrentSubmissionCard.module.css";
 import type { GameSubmissionResults } from "../submissionTypes";
 import type { UseFormReturnType } from "@mantine/form";
 import { validateUrl } from "#fields/validators.ts";
+import { encodeCode128B } from "./code128";
+
+const BARCODE = encodeCode128B("AusSpeedruns");
 
 type CurrentSubmissionCardProps = {
 	currentStep: number;
@@ -131,7 +134,17 @@ export default function CurrentSubmissionCard(props: CurrentSubmissionCardProps)
 
 			<hr />
 
-			<div className={styles.barcode} aria-hidden />
+			<svg
+				className={styles.barcode}
+				viewBox={`0 0 ${BARCODE.width} 1`}
+				preserveAspectRatio="none"
+				shapeRendering="crispEdges"
+				aria-hidden
+			>
+				{BARCODE.bars.map((bar) => (
+					<rect key={bar.x} x={bar.x} width={bar.width} height={1} />
+				))}
+			</svg>
 			<p className={styles.footer}>
 				{props.submitted ? "Thank you for submitting!" : `Step ${Math.min(props.currentStep + 1, 5)} of 5`}
 			</p>

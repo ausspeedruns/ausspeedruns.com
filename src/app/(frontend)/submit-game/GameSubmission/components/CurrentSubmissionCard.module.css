@@ -138,19 +138,11 @@
 	}
 
 	.barcode {
+		display: block;
+		width: calc(100% - 1rem);
 		height: 2.25rem;
 		margin: 0.25rem 0.5rem 0.5rem;
-		background: repeating-linear-gradient(
-			90deg,
-			var(--receipt-ink) 0 2px,
-			transparent 2px 4px,
-			var(--receipt-ink) 4px 5px,
-			transparent 5px 8px,
-			var(--receipt-ink) 8px 11px,
-			transparent 11px 12px,
-			var(--receipt-ink) 12px 13px,
-			transparent 13px 16px
-		);
+		fill: var(--receipt-ink);
 	}
 
 	.footer {

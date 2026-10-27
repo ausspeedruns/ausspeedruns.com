@@ -2,19 +2,18 @@ import React from "react";
 import type { DonationTrackerBlock as DonationTrackerBlockProps, Incentive, Run } from "#/payload-types";
 import { getPayload } from "payload";
 import configPromise from "#payload-config";
-import { getRunCategoryLabel, getRunDisplayName } from "#/utilities/runDisplay";
 import { formatCurrency, resolveEvent } from "#/utilities/events/postEventData";
-import { parseIncentiveResult, type IncentiveResult } from "#/utilities/events/incentiveResults";
-import { IncentiveResultCard } from "#/components/Incentives/IncentiveResultCard";
+import {
+	getIncentiveDescription,
+	getIncentiveRunLabel,
+	parseIncentiveResult,
+	type IncentiveResult,
+} from "#/utilities/events/incentiveResults";
+import { IncentiveCard } from "#/components/Incentives/IncentiveCard";
 import { Container, Group, Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import styles from "./DonationTrackerBlock.module.css";
 
 type ParsedEntry = { incentive: Incentive; result: IncentiveResult };
-
-function runLabel(run: Incentive["run"]): string | null {
-	if (!run || typeof run !== "object") return null;
-	return `${getRunDisplayName(run)} – ${getRunCategoryLabel(run)}`;
-}
 
 function GroupHeader({ title, children }: { title: string; children: React.ReactNode }) {
 	return (
@@ -65,12 +64,16 @@ export async function DonationTrackerBlock(props: DonationTrackerBlockProps) {
 	const raised = eventData.postEvent?.raised;
 
 	const renderGrid = (entries: typeof results) => (
-		<SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing="sm">
+		<SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing="sm" className={styles.grid}>
 			{entries.map(({ incentive, result }) => (
-				<IncentiveResultCard
+				<IncentiveCard
 					key={incentive.id}
+					size="sm"
 					title={incentive.title}
-					label={runLabel(incentive.run)}
+					runLabel={getIncentiveRunLabel(incentive.run)}
+					description={getIncentiveDescription(incentive)}
+					scheduledTime={typeof incentive.run === "object" ? incentive.run?.scheduledTime : null}
+					isActive={incentive.isActive ?? true}
 					result={result}
 				/>
 			))}

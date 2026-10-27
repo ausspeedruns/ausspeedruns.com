@@ -423,3 +423,8 @@
 		background: var(--mantine-primary-color-light);
 	}
 }
+
+.incentives {
+	/* Bid war names may overflow their cards on purpose, but shouldn't make the page scroll sideways */
+	overflow-x: clip;
+}

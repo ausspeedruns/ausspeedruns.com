@@ -43,7 +43,7 @@ export async function getEventLiveData(eventId: number): Promise<LiveData> {
 			depth: 2,
 			limit: 200,
 			pagination: false,
-			select: { title: true, type: true, data: true, run: true },
+			select: { title: true, type: true, description: true, notes: true, data: true, run: true },
 			populate: {
 				runs: { type: true, title: true, game: true, category: true, scheduledTime: true, estimate: true },
 				games: { name: true },

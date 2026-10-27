@@ -89,6 +89,7 @@ describe("selectUpcomingIncentives", () => {
 	const incentive = (id: number, start: number | null, end: number | null): LiveIncentive => ({
 		id,
 		title: `Incentive ${id}`,
+		description: null,
 		runLabel: null,
 		scheduledTime: start === null ? null : iso(start),
 		endTime: end === null ? null : iso(end),
@@ -166,5 +167,13 @@ describe("serialisers", () => {
 
 		expect(live).toMatchObject({ runLabel: "Celeste – Any%", scheduledTime: iso(0), endTime: iso(1) });
 		expect(toLiveIncentive({ id: 2, title: "Broken", type: "goal", data: null } as Incentive)).toBeNull();
+		expect(
+			toLiveIncentive({
+				id: 3,
+				title: "Name the file",
+				type: "war",
+				data: { options: [] },
+			} as unknown as Incentive)?.result,
+		).toEqual({ kind: "war", options: [], total: 0 });
 	});
 });

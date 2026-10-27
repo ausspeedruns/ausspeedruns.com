@@ -3,7 +3,12 @@ import { relationId } from "#/access/helpers";
 import { getGameName, getRunDisplayName } from "#/utilities/runDisplay";
 import { sortChildren } from "#/utilities/runs/medley";
 import { estimateToMs } from "#/utilities/schedule/timing";
-import { parseIncentiveResult, type IncentiveResult } from "./incentiveResults";
+import {
+	getIncentiveDescription,
+	getIncentiveRunLabel,
+	parseIncentiveResult,
+	type IncentiveResult,
+} from "./incentiveResults";
 
 export interface LiveRunner {
 	name: string;
@@ -28,6 +33,7 @@ export interface LiveRun {
 export interface LiveIncentive {
 	id: number;
 	title: string;
+	description: string | null;
 	runLabel: string | null;
 	scheduledTime: string | null;
 	/** When the incentive's run is expected to finish. Null if unknown. */
@@ -180,9 +186,8 @@ export function toLiveIncentive(incentive: Incentive): LiveIncentive | null {
 	return {
 		id: incentive.id,
 		title: incentive.title,
-		runLabel: run
-			? [getRunDisplayName(run), run.type === "medley" ? null : run.category].filter(Boolean).join(" – ")
-			: null,
+		description: getIncentiveDescription(incentive),
+		runLabel: getIncentiveRunLabel(run),
 		scheduledTime,
 		endTime:
 			scheduledTime && estimateMs !== null

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { Anchor, Badge, Container, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
-import { IncentiveResultCard } from "#/components/Incentives/IncentiveResultCard";
+import { IncentiveCard } from "#/components/Incentives/IncentiveCard";
 import { getLiveState, selectUpcomingIncentives, type LiveData } from "#/utilities/events/liveSchedule";
 import { useNow } from "#/utilities/react/useNow";
 import { HeroActions } from "./HeroActions";
@@ -159,20 +159,21 @@ export function EventLiveClient({
 									Donate and <strong>mention the incentive in your donation message</strong> to put
 									your money towards it.
 								</Text>
-								<SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="sm">
+								<SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="sm" className={styles.incentives}>
 									{incentives.map((incentive) => (
-										<IncentiveResultCard
+										<IncentiveCard
 											key={incentive.id}
+											size="sm"
 											title={incentive.title}
-											label={incentive.runLabel}
-											meta={
+											runLabel={incentive.runLabel}
+											description={incentive.description}
+											time={
 												incentive.scheduledTime ? (
 													<span suppressHydrationWarning>
 														{formatRelative(incentive.scheduledTime, now)}
 													</span>
 												) : undefined
 											}
-											leaderLabel="Leading"
 											result={incentive.result}
 										/>
 									))}

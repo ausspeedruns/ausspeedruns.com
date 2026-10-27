@@ -8,11 +8,13 @@ import payloadConfig from "#payload-config";
 import type { Incentive, Media } from "#/payload-types";
 import { getMediaUrl } from "#/utilities/getMediaUrl";
 import { findCanonicalCase } from "#utilities/caseInsensitive.ts";
-import { getRunDisplayName, getRunCategoryLabel } from "#utilities/runDisplay.ts";
-import { validateIncentiveData, type Goal as GoalData, type War as WarData } from "#utilities/schedule/incentives.ts";
-import { Goal } from "./components/Goal";
-import { War } from "./components/War";
-import type { IncentiveItem } from "./incentiveType";
+import {
+	getIncentiveDescription,
+	getIncentiveRunLabel,
+	parseIncentiveResult,
+	type IncentiveResult,
+} from "#/utilities/events/incentiveResults";
+import { IncentiveCard } from "#/components/Incentives/IncentiveCard";
 import styles from "./page.module.css";
 
 // Totals change throughout an event, so regenerate the page at most a minute after it goes stale
@@ -24,43 +26,39 @@ interface URLProps {
 	}>;
 }
 
-function toIncentiveItem(incentive: Incentive): IncentiveItem | null {
-	if (validateIncentiveData(incentive.data, incentive.type) !== true || !incentive.data) return null;
+interface IncentiveItem {
+	id: number;
+	title: string;
+	description: string | null;
+	isActive: boolean;
+	runLabel: string | null;
+	scheduledTime: string | null;
+	result: IncentiveResult;
+}
 
-	const run = incentive.run && typeof incentive.run === "object" ? incentive.run : null;
-	const base = {
+function toIncentiveItem(incentive: Incentive): IncentiveItem | null {
+	const result = parseIncentiveResult(incentive);
+	if (!result) return null;
+
+	return {
 		id: incentive.id,
 		title: incentive.title,
-		// Legacy incentives keep their public blurb in notes
-		description: incentive.description || incentive.notes || null,
+		description: getIncentiveDescription(incentive),
 		isActive: incentive.isActive ?? true,
-		run: run
-			? {
-					name: getRunDisplayName(run),
-					category: getRunCategoryLabel(run),
-					scheduledTime: run.scheduledTime ?? null,
-				}
-			: null,
+		runLabel: getIncentiveRunLabel(incentive.run),
+		scheduledTime: (typeof incentive.run === "object" && incentive.run?.scheduledTime) || null,
+		result,
 	};
-
-	return incentive.type === "goal"
-		? { ...base, type: "goal", data: incentive.data as unknown as GoalData }
-		: { ...base, type: "war", data: incentive.data as unknown as WarData };
 }
 
 function getScheduledTimeValue(incentive: IncentiveItem): number {
-	const parsedTime = incentive.run?.scheduledTime ? Date.parse(incentive.run.scheduledTime) : Number.NaN;
+	const parsedTime = incentive.scheduledTime ? Date.parse(incentive.scheduledTime) : Number.NaN;
 	return Number.isNaN(parsedTime) ? Number.MAX_SAFE_INTEGER : parsedTime;
 }
 
-function renderIncentive(incentive: IncentiveItem, highlighted = false) {
-	if (incentive.type === "war") {
-		return <War key={incentive.id} incentive={incentive} highlighted={highlighted} />;
-	}
-
-	return <Goal key={incentive.id} incentive={incentive} highlighted={highlighted} />;
+function renderIncentive({ id, ...incentive }: IncentiveItem, highlighted = false) {
+	return <IncentiveCard key={id} {...incentive} highlighted={highlighted} />;
 }
-
 function getMediaObject(value?: number | Media | null): Media | null {
 	return value && typeof value === "object" && value.url ? value : null;
 }

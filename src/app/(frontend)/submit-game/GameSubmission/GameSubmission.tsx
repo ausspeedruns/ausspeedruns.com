@@ -1,12 +1,15 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./GameSubmission.module.css";
 
 import { Checkbox, Stepper, Paper, Button, Select } from "@mantine/core";
+import { ChevronLeft, ChevronRight, Upload } from "pixelarticons/react";
 import type { GameSubmissionResults } from "./submissionTypes";
 import CurrentSubmissionCard from "./components/CurrentSubmissionCard";
 import { createSubmission } from "./gameSubmissionAction";
+import { getStepErrors } from "./validateSubmission";
+import { getEventDays } from "#/utilities/getEventDays";
 import { GameInfo } from "./steps/GameInfoStep";
 import { RunInfo } from "./steps/RunInfoStep";
 import { Availability } from "./steps/AvailabilityStep";
@@ -15,7 +18,15 @@ import { SubmissionResults } from "./steps/ResultsStep";
 import { RaceCoop } from "./steps/RaceCoopStep";
 import { useForm } from "@mantine/form";
 import type { OldSubmission } from "./components/PreviousSubmissions";
-import type { Submission } from "#payload-types.ts";
+import type { Event, Submission } from "#payload-types.ts";
+
+const STEPS = [
+	{ label: "Game", description: "Title & platform" },
+	{ label: "Speedrun", description: "Category & estimate" },
+	{ label: "Availability", description: "Event days" },
+	{ label: "Race/Co-op", description: "Optional" },
+	{ label: "Submit", description: "Review & confirm" },
+];
 
 interface GameSubmissionsProps {
 	availableEvents: {
@@ -26,7 +37,7 @@ interface GameSubmissionsProps {
 		startDate: string;
 		endDate: string;
 		eventTimezone: string;
-		submissionInstructions: any | null;
+		submissionInstructions: Event["submissionInstructions"];
 	}[];
 	oldSubmissions: OldSubmission[];
 }
@@ -35,7 +46,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 	const [loading, setLoading] = useState(false);
 	const [submissionResults, setSubmissionResults] = useState<Submission | null>(null);
 	const form = useForm<GameSubmissionResults>({
-		mode: "uncontrolled",
+		mode: "controlled",
 		initialValues: {
 			event: props.availableEvents.length > 0 ? props.availableEvents[0].id : 0,
 
@@ -67,65 +78,35 @@ function GameSubmissions(props: GameSubmissionsProps) {
 			backup: true,
 		},
 
-		validate: (values) => {
-			if (currentStep === 0) {
-				return {
-					game: values.game ? null : "Please enter a game",
-					platform: values.platform ? null : "Please enter a platform",
-					techPlatform: values.techPlatform ? null : "Please enter a tech platform",
-				};
-			}
-
-			if (currentStep === 1) {
-				return {
-					category: values.category ? null : "Please enter a category",
-					video: values.video ? null : "Please enter a video link",
-					estimate: values.estimate !== "00:00:00" ? null : "Please enter an estimate",
-					possibleEstimate: values.possibleEstimate
-						? values.possibleEstimate === "00:00:00"
-							? "Please enter a possible estimate"
-							: null
-						: null,
-					possibleEstimateReason:
-						values.possibleEstimateReason === "" ? "Please enter a reason for the possible estimate" : null,
-					donationIncentives:
-						values.donationIncentives && values.donationIncentives.length > 0
-							? values.donationIncentives.some((incentive) => !incentive.title)
-								? "Please fill out all donation incentive titles"
-								: null
-							: null,
-				};
-			}
-
-			if (currentStep === 2) {
-				return {
-					availability:
-						values.availability.length > 0 && values.availability.some((days) => days)
-							? null
-							: "Please select at least one availability option",
-				};
-			}
-
-			// Step 3 (Race / Co-op) has no required fields
-			if (currentStep === 3) {
-				return {};
-			}
-
-			// Step 4 (Acknowledgement) has no fields
-			if (currentStep === 4) {
-				return {};
-			}
-
-			return {};
-		},
+		validate: (values) => getStepErrors(currentStep, values, eventLength),
 	});
 	const eventsList = props.availableEvents;
 
-	const [backup, setBackup] = useState(true);
+	const [backupAcknowledged, setBackupAcknowledged] = useState(false);
+	const [backupAcknowledgedError, setBackupAcknowledgedError] = useState(false);
+	const [submissionError, setSubmissionError] = useState<string | null>(null);
 	const [currentStep, setCurrentStep] = useState(0);
 	const submissionInFlightRef = useRef(false);
 
+	const formTopRef = useRef<HTMLDivElement>(null);
+	const isFirstRenderRef = useRef(true);
+
 	const currentEvent = eventsList?.find((eventResult) => eventResult.id === form.values.event);
+	const isBackupOnly = Boolean(currentEvent?.acceptingBackups && !currentEvent?.acceptingSubmissions);
+	const eventLength: number = currentEvent ? getEventDays(currentEvent.startDate, currentEvent.endDate) : 0;
+
+	// Bring the top of the form back into view when changing steps on long pages
+	useEffect(() => {
+		if (isFirstRenderRef.current) {
+			isFirstRenderRef.current = false;
+			return;
+		}
+
+		const formTop = formTopRef.current;
+		if (formTop && formTop.getBoundingClientRect().top < 0) {
+			formTop.scrollIntoView({ behavior: "smooth", block: "start" });
+		}
+	}, [currentStep]);
 
 	function handleNext() {
 		if (form.validate().hasErrors) {
@@ -137,7 +118,23 @@ function GameSubmissions(props: GameSubmissionsProps) {
 				return;
 			}
 
+			// Re-check every earlier step in case something changed (e.g. a different event was selected)
+			for (let step = 0; step < 4; step++) {
+				const stepErrors = getStepErrors(step, form.values, eventLength);
+				if (Object.keys(stepErrors).length > 0) {
+					setCurrentStep(step);
+					form.setErrors(stepErrors);
+					return;
+				}
+			}
+
+			if (isBackupOnly && !backupAcknowledged) {
+				setBackupAcknowledgedError(true);
+				return;
+			}
+
 			submissionInFlightRef.current = true;
+			setSubmissionError(null);
 			setCurrentStep(5);
 			void handleSubmission(form.values);
 			return;
@@ -154,6 +151,13 @@ function GameSubmissions(props: GameSubmissionsProps) {
 		setCurrentStep(0);
 		form.reset();
 		setSubmissionResults(null);
+		setSubmissionError(null);
+		setBackupAcknowledged(false);
+	}
+
+	function returnToReview() {
+		setSubmissionError(null);
+		setCurrentStep(4);
 	}
 
 	if (!currentEvent) {
@@ -166,32 +170,53 @@ function GameSubmissions(props: GameSubmissionsProps) {
 			const result = await createSubmission(values);
 
 			if (result.success) {
-				console.log("Submission successful:", result.data);
-				// notifications.show({
-				// 	title: "Sent",
-				// 	message: "Form submitted successfully",
-				// 	color: "green",
-				// });
-				// form.reset();
 				setSubmissionResults(result.data ?? null);
 			} else {
 				console.error("Submission error:", result.error);
-				// notifications.show({
-				// 	title: "Error",
-				// 	message: result.error ?? "Something went wrong",
-				// 	color: "red",
-				// });
+				setSubmissionError(result.error ?? "Something went wrong. Please try again.");
 			}
-		} catch {
-			// notifications.show({
-			// 	title: "Error",
-			// 	message: "Network error",
-			// 	color: "red",
-			// });
-			console.error("Network error");
+		} catch (error) {
+			console.error("Network error", error);
+			setSubmissionError("Network error. Please check your connection and try again.");
 		} finally {
 			submissionInFlightRef.current = false;
 			setLoading(false);
+		}
+	}
+
+	function renderStep() {
+		if (!currentEvent) return null;
+
+		switch (currentStep) {
+			case 0:
+				return <GameInfo previousSubmissions={props.oldSubmissions} form={form} />;
+			case 1:
+				return <RunInfo form={form} />;
+			case 2:
+				return <Availability event={currentEvent} eventLength={eventLength} form={form} />;
+			case 3:
+				return <RaceCoop form={form} />;
+			case 4:
+				return (
+					<Acknowledgement
+						acceptingBackups={currentEvent.acceptingBackups}
+						acceptingSubmissions={currentEvent.acceptingSubmissions}
+						submissionInstructions={currentEvent.submissionInstructions}
+						eventDays={eventLength}
+						onEditStep={setCurrentStep}
+						form={form}
+					/>
+				);
+			default:
+				return (
+					<SubmissionResults
+						resetForm={resetForm}
+						returnToReview={returnToReview}
+						results={submissionResults}
+						error={submissionError}
+						loading={loading}
+					/>
+				);
 		}
 	}
 
@@ -203,6 +228,13 @@ function GameSubmissions(props: GameSubmissionsProps) {
 						label="Event"
 						key={form.key("event")}
 						{...form.getInputProps("event")}
+						value={form.values.event.toString()}
+						onChange={(value) => {
+							if (!value) return;
+							form.setFieldValue("event", Number(value));
+							form.setFieldValue("availability", []);
+						}}
+						allowDeselect={false}
 						required
 						data={eventsList.map((event) => ({
 							value: event.id.toString(),
@@ -212,67 +244,73 @@ function GameSubmissions(props: GameSubmissionsProps) {
 				</div>
 			)}
 
-			{currentEvent.acceptingBackups && !currentEvent.acceptingSubmissions && (
+			{isBackupOnly && (
 				<Checkbox
-					onChange={(e) => setBackup(e.currentTarget.checked)}
-					checked={backup}
+					onChange={(e) => {
+						setBackupAcknowledged(e.currentTarget.checked);
+						if (e.currentTarget.checked) setBackupAcknowledgedError(false);
+					}}
+					checked={backupAcknowledged}
+					error={backupAcknowledgedError ? "Please confirm you understand before submitting" : undefined}
 					label="You understand that this is a submission for backup games"
 				/>
 			)}
+			<div className={styles.formTop} ref={formTopRef} aria-hidden />
+			<Stepper
+				active={currentStep}
+				onStepClick={(step) => {
+					if (step < currentStep && currentStep < 5) setCurrentStep(step);
+				}}
+				allowNextStepsSelect={false}
+				size="sm"
+				classNames={{
+					root: styles.stepper,
+					stepDescription: styles.stepDescription,
+					stepBody: styles.stepBody,
+				}}
+			>
+				{STEPS.map((step) => (
+					<Stepper.Step key={step.label} label={step.label} description={step.description} />
+				))}
+			</Stepper>
+
 			<div className={styles.formAndData}>
 				<Paper shadow="sm" withBorder className={styles.paper}>
-					<Stepper
-						active={currentStep}
-						onStepClick={(step) => {
-							if (step < currentStep) setCurrentStep(step);
-						}}
-						className={styles.stepper}
-						size="sm"
-					>
-						<Stepper.Step label="Game" description="Title &amp; platform">
-							<GameInfo previousSubmissions={props.oldSubmissions} form={form} />
-						</Stepper.Step>
-						<Stepper.Step label="Speedrun" description="Category &amp; estimate">
-							<RunInfo form={form} />
-						</Stepper.Step>
-						<Stepper.Step label="Availability" description="Event days">
-							<Availability event={currentEvent} form={form} />
-						</Stepper.Step>
-						<Stepper.Step label="Race/Co-op" description="Optional">
-							<RaceCoop form={form} />
-						</Stepper.Step>
-						<Stepper.Step label="Submit" description="Review &amp; confirm">
-							<Acknowledgement
-								acceptingBackups={currentEvent?.acceptingBackups ?? false}
-								acceptingSubmissions={currentEvent?.acceptingSubmissions ?? false}
-								submissionInstructions={currentEvent?.submissionInstructions.document}
-								form={form}
-							/>
-						</Stepper.Step>
-						<Stepper.Completed>
-							<SubmissionResults resetForm={resetForm} results={submissionResults} loading={loading} />
-						</Stepper.Completed>
-					</Stepper>
+					{renderStep()}
 					{currentStep < 5 && (
 						<div className={styles.pageControls}>
 							<Button
 								variant="default"
-								disabled={loading || currentStep === 0 || currentStep > 4}
+								disabled={loading}
 								onClick={handleBack}
+								leftSection={<ChevronLeft />}
+								className={currentStep === 0 ? styles.hidden : undefined}
+								aria-hidden={currentStep === 0}
+								tabIndex={currentStep === 0 ? -1 : undefined}
 							>
 								Back
 							</Button>
+							<span className={styles.stepCount}>
+								Step {currentStep + 1} of {STEPS.length}
+							</span>
 							<Button
 								onClick={handleNext}
-								disabled={loading}
+								loading={loading}
 								variant={currentStep === 4 ? "filled" : "light"}
+								rightSection={currentStep === 4 ? <Upload /> : <ChevronRight />}
 							>
 								{currentStep === 4 ? "Submit Run" : "Continue"}
 							</Button>
 						</div>
 					)}
 				</Paper>
-				{currentStep !== 5 && <CurrentSubmissionCard currentStep={currentStep} form={form} />}
+				<CurrentSubmissionCard
+					currentStep={currentStep}
+					form={form}
+					eventName={currentEvent.shortName}
+					totalDays={eventLength}
+					submitted={Boolean(submissionResults)}
+				/>
 			</div>
 		</div>
 	);

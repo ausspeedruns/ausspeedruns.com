@@ -13,8 +13,20 @@ interface RunInfoProps {
 }
 
 export function RunInfo(props: RunInfoProps) {
-	const [showPossibleEstimate, setShowPossibleEstimate] = useState(false);
-	const [showSpecialReqs, setShowSpecialReqs] = useState(false);
+	const showPossibleEstimate = props.form.values.possibleEstimate !== undefined;
+	const [showSpecialReqs, setShowSpecialReqs] = useState(Boolean(props.form.values.specialRequirements));
+
+	function togglePossibleEstimate(checked: boolean) {
+		props.form.setFieldValue("possibleEstimate", checked ? "00:00:00" : undefined);
+		props.form.setFieldValue("possibleEstimateReason", checked ? "" : undefined);
+		props.form.clearFieldError("possibleEstimate");
+		props.form.clearFieldError("possibleEstimateReason");
+	}
+
+	function removeSpecialReqs() {
+		props.form.setFieldValue("specialRequirements", "");
+		setShowSpecialReqs(false);
+	}
 
 	function handleNewDonationIncentive() {
 		if (typeof props.form.values.donationIncentives === "undefined") {
@@ -58,6 +70,8 @@ export function RunInfo(props: RunInfoProps) {
 
 			<TextInput
 				label="Video of your own run"
+				description="A link to a YouTube, Twitch or similar video, e.g. https://youtu.be/..."
+				type="url"
 				autoComplete="off"
 				maxLength={100}
 				required
@@ -75,7 +89,7 @@ export function RunInfo(props: RunInfoProps) {
 					{...props.form.getInputProps("estimate")}
 				/>
 				<Checkbox
-					onChange={(e) => setShowPossibleEstimate(e.currentTarget.checked)}
+					onChange={(e) => togglePossibleEstimate(e.currentTarget.checked)}
 					checked={showPossibleEstimate}
 					label="Possible to go 15 minutes or more under?"
 				/>
@@ -121,7 +135,7 @@ export function RunInfo(props: RunInfoProps) {
 							/>
 							<Button
 								variant="outline"
-								onClick={() => setShowSpecialReqs(false)}
+								onClick={removeSpecialReqs}
 								color="red"
 								className={styles.button}
 							>
@@ -141,25 +155,18 @@ export function RunInfo(props: RunInfoProps) {
 				{typeof props.form.values.donationIncentives !== "undefined" && (
 					<Input.Label>Donation Incentives</Input.Label>
 				)}
-				{props.form.values.donationIncentives?.map((donationIncentive, i) => {
-					return (
-						<div className={styles.optionalSection} key={i}>
-							<div className={styles.optionalTextInputs}>
-								<DonationIncentiveInput form={props.form} index={i} />
-								<Button
-									variant="outline"
-									disabled={Boolean(donationIncentive.title)}
-									onClick={() => handleDonationIncentiveCancel(i)}
-									color="red"
-								>
-									Remove
-								</Button>
-							</div>
-						</div>
-					);
-				})}
+				{props.form.values.donationIncentives?.map((_, i) => (
+					<div className={styles.optionalSection} key={i}>
+						<DonationIncentiveInput
+							form={props.form}
+							index={i}
+							onRemove={() => handleDonationIncentiveCancel(i)}
+						/>
+					</div>
+				))}
 				<Button
 					variant="light"
+					className={styles.addButton}
 					onClick={handleNewDonationIncentive}
 					disabled={
 						typeof props.form.values.donationIncentives !== "undefined" &&

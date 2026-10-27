@@ -1,4 +1,4 @@
-import { Input, TextInput } from "@mantine/core";
+import { Button, TextInput } from "@mantine/core";
 import type { UseFormReturnType } from "@mantine/form";
 import styles from "./DonationIncentive.module.css";
 import type { GameSubmissionResults } from "../submissionTypes";
@@ -6,31 +6,42 @@ import type { GameSubmissionResults } from "../submissionTypes";
 type DonationIncentiveProps = {
 	form: UseFormReturnType<GameSubmissionResults>;
 	index: number;
+	onRemove: () => void;
 };
 
-export default function DonationIncentiveInput({ form, index }: DonationIncentiveProps) {
+export default function DonationIncentiveInput({ form, index, onRemove }: DonationIncentiveProps) {
+	// Optional fields start undefined; keep the inputs controlled from the start
+	const inputProps = (field: "title" | "time" | "description") => {
+		const props = form.getInputProps(`donationIncentives.${index}.${field}`);
+		return { ...props, value: props.value ?? "" };
+	};
+
 	return (
 		<div className={styles.container}>
+			<div className={styles.header}>
+				<span className={styles.title}>Incentive {index + 1}</span>
+				<Button variant="subtle" color="red" size="compact-sm" onClick={onRemove}>
+					Remove
+				</Button>
+			</div>
 			<div className={styles.topRow}>
 				<TextInput
-					{...form.getInputProps(`donationIncentives.${index}.title`)}
+					{...inputProps("title")}
 					label="Name"
-					style={{ flex: 1 }}
+					placeholder="e.g. Name the file"
+					required
 				/>
 				<TextInput
-					{...form.getInputProps(`donationIncentives.${index}.time`)}
-					label="Extra Time Needed"
-					style={{ flex: 1 }}
+					{...inputProps("time")}
+					label="Extra time needed"
+					placeholder="e.g. 5 mins"
 				/>
 			</div>
-			<div className={styles.bottomRow}>
-				<div style={{ width: "100%" }}>
-					<TextInput {...form.getInputProps(`donationIncentives.${index}.description`)} label="Details" />
-					<Input.Description>
-						e.g. Character limits, bid war options, video of extra category
-					</Input.Description>
-				</div>
-			</div>
+			<TextInput
+				{...inputProps("description")}
+				label="Details"
+				description="e.g. Character limits, bid war options, video of extra category"
+			/>
 		</div>
 	);
 }

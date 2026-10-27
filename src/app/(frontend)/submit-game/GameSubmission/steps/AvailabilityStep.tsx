@@ -1,6 +1,5 @@
-import { useMemo } from "react";
-import { Checkbox, Input } from "@mantine/core";
-import { addDays, differenceInDays } from "date-fns";
+import { Alert, Checkbox, Input } from "@mantine/core";
+import { addDays } from "date-fns";
 import styles from "../GameSubmission.module.css";
 import { type GameSubmissionResults } from "../submissionTypes";
 import type { UseFormReturnType } from "@mantine/form";
@@ -11,14 +10,26 @@ interface AvailabilityProps {
 		endDate: string;
 		eventTimezone: string;
 	};
+	eventLength: number;
 	form: UseFormReturnType<GameSubmissionResults>;
 }
 
 export function Availability(props: AvailabilityProps) {
-	const eventLength = useMemo(
-		() => differenceInDays(props.event.endDate, props.event.startDate) + 1,
-		[props.event],
-	);
+	const { eventLength } = props;
+
+	if (eventLength === 0) {
+		return (
+			<div className={styles.pageContent}>
+				<div className={styles.pageHeader}>
+					<h3>Availability</h3>
+					<p>Select all days you are available to attend.</p>
+				</div>
+				<Alert variant="light" color="blue" title="Event dates not announced yet">
+					This event doesn&apos;t have its dates set yet, so you can skip this step for now.
+				</Alert>
+			</div>
+		);
+	}
 
 	const allSelected =
 		props.form.values.availability.length >= eventLength && props.form.values.availability.every(Boolean);
@@ -63,9 +74,7 @@ export function Availability(props: AvailabilityProps) {
 
 			<Checkbox checked={allSelected} onChange={toggleAll} label="Available all days" fw={600} />
 
-			<div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", paddingLeft: "0.25rem" }}>
-				{dateCheckboxes}
-			</div>
+			<div className={styles.dayList}>{dateCheckboxes}</div>
 
 			{props.form.errors.availability && <Input.Error>{props.form.errors.availability}</Input.Error>}
 		</div>

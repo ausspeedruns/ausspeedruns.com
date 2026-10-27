@@ -8,7 +8,7 @@ import type { UseFormReturnType } from "@mantine/form";
 import { platforms, techPlatforms } from "../platforms";
 
 interface RunInfoProps {
-	previousSubmissions: OldSubmission[];
+	previousSubmissions?: OldSubmission[];
 	form: UseFormReturnType<GameSubmissionResults>;
 }
 
@@ -30,7 +30,11 @@ export function GameInfo(props: RunInfoProps) {
 				<p>Tell us about the game you want to run.</p>
 			</div>
 
-			<PreviousSubmissions submissions={props.previousSubmissions} onGameClick={autofillGame} />
+			<PreviousSubmissions
+				submissions={props.previousSubmissions}
+				selected={{ game: props.form.values.game, platform: props.form.values.platform }}
+				onGameClick={autofillGame}
+			/>
 
 			<TextInput
 				label="Game Name"
@@ -75,12 +79,13 @@ export function GameInfo(props: RunInfoProps) {
 					data={[
 						{ label: "G, PG or M", value: "m_or_lower" },
 						{ label: "MA15+", value: "ma15" },
-						{ label: "RA18+", value: "r18" },
+						{ label: "R18+", value: "r18" },
 					]}
 					name="ageRating"
 					key={props.form.key("ageRating")}
 					{...props.form.getInputProps("ageRating")}
 				/>
+				{props.form.errors.ageRating && <Input.Error>{props.form.errors.ageRating}</Input.Error>}
 				<Input.Description>
 					If unsure, search{" "}
 					<a href="https://www.classification.gov.au/" target="_blank" rel="noreferrer noopener">

@@ -7,6 +7,7 @@ import {
 	Badge,
 	Divider,
 	Group,
+	List,
 	Paper,
 	SimpleGrid,
 	Stack,
@@ -16,11 +17,26 @@ import {
 } from "@mantine/core";
 import { Calendar, Clock, Monitor, Link as LinkIcon } from "pixelarticons/react";
 
-import { EditSubmissionModal } from "./EditSubmission";
+import { EditSubmissionModal, type SubmissionEventInfo } from "./EditSubmission";
+import { parseAvailability, parseDonationIncentives } from "./submissionFormMapping";
+import { getEventDays } from "#/utilities/getEventDays";
 
 interface SubmissionProps {
 	submission: SubmissionType;
-	canEdit?: boolean;
+	event?: SubmissionEventInfo;
+}
+
+const RACE_LABELS: Record<string, string> = {
+	noRace: "No",
+	solo: "Yes (solo possible)",
+	only: "Yes (race/co-op only)",
+};
+
+function availabilitySummary(submission: SubmissionType, event?: SubmissionEventInfo) {
+	const days = parseAvailability(submission.availability);
+	const eventDays = event ? getEventDays(event.startDate, event.endDate) : days.length;
+	if (eventDays === 0 || days.length === 0) return "Not provided";
+	return `${days.slice(0, eventDays).filter(Boolean).length} of ${eventDays} days`;
 }
 
 const dateFormatter = new Intl.DateTimeFormat("en-AU", {
@@ -65,7 +81,10 @@ function renderValue(value: unknown) {
 }
 
 export function Submission(props: SubmissionProps) {
-	const { submission } = props;
+	const { submission, event } = props;
+	const eventOpen = Boolean(event?.acceptingSubmissions || event?.acceptingBackups);
+	const isPending = submission.status === "pending";
+	const incentives = parseDonationIncentives(submission.donationIncentives);
 
 	return (
 		<Paper my="md" shadow="xs" withBorder>
@@ -90,7 +109,13 @@ export function Submission(props: SubmissionProps) {
 				</Accordion.Control>
 				<Accordion.Panel>
 					<Stack gap="md" pb="xs">
-						{props.canEdit && <EditSubmissionModal submission={submission} />}
+						{event && eventOpen && isPending && <EditSubmissionModal submission={submission} event={event} />}
+						{eventOpen && !isPending && (
+							<Text size="sm" c="dimmed">
+								This submission has been reviewed, so it can no longer be edited. Contact the event
+								staff if something needs to change.
+							</Text>
+						)}
 						<SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="sm">
 							<Group gap="xs" wrap="nowrap" align="flex-start">
 								<ThemeIcon color="violet" variant="light">
@@ -163,22 +188,18 @@ export function Submission(props: SubmissionProps) {
 								</Text>
 								<Text>
 									<Text span fw={600}>
-										Race type
+										{submission.isCoop ? "Co-op" : "Race"}
 									</Text>{" "}
-									{formatEnumLabel(submission.raceType)}
+									{RACE_LABELS[submission.raceType ?? "noRace"] ?? formatEnumLabel(submission.raceType)}
 								</Text>
-								<Text>
-									<Text span fw={600}>
-										Co-op
-									</Text>{" "}
-									{submission.isCoop ? "Yes" : "No"}
-								</Text>
-								<Text>
-									<Text span fw={600}>
-										Racer
-									</Text>{" "}
-									{renderValue(submission.racer)}
-								</Text>
+								{submission.raceType && submission.raceType !== "noRace" && (
+									<Text>
+										<Text span fw={600}>
+											With
+										</Text>{" "}
+										{renderValue(submission.racer)}
+									</Text>
+								)}
 							</Stack>
 
 							<Stack gap={4}>
@@ -193,15 +214,32 @@ export function Submission(props: SubmissionProps) {
 								</Text>
 								<Text>
 									<Text span fw={600}>
-										Donation incentives
-									</Text>{" "}
-									{renderValue(submission.donationIncentives)}
-								</Text>
-								<Text>
-									<Text span fw={600}>
 										Availability
 									</Text>{" "}
-									{renderValue(submission.availability)}
+									{availabilitySummary(submission, event)}
+								</Text>
+								<Text component="div">
+									<Text span fw={600}>
+										Donation incentives
+									</Text>{" "}
+									{incentives.length === 0 ? (
+										"None"
+									) : (
+										<List size="sm" mt={4}>
+											{incentives.map((incentive, i) => (
+												<List.Item key={i}>
+													{incentive.title}
+													{incentive.time && ` (+${incentive.time})`}
+													{incentive.description && (
+														<Text span c="dimmed">
+															{" "}
+															– {incentive.description}
+														</Text>
+													)}
+												</List.Item>
+											))}
+										</List>
+									)}
 								</Text>
 								{submission.video ? (
 									<Group gap={6} mt={4} wrap="wrap">

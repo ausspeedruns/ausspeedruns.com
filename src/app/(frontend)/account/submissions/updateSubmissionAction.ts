@@ -131,3 +131,26 @@ export async function updateSubmission(submissionId: number, values: UpdateSubmi
 		};
 	}
 }
+
+export async function withdrawSubmission(submissionId: number) {
+	const payload = await getPayload({ config });
+	const requestHeaders = await headers();
+	const { user } = await payload.auth({ headers: requestHeaders });
+
+	if (!user) {
+		return { message: "You need to be logged in to withdraw submissions.", success: false };
+	}
+
+	try {
+		// Access control limits this to the runner's own submissions, and a hook blocks reviewed ones
+		await payload.delete({ collection: "submissions", id: submissionId, overrideAccess: false, user });
+		revalidatePath("/account/submissions");
+		return { message: "Submission withdrawn.", success: true };
+	} catch (error) {
+		console.error("Error withdrawing submission:", error);
+		return {
+			message: error instanceof Error ? error.message : "Unable to withdraw your submission right now.",
+			success: false,
+		};
+	}
+}

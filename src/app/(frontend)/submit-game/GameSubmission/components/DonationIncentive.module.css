@@ -1,11 +1,30 @@
 .container {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
 	width: 100%;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.title {
+	font-size: 0.8rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var(--mantine-color-dimmed);
 }
 
 .topRow {
 	display: grid;
-	grid-template-columns: 60% 40%;
-	gap: 8px;
-	margin-bottom: 8px;
-	padding-right: 8px;
+	grid-template-columns: 2fr 1fr;
+	gap: 0.75rem;
+
+	@media (max-width: 36em) {
+		grid-template-columns: 1fr;
+	}
 }

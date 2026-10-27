@@ -2,6 +2,7 @@ import type { BasePayload } from "payload";
 import { kitchenSinkPage } from "./kitchen-sink.ts";
 import { seedKitchenSinkData } from "./kitchen-sink-data.ts";
 import { homePage } from "./home.ts";
+import { upcomingEventTemplatePage } from "./upcoming-event-template.ts";
 import { seedSegmentTypes } from "./segment-types.ts";
 
 export async function seed(payload: BasePayload) {
@@ -24,6 +25,16 @@ async function createPages(payload: BasePayload) {
 		depth: 0,
 		data: await kitchenSinkPage(payload),
 	});
+
+	const upcomingEventTemplate = await upcomingEventTemplatePage(payload);
+	if (upcomingEventTemplate) {
+		await payload.create({
+			collection: "pages",
+			depth: 0,
+			draft: true,
+			data: upcomingEventTemplate,
+		});
+	}
 }
 
 async function setupHeader(payload: BasePayload, aboutUsPageId: number) {

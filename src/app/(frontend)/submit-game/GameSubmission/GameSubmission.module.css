@@ -1,23 +1,102 @@
 .gameForm {
 	margin: auto;
 	width: 100%;
-	max-width: 960px;
+	max-width: 1040px;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
 
 	.stepper {
-		margin: 1.5rem 0 0.5rem;
+		padding: 0 0.5rem;
+	}
+
+	.formTop {
+		/* Zero-height scroll anchor above the stepper; offsets the parent's flex gap */
+		margin-bottom: -1.5rem;
+		scroll-margin-top: 1rem;
 	}
 
 	.formAndData {
 		display: flex;
+		align-items: flex-start;
 		gap: 1.5rem;
 	}
 
 	.paper {
-		padding: 2rem 2.5rem;
+		padding: 2rem 2.5rem 1.5rem;
 		display: flex;
 		flex-direction: column;
 		flex-grow: 1;
+		min-width: 0;
 		border-radius: 12px;
+	}
+
+	.dayList {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+		gap: 0.5rem;
+
+		& > * {
+			padding: 0.65rem 0.75rem;
+			border: 1px solid var(--mantine-color-default-border);
+			border-radius: 8px;
+			transition: border-color 150ms ease;
+
+			&:has(input:checked) {
+				border-color: var(--mantine-primary-color-filled);
+			}
+		}
+	}
+
+	.reviewList {
+		margin: 0;
+		border: 1px solid var(--mantine-color-default-border);
+		border-radius: 8px;
+	}
+
+	.reviewItem {
+		display: grid;
+		grid-template-columns: 7rem 1fr auto;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.65rem 0.75rem 0.65rem 1rem;
+
+		& + .reviewItem {
+			border-top: 1px solid var(--mantine-color-default-border);
+		}
+
+		dt {
+			font-size: 0.8rem;
+			font-weight: 600;
+			color: var(--mantine-color-dimmed);
+		}
+
+		dd {
+			margin: 0;
+			overflow-wrap: anywhere;
+		}
+
+		@media (max-width: 36em) {
+			grid-template-columns: 1fr auto;
+
+			dd {
+				grid-column: 1 / -1;
+				grid-row: 2;
+			}
+		}
+	}
+
+	.addButton {
+		align-self: flex-start;
+	}
+
+	.hidden {
+		visibility: hidden;
+	}
+
+	.stepCount {
+		font-size: 0.8rem;
+		color: var(--mantine-color-dimmed);
 	}
 
 	.pageContent {
@@ -70,6 +149,7 @@
 	.fieldRow {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
+		align-items: end;
 		gap: 1rem;
 	}
 
@@ -105,58 +185,54 @@
 		color: var(--mantine-color-red-6);
 	}
 
-	.finalGamePage {
-		padding: 1rem 0;
+	.successHeader {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 1rem 0 0.5rem;
+		text-align: center;
 
-		table {
-			table-layout: fixed;
-			margin: auto;
-			width: 100%;
-		}
-
-		td {
-			font-size: 1.1rem;
-			padding: 10px 12px;
-			text-align: left;
-			width: 100%;
-			overflow-wrap: break-word;
-			hyphens: manual;
-			vertical-align: text-top;
-		}
-
-		td:first-child {
-			font-weight: 600;
-			text-align: right;
-			color: var(--mantine-color-dimmed);
-			white-space: nowrap;
-			width: auto;
-		}
-
-		.techPlatform {
-			font-size: 0.9rem;
-			font-style: italic;
-			color: var(--mantine-color-dimmed);
-		}
-
-		.game {
-			font-weight: 700;
+		h3 {
+			margin: 0.5rem 0 0;
 			font-size: 1.5rem;
-			text-align: center;
-			margin-bottom: 0.5rem;
 		}
 
-		.category {
-			text-align: center;
+		p {
+			margin: 0;
 			color: var(--mantine-color-dimmed);
-			font-size: 1rem;
-			margin-top: -0.25rem;
-			margin-bottom: 0.75rem;
+			overflow-wrap: anywhere;
+		}
+	}
+
+	.nextSteps {
+		margin: 0.5rem 0 0;
+		padding-left: 1.25rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+
+	.resultActions {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: 0.5rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--mantine-color-default-border);
+	}
+
+	@media (max-width: 62em) {
+		.stepDescription {
+			display: none;
 		}
 	}
 
 	@media (max-width: 48em) {
 		.formAndData {
 			flex-direction: column;
+			align-items: stretch;
 		}
 
 		.paper {
@@ -165,6 +241,26 @@
 
 		.fieldRow {
 			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 36em) {
+		/* Only show the step icons on phones (visually hidden so buttons keep their names) */
+		.stepBody {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+			clip-path: inset(50%);
+			white-space: nowrap;
+		}
+
+		.stepCount {
+			display: none;
+		}
+
+		.pageControls {
+			gap: 0.75rem;
 		}
 	}
 }

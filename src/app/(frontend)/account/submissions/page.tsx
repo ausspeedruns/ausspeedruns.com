@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { Accordion, Alert, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import { ListBox } from "pixelarticons/react";
 import { Submission } from "./Submission";
+import type { SubmissionEventInfo } from "./EditSubmission";
 
 import type { Submission as SubmissionType } from "#payload-types.ts";
 
@@ -26,12 +27,14 @@ export default async function AccountSubmissionsPage() {
 			},
 		},
 		sort: "-createdAt",
+		pagination: false,
 	});
 
-	// Each submission has an event attached to it, group submissions by event and display them in separate accordions
-	const submissionsByEvent: Record<number, SubmissionType[]> = {};
+	// Group submissions by event. A Map keeps insertion order (plain objects sort numeric keys ascending),
+	// so events with the newest submission come first and each group stays newest-first.
+	const submissionsByEvent = new Map<number, SubmissionType[]>();
 	submissions.docs.forEach((submission) => {
-		let eventId: number | undefined;
+		let eventId: number;
 		if (submission.event && typeof submission.event === "object") {
 			eventId = submission.event.id;
 		} else if (typeof submission.event === "number") {
@@ -40,23 +43,23 @@ export default async function AccountSubmissionsPage() {
 			eventId = -1;
 		}
 
-		if (!submissionsByEvent[eventId]) {
-			submissionsByEvent[eventId] = [];
-		}
-
-		submissionsByEvent[eventId].push(submission);
+		const group = submissionsByEvent.get(eventId) ?? [];
+		group.push(submission);
+		submissionsByEvent.set(eventId, group);
 	});
 
 	const eventNames = await payload.find({
 		collection: "events",
 		depth: 0,
+		pagination: false,
 		where: {
 			id: {
-				in: Object.keys(submissionsByEvent).map(Number),
+				in: [...submissionsByEvent.keys()],
 			},
 		},
 		select: {
 			name: true,
+			timeSettings: true,
 			settings: {
 				isAcceptingBackups: true,
 				isAcceptingSubmissions: true,
@@ -64,17 +67,13 @@ export default async function AccountSubmissionsPage() {
 		},
 	});
 
-	const eventNameMap: Record<
-		number,
-		{
-			name: string;
-			acceptingSubmissions: boolean;
-			acceptingBackups: boolean;
-		}
-	> = {};
+	const eventNameMap: Record<number, SubmissionEventInfo> = {};
 	eventNames.docs.forEach((event) => {
 		eventNameMap[event.id] = {
 			name: event.name,
+			startDate: event.timeSettings?.startTime ?? "",
+			endDate: event.timeSettings?.endTime ?? "",
+			eventTimezone: event.timeSettings?.timezone ?? "",
 			acceptingSubmissions: event.settings?.isAcceptingSubmissions ?? false,
 			acceptingBackups: event.settings?.isAcceptingBackups ?? false,
 		};
@@ -84,7 +83,7 @@ export default async function AccountSubmissionsPage() {
 		<Stack gap="md">
 			<Title order={1}>Run Submissions</Title>
 			<Accordion>
-				{Object.keys(submissionsByEvent).length === 0 ? (
+				{submissionsByEvent.size === 0 ? (
 					<Alert
 						color="gray"
 						icon={
@@ -97,22 +96,17 @@ export default async function AccountSubmissionsPage() {
 						<Text size="sm">You have not made any submissions yet.</Text>
 					</Alert>
 				) : (
-					Object.entries(submissionsByEvent).map(([eventId, submissions]) => {
+					[...submissionsByEvent.entries()].map(([eventId, submissions]) => {
+						const eventInfo = eventNameMap[eventId];
+
 						return (
-							<>
-								<h3>{eventNameMap[Number(eventId)]?.name ?? "Unknown Event"}</h3>
+							<div key={eventId}>
+								<h3>{eventInfo?.name ?? "Unknown Event"}</h3>
 								{submissions.map((submission) => (
-									<Submission
-										key={submission.id}
-										submission={submission}
-										canEdit={
-											eventNameMap[Number(eventId)]?.acceptingSubmissions ||
-											eventNameMap[Number(eventId)]?.acceptingBackups
-										}
-									/>
+									<Submission key={submission.id} submission={submission} event={eventInfo} />
 								))}
 								<hr />
-							</>
+							</div>
 						);
 					})
 				)}

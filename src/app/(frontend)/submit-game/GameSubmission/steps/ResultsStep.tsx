@@ -1,11 +1,14 @@
 import styles from "../GameSubmission.module.css";
 
-import { Loader, Button, Alert } from "@mantine/core";
+import { Loader, Button, Alert, ThemeIcon } from "@mantine/core";
+import { Archive, Check, Reload } from "pixelarticons/react";
 import type { Submission } from "#payload-types.ts";
 
 type SubmissionResultsProps = {
 	resetForm: () => void;
+	returnToReview: () => void;
 	results: Submission | null;
+	error?: string | null;
 	loading?: boolean;
 };
 
@@ -23,56 +26,45 @@ export function SubmissionResults(props: SubmissionResultsProps) {
 
 	if (!props.results) {
 		return (
-			<Alert color="red" variant="light" title="Submission Error">
-				Something went wrong. Please try again.
-			</Alert>
+			<div className={styles.pageContent}>
+				<Alert color="red" variant="light" title="Submission Error">
+					{props.error ?? "Something went wrong. Please try again."}
+				</Alert>
+				<Button variant="light" fullWidth onClick={props.returnToReview}>
+					Go back
+				</Button>
+			</div>
 		);
 	}
 
 	return (
 		<div className={styles.pageContent}>
-			<Alert color="green" variant="light" title="Submission Received">
-				Your run has been submitted successfully!
-			</Alert>
-
-			<div className={styles.finalGamePage}>
-				<p className={styles.game}>{props.results.game}</p>
-				<p className={styles.category}>{props.results.category}</p>
-				<table>
-					<tbody>
-						<tr>
-							<td>Estimate</td>
-							<td>
-								{props.results.possibleEstimate && `${props.results.possibleEstimate} – `}
-								{props.results.estimate}
-							</td>
-						</tr>
-						<tr>
-							<td>Platform</td>
-							<td>
-								{props.results.platform}{" "}
-								<span className={styles.techPlatform}>
-									{props.results.platform !== props.results.techPlatform &&
-										`(Running on ${props.results.techPlatform})`}
-								</span>
-							</td>
-						</tr>
-						{props.results.raceType !== "noRace" && (
-							<tr>
-								<td>
-									{props.results.raceType === "solo" && "Solo or "}
-									{props.results.isCoop ? "Co-op" : "Race"} with
-								</td>
-								<td>{props.results.racer}</td>
-							</tr>
-						)}
-					</tbody>
-				</table>
+			<div className={styles.successHeader}>
+				<ThemeIcon size={56} radius="xl" color="green" variant="light">
+					<Check style={{ width: 32, height: 32 }} />
+				</ThemeIcon>
+				<h3>Submission received!</h3>
+				<p>
+					<strong>{props.results.game}</strong> – {props.results.category} has been submitted.
+				</p>
 			</div>
 
-			<Button variant="light" fullWidth onClick={props.resetForm}>
-				Submit another game
-			</Button>
+			<div className={styles.optionalSection}>
+				<p className={styles.fieldGroupLabel}>What happens next</p>
+				<ul className={styles.nextSteps}>
+					<li>Your submission is now pending review by the event team.</li>
+					<li>You can view or edit it from your submissions page while it is still pending.</li>
+				</ul>
+			</div>
+
+			<div className={styles.resultActions}>
+				<Button variant="default" component="a" href="/account/submissions" leftSection={<Archive />}>
+					View my submissions
+				</Button>
+				<Button onClick={props.resetForm} rightSection={<Reload />}>
+					Submit another game
+				</Button>
+			</div>
 		</div>
 	);
 }

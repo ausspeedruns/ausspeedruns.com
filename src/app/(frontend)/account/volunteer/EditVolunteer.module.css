@@ -1,17 +1,41 @@
-.triggerButton {
-	align-self: flex-start;
+.modalTitle {
+	font-weight: 700;
+	font-size: 1.15rem;
 }
 
-.form {
+.body {
 	display: flex;
 	flex-direction: column;
-	gap: var(--mantine-spacing-sm);
+	gap: 1.75rem;
 }
 
-.status {
-	margin-top: var(--mantine-spacing-xs);
+.eventName {
+	margin: 0 !important;
+	color: var(--mantine-color-dimmed);
+	font-size: 0.875rem;
 }
 
-.actions {
-	justify-content: flex-end;
+.errorDot {
+	display: inline-block;
+	width: 0.5rem;
+	height: 0.5rem;
+	border-radius: 50%;
+	background: var(--mantine-color-red-6);
+}
+
+.footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	padding-top: 1rem;
+	border-top: 1px solid var(--mantine-color-default-border);
+}
+
+.withdraw {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex-wrap: wrap;
 }

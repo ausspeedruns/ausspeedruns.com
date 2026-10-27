@@ -82,9 +82,8 @@ function EstimateInput(props: EstimateInputProps) {
 				onBlur={props.onBlur}
 				onChange={props.onChange}
 			/>
-			<Input.Label className={styles.label}>
+			<Input.Label className={styles.label} required={props.required}>
 				{props.label ?? "Estimate"}
-				{props.required && "*"}
 			</Input.Label>
 			<div className={styles.inputContainer}>
 				<Select

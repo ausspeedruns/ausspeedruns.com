@@ -2,14 +2,20 @@
 
 import type { Volunteer as VolunteerType } from "#payload-types.ts";
 import { Accordion, Badge, Divider, Group, List, Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
-import { EditVolunteerModal } from "./EditVolunteer";
+import { EditVolunteerModal, type VolunteerEventInfo } from "./EditVolunteer";
 
 import styles from "./Volunteer.module.css";
 
 interface VolunteerProps {
 	volunteer: VolunteerType;
-	canEdit?: boolean;
+	event?: VolunteerEventInfo;
 }
+
+const STATUS_COLORS: Record<string, string> = {
+	pending: "yellow",
+	accepted: "green",
+	rejected: "red",
+};
 
 const ROLE_LABELS: Record<VolunteerType["role"][number], string> = {
 	frontDesk: "Front Desk",
@@ -27,8 +33,11 @@ const ROLE_COLORS: Record<VolunteerType["role"][number], string> = {
 
 export function Volunteer(props: VolunteerProps) {
 	const { volunteer } = props;
+	const { event } = props;
 	const hasHost = volunteer.role.includes("host");
 	const hasTech = volunteer.role.includes("tech");
+	const status = volunteer.status ?? "pending";
+	const isPending = status === "pending";
 
 	return (
 		<Paper my="md" shadow="xs" withBorder>
@@ -36,6 +45,9 @@ export function Volunteer(props: VolunteerProps) {
 				<Accordion.Control>
 					<Stack gap={4} align="flex-start">
 						<Group gap="xs" wrap="wrap">
+							<Badge color={STATUS_COLORS[status] ?? "gray"} variant="filled">
+								{status.charAt(0).toUpperCase() + status.slice(1)}
+							</Badge>
 							{volunteer.role.map((role) => (
 								<Badge key={role} color={ROLE_COLORS[role]} variant="light">
 									{ROLE_LABELS[role]}
@@ -51,7 +63,13 @@ export function Volunteer(props: VolunteerProps) {
 				</Accordion.Control>
 				<Accordion.Panel>
 					<Stack gap="md" pb="xs">
-						{props.canEdit ? <EditVolunteerModal volunteer={volunteer} /> : null}
+						{event?.acceptingVolunteers && isPending && <EditVolunteerModal volunteer={volunteer} event={event} />}
+						{event?.acceptingVolunteers && !isPending && (
+							<Text size="sm" c="dimmed">
+								This application has been reviewed, so it can no longer be edited. Contact the event
+								staff if something needs to change.
+							</Text>
+						)}
 						<div>
 							<Text size="xs" c="dimmed" tt="uppercase" fw={700} mb={4}>
 								Availability

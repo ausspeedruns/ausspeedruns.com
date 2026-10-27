@@ -40,59 +40,50 @@ export default async function VolunteerPage() {
 			<div className={styles.noEvents}>
 				<h2>We require a Discord username to accept volunteer submissions.</h2>
 				<p>Please add your Discord username in your profile settings and try again.</p>
-				<Button component="a" href={`/user/${user.username}/edit`}>
+				<Button component="a" href="/account/edit" rightSection={<ArrowRight />}>
 					Update Profile
 				</Button>
 			</div>
 		);
 	}
 
-	// Query events that are accepting submissions or backups
 	const eventsResult = await payload.find({
 		collection: "events",
-		where: {
-			or: [{ "settings.isAcceptingVolunteers": { equals: true } }],
-		},
+		where: { "settings.isAcceptingVolunteers": { equals: true } },
 		pagination: false,
+		depth: 0,
 	});
 
-	// Query user's existing submissions (sorted by newest first)
-	const submissionsResult = await payload.find({
-		collection: "submissions",
-		where: {
-			runner: { equals: user.id },
-		},
-		sort: "-createdAt",
-		pagination: false,
-	});
+	const events = eventsResult.docs.map((event) => ({
+		id: event.id,
+		shortName: event.shortName,
+		startDate: event.timeSettings?.startTime ?? "",
+		endDate: event.timeSettings?.endTime ?? "",
+		eventTimezone: event.timeSettings?.timezone ?? "",
+	}));
 
-	const events = eventsResult.docs;
-	const submissions = submissionsResult.docs;
+	// Only one application per event is allowed, so flag the ones they've already applied to
+	const existingApplications =
+		events.length > 0
+			? await payload.find({
+					collection: "volunteers",
+					where: {
+						and: [
+							{ volunteer: { equals: user.id } },
+							{ event: { in: events.map((event) => event.id) } },
+						],
+					},
+					pagination: false,
+					depth: 0,
+					select: { event: true },
+				})
+			: { docs: [] };
 
-	// Map to the shape expected by child components
-	const data = {
-		user: {
-			verified: true, // PayloadCMS auth: true handles email; adjust if you add email verification
-			dateOfBirth: user.dateOfBirth,
-			discord: user.socials?.discord ?? "",
-			submissions: submissions.map((sub) => ({
-				game: sub.game,
-				platform: sub.platform,
-				techPlatform: sub.techPlatform ?? undefined,
-				ageRating: sub.ageRating,
-			})),
-		},
-		events: events.map((event) => ({
-			id: event.id,
-			shortName: event.shortName,
-			submissionInstructions: event.submissionInstructions ?? null,
-			startDate: event.timeSettings?.startTime ?? "",
-			endDate: event.timeSettings?.endTime ?? "",
-			eventTimezone: event.timeSettings?.timezone ?? "",
-		})),
-	};
+	const appliedEventIds = existingApplications.docs
+		.map((application) => (typeof application.event === "object" ? application.event?.id : application.event))
+		.filter((id): id is number => typeof id === "number");
 
-	if (data.events.length === 0) {
+	if (events.length === 0) {
 		return (
 			<div className={styles.noEvents}>
 				<h2>Unfortunately we have no events currently accepting volunteers.</h2>
@@ -111,7 +102,7 @@ export default async function VolunteerPage() {
 
 	return (
 		<div className={styles.page}>
-			<VolunteerForm events={data.events} />
+			<VolunteerForm events={events} appliedEventIds={appliedEventIds} />
 		</div>
 	);
 }

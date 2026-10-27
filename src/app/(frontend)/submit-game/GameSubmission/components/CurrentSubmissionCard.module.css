@@ -1,112 +1,197 @@
-.data {
-	width: 16rem;
-	min-width: 16rem;
-	max-width: 16rem;
-	padding: 1rem 1.25rem 1.5rem;
-	height: fit-content;
-	border-radius: 0;
+.receipt {
+	--receipt-ink: #1f1f1f;
+	--receipt-muted: #6b6b6b;
+	--receipt-paper: #fefcf5;
+
 	position: sticky;
-	top: 1rem;
+	top: 1.5rem;
+	flex: 0 0 17rem;
+	width: 17rem;
+	padding: 1.5rem 1.25rem 1.75rem;
 	font-family: "Courier New", Courier, monospace;
-	background: #fefcf5;
-	color: #2a2a2a;
-	border: none;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	background: var(--receipt-paper);
+	color: var(--receipt-ink);
 	/* Torn/zigzag top and bottom edges */
-	mask-image: linear-gradient(to right, transparent 0, #000 0),
-		linear-gradient(135deg, #000 33.33%, transparent 33.33%),
-		linear-gradient(-135deg, #000 33.33%, transparent 33.33%),
-		linear-gradient(45deg, #000 33.33%, transparent 33.33%),
+	mask-image:
+		linear-gradient(to right, transparent 0, #000 0), linear-gradient(135deg, #000 33.33%, transparent 33.33%),
+		linear-gradient(-135deg, #000 33.33%, transparent 33.33%), linear-gradient(45deg, #000 33.33%, transparent 33.33%),
 		linear-gradient(-45deg, #000 33.33%, transparent 33.33%);
-	mask-size: 100% calc(100% - 12px), 6px 6px, 6px 6px, 6px 6px, 6px 6px;
+	mask-size:
+		100% calc(100% - 12px),
+		6px 6px,
+		6px 6px,
+		6px 6px,
+		6px 6px;
 	mask-position: center, bottom left, bottom left, top left, top left;
 	mask-repeat: no-repeat, repeat-x, repeat-x, repeat-x, repeat-x;
 
-	.header {
-		width: 100%;
-		text-align: center;
-		font-weight: 700;
-		font-size: 0.95rem;
-		text-transform: uppercase;
-		letter-spacing: 0.12em;
-		color: #2a2a2a;
-	}
-
-	.storeName {
-		width: 100%;
-		text-align: center;
-		font-weight: 700;
-		font-size: 0.7rem;
-		letter-spacing: 0.08em;
-		color: #555;
-		margin-bottom: 0.25rem;
+	p {
+		margin: 0;
 	}
 
 	hr {
 		border: none;
-		border-top: 1px dashed #999;
-		margin: 0.5rem 0;
+		border-top: 1px dashed #9a9a9a;
+		margin: 0.75rem 0;
+	}
+
+	.storeName {
+		text-align: center;
+		font-weight: 700;
+		font-size: 0.7rem;
+		letter-spacing: 0.08em;
+		color: var(--receipt-muted);
+	}
+
+	.header {
+		margin: 0.35rem 0 0.25rem;
+		text-align: center;
+		font-weight: 700;
+		font-size: 1rem;
+		text-transform: uppercase;
+		letter-spacing: 0.14em;
+	}
+
+	.meta {
+		text-align: center;
+		font-size: 0.7rem;
+		color: var(--receipt-muted);
+		overflow-wrap: anywhere;
+	}
+
+	.section {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+		transition: opacity 200ms ease;
+
+		& + .section {
+			margin-top: 0.4rem;
+		}
+
+		&[data-state="upcoming"] {
+			opacity: 0.4;
+		}
 	}
 
 	.label {
-		margin-top: 0.5rem;
 		font-size: 0.65rem;
 		font-weight: 700;
 		text-transform: uppercase;
 		letter-spacing: 0.06em;
-		color: #666;
+		color: var(--receipt-muted);
+		white-space: nowrap;
+	}
+
+	.block {
+		display: flex;
+		flex-direction: column;
+		gap: 0.1rem;
 	}
 
 	.value {
 		font-size: 0.85rem;
-		font-weight: 600;
-		margin-top: 0.1rem;
-		overflow-wrap: break-word;
-		hyphens: manual;
-		min-height: 1.4em;
-		color: #1a1a1a;
+		font-weight: 700;
+		overflow-wrap: anywhere;
 	}
 
-	.footer {
-		margin-top: 0.75rem;
-		text-align: center;
-		font-size: 0.6rem;
-		letter-spacing: 0.04em;
-		color: #888;
+	.subValue {
+		display: block;
+		font-size: 0.75rem;
+		font-weight: 400;
+		color: var(--receipt-muted);
+	}
+
+	/* Label on the left, value on the right, joined by a dotted leader */
+	.line {
+		display: flex;
+		align-items: baseline;
+		gap: 0.35rem;
+
+		&::after {
+			content: "";
+			order: 1;
+			flex: 1;
+			min-width: 1rem;
+			border-bottom: 1px dotted #b5b5b5;
+		}
+	}
+
+	.lineValue {
+		order: 2;
+		font-size: 0.8rem;
+		font-weight: 700;
+		text-align: right;
+		overflow-wrap: anywhere;
+	}
+
+	.blank {
+		color: #c4c4c4;
+		font-weight: 400;
+		letter-spacing: -0.05em;
 	}
 
 	.barcode {
-		margin-top: 0.5rem;
+		height: 2.25rem;
+		margin: 0.25rem 0.5rem 0.5rem;
+		background: repeating-linear-gradient(
+			90deg,
+			var(--receipt-ink) 0 2px,
+			transparent 2px 4px,
+			var(--receipt-ink) 4px 5px,
+			transparent 5px 8px,
+			var(--receipt-ink) 8px 11px,
+			transparent 11px 12px,
+			var(--receipt-ink) 12px 13px,
+			transparent 13px 16px
+		);
+	}
+
+	.footer {
 		text-align: center;
-		font-size: 1.4rem;
-		letter-spacing: -0.05em;
-		line-height: 1;
-		color: #2a2a2a;
-		user-select: none;
+		font-size: 0.65rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--receipt-muted);
+	}
+
+	.stamp {
+		position: absolute;
+		top: 38%;
+		left: 50%;
+		padding: 0.25rem 0.75rem;
+		border: 3px solid #c0392b;
+		border-radius: 6px;
+		color: #c0392b;
+		font-size: 1.5rem;
+		font-weight: 900;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		opacity: 0.85;
+		transform: translate(-50%, -50%) rotate(-14deg);
+		pointer-events: none;
+		animation: stamp 350ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
 	}
 
 	@media (max-width: 48em) {
+		position: relative;
+		top: 0;
+		flex-basis: auto;
 		width: 100%;
-		max-width: 100%;
-		min-width: 100%;
-		position: static;
+		max-width: 26rem;
+		margin: 0 auto;
+	}
+}
 
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 0 1rem;
+@keyframes stamp {
+	from {
+		opacity: 0;
+		transform: translate(-50%, -50%) rotate(-14deg) scale(1.8);
+	}
+}
 
-		.header,
-		.storeName {
-			grid-column: 1 / -1;
-		}
-
-		hr {
-			grid-column: 1 / -1;
-		}
-
-		.footer,
-		.barcode {
-			grid-column: 1 / -1;
-		}
+@media (prefers-reduced-motion: reduce) {
+	.receipt .stamp {
+		animation: none;
 	}
 }

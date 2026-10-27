@@ -51,6 +51,7 @@ export function RaceCoop(props: RaceCoopProps) {
 							label="Name of other runner(s)"
 							autoComplete="off"
 							maxLength={100}
+							required
 							name="racer"
 							key={props.form.key("racer")}
 							{...props.form.getInputProps("racer")}

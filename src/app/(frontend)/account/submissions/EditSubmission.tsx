@@ -2,276 +2,247 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Alert, Button, Checkbox, Group, Modal, Select, Stack, TextInput, Textarea } from "@mantine/core";
+import { Alert, Button, Checkbox, Group, Modal, Tabs, Text } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useMediaQuery } from "@mantine/hooks";
+import { Pencil, Trash } from "pixelarticons/react";
 
-import { updateSubmission, type UpdateSubmissionValues } from "./updateSubmissionAction";
+import gameStyles from "#/app/(frontend)/submit-game/GameSubmission/GameSubmission.module.css";
+import { GameInfo } from "#/app/(frontend)/submit-game/GameSubmission/steps/GameInfoStep";
+import { RunInfo } from "#/app/(frontend)/submit-game/GameSubmission/steps/RunInfoStep";
+import { Availability } from "#/app/(frontend)/submit-game/GameSubmission/steps/AvailabilityStep";
+import { RaceCoop } from "#/app/(frontend)/submit-game/GameSubmission/steps/RaceCoopStep";
+import { getStepErrors } from "#/app/(frontend)/submit-game/GameSubmission/validateSubmission";
+import type { GameSubmissionResults } from "#/app/(frontend)/submit-game/GameSubmission/submissionTypes";
+import { getEventDays } from "#/utilities/getEventDays";
+
+import { updateSubmission, withdrawSubmission } from "./updateSubmissionAction";
+import { formValuesToUpdate, submissionToFormValues } from "./submissionFormMapping";
 import styles from "./EditSubmission.module.css";
 
 import type { Submission } from "#payload-types.ts";
 
-type FormStatus = {
-	message: string;
-	type: "error" | "success";
-} | null;
+export interface SubmissionEventInfo {
+	name: string;
+	startDate: string;
+	endDate: string;
+	eventTimezone: string;
+	acceptingSubmissions: boolean;
+	acceptingBackups: boolean;
+}
 
 interface EditSubmissionModalProps {
 	submission: Submission;
+	event: SubmissionEventInfo;
 }
 
-function valueToJsonText(value: Submission["donationIncentives"] | Submission["availability"]) {
-	if (value === null || value === undefined || value === "") {
-		return "";
-	}
+const TABS = [
+	{ value: "game", label: "Game" },
+	{ value: "speedrun", label: "Speedrun" },
+	{ value: "availability", label: "Availability" },
+	{ value: "race", label: "Race/Co-op" },
+] as const;
 
-	if (typeof value === "string") {
-		return value;
-	}
+type TabValue = (typeof TABS)[number]["value"];
 
-	return JSON.stringify(value, null, 2);
-}
-
-function parseJsonField(value: string, fieldName: string) {
-	const trimmedValue = value.trim();
-	if (!trimmedValue) {
-		return {
-			error: null,
-			value: null,
-		};
-	}
-
-	try {
-		return {
-			error: null,
-			value: JSON.parse(trimmedValue) as unknown,
-		};
-	} catch {
-		return {
-			error: `${fieldName} must be valid JSON.`,
-			value: null,
-		};
-	}
-}
-
-export function EditSubmissionModal({ submission }: EditSubmissionModalProps) {
+export function EditSubmissionModal({ submission, event }: EditSubmissionModalProps) {
 	const router = useRouter();
+	const isMobile = useMediaQuery("(max-width: 48em)");
 	const [opened, setOpened] = useState(false);
+	const [activeTab, setActiveTab] = useState<TabValue>("game");
+	const [tabsWithErrors, setTabsWithErrors] = useState<TabValue[]>([]);
+	const [error, setError] = useState<string | null>(null);
+	const [saved, setSaved] = useState(false);
+	const [confirmWithdraw, setConfirmWithdraw] = useState(false);
 	const [isPending, startTransition] = useTransition();
-	const [status, setStatus] = useState<FormStatus>(null);
 
-	const form = useForm<UpdateSubmissionValues & { donationIncentivesText: string; availabilityText: string }>({
-		mode: "uncontrolled",
-		initialValues: {
-			game: submission.game ?? "",
-			category: submission.category ?? "",
-			platform: submission.platform ?? "",
-			techPlatform: submission.techPlatform ?? "",
-			estimate: submission.estimate ?? "",
-			possibleEstimate: submission.possibleEstimate ?? "",
-			possibleEstimateReason: submission.possibleEstimateReason ?? "",
-			specialRequirements: submission.specialRequirements ?? "",
-			video: submission.video ?? "",
-			ageRating: submission.ageRating ?? null,
-			raceType: submission.raceType ?? null,
-			racer: submission.racer ?? "",
-			isCoop: Boolean(submission.isCoop),
-			canBackup: Boolean(submission.canBackup),
-			donationIncentives: submission.donationIncentives ?? null,
-			availability: submission.availability ?? null,
-			donationIncentivesText: valueToJsonText(submission.donationIncentives),
-			availabilityText: valueToJsonText(submission.availability),
-		},
-		validate: {
-			game: (value) => (value.trim().length > 0 ? null : "Game is required."),
-			category: (value) => (value.trim().length > 0 ? null : "Category is required."),
-			platform: (value) => (value.trim().length > 0 ? null : "Platform is required."),
-			estimate: (value) => (value.trim().length > 0 ? null : "Estimate is required."),
-		},
+	const eventDays = getEventDays(event.startDate, event.endDate);
+	const form = useForm<GameSubmissionResults>({
+		mode: "controlled",
+		initialValues: submissionToFormValues(submission),
 	});
 
-	const handleClose = () => {
-		setOpened(false);
-		setStatus(null);
-		form.reset();
-	};
-
-	const handleSubmit = form.onSubmit((values) => {
-		setStatus(null);
+	function open() {
+		form.setValues(submissionToFormValues(submission));
+		form.resetDirty();
 		form.clearErrors();
+		setActiveTab("game");
+		setTabsWithErrors([]);
+		setError(null);
+		setConfirmWithdraw(false);
+		setSaved(false);
+		setOpened(true);
+	}
 
-		const parsedDonationIncentives = parseJsonField(values.donationIncentivesText, "Donation incentives");
-		const parsedAvailability = parseJsonField(values.availabilityText, "Availability");
+	function close() {
+		if (isPending) return;
+		setOpened(false);
+	}
 
-		if (parsedDonationIncentives.error) {
-			form.setFieldError("donationIncentivesText", parsedDonationIncentives.error);
-			return;
-		}
+	function handleSave() {
+		setError(null);
 
-		if (parsedAvailability.error) {
-			form.setFieldError("availabilityText", parsedAvailability.error);
+		const errors: Record<string, string> = {};
+		const failingTabs: TabValue[] = [];
+		TABS.forEach((tab, step) => {
+			const stepErrors = getStepErrors(step, form.values, eventDays);
+			if (Object.keys(stepErrors).length > 0) {
+				failingTabs.push(tab.value);
+				Object.assign(errors, stepErrors);
+			}
+		});
+
+		form.setErrors(errors);
+		setTabsWithErrors(failingTabs);
+		if (failingTabs.length > 0) {
+			setActiveTab(failingTabs[0]);
 			return;
 		}
 
 		startTransition(async () => {
-			const result = await updateSubmission(submission.id, {
-				game: values.game,
-				category: values.category,
-				platform: values.platform,
-				techPlatform: values.techPlatform,
-				estimate: values.estimate,
-				possibleEstimate: values.possibleEstimate,
-				possibleEstimateReason: values.possibleEstimateReason,
-				specialRequirements: values.specialRequirements,
-				video: values.video,
-				ageRating: values.ageRating,
-				raceType: values.raceType,
-				racer: values.racer,
-				isCoop: values.isCoop,
-				canBackup: values.canBackup,
-				donationIncentives: parsedDonationIncentives.value as Submission["donationIncentives"],
-				availability: parsedAvailability.value as Submission["availability"],
-			});
+			const result = await updateSubmission(submission.id, formValuesToUpdate(form.values, eventDays));
 
-			setStatus({
-				message: result.message,
-				type: result.success ? "success" : "error",
-			});
-
-			if (result.success) {
-				router.refresh();
-				handleClose();
+			if (!result.success) {
+				setError(result.message);
+				return;
 			}
+
+			setOpened(false);
+			setSaved(true);
+			router.refresh();
 		});
-	});
+	}
+
+	function handleWithdraw() {
+		if (!confirmWithdraw) {
+			setConfirmWithdraw(true);
+			return;
+		}
+
+		setError(null);
+		startTransition(async () => {
+			const result = await withdrawSubmission(submission.id);
+
+			if (!result.success) {
+				setError(result.message);
+				setConfirmWithdraw(false);
+				return;
+			}
+
+			setOpened(false);
+			router.refresh();
+		});
+	}
+
+	const showBackupOption = event.acceptingSubmissions && event.acceptingBackups;
 
 	return (
 		<>
-			<Button className={styles.triggerButton} onClick={() => setOpened(true)} size="xs" variant="light">
-				Edit submission
-			</Button>
-			<Modal opened={opened} onClose={handleClose} title="Edit submission" size="xl" centered>
-				<form className={styles.form} onSubmit={handleSubmit}>
-					<div className={styles.grid}>
-						<TextInput key={form.key("game")} label="Game" required {...form.getInputProps("game")} />
-						<TextInput
-							key={form.key("category")}
-							label="Category"
-							required
-							{...form.getInputProps("category")}
-						/>
-						<TextInput
-							key={form.key("platform")}
-							label="Platform"
-							required
-							{...form.getInputProps("platform")}
-						/>
-						<TextInput
-							key={form.key("techPlatform")}
-							label="Tech Platform"
-							{...form.getInputProps("techPlatform")}
-						/>
-						<TextInput
-							key={form.key("estimate")}
-							label="Estimate"
-							required
-							{...form.getInputProps("estimate")}
-						/>
-						<TextInput
-							key={form.key("possibleEstimate")}
-							label="Possible estimate"
-							{...form.getInputProps("possibleEstimate")}
-						/>
-						<Select
-							clearable
-							data={[
-								{ label: "G, PG or M", value: "m_or_lower" },
-								{ label: "MA15+", value: "ma15" },
-								{ label: "R18+", value: "r18" },
-							]}
-							key={form.key("ageRating")}
-							label="Age rating"
-							{...form.getInputProps("ageRating")}
-						/>
-						<Select
-							clearable
-							data={[
-								{ label: "No Race", value: "noRace" },
-								{ label: "Possible Solo", value: "solo" },
-								{ label: "Only Race/Co-op", value: "only" },
-							]}
-							key={form.key("raceType")}
-							label="Race type"
-							{...form.getInputProps("raceType")}
-						/>
-						<TextInput key={form.key("racer")} label="Racer" {...form.getInputProps("racer")} />
-						<TextInput key={form.key("video")} label="Video URL" {...form.getInputProps("video")} />
-						<Textarea
-							className={styles.fullWidth}
-							autosize
-							key={form.key("possibleEstimateReason")}
-							label="Possible estimate reason"
-							minRows={2}
-							{...form.getInputProps("possibleEstimateReason")}
-						/>
-						<Textarea
-							className={styles.fullWidth}
-							autosize
-							key={form.key("specialRequirements")}
-							label="Special requirements"
-							minRows={2}
-							{...form.getInputProps("specialRequirements")}
-						/>
-						<Textarea
-							className={styles.fullWidth}
-							autosize
-							description="Raw JSON. Leave empty to clear this field."
-							key={form.key("donationIncentivesText")}
-							label="Donation incentives"
-							minRows={3}
-							{...form.getInputProps("donationIncentivesText")}
-						/>
-						<Textarea
-							className={styles.fullWidth}
-							autosize
-							description="Raw JSON. Leave empty to clear this field."
-							key={form.key("availabilityText")}
-							label="Availability"
-							minRows={3}
-							{...form.getInputProps("availabilityText")}
-						/>
-						<Stack className={styles.fullWidth} gap="xs">
-							<Checkbox
-								key={form.key("isCoop")}
-								label="Co-op run"
-								{...form.getInputProps("isCoop", { type: "checkbox" })}
-							/>
-							<Checkbox
-								key={form.key("canBackup")}
-								label="Can backup"
-								{...form.getInputProps("canBackup", { type: "checkbox" })}
-							/>
-						</Stack>
-					</div>
+			<Group gap="sm">
+				<Button onClick={open} size="xs" variant="light" leftSection={<Pencil width={14} height={14} />}>
+					Edit submission
+				</Button>
+				{saved && (
+					<Text size="sm" c="green" role="status">
+						Changes saved
+					</Text>
+				)}
+			</Group>
 
-					{status && (
-						<Alert
-							className={styles.status}
-							color={status.type === "error" ? "red" : "green"}
-							role="status"
-						>
-							{status.message}
+			<Modal
+				opened={opened}
+				onClose={close}
+				title={<span className={styles.modalTitle}>Edit {submission.game}</span>}
+				size="xl"
+				fullScreen={isMobile}
+				centered
+			>
+				<div className={`${gameStyles.gameForm} ${styles.body}`}>
+					<p className={styles.eventName}>{event.name}</p>
+
+					<Tabs value={activeTab} onChange={(value) => value && setActiveTab(value as TabValue)}>
+						<Tabs.List grow>
+							{TABS.map((tab) => (
+								<Tabs.Tab
+									key={tab.value}
+									value={tab.value}
+									rightSection={
+										tabsWithErrors.includes(tab.value) ? (
+											<span className={styles.errorDot} aria-label="Has errors" />
+										) : null
+									}
+								>
+									{tab.label}
+								</Tabs.Tab>
+							))}
+						</Tabs.List>
+
+						<Tabs.Panel value="game" pt="lg">
+							<GameInfo form={form} />
+						</Tabs.Panel>
+						<Tabs.Panel value="speedrun" pt="lg">
+							<RunInfo form={form} />
+						</Tabs.Panel>
+						<Tabs.Panel value="availability" pt="lg">
+							<Availability event={event} eventLength={eventDays} form={form} />
+						</Tabs.Panel>
+						<Tabs.Panel value="race" pt="lg">
+							<RaceCoop form={form} />
+						</Tabs.Panel>
+					</Tabs>
+
+					{showBackupOption && (
+						<Checkbox
+							label="Allow as backup run"
+							description="If your run isn't picked for the main schedule, it may still be used as a backup."
+							checked={form.values.backup}
+							onChange={(e) => form.setFieldValue("backup", e.currentTarget.checked)}
+						/>
+					)}
+
+					{error && (
+						<Alert color="red" variant="light" title="Couldn't save your changes">
+							{error}
 						</Alert>
 					)}
 
-					<Group className={styles.actions} mt="sm">
-						<Button onClick={handleClose} type="button" variant="default">
-							Cancel
-						</Button>
-						<Button loading={isPending} type="submit">
-							Save changes
-						</Button>
-					</Group>
-				</form>
+					<div className={styles.footer}>
+						<div className={styles.withdraw}>
+							{confirmWithdraw ? (
+								<>
+									<Text size="sm">Withdraw this submission?</Text>
+									<Button size="xs" color="red" loading={isPending} onClick={handleWithdraw}>
+										Yes, withdraw
+									</Button>
+									<Button
+										size="xs"
+										variant="subtle"
+										color="gray"
+										onClick={() => setConfirmWithdraw(false)}
+									>
+										Keep
+									</Button>
+								</>
+							) : (
+								<Button variant="subtle" color="red" size="sm" onClick={handleWithdraw} leftSection={<Trash width={14} height={14} />}>
+									Withdraw submission
+								</Button>
+							)}
+						</div>
+						<Group gap="sm">
+							<Button variant="default" onClick={close} disabled={isPending}>
+								Cancel
+							</Button>
+							<Button
+								onClick={handleSave}
+								loading={isPending && !confirmWithdraw}
+								disabled={!form.isDirty() || confirmWithdraw}
+							>
+								Save changes
+							</Button>
+						</Group>
+					</div>
+				</div>
 			</Modal>
 		</>
 	);

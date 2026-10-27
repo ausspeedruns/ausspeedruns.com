@@ -34,6 +34,18 @@ export default async function SubmitGamePage() {
 		);
 	}
 
+	if (!user.socials?.discord) {
+		return (
+			<div className={styles.signIn}>
+				<h2>We require a Discord username to accept game submissions.</h2>
+				<p>Please add your Discord username in your profile settings and try again.</p>
+				<Button component="a" href="/account/edit" rightSection={<ArrowRight />}>
+					Update Profile
+				</Button>
+			</div>
+		);
+	}
+
 	// Query events that are accepting submissions or backups
 	const eventsResult = await payload.find({
 		collection: "events",

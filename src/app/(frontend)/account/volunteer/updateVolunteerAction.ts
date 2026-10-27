@@ -86,7 +86,8 @@ export async function updateVolunteer(volunteerId: number, values: UpdateVolunte
 			id: volunteerId,
 			data: {
 				role: values.role,
-				availability: values.availability.length > 0 ? values.availability.map((time) => ({ time })) : null,
+				// Payload array fields must be an array; null throws during update
+				availability: values.availability.map((time) => ({ time })),
 				maximumTime: values.maximumTime ?? null,
 				maxDailyHostTime: values.maxDailyHostTime ?? null,
 				hostSpecificGame: trimToNull(values.hostSpecificGame),
@@ -107,6 +108,29 @@ export async function updateVolunteer(volunteerId: number, values: UpdateVolunte
 
 		return {
 			message: error instanceof Error ? error.message : "Unable to save your volunteer application right now.",
+			success: false,
+		};
+	}
+}
+
+export async function withdrawVolunteer(volunteerId: number) {
+	const payload = await getPayload({ config });
+	const requestHeaders = await headers();
+	const { user } = await payload.auth({ headers: requestHeaders });
+
+	if (!user) {
+		return { message: "You need to be logged in to withdraw applications.", success: false };
+	}
+
+	try {
+		// Access control limits this to the volunteer's own applications, and a hook blocks reviewed ones
+		await payload.delete({ collection: "volunteers", id: volunteerId, overrideAccess: false, user });
+		revalidatePath("/account/volunteer");
+		return { message: "Application withdrawn.", success: true };
+	} catch (error) {
+		console.error("Error withdrawing volunteer application:", error);
+		return {
+			message: error instanceof Error ? error.message : "Unable to withdraw your application right now.",
 			success: false,
 		};
 	}

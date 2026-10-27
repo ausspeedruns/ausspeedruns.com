@@ -9,6 +9,7 @@ import { useForm } from "@mantine/form";
 import styles from "./page.module.css";
 import { Check, SquareAlert } from "pixelarticons/react";
 import { useSessionStore } from "#stores/useSessionStore.ts";
+import { getSafeRedirectPath } from "#utilities/safeRedirect.ts";
 
 type LoginFormProps = {
 	redirectPath: string;
@@ -23,12 +24,6 @@ type LoginFormValues = {
 	email: string;
 	password: string;
 };
-
-function getSafeRedirectPath(value: string | null | undefined): string {
-	if (!value) return "/";
-	if (!value.startsWith("/") || value.startsWith("//")) return "/";
-	return value;
-}
 
 export function LoginForm({ redirectPath }: LoginFormProps) {
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -99,8 +94,8 @@ export function LoginForm({ redirectPath }: LoginFormProps) {
 			// Update the header, which loads the session client-side
 			void useSessionStore.getState().refresh();
 
-			const nextFromQuery = getSafeRedirectPath(searchParams.get("redirect") ?? searchParams.get("next"));
-			router.push(nextFromQuery ?? redirectPath);
+			const nextPath = getSafeRedirectPath(searchParams.get("redirect") ?? searchParams.get("next"), redirectPath);
+			router.push(nextPath);
 			router.refresh();
 		} catch {
 			setStatus({

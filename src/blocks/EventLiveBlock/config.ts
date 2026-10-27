@@ -1,10 +1,11 @@
 import type { Block, Field } from "payload";
 
 import { validateUrl } from "#fields/validators.ts";
+import { toSafeRelativePath } from "#utilities/safeRedirect.ts";
 
 /** Accepts an http(s) URL or a site-relative path such as /donate. */
 const validateLink = (value: unknown): true | string => {
-	if (typeof value === "string" && value.startsWith("/") && !value.startsWith("//")) return true;
+	if (typeof value === "string" && toSafeRelativePath(value)) return true;
 	return validateUrl(value);
 };
 

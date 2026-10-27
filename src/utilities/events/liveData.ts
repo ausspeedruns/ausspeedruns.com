@@ -8,6 +8,12 @@ import { toLiveIncentive, toLiveRuns, type LiveData, type LiveIncentive } from "
 export async function getEventLiveData(eventId: number): Promise<LiveData> {
 	const payload = await getPayload({ config });
 
+	const event = await payload
+		.findByID({ collection: "events", id: eventId, depth: 0, select: { scheduleMetadata: { published: true } } })
+		.catch(() => null);
+	// Unpublished schedules stay private, even to the live block
+	if (!event?.scheduleMetadata?.published) return { runs: [], incentives: [] };
+
 	const [runs, incentives] = await Promise.all([
 		payload.find({
 			collection: "runs",

@@ -2,10 +2,11 @@ import type { CollectionConfig } from "payload";
 import { randomUUID } from "node:crypto";
 
 import { staff } from "#access/staff.ts";
-import { manageUsers } from "#access/manageUsers.ts";
+import { manageNonAdminUsers, manageNonAdminUsersOrSelf } from "#access/manageNonAdminUsers.ts";
 import { sameUserOrManageUsers } from "#access/sameUserOrManageUsers.ts";
 import { anyone } from "#access/anyone.ts";
 import { isAdminField } from "#access/field/isAdmin.ts";
+import { manageUsersField } from "#access/field/manageUsersField.ts";
 import { render } from "@react-email/components";
 import { clearLegacyPasswordOnChange, upgradeLegacyPassword } from "./hooks/legacyPassword.ts";
 import { getServerSideURL } from "#utilities/getURL.ts";
@@ -18,9 +19,9 @@ export const Users: CollectionConfig<"users"> = {
 	access: {
 		admin: staff,
 		create: anyone, // Allow anyone to create an account
-		delete: manageUsers,
+		delete: manageNonAdminUsers,
 		read: sameUserOrManageUsers,
-		update: sameUserOrManageUsers,
+		update: manageNonAdminUsersOrSelf,
 	},
 	admin: {
 		useAsTitle: "username",
@@ -244,6 +245,13 @@ export const Users: CollectionConfig<"users"> = {
 			type: "text",
 			admin: { readOnly: true, position: "sidebar" },
 			access: { create: () => false, update: () => false }, // only set programmatically
+		},
+		{
+			// Overrides Payload's built-in verification field, which any logged-in user could set,
+			// so people can't create pre-verified accounts for email addresses they don't own
+			name: "_verified",
+			type: "checkbox",
+			access: { create: manageUsersField, update: manageUsersField },
 		},
 		{
 			// Keystone bcrypt hash for users who haven't logged in since the migration (see hooks/legacyPassword.ts)

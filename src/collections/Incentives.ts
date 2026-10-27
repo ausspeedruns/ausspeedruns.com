@@ -1,7 +1,7 @@
 import type { CollectionBeforeValidateHook, CollectionConfig } from "payload";
 
 import type { Incentive } from "#/payload-types";
-import { anyone } from "#access/anyone.ts";
+import { scheduleVisible } from "#access/scheduleVisible.ts";
 import { relationId } from "#access/helpers.ts";
 import { manageContent } from "#access/manageContent.ts";
 import { validateIncentiveData } from "#utilities/schedule/incentives.ts";
@@ -41,7 +41,7 @@ export const Incentives: CollectionConfig<"incentives"> = {
 	access: {
 		create: manageContent,
 		delete: manageContent,
-		read: anyone,
+		read: scheduleVisible,
 		update: manageContent,
 	},
 	hooks: {

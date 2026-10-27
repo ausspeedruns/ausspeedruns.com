@@ -91,6 +91,8 @@ export function submissionsToCsv(event: EventSummary, submissions: SubmissionSum
 	});
 
 	return Papa.unparse(rows, {
+		// Submissions are user-supplied, so stop spreadsheets running values like =HYPERLINK(...) as formulas
+		escapeFormulae: true,
 		columns: [
 			"type",
 			"id",
@@ -118,11 +120,15 @@ export function submissionsToCsv(event: EventSummary, submissions: SubmissionSum
 
 export type CsvRow = Record<string, string | undefined>;
 
+const ESCAPED_FORMULA = /^'[=+\-@\t\r]/;
+
 export function parseCsv(text: string): CsvRow[] {
 	const result = Papa.parse<CsvRow>(text, {
 		header: true,
 		skipEmptyLines: "greedy",
 		transformHeader: (header) => header.trim(),
+		// Undo the formula escaping added by submissionsToCsv so exports round-trip
+		transform: (value) => (ESCAPED_FORMULA.test(value) ? value.slice(1) : value),
 	});
 	return result.data;
 }

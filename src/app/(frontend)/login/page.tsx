@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getPayload } from "payload";
 
 import configPromise from "#payload-config";
+import { getSafeRedirectPath } from "#utilities/safeRedirect.ts";
 
 import { LoginForm } from "./LoginForm.tsx";
 import styles from "./page.module.css";
@@ -19,12 +20,6 @@ type LoginPageProps = {
 		redirect?: string;
 	}>;
 };
-
-function getSafeRedirectPath(value?: string): string {
-	if (!value) return "/";
-	if (!value.startsWith("/") || value.startsWith("//")) return "/";
-	return value;
-}
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
 	const params = await searchParams;

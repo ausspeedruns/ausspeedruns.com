@@ -10,7 +10,7 @@ import {
 } from "payload";
 
 import type { Run } from "#/payload-types";
-import { anyone } from "#access/anyone.ts";
+import { scheduleVisible, techScheduleField } from "#access/scheduleVisible.ts";
 import { relationId } from "#access/helpers.ts";
 import { manageContent } from "#access/manageContent.ts";
 import { validateEstimate, validateUrl } from "#fields/validators.ts";
@@ -159,7 +159,7 @@ export const Runs: CollectionConfig<"runs"> = {
 	access: {
 		create: manageContent,
 		delete: manageContent,
-		read: anyone,
+		read: scheduleVisible,
 		update: manageContent,
 	},
 	hooks: {
@@ -347,6 +347,7 @@ export const Runs: CollectionConfig<"runs"> = {
 		{
 			name: "specialRequirements",
 			type: "textarea",
+			access: { read: techScheduleField },
 		},
 		{
 			type: "row",

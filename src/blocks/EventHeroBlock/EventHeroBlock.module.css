@@ -12,12 +12,14 @@
 	position: absolute;
 	inset: 0;
 	z-index: -1;
+	filter: blur(6px);
 
 	&::after {
 		content: "";
 		position: absolute;
 		inset: 0;
-		background: linear-gradient(180deg, rgb(0 0 0 / 55%) 0%, var(--mantine-color-body) 100%);
+		background: var(--mantine-color-body);
+		opacity: 0.5;
 	}
 }
 

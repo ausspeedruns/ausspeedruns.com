@@ -2,17 +2,26 @@
 
 import { Select } from "@mantine/core";
 import { useMantineColorScheme } from "@mantine/core";
+import { Monitor, Moon, Sun } from "pixelarticons/react";
+
+const icons = {
+	auto: Monitor,
+	light: Sun,
+	dark: Moon,
+};
 
 export function ThemeSelector() {
 	const { colorScheme, setColorScheme } = useMantineColorScheme();
+	const Icon = icons[colorScheme] ?? Monitor;
 
 	return (
 		<Select
-			aria-label="Select a theme"
+			aria-label="Colour scheme"
+			title="Colour scheme"
 			data={[
-				{ value: "auto", label: "Auto" },
-				{ value: "light", label: "Light" },
-				{ value: "dark", label: "Dark" },
+				{ value: "auto", label: "Auto theme" },
+				{ value: "light", label: "Light theme" },
+				{ value: "dark", label: "Dark theme" },
 			]}
 			value={colorScheme}
 			onChange={(value) => {
@@ -20,8 +29,12 @@ export function ThemeSelector() {
 					setColorScheme(value);
 				}
 			}}
-			w={100}
+			allowDeselect={false}
+			leftSection={<Icon width={18} height={18} aria-hidden="true" />}
+			leftSectionPointerEvents="none"
+			w={170}
 			variant="unstyled"
+			styles={{ section: { color: "inherit" } }}
 		/>
 	);
 }

@@ -72,19 +72,19 @@ export async function EventHeroBlock(props: EventHeroBlockProps) {
 					) : null}
 
 					{stats.length > 0 ? (
-						<SimpleGrid cols={{ base: 2, sm: stats.length }} spacing="sm" w="100%" mt="lg">
+						<SimpleGrid cols={{ base: 2, sm: stats.length }} spacing="md" w="100%" mt="lg">
 							{stats.map((stat) => (
 								<Paper
 									key={stat.label}
 									withBorder
-									p="md"
+									p="lg"
 									className={stat.label === "Raised" ? styles.statFeatured : styles.stat}
 								>
-									<Text size="xs" fw={600} tt="uppercase" c="dimmed" className={styles.statLabel}>
-										{stat.label}
-									</Text>
 									<Text fw={800} className={styles.statValue}>
 										{stat.value}
+									</Text>
+									<Text size="sm" fw={600} tt="uppercase" c="dimmed" className={styles.statLabel}>
+										{stat.label}
 									</Text>
 								</Paper>
 							))}

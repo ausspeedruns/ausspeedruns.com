@@ -2,7 +2,7 @@ import React from "react";
 import type { StatsBlock as StatsBlockProps } from "#/payload-types";
 import { Container, Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { getAllTimeStats } from "#/utilities/events/allTimeStats";
-import { formatCurrency } from "#/utilities/events/postEventData";
+import { formatCurrencyRoundedDown } from "#/utilities/formatCurrency";
 import styles from "./StatsBlock.module.css";
 
 export async function StatsBlock(props: StatsBlockProps) {
@@ -11,7 +11,7 @@ export async function StatsBlock(props: StatsBlockProps) {
 
 	const stats: { label: string; value: string; featured?: boolean }[] = [];
 	if (totals && showRaised && totals.totalRaised > 0) {
-		stats.push({ label: "Raised for charity", value: formatCurrency(totals.totalRaised), featured: true });
+		stats.push({ label: "Raised for charity", value: formatCurrencyRoundedDown(totals.totalRaised), featured: true });
 	}
 	if (totals && showEvents && totals.eventCount > 0) {
 		stats.push({ label: "Events", value: totals.eventCount.toLocaleString() });

@@ -2,6 +2,7 @@ import { Box } from "@mantine/core";
 import { format } from "date-fns";
 
 import styles from "./Ticket.module.css";
+import { CheckInCode } from "./CheckInCode";
 import { Media } from "#components/Media/Media.tsx";
 import { BankTransferDetails } from "#components/BankTransferDetails/BankTransferDetails.tsx";
 import type { Event, PaymentSetting } from "#/payload-types";
@@ -10,7 +11,7 @@ import { formatCents } from "#utilities/formatCents.ts";
 interface TicketProps {
 	ticketData: {
 		paid: boolean;
-		ticketID: string;
+		ticketID: string | null;
 		method: "bank" | "card";
 		taken: boolean;
 		event: Event;
@@ -61,7 +62,7 @@ export function Ticket(props: TicketProps) {
 				<div className={styles.informationGrid}>
 					<div className={styles.gridItem}>
 						<span className={styles.label}>Ticket ID</span>
-						<span className={styles.value}>{ticketID}</span>
+						<span className={styles.value}>{ticketID ?? "Missing ID"}</span>
 					</div>
 					<div className={styles.gridItem}>
 						<span className={styles.label}>Price</span>
@@ -69,12 +70,14 @@ export function Ticket(props: TicketProps) {
 					</div>
 				</div>
 
+				{ticketID && <CheckInCode ticketID={ticketID} eventName={event.name} />}
+
 				{method === "bank" && !paid && (
 					<div className={styles.bankDetails}>
 						<h4>Bank transfer details</h4>
 						<BankTransferDetails
 							amountInCents={amountOwedInCents}
-							reference={ticketID}
+							reference={ticketID ?? "Missing ID"}
 							accountName={props.bankTransfer?.accountName}
 							bsb={props.bankTransfer?.bsb}
 							accountNumber={props.bankTransfer?.accountNumber}

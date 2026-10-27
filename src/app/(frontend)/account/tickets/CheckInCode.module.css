@@ -1,0 +1,72 @@
+.openButton {
+	align-self: flex-start;
+
+	@media (max-width: 768px) {
+		align-self: stretch;
+	}
+}
+
+/* Always black on white so the code is as easy to read as possible, regardless of colour scheme */
+.content {
+	background-color: #fff;
+	color: #000;
+}
+
+.body {
+	min-height: 100dvh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1.5rem;
+	padding: 1.5rem 1rem;
+	text-align: center;
+}
+
+.eventName {
+	margin: 0;
+	font-size: 1.25rem;
+	font-weight: 700;
+}
+
+.instruction {
+	margin: 0;
+	font-size: 1.125rem;
+}
+
+.code {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.3em;
+	font-family: ui-monospace, "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+	font-size: clamp(2.25rem, 13vw, 6rem);
+	font-weight: 700;
+	line-height: 1;
+}
+
+.group {
+	display: flex;
+	gap: 0.15em;
+}
+
+.char {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.1em;
+	padding: 0.15em 0;
+	border: 3px solid #000;
+	background-color: #fff;
+}
+
+.fullId {
+	margin: 0;
+	font-family: ui-monospace, "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+	font-size: 1.25rem;
+	letter-spacing: 0.1em;
+}
+
+.closeButton {
+	max-width: 24rem;
+}

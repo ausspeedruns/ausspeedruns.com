@@ -2,7 +2,8 @@ import config from "#payload-config";
 import { getPayload } from "payload";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Anchor, Stack, Text, Title } from "@mantine/core";
+import { Alert, Anchor, Stack, Text, ThemeIcon, Title } from "@mantine/core";
+import { ListBox } from "pixelarticons/react";
 import { Order } from "./Order";
 
 export default async function AccountOrdersPage() {
@@ -35,7 +36,17 @@ export default async function AccountOrdersPage() {
 				</Text>
 			</div>
 			{orders.docs.length === 0 ? (
-				<Text c="dimmed">You haven&apos;t placed any orders yet.</Text>
+				<Alert
+					color="gray"
+					icon={
+						<ThemeIcon color="gray" radius="xl" size="sm" variant="light">
+							<ListBox width={14} height={14} />
+						</ThemeIcon>
+					}
+					variant="light"
+				>
+					<Text size="sm">You haven&apos;t placed any orders yet.</Text>
+				</Alert>
 			) : (
 				orders.docs.map((order) => (
 					<Order key={order.id} order={order} bankTransfer={paymentSettings.bankTransfer} />

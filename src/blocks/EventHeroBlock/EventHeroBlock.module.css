@@ -69,13 +69,14 @@
 	background: var(--mantine-primary-color-light);
 }
 
-.statLabel {
-	letter-spacing: 0.08em;
-}
-
 .statValue {
-	margin-top: 0.25rem;
-	font-size: clamp(1.5rem, 3vw, 2.1rem);
+	font-family: "Jersey10", sans-serif;
+	font-size: clamp(4rem, 4vw, 2.5rem);
 	font-variant-numeric: tabular-nums;
 	line-height: 1.1;
+}
+
+.statLabel {
+	margin-top: 0.25rem;
+	letter-spacing: 0.08em;
 }

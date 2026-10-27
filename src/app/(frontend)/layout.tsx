@@ -28,6 +28,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 				<link href="/fonts/Poppins/Poppins.css" rel="stylesheet" />
 			</head>
 			<body>
+				<a href="#main-content" className="skip-link">
+					Skip to main content
+				</a>
 				<Providers>
 					<AdminBar
 						adminBarProps={{
@@ -36,6 +39,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 					/>
 
 					<Header />
+					{/* Skip link target; pages render their own <main> landmark */}
+					<div id="main-content" tabIndex={-1} />
 					{children}
 					<Footer />
 				</Providers>

@@ -12,7 +12,7 @@ export function RaceCoop(props: RaceCoopProps) {
 	return (
 		<div className={styles.pageContent}>
 			<div className={styles.pageHeader}>
-				<h3>Race / Co-op</h3>
+				<h2>Race / Co-op</h2>
 				<p>Optionally submit this run as a race or co-op.</p>
 			</div>
 
@@ -29,6 +29,7 @@ export function RaceCoop(props: RaceCoopProps) {
 							All other runners must also submit the game separately.
 						</Alert>
 						<Radio.Group
+							label="Race or co-op"
 							value={props.form.values.coop.toString()}
 							onChange={(value) => props.form.setFieldValue("coop", value === "true")}
 						>

@@ -21,7 +21,7 @@ export function Availability(props: AvailabilityProps) {
 		return (
 			<div className={styles.pageContent}>
 				<div className={styles.pageHeader}>
-					<h3>Availability</h3>
+					<h2>Availability</h2>
 					<p>Select all days you are available to attend.</p>
 				</div>
 				<Alert variant="light" color="blue" title="Event dates not announced yet">
@@ -68,15 +68,28 @@ export function Availability(props: AvailabilityProps) {
 	return (
 		<div className={styles.pageContent}>
 			<div className={styles.pageHeader}>
-				<h3>Availability</h3>
+				<h2>Availability</h2>
 				<p>Select all days you are available to attend. More availability improves your chances.</p>
 			</div>
 
-			<Checkbox checked={allSelected} onChange={toggleAll} label="Available all days" fw={600} />
+			{/* data-path lets the form focus this group (and read out the error) when no day is selected */}
+			<div
+				role="group"
+				aria-label="Days you are available"
+				aria-describedby={props.form.errors.availability ? "availability-error" : undefined}
+				data-path="availability"
+				tabIndex={-1}
+				className={styles.pageContent}
+				style={{ padding: 0 }}
+			>
+				<Checkbox checked={allSelected} onChange={toggleAll} label="Available all days" fw={600} />
 
-			<div className={styles.dayList}>{dateCheckboxes}</div>
+				<div className={styles.dayList}>{dateCheckboxes}</div>
+			</div>
 
-			{props.form.errors.availability && <Input.Error>{props.form.errors.availability}</Input.Error>}
+			{props.form.errors.availability && (
+				<Input.Error id="availability-error">{props.form.errors.availability}</Input.Error>
+			)}
 		</div>
 	);
 }

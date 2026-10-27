@@ -1,6 +1,6 @@
 "use client";
 
-import { Autocomplete, Input, TextInput, SegmentedControl } from "@mantine/core";
+import { Autocomplete, Input, TextInput, SegmentedControl, VisuallyHidden } from "@mantine/core";
 import PreviousSubmissions, { type OldSubmission } from "../components/PreviousSubmissions";
 import styles from "../GameSubmission.module.css";
 import type { GameSubmissionResults } from "../submissionTypes";
@@ -26,7 +26,7 @@ export function GameInfo(props: RunInfoProps) {
 	return (
 		<div className={styles.pageContent}>
 			<div className={styles.pageHeader}>
-				<h3>Game Information</h3>
+				<h2>Game Information</h2>
 				<p>Tell us about the game you want to run.</p>
 			</div>
 
@@ -38,7 +38,7 @@ export function GameInfo(props: RunInfoProps) {
 
 			<TextInput
 				label="Game Name"
-				autoComplete="game"
+				autoComplete="off"
 				maxLength={100}
 				required
 				name="game"
@@ -73,8 +73,14 @@ export function GameInfo(props: RunInfoProps) {
 			</div>
 
 			<div>
-				<Input.Label required>Age Rating</Input.Label>
+				<Input.Label required id="age-rating-label">
+					Age Rating
+				</Input.Label>
 				<SegmentedControl
+					aria-labelledby="age-rating-label"
+					aria-describedby={
+						props.form.errors.ageRating ? "age-rating-error age-rating-description" : "age-rating-description"
+					}
 					fullWidth
 					data={[
 						{ label: "G, PG or M", value: "m_or_lower" },
@@ -85,11 +91,13 @@ export function GameInfo(props: RunInfoProps) {
 					key={props.form.key("ageRating")}
 					{...props.form.getInputProps("ageRating")}
 				/>
-				{props.form.errors.ageRating && <Input.Error>{props.form.errors.ageRating}</Input.Error>}
-				<Input.Description>
+				{props.form.errors.ageRating && (
+					<Input.Error id="age-rating-error">{props.form.errors.ageRating}</Input.Error>
+				)}
+				<Input.Description id="age-rating-description">
 					If unsure, search{" "}
 					<a href="https://www.classification.gov.au/" target="_blank" rel="noreferrer noopener">
-						classification.gov.au
+						classification.gov.au<VisuallyHidden> (opens in a new tab)</VisuallyHidden>
 					</a>
 				</Input.Description>
 			</div>

@@ -16,9 +16,10 @@ import { Availability } from "./steps/AvailabilityStep";
 import { Acknowledgement } from "./steps/AcknowledgementStep";
 import { SubmissionResults } from "./steps/ResultsStep";
 import { RaceCoop } from "./steps/RaceCoopStep";
-import { useForm } from "@mantine/form";
+import { useForm, type FormErrors } from "@mantine/form";
 import type { OldSubmission } from "./components/PreviousSubmissions";
 import type { Event, Submission } from "#payload-types.ts";
+import { focusFirstError } from "#utilities/react/focusFirstError.ts";
 
 const STEPS = [
 	{ label: "Game", description: "Title & platform" },
@@ -89,7 +90,10 @@ function GameSubmissions(props: GameSubmissionsProps) {
 	const submissionInFlightRef = useRef(false);
 
 	const formTopRef = useRef<HTMLDivElement>(null);
-	const isFirstRenderRef = useRef(true);
+	const stepContentRef = useRef<HTMLDivElement>(null);
+	const backupCheckboxRef = useRef<HTMLInputElement>(null);
+	const pendingErrorFocusRef = useRef<FormErrors | null>(null);
+	const lastStepStateRef = useRef(`${currentStep}-${loading}`);
 
 	const currentEvent = eventsList?.find((eventResult) => eventResult.id === form.values.event);
 	const isBackupOnly = Boolean(currentEvent?.acceptingBackups && !currentEvent?.acceptingSubmissions);
@@ -97,19 +101,36 @@ function GameSubmissions(props: GameSubmissionsProps) {
 
 	// Bring the top of the form back into view when changing steps on long pages
 	useEffect(() => {
-		if (isFirstRenderRef.current) {
-			isFirstRenderRef.current = false;
-			return;
-		}
+		// Compare against the last handled state rather than a first-render flag so Strict Mode's double effect run
+		// doesn't steal focus on page load
+		const stepState = `${currentStep}-${loading}`;
+		if (lastStepStateRef.current === stepState) return;
+		lastStepStateRef.current = stepState;
 
 		const formTop = formTopRef.current;
 		if (formTop && formTop.getBoundingClientRect().top < 0) {
 			formTop.scrollIntoView({ behavior: "smooth", block: "start" });
 		}
-	}, [currentStep]);
+
+		// Sent back to an earlier step with errors: focus the first invalid field instead of the heading
+		const pendingErrors = pendingErrorFocusRef.current;
+		pendingErrorFocusRef.current = null;
+		if (pendingErrors && focusFirstError(form, pendingErrors)) return;
+
+		// Move focus to the new step's heading (or the loading/result message) so screen readers announce the change,
+		// and so focus isn't lost when the Continue/Submit button disappears on the final step
+		const focusTarget = stepContentRef.current?.querySelector<HTMLElement>('h2, [role="status"], [role="alert"]');
+		if (focusTarget) {
+			focusTarget.tabIndex = -1;
+			focusTarget.focus({ preventScroll: true });
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentStep, loading]);
 
 	function handleNext() {
-		if (form.validate().hasErrors) {
+		const validation = form.validate();
+		if (validation.hasErrors) {
+			focusFirstError(form, validation.errors);
 			return;
 		}
 
@@ -122,6 +143,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 			for (let step = 0; step < 4; step++) {
 				const stepErrors = getStepErrors(step, form.values, eventLength);
 				if (Object.keys(stepErrors).length > 0) {
+					pendingErrorFocusRef.current = stepErrors;
 					setCurrentStep(step);
 					form.setErrors(stepErrors);
 					return;
@@ -130,6 +152,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 
 			if (isBackupOnly && !backupAcknowledged) {
 				setBackupAcknowledgedError(true);
+				backupCheckboxRef.current?.focus();
 				return;
 			}
 
@@ -246,6 +269,7 @@ function GameSubmissions(props: GameSubmissionsProps) {
 
 			{isBackupOnly && (
 				<Checkbox
+					ref={backupCheckboxRef}
 					onChange={(e) => {
 						setBackupAcknowledged(e.currentTarget.checked);
 						if (e.currentTarget.checked) setBackupAcknowledgedError(false);
@@ -269,14 +293,21 @@ function GameSubmissions(props: GameSubmissionsProps) {
 					stepBody: styles.stepBody,
 				}}
 			>
-				{STEPS.map((step) => (
-					<Stepper.Step key={step.label} label={step.label} description={step.description} />
+				{STEPS.map((step, index) => (
+					<Stepper.Step
+						key={step.label}
+						label={step.label}
+						description={step.description}
+						aria-current={index === currentStep ? "step" : undefined}
+					/>
 				))}
 			</Stepper>
 
 			<div className={styles.formAndData}>
 				<Paper shadow="sm" withBorder className={styles.paper}>
-					{renderStep()}
+					<div ref={stepContentRef} style={{ display: "contents" }}>
+						{renderStep()}
+					</div>
 					{currentStep < 5 && (
 						<div className={styles.pageControls}>
 							<Button

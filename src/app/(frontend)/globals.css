@@ -72,6 +72,8 @@ html:root[data-mantine-color-scheme="light"] {
 
 html:root[data-mantine-color-scheme="dark"] {
 	--mantine-color-body: #03070f;
+	/* Mantine's default (dark-3) is ~3.7:1 on inputs; dark-2 passes AA */
+	--mantine-color-placeholder: var(--mantine-color-dark-2);
 }
 
 /* Inputs get stronger borders (>= 3:1 against their surface) than cards/dividers. */
@@ -116,6 +118,27 @@ html:root[data-mantine-color-scheme="dark"] {
 	--success: 196 100% 14%;
 	--warning: 34 51% 25%;
 	--error: 10 39% 43%;
+}
+
+.skip-link {
+	position: absolute;
+	top: 0.5rem;
+	left: 0.5rem;
+	z-index: 1000;
+	padding: 0.5rem 1rem;
+	border-radius: var(--radius);
+	background: var(--mantine-color-body);
+	color: hsl(var(--foreground));
+	font-weight: 600;
+	transform: translateY(-200%);
+}
+
+.skip-link:focus {
+	transform: none;
+}
+
+#main-content:focus {
+	outline: none;
 }
 
 .container {

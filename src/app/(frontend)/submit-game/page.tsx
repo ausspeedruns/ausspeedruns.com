@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { getPayload } from "payload";
 import configPromise from "#payload-config";
-import { Button } from "@mantine/core";
+import { Button, VisuallyHidden } from "@mantine/core";
 import { ArrowRight, Files, Home, Login } from "pixelarticons/react";
 
 import styles from "./page.module.css";
@@ -21,8 +21,8 @@ export default async function SubmitGamePage() {
 
 	if (!user) {
 		return (
-			<div className={styles.signIn}>
-				<h2>Please sign in to submit games.</h2>
+			<main className={styles.signIn}>
+				<h1>Please sign in to submit games.</h1>
 				<Button component="a" href="/login?redirect=/submit-game" rightSection={<Login />}>
 					Sign In
 				</Button>
@@ -30,19 +30,19 @@ export default async function SubmitGamePage() {
 				<Button component="a" href="/signup" rightSection={<ArrowRight />}>
 					Join
 				</Button>
-			</div>
+			</main>
 		);
 	}
 
 	if (!user.socials?.discord) {
 		return (
-			<div className={styles.signIn}>
-				<h2>We require a Discord username to accept game submissions.</h2>
+			<main className={styles.signIn}>
+				<h1>We require a Discord username to accept game submissions.</h1>
 				<p>Please add your Discord username in your profile settings and try again.</p>
 				<Button component="a" href="/account/edit" rightSection={<ArrowRight />}>
 					Update Profile
 				</Button>
-			</div>
+			</main>
 		);
 	}
 
@@ -98,8 +98,8 @@ export default async function SubmitGamePage() {
 
 	if (data.events.length === 0) {
 		return (
-			<div>
-				<h2>Unfortunately we have no events currently accepting submissions.</h2>
+			<main>
+				<h1>Unfortunately we have no events currently accepting submissions.</h1>
 				<p>Join our Discord to stay up to date!</p>
 				<Button component="a" href="/discord">
 					Discord
@@ -107,14 +107,14 @@ export default async function SubmitGamePage() {
 				<Button component="a" href="/" leftSection={<Home />}>
 					Home
 				</Button>
-			</div>
+			</main>
 		);
 	}
 
 	const singleEvent = data.events.length === 1 ? data.events[0] : undefined;
 
 	return (
-		<div className={styles.page}>
+		<main className={styles.page}>
 			<h1>
 				{singleEvent?.shortName}{" "}
 				{singleEvent?.acceptingBackups && !singleEvent?.acceptingSubmissions ? "Backup" : "Game"} Submission
@@ -127,8 +127,9 @@ export default async function SubmitGamePage() {
 				rightSection={<Files />}
 			>
 				AusSpeedruns Submission Guidelines
+				<VisuallyHidden> (opens in a new tab)</VisuallyHidden>
 			</Button>
 			<GameSubmissions availableEvents={data.events} oldSubmissions={data.user.submissions} />
-		</div>
+		</main>
 	);
 }

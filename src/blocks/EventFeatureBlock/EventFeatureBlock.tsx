@@ -1,6 +1,6 @@
 import React from "react";
 import type { EventFeatureBlock as EventFeatureBlockProps } from "#/payload-types";
-import { Container, Group, Stack, Text, Title } from "@mantine/core";
+import { Container, Group, Stack, Text, Title, VisuallyHidden } from "@mantine/core";
 import { Media } from "#/components/Media/Media";
 import { formatCurrency, formatEventDateRange, resolveEvent } from "#/utilities/events/postEventData";
 import { HeroButton } from "#/blocks/EventHeroBlock/HeroButton";
@@ -36,6 +36,7 @@ export async function EventFeatureBlock(props: EventFeatureBlockProps) {
 		<section className={styles.container} data-full-bleed>
 			{hero ? (
 				<Media
+					alt=""
 					className={styles.backdrop}
 					pictureClassName={styles.fillPicture}
 					imgClassName={styles.backdropImage}
@@ -74,6 +75,8 @@ export async function EventFeatureBlock(props: EventFeatureBlockProps) {
 				<Stack align="center" gap="md" className={styles.visual}>
 					{logo ? (
 						<Media
+							// The event name is already in the heading
+							alt=""
 							className={styles.logoWrap}
 							imgClassName={styles.logo}
 							resource={logo}
@@ -81,8 +84,9 @@ export async function EventFeatureBlock(props: EventFeatureBlockProps) {
 						/>
 					) : null}
 					{raised ? (
-						<Text className={styles.raised} aria-label={`${raised} raised`}>
+						<Text className={styles.raised}>
 							{raised}
+							<VisuallyHidden> raised</VisuallyHidden>
 						</Text>
 					) : null}
 				</Stack>

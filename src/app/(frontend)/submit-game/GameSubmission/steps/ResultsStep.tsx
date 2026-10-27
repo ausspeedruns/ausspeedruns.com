@@ -16,6 +16,7 @@ export function SubmissionResults(props: SubmissionResultsProps) {
 	if (props.loading) {
 		return (
 			<div
+				role="status"
 				style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "2rem", gap: "1rem" }}
 			>
 				<Loader size="lg" />
@@ -43,7 +44,7 @@ export function SubmissionResults(props: SubmissionResultsProps) {
 				<ThemeIcon size={56} radius="xl" color="green" variant="light">
 					<Check style={{ width: 32, height: 32 }} />
 				</ThemeIcon>
-				<h3>Submission received!</h3>
+				<h2>Submission received!</h2>
 				<p>
 					<strong>{props.results.game}</strong> – {props.results.category} has been submitted.
 				</p>

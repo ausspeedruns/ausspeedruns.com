@@ -7,6 +7,7 @@ import { draftMode } from "next/headers";
 import { permanentRedirect } from "next/navigation";
 import { findCanonicalCase } from "#utilities/caseInsensitive.ts";
 import React, { cache } from "react";
+import { VisuallyHidden } from "@mantine/core";
 import { homeStatic } from "#/collections/Pages/defaults/homeStatic";
 
 import { RenderBlocks } from "#/blocks/RenderBlocks";
@@ -81,16 +82,24 @@ export default async function Page({ params: paramsPromise }: Args) {
 
 	const { layout } = page;
 
+	// Pages built only from blocks with h2 headings (e.g. the home page) would otherwise have no page-level heading
+	const hasHeadingOne =
+		layout?.some((block) => block.blockType === "eventHeroBlock") || JSON.stringify(layout).includes('"tag":"h1"');
+
 	return (
-		<article>
+		<main>
 			<PageClient />
 			{/* Allows redirects for valid pages too */}
 			<PayloadRedirects disableNotFound url={url} />
 
 			{draft && <LivePreviewListener />}
 
+			{!hasHeadingOne && (
+				<VisuallyHidden component="h1">{slug === "home" ? "AusSpeedruns" : page.title}</VisuallyHidden>
+			)}
+
 			<RenderBlocks blocks={layout} />
-		</article>
+		</main>
 	);
 }
 

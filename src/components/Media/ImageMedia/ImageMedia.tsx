@@ -39,7 +39,8 @@ export function ImageMedia(props: MediaProps) {
 
 		width = fullWidth!;
 		height = fullHeight!;
-		alt = altFromResource ?? "";
+		// An explicit alt (including "" for decorative images) takes precedence over the media library's alt
+		alt = altFromProps ?? altFromResource ?? "";
 
 		const cacheTag = resource.updatedAt;
 

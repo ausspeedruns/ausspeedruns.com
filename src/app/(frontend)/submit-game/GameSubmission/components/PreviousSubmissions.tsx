@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 import { Card, UnstyledButton } from "@mantine/core";
 import styles from "./PreviousSubmissions.module.css";
 import type { Submission } from "#payload-types.ts";
@@ -33,6 +33,7 @@ function uniqueGames(submissions: OldSubmission[]): OldSubmission[] {
 
 function PreviousSubmissions(props: PreviousSubmissionsProps) {
 	const games = useMemo(() => uniqueGames(props.submissions ?? []), [props.submissions]);
+	const labelId = useId();
 
 	if (games.length === 0) return null;
 
@@ -40,8 +41,10 @@ function PreviousSubmissions(props: PreviousSubmissionsProps) {
 
 	return (
 		<div className={styles.previousSubmissions}>
-			<p className={styles.label}>Quick fill from previous submissions ({games.length})</p>
-			<div className={styles.row}>
+			<p className={styles.label} id={labelId}>
+				Quick fill from previous submissions ({games.length})
+			</p>
+			<div className={styles.row} role="group" aria-labelledby={labelId}>
 				{games.map((submission) => {
 					const key = submissionKey(submission);
 					const isSelected = key === selectedKey;

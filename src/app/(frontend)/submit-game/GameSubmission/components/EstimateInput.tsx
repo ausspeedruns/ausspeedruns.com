@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import type { ChangeEvent, FocusEvent, ReactNode } from "react";
 import styles from "./EstimateInput.module.css";
 import { Input, Select } from "@mantine/core";
@@ -15,6 +15,8 @@ type EstimateInputProps = {
 	error?: ReactNode;
 	disabled?: boolean;
 	name?: string;
+	/** Passed through by form.getInputProps so the form can focus this field when it has an error */
+	"data-path"?: string;
 };
 
 function parseEstimateString(estimate: string) {
@@ -46,6 +48,8 @@ function EstimateInput(props: EstimateInputProps) {
 		() => parseEstimateString(props.value ?? props.defaultValue ?? "00:00:00"),
 		[props.defaultValue, props.value],
 	);
+	const labelId = useId();
+	const errorId = useId();
 	const [hours, setHours] = useState<number>(initialTime.hours);
 	const [mins, setMins] = useState<number>(initialTime.mins);
 
@@ -73,7 +77,13 @@ function EstimateInput(props: EstimateInputProps) {
 	}, [hours, mins, props.onChange, props.onTimeChange, props.value]);
 
 	return (
-		<div className={styles.estimateContainer}>
+		// Grouped so screen readers announce e.g. "Estimate" before the "Hour" and "Mins" selects
+		<div
+			className={styles.estimateContainer}
+			role="group"
+			aria-labelledby={labelId}
+			aria-describedby={props.error ? errorId : undefined}
+		>
 			<input
 				type="hidden"
 				name={props.name}
@@ -82,13 +92,15 @@ function EstimateInput(props: EstimateInputProps) {
 				onBlur={props.onBlur}
 				onChange={props.onChange}
 			/>
-			<Input.Label className={styles.label} required={props.required}>
+			<Input.Label className={styles.label} required={props.required} id={labelId}>
 				{props.label ?? "Estimate"}
 			</Input.Label>
 			<div className={styles.inputContainer}>
 				<Select
 					disabled={props.disabled}
 					className={styles.select}
+					data-path={props["data-path"]}
+					error={Boolean(props.error)}
 					label="Hour"
 					value={hours.toString()}
 					onChange={(val) => val !== null && setHours(parseInt(val))}
@@ -102,6 +114,7 @@ function EstimateInput(props: EstimateInputProps) {
 				<Select
 					disabled={props.disabled}
 					className={styles.select}
+					error={Boolean(props.error)}
 					label="Mins"
 					value={mins.toString()}
 					onChange={(val) => val !== null && setMins(parseInt(val))}
@@ -113,7 +126,7 @@ function EstimateInput(props: EstimateInputProps) {
 					}))}
 				/>
 			</div>
-			{props.error ? <Input.Error>{props.error}</Input.Error> : null}
+			{props.error ? <Input.Error id={errorId}>{props.error}</Input.Error> : null}
 		</div>
 	);
 }

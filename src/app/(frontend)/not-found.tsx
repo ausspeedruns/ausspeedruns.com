@@ -9,13 +9,13 @@ const responses = [
 
 export default function NotFound() {
 	return (
-		<div className={`container ${styles.container}`}>
+		<main className={`container ${styles.container}`}>
 			<div className={styles.content}>
 				<h1 className={styles.title}>404</h1>
 				{responses[Math.floor(Math.random() * responses.length)]}
 				<p className={styles.description}>This page could not be found.</p>
 			</div>
 			<ButtonLink href="/">Go home</ButtonLink>
-		</div>
+		</main>
 	);
 }

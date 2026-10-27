@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Checkbox } from "@mantine/core";
+import { Button, Checkbox, VisuallyHidden } from "@mantine/core";
 import { raceSummary } from "../components/CurrentSubmissionCard";
 import styles from "../GameSubmission.module.css";
 import RichText from "#components/RichText/RichText.tsx";
@@ -52,7 +52,7 @@ export function Acknowledgement(props: AcknowledgementProps) {
 	return (
 		<div className={styles.pageContent}>
 			<div className={styles.pageHeader}>
-				<h3>Review &amp; Submit</h3>
+				<h2>Review &amp; Submit</h2>
 				<p>Check your details and the submission instructions, then submit your run.</p>
 			</div>
 
@@ -62,7 +62,7 @@ export function Acknowledgement(props: AcknowledgementProps) {
 						<dt>{item.label}</dt>
 						<dd>{item.value}</dd>
 						<Button variant="subtle" size="compact-sm" onClick={() => props.onEditStep(item.step)}>
-							Edit
+							Edit<VisuallyHidden> {item.label}</VisuallyHidden>
 						</Button>
 					</div>
 				))}

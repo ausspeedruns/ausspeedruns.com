@@ -3,13 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Alert, Anchor, Button, PasswordInput, Stack, Text, TextInput, Tooltip } from "@mantine/core";
+import { Alert, Anchor, Button, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 
 import styles from "./page.module.css";
 import { useForm } from "@mantine/form";
 import { SignUp } from "./signupAction";
 import { Check, SquareAlert } from "pixelarticons/react";
+import { focusFirstError } from "#utilities/react/focusFirstError.ts";
 
 export interface SignUpFormData {
 	username: string;
@@ -103,9 +104,13 @@ export function SignUpForm() {
 
 	return (
 		<Stack gap="md">
-			<form className={styles.form} onSubmit={form.onSubmit(handleSubmit)}>
+			<form
+				className={styles.form}
+				onSubmit={form.onSubmit(handleSubmit, (errors) => focusFirstError(form, errors))}
+			>
 				<TextInput
 					label="Username"
+					description="3-25 characters: letters, numbers, underscores, tildes and hyphens."
 					id="username"
 					name="username"
 					autoComplete="username"
@@ -128,6 +133,7 @@ export function SignUpForm() {
 
 				<PasswordInput
 					label="Password"
+					description="At least 8 characters."
 					id="password"
 					name="password"
 					autoComplete="new-password"
@@ -138,33 +144,9 @@ export function SignUpForm() {
 				/>
 
 				<DatePickerInput
-					label={
-						<span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-							Date of Birth
-							<Tooltip
-								label="We collect your date of birth to verify you meet the minimum age requirements for our events and events we partner with."
-								multiline
-								w={250}
-							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="16"
-									height="16"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									strokeWidth="2"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									style={{ cursor: "help", opacity: 0.6 }}
-								>
-									<circle cx="12" cy="12" r="10" />
-									<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-									<line x1="12" y1="17" x2="12.01" y2="17" />
-								</svg>
-							</Tooltip>
-						</span>
-					}
+					label="Date of Birth"
+					// Shown as text (rather than a hover-only tooltip) so keyboard and screen reader users get it too
+					description="Used to check you meet the minimum age for our events and events we partner with."
 					required
 					placeholder="Select your date of birth"
 					maxDate={new Date()}
@@ -174,6 +156,8 @@ export function SignUpForm() {
 					name="dateOfBirth"
 					key={form.key("dateOfBirth")}
 					{...form.getInputProps("dateOfBirth")}
+					// An empty string renders as "Invalid Date" instead of the placeholder
+					defaultValue={form.getValues().dateOfBirth || null}
 				/>
 
 				<Button className={styles.submit} type="submit" loading={isSubmitting} size="md" fullWidth>
@@ -186,8 +170,8 @@ export function SignUpForm() {
 					variant="light"
 					icon={status.type === "error" ? <SquareAlert /> : <Check />}
 					color={status.type === "error" ? "red" : "green"}
-					role="status"
-					aria-live={status.type === "error" ? "assertive" : "polite"}
+					// role="alert" is announced as soon as it appears; a freshly mounted role="status" often isn't
+					role={status.type === "error" ? "alert" : "status"}
 				>
 					{status.message}
 				</Alert>

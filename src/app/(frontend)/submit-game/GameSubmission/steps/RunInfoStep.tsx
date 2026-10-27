@@ -53,13 +53,13 @@ export function RunInfo(props: RunInfoProps) {
 	return (
 		<div className={styles.pageContent}>
 			<div className={styles.pageHeader}>
-				<h3>Speedrun Details</h3>
+				<h2>Speedrun Details</h2>
 				<p>Provide details about your run category and timing.</p>
 			</div>
 
 			<TextInput
 				label="Category"
-				autoComplete="category"
+				autoComplete="off"
 				description="Do not use uncommon acronyms."
 				maxLength={100}
 				required

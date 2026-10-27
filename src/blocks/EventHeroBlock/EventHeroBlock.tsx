@@ -37,6 +37,7 @@ export async function EventHeroBlock(props: EventHeroBlockProps) {
 		<section className={styles.container} data-full-bleed>
 			{hero ? (
 				<Media
+					alt=""
 					className={styles.backdrop}
 					pictureClassName={styles.fillPicture}
 					imgClassName={styles.backdropImage}
@@ -50,6 +51,8 @@ export async function EventHeroBlock(props: EventHeroBlockProps) {
 				<Stack align="center" gap="sm">
 					{logo ? (
 						<Media
+							// Only name the logo when the heading doesn't already contain the event name
+							alt={heading && !heading.includes(event.name) ? event.name : ""}
 							className={styles.logoWrap}
 							imgClassName={styles.logo}
 							resource={logo}

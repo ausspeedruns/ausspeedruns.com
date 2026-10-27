@@ -10,6 +10,7 @@ import styles from "./page.module.css";
 import { Check, SquareAlert } from "pixelarticons/react";
 import { useSessionStore } from "#stores/useSessionStore.ts";
 import { getSafeRedirectPath } from "#utilities/safeRedirect.ts";
+import { focusFirstError } from "#utilities/react/focusFirstError.ts";
 
 type LoginFormProps = {
 	redirectPath: string;
@@ -105,7 +106,7 @@ export function LoginForm({ redirectPath }: LoginFormProps) {
 		} finally {
 			setIsSubmitting(false);
 		}
-	});
+	}, (errors) => focusFirstError(form, errors));
 
 	return (
 		<Stack gap="md">
@@ -141,8 +142,8 @@ export function LoginForm({ redirectPath }: LoginFormProps) {
 					variant="light"
 					icon={status.type === "error" ? <SquareAlert /> : <Check />}
 					color={status.type === "error" ? "red" : "green"}
-					role="status"
-					aria-live={status.type === "error" ? "assertive" : "polite"}
+					// role="alert" is announced as soon as it appears; a freshly mounted role="status" often isn't
+					role={status.type === "error" ? "alert" : "status"}
 				>
 					{status.message}
 				</Alert>

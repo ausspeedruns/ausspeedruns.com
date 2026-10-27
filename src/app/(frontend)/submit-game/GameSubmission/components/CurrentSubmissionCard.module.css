@@ -14,7 +14,8 @@
 	/* Torn/zigzag top and bottom edges */
 	mask-image:
 		linear-gradient(to right, transparent 0, #000 0), linear-gradient(135deg, #000 33.33%, transparent 33.33%),
-		linear-gradient(-135deg, #000 33.33%, transparent 33.33%), linear-gradient(45deg, #000 33.33%, transparent 33.33%),
+		linear-gradient(-135deg, #000 33.33%, transparent 33.33%),
+		linear-gradient(45deg, #000 33.33%, transparent 33.33%),
 		linear-gradient(-45deg, #000 33.33%, transparent 33.33%);
 	mask-size:
 		100% calc(100% - 12px),
@@ -22,7 +23,12 @@
 		6px 6px,
 		6px 6px,
 		6px 6px;
-	mask-position: center, bottom left, bottom left, top left, top left;
+	mask-position:
+		center,
+		bottom left,
+		bottom left,
+		top left,
+		top left;
 	mask-repeat: no-repeat, repeat-x, repeat-x, repeat-x, repeat-x;
 
 	p {

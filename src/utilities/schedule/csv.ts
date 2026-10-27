@@ -341,7 +341,8 @@ export function csvRowsToDraft(csvRows: CsvRow[], context: ImportContext): Draft
 
 		const raceType = (pick("raceType", submission?.raceType) || "noRace") as SubmissionSummary["raceType"];
 		const isRace = raceType === "solo" || raceType === "only";
-		const isCoop = isRace && (csv.coop !== undefined && csv.coop.trim() ? isTruthy(csv.coop) : Boolean(submission?.isCoop));
+		const isCoop =
+			isRace && (csv.coop !== undefined && csv.coop.trim() ? isTruthy(csv.coop) : Boolean(submission?.isCoop));
 
 		const medleyName = csv.medley?.trim();
 		const parentKey = medleyName ? (medleyKeys.get(normaliseName(medleyName)) ?? null) : null;

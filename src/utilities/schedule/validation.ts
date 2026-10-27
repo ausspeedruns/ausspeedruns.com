@@ -68,12 +68,22 @@ export function validateDraft(
 		}
 
 		if (row.type === "segment" && !row.segmentTypeId) {
-			issues.push({ level: "error", step: "timing", rowKey: row.key, message: `${label}: choose a segment type.` });
+			issues.push({
+				level: "error",
+				step: "timing",
+				rowKey: row.key,
+				message: `${label}: choose a segment type.`,
+			});
 		}
 
 		if (row.type === "medley") {
 			if (!row.category.trim()) {
-				issues.push({ level: "error", step: "timing", rowKey: row.key, message: `${label}: missing medley name.` });
+				issues.push({
+					level: "error",
+					step: "timing",
+					rowKey: row.key,
+					message: `${label}: missing medley name.`,
+				});
 			}
 			const children = draft.rows.filter((candidate) => candidate.parentKey === row.key);
 			if (children.length === 0) {
@@ -200,7 +210,12 @@ export function validateDraft(
 	const blockNames = (draft.blocks ?? []).map((block) => block.name.trim() || "Untitled block");
 	(draft.blocks ?? []).forEach((block, i) => {
 		if (!block.name.trim()) {
-			issues.push({ level: "error", step: "blocks", blockKey: block.key, message: "A schedule block is missing a name." });
+			issues.push({
+				level: "error",
+				step: "blocks",
+				blockKey: block.key,
+				message: "A schedule block is missing a name.",
+			});
 		}
 		if (validateColour(block.colour) !== true || !block.colour.trim()) {
 			issues.push({

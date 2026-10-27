@@ -92,7 +92,11 @@ export const scheduleBlocksField: ArrayField = {
 					type: "relationship",
 					relationTo: "runs",
 					filterOptions: sameEventTopLevelRuns,
-					admin: { width: "50%", sortOptions: "scheduledTime", description: "Leave empty for a single-run block." },
+					admin: {
+						width: "50%",
+						sortOptions: "scheduledTime",
+						description: "Leave empty for a single-run block.",
+					},
 				},
 			],
 		},

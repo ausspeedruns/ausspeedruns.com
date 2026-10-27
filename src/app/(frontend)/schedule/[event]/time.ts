@@ -28,11 +28,6 @@ export function displayZoneOptions(eventTimezone: string, showEventTime: boolean
 }
 
 /** Formats a schedule time using date-fns tokens in the event or local timezone. */
-export function formatScheduleTime(
-	value: string,
-	eventTimezone: string,
-	showEventTime: boolean,
-	formatString: string,
-) {
+export function formatScheduleTime(value: string, eventTimezone: string, showEventTime: boolean, formatString: string) {
 	return format(scheduleTimeToDate(value), formatString, displayZoneOptions(eventTimezone, showEventTime));
 }

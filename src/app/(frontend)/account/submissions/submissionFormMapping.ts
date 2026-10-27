@@ -1,5 +1,8 @@
 import type { Submission } from "#payload-types.ts";
-import type { DonationIncentive, GameSubmissionResults } from "#/app/(frontend)/submit-game/GameSubmission/submissionTypes";
+import type {
+	DonationIncentive,
+	GameSubmissionResults,
+} from "#/app/(frontend)/submit-game/GameSubmission/submissionTypes";
 import type { UpdateSubmissionValues } from "./updateSubmissionAction";
 
 /** Availability is stored as a JSON string (or array) of "true"/"false" values, one per event day. */
@@ -20,7 +23,9 @@ export function parseAvailability(value: Submission["availability"]): boolean[] 
 export function parseDonationIncentives(value: Submission["donationIncentives"]): DonationIncentive[] {
 	if (!Array.isArray(value)) return [];
 	return value
-		.filter((incentive): incentive is Record<string, unknown> => Boolean(incentive) && typeof incentive === "object")
+		.filter(
+			(incentive): incentive is Record<string, unknown> => Boolean(incentive) && typeof incentive === "object",
+		)
 		.map((incentive) => ({
 			title: String(incentive.title ?? ""),
 			time: incentive.time ? String(incentive.time) : undefined,

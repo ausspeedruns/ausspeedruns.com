@@ -109,7 +109,9 @@ export function Submission(props: SubmissionProps) {
 				</Accordion.Control>
 				<Accordion.Panel>
 					<Stack gap="md" pb="xs">
-						{event && eventOpen && isPending && <EditSubmissionModal submission={submission} event={event} />}
+						{event && eventOpen && isPending && (
+							<EditSubmissionModal submission={submission} event={event} />
+						)}
 						{eventOpen && !isPending && (
 							<Text size="sm" c="dimmed">
 								This submission has been reviewed, so it can no longer be edited. Contact the event
@@ -190,7 +192,8 @@ export function Submission(props: SubmissionProps) {
 									<Text span fw={600}>
 										{submission.isCoop ? "Co-op" : "Race"}
 									</Text>{" "}
-									{RACE_LABELS[submission.raceType ?? "noRace"] ?? formatEnumLabel(submission.raceType)}
+									{RACE_LABELS[submission.raceType ?? "noRace"] ??
+										formatEnumLabel(submission.raceType)}
 								</Text>
 								{submission.raceType && submission.raceType !== "noRace" && (
 									<Text>

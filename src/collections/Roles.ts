@@ -59,7 +59,9 @@ export const Roles: CollectionConfig<"roles"> = {
 					name: "canPickupTickets",
 					type: "checkbox",
 					defaultValue: false,
-					admin: { description: "Ticket pickup desk only: look up tickets and mark tickets/merch as collected." },
+					admin: {
+						description: "Ticket pickup desk only: look up tickets and mark tickets/merch as collected.",
+					},
 				},
 				{
 					name: "canAccessTechSchedule",

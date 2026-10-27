@@ -25,17 +25,8 @@ export default function DonationIncentiveInput({ form, index, onRemove }: Donati
 				</Button>
 			</div>
 			<div className={styles.topRow}>
-				<TextInput
-					{...inputProps("title")}
-					label="Name"
-					placeholder="e.g. Name the file"
-					required
-				/>
-				<TextInput
-					{...inputProps("time")}
-					label="Extra time needed"
-					placeholder="e.g. 5 mins"
-				/>
+				<TextInput {...inputProps("title")} label="Name" placeholder="e.g. Name the file" required />
+				<TextInput {...inputProps("time")} label="Extra time needed" placeholder="e.g. 5 mins" />
 			</div>
 			<TextInput
 				{...inputProps("description")}

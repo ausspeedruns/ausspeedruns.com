@@ -115,7 +115,13 @@ export function NowPlaying({ runs, state, now, raised, scheduleHref }: NowPlayin
 			<div className={styles.nowPlayingGrid}>
 				<Stack gap={6} aria-live="polite">
 					<Text className={styles.kicker}>
-						{state.status === "pre" ? "Starting soon" : isIntermission ? "Intermission" : current ? "Now playing" : "Setting up"}
+						{state.status === "pre"
+							? "Starting soon"
+							: isIntermission
+								? "Intermission"
+								: current
+									? "Now playing"
+									: "Setting up"}
 					</Text>
 					{state.status === "pre" && next ? (
 						<>
@@ -158,7 +164,8 @@ export function NowPlaying({ runs, state, now, raised, scheduleHref }: NowPlayin
 						</Text>
 						<RunDetails run={next} />
 						<Text size="sm" c="dimmed" suppressHydrationWarning>
-							{formatStartTime(next.scheduledTime)} · <Countdown target={next.scheduledTime} initialNow={now} />
+							{formatStartTime(next.scheduledTime)} ·{" "}
+							<Countdown target={next.scheduledTime} initialNow={now} />
 						</Text>
 					</Stack>
 				) : state.status === "pre" && next ? (

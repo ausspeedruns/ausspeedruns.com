@@ -158,7 +158,10 @@ function BlockCard({
 				))}
 
 				<Group justify="space-between">
-					<Tooltip label="Select runs in the list first (click, then shift-click)" disabled={Boolean(selection)}>
+					<Tooltip
+						label="Select runs in the list first (click, then shift-click)"
+						disabled={Boolean(selection)}
+					>
 						<Button
 							size="xs"
 							variant="light"
@@ -275,8 +278,7 @@ export function BlocksStep() {
 	const [anchor, setAnchor] = useState<number | null>(null);
 	const [selection, setSelection] = useState<{ from: number; to: number } | null>(null);
 
-	const segmentTypeName = (id: number | null | undefined) =>
-		data.segmentTypes.find((type) => type.id === id)?.name;
+	const segmentTypeName = (id: number | null | undefined) => data.segmentTypes.find((type) => type.id === id)?.name;
 
 	const blocks = state.blocks ?? [];
 	const entries = useMemo(() => timed.filter((entry) => !entry.row.parentKey), [timed]);
@@ -364,7 +366,11 @@ export function BlocksStep() {
 					<Group justify="space-between">
 						<Title order={4}>Blocks ({blocks.length})</Title>
 						<Group gap="xs">
-							<Button size="xs" variant="default" onClick={() => update((previous) => addBlock(previous, newBlock(previous)))}>
+							<Button
+								size="xs"
+								variant="default"
+								onClick={() => update((previous) => addBlock(previous, newBlock(previous)))}
+							>
 								+ Empty block
 							</Button>
 							<Button size="xs" disabled={!selection} onClick={createFromSelection}>
@@ -374,8 +380,8 @@ export function BlocksStep() {
 					</Group>
 					{blocks.length === 0 && (
 						<Text c="dimmed" size="sm">
-							No blocks yet. Click a run in the schedule, shift-click another to select a range, then press{" "}
-							<strong>Block from selection</strong>.
+							No blocks yet. Click a run in the schedule, shift-click another to select a range, then
+							press <strong>Block from selection</strong>.
 						</Text>
 					)}
 					{blocks.map((block, index) => (

@@ -37,12 +37,7 @@ function CategoryBadge({ label, block }: { label: string; block?: Block }) {
 export function RunElement(props: RunItemProps) {
 	const { run } = props;
 
-	const convertedTimezone = formatScheduleTime(
-		run.scheduledTime,
-		props.eventTimezone,
-		props.showLocalTime,
-		"h:mm a",
-	);
+	const convertedTimezone = formatScheduleTime(run.scheduledTime, props.eventTimezone, props.showLocalTime, "h:mm a");
 
 	const minorStyle = props.block
 		? { background: `color-mix(in srgb, ${props.block.colour} 30%, transparent)` }

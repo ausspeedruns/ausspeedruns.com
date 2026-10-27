@@ -24,18 +24,18 @@ Without `--production`, the [Keystone import](#importing-from-keystone) also add
 
 ## Scripts
 
-| Command | Description |
-| --- | --- |
-| `pnpm dev` | Start the Next.js dev server (site and admin panel) |
-| `pnpm build` / `pnpm start` | Make a production build (and generate the sitemap) / serve it |
-| `pnpm dev:prod` | Clean build, then start it locally |
-| `pnpm lint` / `pnpm lint:fix` | Run oxlint |
-| `pnpm test:int` | Integration tests (Vitest, `tests/int`). These need a database |
-| `pnpm test:e2e` | End-to-end tests (Playwright, `tests/e2e`). Starts `pnpm dev` |
-| `pnpm generate:types` | Regenerate `src/payload-types.ts` after changing the schema |
-| `pnpm generate:importmap` | Regenerate the admin import map after adding, moving or renaming admin components |
-| `pnpm email:dev` | Preview the email templates in `src/emails` |
-| `pnpm payload migrate:create <name>` | Create a database migration (see [Migrations](#migrations)) |
+| Command                              | Description                                                                       |
+| ------------------------------------ | --------------------------------------------------------------------------------- |
+| `pnpm dev`                           | Start the Next.js dev server (site and admin panel)                               |
+| `pnpm build` / `pnpm start`          | Make a production build (and generate the sitemap) / serve it                     |
+| `pnpm dev:prod`                      | Clean build, then start it locally                                                |
+| `pnpm lint` / `pnpm lint:fix`        | Run oxlint                                                                        |
+| `pnpm test:int`                      | Integration tests (Vitest, `tests/int`). These need a database                    |
+| `pnpm test:e2e`                      | End-to-end tests (Playwright, `tests/e2e`). Starts `pnpm dev`                     |
+| `pnpm generate:types`                | Regenerate `src/payload-types.ts` after changing the schema                       |
+| `pnpm generate:importmap`            | Regenerate the admin import map after adding, moving or renaming admin components |
+| `pnpm email:dev`                     | Preview the email templates in `src/emails`                                       |
+| `pnpm payload migrate:create <name>` | Create a database migration (see [Migrations](#migrations))                       |
 
 ## Project structure
 
@@ -78,9 +78,9 @@ public/                      Static files (fonts, images). public/media holds lo
 
 - **Imports:** use the `#…` aliases (e.g. `#utilities/getURL.ts` or `#/components/Card/Card`) instead of long relative paths.
 - **File names:**
-  - React components and their CSS modules use PascalCase (`CartItem.tsx`, `CartItem.module.css`).
-  - Other modules use camelCase (`volunteerAction.ts`, `scheduleTypes.ts`).
-  - Next.js special files keep their reserved names (`page.tsx`, `layout.tsx`, `route.ts`, `page.module.css`).
+    - React components and their CSS modules use PascalCase (`CartItem.tsx`, `CartItem.module.css`).
+    - Other modules use camelCase (`volunteerAction.ts`, `scheduleTypes.ts`).
+    - Next.js special files keep their reserved names (`page.tsx`, `layout.tsx`, `route.ts`, `page.module.css`).
 - **Blocks:** every block lives in `src/blocks/<Name>Block/`, with a `config.ts` and a `<Name>Block.tsx`. Register new blocks in `RenderBlocks.tsx` and the relevant collection.
 - **Styling:** CSS Modules (`*.module.css`) and Mantine. PostCSS provides the Mantine breakpoints as variables.
 - **Admin components:** they are referenced by path string (e.g. `./components/admin/TicketPickup/TicketPickupView`). Run `pnpm generate:importmap` after moving one.
@@ -88,7 +88,6 @@ public/                      Static files (fonts, images). public/media holds lo
 ## Database
 
 ### Migrations
-
 
 [Migrations](https://payloadcms.com/docs/database/migrations) are SQL versions of the schema, stored in `src/migrations`. Production never uses `push`, so **every schema change (collections, fields, plugins) needs a migration** committed alongside it.
 
@@ -127,23 +126,22 @@ Flags:
 
 ### Deploying to Azure
 
-
 Production runs as a Docker container on an Azure VM, with Azure Database for PostgreSQL and Azure Blob Storage for media. The setup follows Payload's [deployment](https://payloadcms.com/docs/production/deployment), [preventing abuse](https://payloadcms.com/docs/production/preventing-abuse) and [performance](https://payloadcms.com/docs/performance/overview) guides.
 
 #### Azure resources
 
 - **PostgreSQL** (Azure Database for PostgreSQL flexible server)
-  - Put it in the same region as the VM (e.g. Australia East) to keep latency low.
-  - TLS is required, so add `?sslmode=require` to `DATABASE_URI`.
-  - Let the VM through the server firewall, or use private networking.
-  - `DATABASE_POOL_MAX` (default 10) sets the size of the connection pool.
+    - Put it in the same region as the VM (e.g. Australia East) to keep latency low.
+    - TLS is required, so add `?sslmode=require` to `DATABASE_URI`.
+    - Let the VM through the server firewall, or use private networking.
+    - `DATABASE_POOL_MAX` (default 10) sets the size of the connection pool.
 - **Blob Storage**
-  - Create a container (default name `media`) with **anonymous read access for blobs**. Media is public, so it's served straight from Blob (`disablePayloadAccessControl`) rather than proxied through Node.
-  - Set `AZURE_STORAGE_ACCOUNT_BASEURL` to the account URL (`https://<account>.blob.core.windows.net`), or to a CDN / Front Door endpoint in front of it.
-  - If `AZURE_STORAGE_CONNECTION_STRING` isn't set, uploads fall back to `public/media` on local disk.
+    - Create a container (default name `media`) with **anonymous read access for blobs**. Media is public, so it's served straight from Blob (`disablePayloadAccessControl`) rather than proxied through Node.
+    - Set `AZURE_STORAGE_ACCOUNT_BASEURL` to the account URL (`https://<account>.blob.core.windows.net`), or to a CDN / Front Door endpoint in front of it.
+    - If `AZURE_STORAGE_CONNECTION_STRING` isn't set, uploads fall back to `public/media` on local disk.
 - **Email**
-  - Any SMTP provider works via `SMTP_*`, e.g. Azure Communication Services (`smtp.azurecomm.net:587`).
-  - Without `SMTP_HOST`, verification and password reset emails are only logged, so users can't verify their accounts.
+    - Any SMTP provider works via `SMTP_*`, e.g. Azure Communication Services (`smtp.azurecomm.net:587`).
+    - Without `SMTP_HOST`, verification and password reset emails are only logged, so users can't verify their accounts.
 
 To move existing uploads, copy the contents of `public/media` into the container, e.g. `azcopy copy "public/media/*" "https://<account>.blob.core.windows.net/media?<SAS>"`.
 
@@ -187,18 +185,18 @@ Bind the container to localhost and put a reverse proxy (Caddy or nginx) in fron
 - Redirect the alternate hostname (e.g. `www.`) to the one in `NEXT_PUBLIC_SERVER_URL`, so everyone shares one cookie and one set of absolute URLs.
 - Forward `Host`, `X-Forwarded-For` and `X-Forwarded-Proto`.
 - Rate limit the endpoints that are open to abuse:
-  - `/api/users/login`
-  - `/api/users/forgot-password`
-  - `/api/users` (sign up)
-  - `/api/form-submissions`
-  - The `/signup`, `/volunteer` and `/submit-game` server actions
+    - `/api/users/login`
+    - `/api/users/forgot-password`
+    - `/api/users` (sign up)
+    - `/api/form-submissions`
+    - The `/signup`, `/volunteer` and `/submit-game` server actions
 - Keep per-IP limits generous. Everyone on the venue Wi-Fi at an event, and many mobile users (carrier-grade NAT), share one IP address. Ticket pickup staff and attendees shouldn't trip a limit meant for bots.
 - Cache `/_next/static/*` (immutable) at the proxy or CDN.
 
 #### Built-in protections
 
 - **CSRF:** the auth cookie is `SameSite=Lax`, so browsers don't send it with cross-site POST/fetch requests. Next.js also checks the origin of server actions, and CORS is limited to the same origin.
-  - Payload's own CSRF check (enabled by setting `serverURL` or `csrf`) is deliberately left off. It ignores the cookie whenever a visit starts on another site, which logs people out when they return from Stripe or follow an email or Discord link. It also affects every page on Safari before 16.4.
+    - Payload's own CSRF check (enabled by setting `serverURL` or `csrf`) is deliberately left off. It ignores the cookie whenever a visit starts on another site, which logs people out when they return from Stripe or follow an email or Discord link. It also affects every page on Safari before 16.4.
 - **Logins:** accounts lock for 10 minutes after 5 failed logins, and email verification is required. Resetting the password unlocks the account straight away.
 - **GraphQL:** disabled. Integrations such as the stream graphics use REST with API keys.
 - **Query depth:** `maxDepth` is 3.

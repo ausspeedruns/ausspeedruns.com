@@ -61,7 +61,8 @@ function toScheduleRuns(docs: RunDoc[]): Run[] {
 				game: getRunDisplayName(run),
 				estimate: run.estimate,
 				scheduledTime: run.scheduledTime as string,
-				platform: run.platform || [...new Set(children.map((child) => child.platform).filter(Boolean))].join(", "),
+				platform:
+					run.platform || [...new Set(children.map((child) => child.platform).filter(Boolean))].join(", "),
 				category: run.category ?? "",
 				runners: usernames(run),
 				otherRunners: otherRunners(run),
@@ -71,7 +72,13 @@ function toScheduleRuns(docs: RunDoc[]): Run[] {
 				displayIndex: i,
 				...(run.type === "medley" ? { children } : {}),
 				...(segmentType
-					? { segmentType: { name: segmentType.name, colour: segmentType.colour, textColour: segmentType.textColour } }
+					? {
+							segmentType: {
+								name: segmentType.name,
+								colour: segmentType.colour,
+								textColour: segmentType.textColour,
+							},
+						}
 					: {}),
 			};
 		});
@@ -214,7 +221,9 @@ export default async function EventSchedule({ params }: URLProps) {
 				logo={event.media?.logo}
 				horaro={event.scheduleMetadata?.horaro || ""}
 				oengus={event.scheduleMetadata?.oengus || ""}
-				scheduleBlocks={toScheduleBlocks(event.scheduleMetadata?.scheduleBlocks as EventBlockData[] | undefined)}
+				scheduleBlocks={toScheduleBlocks(
+					event.scheduleMetadata?.scheduleBlocks as EventBlockData[] | undefined,
+				)}
 				shortName={event.shortName}
 				runs={toScheduleRuns(runsRequest.docs)}
 			/>

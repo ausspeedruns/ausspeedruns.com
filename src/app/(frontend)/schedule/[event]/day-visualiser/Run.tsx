@@ -86,4 +86,4 @@ export function RunVisualBlock({ run, proportion, block }: RunProps) {
 			/>
 		</RunHover>
 	);
-};
+}

@@ -97,7 +97,12 @@ describe("Case insensitivity", () => {
 		});
 
 		it("returns the exact value when it matches", async () => {
-			const canonical = await findCanonicalCase({ payload, collection: "events", field: "shortName", value: shortName });
+			const canonical = await findCanonicalCase({
+				payload,
+				collection: "events",
+				field: "shortName",
+				value: shortName,
+			});
 			expect(canonical).toBe(shortName);
 		});
 

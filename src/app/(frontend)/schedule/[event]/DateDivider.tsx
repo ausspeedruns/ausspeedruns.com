@@ -13,4 +13,4 @@ export function DateDivider(props: DateDividerProps) {
 			{dateString}
 		</div>
 	);
-};
+}

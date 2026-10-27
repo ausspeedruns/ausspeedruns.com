@@ -161,7 +161,8 @@ export function ScheduleImportApp({ events, initialEventId, apiBase, links = {} 
 			: null;
 
 	const end = scheduleEnd(timed);
-	const runCount = timed.filter((entry) => entry.row.type === "run" && !entry.row.parentKey).length +
+	const runCount =
+		timed.filter((entry) => entry.row.type === "run" && !entry.row.parentKey).length +
 		timed.filter((entry) => entry.row.type === "medley").length;
 	const eventLink = data ? fillLink(links.event, { id: data.event.id, eventId: data.event.id }) : null;
 	const saveBadge = SAVE_STATUS[saveStatus];
@@ -231,9 +232,9 @@ export function ScheduleImportApp({ events, initialEventId, apiBase, links = {} 
 
 			{data?.draft.eventBlocksChanged && (
 				<Alert color="blue">
-					The event&apos;s schedule blocks were edited directly after the schedule was last applied. Re-applying
-					will replace them with the blocks in this draft — use &quot;Rebuild draft from live runs&quot; to bring
-					them into the draft first.
+					The event&apos;s schedule blocks were edited directly after the schedule was last applied.
+					Re-applying will replace them with the blocks in this draft — use &quot;Rebuild draft from live
+					runs&quot; to bring them into the draft first.
 				</Alert>
 			)}
 

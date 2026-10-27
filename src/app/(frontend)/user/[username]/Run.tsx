@@ -32,7 +32,9 @@ export function Run(props: RunProps) {
 						<Title order={3} textWrap="balance" mb="xs">
 							{getRunDisplayName(props.run)}
 						</Title>
-						<Text c="dimmed">{[getRunCategoryLabel(props.run), props.run.platform].filter(Boolean).join(" · ")}</Text>
+						<Text c="dimmed">
+							{[getRunCategoryLabel(props.run), props.run.platform].filter(Boolean).join(" · ")}
+						</Text>
 					</Box>
 					<Text c="ausSpeedrunsOrange" ta="right" flex="none">
 						{props.run.time ?? "??:??:??"}

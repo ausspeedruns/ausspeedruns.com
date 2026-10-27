@@ -77,7 +77,14 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 		<Container component="article" size="xl" pt="3rem" pb="4rem">
 			<Stack component="section" gap="lg" mb="md">
 				<div>
-					<Title className={styles.heroTitle} order={1} ff="Jersey10, var(--mantine-font-family)" fw="normal" tt="uppercase" lts="0.05em">
+					<Title
+						className={styles.heroTitle}
+						order={1}
+						ff="Jersey10, var(--mantine-font-family)"
+						fw="normal"
+						tt="uppercase"
+						lts="0.05em"
+					>
 						{user.username}
 					</Title>
 					{user.pronouns && <Text c="dimmed">{user.pronouns}</Text>}

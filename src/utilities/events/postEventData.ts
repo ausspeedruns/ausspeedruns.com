@@ -41,7 +41,12 @@ export function formatEventDateRange(event: Event): string | null {
 	const timeZone = timezone || "Australia/Melbourne";
 
 	try {
-		const formatter = new Intl.DateTimeFormat("en-AU", { day: "numeric", month: "short", year: "numeric", timeZone });
+		const formatter = new Intl.DateTimeFormat("en-AU", {
+			day: "numeric",
+			month: "short",
+			year: "numeric",
+			timeZone,
+		});
 		return end ? formatter.formatRange(start, end) : formatter.format(start);
 	} catch {
 		return start.toLocaleDateString("en-AU");

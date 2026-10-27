@@ -26,7 +26,11 @@ export async function homePage(
 		where: {
 			and: [
 				{ "timeSettings.startTime": { less_than: nowIso } },
-				{ "timeSettings.startTime": { greater_than_equal: new Date(now.getTime() - MS_PER_YEAR).toISOString() } },
+				{
+					"timeSettings.startTime": {
+						greater_than_equal: new Date(now.getTime() - MS_PER_YEAR).toISOString(),
+					},
+				},
 			],
 		},
 	});
@@ -37,7 +41,9 @@ export async function homePage(
 			event: event.id,
 			showCountdown: true,
 			showRaised: false,
-			...(event.settings?.isAcceptingSubmissions ? { extraLinks: [{ label: "Submit a run", url: "/submit-game" }] } : {}),
+			...(event.settings?.isAcceptingSubmissions
+				? { extraLinks: [{ label: "Submit a run", url: "/submit-game" }] }
+				: {}),
 		})),
 		...past.docs.map((event) => ({
 			blockType: "eventFeatureBlock" as const,

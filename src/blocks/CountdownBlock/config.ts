@@ -6,6 +6,6 @@ export const CountdownBlockConfig: Block = {
 	fields: [
 		{ name: "title", type: "text", label: "Title", defaultValue: "Event Starts In" },
 		{ name: "targetDate", type: "date", label: "Target Date", required: true },
-		{ name: "finishedMessage", type: "text", label: "Finished Message", defaultValue: "The event has started!" }
-	]
+		{ name: "finishedMessage", type: "text", label: "Finished Message", defaultValue: "The event has started!" },
+	],
 };

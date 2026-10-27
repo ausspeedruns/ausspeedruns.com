@@ -11,8 +11,8 @@ export const FAQBlockConfig: Block = {
 			label: "FAQs",
 			fields: [
 				{ name: "question", type: "text", required: true },
-				{ name: "answer", type: "richText", required: true }
-			]
-		}
-	]
+				{ name: "answer", type: "richText", required: true },
+			],
+		},
+	],
 };

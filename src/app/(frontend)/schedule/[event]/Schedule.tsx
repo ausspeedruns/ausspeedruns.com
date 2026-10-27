@@ -6,7 +6,6 @@ import { format } from "date-fns";
 
 import type { Block, Run, Settings } from "./scheduleTypes";
 
-import { RunElement } from "./Run";
 import { Day } from "./Day";
 import { Filters } from "./Filters";
 import type { Media as MediaType } from "#payload-types.ts";
@@ -45,41 +44,13 @@ interface ScheduleProps {
 	runs: Run[];
 }
 
-// const TEST_CURRENT_TIME = new Date(2025, 6, 9, 16, 25);
 export function Schedule(props: ScheduleProps) {
-	// console.log(TEST_CURRENT_TIME);
 	const [settings, setSettings] = useState(DEFAULT_SETTINGS);
-	const [currentTime, setCurrentTime] = useState(new Date());
-	// const [currentTime] = useState(TEST_CURRENT_TIME);
-	const [currentRunIndex, setCurrentRunIndex] = useState(-1);
 
 	const scheduleBlocks = useMemo(
 		() => generateBlockRunMap(props.scheduleBlocks, props.runs),
 		[props.scheduleBlocks, props.runs],
 	);
-
-	// Update the current time every 10 seconds
-	// useEffect(() => {
-	// 	const interval = setInterval(() => {
-	// 		setCurrentTime(new Date());
-	// 	}, 10000);
-	// 	return () => clearInterval(interval);
-	// }, []);
-
-	// useEffect(() => {
-	// 	if (isAfter(currentTime, props.time.start) && isBefore(currentTime, props.time.end)) {
-	// 		let i = 0;
-	// 		for (; i < props.runs.length; i++) {
-	// 			const run = props.runs[i];
-	// 			if (isAfter(scheduleTimeToDate(run.scheduledTime), currentTime)) break;
-	// 		}
-
-	// 		if (props.runs[i - 1]) {
-	// 			setCurrentRunIndex(i - 1);
-	// 			setSettings({ ...settings, liveRunId: props.runs[i - 1].id });
-	// 		}
-	// 	}
-	// }, [currentTime, props.time.end, props.time.start, settings, props.runs]);
 
 	const runsWithOrder = props.runs.map((run, i) => {
 		return { ...run, displayIndex: i };
@@ -146,16 +117,6 @@ export function Schedule(props: ScheduleProps) {
 			/>
 			<Filters currentSettings={settings} setSettings={setSettings} runs={props.runs} />
 			<div className={styles.scheduleContainer}>
-				{currentRunIndex > -1 && (
-					<section className={styles.currentRun}>
-						<h3>Currently Running</h3>
-						<RunElement
-							run={runsWithOrder[currentRunIndex]}
-							eventTimezone={props.time.timezone}
-							showLocalTime={settings.showLocalTime}
-						/>
-					</section>
-				)}
 				<div className={styles.schedule}>
 					<div className={styles.dayButtons}>
 						{getAllDays(runsWithOrder, props.time.timezone, settings.showLocalTime).map((day) => {

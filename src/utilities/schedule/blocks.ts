@@ -86,7 +86,8 @@ export function findBlockProblems<Id>(blocks: BlockRange<Id>[], orderedIds: Id[]
 		for (let b = a + 1; b < ranges.length; b++) {
 			const ra = ranges[a];
 			const rb = ranges[b];
-			if (ra && rb && ra.from <= rb.to && rb.from <= ra.to) problems.push({ type: "overlap", block: b, other: a });
+			if (ra && rb && ra.from <= rb.to && rb.from <= ra.to)
+				problems.push({ type: "overlap", block: b, other: a });
 		}
 	}
 	return problems;

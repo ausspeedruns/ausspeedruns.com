@@ -8,7 +8,9 @@ import { getYouTubeEmbedUrl } from "#utilities/runDisplay.ts";
 import { RandomRunPlayer } from "./RandomRunPlayer";
 
 export async function RandomRunBlock(props: RandomRunBlockProps) {
-	const specificRuns = (props.specificRuns ?? []).filter((run): run is Run => typeof run === "object" && run !== null);
+	const specificRuns = (props.specificRuns ?? []).filter(
+		(run): run is Run => typeof run === "object" && run !== null,
+	);
 
 	let candidates: string[];
 

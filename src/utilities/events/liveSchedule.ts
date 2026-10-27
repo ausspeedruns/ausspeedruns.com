@@ -180,7 +180,9 @@ export function toLiveIncentive(incentive: Incentive): LiveIncentive | null {
 	return {
 		id: incentive.id,
 		title: incentive.title,
-		runLabel: run ? [getRunDisplayName(run), run.type === "medley" ? null : run.category].filter(Boolean).join(" – ") : null,
+		runLabel: run
+			? [getRunDisplayName(run), run.type === "medley" ? null : run.category].filter(Boolean).join(" – ")
+			: null,
 		scheduledTime,
 		endTime:
 			scheduledTime && estimateMs !== null

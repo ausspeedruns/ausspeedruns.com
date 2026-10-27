@@ -84,7 +84,8 @@ export const Products: CollectionConfig<"products"> = {
 							min: 0,
 							admin: {
 								step: 1,
-								description: "Leave blank for unlimited. Decremented automatically when orders complete.",
+								description:
+									"Leave blank for unlimited. Decremented automatically when orders complete.",
 							},
 						},
 					],
@@ -98,7 +99,12 @@ export const Products: CollectionConfig<"products"> = {
 				{
 					type: "row",
 					fields: [
-						{ name: "allowStripe", label: "Allow card payments (Stripe)", type: "checkbox", defaultValue: true },
+						{
+							name: "allowStripe",
+							label: "Allow card payments (Stripe)",
+							type: "checkbox",
+							defaultValue: true,
+						},
 						{
 							name: "allowBankTransfer",
 							label: "Allow bank transfer",

@@ -110,7 +110,8 @@ type GeneratedBlock = ReturnType<typeof buildLayout>[number];
 const EDITOR_BLOCK_TYPES = new Set(["eventImagesBlock", "sponsorGridBlock"]);
 
 function isLegacyPlaceholderGallery(block: { blockType?: string; images?: unknown }): boolean {
-	if (block.blockType !== "eventImagesBlock" || !Array.isArray(block.images) || block.images.length === 0) return false;
+	if (block.blockType !== "eventImagesBlock" || !Array.isArray(block.images) || block.images.length === 0)
+		return false;
 	return block.images.every(
 		(image) => typeof image?.externalUrl === "string" && image.externalUrl.includes("placehold.co"),
 	);

@@ -224,7 +224,13 @@ export function EditSubmissionModal({ submission, event }: EditSubmissionModalPr
 									</Button>
 								</>
 							) : (
-								<Button variant="subtle" color="red" size="sm" onClick={handleWithdraw} leftSection={<Trash width={14} height={14} />}>
+								<Button
+									variant="subtle"
+									color="red"
+									size="sm"
+									onClick={handleWithdraw}
+									leftSection={<Trash width={14} height={14} />}
+								>
 									Withdraw submission
 								</Button>
 							)}

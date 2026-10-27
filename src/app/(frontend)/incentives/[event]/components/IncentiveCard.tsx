@@ -26,7 +26,11 @@ export function IncentiveCard({ incentive, highlighted, status, children }: Ince
 			<Stack gap="md" h="100%">
 				<Group justify="space-between" wrap="nowrap">
 					<Text c="ausSpeedrunsOrange" flex="none">
-						{incentive.run?.scheduledTime ? <FormatLocalTime date={incentive.run.scheduledTime} /> : "Time TBD"}
+						{incentive.run?.scheduledTime ? (
+							<FormatLocalTime date={incentive.run.scheduledTime} />
+						) : (
+							"Time TBD"
+						)}
 					</Text>
 					<Group gap="xs" wrap="nowrap">
 						{status}

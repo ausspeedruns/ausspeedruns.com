@@ -172,7 +172,8 @@ function ScheduleRow({ timedRow, label, issues, medleys, onEdit, onInsert, onDel
 				)}
 				{isMedley && (
 					<Text size="xs" c={childrenMs > (estimateToMs(row.estimate) ?? 0) ? "orange" : "dimmed"}>
-						{children.length} {children.length === 1 ? "game" : "games"} · {msToEstimate(childrenMs)} of games
+						{children.length} {children.length === 1 ? "game" : "games"} · {msToEstimate(childrenMs)} of
+						games
 					</Text>
 				)}
 			</Table.Td>
@@ -214,24 +215,24 @@ function ScheduleRow({ timedRow, label, issues, medleys, onEdit, onInsert, onDel
 						—
 					</Text>
 				) : (
-				<NumberInput
-					size="xs"
-					w={70}
-					hideControls
-					min={0}
-					aria-label="Setup minutes after"
-					placeholder={String(
-						setupMinutesFor({ ...row, setupMinutesOverride: null }, state.defaultSetupMinutes),
-					)}
-					value={row.setupMinutesOverride ?? ""}
-					onChange={(value) =>
-						update((previous) =>
-							updateRow(previous, row.key, {
-								setupMinutesOverride: value === "" ? null : Math.max(0, Number(value)),
-							}),
-						)
-					}
-				/>
+					<NumberInput
+						size="xs"
+						w={70}
+						hideControls
+						min={0}
+						aria-label="Setup minutes after"
+						placeholder={String(
+							setupMinutesFor({ ...row, setupMinutesOverride: null }, state.defaultSetupMinutes),
+						)}
+						value={row.setupMinutesOverride ?? ""}
+						onChange={(value) =>
+							update((previous) =>
+								updateRow(previous, row.key, {
+									setupMinutesOverride: value === "" ? null : Math.max(0, Number(value)),
+								}),
+							)
+						}
+					/>
 				)}
 			</Table.Td>
 			<Table.Td>
@@ -253,7 +254,9 @@ function ScheduleRow({ timedRow, label, issues, medleys, onEdit, onInsert, onDel
 									<Menu.Divider />
 								</>
 							)}
-							<Menu.Label>{isChild ? "Insert after (runs join the medley)" : "Insert after this row"}</Menu.Label>
+							<Menu.Label>
+								{isChild ? "Insert after (runs join the medley)" : "Insert after this row"}
+							</Menu.Label>
 							{RUN_TYPES.map((type) => (
 								<Menu.Item key={type.value} onClick={() => onInsert(row.key, type.value)}>
 									{type.label}
@@ -266,7 +269,9 @@ function ScheduleRow({ timedRow, label, issues, medleys, onEdit, onInsert, onDel
 									{medleys.map((medley) => (
 										<Menu.Item
 											key={medley.key}
-											onClick={() => update((previous) => addRowToMedley(previous, row.key, medley.key))}
+											onClick={() =>
+												update((previous) => addRowToMedley(previous, row.key, medley.key))
+											}
 										>
 											{medley.category || "Untitled medley"}
 										</Menu.Item>
@@ -276,7 +281,9 @@ function ScheduleRow({ timedRow, label, issues, medleys, onEdit, onInsert, onDel
 							{isChild && (
 								<>
 									<Menu.Divider />
-									<Menu.Item onClick={() => update((previous) => removeRowFromMedley(previous, row.key))}>
+									<Menu.Item
+										onClick={() => update((previous) => removeRowFromMedley(previous, row.key))}
+									>
 										Move out of medley
 									</Menu.Item>
 								</>
@@ -364,9 +371,9 @@ export function TimingStep() {
 			<Text size="sm" c="dimmed">
 				Drag rows to reorder. Times flow from the event start (
 				{formatInTz(data.event.startTime, tz, "EEE d MMM, h:mm a")} {tz}) using each row&apos;s estimate plus
-				the setup after it. Runs and medleys use the default setup unless overridden; segments, buffers,
-				sleep and other blocks default to no setup. Games inside a medley share the medley&apos;s slot: drag a
-				run onto a medley&apos;s game (or down onto the medley) to add it, or use the + menu. Hover ⚠ to see a
+				the setup after it. Runs and medleys use the default setup unless overridden; segments, buffers, sleep
+				and other blocks default to no setup. Games inside a medley share the medley&apos;s slot: drag a run
+				onto a medley&apos;s game (or down onto the medley) to add it, or use the + menu. Hover ⚠ to see a
 				row&apos;s warnings.
 			</Text>
 

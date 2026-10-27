@@ -133,12 +133,7 @@ export function RunInfo(props: RunInfoProps) {
 								key={props.form.key("specialRequirements")}
 								{...props.form.getInputProps("specialRequirements")}
 							/>
-							<Button
-								variant="outline"
-								onClick={removeSpecialReqs}
-								color="red"
-								className={styles.button}
-							>
+							<Button variant="outline" onClick={removeSpecialReqs} color="red" className={styles.button}>
 								Remove
 							</Button>
 						</div>

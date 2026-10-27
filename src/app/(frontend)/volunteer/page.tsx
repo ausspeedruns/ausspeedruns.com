@@ -68,10 +68,7 @@ export default async function VolunteerPage() {
 			? await payload.find({
 					collection: "volunteers",
 					where: {
-						and: [
-							{ volunteer: { equals: user.id } },
-							{ event: { in: events.map((event) => event.id) } },
-						],
+						and: [{ volunteer: { equals: user.id } }, { event: { in: events.map((event) => event.id) } }],
 					},
 					pagination: false,
 					depth: 0,

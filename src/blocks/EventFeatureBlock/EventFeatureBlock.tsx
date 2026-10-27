@@ -8,7 +8,15 @@ import { EventCountdown } from "./EventCountdown";
 import styles from "./EventFeatureBlock.module.css";
 
 export async function EventFeatureBlock(props: EventFeatureBlockProps) {
-	const { description, showDates = true, showCountdown, showRaised = true, buttonLabel, buttonUrl, extraLinks } = props;
+	const {
+		description,
+		showDates = true,
+		showCountdown,
+		showRaised = true,
+		buttonLabel,
+		buttonUrl,
+		extraLinks,
+	} = props;
 	const event = await resolveEvent(props.event);
 	if (!event) return null;
 

@@ -34,7 +34,12 @@ export function War({ incentive, highlighted }: WarProps) {
 											</Badge>
 										)}
 									</Group>
-									<Text size="sm" c={isLeading ? undefined : "dimmed"} fw={isLeading ? 700 : 400} flex="none">
+									<Text
+										size="sm"
+										c={isLeading ? undefined : "dimmed"}
+										fw={isLeading ? 700 : 400}
+										flex="none"
+									>
 										{formatMoney(option.total)}
 									</Text>
 								</Group>

@@ -111,10 +111,18 @@ export function insertRowAfter<T extends Row>(rows: T[], afterKey: string | null
 	const after = rows[index];
 
 	if (row.type === "run" && after.parentKey) {
-		return normaliseRows([...rows.slice(0, index + 1), { ...row, parentKey: after.parentKey }, ...rows.slice(index + 1)]);
+		return normaliseRows([
+			...rows.slice(0, index + 1),
+			{ ...row, parentKey: after.parentKey },
+			...rows.slice(index + 1),
+		]);
 	}
 
 	const anchorIndex = after.parentKey ? rows.findIndex((candidate) => candidate.key === after.parentKey) : index;
 	const [, end] = blockRange(rows, anchorIndex);
-	return normaliseRows([...rows.slice(0, end + 1), { ...row, parentKey: row.parentKey ?? null }, ...rows.slice(end + 1)]);
+	return normaliseRows([
+		...rows.slice(0, end + 1),
+		{ ...row, parentKey: row.parentKey ?? null },
+		...rows.slice(end + 1),
+	]);
 }

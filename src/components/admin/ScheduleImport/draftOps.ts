@@ -109,7 +109,11 @@ export function deleteRow(state: DraftState, key: string): DraftState {
 
 const BLOCK_COLOURS = ["#08a256", "#783884", "#e98033", "#437c90", "#cc2936", "#2a4d9b", "#b8860b", "#d6336c"];
 
-export function newBlock(state: DraftState, startRowKey: string | null = null, endRowKey: string | null = null): DraftBlock {
+export function newBlock(
+	state: DraftState,
+	startRowKey: string | null = null,
+	endRowKey: string | null = null,
+): DraftBlock {
 	return {
 		key: nanoid(),
 		name: "",

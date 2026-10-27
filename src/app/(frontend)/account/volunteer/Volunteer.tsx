@@ -63,7 +63,9 @@ export function Volunteer(props: VolunteerProps) {
 				</Accordion.Control>
 				<Accordion.Panel>
 					<Stack gap="md" pb="xs">
-						{event?.acceptingVolunteers && isPending && <EditVolunteerModal volunteer={volunteer} event={event} />}
+						{event?.acceptingVolunteers && isPending && (
+							<EditVolunteerModal volunteer={volunteer} event={event} />
+						)}
 						{event?.acceptingVolunteers && !isPending && (
 							<Text size="sm" c="dimmed">
 								This application has been reviewed, so it can no longer be edited. Contact the event

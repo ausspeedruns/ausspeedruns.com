@@ -107,8 +107,10 @@ export function RowEditor({ rowKey, onClose }: RowEditorProps) {
 							/>
 							<Text size="sm" c="dimmed">
 								{children.length} {children.length === 1 ? "game" : "games"} totalling{" "}
-								{msToEstimate(children.reduce((total, child) => total + (estimateToMs(child.estimate) ?? 0), 0))}.
-								Runners are taken from the games. Add games with the + menu on the medley row.
+								{msToEstimate(
+									children.reduce((total, child) => total + (estimateToMs(child.estimate) ?? 0), 0),
+								)}
+								. Runners are taken from the games. Add games with the + menu on the medley row.
 							</Text>
 						</>
 					)}

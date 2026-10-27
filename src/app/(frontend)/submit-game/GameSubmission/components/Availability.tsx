@@ -15,10 +15,7 @@ type AvailabilityProps = {
 
 export default function Availability(props: AvailabilityProps) {
 	const [dates, setDates] = useState<boolean[]>(props.value ?? []);
-	const eventLength = useMemo(
-		() => differenceInDays(props.event.endDate, props.event.startDate) + 1,
-		[props.event],
-	);
+	const eventLength = useMemo(() => differenceInDays(props.event.endDate, props.event.startDate) + 1, [props.event]);
 
 	useEffect(() => {
 		props.onAvailabilityUpdate(dates);

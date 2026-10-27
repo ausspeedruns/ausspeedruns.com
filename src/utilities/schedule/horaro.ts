@@ -90,17 +90,29 @@ export function buildHoraroSchedule(
 			event: { name: event.name, slug: event.shortName },
 			columns: ["Game", "Category", "Runner", "Platform", "Donation Incentives", "Bluesky"],
 			items: sorted.map((run, i) => {
-				const lengthSeconds = Math.round((estimateToMs(run.estimate) ?? 0) / 1000) + Math.max(0, (gaps[i] ?? setupSeconds) - setupSeconds);
+				const lengthSeconds =
+					Math.round((estimateToMs(run.estimate) ?? 0) / 1000) +
+					Math.max(0, (gaps[i] ?? setupSeconds) - setupSeconds);
 
 				if (run.type === "segment") {
 					const presenters = [
 						...run.runners.map((runner) => runner.username),
-						...run.otherRunners.split(",").map((name) => name.trim()).filter(Boolean),
+						...run.otherRunners
+							.split(",")
+							.map((name) => name.trim())
+							.filter(Boolean),
 					];
 					return {
 						length: secondsToIsoDuration(lengthSeconds),
 						length_t: lengthSeconds,
-						data: [cell(run.title || run.category), null, cell(presenters.join(", ")), null, cell(run.incentives.join(" | ")), null],
+						data: [
+							cell(run.title || run.category),
+							null,
+							cell(presenters.join(", ")),
+							null,
+							cell(run.incentives.join(" | ")),
+							null,
+						],
 					};
 				}
 
@@ -114,13 +126,21 @@ export function buildHoraroSchedule(
 
 				const runnerNames = [
 					...run.runners.map((runner) =>
-						runner.twitch ? `[${runner.username}](https://www.twitch.tv/${runner.twitch})` : runner.username,
+						runner.twitch
+							? `[${runner.username}](https://www.twitch.tv/${runner.twitch})`
+							: runner.username,
 					),
-					...run.otherRunners.split(",").map((name) => name.trim()).filter(Boolean),
+					...run.otherRunners
+						.split(",")
+						.map((name) => name.trim())
+						.filter(Boolean),
 				];
 				const blueskies = run.runners
 					.filter((runner) => runner.bluesky)
-					.map((runner) => `[@${runner.bluesky}](https://bsky.app/profile/${runner.bluesky?.replace(/^@/, "")})`);
+					.map(
+						(runner) =>
+							`[@${runner.bluesky}](https://bsky.app/profile/${runner.bluesky?.replace(/^@/, "")})`,
+					);
 
 				return {
 					length: secondsToIsoDuration(lengthSeconds),
@@ -130,7 +150,10 @@ export function buildHoraroSchedule(
 						cell(
 							run.type === "medley"
 								? (run.children ?? [])
-										.map((child) => `${child.game} (${child.category}${child.runners.length > 0 ? ` – ${child.runners.join(", ")}` : ""})`)
+										.map(
+											(child) =>
+												`${child.game} (${child.category}${child.runners.length > 0 ? ` – ${child.runners.join(", ")}` : ""})`,
+										)
 										.join(" / ") || "Medley"
 								: run.category,
 						),

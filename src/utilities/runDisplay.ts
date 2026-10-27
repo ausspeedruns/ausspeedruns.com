@@ -26,10 +26,7 @@ export const topLevelRunsWhere: Where = { parent: { exists: false } };
 
 /** Database equivalent of `isCountedRun`. */
 export const countedRunsWhere: Where = {
-	and: [
-		topLevelRunsWhere,
-		{ or: [{ type: { in: ["run", "medley"] } }, { type: { exists: false } }] },
-	],
+	and: [topLevelRunsWhere, { or: [{ type: { in: ["run", "medley"] } }, { type: { exists: false } }] }],
 };
 
 /** Returns the game's display name from a (possibly unpopulated) game relationship. */

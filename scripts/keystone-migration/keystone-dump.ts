@@ -104,7 +104,11 @@ export class KeystoneDump {
 					createTable = null;
 					continue;
 				}
-				const col = line.trim().match(/^("(?:[^"]|"")+"|[^\s"]+)\s+(.+?)(?:\s+(?:DEFAULT|NOT NULL|NULL|CONSTRAINT|GENERATED|COLLATE)\b.*)?,?$/);
+				const col = line
+					.trim()
+					.match(
+						/^("(?:[^"]|"")+"|[^\s"]+)\s+(.+?)(?:\s+(?:DEFAULT|NOT NULL|NULL|CONSTRAINT|GENERATED|COLLATE)\b.*)?,?$/,
+					);
 				if (col && !/^(CONSTRAINT|PRIMARY|UNIQUE|CHECK|FOREIGN)\b/i.test(col[1])) {
 					createTable.types.set(unquoteIdent(col[1]), col[2].replace(/,$/, ""));
 				}

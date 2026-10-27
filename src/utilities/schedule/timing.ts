@@ -52,7 +52,8 @@ export interface TimedRow<T> {
  * Games in a medley don't move the schedule on; they're laid out inside their medley's slot instead.
  */
 export function computeSchedule<
-	T extends Pick<DraftRow, "type" | "estimate" | "setupMinutesOverride"> & Partial<Pick<DraftRow, "key" | "parentKey">>,
+	T extends Pick<DraftRow, "type" | "estimate" | "setupMinutesOverride"> &
+		Partial<Pick<DraftRow, "key" | "parentKey">>,
 >(rows: T[], startTime: string | Date, defaultSetupMinutes: number): TimedRow<T>[] {
 	let cursor = new Date(startTime).getTime();
 	const childCursors = new Map<string, number>();

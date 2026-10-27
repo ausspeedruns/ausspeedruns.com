@@ -16,7 +16,8 @@ export function EventCountdown({ startTime }: { startTime: string }) {
 			{parts ? (
 				<>
 					<span title="Days">{pad(parts.days)}</span> : <span title="Hours">{pad(parts.hours)}</span> :{" "}
-					<span title="Minutes">{pad(parts.minutes)}</span> : <span title="Seconds">{pad(parts.seconds)}</span>
+					<span title="Minutes">{pad(parts.minutes)}</span> :{" "}
+					<span title="Seconds">{pad(parts.seconds)}</span>
 				</>
 			) : (
 				"\u00a0"

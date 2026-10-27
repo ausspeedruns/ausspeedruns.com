@@ -111,12 +111,26 @@ export const Volunteers: CollectionConfig<"volunteers"> = {
 				const [user, event] = await Promise.all([
 					volunteerId
 						? req.payload
-								.findByID({ collection: "users", id: volunteerId, depth: 0, overrideAccess: true, req, select: { username: true } })
+								.findByID({
+									collection: "users",
+									id: volunteerId,
+									depth: 0,
+									overrideAccess: true,
+									req,
+									select: { username: true },
+								})
 								.catch(() => null)
 						: null,
 					eventId
 						? req.payload
-								.findByID({ collection: "events", id: eventId, depth: 0, overrideAccess: true, req, select: { shortName: true } })
+								.findByID({
+									collection: "events",
+									id: eventId,
+									depth: 0,
+									overrideAccess: true,
+									req,
+									select: { shortName: true },
+								})
 								.catch(() => null)
 						: null,
 				]);

@@ -51,7 +51,10 @@ function runInfoErrors(values: GameSubmissionResults): StepErrors {
 			errors.possibleEstimate = possibleResult;
 		} else if (estimateToSeconds(values.possibleEstimate) === 0) {
 			errors.possibleEstimate = "Please enter a lower estimate";
-		} else if (!errors.estimate && estimateToSeconds(values.possibleEstimate) >= estimateToSeconds(values.estimate)) {
+		} else if (
+			!errors.estimate &&
+			estimateToSeconds(values.possibleEstimate) >= estimateToSeconds(values.estimate)
+		) {
 			errors.possibleEstimate = "Must be lower than your estimate";
 		}
 	}

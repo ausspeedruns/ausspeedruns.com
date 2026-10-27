@@ -50,7 +50,10 @@ export async function findCaseInsensitiveMatches({
 	const docs = result.docs as unknown as Array<Record<string, unknown> & { id: number | string }>;
 	return docs
 		.map((doc) => ({ id: doc.id, value: doc[field] }))
-		.filter((doc): doc is CaseInsensitiveMatch => typeof doc.value === "string" && doc.value.toLowerCase() === lowerValue)
+		.filter(
+			(doc): doc is CaseInsensitiveMatch =>
+				typeof doc.value === "string" && doc.value.toLowerCase() === lowerValue,
+		)
 		.sort((a, b) => Number(b.value === value) - Number(a.value === value));
 }
 

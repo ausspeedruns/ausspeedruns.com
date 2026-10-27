@@ -36,7 +36,11 @@ const draftRowSchema = z.object({
 	platform: z.string(),
 	techPlatform: z.string(),
 	estimate: z.string(),
-	setupMinutesOverride: z.number().min(0).max(24 * 60).nullable(),
+	setupMinutesOverride: z
+		.number()
+		.min(0)
+		.max(24 * 60)
+		.nullable(),
 	runnerIds: z.array(z.string()),
 	otherRunners: z.string(),
 	isRace: z.boolean(),
@@ -121,7 +125,10 @@ function handler(
 ): Endpoint["handler"] {
 	return async (req) => {
 		if (!req.user || !(await isContentManager(req))) {
-			return Response.json({ error: "You need content management access to use the schedule importer." }, { status: 403 });
+			return Response.json(
+				{ error: "You need content management access to use the schedule importer." },
+				{ status: 403 },
+			);
 		}
 
 		const shouldCommit = transaction ? await initTransaction(req) : false;

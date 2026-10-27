@@ -14,7 +14,10 @@ export function sortChildren<T extends Pick<Run, "id" | "order">>(children: T[])
 }
 
 /** Expected start time of each child: parent start + estimates of the children before it. */
-export function childStartTimes(parentStart: string | null | undefined, children: ChildTiming[]): Map<number, string | null> {
+export function childStartTimes(
+	parentStart: string | null | undefined,
+	children: ChildTiming[],
+): Map<number, string | null> {
 	const times = new Map<number, string | null>();
 	let cursor = parentStart ? new Date(parentStart).getTime() : null;
 	for (const child of sortChildren(children)) {
@@ -62,7 +65,14 @@ export async function syncMedley(req: PayloadRequest, parentId: number): Promise
 			depth: 0,
 			pagination: false,
 			overrideAccess: true,
-			select: { estimate: true, order: true, scheduledTime: true, event: true, runners: true, otherRunners: true },
+			select: {
+				estimate: true,
+				order: true,
+				scheduledTime: true,
+				event: true,
+				runners: true,
+				otherRunners: true,
+			},
 			req,
 		})
 	).docs as Run[];

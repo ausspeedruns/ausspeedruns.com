@@ -3,7 +3,13 @@ import { createLocalReq, getPayload, type Payload, type PayloadRequest } from "p
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { ScheduleDrafts } from "#/collections/ScheduleDrafts";
-import { addBlock, linkSubmission, newBlock, updateIncentive, updateRow } from "#/components/admin/ScheduleImport/draftOps";
+import {
+	addBlock,
+	linkSubmission,
+	newBlock,
+	updateIncentive,
+	updateRow,
+} from "#/components/admin/ScheduleImport/draftOps";
 import config from "#/payload.config";
 import type { Event, Submission, User } from "#/payload-types";
 import type { DraftState } from "#/utilities/schedule/types";
@@ -122,9 +128,13 @@ describe("Schedule importer", () => {
 
 	it("denies the endpoints to users without content management", async () => {
 		const endpoint = ScheduleDrafts.endpoints
-			? (ScheduleDrafts.endpoints as { path: string; method: string; handler: (req: PayloadRequest) => Promise<Response> }[]).find(
-					(candidate) => candidate.path === "/event/:eventId" && candidate.method === "get",
-				)
+			? (
+					ScheduleDrafts.endpoints as {
+						path: string;
+						method: string;
+						handler: (req: PayloadRequest) => Promise<Response>;
+					}[]
+				).find((candidate) => candidate.path === "/event/:eventId" && candidate.method === "get")
 			: undefined;
 		expect(endpoint).toBeDefined();
 
@@ -209,9 +219,17 @@ describe("Schedule importer", () => {
 	});
 
 	it("re-applies edits in place and keeps donation totals", async () => {
-		const incentives = await payload.find({ collection: "incentives", where: { event: { equals: event.id } }, depth: 0 });
+		const incentives = await payload.find({
+			collection: "incentives",
+			where: { event: { equals: event.id } },
+			depth: 0,
+		});
 		const raceIncentive = incentives.docs.find((incentive) => incentive.title === "Race bonus")!;
-		await payload.update({ collection: "incentives", id: raceIncentive.id, data: { data: { goal: 100, current: 42 } } });
+		await payload.update({
+			collection: "incentives",
+			id: raceIncentive.id,
+			data: { data: { goal: 100, current: 42 } },
+		});
 
 		const draft = await getDraft();
 		let state = { defaultSetupMinutes: 10, rows: draft.draft.rows, incentives: draft.draft.incentives };
@@ -235,7 +253,12 @@ describe("Schedule importer", () => {
 	it("applies schedule blocks to the event", async () => {
 		const draft = await getDraft();
 		const [first, second, third] = draft.draft.rows;
-		let state: DraftState = { defaultSetupMinutes: 10, rows: draft.draft.rows, incentives: draft.draft.incentives, blocks: [] };
+		let state: DraftState = {
+			defaultSetupMinutes: 10,
+			rows: draft.draft.rows,
+			incentives: draft.draft.incentives,
+			blocks: [],
+		};
 		state = addBlock(state, { ...newBlock(state, first.key, second.key), name: "Opening block" });
 		state = addBlock(state, { ...newBlock(state, third.key), name: "Sleepy block", textColour: "#ffffff" });
 		state = addBlock(state, { ...newBlock(state), name: "Unassigned" });

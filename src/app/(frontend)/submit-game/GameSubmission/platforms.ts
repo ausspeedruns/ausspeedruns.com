@@ -39,4 +39,3 @@ export const techPlatforms = [
 	"Nintendo 3DS VC",
 	"Nintendo Switch NSO",
 ] as const;
-

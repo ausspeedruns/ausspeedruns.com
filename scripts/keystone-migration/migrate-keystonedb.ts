@@ -67,7 +67,10 @@ function parseLegacyBlocks(value: unknown): LegacyBlock[] {
 	if (!Array.isArray(parsed)) return [];
 	return parsed.filter(
 		(block): block is LegacyBlock =>
-			typeof block === "object" && block !== null && typeof block.name === "string" && typeof block.startRunId === "string",
+			typeof block === "object" &&
+			block !== null &&
+			typeof block.name === "string" &&
+			typeof block.startRunId === "string",
 	);
 }
 const migratedUserIds = new Set<string>();
@@ -85,7 +88,10 @@ let failureCount = 0;
 /** Normalises legacy durations ("25", "00:60:00", "1:30") into HH:MM:SS. */
 function normaliseDuration<T extends string | null | undefined>(value: T): T {
 	if (!value) return value;
-	const parts = value.trim().split(":").map((part) => Number(part));
+	const parts = value
+		.trim()
+		.split(":")
+		.map((part) => Number(part));
 	if (parts.length === 0 || parts.some((part) => !Number.isFinite(part))) return value;
 
 	// A bare number is treated as minutes, "H:MM" as hours and minutes
@@ -101,7 +107,11 @@ function normaliseVideo(value: string | null | undefined): { url: string | null;
 	const trimmed = value?.trim();
 	if (!trimmed) return { url: null, note: null };
 
-	const candidate = /^https?:\/\//i.test(trimmed) ? trimmed : /^[\w-]+(\.[\w-]+)+(\/\S*)?$/.test(trimmed) ? `https://${trimmed}` : null;
+	const candidate = /^https?:\/\//i.test(trimmed)
+		? trimmed
+		: /^[\w-]+(\.[\w-]+)+(\/\S*)?$/.test(trimmed)
+			? `https://${trimmed}`
+			: null;
 	if (candidate) {
 		try {
 			new URL(candidate);
@@ -195,7 +205,9 @@ async function migrate() {
 	const { default: config } = await import("../../src/payload.config.ts");
 
 	if (!dumpPath || !fs.existsSync(dumpPath)) {
-		console.error(`Keystone dump not found: ${dumpPath ?? "(not set)"}. Pass --dump <file> or set KEYSTONE_DUMP_PATH.`);
+		console.error(
+			`Keystone dump not found: ${dumpPath ?? "(not set)"}. Pass --dump <file> or set KEYSTONE_DUMP_PATH.`,
+		);
 		process.exit(1);
 	}
 
@@ -336,7 +348,8 @@ async function migrateUsers(payload: BasePayload, source: KeystoneDump) {
 
 		// Payload can't verify Keystone's bcrypt hashes, so keep them for the login upgrade hook and give the
 		// account an unguessable Payload password until then (see src/collections/Users/hooks/legacyPassword.ts)
-		const legacyPasswordHash = typeof password === "string" && /^\$2[aby]\$\d{2}\$/.test(password) ? password : null;
+		const legacyPasswordHash =
+			typeof password === "string" && /^\$2[aby]\$\d{2}\$/.test(password) ? password : null;
 		if (!legacyPasswordHash) {
 			console.warn(`User ${username} has no bcrypt password hash; they will need to reset their password`);
 		}
@@ -690,7 +703,8 @@ async function migrateRuns(payload: BasePayload, source: KeystoneDump) {
 					isCoop: coop,
 					techPlatform,
 					scheduledTime: scheduledTime ? new Date(scheduledTime).toISOString() : undefined,
-					scheduledTime_tz: (eventInfoMap.get(event)?.timezone as "Australia/Melbourne") ?? "Australia/Melbourne", // Cheeky hack
+					scheduledTime_tz:
+						(eventInfoMap.get(event)?.timezone as "Australia/Melbourne") ?? "Australia/Melbourne", // Cheeky hack
 					otherRunners: racer,
 					legacyKeystoneId: id,
 					// Resolve relationships from cache instead of querying DB
@@ -721,7 +735,9 @@ async function migrateScheduleBlocks(payload: BasePayload) {
 		const mapped = legacyBlocks.flatMap((block) => {
 			const startRun = runIdMap.get(block.startRunId);
 			if (!startRun) {
-				console.warn(`Skipping schedule block "${block.name}" for event ${legacyEventId}: start run was not migrated`);
+				console.warn(
+					`Skipping schedule block "${block.name}" for event ${legacyEventId}: start run was not migrated`,
+				);
 				return [];
 			}
 			const endRun = block.endRunId ? (runIdMap.get(block.endRunId) ?? null) : null;
@@ -756,7 +772,12 @@ async function migrateScheduleBlocks(payload: BasePayload) {
 		);
 		const rejected = new Set(problems.map((problem) => problem.block));
 		for (const problem of problems) {
-			console.warn(`Skipping schedule block: ${describeBlockProblem(problem, mapped.map((block) => block.name))}`);
+			console.warn(
+				`Skipping schedule block: ${describeBlockProblem(
+					problem,
+					mapped.map((block) => block.name),
+				)}`,
+			);
 		}
 		const scheduleBlocks = mapped.filter((_, i) => !rejected.has(i));
 		if (scheduleBlocks.length === 0) continue;

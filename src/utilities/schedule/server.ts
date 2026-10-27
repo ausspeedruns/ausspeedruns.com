@@ -178,7 +178,10 @@ function draftState(draft: ScheduleDraft | null): DraftState {
 		defaultSetupMinutes: draft?.defaultSetupMinutes ?? DEFAULT_SETUP_MINUTES,
 		rows,
 		incentives: (Array.isArray(draft?.incentives) ? draft.incentives : []) as unknown as DraftIncentive[],
-		blocks: normaliseDraftBlocks((Array.isArray(draft?.blocks) ? draft.blocks : []) as unknown as DraftBlock[], rows),
+		blocks: normaliseDraftBlocks(
+			(Array.isArray(draft?.blocks) ? draft.blocks : []) as unknown as DraftBlock[],
+			rows,
+		),
 	};
 }
 
@@ -385,7 +388,10 @@ export async function importCsv(
 export async function exportSubmissionsCsv(req: PayloadRequest, eventId: number) {
 	const event = await loadEvent(req, eventId);
 	const submissions = await loadSubmissions(req, eventId);
-	return { filename: `${event.shortName}-submissions.csv`, csv: submissionsToCsv(toEventSummary(event), submissions) };
+	return {
+		filename: `${event.shortName}-submissions.csv`,
+		csv: submissionsToCsv(toEventSummary(event), submissions),
+	};
 }
 
 // ---------------------------------------------------------------------------
@@ -538,11 +544,26 @@ export async function applyDraft(
 					req,
 				});
 			}
-			await req.payload.update({ collection: "runs", id: existing.id, data, depth: 0, overrideAccess: true, context, req });
+			await req.payload.update({
+				collection: "runs",
+				id: existing.id,
+				data,
+				depth: 0,
+				overrideAccess: true,
+				context,
+				req,
+			});
 			newMap.runs[row.key] = existing.id;
 			result.updated++;
 		} else {
-			const created = await req.payload.create({ collection: "runs", data, depth: 0, overrideAccess: true, context, req });
+			const created = await req.payload.create({
+				collection: "runs",
+				data,
+				depth: 0,
+				overrideAccess: true,
+				context,
+				req,
+			});
 			newMap.runs[row.key] = created.id;
 			result.created++;
 		}
@@ -575,7 +596,14 @@ export async function applyDraft(
 		};
 
 		if (existing) {
-			await req.payload.update({ collection: "incentives", id: existing.id, data, depth: 0, overrideAccess: true, req });
+			await req.payload.update({
+				collection: "incentives",
+				id: existing.id,
+				data,
+				depth: 0,
+				overrideAccess: true,
+				req,
+			});
 			newMap.incentives[incentive.key] = existing.id;
 			result.incentives.updated++;
 		} else {
@@ -721,7 +749,13 @@ export async function resetSchedule(
 	const runs = await deleteByIds(req, "runs", runIds);
 
 	// Blocks point at the deleted runs; the draft keeps its blocks for the next apply
-	const event = await req.payload.findByID({ collection: "events", id: eventId, depth: 0, overrideAccess: true, req });
+	const event = await req.payload.findByID({
+		collection: "events",
+		id: eventId,
+		depth: 0,
+		overrideAccess: true,
+		req,
+	});
 	if ((event.scheduleMetadata?.scheduleBlocks ?? []).length > 0) {
 		await req.payload.update({
 			collection: "events",
@@ -820,7 +854,9 @@ export async function rebuildDraftFromRuns(req: PayloadRequest, eventId: number)
 		if (parentId === null) {
 			const next = topLevel[topLevel.indexOf(run) + 1];
 			const end = new Date(run.scheduledTime as string).getTime() + (estimateToMs(run.estimate) ?? 0);
-			const gapMinutes = next ? Math.round((new Date(next.scheduledTime as string).getTime() - end) / 60000) : null;
+			const gapMinutes = next
+				? Math.round((new Date(next.scheduledTime as string).getTime() - end) / 60000)
+				: null;
 			const naturalSetup = isPerformanceType(type) ? defaultSetupMinutes : 0;
 			setupMinutesOverride = gapMinutes !== null && gapMinutes !== naturalSetup ? Math.max(0, gapMinutes) : null;
 		}
@@ -866,9 +902,8 @@ export async function rebuildDraftFromRuns(req: PayloadRequest, eventId: number)
 				description: incentive.description ?? "",
 				notes: incentive.notes ?? "",
 				type: incentive.type,
-				data: (incentive.data ?? (incentive.type === "goal" ? { goal: 0, current: 0 } : { options: [] })) as unknown as
-					| Goal
-					| War,
+				data: (incentive.data ??
+					(incentive.type === "goal" ? { goal: 0, current: 0 } : { options: [] })) as unknown as Goal | War,
 			},
 		];
 	});
@@ -884,7 +919,12 @@ export async function rebuildDraftFromRuns(req: PayloadRequest, eventId: number)
 			category: "Pre-show",
 			platform: "",
 			techPlatform: "",
-			estimate: msToEstimate(Math.max(0, new Date(firstStart).getTime() - new Date(event.timeSettings?.startTime ?? firstStart).getTime())),
+			estimate: msToEstimate(
+				Math.max(
+					0,
+					new Date(firstStart).getTime() - new Date(event.timeSettings?.startTime ?? firstStart).getTime(),
+				),
+			),
 			setupMinutesOverride: 0,
 			runnerIds: [],
 			otherRunners: "",
@@ -997,8 +1037,7 @@ export async function exportHoraro(req: PayloadRequest, eventId: number): Promis
 		})
 	).docs;
 	const runs = allRuns.filter((run) => run.scheduledTime && relationId(run.parent) === null);
-	const childrenOf = (parentId: number) =>
-		sortChildren(allRuns.filter((run) => relationId(run.parent) === parentId));
+	const childrenOf = (parentId: number) => sortChildren(allRuns.filter((run) => relationId(run.parent) === parentId));
 
 	if (runs.length === 0) throw new ScheduleError("This event has no scheduled runs to export.");
 
@@ -1022,8 +1061,13 @@ export async function exportHoraro(req: PayloadRequest, eventId: number): Promis
 				game: gameName(child),
 				category: child.category ?? "",
 				runners: [
-					...(child.runners ?? []).filter((runner): runner is User => typeof runner === "object").map((runner) => runner.username),
-					...(child.otherRunners ?? "").split(",").map((name) => name.trim()).filter(Boolean),
+					...(child.runners ?? [])
+						.filter((runner): runner is User => typeof runner === "object")
+						.map((runner) => runner.username),
+					...(child.otherRunners ?? "")
+						.split(",")
+						.map((name) => name.trim())
+						.filter(Boolean),
 				],
 			})),
 			type: (run.type ?? "run") as RunType,
@@ -1032,7 +1076,13 @@ export async function exportHoraro(req: PayloadRequest, eventId: number): Promis
 			category: run.category ?? "",
 			platform:
 				run.platform ||
-				[...new Set(childrenOf(run.id).map((child) => child.platform).filter(Boolean))].join(", "),
+				[
+					...new Set(
+						childrenOf(run.id)
+							.map((child) => child.platform)
+							.filter(Boolean),
+					),
+				].join(", "),
 			estimate: run.estimate,
 			scheduledTime: run.scheduledTime as string,
 			isRace: Boolean(run.isRace),
@@ -1047,7 +1097,9 @@ export async function exportHoraro(req: PayloadRequest, eventId: number): Promis
 			otherRunners: run.otherRunners ?? "",
 			incentives: [
 				...incentivesFor(run.id),
-				...childrenOf(run.id).flatMap((child) => incentivesFor(child.id).map((title) => `${gameName(child)}: ${title}`)),
+				...childrenOf(run.id).flatMap((child) =>
+					incentivesFor(child.id).map((title) => `${gameName(child)}: ${title}`),
+				),
 			],
 		})),
 	);

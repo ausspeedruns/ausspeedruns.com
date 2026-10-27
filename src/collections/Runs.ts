@@ -98,12 +98,14 @@ const validateParent: CollectionBeforeChangeHook<Run> = async ({ data, req, orig
 			overrideAccess: true,
 			req,
 		});
-		if (children.totalDocs > 0) throw new APIError("Remove this medley's games before changing its type.", 400, null, true);
+		if (children.totalDocs > 0)
+			throw new APIError("Remove this medley's games before changing its type.", 400, null, true);
 	}
 
 	if (parentId === null) return data;
 	if (type !== "run") throw new APIError("Only game runs can be part of a medley.", 400, null, true);
-	if (originalDoc && parentId === originalDoc.id) throw new APIError("A run can't be part of itself.", 400, null, true);
+	if (originalDoc && parentId === originalDoc.id)
+		throw new APIError("A run can't be part of itself.", 400, null, true);
 
 	const parent = await req.payload
 		.findByID({ collection: "runs", id: parentId, depth: 0, overrideAccess: true, req, joins: false })
@@ -227,7 +229,8 @@ export const Runs: CollectionConfig<"runs"> = {
 						return { and };
 					},
 					admin: {
-						description: "Set to make this game part of a medley. Its event and scheduled time are taken from the medley.",
+						description:
+							"Set to make this game part of a medley. Its event and scheduled time are taken from the medley.",
 					},
 				},
 				{

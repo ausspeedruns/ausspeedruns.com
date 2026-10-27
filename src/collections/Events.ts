@@ -95,7 +95,8 @@ export const Events: CollectionConfig<"events"> = {
 											name: "isAcceptingBackups",
 											type: "checkbox",
 											admin: {
-												description: "Allow backup-only submissions while main submissions are closed.",
+												description:
+													"Allow backup-only submissions while main submissions are closed.",
 											},
 										},
 										{

@@ -20,8 +20,8 @@
 	overflow: hidden;
 
 	&[data-empty="true"] {
-		background: repeating-conic-gradient(var(--theme-elevation-100) 0 25%, var(--theme-elevation-0) 0 50%) 50% / 12px
-			12px;
+		background: repeating-conic-gradient(var(--theme-elevation-100) 0 25%, var(--theme-elevation-0) 0 50%) 50% /
+			12px 12px;
 	}
 }
 

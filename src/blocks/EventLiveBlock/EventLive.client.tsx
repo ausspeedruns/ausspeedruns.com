@@ -137,7 +137,13 @@ export function EventLiveClient({
 
 						<TwitchEmbed />
 
-						<NowPlaying runs={data.runs} state={state} now={now} raised={raised} scheduleHref={scheduleHref} />
+						<NowPlaying
+							runs={data.runs}
+							state={state}
+							now={now}
+							raised={raised}
+							scheduleHref={scheduleHref}
+						/>
 
 						{incentives.length > 0 ? (
 							<section aria-labelledby="event-live-incentives">
@@ -150,8 +156,8 @@ export function EventLiveClient({
 									</Anchor>
 								</Group>
 								<Text size="sm" c="dimmed" mb="sm">
-									Donate and <strong>mention the incentive in your donation message</strong> to put your money towards
-									it.
+									Donate and <strong>mention the incentive in your donation message</strong> to put
+									your money towards it.
 								</Text>
 								<SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="sm">
 									{incentives.map((incentive) => (
@@ -161,7 +167,9 @@ export function EventLiveClient({
 											label={incentive.runLabel}
 											meta={
 												incentive.scheduledTime ? (
-													<span suppressHydrationWarning>{formatRelative(incentive.scheduledTime, now)}</span>
+													<span suppressHydrationWarning>
+														{formatRelative(incentive.scheduledTime, now)}
+													</span>
 												) : undefined
 											}
 											leaderLabel="Leading"

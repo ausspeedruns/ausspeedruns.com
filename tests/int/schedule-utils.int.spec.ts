@@ -141,7 +141,10 @@ describe("csv", () => {
 		expect(detectRowType({ game: "Sleep", id: "3" })).toBe("run");
 
 		const draft = csvRowsToDraft(
-			[{ game: "Sleep", category: "Overnight", estimate: "8:00" }, { game: "Setup Buffer", estimate: "0:15" }],
+			[
+				{ game: "Sleep", category: "Overnight", estimate: "8:00" },
+				{ game: "Setup Buffer", estimate: "0:15" },
+			],
 			{ submissions: [], users: [], games: [], makeKey },
 		);
 		expect(draft.rows.map((entry) => [entry.type, entry.category, entry.estimate])).toEqual([
@@ -196,7 +199,14 @@ describe("pairing", () => {
 			submission({ id: 4, runnerId: "u4", runnerUsername: "dan", raceType: "noRace" }),
 		];
 		const suggestions = suggestPartners(
-			row({ submissionIds: [1], runnerIds: ["u1"], gameName: "Super Mario 64", category: "16 Star", isRace: true, racerHint: "Bob" }),
+			row({
+				submissionIds: [1],
+				runnerIds: ["u1"],
+				gameName: "Super Mario 64",
+				category: "16 Star",
+				isRace: true,
+				racerHint: "Bob",
+			}),
 			submissions,
 		);
 
@@ -218,17 +228,29 @@ describe("pairing", () => {
 
 describe("incentives", () => {
 	it("keeps donation totals when re-applying the same type", () => {
-		expect(mergeIncentiveData("goal", { goal: 500, current: 0 }, { type: "goal", data: { goal: 300, current: 120 } })).toEqual({
+		expect(
+			mergeIncentiveData("goal", { goal: 500, current: 0 }, { type: "goal", data: { goal: 300, current: 120 } }),
+		).toEqual({
 			goal: 500,
 			current: 120,
 		});
 		expect(
 			mergeIncentiveData(
 				"war",
-				{ options: [{ name: "Red", total: 0 }, { name: "Green", total: 0 }] },
+				{
+					options: [
+						{ name: "Red", total: 0 },
+						{ name: "Green", total: 0 },
+					],
+				},
 				{ type: "war", data: { options: [{ name: "red", total: 50 }] } },
 			),
-		).toEqual({ options: [{ name: "Red", total: 50 }, { name: "Green", total: 0 }] });
+		).toEqual({
+			options: [
+				{ name: "Red", total: 50 },
+				{ name: "Green", total: 0 },
+			],
+		});
 		expect(mergeIncentiveData("goal", { goal: 100, current: 0 }, { type: "war", data: { options: [] } })).toEqual({
 			goal: 100,
 			current: 0,
@@ -303,7 +325,9 @@ describe("validation", () => {
 		expect(messages).toContain("error:b"); // missing game
 		expect(messages).toContain("warning:c"); // availability + pairing
 		expect(messages).toContain("error:i"); // invalid goal data
-		expect(issues.some((issue) => issue.message.includes("bob did not mark themselves available on day 2"))).toBe(true);
+		expect(issues.some((issue) => issue.message.includes("bob did not mark themselves available on day 2"))).toBe(
+			true,
+		);
 	});
 });
 

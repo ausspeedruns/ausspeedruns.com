@@ -173,7 +173,12 @@ describe("Collections", () => {
 
 	describe("Volunteers", () => {
 		it("prevents duplicate applications for the same event", async () => {
-			const data = { event: openEvent.id, volunteer: runnerA.id, role: ["host" as const], status: "pending" as const };
+			const data = {
+				event: openEvent.id,
+				volunteer: runnerA.id,
+				role: ["host" as const],
+				status: "pending" as const,
+			};
 			const application = await payload.create({
 				collection: "volunteers",
 				overrideAccess: false,

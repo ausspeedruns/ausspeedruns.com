@@ -10,7 +10,10 @@ const ROLES_CONTEXT_KEY = "__resolvedUserRoles";
  * Resolves all roles for the request's user, handling both populated Role objects and numeric IDs.
  * The result is cached on `req.context` so repeated access checks in one request only hit the DB once.
  */
-export async function resolveUserRoles(req: PayloadRequest, user: User | null | undefined = req.user as User): Promise<Role[]> {
+export async function resolveUserRoles(
+	req: PayloadRequest,
+	user: User | null | undefined = req.user as User,
+): Promise<Role[]> {
 	if (!user?.roles || user.roles.length === 0) return [];
 
 	const isRequestUser = user === req.user;
@@ -58,7 +61,8 @@ export const isUserManager = (req: PayloadRequest) => userHasRoleFlag(req, "canM
 export const isAdminUser = (req: PayloadRequest) => userHasRoleFlag(req, "admin");
 
 /** The ticket pickup desk is available to the dedicated pickup role, user managers and admins. */
-export const roleCanUseTicketPickup = (role: Role) => Boolean(role.admin || role.canManageUsers || role.canPickupTickets);
+export const roleCanUseTicketPickup = (role: Role) =>
+	Boolean(role.admin || role.canManageUsers || role.canPickupTickets);
 
 /** The tech/graphics schedule API is available to content managers, admins and the dedicated tech role. */
 export async function canAccessTechSchedule(req: PayloadRequest): Promise<boolean> {

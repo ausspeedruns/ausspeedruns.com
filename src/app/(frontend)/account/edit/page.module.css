@@ -61,7 +61,9 @@
 	font-size: 0.875rem;
 	color: hsl(var(--foreground));
 	outline: none;
-	transition: border-color 120ms ease, box-shadow 120ms ease;
+	transition:
+		border-color 120ms ease,
+		box-shadow 120ms ease;
 }
 
 .select:focus {

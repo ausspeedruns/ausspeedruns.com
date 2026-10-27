@@ -10,7 +10,7 @@ export async function seed(payload: BasePayload) {
 	await seedKitchenSinkData(payload);
 	await createPages(payload);
 
-	await setupHeader(payload, -1);
+	await setupHeader(payload);
 }
 
 async function createPages(payload: BasePayload) {
@@ -37,7 +37,7 @@ async function createPages(payload: BasePayload) {
 	}
 }
 
-async function setupHeader(payload: BasePayload, aboutUsPageId: number) {
+async function setupHeader(payload: BasePayload) {
 	// Create Nav Links
 	await payload.updateGlobal({
 		slug: "header",

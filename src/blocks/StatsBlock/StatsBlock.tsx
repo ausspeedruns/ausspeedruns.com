@@ -38,9 +38,18 @@ export async function StatsBlock(props: StatsBlockProps) {
 						{description}
 					</Text>
 				) : null}
-				<SimpleGrid cols={{ base: Math.min(stats.length, 2), sm: Math.min(stats.length, 4) }} spacing="md" w="100%">
+				<SimpleGrid
+					cols={{ base: Math.min(stats.length, 2), sm: Math.min(stats.length, 4) }}
+					spacing="md"
+					w="100%"
+				>
 					{stats.map((stat) => (
-						<Paper key={stat.label} withBorder p="lg" className={stat.featured ? styles.statFeatured : styles.stat}>
+						<Paper
+							key={stat.label}
+							withBorder
+							p="lg"
+							className={stat.featured ? styles.statFeatured : styles.stat}
+						>
 							<Text fw={800} className={styles.value}>
 								{stat.value}
 							</Text>

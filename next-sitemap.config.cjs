@@ -1,5 +1,4 @@
-const SITE_URL =
-	process.env.NEXT_PUBLIC_SERVER_URL || "https://example.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SERVER_URL || "https://example.com";
 
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {

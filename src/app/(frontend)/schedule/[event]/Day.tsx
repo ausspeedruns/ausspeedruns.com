@@ -90,7 +90,9 @@ export function Day(props: DayProps) {
 	const filteredRuns = FilterRuns(props.sortedRuns, props.settings.filter, props.blocks);
 	const runById = new Map(props.sortedRuns.map((run) => [run.id, run]));
 	const dayOf = (run: Run | undefined) =>
-		run ? formatScheduleTime(run.scheduledTime, props.eventTimezone, props.settings.showLocalTime, "yyyy-MM-dd") : null;
+		run
+			? formatScheduleTime(run.scheduledTime, props.eventTimezone, props.settings.showLocalTime, "yyyy-MM-dd")
+			: null;
 	const runDays = runsToDays(filteredRuns, props.eventTimezone, props.settings.showLocalTime);
 
 	return (

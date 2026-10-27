@@ -50,7 +50,12 @@ describe("getLiveState", () => {
 	});
 
 	it("tracks the current run and its progress", () => {
-		expect(getLiveState(schedule, at(0.25))).toEqual({ status: "live", currentIndex: 0, nextIndex: 2, progress: 0.25 });
+		expect(getLiveState(schedule, at(0.25))).toEqual({
+			status: "live",
+			currentIndex: 0,
+			nextIndex: 2,
+			progress: 0.25,
+		});
 	});
 
 	it("treats non-run entries as the current entry", () => {
@@ -133,7 +138,13 @@ describe("serialisers", () => {
 
 	it("uses the label for non-run entries and skips unscheduled runs", () => {
 		expect(
-			toLiveRun({ id: 2, type: "sleep", category: "Overnight break", estimate: "8:00:00", scheduledTime: iso(0) } as Run),
+			toLiveRun({
+				id: 2,
+				type: "sleep",
+				category: "Overnight break",
+				estimate: "8:00:00",
+				scheduledTime: iso(0),
+			} as Run),
 		).toMatchObject({ title: "Overnight break", runners: [] });
 		expect(toLiveRun({ id: 3, estimate: "1:00:00" } as Run)).toBeNull();
 	});
@@ -144,7 +155,13 @@ describe("serialisers", () => {
 			title: "Kill the boss",
 			type: "goal",
 			data: { goal: 500, current: 100 },
-			run: { id: 1, game: { id: 1, name: "Celeste" }, category: "Any%", estimate: "1:00:00", scheduledTime: iso(0) },
+			run: {
+				id: 1,
+				game: { id: 1, name: "Celeste" },
+				category: "Any%",
+				estimate: "1:00:00",
+				scheduledTime: iso(0),
+			},
 		} as unknown as Incentive);
 
 		expect(live).toMatchObject({ runLabel: "Celeste – Any%", scheduledTime: iso(0), endTime: iso(1) });

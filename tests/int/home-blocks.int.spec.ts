@@ -10,9 +10,21 @@ describe("summariseEvents", () => {
 	it("sums raised amounts and only counts started events", () => {
 		const result = summariseEvents(
 			[
-				{ id: 1, timeSettings: { timezone: "Australia/Melbourne", startTime: "2026-01-10T00:00:00Z" }, postEvent: { raised: 1000 } },
-				{ id: 2, timeSettings: { timezone: "Australia/Melbourne", startTime: "2026-07-10T00:00:00Z" }, postEvent: { raised: 250.5 } },
-				{ id: 3, timeSettings: { timezone: "Australia/Melbourne", startTime: "2027-01-23T00:00:00Z" }, postEvent: {} },
+				{
+					id: 1,
+					timeSettings: { timezone: "Australia/Melbourne", startTime: "2026-01-10T00:00:00Z" },
+					postEvent: { raised: 1000 },
+				},
+				{
+					id: 2,
+					timeSettings: { timezone: "Australia/Melbourne", startTime: "2026-07-10T00:00:00Z" },
+					postEvent: { raised: 250.5 },
+				},
+				{
+					id: 3,
+					timeSettings: { timezone: "Australia/Melbourne", startTime: "2027-01-23T00:00:00Z" },
+					postEvent: {},
+				},
 				{ id: 4, timeSettings: { timezone: "Australia/Melbourne" } },
 			],
 			now,

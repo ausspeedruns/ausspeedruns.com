@@ -135,10 +135,18 @@ export async function EventLiveBlock(props: EventLiveBlockProps) {
 			donateUrl={donateUrl}
 			backdrop={backdrop}
 			eventInfo={eventInfo}
-			majorSponsors={majorSponsors.length > 0 ? <SponsorLogos key="major-sponsors" sponsors={majorSponsors} tier="major" /> : null}
+			majorSponsors={
+				majorSponsors.length > 0 ? (
+					<SponsorLogos key="major-sponsors" sponsors={majorSponsors} tier="major" />
+				) : null
+			}
 			minorSponsors={
 				minorSponsors.length > 0 ? (
-					<section key="minor-sponsors" className={styles.minorSponsors} aria-labelledby="event-live-sponsors">
+					<section
+						key="minor-sponsors"
+						className={styles.minorSponsors}
+						aria-labelledby="event-live-sponsors"
+					>
 						<Title order={3} size="h4" id="event-live-sponsors" ta="center" mb="md">
 							Thank you to our sponsors
 						</Title>

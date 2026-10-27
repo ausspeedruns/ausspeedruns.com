@@ -36,7 +36,12 @@ export function Goal({ incentive, highlighted }: GoalProps) {
 						{Math.floor(percent)}%
 					</Text>
 				</Group>
-				<Progress value={percent} size="lg" color="ausSpeedrunsOrange" aria-label={`${incentive.title} progress`} />
+				<Progress
+					value={percent}
+					size="lg"
+					color="ausSpeedrunsOrange"
+					aria-label={`${incentive.title} progress`}
+				/>
 			</Stack>
 		</IncentiveCard>
 	);

@@ -105,7 +105,8 @@ function title(run: Run): string {
 }
 
 function toItem(run: Run, children: Run[], incentivesByRun: Map<number, Incentive[]>): TechItem {
-	const segmentType = run.segmentType && typeof run.segmentType === "object" ? (run.segmentType as SegmentType) : null;
+	const segmentType =
+		run.segmentType && typeof run.segmentType === "object" ? (run.segmentType as SegmentType) : null;
 
 	return {
 		id: run.id,
@@ -194,21 +195,21 @@ export async function loadTechSchedule(req: PayloadRequest, shortName: string): 
 	if (!event) return null;
 
 	const runs = await req.payload.find({
-			collection: "runs",
-			where: { event: { equals: event.id } },
-			sort: "scheduledTime",
-			depth: 1,
-			pagination: false,
-			overrideAccess: true,
-			joins: false,
-			populate: {
-				games: { name: true, year: true, stream: true },
-				users: { username: true, name: true, pronouns: true, socials: true },
-				"segment-types": { name: true, slug: true },
-				runs: { type: true },
-			},
-			req,
-		});
+		collection: "runs",
+		where: { event: { equals: event.id } },
+		sort: "scheduledTime",
+		depth: 1,
+		pagination: false,
+		overrideAccess: true,
+		joins: false,
+		populate: {
+			games: { name: true, year: true, stream: true },
+			users: { username: true, name: true, pronouns: true, socials: true },
+			"segment-types": { name: true, slug: true },
+			runs: { type: true },
+		},
+		req,
+	});
 
 	const incentives =
 		runs.docs.length > 0

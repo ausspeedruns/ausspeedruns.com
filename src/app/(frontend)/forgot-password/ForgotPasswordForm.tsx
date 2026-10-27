@@ -1,20 +1,24 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { Alert, Button, Paper, Stack, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 import { requestPasswordReset, type ForgotPasswordFormValues } from "./forgotPasswordAction";
 import styles from "./page.module.css";
+import { HoneypotField, TurnstileField, type TurnstileInstance } from "#components/BotCheck/BotCheck.tsx";
+import { readHoneypot, TURNSTILE_ACTIONS } from "#utilities/botCheck/shared.ts";
 
 type FormStatus = {
 	message: string;
 	type: "error" | "success";
 } | null;
 
-export function ForgotPasswordForm() {
+export function ForgotPasswordForm({ turnstileSiteKey }: { turnstileSiteKey: string | null }) {
 	const [isPending, startTransition] = useTransition();
 	const [status, setStatus] = useState<FormStatus>(null);
+	const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+	const turnstileRef = useRef<TurnstileInstance | undefined>(undefined);
 
 	const form = useForm<ForgotPasswordFormValues>({
 		mode: "uncontrolled",
@@ -26,11 +30,21 @@ export function ForgotPasswordForm() {
 		},
 	});
 
-	const handleSubmit = form.onSubmit((values) => {
+	const handleSubmit = form.onSubmit((values, event) => {
 		setStatus(null);
 
+		if (!turnstileToken) {
+			setStatus({ message: "Please complete the verification check.", type: "error" });
+			return;
+		}
+
+		const honeypot = readHoneypot(event?.currentTarget);
+
 		startTransition(async () => {
-			const result = await requestPasswordReset(values);
+			const result = await requestPasswordReset(values, { turnstileToken, honeypot }).catch(() => ({
+				success: false,
+				message: "Unable to send reset email right now. Please try again.",
+			}));
 
 			setStatus({
 				message: result.message,
@@ -40,6 +54,10 @@ export function ForgotPasswordForm() {
 			if (result.success) {
 				form.reset();
 			}
+
+			// Turnstile tokens can only be used once
+			setTurnstileToken(null);
+			turnstileRef.current?.reset();
 		});
 	});
 
@@ -49,11 +67,22 @@ export function ForgotPasswordForm() {
 				<Stack gap="lg">
 					<TextInput
 						id="email"
+						name="email"
+						type="email"
 						key={form.key("email")}
 						label="Email address"
 						placeholder="you@example.com"
-						autoComplete="email"
+						autoComplete="username"
 						{...form.getInputProps("email")}
+					/>
+
+					<HoneypotField />
+
+					<TurnstileField
+						ref={turnstileRef}
+						siteKey={turnstileSiteKey}
+						action={TURNSTILE_ACTIONS.forgotPassword}
+						onTokenChange={setTurnstileToken}
 					/>
 
 					{status && (

@@ -114,9 +114,11 @@ export function LoginForm({ redirectPath }: LoginFormProps) {
 				<TextInput
 					label="Email"
 					id="email"
+					name="email"
 					key={form.key("email")}
 					type="email"
-					autoComplete="email"
+					// Accounts log in with their email, so it's the password-manager "username"
+					autoComplete="username"
 					placeholder="you@example.com"
 					size="md"
 					{...form.getInputProps("email")}
@@ -125,6 +127,7 @@ export function LoginForm({ redirectPath }: LoginFormProps) {
 				<PasswordInput
 					label="Password"
 					id="password"
+					name="password"
 					key={form.key("password")}
 					autoComplete="current-password"
 					placeholder="Enter your password"

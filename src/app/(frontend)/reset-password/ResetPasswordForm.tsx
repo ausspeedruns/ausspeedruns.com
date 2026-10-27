@@ -15,7 +15,7 @@ type FormStatus = {
 	expired?: boolean;
 } | null;
 
-export function ResetPasswordForm({ token }: { token: string }) {
+export function ResetPasswordForm({ token, email }: { token: string; email: string | null }) {
 	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 	const [status, setStatus] = useState<FormStatus>(null);
@@ -61,8 +61,15 @@ export function ResetPasswordForm({ token }: { token: string }) {
 						</Text>
 					</div>
 
+					{/* Hidden username so password managers update the right saved login */}
+					{email && (
+						<input type="email" name="email" autoComplete="username" value={email} readOnly hidden />
+					)}
+
 					<PasswordInput
 						id="password"
+						name="password"
+						autoComplete="new-password"
 						key={form.key("password")}
 						label="New password"
 						placeholder="New password"
@@ -71,6 +78,8 @@ export function ResetPasswordForm({ token }: { token: string }) {
 
 					<PasswordInput
 						id="confirmPassword"
+						name="confirmPassword"
+						autoComplete="new-password"
 						key={form.key("confirmPassword")}
 						label="Confirm new password"
 						placeholder="Confirm new password"

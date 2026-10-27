@@ -4,11 +4,12 @@ import { randomUUID } from "node:crypto";
 import { staff } from "#access/staff.ts";
 import { manageNonAdminUsers, manageNonAdminUsersOrSelf } from "#access/manageNonAdminUsers.ts";
 import { sameUserOrManageUsers } from "#access/sameUserOrManageUsers.ts";
-import { anyone } from "#access/anyone.ts";
+import { manageUsers } from "#access/manageUsers.ts";
 import { isAdminField } from "#access/field/isAdmin.ts";
 import { manageUsersField } from "#access/field/manageUsersField.ts";
 import { render } from "@react-email/components";
 import { clearLegacyPasswordOnChange, upgradeLegacyPassword } from "./hooks/legacyPassword.ts";
+import { requireBotCheckedForgotPassword } from "./hooks/botProtection.ts";
 import { getServerSideURL } from "#utilities/getURL.ts";
 import { preventCaseInsensitiveDuplicate } from "#hooks/preventCaseInsensitiveDuplicate.ts";
 
@@ -18,7 +19,9 @@ export const Users: CollectionConfig<"users"> = {
 	slug: "users",
 	access: {
 		admin: staff,
-		create: anyone, // Allow anyone to create an account
+		// Public sign ups go through the bot-checked /signup server action (Local API), so the REST and GraphQL
+		// endpoints can't be used to skip the check
+		create: manageUsers,
 		delete: manageNonAdminUsers,
 		read: sameUserOrManageUsers,
 		update: manageNonAdminUsersOrSelf,
@@ -37,7 +40,7 @@ export const Users: CollectionConfig<"users"> = {
 		socials: true,
 	},
 	hooks: {
-		beforeOperation: [upgradeLegacyPassword],
+		beforeOperation: [upgradeLegacyPassword, requireBotCheckedForgotPassword],
 		// Usernames are used in public URLs (/user/<username>), which are matched case-insensitively
 		beforeValidate: [preventCaseInsensitiveDuplicate("username", "That username is already taken.")],
 		beforeChange: [clearLegacyPasswordOnChange],

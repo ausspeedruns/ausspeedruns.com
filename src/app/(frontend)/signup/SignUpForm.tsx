@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Alert, Anchor, Button, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
@@ -11,6 +11,8 @@ import { useForm } from "@mantine/form";
 import { SignUp } from "./signupAction";
 import { Check, SquareAlert } from "pixelarticons/react";
 import { focusFirstError } from "#utilities/react/focusFirstError.ts";
+import { HoneypotField, TurnstileField, type TurnstileInstance } from "#components/BotCheck/BotCheck.tsx";
+import { readHoneypot, TURNSTILE_ACTIONS } from "#utilities/botCheck/shared.ts";
 
 export interface SignUpFormData {
 	username: string;
@@ -26,9 +28,11 @@ type FormStatus = {
 	message: string;
 } | null;
 
-export function SignUpForm() {
+export function SignUpForm({ turnstileSiteKey }: { turnstileSiteKey: string | null }) {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [status, setStatus] = useState<FormStatus>(null);
+	const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+	const turnstileRef = useRef<TurnstileInstance | undefined>(undefined);
 
 	const form = useForm<SignUpFormData>({
 		mode: "uncontrolled",
@@ -62,32 +66,35 @@ export function SignUpForm() {
 
 	const router = useRouter();
 
-	async function handleSubmit() {
+	async function handleSubmit(values: SignUpFormData, event?: FormEvent<HTMLFormElement>) {
 		setIsSubmitting(true);
 		setStatus(null);
 
-		if (form.validate().hasErrors) {
-			setStatus({
-				type: "error",
-				message: "Please fix the errors in the form.",
-			});
+		if (!turnstileToken) {
+			setStatus({ type: "error", message: "Please complete the verification check." });
 			setIsSubmitting(false);
 			return;
 		}
 
 		try {
-			const response = await SignUp(form.values);
+			const response = await SignUp(values, {
+				turnstileToken,
+				honeypot: readHoneypot(event?.currentTarget),
+			});
 
 			if (!response.success) {
 				const errorMessage = response.message ?? "Something went wrong. Please try again.";
 
 				setStatus({ type: "error", message: errorMessage });
+				// Turnstile tokens can only be used once
+				setTurnstileToken(null);
+				turnstileRef.current?.reset();
 				return;
 			}
 
 			setStatus({
 				type: "success",
-				message: "Account created! Redirecting...",
+				message: "Account created! Check your email to verify your account, then log in. Redirecting...",
 			});
 
 			router.push("/login");
@@ -97,6 +104,8 @@ export function SignUpForm() {
 				type: "error",
 				message: "Unable to create your account right now. Please try again.",
 			});
+			setTurnstileToken(null);
+			turnstileRef.current?.reset();
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -108,12 +117,14 @@ export function SignUpForm() {
 				className={styles.form}
 				onSubmit={form.onSubmit(handleSubmit, (errors) => focusFirstError(form, errors))}
 			>
+				{/* Accounts log in with their email, so this public display name mustn't be marked as the
+				    password-manager username (or saved logins wouldn't fill the login form) */}
 				<TextInput
 					label="Username"
 					description="3-25 characters: letters, numbers, underscores, tildes and hyphens."
-					id="username"
-					name="username"
-					autoComplete="username"
+					id="handle"
+					name="handle"
+					autoComplete="nickname"
 					required
 					key={form.key("username")}
 					{...form.getInputProps("username")}
@@ -124,7 +135,7 @@ export function SignUpForm() {
 					id="email"
 					name="email"
 					type="email"
-					autoComplete="email"
+					autoComplete="username"
 					required
 					placeholder="you@example.com"
 					key={form.key("email")}
@@ -158,6 +169,15 @@ export function SignUpForm() {
 					{...form.getInputProps("dateOfBirth")}
 					// An empty string renders as "Invalid Date" instead of the placeholder
 					defaultValue={form.getValues().dateOfBirth || null}
+				/>
+
+				<HoneypotField />
+
+				<TurnstileField
+					ref={turnstileRef}
+					siteKey={turnstileSiteKey}
+					action={TURNSTILE_ACTIONS.signup}
+					onTokenChange={setTurnstileToken}
 				/>
 
 				<Button className={styles.submit} type="submit" loading={isSubmitting} size="md" fullWidth>

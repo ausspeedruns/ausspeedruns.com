@@ -35,6 +35,9 @@ importers:
       '@mantine/notifications':
         specifier: ^9.7.4
         version: 9.7.4(@mantine/core@9.7.4(@mantine/hooks@9.7.4(react@19.3.1))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@mantine/hooks@9.7.4(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@marsidev/react-turnstile':
+        specifier: ^1.6.3
+        version: 1.6.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@payloadcms/admin-bar':
         specifier: 3.92.0
         version: 3.92.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -2264,6 +2267,12 @@ packages:
     resolution: {integrity: sha512-tICEOzsaV2eiV4QAegdErRLtfd0da02DKqsEIzJLa+8T5dWDnBMCqlWxHfBMnaL7HBAmpx41koad0zUZPGw7pg==}
     peerDependencies:
       react: ^19.2.0
+
+  '@marsidev/react-turnstile@1.6.3':
+    resolution: {integrity: sha512-JdMMArjEVDMs5jnGMBeXl3y6dkMuIXPG4Tu88Uo2Rkf8ujEw/iJ2Yp/3n4kDF3BjJ+bJB9WC19LPWc5a7/4srA==}
+    peerDependencies:
+      react: ^17.0.2 || ^18.0.0 || ^19.0
+      react-dom: ^17.0.2 || ^18.0.0 || ^19.0
 
   '@monaco-editor/loader@1.7.0':
     resolution: {integrity: sha512-gIwR1HrJrrx+vfyOhYmCZ0/JcWqG5kbfG7+d3f/C1LXk2EvzAbHSg3MQ5lO2sMlo9izoAZ04shohfKLVT6crVA==}
@@ -7771,6 +7780,11 @@ snapshots:
   '@mantine/store@9.7.4(react@19.3.1)':
     dependencies:
       react: 19.3.1
+
+  '@marsidev/react-turnstile@1.6.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+    dependencies:
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
   '@monaco-editor/loader@1.7.0':
     dependencies:

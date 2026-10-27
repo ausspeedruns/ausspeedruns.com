@@ -217,22 +217,64 @@ describe("access control", () => {
 			).rejects.toThrow();
 		});
 
-		it("doesn't let members create pre-verified accounts", async () => {
+		// Public sign ups have to go through the bot-checked /signup server action
+		it("doesn't let anonymous visitors or members create accounts through the API", async () => {
+			const data = (name: string) => ({
+				username: `sec_${name}_${suffix}`,
+				email: `sec_${name}_${suffix}@example.com`,
+				password: "password123",
+				dateOfBirth: "1990-01-01T00:00:00.000Z",
+				_verified: true,
+			});
+
+			await expect(
+				payload.create({
+					collection: "users",
+					disableVerificationEmail: true,
+					data: data("anon"),
+					overrideAccess: false,
+					req: anonReq,
+				}),
+			).rejects.toThrow();
+			await expect(
+				payload.create({
+					collection: "users",
+					disableVerificationEmail: true,
+					data: data("fake"),
+					overrideAccess: false,
+					req: memberReq,
+				}),
+			).rejects.toThrow();
+		});
+
+		it("only allows password reset requests through the website's forgot password page", async () => {
+			await expect(
+				payload.forgotPassword({
+					collection: "users",
+					data: { email: member.email },
+					disableEmail: true,
+					req: { payloadAPI: "REST" },
+				}),
+			).rejects.toThrow();
+			await expect(
+				payload.forgotPassword({ collection: "users", data: { email: member.email }, disableEmail: true }),
+			).resolves.toBeTruthy();
+		});
+
+		it("still lets user managers create accounts", async () => {
 			const created = await payload.create({
 				collection: "users",
 				disableVerificationEmail: true,
 				data: {
-					username: `sec_fake_${suffix}`,
-					email: `sec_fake_${suffix}@example.com`,
+					username: `sec_managed_${suffix}`,
+					email: `sec_managed_${suffix}@example.com`,
 					password: "password123",
 					dateOfBirth: "1990-01-01T00:00:00.000Z",
-					_verified: true,
 				},
 				overrideAccess: false,
-				req: memberReq,
+				req: managerReq,
 			});
-			const stored = await payload.findByID({ collection: "users", id: created.id, depth: 0 });
-			expect(stored._verified).not.toBe(true);
+			expect(created.username).toBe(`sec_managed_${suffix}`);
 		});
 	});
 

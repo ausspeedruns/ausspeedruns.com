@@ -1,0 +1,8 @@
+/* Moved off-screen rather than display: none, which some bots check for */
+.honeypot {
+	position: absolute;
+	left: -10000px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}

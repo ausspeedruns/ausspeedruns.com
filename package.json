@@ -37,6 +37,7 @@
 		"@mantine/form": "^9.7.4",
 		"@mantine/hooks": "^9.7.4",
 		"@mantine/notifications": "^9.7.4",
+		"@marsidev/react-turnstile": "^1.6.3",
 		"@payloadcms/admin-bar": "3.92.0",
 		"@payloadcms/db-postgres": "3.92.0",
 		"@payloadcms/email-nodemailer": "3.92.0",

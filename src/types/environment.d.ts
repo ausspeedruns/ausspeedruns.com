@@ -20,6 +20,8 @@ declare global {
 			SMTP_PASS?: string;
 			EMAIL_FROM_ADDRESS?: string;
 			EMAIL_FROM_NAME?: string;
+			TURNSTILE_SITE_KEY?: string;
+			TURNSTILE_SECRET_KEY?: string;
 			AZURE_STORAGE_CONNECTION_STRING?: string;
 			AZURE_STORAGE_CONTAINER_NAME?: string;
 			AZURE_STORAGE_ACCOUNT_BASEURL?: string;

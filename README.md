@@ -173,6 +173,7 @@ At minimum, set:
 - `PREVIEW_SECRET` and `CRON_SECRET`
 - The Stripe keys
 - `SMTP_*` and `EMAIL_FROM_*`
+- `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` (sign up and forgot password are disabled in production without them)
 - `AZURE_STORAGE_*`
 
 Pending migrations run on startup.
@@ -186,10 +187,8 @@ Bind the container to localhost and put a reverse proxy (Caddy or nginx) in fron
 - Forward `Host`, `X-Forwarded-For` and `X-Forwarded-Proto`.
 - Rate limit the endpoints that are open to abuse:
     - `/api/users/login`
-    - `/api/users/forgot-password`
-    - `/api/users` (sign up)
     - `/api/form-submissions`
-    - The `/signup`, `/volunteer` and `/submit-game` server actions
+    - The `/signup`, `/forgot-password`, `/volunteer` and `/submit-game` server actions
 - Keep per-IP limits generous. Everyone on the venue Wi-Fi at an event, and many mobile users (carrier-grade NAT), share one IP address. Ticket pickup staff and attendees shouldn't trip a limit meant for bots.
 - Cache `/_next/static/*` (immutable) at the proxy or CDN.
 
@@ -198,6 +197,7 @@ Bind the container to localhost and put a reverse proxy (Caddy or nginx) in fron
 - **CSRF:** the auth cookie is `SameSite=Lax`, so browsers don't send it with cross-site POST/fetch requests. Next.js also checks the origin of server actions, and CORS is limited to the same origin.
     - Payload's own CSRF check (enabled by setting `serverURL` or `csrf`) is deliberately left off. It ignores the cookie whenever a visit starts on another site, which logs people out when they return from Stripe or follow an email or Discord link. It also affects every page on Safari before 16.4.
 - **Logins:** accounts lock for 10 minutes after 5 failed logins, and email verification is required. Resetting the password unlocks the account straight away.
+- **Bots:** sign up and forgot password use [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) and a hidden honeypot field, both checked in the server actions. The REST `/api/users` (create) and `/api/users/forgot-password` endpoints are closed to the public so they can't be used to skip the check; only user managers can create accounts through the API or admin panel.
 - **GraphQL:** disabled. Integrations such as the stream graphics use REST with API keys.
 - **Query depth:** `maxDepth` is 3.
 - **Uploads:** only content managers can upload media.

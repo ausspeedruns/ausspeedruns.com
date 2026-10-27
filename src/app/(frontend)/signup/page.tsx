@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getPayload } from "payload";
 
 import configPromise from "#payload-config";
+import { getTurnstileSiteKey } from "#utilities/botCheck/server.ts";
 
 import { SignUpForm } from "./SignUpForm.tsx";
 import styles from "./page.module.css";
@@ -30,7 +31,7 @@ export default async function SignUpPage() {
 					<Title order={1} ta="center">
 						Sign Up
 					</Title>
-					<SignUpForm />
+					<SignUpForm turnstileSiteKey={getTurnstileSiteKey()} />
 				</Stack>
 			</Card>
 		</main>

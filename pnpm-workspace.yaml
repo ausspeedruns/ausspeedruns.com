@@ -6,7 +6,5 @@ minimumReleaseAgeExclude:
     - "@mantine/dates@9.7.4"
     - "@mantine/form@9.7.4"
     - "@mantine/hooks@9.7.4"
-    - "@mantine/modals@9.7.4"
     - "@mantine/notifications@9.7.4"
-    - "@mantine/nprogress@9.7.4"
     - "@mantine/store@9.7.4"

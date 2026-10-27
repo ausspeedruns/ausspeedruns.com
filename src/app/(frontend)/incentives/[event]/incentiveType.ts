@@ -1,35 +1,25 @@
-import { z } from "zod";
+import type { Goal, War } from "#utilities/schedule/incentives.ts";
 
-export const BaseIncentiveData = z.object({
-	id: z.union([z.string(), z.number()]),
-	type: z.string(),
-	title: z.string(),
-	isActive: z.boolean(),
-	notes: z.string().optional(),
-	run: z.object({
-		game: z.string(),
-		category: z.string(),
-		scheduledTime: z.string(),
-	}),
-	data: z.record(z.string(), z.unknown()),
-});
+interface BaseIncentive {
+	id: number;
+	title: string;
+	description: string | null;
+	isActive: boolean;
+	run: {
+		name: string;
+		category: string;
+		scheduledTime: string | null;
+	} | null;
+}
 
-export const War = BaseIncentiveData.extend({
-	type: z.literal("war"),
-	data: z.object({
-		options: z.array(
-			z.object({
-				name: z.string(),
-				total: z.number(),
-			}),
-		),
-	}),
-});
+export type GoalIncentive = BaseIncentive & { type: "goal"; data: Goal };
+export type WarIncentive = BaseIncentive & { type: "war"; data: War };
+export type IncentiveItem = GoalIncentive | WarIncentive;
 
-export const Goal = BaseIncentiveData.extend({
-	type: z.literal("goal"),
-	data: z.object({
-		goal: z.number(),
-		current: z.number(),
-	}),
-});
+const currencyOptions = { style: "currency", currency: "AUD", currencyDisplay: "narrowSymbol" } as const;
+const wholeDollarFormatter = new Intl.NumberFormat("en-AU", { ...currencyOptions, maximumFractionDigits: 0 });
+const centsFormatter = new Intl.NumberFormat("en-AU", { ...currencyOptions, minimumFractionDigits: 2 });
+
+export function formatMoney(value: number): string {
+	return (Number.isInteger(value) ? wholeDollarFormatter : centsFormatter).format(value);
+}

@@ -1,122 +1,12 @@
-.page {
-	--bg: light-dark(#eef1f3, #19120c);
-	--surface-low: light-dark(#ffffff, #221a14);
-	--surface-mid: light-dark(#ffffff, #261e18);
-	--surface-high: light-dark(#e6eaee, #312822);
-	--surface-bright: light-dark(#d6dce2, #413730);
-	--outline: light-dark(#5c6670, #544437);
-	--outline-soft: color-mix(in srgb, var(--outline) 30%, transparent);
-	--primary: #cc7722;
-	--primary-strong: #d27c27;
-	--on-surface: light-dark(#1a1410, #f0dfd5);
-	--on-surface-soft: light-dark(#4a3f37, #dac2b2);
-	--tertiary: #7ad0ff;
-	color: var(--on-surface);
-	min-height: 100vh;
-	font-family: var(--mantine-font-family), sans-serif;
-}
-
-.main {
-	padding: 3rem 1.25rem 4rem;
-}
-
-.heroSection {
-	margin-bottom: 1rem;
-}
-
 .heroTitle {
-	position: relative;
-	display: inline-block;
-	font-family: "Jersey10", var(--mantine-font-family), sans-serif;
-	font-weight: normal;
 	font-size: clamp(2.4rem, 11vw, 7rem);
-	letter-spacing: 0.05em;
-	text-transform: uppercase;
-	color: var(--on-surface);
 	word-break: break-word;
 }
 
-.heroTitle::after {
-	content: attr(data-text);
-	position: absolute;
-	left: 32px;
-	top: -16px;
-	z-index: -1;
-	color: transparent;
-	-webkit-text-stroke: 1px color-mix(in srgb, var(--primary) 45%, transparent);
-	width: 100%;
-}
-
-.pronouns {
-	color: var(--on-surface-soft);
-}
-
-.quickPanel {
-	border-top: 1px solid var(--outline-soft);
-	border-bottom: 1px solid var(--outline-soft);
-	padding: 1.4rem 0;
-}
-
-.contentGrid {
-	display: grid;
-	grid-template-columns: 1fr;
-	gap: 2rem;
-	align-items: start;
-}
-
-.historySection,
-.upcomingSection {
-	min-width: 0;
-}
-
-.sectionHeader {
-	display: flex;
-	align-items: baseline;
-	justify-content: space-between;
-	gap: 0.65rem;
-	padding-bottom: 0.85rem;
-	margin-bottom: 1.2rem;
-	border-bottom: 1px solid var(--outline-soft);
-}
-
-.sectionTitle,
-.sectionTitleAlt {
-	position: relative;
-	display: inline-block;
+.sectionTitle {
 	font-size: clamp(1.85rem, 5vw, 2.05rem);
 	font-weight: 800;
 	text-transform: uppercase;
 	line-height: 1;
 	letter-spacing: -0.03em;
 }
-
-.sectionTitle {
-	color: var(--primary);
-}
-
-.sectionTitleAlt {
-	color: var(--on-surface);
-}
-
-.emptyState {
-	background: var(--surface-mid);
-	border-color: var(--outline-soft);
-}
-
-@media (width >= 75em) {
-	.contentGrid {
-		grid-template-columns: minmax(0, 2fr) minmax(18rem, 1fr);
-	}
-}
-
-@media (max-width: 48em) {
-	.main {
-		padding-inline: 0.9rem;
-	}
-
-	.sectionHeader {
-		align-items: flex-start;
-		flex-direction: column;
-	}
-}
-

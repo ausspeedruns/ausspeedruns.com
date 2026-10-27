@@ -1,56 +1,23 @@
 .scheduleItem {
 	position: relative;
-	background: var(--surface-low);
-	padding: 1.3rem;
-	overflow: hidden;
-	display: flex;
-	flex-direction: column;
-	gap: 0.85rem;
-	transition: background-color 0.2s ease;
-}
+	transition: background-color 150ms ease;
 
-.scheduleItemHighlight {
-	background: var(--surface-high);
-}
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0 0 0 auto;
+		width: 3px;
+		background: var(--mantine-primary-color-light);
+		transition: background-color 150ms ease;
+	}
 
-.scheduleItem:hover {
-	background: color-mix(in srgb, var(--surface-high) 88%, var(--surface-bright));
-}
+	&:hover,
+	&[data-highlighted] {
+		background: var(--mantine-color-default-hover);
+	}
 
-.scheduleRail {
-	position: absolute;
-	right: 0;
-	top: 0;
-	height: 100%;
-	width: 3px;
-	background: color-mix(in srgb, var(--primary) 26%, transparent);
-	transition: background-color 0.2s ease;
-}
-
-.scheduleItem:hover .scheduleRail {
-	background: var(--primary);
-}
-
-.scheduleDate {
-	color: var(--primary);
-	white-space: nowrap;
-}
-
-.scheduleEstimate {
-	border-color: color-mix(in srgb, var(--tertiary) 32%, transparent);
-	color: var(--tertiary);
-	background: transparent;
-}
-
-.scheduleTitle {
-	margin: 0;
-}
-
-.scheduleEvent {
-	opacity: 0.58;
-}
-
-.scheduleMode {
-	opacity: 0.48;
-	text-align: right;
+	&:hover::after,
+	&[data-highlighted]::after {
+		background: var(--mantine-primary-color-filled);
+	}
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Button, Card, Container, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Button, Card, Container, Divider, Grid, GridCol, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { Bluesky, Video } from "pixelarticons/react";
 import type { Run as RunType } from "#/payload-types";
 import { headers } from "next/headers";
@@ -74,82 +74,88 @@ export default async function UserPage({ params: paramsPromise }: Args) {
 	].filter((item) => item.href);
 
 	return (
-		<article className={styles.page}>
-			<Container className={styles.main} size="xl">
-				<section className={styles.heroSection}>
-					<div className={styles.titleBlock}>
-						<Title className={styles.heroTitle} order={1}>
-							{user.username}
-						</Title>
-						{user.pronouns && <Text className={styles.pronouns}>{user.pronouns}</Text>}
-					</div>
-
-					<div className={styles.quickPanel}>
-						<Group gap="sm">
-							{socialItems.map((item) => {
-								const Icon = item.icon;
-								return (
-									<Button
-										leftSection={<Icon width={16} height={16} />}
-										key={item.label}
-										component="a"
-										href={item.href}
-										target="_blank"
-										rel="noreferrer"
-									>
-										{item.label}
-									</Button>
-								);
-							})}
-						</Group>
-
-						{auth.user?.id === user.id && <UserNavigation />}
-					</div>
-				</section>
-
-				<div className={styles.contentGrid}>
-					<section className={styles.historySection}>
-						<div className={styles.sectionHeader}>
-							<Title className={styles.sectionTitle} order={2}>
-								Runs
-							</Title>
-						</div>
-
-						{historicalRuns.length === 0 ? (
-							<Card className={styles.emptyState}>
-								<Text c="dimmed">No runs.</Text>
-							</Card>
-						) : (
-							<SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
-								{historicalRuns.map((run) => (
-									<Run key={run.id} run={run} />
-								))}
-							</SimpleGrid>
-						)}
-					</section>
-
-					<aside className={styles.upcomingSection}>
-						<div className={styles.sectionHeader}>
-							<Title className={styles.sectionTitleAlt} data-text="Upcoming" order={2}>
-								Upcoming
-							</Title>
-						</div>
-
-						{upcomingRuns.length === 0 ? (
-							<Card className={styles.emptyState}>
-								<Text c="dimmed">No upcoming runs scheduled.</Text>
-							</Card>
-						) : (
-							<Stack gap="xs">
-								{upcomingRuns.map((run) => (
-									<UpcomingRun key={run.id} run={run} />
-								))}
-							</Stack>
-						)}
-					</aside>
+		<Container component="article" size="xl" pt="3rem" pb="4rem">
+			<Stack component="section" gap="lg" mb="md">
+				<div>
+					<Title className={styles.heroTitle} order={1} ff="Jersey10, var(--mantine-font-family)" fw="normal" tt="uppercase" lts="0.05em">
+						{user.username}
+					</Title>
+					{user.pronouns && <Text c="dimmed">{user.pronouns}</Text>}
 				</div>
-			</Container>
-		</article>
+
+				<Divider />
+
+				{(socialItems.length > 0 || auth.user?.id === user.id) && (
+					<>
+						<div>
+							{socialItems.length > 0 && (
+								<Group gap="sm">
+									{socialItems.map((item) => {
+										const Icon = item.icon;
+										return (
+											<Button
+												leftSection={<Icon width={16} height={16} />}
+												key={item.label}
+												component="a"
+												href={item.href}
+												target="_blank"
+												rel="noreferrer"
+											>
+												{item.label}
+											</Button>
+										);
+									})}
+								</Group>
+							)}
+
+							{auth.user?.id === user.id && <UserNavigation />}
+						</div>
+
+						<Divider />
+					</>
+				)}
+			</Stack>
+
+			<Grid gap="xl" align="flex-start">
+				<GridCol component="section" span={{ base: 12, lg: 8 }}>
+					<Title className={styles.sectionTitle} order={2} c="ausSpeedrunsOrange">
+						Runs
+					</Title>
+					<Divider mt="sm" mb="lg" />
+
+					{historicalRuns.length === 0 ? (
+						<Card withBorder>
+							<Text c="dimmed">No runs.</Text>
+						</Card>
+					) : (
+						<SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
+							{historicalRuns.map((run) => (
+								<Run key={run.id} run={run} />
+							))}
+						</SimpleGrid>
+					)}
+				</GridCol>
+
+				<GridCol component="aside" span={{ base: 12, lg: 4 }}>
+					<Title className={styles.sectionTitle} order={2}>
+						Upcoming
+					</Title>
+					<Divider mt="sm" mb="lg" />
+
+					{upcomingRuns.length === 0 ? (
+						<Card withBorder>
+							<Text c="dimmed">No upcoming runs scheduled.</Text>
+						</Card>
+					) : (
+						<Stack gap="xs">
+							{upcomingRuns.map((run) => (
+								<UpcomingRun key={run.id} run={run} />
+							))}
+						</Stack>
+					)}
+				</GridCol>
+			</Grid>
+		</Container>
 	);
 }
 

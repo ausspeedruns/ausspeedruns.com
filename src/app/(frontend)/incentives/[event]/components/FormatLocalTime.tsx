@@ -3,9 +3,14 @@
 import { format } from "date-fns";
 
 interface Props {
-	date: Date;
+	date: string;
 }
 
 export function FormatLocalTime({ date }: Props) {
-	return format(date, "EEEE h:mm a");
+	return (
+		// The server renders in its own timezone, so the client re-renders in the viewer's local time
+		<time dateTime={date} suppressHydrationWarning>
+			{format(new Date(date), "EEEE h:mm a")}
+		</time>
+	);
 }

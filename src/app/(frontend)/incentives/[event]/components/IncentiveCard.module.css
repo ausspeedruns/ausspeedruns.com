@@ -1,0 +1,34 @@
+.card {
+	position: relative;
+	height: 100%;
+	/* Lets overly long bid war options escape the card on purpose */
+	overflow: visible;
+
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0 0 0 auto;
+		width: 3px;
+		background: var(--mantine-primary-color-light);
+	}
+
+	&[data-highlighted] {
+		background: var(--mantine-color-default-hover);
+	}
+
+	&[data-highlighted]::after {
+		background: var(--mantine-primary-color-filled);
+	}
+
+	&[data-closed]::after {
+		background: var(--mantine-color-default-border);
+	}
+}
+
+.description {
+	white-space: pre-line;
+}
+
+.progress {
+	margin-top: auto;
+}

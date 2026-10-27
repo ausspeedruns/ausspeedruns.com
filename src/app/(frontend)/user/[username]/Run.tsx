@@ -1,4 +1,4 @@
-import { Box, Card, Group, Stack, Text, Title } from "@mantine/core";
+import { AspectRatio, Box, Card, Divider, Group, Stack, Text, Title } from "@mantine/core";
 import styles from "./Run.module.css";
 import { getEventLabel } from "./getEventLabel";
 import type { Run as RunData } from "#payload-types.ts";
@@ -12,36 +12,39 @@ export function Run(props: RunProps) {
 	const embedUrl = getYouTubeEmbedUrl(props.run.youtube);
 
 	return (
-		<Card className={styles.runCard}>
-			<Box className={styles.thumbWrap} p="xs">
+		<Card padding="sm" withBorder>
+			<AspectRatio ratio={16 / 9} mb="md">
 				{embedUrl && (
 					<iframe
+						className={styles.video}
 						src={embedUrl}
 						title="YouTube video player"
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 						referrerPolicy="strict-origin-when-cross-origin"
 						allowFullScreen
-						style={{ width: "100%", height: "100%", border: "none" }}
 					/>
 				)}
-			</Box>
+			</AspectRatio>
 
-			<Stack className={styles.cardBody} gap="md" justify="space-between">
+			<Stack gap="md" justify="space-between" flex={1}>
 				<Group align="flex-start" justify="space-between" wrap="nowrap">
-					<div>
-						<Title className={styles.runTitle} order={3} textWrap="balance" mb="xs">
+					<Box miw={0}>
+						<Title order={3} textWrap="balance" mb="xs">
 							{getRunDisplayName(props.run)}
 						</Title>
-						<Text className={styles.runMeta}>{[getRunCategoryLabel(props.run), props.run.platform].filter(Boolean).join(" · ")}</Text>
-					</div>
-					<div className={styles.timeBlock}>
-						<Text className={styles.finalTime}>{props.run.time ?? "??:??:??"}</Text>
-					</div>
+						<Text c="dimmed">{[getRunCategoryLabel(props.run), props.run.platform].filter(Boolean).join(" · ")}</Text>
+					</Box>
+					<Text c="ausSpeedrunsOrange" ta="right" flex="none">
+						{props.run.time ?? "??:??:??"}
+					</Text>
 				</Group>
 
-				<Group className={styles.cardFooter} gap="sm" wrap="nowrap" pt="md">
-					<Text className={styles.eventLine}>{getEventLabel(props.run)}</Text>
-				</Group>
+				<div>
+					<Divider mb="md" />
+					<Text c="dimmed" truncate>
+						{getEventLabel(props.run)}
+					</Text>
+				</div>
 			</Stack>
 		</Card>
 	);

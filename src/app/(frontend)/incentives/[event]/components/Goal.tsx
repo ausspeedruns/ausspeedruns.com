@@ -1,52 +1,43 @@
-import { Badge, Group, Paper, Progress, Stack, Text } from "@mantine/core";
-import type { Goal as GoalSchema } from "../incentiveType";
-import { FormatLocalTime } from "./FormatLocalTime";
-import type z from "zod";
+import { Badge, Group, Progress, Stack, Text } from "@mantine/core";
+import { formatMoney, type GoalIncentive } from "../incentiveType";
+import { IncentiveCard } from "./IncentiveCard";
 
-export function Goal(props: z.infer<typeof GoalSchema>) {
-	const time = new Date(props.run.scheduledTime);
-	const progress = props.data.goal > 0 ? Math.min(props.data.current / props.data.goal, 1) : 0;
+interface GoalProps {
+	incentive: GoalIncentive;
+	highlighted?: boolean;
+}
+
+export function Goal({ incentive, highlighted }: GoalProps) {
+	const { goal, current } = incentive.data;
+	const percent = goal > 0 ? Math.min((current / goal) * 100, 100) : 0;
+	const isMet = goal > 0 && current >= goal;
 
 	return (
-		<Paper
-			withBorder
-			radius={0}
-			p="sm"
-			style={{
-				borderWidth: 1,
-				borderColor: "var(--mantine-color-default-border)",
-				background: "var(--mantine-color-default)",
-				opacity: props.isActive ? 1 : 0.7,
-			}}
+		<IncentiveCard
+			incentive={incentive}
+			highlighted={highlighted}
+			status={
+				isMet ? (
+					<Badge color="ausSpeedrunsOrange" variant="filled">
+						Met
+					</Badge>
+				) : null
+			}
 		>
 			<Stack gap={6}>
-				<Group justify="space-between" align="center" wrap="wrap">
-					<Badge radius={0} color={props.isActive ? "lime" : "gray"} variant="light">
-						{props.isActive ? "Goal" : "Goal - Disabled"}
-					</Badge>
-					<Text size="xs" c="dimmed">
-						<FormatLocalTime date={time} />
-					</Text>
-				</Group>
-
-				<Text fw={700}>{props.title}</Text>
-				<Text size="sm" c="dimmed">
-					{props.run.game} / {props.run.category}
-				</Text>
-				{props.notes ? <Text size="sm">{props.notes}</Text> : null}
-
-				<Group justify="space-between" align="center" wrap="nowrap" gap="xs">
+				<Group justify="space-between" align="baseline" wrap="nowrap" gap="xs">
 					<Text fw={700}>
-						${props?.data.current?.toLocaleString() ?? "Error"} / $
-						{props?.data.goal?.toLocaleString() ?? "Error"}
+						{formatMoney(current)}{" "}
+						<Text span c="dimmed" fw={400}>
+							/ {formatMoney(goal)}
+						</Text>
 					</Text>
-					<Text size="xs" c="dimmed">
-						{Math.round(progress * 100)}%
+					<Text size="sm" c="dimmed">
+						{Math.floor(percent)}%
 					</Text>
 				</Group>
-
-				<Progress value={progress * 100} radius={0} size="lg" color={props.isActive ? "lime" : "gray"} />
+				<Progress value={percent} size="lg" color="ausSpeedrunsOrange" aria-label={`${incentive.title} progress`} />
 			</Stack>
-		</Paper>
+		</IncentiveCard>
 	);
 }

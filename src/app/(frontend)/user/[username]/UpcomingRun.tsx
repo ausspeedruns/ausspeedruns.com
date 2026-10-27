@@ -1,4 +1,4 @@
-import { Badge, Group, Text, Title } from "@mantine/core";
+import { Badge, Card, Group, Stack, Text, Title } from "@mantine/core";
 import styles from "./UpcomingRun.module.css";
 
 interface UpcomingRunProps {
@@ -15,26 +15,34 @@ interface UpcomingRunProps {
 
 export function UpcomingRun(props: UpcomingRunProps) {
 	return (
-		<article
-			className={`${styles.scheduleItem} ${props.run.isHighlighted ? styles.scheduleItemHighlight : ""}`}
-			key={props.run.id}
+		<Card
+			component="article"
+			className={styles.scheduleItem}
+			data-highlighted={props.run.isHighlighted || undefined}
+			padding="lg"
+			withBorder
 		>
-			<div className={styles.scheduleRail} />
-			<Group justify="space-between" wrap="nowrap">
-				<Text className={styles.scheduleDate}>{props.run.date}</Text>
-				<Badge className={styles.scheduleEstimate} variant="outline">
-					EST: {props.run.estimate}
-				</Badge>
-			</Group>
-			<div>
-				<Title className={styles.scheduleTitle} order={4}>
-					{props.run.game}
-				</Title>
-				<Text className={styles.scheduleEvent}>{props.run.event}</Text>
-			</div>
-			<Group justify="space-between" wrap="nowrap">
-				<Text className={styles.scheduleMode}>{props.run.mode}</Text>
-			</Group>
-		</article>
+			<Stack gap="sm">
+				<Group justify="space-between" wrap="nowrap">
+					<Text c="ausSpeedrunsOrange" flex="none">
+						{props.run.date}
+					</Text>
+					{props.run.estimate && (
+						<Badge color="ausSpeedrunsBlue" variant="outline">
+							EST: {props.run.estimate}
+						</Badge>
+					)}
+				</Group>
+				<div>
+					<Title order={4}>{props.run.game}</Title>
+					<Text c="dimmed">{props.run.event}</Text>
+				</div>
+				{props.run.mode && (
+					<Text c="dimmed" size="sm" ta="right">
+						{props.run.mode}
+					</Text>
+				)}
+			</Stack>
+		</Card>
 	);
 }

@@ -1,541 +1,151 @@
-import type { Media } from "#payload-types.ts";
 import type { RequiredDataFromCollectionSlug } from "payload";
 
-export type PageArgs = {
-	heroImage: Media;
-};
+import type { FAQBlock } from "../../src/payload-types.ts";
+import {
+	BOLD,
+	headingNode,
+	linkNode,
+	listNode,
+	paragraphNode,
+	richText as buildRichText,
+	textNode,
+} from "./richTextHelpers.ts";
 
-export function aboutUsPage(args: PageArgs): RequiredDataFromCollectionSlug<"pages"> {
-	const { heroImage } = args;
+type PageData = RequiredDataFromCollectionSlug<"pages">;
+type LayoutBlock = PageData["layout"][number];
+
+type RichTextValue = NonNullable<FAQBlock["faqs"]>[number]["answer"];
+
+// The helpers type children loosely; the shapes they build are valid Lexical nodes
+const richText = (...children: object[]) => buildRichText(...children) as unknown as RichTextValue;
+
+const customLink = (label: string, url: string, appearance: "default" | "outline" = "default") => ({
+	link: { type: "custom" as const, label, url, appearance, newTab: /^https?:\/\//.test(url) },
+});
+
+/** Bracketed writing prompt, so editors can see what goes where and roughly how much to write. */
+const prompt = (text: string) => paragraphNode([textNode(`[${text}]`)]);
+
+/**
+ * Draft About Us skeleton. Every paragraph is a writing prompt with a target
+ * length; replace them in the admin before publishing.
+ */
+export function aboutUsPage(): PageData {
+	const layout: LayoutBlock[] = [
+		{
+			blockName: "About: Intro",
+			blockType: "content",
+			columns: [
+				{
+					size: "full",
+					enableLink: false,
+					richText: richText(
+						headingNode("About AusSpeedruns", "h1"),
+						prompt("~1–2 sentences: who AusSpeedruns is in a nutshell"),
+						prompt("~1 short paragraph: what we do and why we do it"),
+					),
+				},
+			],
+		},
+		{
+			blockName: "About: All-time stats",
+			blockType: "statsBlock",
+			title: "AusSpeedruns so far",
+			description: "[~1 sentence: framing for the numbers below]",
+			showRaised: true,
+			showEvents: true,
+			showRuns: true,
+			extraStats: [{ label: "Charities supported", value: "[#]" }],
+		},
+		{
+			blockName: "About: Our story",
+			blockType: "content",
+			columns: [
+				{
+					size: "twoThirds",
+					enableLink: false,
+					richText: richText(
+						headingNode("Our story", "h2"),
+						prompt("~1 paragraph: how and when AusSpeedruns started, and who started it"),
+						prompt("~1 paragraph: how the events and community grew over the years"),
+						prompt("~1 paragraph: where AusSpeedruns is today and what's next"),
+					),
+				},
+				{
+					size: "oneThird",
+					enableLink: false,
+					richText: richText(
+						headingNode("Milestones", "h3"),
+						listNode("bullet", [
+							[textNode("[Year]: ", BOLD), textNode("[first event / founding]")],
+							[textNode("[Year]: ", BOLD), textNode("[milestone]")],
+							[textNode("[Year]: ", BOLD), textNode("[milestone]")],
+							[textNode("[Year]: ", BOLD), textNode("[milestone]")],
+						]),
+					),
+				},
+			],
+		},
+		{
+			blockName: "About: Charities",
+			blockType: "content",
+			columns: [
+				{
+					size: "full",
+					enableLink: false,
+					richText: richText(
+						headingNode("Charities we've supported", "h2"),
+						prompt("~1 sentence: why charity is at the heart of our events"),
+						listNode("bullet", [
+							[textNode("[Charity name]: ", BOLD), textNode("[event(s)], [~1 sentence on the cause]")],
+							[textNode("[Charity name]: ", BOLD), textNode("[event(s)], [~1 sentence on the cause]")],
+							[textNode("[Charity name]: ", BOLD), textNode("[event(s)], [~1 sentence on the cause]")],
+						]),
+					),
+				},
+			],
+		},
+		{
+			blockName: "About: Get involved CTA",
+			blockType: "cta",
+			richText: richText(
+				headingNode("Get involved", "h2"),
+				prompt("~1–2 sentences: invite people to run, volunteer or join the community"),
+			),
+			links: [customLink("Submit a run", "/submit-game"), customLink("Volunteer", "/volunteer", "outline")],
+		},
+		{
+			blockName: "About: Partner with us / Contact CTA",
+			blockType: "cta",
+			richText: richText(
+				headingNode("Partner with us", "h2"),
+				prompt("~1–2 sentences: the reach we offer sponsors and partners, and who to talk to"),
+				paragraphNode([
+					textNode("Contact: ", BOLD),
+					linkNode("[contact email]", "mailto:[contact email]"),
+				]),
+			),
+			links: [customLink("Get in touch", "mailto:[contact email]")],
+		},
+		{
+			blockName: "About: Twitch banner",
+			blockType: "socialBannerBlock",
+			heading: "Watch live on Twitch",
+			text: "Follow AusSpeedruns on Twitch so you don't miss our next marathon.",
+			buttonLabel: "Follow on Twitch",
+			url: "https://www.twitch.tv/ausspeedruns",
+			platform: "twitch",
+		},
+	];
+
 	return {
 		slug: "about-us",
-		_status: "published",
+		_status: "draft",
 		title: "About Us",
 		meta: {
-			description: "Australian Speedrunners raising money for charity as fast as possible.",
-			image: heroImage.id,
-			title: "AusSpeedruns",
+			title: "About Us | AusSpeedruns",
+			description: "[~1–2 sentences, under 160 characters: who AusSpeedruns is, for search results]",
 		},
-		layout: [
-			{
-				blockName: "Content Block",
-				blockType: "content",
-				columns: [
-					{
-						richText: {
-							root: {
-								type: "root",
-								children: [
-									{
-										type: "heading",
-										children: [
-											{
-												type: "text",
-												detail: 0,
-												format: 0,
-												mode: "normal",
-												style: "",
-												text: "Core features",
-												version: 1,
-											},
-										],
-										direction: "ltr",
-										format: "",
-										indent: 0,
-										tag: "h2",
-										version: 1,
-									},
-								],
-								direction: "ltr",
-								format: "",
-								indent: 0,
-								version: 1,
-							},
-						},
-						size: "full",
-					},
-					{
-						enableLink: false,
-						richText: {
-							root: {
-								type: "root",
-								children: [
-									{
-										type: "heading",
-										children: [
-											{
-												type: "text",
-												detail: 0,
-												format: 0,
-												mode: "normal",
-												style: "",
-												text: "Admin Dashboard",
-												version: 1,
-											},
-										],
-										direction: "ltr",
-										format: "",
-										indent: 0,
-										tag: "h3",
-										version: 1,
-									},
-									{
-										type: "paragraph",
-										children: [
-											{
-												type: "text",
-												detail: 0,
-												format: 0,
-												mode: "normal",
-												style: "",
-												text: "Manage this site's pages and posts from the ",
-												version: 1,
-											},
-											{
-												type: "link",
-												children: [
-													{
-														type: "text",
-														detail: 0,
-														format: 0,
-														mode: "normal",
-														style: "",
-														text: "admin dashboard",
-														version: 1,
-													},
-												],
-												direction: "ltr",
-												fields: {
-													linkType: "custom",
-													newTab: false,
-													url: "/admin",
-												},
-												format: "",
-												indent: 0,
-												version: 2,
-											},
-											{
-												type: "text",
-												detail: 0,
-												format: 0,
-												mode: "normal",
-												style: "",
-												text: ".",
-												version: 1,
-											},
-										],
-										direction: "ltr",
-										format: "",
-										indent: 0,
-										textFormat: 0,
-										version: 1,
-									},
-								],
-								direction: "ltr",
-								format: "",
-								indent: 0,
-								version: 1,
-							},
-						},
-						size: "oneThird",
-					},
-					{
-						enableLink: false,
-						richText: {
-							root: {
-								type: "root",
-								children: [
-									{
-										type: "heading",
-										children: [
-											{
-												type: "text",
-												detail: 0,
-												format: 0,
-												mode: "normal",
-												style: "",
-												text: "Preview",
-												version: 1,
-											},
-										],
-										direction: "ltr",
-										format: "",
-										indent: 0,
-										tag: "h3",
-										version: 1,
-									},
-									{
-										type: "paragraph",
-										children: [
-											{
-												type: "text",
-												detail: 0,
-												format: 0,
-												mode: "normal",
-												style: "",
-												text: "Using versions, drafts, and preview, editors can review and share their changes before publishing them.",
-												version: 1,
-											},
-										],
-										direction: "ltr",
-										format: "",
-										indent: 0,
-										textFormat: 0,
-										version: 1,
-									},
-								],
-								direction: "ltr",
-								format: "",
-								indent: 0,
-								version: 1,
-							},
-						},
-						size: "oneThird",
-					},
-					{
-						enableLink: false,
-						richText: {
-							root: {
-								type: "root",
-								children: [
-									{
-										type: "heading",
-										children: [
-											{
-												type: "text",
-												detail: 0,
-												format: 0,
-												mode: "normal",
-												style: "",
-												text: "Page Builder",
-												version: 1,
-											},
-										],
-										direction: "ltr",
-										format: "",
-										indent: 0,
-										tag: "h3",
-										version: 1,
-									},
-									{
-										type: "paragraph",
-										children: [
-											{
-												type: "text",
-												detail: 0,
-												format: 0,
-												mode: "normal",
-												style: "",
-												text: "Custom page builder allows you to create unique page, post, and project layouts for any type of content.",
-												version: 1,
-											},
-										],
-										direction: "ltr",
-										format: "",
-										indent: 0,
-										textFormat: 0,
-										version: 1,
-									},
-								],
-								direction: "ltr",
-								format: "",
-								indent: 0,
-								version: 1,
-							},
-						},
-						size: "oneThird",
-					},
-					{
-						enableLink: false,
-						richText: {
-							root: {
-								type: "root",
-								children: [
-									{
-										type: "heading",
-										children: [
-											{
-												type: "text",
-												detail: 0,
-												format: 0,
-												mode: "normal",
-												style: "",
-												text: "SEO",
-												version: 1,
-											},
-										],
-										direction: "ltr",
-										format: "",
-										indent: 0,
-										tag: "h3",
-										version: 1,
-									},
-									{
-										type: "paragraph",
-										children: [
-											{
-												type: "text",
-												detail: 0,
-												format: 0,
-												mode: "normal",
-												style: "",
-												text: "Editors have complete control over SEO data and site content directly from the ",
-												version: 1,
-											},
-											{
-												type: "link",
-												children: [
-													{
-														type: "text",
-														detail: 0,
-														format: 0,
-														mode: "normal",
-														style: "",
-														text: "admin dashboard",
-														version: 1,
-													},
-												],
-												direction: "ltr",
-												fields: {
-													linkType: "custom",
-													newTab: false,
-													url: "/admin",
-												},
-												format: "",
-												indent: 0,
-												version: 2,
-											},
-											{
-												type: "text",
-												detail: 0,
-												format: 0,
-												mode: "normal",
-												style: "",
-												text: ".",
-												version: 1,
-											},
-										],
-										direction: "ltr",
-										format: "",
-										indent: 0,
-										textFormat: 0,
-										version: 1,
-									},
-								],
-								direction: "ltr",
-								format: "",
-								indent: 0,
-								version: 1,
-							},
-						},
-						size: "oneThird",
-					},
-					{
-						enableLink: false,
-						richText: {
-							root: {
-								type: "root",
-								children: [
-									{
-										type: "heading",
-										children: [
-											{
-												type: "text",
-												detail: 0,
-												format: 0,
-												mode: "normal",
-												style: "",
-												text: "Dark Mode",
-												version: 1,
-											},
-										],
-										direction: "ltr",
-										format: "",
-										indent: 0,
-										tag: "h3",
-										version: 1,
-									},
-									{
-										type: "paragraph",
-										children: [
-											{
-												type: "text",
-												detail: 0,
-												format: 0,
-												mode: "normal",
-												style: "",
-												text: "Users will experience this site in their preferred color scheme and each block can be inverted.",
-												version: 1,
-											},
-										],
-										direction: "ltr",
-										format: "",
-										indent: 0,
-										textFormat: 0,
-										version: 1,
-									},
-								],
-								direction: "ltr",
-								format: "",
-								indent: 0,
-								version: 1,
-							},
-						},
-						size: "oneThird",
-					},
-				],
-			},
-			{
-				blockName: "Archive Block",
-				blockType: "archive",
-				categories: [],
-				introContent: {
-					root: {
-						type: "root",
-						children: [
-							{
-								type: "heading",
-								children: [
-									{
-										type: "text",
-										detail: 0,
-										format: 0,
-										mode: "normal",
-										style: "",
-										text: "Recent posts",
-										version: 1,
-									},
-								],
-								direction: "ltr",
-								format: "",
-								indent: 0,
-								tag: "h3",
-								version: 1,
-							},
-							{
-								type: "paragraph",
-								children: [
-									{
-										type: "text",
-										detail: 0,
-										format: 0,
-										mode: "normal",
-										style: "",
-										text: 'The posts below are displayed in an "Archive" layout building block which is an extremely powerful way to display documents on a page. It can be auto-populated by collection or by category, or posts can be individually selected. Pagination controls will automatically appear if the number of results exceeds the number of items per page.',
-										version: 1,
-									},
-								],
-								direction: "ltr",
-								format: "",
-								indent: 0,
-								textFormat: 0,
-								version: 1,
-							},
-						],
-						direction: "ltr",
-						format: "",
-						indent: 0,
-						version: 1,
-					},
-				},
-				populateBy: "collection",
-				relationTo: "posts",
-			},
-			{
-				blockName: "CTA",
-				blockType: "cta",
-				links: [
-					{
-						link: {
-							type: "custom",
-							appearance: "default",
-							label: "All posts",
-							url: "/posts",
-						},
-					},
-				],
-				richText: {
-					root: {
-						type: "root",
-						children: [
-							{
-								type: "heading",
-								children: [
-									{
-										type: "text",
-										detail: 0,
-										format: 0,
-										mode: "normal",
-										style: "",
-										text: "This is a call to action",
-										version: 1,
-									},
-								],
-								direction: "ltr",
-								format: "",
-								indent: 0,
-								tag: "h3",
-								version: 1,
-							},
-							{
-								type: "paragraph",
-								children: [
-									{
-										type: "text",
-										detail: 0,
-										format: 0,
-										mode: "normal",
-										style: "",
-										text: "This is a custom layout building block ",
-										version: 1,
-									},
-									{
-										type: "link",
-										children: [
-											{
-												type: "text",
-												detail: 0,
-												format: 0,
-												mode: "normal",
-												style: "",
-												text: "configured in the admin dashboard",
-												version: 1,
-											},
-										],
-										direction: "ltr",
-										fields: {
-											linkType: "custom",
-											newTab: false,
-											url: "/admin",
-										},
-										format: "",
-										indent: 0,
-										version: 2,
-									},
-									{
-										type: "text",
-										detail: 0,
-										format: 0,
-										mode: "normal",
-										style: "",
-										text: ".",
-										version: 1,
-									},
-								],
-								direction: "ltr",
-								format: "",
-								indent: 0,
-								textFormat: 0,
-								version: 1,
-							},
-						],
-						direction: "ltr",
-						format: "",
-						indent: 0,
-						version: 1,
-					},
-				},
-			},
-		],
+		layout,
 	};
 }

@@ -101,27 +101,41 @@ export async function resendVerificationEmail() {
 		};
 	}
 
-	const newToken = crypto.randomBytes(20).toString("hex");
-
-	const result = await payload.update({
-		collection: "users",
-		id: user.id,
-		data: {
-			_verificationToken: newToken,
-		},
-	});
-
-	if (result._verificationToken !== newToken) {
+	if (user._verified) {
 		return {
-			message: "Failed to generate a new verification token. Please try again later.",
+			message: "Your email is already verified.",
 			success: false,
 		};
 	}
 
-	// Send email
-	await payload.sendEmail({
-		to: user.email,
-		subject: "AusSpeedruns - Email Verification",
-		html: await render(VerificationEmail({ token: newToken })),
-	});
+	const newToken = crypto.randomBytes(20).toString("hex");
+
+	try {
+		// `_verificationToken` is a hidden field, so it is saved but never returned in the result
+		await payload.update({
+			collection: "users",
+			id: user.id,
+			data: {
+				_verificationToken: newToken,
+			},
+		});
+
+		await payload.sendEmail({
+			to: user.email,
+			subject: "AusSpeedruns - Email Verification",
+			html: await render(VerificationEmail({ token: newToken })),
+		});
+	} catch (error) {
+		console.error("Error resending verification email:", error);
+
+		return {
+			message: "Unable to send the verification email right now. Please try again later.",
+			success: false,
+		};
+	}
+
+	return {
+		message: `Verification email sent to ${user.email}.`,
+		success: true,
+	};
 }

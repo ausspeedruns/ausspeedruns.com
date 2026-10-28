@@ -4,16 +4,24 @@ import { seedKitchenSinkData } from "./kitchen-sink-data.ts";
 import { homePage } from "./home.ts";
 import { upcomingEventTemplatePage } from "./upcoming-event-template.ts";
 import { seedSegmentTypes } from "./segment-types.ts";
+import { aboutUsPage } from "./about-us.ts";
 
 export async function seed(payload: BasePayload) {
 	await seedSegmentTypes(payload);
 	await seedKitchenSinkData(payload);
-	await createPages(payload);
+	const { aboutUsPageId } = await createPages(payload);
 
-	await setupHeader(payload);
+	await setupHeader(payload, aboutUsPageId);
 }
 
 async function createPages(payload: BasePayload) {
+	const aboutUs = await payload.create({
+		collection: "pages",
+		depth: 0,
+		draft: true,
+		data: aboutUsPage(),
+	});
+
 	await payload.create({
 		collection: "pages",
 		depth: 0,
@@ -35,9 +43,11 @@ async function createPages(payload: BasePayload) {
 			data: upcomingEventTemplate,
 		});
 	}
+
+	return { aboutUsPageId: aboutUs.id };
 }
 
-async function setupHeader(payload: BasePayload) {
+async function setupHeader(payload: BasePayload, aboutUsPageId: number) {
 	// Create Nav Links
 	await payload.updateGlobal({
 		slug: "header",
@@ -62,16 +72,16 @@ async function setupHeader(payload: BasePayload) {
 					},
 				},
 				// About Us Link
-				// {
-				// 	link: {
-				// 		type: "reference",
-				// 		label: "About Us",
-				// 		reference: {
-				// 			relationTo: "pages",
-				// 			value: aboutUsPageId
-				// 		},
-				// 	},
-				// },
+				{
+					link: {
+						type: "reference",
+						label: "About Us",
+						reference: {
+							relationTo: "pages",
+							value: aboutUsPageId,
+						},
+					},
+				},
 			],
 		},
 	});

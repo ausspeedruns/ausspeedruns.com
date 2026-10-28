@@ -6,7 +6,7 @@ const styles = {
 		backgroundColor: "#EEF1F4",
 		margin: 0,
 		padding: "24px 12px",
-		fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
+		fontFamily: "sans-serif",
 	},
 	container: {
 		width: "100%",
@@ -82,7 +82,7 @@ export function VerificationEmail({ token: code }: VerificationEmailProps) {
 	return (
 		<Html>
 			<Head />
-			<Preview>AusSpeedruns account verification code</Preview>
+			<Preview>Verify your AusSpeedruns account email</Preview>
 			<Body style={styles.body}>
 				<Container style={styles.container}>
 					<Section style={styles.card}>
@@ -94,7 +94,6 @@ export function VerificationEmail({ token: code }: VerificationEmailProps) {
 						/>
 					</Section>
 					<Section style={{ ...styles.card, ...styles.content }}>
-						<Text style={styles.eyebrow}>Account Setup</Text>
 						<Text style={styles.heading}>AusSpeedruns email verification</Text>
 						<Text style={styles.text}>Confirm your email address to finish setting up your account.</Text>
 						<Section style={styles.buttonWrap}>

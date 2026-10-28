@@ -14,7 +14,7 @@ type UserEditFormProps = {
 	initialValues: UserEditFormValues;
 	username: string;
 	isEmailVerified: boolean;
-	onResendVerification?: () => void;
+	onResendVerification?: () => Promise<{ message: string; success: boolean }>;
 };
 
 type FormStatus = {
@@ -26,6 +26,8 @@ export function UserEditForm({ initialValues, username, isEmailVerified, onResen
 	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 	const [status, setStatus] = useState<FormStatus>(null);
+	const [isResending, startResendTransition] = useTransition();
+	const [resendStatus, setResendStatus] = useState<FormStatus>(null);
 	const form = useForm<UserEditFormValues>({
 		mode: "uncontrolled",
 		initialValues,
@@ -51,6 +53,20 @@ export function UserEditForm({ initialValues, username, isEmailVerified, onResen
 			}
 		});
 	});
+
+	const handleResendVerification = () => {
+		if (!onResendVerification) return;
+		setResendStatus(null);
+
+		startResendTransition(async () => {
+			const result = await onResendVerification();
+
+			setResendStatus({
+				message: result.message,
+				type: result.success ? "success" : "error",
+			});
+		});
+	};
 
 	return (
 		<form className={styles.form} onSubmit={handleSubmit}>
@@ -122,26 +138,44 @@ export function UserEditForm({ initialValues, username, isEmailVerified, onResen
 					</div>
 
 					<div className={styles.formGrid}>
-						<Group align="flex-end" gap="sm" wrap="nowrap">
-							<TextInput
-								id="email"
-								key={form.key("email")}
-								label="Email address"
-								placeholder="you@example.com"
-								style={{ flex: 1 }}
-								{...form.getInputProps("email")}
-							/>
+						<Stack gap="xs">
+							<Group align="flex-end" gap="sm" wrap="nowrap">
+								<TextInput
+									id="email"
+									key={form.key("email")}
+									label="Email address"
+									placeholder="you@example.com"
+									style={{ flex: 1 }}
+									{...form.getInputProps("email")}
+								/>
 
-							{isEmailVerified ? (
-								<Badge color="green" mb={8} variant="light">
-									Verified
-								</Badge>
-							) : (
-								<Button mb={4} onClick={onResendVerification} type="button" variant="light">
-									Resend verification
-								</Button>
+								{isEmailVerified ? (
+									<Badge color="green" mb={8} variant="light">
+										Verified
+									</Badge>
+								) : (
+									<Button
+										mb={4}
+										loading={isResending}
+										onClick={handleResendVerification}
+										type="button"
+										variant="light"
+									>
+										Resend verification
+									</Button>
+								)}
+							</Group>
+
+							{resendStatus && (
+								<Alert
+									color={resendStatus.type === "error" ? "red" : "green"}
+									radius="md"
+									role="status"
+								>
+									{resendStatus.message}
+								</Alert>
 							)}
-						</Group>
+						</Stack>
 
 						<TextInput
 							id="name"

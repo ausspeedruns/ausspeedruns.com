@@ -6,7 +6,7 @@ const styles = {
 		backgroundColor: "#EEF1F4",
 		margin: 0,
 		padding: "24px 12px",
-		fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
+		fontFamily: "sans-serif",
 	},
 	container: {
 		width: "100%",
@@ -94,7 +94,6 @@ export function ResetPasswordEmail({ token }: ResetPasswordEmailProps) {
 						/>
 					</Section>
 					<Section style={{ ...styles.card, ...styles.content }}>
-						<Text style={styles.eyebrow}>Account Security</Text>
 						<Text style={styles.heading}>AusSpeedruns reset password</Text>
 						<Text style={styles.text}>
 							Use the secure link below to set a new password for your account.

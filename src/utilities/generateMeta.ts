@@ -8,12 +8,13 @@ import { getServerSideURL } from "./getURL";
 const getImageURL = (image?: Media | Config["db"]["defaultIDType"] | null) => {
 	const serverUrl = getServerSideURL();
 
-	let url = serverUrl + "/website-template-OG.webp";
+	let url = serverUrl + "/AusSpeedrunsOG.png";
 
 	if (image && typeof image === "object" && "url" in image) {
-		const ogUrl = image.sizes?.og?.url;
+		const imageUrl = image.sizes?.og?.url || image.url;
 
-		url = ogUrl ? serverUrl + ogUrl : serverUrl + image.url;
+		// Media served from Azure Blob/CDN already has an absolute URL
+		if (imageUrl) url = /^https?:\/\//.test(imageUrl) ? imageUrl : serverUrl + imageUrl;
 	}
 
 	return url;

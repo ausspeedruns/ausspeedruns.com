@@ -6,7 +6,7 @@ const defaultOpenGraph: Metadata["openGraph"] = {
 	description: "Home of the AusSpeedruns events.",
 	images: [
 		{
-			url: `${getServerSideURL()}/website-template-OG.webp`,
+			url: `${getServerSideURL()}/AusSpeedrunsOG.png`,
 		},
 	],
 	siteName: "AusSpeedruns",

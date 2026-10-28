@@ -10,6 +10,7 @@ const MEDIA_BASE_URL = process.env.AZURE_STORAGE_ACCOUNT_BASEURL;
 const securityHeaders = [
 	{ key: "X-Content-Type-Options", value: "nosniff" },
 	{ key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+	{ key: "Permissions-Policy", value: "camera=(self), microphone=(), geolocation=(), browsing-topics=()" },
 	...(NEXT_PUBLIC_SERVER_URL.startsWith("https://")
 		? [{ key: "Strict-Transport-Security", value: "max-age=31536000" }]
 		: []),
@@ -40,6 +41,7 @@ const noFramingRoutes = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	output: "standalone",
+	poweredByHeader: false,
 	images: {
 		remotePatterns: [NEXT_PUBLIC_SERVER_URL, MEDIA_BASE_URL].filter(Boolean).map((item) => {
 			const url = new URL(item);

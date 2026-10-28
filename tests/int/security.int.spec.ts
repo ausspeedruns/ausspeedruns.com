@@ -2,6 +2,7 @@
 import { createLocalReq, getPayload, type Payload, type PayloadRequest } from "payload";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
+import { canRunJobs } from "#/access/runJobs";
 import config from "#/payload.config";
 import type { Event, Game, Run, User } from "#/payload-types";
 import { getEventLiveData } from "#/utilities/events/liveData";
@@ -144,6 +145,45 @@ describe("access control", () => {
 		await payload.delete({ collection: "users", where: { username: { like: `sec_%_${suffix}` } } });
 		for (const id of roleIds) await payload.delete({ collection: "roles", id });
 		await payload.destroy();
+	});
+
+	describe("job runner", () => {
+		const schedulerReq = (authorization?: string) =>
+			({ user: null, headers: new Headers(authorization ? { authorization } : {}) }) as unknown as PayloadRequest;
+
+		it("only lets admins, content managers and the cron secret run jobs", async () => {
+			const previous = process.env.CRON_SECRET;
+			process.env.CRON_SECRET = "test-cron-secret";
+			try {
+				const contentReq = await reqFor(
+					await createUser("content", [await createRole("Sec Content", { canManageContent: true })]),
+				);
+
+				expect(await canRunJobs({ req: await reqFor(admin) })).toBe(true);
+				expect(await canRunJobs({ req: contentReq })).toBe(true);
+				expect(await canRunJobs({ req: schedulerReq("Bearer test-cron-secret") })).toBe(true);
+
+				expect(await canRunJobs({ req: memberReq })).toBe(false);
+				expect(await canRunJobs({ req: managerReq })).toBe(false);
+				expect(await canRunJobs({ req: anonReq })).toBe(false);
+				expect(await canRunJobs({ req: schedulerReq("Bearer wrong") })).toBe(false);
+			} finally {
+				if (previous === undefined) delete process.env.CRON_SECRET;
+				else process.env.CRON_SECRET = previous;
+			}
+		});
+
+		it("fails closed when CRON_SECRET isn't set", async () => {
+			const previous = process.env.CRON_SECRET;
+			delete process.env.CRON_SECRET;
+			try {
+				expect(await canRunJobs({ req: schedulerReq("Bearer undefined") })).toBe(false);
+				expect(await canRunJobs({ req: schedulerReq("Bearer ") })).toBe(false);
+			} finally {
+				if (previous === undefined) delete process.env.CRON_SECRET;
+				else process.env.CRON_SECRET = previous;
+			}
+		});
 	});
 
 	describe("users", () => {

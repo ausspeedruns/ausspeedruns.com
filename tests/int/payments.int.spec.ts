@@ -8,6 +8,7 @@ import type { Order, Product, User } from "#/payload-types";
 import {
 	createReservedOrder,
 	getReservedQuantities,
+	MAX_PENDING_BANK_TRANSFER_ORDERS,
 	STRIPE_RESERVATION_SECONDS,
 	variantKey,
 } from "#/utilities/payments/reservations";
@@ -168,6 +169,56 @@ describe("Payments", () => {
 			const order = await reserveOrThrow(product, 3);
 			expect(order.totalInCents).toBe(3702);
 			expect(order.items[0]).toMatchObject({ unitPriceInCents: 1234, variantLabel: "Standard" });
+		});
+
+		it("caps how many unpaid bank transfer orders one account can hold", async () => {
+			const product = await createProduct(null);
+			const hoarder = await payload.create({
+				collection: "users",
+				disableVerificationEmail: true,
+				data: {
+					username: `payment_hoarder_${suffix}`,
+					email: `payment_hoarder_${suffix}@example.com`,
+					password: "password123",
+					dateOfBirth: "1990-01-01T00:00:00.000Z",
+				},
+			});
+			const reserveFor = (purchaseType: "stripe" | "bankTransfer") =>
+				createReservedOrder(payload, {
+					userId: hoarder.id,
+					purchaseType,
+					items: [{ productId: product.id, variantId: product.variants[0].id!, quantity: 1 }],
+				});
+
+			try {
+				const orders: Order[] = [];
+				for (let i = 0; i < MAX_PENDING_BANK_TRANSFER_ORDERS; i++) {
+					const result = await reserveFor("bankTransfer");
+					if (!result.success) throw new Error(result.error);
+					orders.push(result.order);
+				}
+
+				expect(await reserveFor("bankTransfer")).toMatchObject({
+					success: false,
+					error: expect.stringMatching(/unpaid bank transfer/),
+				});
+				// Card payments aren't affected, and paying an existing order frees a slot.
+				expect((await reserveFor("stripe")).success).toBe(true);
+				await payload.update({
+					collection: "orders",
+					id: orders[0].id,
+					data: { status: "completed" },
+					overrideAccess: true,
+				});
+				expect((await reserveFor("bankTransfer")).success).toBe(true);
+			} finally {
+				await payload.delete({
+					collection: "orders",
+					where: { user: { equals: hoarder.id } },
+					overrideAccess: true,
+				});
+				await payload.delete({ collection: "users", id: hoarder.id, overrideAccess: true });
+			}
 		});
 	});
 

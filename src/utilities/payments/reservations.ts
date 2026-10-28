@@ -10,6 +10,9 @@ const STRIPE_RESERVATION_GRACE_SECONDS = 5 * 60;
 
 export const STRIPE_RESERVATION_SECONDS = STRIPE_SESSION_TTL_SECONDS + STRIPE_RESERVATION_GRACE_SECONDS;
 
+/** Unpaid bank transfer orders hold stock until an admin acts, so cap how many one account can have open. */
+export const MAX_PENDING_BANK_TRANSFER_ORDERS = 10;
+
 export interface ReservationItem {
 	productId: number;
 	variantId: string;
@@ -89,6 +92,27 @@ export async function createReservedOrder(
 
 	return withTransaction(payload, async (req) => {
 		await lockRows(req, "products", productIds);
+
+		if (purchaseType === "bankTransfer") {
+			const { totalDocs } = await req.payload.count({
+				collection: "orders",
+				where: {
+					and: [
+						{ user: { equals: userId } },
+						{ purchaseType: { equals: "bankTransfer" } },
+						{ status: { equals: "pending" } },
+					],
+				},
+				overrideAccess: true,
+				req,
+			});
+			if (totalDocs >= MAX_PENDING_BANK_TRANSFER_ORDERS) {
+				return {
+					success: false,
+					error: "You have too many unpaid bank transfer orders. Please pay for your existing orders, or contact us to cancel one, before placing another.",
+				};
+			}
+		}
 
 		const products = await req.payload.find({
 			collection: "products",

@@ -4,6 +4,7 @@ import type { Payload } from "payload";
 import type { CheckoutResult } from "#actions/checkout.ts";
 import { createReservedOrder, type ReservationItem } from "#utilities/payments/reservations.ts";
 import { getStripe, STRIPE_CURRENCY, STRIPE_SESSION_TTL_SECONDS } from "#utilities/payments/stripe.ts";
+import { getServerSideURL } from "#utilities/getURL.ts";
 
 export async function stripeCheckout(
 	payload: Payload,
@@ -57,8 +58,8 @@ export async function stripeCheckout(
 				mode: "payment",
 				line_items: lineItems,
 				client_reference_id: order.reference!,
-				success_url: `${process.env.NEXT_PUBLIC_URL}/success?sessionId={CHECKOUT_SESSION_ID}`,
-				cancel_url: `${process.env.NEXT_PUBLIC_URL}/cancel?sessionId={CHECKOUT_SESSION_ID}`,
+				success_url: `${getServerSideURL()}/success?sessionId={CHECKOUT_SESSION_ID}`,
+				cancel_url: `${getServerSideURL()}/cancel?sessionId={CHECKOUT_SESSION_ID}`,
 				expires_at: Math.floor(Date.now() / 1000) + STRIPE_SESSION_TTL_SECONDS,
 				metadata,
 				payment_intent_data: { metadata },

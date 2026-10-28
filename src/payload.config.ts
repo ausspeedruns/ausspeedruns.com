@@ -4,7 +4,7 @@ import { azureStorage } from "@payloadcms/storage-azure";
 
 import sharp from "sharp"; // sharp-import
 import path from "node:path";
-import { buildConfig, type PayloadRequest } from "payload";
+import { buildConfig } from "payload";
 import { fileURLToPath } from "node:url";
 
 import { Categories } from "./collections/Categories.ts";
@@ -31,6 +31,7 @@ import { defaultLexical } from "#fields/defaultLexical.ts";
 import { getServerSideURL } from "./utilities/getURL.ts";
 import { Games } from "#collections/Game.ts";
 import { migrations } from "./migrations/index.ts";
+import { canRunJobs } from "./access/runJobs.ts";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -172,15 +173,7 @@ export default buildConfig({
 	},
 	jobs: {
 		access: {
-			run: ({ req }: { req: PayloadRequest }): boolean => {
-				// Allow logged in users to execute this endpoint (default)
-				if (req.user) return true;
-
-				// Otherwise allow external schedulers that send the CRON_SECRET
-				// as an Authorization header:
-				const authHeader = req.headers.get("authorization");
-				return authHeader === `Bearer ${process.env.CRON_SECRET}`;
-			},
+			run: canRunJobs,
 		},
 		// The site runs on a long-lived server, so process queued jobs (e.g. scheduled publish) in-process every minute
 		autoRun: [{ cron: "* * * * *", queue: "default", limit: 10 }],

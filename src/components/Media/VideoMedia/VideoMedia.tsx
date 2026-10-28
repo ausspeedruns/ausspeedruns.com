@@ -24,7 +24,7 @@ export function VideoMedia(props: MediaProps) {
 	}, []);
 
 	if (resource && typeof resource === "object") {
-		const { filename } = resource;
+		const { filename, url } = resource;
 
 		return (
 			<video
@@ -37,7 +37,7 @@ export function VideoMedia(props: MediaProps) {
 				playsInline
 				ref={videoRef}
 			>
-				<source src={getMediaUrl(`/media/${filename}`)} />
+				<source src={getMediaUrl(url || `/media/${filename}`)} />
 			</video>
 		);
 	}

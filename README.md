@@ -178,6 +178,8 @@ At minimum, set:
 
 Pending migrations run on startup.
 
+`GET /next/health` returns `200` when the server is up and can reach Postgres, and `503` otherwise. The image's Docker `HEALTHCHECK` uses it, and the reverse proxy or load balancer can use it too.
+
 #### Reverse proxy, TLS and rate limiting
 
 Bind the container to localhost and put a reverse proxy (Caddy or nginx) in front of it, or put Azure Front Door / Application Gateway in front of the VM. The proxy should:
@@ -201,3 +203,5 @@ Bind the container to localhost and put a reverse proxy (Caddy or nginx) in fron
 - **GraphQL:** disabled. Integrations such as the stream graphics use REST with API keys.
 - **Query depth:** `maxDepth` is 3.
 - **Uploads:** only content managers can upload media.
+- **Jobs:** `/api/payload-jobs/run` is limited to admins, content managers and requests sending `Authorization: Bearer <CRON_SECRET>`. Without `CRON_SECRET`, only signed-in staff can call it.
+- **Bank transfers:** an account can have at most 10 unpaid bank transfer orders, since each one holds stock until an admin completes or cancels it.

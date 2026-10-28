@@ -12,7 +12,6 @@ declare global {
 			STRIPE_SECRET_KEY: string;
 			STRIPE_WEBHOOK_SECRET: string;
 			NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: string;
-			NEXT_PUBLIC_URL: string;
 			SMTP_HOST?: string;
 			SMTP_PORT?: string;
 			SMTP_SECURE?: string;

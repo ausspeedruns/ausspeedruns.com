@@ -31,9 +31,7 @@ ENV NODE_ENV=production
 # NEXT_PUBLIC_* values are inlined into the build (client and server code), so they must be set here:
 #   docker build --build-arg NEXT_PUBLIC_SERVER_URL=https://ausspeedruns.com ...
 ARG NEXT_PUBLIC_SERVER_URL
-ARG NEXT_PUBLIC_URL=${NEXT_PUBLIC_SERVER_URL}
 ENV NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
-ENV NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL}
 # Azure Blob (or CDN) origin that media is served from; next.config.js allows it for next/image at build time
 ARG AZURE_STORAGE_ACCOUNT_BASEURL
 ENV AZURE_STORAGE_ACCOUNT_BASEURL=${AZURE_STORAGE_ACCOUNT_BASEURL}
@@ -78,6 +76,10 @@ RUN install -d -o nextjs -g nodejs /app/.next /app/public/media
 USER nextjs
 
 EXPOSE 3000
+
+# Generous start period: pending migrations run before the server starts listening
+HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=3 \
+  CMD wget -q -O /dev/null "http://127.0.0.1:${PORT}/next/health" || exit 1
 
 # Exec form so node receives SIGTERM directly for graceful shutdown
 CMD ["node", "server.js"]

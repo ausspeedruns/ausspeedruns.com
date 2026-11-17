@@ -60,6 +60,7 @@
 
 .countdown {
 	margin: 0;
+	font-family: Noto Sans, monospace;
 	font-size: clamp(1.1rem, 2.5vw, 1.4rem);
 	font-variant-numeric: tabular-nums;
 	letter-spacing: 0.05em;

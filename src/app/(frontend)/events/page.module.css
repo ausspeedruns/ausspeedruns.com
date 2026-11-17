@@ -37,7 +37,6 @@
 .eventLink {
 	display: block;
 	overflow: hidden;
-	border-radius: 1rem;
 	border: 1px solid hsla(var(--border));
 	background-color: hsl(var(--card));
 	text-decoration: none;

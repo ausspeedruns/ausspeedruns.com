@@ -23,7 +23,6 @@ const DRAWER_ID = "mobile-nav-drawer";
 export function HeaderNav({ data }: HeaderNavProps) {
 	const cartCount = useCartStore((state) => state.items.reduce((sum, item) => sum + item.quantity, 0));
 	const user = useSessionStore((state) => state.user);
-	const canAccessAdmin = useSessionStore((state) => state.canAccessAdmin);
 	const sessionLoaded = useSessionStore((state) => state.loaded);
 	const refreshSession = useSessionStore((state) => state.refresh);
 	const navItems = data?.navItems ?? [];
@@ -56,13 +55,6 @@ export function HeaderNav({ data }: HeaderNavProps) {
 	const renderSiteLinks = (linkClassName: string) =>
 		navItems.map(({ link }, i) => <CMSLink key={i} {...link} appearance="link" className={linkClassName} />);
 
-	const adminLink = (linkClassName: string) =>
-		canAccessAdmin && (
-			<Link href="/admin" rel="noopener noreferrer" target="_blank" className={clsx(linkClassName, styles.admin)}>
-				Admin Dashboard
-			</Link>
-		);
-
 	const profileLink = (linkClassName: string) =>
 		user && (
 			<Link href={`/user/${user.username}`} className={linkClassName}>
@@ -75,7 +67,6 @@ export function HeaderNav({ data }: HeaderNavProps) {
 				{renderSiteLinks(styles.link)}
 				{navItems.length > 0 && <span className={styles.divider} aria-hidden />}
 				<div className={styles.accountGroup}>
-					{adminLink(styles.link)}
 					{cartLink}
 					{user ? (
 						profileLink(styles.link)
@@ -139,7 +130,6 @@ export function HeaderNav({ data }: HeaderNavProps) {
 					{renderSiteLinks(styles.drawerLink)}
 
 					<div className={styles.drawerAccount}>
-						{adminLink(styles.drawerLink)}
 						{user ? (
 							profileLink(styles.drawerLink)
 						) : (

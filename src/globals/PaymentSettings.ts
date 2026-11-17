@@ -18,7 +18,7 @@ export const PaymentSettings: GlobalConfig = {
 			name: "bankTransfer",
 			type: "group",
 			admin: {
-				description: "Shown to customers after they place a bank transfer order.",
+				description: "Shown to people after they place a bank transfer order.",
 			},
 			fields: [
 				{

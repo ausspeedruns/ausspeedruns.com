@@ -25,7 +25,8 @@
 		"start": "next start",
 		"test": "pnpm run test:int && pnpm run test:e2e",
 		"test:e2e": "pnpm exec playwright test --config=playwright.config.ts",
-		"test:int": "vitest run --config ./vitest.config.mts"
+		"test:int": "vitest run --config ./vitest.config.mts",
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
 		"@date-fns/tz": "^1.5.0",

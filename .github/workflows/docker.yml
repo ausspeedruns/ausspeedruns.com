@@ -1,0 +1,92 @@
+name: Docker
+
+on:
+    push:
+        branches: [main]
+        tags: ["v*"]
+    workflow_dispatch:
+
+concurrency:
+    group: docker-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+env:
+    IMAGE_NAME: ${{ vars.IMAGE_NAME || 'ausspeedruns-web' }}
+
+jobs:
+    build-and-push:
+        name: Build and push to ACR
+        runs-on: ubuntu-latest
+        # The OIDC federated credential and the build secrets are scoped to this environment
+        environment: production
+        permissions:
+            contents: read
+            id-token: write
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v7
+
+            - name: Azure login (OIDC)
+              uses: azure/login@v3
+              with:
+                  client-id: ${{ secrets.AZURE_CLIENT_ID }}
+                  tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+                  subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+            # Exchanges the Azure AD token for an ACR token and configures the Docker credential
+            - name: Log in to ACR
+              env:
+                  ACR_LOGIN_SERVER: ${{ vars.ACR_LOGIN_SERVER }}
+              run: az acr login --name "$ACR_LOGIN_SERVER"
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v4
+
+            - name: Docker metadata
+              id: meta
+              uses: docker/metadata-action@v6
+              with:
+                  images: ${{ vars.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}
+                  tags: |
+                      type=raw,value=latest,enable={{is_default_branch}}
+                      type=ref,event=branch
+                      type=semver,pattern={{version}}
+                      type=semver,pattern={{major}}.{{minor}}
+                      type=sha
+
+            - name: Build and push
+              id: build
+              uses: docker/build-push-action@v7
+              with:
+                  context: .
+                  platforms: linux/amd64
+                  push: true
+                  tags: ${{ steps.meta.outputs.tags }}
+                  labels: ${{ steps.meta.outputs.labels }}
+                  annotations: ${{ steps.meta.outputs.annotations }}
+                  build-args: |
+                      NEXT_PUBLIC_SERVER_URL=${{ vars.NEXT_PUBLIC_SERVER_URL }}
+                      AZURE_STORAGE_ACCOUNT_BASEURL=${{ vars.AZURE_STORAGE_ACCOUNT_BASEURL }}
+                  # generateStaticParams reads Postgres during `next build`; mounted as a BuildKit secret, never stored in a layer
+                  secrets: |
+                      DATABASE_URI=${{ secrets.DATABASE_URI }}
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
+                  provenance: mode=max
+                  sbom: true
+
+            - name: Summary
+              env:
+                  TAGS: ${{ steps.meta.outputs.tags }}
+                  DIGEST: ${{ steps.build.outputs.digest }}
+              run: |
+                  {
+                    echo "### Pushed image"
+                    echo
+                    echo "Digest: \`$DIGEST\`"
+                    echo
+                    echo "$TAGS" | sed 's/^/- `/; s/$/`/'
+                  } >> "$GITHUB_STEP_SUMMARY"

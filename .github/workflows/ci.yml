@@ -1,0 +1,85 @@
+name: CI
+
+on:
+    pull_request:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+    contents: read
+
+env:
+    NODE_VERSION: "26"
+    PNPM_VERSION: "12.15.0"
+
+jobs:
+    lint:
+        name: Lint
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+            - uses: pnpm/action-setup@v6
+              with:
+                  version: ${{ env.PNPM_VERSION }}
+            - uses: actions/setup-node@v7
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: pnpm
+            - run: pnpm install --frozen-lockfile
+            - run: pnpm lint
+
+    typecheck:
+        name: Typecheck
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+            - uses: pnpm/action-setup@v6
+              with:
+                  version: ${{ env.PNPM_VERSION }}
+            - uses: actions/setup-node@v7
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: pnpm
+            - run: pnpm install --frozen-lockfile
+            # Generates the .next route types that next-env.d.ts and typed routes reference
+            - run: pnpm exec next typegen
+            - run: pnpm typecheck
+
+    test-int:
+        name: Integration tests
+        runs-on: ubuntu-latest
+        services:
+            postgres:
+                image: postgres:18
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_DB: ausspeedruns_test
+                ports:
+                    - 5432:5432
+                options: >-
+                    --health-cmd "pg_isready -U postgres"
+                    --health-interval 5s
+                    --health-timeout 5s
+                    --health-retries 10
+        env:
+            DATABASE_URI: postgresql://postgres:postgres@localhost:5432/ausspeedruns_test
+            PAYLOAD_SECRET: ci-test-secret
+            NEXT_PUBLIC_SERVER_URL: http://localhost:3000
+        steps:
+            - uses: actions/checkout@v7
+            - uses: pnpm/action-setup@v6
+              with:
+                  version: ${{ env.PNPM_VERSION }}
+            - uses: actions/setup-node@v7
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: pnpm
+            - run: pnpm install --frozen-lockfile
+            # Each test file pushes the schema on startup; running files in parallel races on a fresh database
+            - run: pnpm test:int --no-file-parallelism

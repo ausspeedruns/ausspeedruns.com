@@ -30,6 +30,7 @@ Without `--production`, the [Keystone import](#importing-from-keystone) also add
 | `pnpm build` / `pnpm start`          | Make a production build (and generate the sitemap) / serve it                     |
 | `pnpm dev:prod`                      | Clean build, then start it locally                                                |
 | `pnpm lint` / `pnpm lint:fix`        | Run oxlint                                                                        |
+| `pnpm typecheck`                     | Type-check with `tsc` (run `pnpm exec next typegen` first on a fresh clone)       |
 | `pnpm test:int`                      | Integration tests (Vitest, `tests/int`). These need a database                    |
 | `pnpm test:e2e`                      | End-to-end tests (Playwright, `tests/e2e`). Starts `pnpm dev`                     |
 | `pnpm generate:types`                | Regenerate `src/payload-types.ts` after changing the schema                       |
@@ -156,6 +157,32 @@ docker build \
   --secret id=DATABASE_URI,env=DATABASE_URI \
   -t ausspeedruns-web .
 ```
+
+#### CI/CD (GitHub Actions)
+
+| Workflow                                     | Runs on                                      | Does                                                                                       |
+| -------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [`ci.yml`](.github/workflows/ci.yml)         | Pull requests, pushes to `main`              | `pnpm lint`, `pnpm typecheck` and `pnpm test:int` (against a throwaway Postgres container) |
+| [`docker.yml`](.github/workflows/docker.yml) | Pushes to `main`, `v*` tags, manual dispatch | Builds the image above and pushes it to Azure Container Registry                           |
+| [`dependabot.yml`](.github/dependabot.yml)   | Weekly                                       | Grouped npm and GitHub Actions updates                                                     |
+
+Images are tagged `latest` (on `main`), `main`, `sha-<commit>`, and `<version>` / `<major>.<minor>` for `v*` tags. Dependabot can't bump the Node, Alpine and pnpm `ARG`s in the Dockerfile, so update those by hand (and `NODE_VERSION` / `PNPM_VERSION` in `ci.yml`).
+
+The Docker job runs in the `production` GitHub environment. Set these on that environment (Settings → Environments → production):
+
+- **Secrets**
+    - `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`: the app registration used to sign in with OIDC (no password is stored).
+    - `DATABASE_URI`: the production connection string, read by `next build` as a BuildKit secret.
+- **Variables**
+    - `ACR_LOGIN_SERVER`, e.g. `ausspeedruns.azurecr.io`.
+    - `NEXT_PUBLIC_SERVER_URL` and `AZURE_STORAGE_ACCOUNT_BASEURL`: inlined into the build.
+    - `IMAGE_NAME` (optional, defaults to `ausspeedruns-web`).
+
+One-time Azure setup:
+
+1. Create an app registration (or user-assigned managed identity) and add a federated credential for GitHub Actions with entity type **Environment**, `<org>/<repo>` and environment `production` (subject `repo:<org>/<repo>:environment:production`).
+2. Give it the **AcrPush** role on the registry: `az role assignment create --assignee <client-id> --role AcrPush --scope <registry-resource-id>`.
+3. Let the runner reach Postgres during the build. GitHub-hosted runner IPs change, so this means a firewall rule covering the `actions` ranges from <https://api.github.com/meta>. That's broad; a self-hosted runner inside the VNet is the tighter option.
 
 #### Run
 

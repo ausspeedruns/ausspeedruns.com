@@ -1,10 +1,4 @@
 allowBuilds:
     esbuild: true
     sharp: true
-minimumReleaseAgeExclude:
-    - "@mantine/core@9.7.4"
-    - "@mantine/dates@9.7.4"
-    - "@mantine/form@9.7.4"
-    - "@mantine/hooks@9.7.4"
-    - "@mantine/notifications@9.7.4"
-    - "@mantine/store@9.7.4"
+minimumReleaseAge: 1440

@@ -3970,7 +3970,7 @@ export interface Footer {
 export interface PaymentSetting {
   id: number;
   /**
-   * Shown to customers after they place a bank transfer order.
+   * Shown to people after they place a bank transfer order.
    */
   bankTransfer: {
     accountName: string;

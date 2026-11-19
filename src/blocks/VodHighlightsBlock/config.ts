@@ -2,6 +2,8 @@ import type { Block } from "payload";
 
 export const VodHighlightsBlockConfig: Block = {
 	slug: "vodHighlightsBlock",
+	imageURL: "/block-thumbnails/vodHighlightsBlock.webp",
+	imageAltText: "Grid of YouTube VODs",
 	interfaceName: "VodHighlightsBlock",
 	fields: [
 		{ name: "title", type: "text", defaultValue: "Watch the runs" },

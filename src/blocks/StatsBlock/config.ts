@@ -2,6 +2,8 @@ import type { Block } from "payload";
 
 export const StatsBlockConfig: Block = {
 	slug: "statsBlock",
+	imageURL: "/block-thumbnails/statsBlock.webp",
+	imageAltText: "All-time AusSpeedruns stat cards",
 	interfaceName: "StatsBlock",
 	labels: {
 		singular: "All-time Stats",

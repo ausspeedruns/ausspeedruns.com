@@ -4,6 +4,8 @@ import { FixedToolbarFeature, InlineToolbarFeature, lexicalEditor } from "@paylo
 
 export const Banner: Block = {
 	slug: "banner",
+	imageURL: "/block-thumbnails/banner.webp",
+	imageAltText: "Coloured callout banner with text",
 	fields: [
 		{
 			name: "style",

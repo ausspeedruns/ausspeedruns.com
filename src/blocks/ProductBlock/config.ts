@@ -2,6 +2,8 @@ import type { Block } from "payload";
 
 export const ProductBlockConfig: Block = {
 	slug: "productBlock",
+	imageURL: "/block-thumbnails/productBlock.webp",
+	imageAltText: "Merch product cards",
 	interfaceName: "ProductBlock",
 	fields: [
 		{

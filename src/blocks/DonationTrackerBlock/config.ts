@@ -2,6 +2,8 @@ import type { Block } from "payload";
 
 export const DonationTrackerBlockConfig: Block = {
 	slug: "donationTrackerBlock",
+	imageURL: "/block-thumbnails/donationTrackerBlock.webp",
+	imageAltText: "Donation total and incentive progress",
 	interfaceName: "DonationTrackerBlock",
 	fields: [
 		{ name: "event", type: "relationship", relationTo: "events", required: true, label: "Event" },

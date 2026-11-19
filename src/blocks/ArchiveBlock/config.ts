@@ -4,6 +4,8 @@ import { FixedToolbarFeature, HeadingFeature, InlineToolbarFeature, lexicalEdito
 
 export const Archive: Block = {
 	slug: "archive",
+	imageURL: "/block-thumbnails/archive.webp",
+	imageAltText: "Grid of post cards",
 	interfaceName: "ArchiveBlock",
 	fields: [
 		{

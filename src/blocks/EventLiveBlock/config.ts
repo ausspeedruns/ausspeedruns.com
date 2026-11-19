@@ -29,6 +29,8 @@ const sponsorTier = (name: string, label: string, description: string): Field =>
 
 export const EventLiveBlockConfig: Block = {
 	slug: "eventLiveBlock",
+	imageURL: "/block-thumbnails/eventLiveBlock.webp",
+	imageAltText: "Live event view with stream, chat and schedule",
 	interfaceName: "EventLiveBlock",
 	labels: {
 		singular: "Event Live",

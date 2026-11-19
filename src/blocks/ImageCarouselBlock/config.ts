@@ -4,6 +4,8 @@ import { FixedToolbarFeature, HeadingFeature, InlineToolbarFeature, lexicalEdito
 
 export const ImageCarousel: Block = {
 	slug: "imageCarousel",
+	imageURL: "/block-thumbnails/imageCarousel.webp",
+	imageAltText: "Rotating image carousel",
 	interfaceName: "ImageCarouselBlock",
 	fields: [
 		{

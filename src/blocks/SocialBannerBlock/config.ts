@@ -2,6 +2,8 @@ import type { Block } from "payload";
 
 export const SocialBannerBlockConfig: Block = {
 	slug: "socialBannerBlock",
+	imageURL: "/block-thumbnails/socialBannerBlock.webp",
+	imageAltText: "Social channel call-out banner",
 	interfaceName: "SocialBannerBlock",
 	labels: {
 		singular: "Social Banner",

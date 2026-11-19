@@ -2,6 +2,8 @@ import type { Block } from "payload";
 
 export const SponsorGridBlockConfig: Block = {
 	slug: "sponsorGridBlock",
+	imageURL: "/block-thumbnails/sponsorGridBlock.webp",
+	imageAltText: "Grid of sponsor logos",
 	interfaceName: "SponsorGridBlock",
 	fields: [
 		{ name: "title", type: "text", label: "Title", defaultValue: "Our Sponsors" },

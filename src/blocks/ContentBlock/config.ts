@@ -62,6 +62,8 @@ const columnFields: Field[] = [
 
 export const Content: Block = {
 	slug: "content",
+	imageURL: "/block-thumbnails/content.webp",
+	imageAltText: "Rich text laid out in columns",
 	interfaceName: "ContentBlock",
 	fields: [
 		{

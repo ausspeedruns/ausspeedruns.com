@@ -9,6 +9,8 @@ const sourceOptions = [
 
 export const EventImagesBlockConfig: Block = {
 	slug: "eventImagesBlock",
+	imageURL: "/block-thumbnails/eventImagesBlock.webp",
+	imageAltText: "Event photo gallery",
 	interfaceName: "EventImagesBlock",
 	fields: [
 		{ name: "title", type: "text", label: "Title" },

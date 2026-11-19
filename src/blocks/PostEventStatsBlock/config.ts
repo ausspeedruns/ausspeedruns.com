@@ -2,6 +2,8 @@ import type { Block } from "payload";
 
 export const PostEventStatsBlockConfig: Block = {
 	slug: "postEventStatsBlock",
+	imageURL: "/block-thumbnails/postEventStatsBlock.webp",
+	imageAltText: "Event recap stats and run list",
 	interfaceName: "PostEventStatsBlock",
 	fields: [
 		{

@@ -2,6 +2,8 @@ import type { Block } from "payload";
 
 export const CountdownBlockConfig: Block = {
 	slug: "countdownBlock",
+	imageURL: "/block-thumbnails/countdownBlock.webp",
+	imageAltText: "Countdown timer to a date",
 	interfaceName: "CountdownBlock",
 	fields: [
 		{ name: "title", type: "text", label: "Title", defaultValue: "Event Starts In" },

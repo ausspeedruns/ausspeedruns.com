@@ -4,6 +4,8 @@ import { FixedToolbarFeature, HeadingFeature, InlineToolbarFeature, lexicalEdito
 
 export const FormBlock: Block = {
 	slug: "formBlock",
+	imageURL: "/block-thumbnails/formBlock.webp",
+	imageAltText: "Embedded form",
 	interfaceName: "FormBlock",
 	fields: [
 		{

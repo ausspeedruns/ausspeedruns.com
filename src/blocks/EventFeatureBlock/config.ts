@@ -2,6 +2,8 @@ import type { Block } from "payload";
 
 export const EventFeatureBlockConfig: Block = {
 	slug: "eventFeatureBlock",
+	imageURL: "/block-thumbnails/eventFeatureBlock.webp",
+	imageAltText: "Compact event card with logo and amount raised",
 	interfaceName: "EventFeatureBlock",
 	labels: {
 		singular: "Event Feature",

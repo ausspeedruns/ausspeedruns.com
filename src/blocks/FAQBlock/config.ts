@@ -2,6 +2,8 @@ import type { Block } from "payload";
 
 export const FAQBlockConfig: Block = {
 	slug: "faqBlock",
+	imageURL: "/block-thumbnails/faqBlock.webp",
+	imageAltText: "Expandable FAQ questions",
 	interfaceName: "FAQBlock",
 	fields: [
 		{ name: "title", type: "text", label: "Title", defaultValue: "Frequently Asked Questions" },

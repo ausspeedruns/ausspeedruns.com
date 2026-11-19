@@ -2,6 +2,8 @@ import type { Block } from "payload";
 
 export const Code: Block = {
 	slug: "code",
+	imageURL: "/block-thumbnails/code.webp",
+	imageAltText: "Syntax-highlighted code snippet",
 	interfaceName: "CodeBlock",
 	fields: [
 		{

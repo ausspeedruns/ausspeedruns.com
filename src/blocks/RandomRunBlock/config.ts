@@ -2,6 +2,8 @@ import type { Block } from "payload";
 
 export const RandomRunBlockConfig: Block = {
 	slug: "randomRunBlock",
+	imageURL: "/block-thumbnails/randomRunBlock.webp",
+	imageAltText: "Random YouTube VOD embed",
 	interfaceName: "RandomRunBlock",
 	fields: [
 		{

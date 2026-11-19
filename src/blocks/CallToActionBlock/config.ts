@@ -6,6 +6,8 @@ import { linkGroup } from "../../fields/linkGroup.ts";
 
 export const CallToAction: Block = {
 	slug: "cta",
+	imageURL: "/block-thumbnails/cta.webp",
+	imageAltText: "Text with call-to-action buttons",
 	interfaceName: "CallToActionBlock",
 	fields: [
 		{

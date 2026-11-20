@@ -175,7 +175,6 @@ export default buildConfig({
 		access: {
 			run: canRunJobs,
 		},
-		// The site runs on a long-lived server, so process queued jobs (e.g. scheduled publish) in-process every minute
 		autoRun: [{ cron: "* * * * *", queue: "default", limit: 10 }],
 		shouldAutoRun: () => process.env.DISABLE_JOBS_AUTORUN !== "true",
 		tasks: [],

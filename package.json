@@ -93,7 +93,7 @@
 		"postcss": "^8.5.33",
 		"postcss-preset-mantine": "^1.18.0",
 		"postcss-simple-vars": "^7.0.1",
-		"react-email": "6.11.13",
+		"react-email": "6.11.15",
 		"typescript": "7.0.2",
 		"vitest": "5.1.0"
 	},

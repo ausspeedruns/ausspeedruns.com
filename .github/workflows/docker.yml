@@ -70,9 +70,6 @@ jobs:
                   build-args: |
                       NEXT_PUBLIC_SERVER_URL=${{ vars.NEXT_PUBLIC_SERVER_URL }}
                       AZURE_STORAGE_ACCOUNT_BASEURL=${{ vars.AZURE_STORAGE_ACCOUNT_BASEURL }}
-                  # generateStaticParams reads Postgres during `next build`; mounted as a BuildKit secret, never stored in a layer
-                  secrets: |
-                      DATABASE_URI=${{ secrets.DATABASE_URI }}
                   cache-from: type=gha
                   cache-to: type=gha,mode=max
                   provenance: mode=max

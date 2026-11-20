@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 
-export const STRIPE_API_VERSION = "2026-09-30.endive" as const;
+export const STRIPE_API_VERSION = "2026-10-28.endive" as const;
 export const STRIPE_CURRENCY = "aud";
 
 /** Stripe requires `expires_at` to be at least 30 minutes away; the extra minute covers clock skew. */

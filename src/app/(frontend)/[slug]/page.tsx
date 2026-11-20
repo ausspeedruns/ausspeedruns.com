@@ -20,6 +20,9 @@ import { LivePreviewListener } from "#/components/LivePreviewListener/LivePrevie
 export const revalidate = 60;
 
 export async function generateStaticParams() {
+	// The Docker build has no database access (see the root layout), so pages render on demand instead
+	if (process.env.SKIP_BUILD_DB) return [];
+
 	const payload = await getPayload({ config: configPromise });
 	const pages = await payload.find({
 		collection: "pages",

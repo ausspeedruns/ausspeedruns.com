@@ -9,7 +9,7 @@ import PageClient from "./page.client";
 
 import styles from "./page.module.css";
 
-export const dynamic = "force-static";
+// Restore `export const dynamic = "force-static";` when turning caching back on (see the root layout)
 export const revalidate = 600;
 
 export default async function Page() {

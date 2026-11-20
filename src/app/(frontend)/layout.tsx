@@ -15,6 +15,10 @@ import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "@mantine/notifications/styles.css";
 
+// Caching is off for launch: the Docker image is built without database access, so every page renders per request.
+// To turn caching back on, remove this and see docs/LAUNCH.md ("Turning caching back on").
+export const dynamic = "force-dynamic";
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 	const { isEnabled } = await draftMode();
 

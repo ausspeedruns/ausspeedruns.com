@@ -18,6 +18,9 @@ import { LivePreviewListener } from "#/components/LivePreviewListener/LivePrevie
 import styles from "./page.module.css";
 
 export async function generateStaticParams() {
+	// The Docker build has no database access (see the root layout), so pages render on demand instead
+	if (process.env.SKIP_BUILD_DB) return [];
+
 	const payload = await getPayload({ config: configPromise });
 	const posts = await payload.find({
 		collection: "posts",

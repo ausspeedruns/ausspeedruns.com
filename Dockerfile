@@ -43,11 +43,9 @@ ENV AZURE_STORAGE_ACCOUNT_BASEURL=${AZURE_STORAGE_ACCOUNT_BASEURL}
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Pages using generateStaticParams query Postgres at build time. Provide the connection
-# string as a build secret so it is never stored in an image layer:
-#   docker build --secret id=DATABASE_URI,env=DATABASE_URI .
+# No database is needed at build time: SKIP_BUILD_DB skips generateStaticParams and the frontend layout
+# renders every page on demand (see src/app/(frontend)/layout.tsx)
 RUN --mount=type=cache,id=next-cache,target=/app/.next/cache \
-  --mount=type=secret,id=DATABASE_URI,env=DATABASE_URI \
   pnpm run build
 
 # Production image, copy all the files and run next

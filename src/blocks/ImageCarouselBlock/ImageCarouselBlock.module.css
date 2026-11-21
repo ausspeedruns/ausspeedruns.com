@@ -23,6 +23,9 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	text-align: center;
+	--foreground: #fff;
+	color: #fff;
 
 	& picture {
 		max-width: 50%;

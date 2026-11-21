@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Chip, Group, Text, Tooltip } from "@mantine/core";
+import { Button, Chip, Group, Text } from "@mantine/core";
 
 import styles from "./BlockLegend.module.css";
 import type { Block, Run } from "./scheduleTypes";
@@ -15,7 +15,7 @@ interface BlockLegendProps {
 	onChange: (selected: string[]) => void;
 }
 
-/** Chips for each block: toggle to filter the schedule to those blocks, or jump to where they start. */
+/** Chips for each block: toggle to filter the schedule to those blocks. */
 export function BlockLegend(props: BlockLegendProps) {
 	const runsById = new Map(props.runs.map((run) => [run.id, run]));
 	// Blocks with the same name (e.g. several "Buffer" blocks) share a chip
@@ -63,7 +63,7 @@ export function BlockLegend(props: BlockLegendProps) {
 										overflowWrap: "anywhere",
 										lineHeight: 1.3,
 										paddingBlock: 4,
-										borderRadius: 16,
+										borderRadius: 0,
 										borderColor: entry.colour,
 										borderWidth: 2,
 										...(props.selected.includes(entry.name)
@@ -84,20 +84,6 @@ export function BlockLegend(props: BlockLegendProps) {
 									)}
 								</span>
 							</Chip>
-							<Tooltip label={`Jump to ${entry.name}`}>
-								<ActionIcon
-									variant="subtle"
-									color="gray"
-									aria-label={`Jump to ${entry.name}`}
-									onClick={() =>
-										document
-											.getElementById(entry.firstRun.id.toString())
-											?.scrollIntoView({ behavior: "smooth", block: "center" })
-									}
-								>
-									↓
-								</ActionIcon>
-							</Tooltip>
 						</div>
 					))}
 				</div>

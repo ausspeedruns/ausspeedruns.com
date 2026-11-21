@@ -1,6 +1,6 @@
 import React from "react";
 import type { StatsBlock as StatsBlockProps } from "#/payload-types";
-import { Container, Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Container, Paper, Stack, Text, Title } from "@mantine/core";
 import { getAllTimeStats } from "#/utilities/events/allTimeStats";
 import { formatCurrencyRoundedDown } from "#/utilities/formatCurrency";
 import styles from "./StatsBlock.module.css";
@@ -38,10 +38,14 @@ export async function StatsBlock(props: StatsBlockProps) {
 						{description}
 					</Text>
 				) : null}
-				<SimpleGrid
-					cols={{ base: Math.min(stats.length, 2), sm: Math.min(stats.length, 4) }}
-					spacing="md"
-					w="100%"
+				<div
+					className={styles.grid}
+					style={
+						{
+							"--cols-base": Math.min(stats.length, 2),
+							"--cols-sm": Math.min(stats.length, 4),
+						} as React.CSSProperties
+					}
 				>
 					{stats.map((stat) => (
 						<Paper
@@ -58,7 +62,7 @@ export async function StatsBlock(props: StatsBlockProps) {
 							</Text>
 						</Paper>
 					))}
-				</SimpleGrid>
+				</div>
 			</Stack>
 		</Container>
 	);

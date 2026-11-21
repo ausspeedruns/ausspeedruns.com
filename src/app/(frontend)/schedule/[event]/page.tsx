@@ -219,6 +219,7 @@ export default async function EventSchedule({ params }: URLProps) {
 					timezone: event.timeSettings?.timezone || "",
 				}}
 				logo={event.media?.logo}
+				logoDarkMode={event.media?.logoDarkMode}
 				horaro={event.scheduleMetadata?.horaro || ""}
 				oengus={event.scheduleMetadata?.oengus || ""}
 				scheduleBlocks={toScheduleBlocks(

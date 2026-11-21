@@ -118,12 +118,6 @@ export function UserEditForm({ initialValues, username, isEmailVerified, onResen
 							{...form.getInputProps("bluesky")}
 						/>
 					</div>
-
-					{status && (
-						<Alert color={status.type === "error" ? "red" : "green"} radius="md" role="status">
-							{status.message}
-						</Alert>
-					)}
 				</Stack>
 			</Paper>
 
@@ -230,6 +224,12 @@ export function UserEditForm({ initialValues, username, isEmailVerified, onResen
 					</div>
 				</Stack>
 			</Paper>
+
+			{status && (
+				<Alert color={status.type === "error" ? "red" : "green"} radius="md" role="status">
+					{status.message}
+				</Alert>
+			)}
 
 			<Group justify="space-between" wrap="wrap">
 				<Button component={Link} href={`/user/${username}`} type="button" variant="default">

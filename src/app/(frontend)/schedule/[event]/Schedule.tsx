@@ -12,7 +12,7 @@ import type { Media as MediaType } from "#payload-types.ts";
 import { resolveBlockRuns } from "#utilities/schedule/blocks.ts";
 import { BlockLegend } from "./BlockLegend";
 import { Media } from "#components/Media/Media.tsx";
-import { Button, Checkbox } from "@mantine/core";
+import { Box, Button, Checkbox } from "@mantine/core";
 import { formatScheduleTime } from "./time";
 import { Open } from "pixelarticons/react";
 
@@ -38,6 +38,7 @@ interface ScheduleProps {
 		timezone: string;
 	};
 	logo?: number | MediaType | null;
+	logoDarkMode?: number | MediaType | null;
 	scheduleBlocks: Block[];
 	oengus: string;
 	horaro: string;
@@ -59,10 +60,21 @@ export function Schedule(props: ScheduleProps) {
 	return (
 		<>
 			<header className={styles.headerContent}>
-				{props.logo && (
-					<div className={styles.eventLogo}>
-						<Media resource={props.logo} />
-					</div>
+				{props.logo && props.logoDarkMode ? (
+					<>
+						<Box className={styles.eventLogo} darkHidden>
+							<Media resource={props.logo} />
+						</Box>
+						<Box className={styles.eventLogo} lightHidden>
+							<Media resource={props.logoDarkMode} />
+						</Box>
+					</>
+				) : (
+					(props.logo || props.logoDarkMode) && (
+						<div className={styles.eventLogo}>
+							<Media resource={props.logo || props.logoDarkMode} />
+						</div>
+					)
 				)}
 
 				<p className={styles.eventLabel}>{props.shortName} Schedule</p>

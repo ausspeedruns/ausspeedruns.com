@@ -21,7 +21,6 @@
 	display: inline-block;
 	width: 0.8em;
 	height: 0.8em;
-	border-radius: 50%;
 	margin-right: 6px;
 	vertical-align: -0.05em;
 	border: 1px solid color-mix(in srgb, currentColor 40%, transparent);

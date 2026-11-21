@@ -4,8 +4,9 @@
 	justify-content: center;
 	width: 13rem;
 	height: 7rem;
-	background: var(--mantine-color-default);
-	color: inherit;
+	/* Most sponsor logos are made for light backgrounds, so keep the tile light in dark mode too */
+	background: light-dark(var(--mantine-color-default), var(--mantine-color-gray-0));
+	color: light-dark(var(--mantine-color-text), var(--mantine-color-dark-7));
 	text-decoration: none;
 	transition:
 		border-color 150ms ease,

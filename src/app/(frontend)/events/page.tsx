@@ -50,7 +50,7 @@ export default async function Events() {
 			</div>
 
 			{upcomingEvents.length > 0 && (
-				<section className={styles.section}>
+				<section className={`${styles.section} ${styles.upcoming}`}>
 					<h2 className={styles.sectionTitle}>Upcoming</h2>
 					<div className={styles.grid}>
 						{upcomingEvents.map((event) => (

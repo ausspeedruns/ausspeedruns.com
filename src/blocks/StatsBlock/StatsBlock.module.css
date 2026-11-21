@@ -1,6 +1,23 @@
+/* Flex rather than grid so a partial last row is centred instead of left-aligned */
+.grid {
+	--gap: var(--mantine-spacing-md);
+	--cols: var(--cols-base);
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: var(--gap);
+	width: 100%;
+
+	@media (min-width: 48em) {
+		--cols: var(--cols-sm);
+	}
+}
+
 .stat,
 .statFeatured {
 	text-align: center;
+	flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols));
+	min-width: 0;
 }
 
 .statFeatured {

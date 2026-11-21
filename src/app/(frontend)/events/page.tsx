@@ -81,11 +81,12 @@ function EventBlock({ event }: EventBlockProps) {
 	const heroImage = getMediaObject(event.media?.hero);
 	const heroUrl = getMediaUrl(heroImage?.url);
 
+	const dateOptions: Intl.DateTimeFormatOptions = { timeZone: event.timeSettings?.timezone ?? "Australia/Melbourne" };
 	const dateString =
 		event.timeSettings?.startTime && event.timeSettings?.endTime
-			? `${new Date(event.timeSettings.startTime).toLocaleDateString()} – ${new Date(
+			? `${new Date(event.timeSettings.startTime).toLocaleDateString("en-AU", dateOptions)} – ${new Date(
 					event.timeSettings.endTime,
-				).toLocaleDateString()}`
+				).toLocaleDateString("en-AU", dateOptions)}`
 			: "";
 
 	const raisedString = event.postEvent?.raised ? `$${event.postEvent.raised.toLocaleString()}` : "";

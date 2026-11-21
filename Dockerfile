@@ -55,6 +55,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
+# Default locale for Intl/toLocale*() calls that don't pass one (Node otherwise falls back to en-US)
+ENV LANG=en_AU.UTF-8
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED=1
 

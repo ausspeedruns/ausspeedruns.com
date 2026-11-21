@@ -14,11 +14,15 @@
 	}
 }
 
-.content {
+/* div. bumps specificity over RichText's .prose (max-width: 65ch), whose load order isn't guaranteed */
+div.content {
 	position: absolute;
-	top: 0;
-	height: 100%;
-	width: 100%;
+	inset: 0;
+	max-width: none;
+	margin: 0;
+	padding: 2rem;
+	gap: 1.5rem;
+	z-index: 2;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -27,8 +31,21 @@
 	--foreground: #fff;
 	color: #fff;
 
+	& > * {
+		max-width: min(100%, 60rem);
+	}
+
 	& picture {
-		max-width: 50%;
+		display: block;
+		width: min(85vw, 42rem);
+		max-width: 100%;
+		margin-inline: auto;
+	}
+
+	& img {
+		width: 100%;
+		height: auto;
+		margin: 0;
 	}
 
 	* {

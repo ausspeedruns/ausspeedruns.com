@@ -7,7 +7,7 @@ import type { Event } from "#payload-types.ts";
 import { Alert, Anchor, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import { ListBox } from "pixelarticons/react";
 
-const TICKET_VISIBLE_AFTER_EVENT_MS = 7 * 24 * 60 * 60 * 1000 * 1000; // 7 days in milliseconds
+const TICKET_VISIBLE_AFTER_EVENT_MS = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
 
 export default async function AccountTicketsPage() {
 	const payload = await getPayload({ config });

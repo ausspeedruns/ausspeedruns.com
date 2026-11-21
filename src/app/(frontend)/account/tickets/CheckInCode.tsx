@@ -63,7 +63,7 @@ export function CheckInCode({ ticketID, eventName }: CheckInCodeProps) {
 				leftSection={<Barcode width={20} height={20} />}
 				className={styles.openButton}
 			>
-				Show ticket at check-in
+				Show ticket
 			</Button>
 
 			<Modal

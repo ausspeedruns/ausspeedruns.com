@@ -1,5 +1,6 @@
 import { Box } from "@mantine/core";
 import { format } from "date-fns";
+import { tz } from "@date-fns/tz";
 
 import styles from "./Ticket.module.css";
 import { CheckInCode } from "./CheckInCode";
@@ -31,16 +32,28 @@ export function Ticket(props: TicketProps) {
 		status = "Paid";
 	}
 
+	const dateOptions = { in: tz(event.timeSettings?.timezone || "Australia/Melbourne") };
+	const startDate = format(event.timeSettings?.startTime ?? new Date(), "EEEE d MMM yyyy", dateOptions);
+	const endDate = format(event.timeSettings?.endTime ?? new Date(), "EEEE d MMM yyyy", dateOptions);
+
+	const logo = event.media?.logo;
+	const logoDarkMode = event.media?.logoDarkMode;
+	const logoAlt = `${event.shortName} logo`;
+
 	return (
 		<Box className={styles.ticket}>
 			<div className={styles.imageSection}>
-				{event.media?.logo ? (
-					<Media
-						resource={event.media.logo}
-						alt={`${event.shortName} logo`}
-						imgClassName={styles.eventLogo}
-						fill
-					/>
+				{logo && logoDarkMode ? (
+					<>
+						<Box className={styles.logoWrapper} darkHidden>
+							<Media resource={logo} alt={logoAlt} imgClassName={styles.eventLogo} fill />
+						</Box>
+						<Box className={styles.logoWrapper} lightHidden>
+							<Media resource={logoDarkMode} alt={logoAlt} imgClassName={styles.eventLogo} fill />
+						</Box>
+					</>
+				) : logo || logoDarkMode ? (
+					<Media resource={logo || logoDarkMode} alt={logoAlt} imgClassName={styles.eventLogo} fill />
 				) : (
 					<div className={styles.placeholderLogo}>{event.shortName}</div>
 				)}
@@ -50,8 +63,7 @@ export function Ticket(props: TicketProps) {
 					<div>
 						<h3>{event.name} Ticket</h3>
 						<p>
-							{format(event.timeSettings?.startTime ?? new Date(), "EEEE d MMM yyyy")} to{" "}
-							{format(event.timeSettings?.endTime ?? new Date(), "EEEE d MMM yyyy")}
+							{startDate === endDate ? startDate : `${startDate} to ${endDate}`}
 						</p>
 					</div>
 					<span className={styles.statusBadge} data-status={status.toLowerCase().replace(" ", "-")}>

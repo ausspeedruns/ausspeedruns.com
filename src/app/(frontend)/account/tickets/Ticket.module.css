@@ -17,6 +17,11 @@
 		position: relative;
 		min-height: 220px;
 
+		.logoWrapper {
+			position: absolute;
+			inset: 0;
+		}
+
 		.eventLogo {
 			image-rendering: pixelated;
 			object-position: center;
@@ -51,6 +56,8 @@
 
 			.statusBadge {
 				display: inline-block;
+				flex-shrink: 0;
+				white-space: nowrap;
 				padding: 0.5rem 1rem;
 				font-weight: 600;
 				font-size: 0.875rem;
@@ -115,6 +122,14 @@
 		.imageSection {
 			flex: 0 0 auto;
 			min-height: 180px;
+		}
+
+		.infoSection {
+			padding: 1.25rem;
+
+			.header {
+				align-items: flex-start;
+			}
 		}
 	}
 }

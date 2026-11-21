@@ -46,6 +46,8 @@ export const Users: CollectionConfig<"users"> = {
 		beforeChange: [clearLegacyPasswordOnChange],
 	},
 	auth: {
+		// Keep users logged in for 180 days, since visits are sporadic (e.g. buying a ticket, then showing it at the event)
+		tokenExpiration: 60 * 60 * 24 * 180,
 		// When served over HTTPS (production), never send the auth cookie over plain HTTP
 		cookies: {
 			secure: getServerSideURL().startsWith("https://"),
